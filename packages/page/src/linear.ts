@@ -350,31 +350,30 @@ const PHASES: Phase[] = [
       ]) },
   ]},
 
-  { id:"fervor", gate:"All or nothing", title:"The Fervor engine — ONE purchase",
-    note:"Any piece alone is a dead slot. Budget the 12% of current Life and ES per second it drains.", steps:[
-    { id:"fv-boots", src:"gear", chip: rungChip("boots", "Dawn Break"), needs:["wl-vorax", "wl-dawnbreak"],
-      title:"Vorax boots + Dawn Break belt",
+  { id:"fervor", gate:"Fervor", title:"The Fervor engine", steps:[
+    { id:"fv-boots", src:"gear", chip: rungChip("boots", "Dawn Break"),
+      needs:["wl-vorax", "wl-dawnbreak", "wl-ghost"],
+      title:"Vorax boots + Dawn Break + Ghost Slaughter",
+      note:"Boots + gloves land together. Corroded 1%-per-rating roll only on Ghost Slaughter.",
       detail: itemsDetail("fv-boots", [
         { name:"Vorax boot base", note:"i86+, at least one decent mod" },
         { name:"Dawn Break belt", note:"EV 950 FE" },
+        { name:"Corroded Ghost Slaughter", note:"1%-per-rating roll only" },
       ]) },
-    { id:"fv-gloves", src:"gear", chip: rungChip("gloves", "Ghost Slaughter"), needs:["wl-ghost", "fv-boots"],
-      title:"Corroded Ghost Slaughter",
-      note:"Corroded 1%-per-rating roll only." },
     { id:"fv-helm", src:"gear", chip: rungChip("helmet", "priceless"),
       title:"Priceless sealed-mana helmet",
       detail: craftDetail("fv-helm", "helmet", "priceless") },
     { id:"fv-prism", src:"prism", chip: dChip(prismRung("Ethereal", "Unmatched Valor").delta),
-      needs:["fv-helm", "fv-boots", "wl-valor"],
+      needs:["wl-valor"],
       title:"Socket Unmatched Valor", note:"Ranger slot; Centralize becomes a respec candidate." },
-    { id:"fv-eternity", src:"gear", chip: rungChip("belt", "Eternity"), needs:["wl-eternity"],
-      title:"Eternity (from the 5 blueprints)",
-      note:"Swap Motionless → Still Attack medium on the link. Precise: Energy Shield once the flat-ES belt is gone.",
-      detail: skillBuysDetail("fv-eternity", "3t", "5t Eternity") },
   ]},
 
   { id:"endgame", cost:"150B+", gate:"Timemark 8 / Atlas", title:"Endgame layers",
     remind:["sl-convert"], steps:[
+    { id:"fv-eternity", seq:"1st", src:"gear", chip: rungChip("belt", "Eternity"), needs:["wl-eternity"],
+      title:"Eternity (from the 5 blueprints)",
+      note:"Swap Motionless → Still Attack medium on the link. Precise: Energy Shield once the flat-ES belt is gone.",
+      detail: skillBuysDetail("fv-eternity", "3t", "5t Eternity") },
     { id:"end-mammoth", src:"pact", title:"2× Unending Fate + 2× Mammoth",
       note:"2× Unending Fate unlock the dual sockets · 2× Mammoth self-casts Lv.20 Resurrection Warcry on hit every 3s (hands-free −60% additional damage taken).",
       detail: itemsDetail("end-mammoth", [
@@ -407,7 +406,7 @@ const TREE_STAGES: TreeStage[] = [
     slots: [{loadout:"150b"}, {loadout:"150b"}, {loadout:"420b", prism:false}, {loadout:"150b"}] },
   { label:"420b — warcries", trigger:"warcries",     slots: all("420b") },
   { label:"Inverse prism",   trigger:"end-warcry",   slots: all("Inverse-Warcry") },
-  { label:"Sealed helmet",   trigger:"fv-helm",      slots: all("5t Eternity") },
+  { label:"Eternity",        trigger:"fv-eternity",  slots: all("5t Eternity") },
   { label:"Prophet → Ronin", trigger:"sl-convert",   slots: all("more_1") },
 ];
 /* steps that respec the tree get a jump-straight-to-that-stage button */
@@ -726,6 +725,18 @@ function phaseInView(main: HTMLElement): string {
   return best;
 }
 
+/* set by renderLinear — resetProgress repaints after clearing state */
+let paintLinear: (() => void) | null = null;
+
+/** Wipe every Linear checkbox (and session fold/peek state) then re-render. */
+export function resetLinearProgress(): void {
+  for (const k of Object.keys(done)) delete done[k];
+  craftOpen.clear();
+  peekDone.clear();
+  saveDone();
+  paintLinear?.();
+}
+
 export function renderLinear(main: HTMLElement, aside: HTMLElement, nav?: HTMLElement | null): void {
   for (const id of Object.keys(TREE_BTN))
     if (!(id in TITLE)) throw new Error(`linear: tree trigger "${id}" has no step`);
@@ -744,6 +755,7 @@ export function renderLinear(main: HTMLElement, aside: HTMLElement, nav?: HTMLEl
     activePhaseId = phaseInView(main) || activePhaseId;
     paintNav();
   };
+  paintLinear = render;
 
   const onScroll = () => {
     const next = phaseInView(main);

@@ -83,7 +83,21 @@
   </div>
 </section>
 
+<footer class="page-foot">
+  <button type="button" id="reset-progress" class="reset-btn">Reset all progress</button>
+</footer>
 </div>
+
+<dialog id="reset-dlg" class="reset-dlg" aria-labelledby="reset-dlg-title">
+  <div class="reset-panel">
+    <h3 id="reset-dlg-title">Reset all progress?</h3>
+    <p>This clears every Linear checklist mark on this device. It cannot be undone.</p>
+    <div class="reset-actions">
+      <button type="button" class="reset-cancel" data-reset="cancel">Cancel</button>
+      <button type="button" class="reset-confirm" data-reset="confirm">Reset everything</button>
+    </div>
+  </div>
+</dialog>
 
 <script type="module" src="/src/main.ts"></script>
 </body>

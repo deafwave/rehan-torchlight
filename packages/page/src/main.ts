@@ -4,7 +4,7 @@ import catalogData from "./data/catalog.json";
 import prismData from "./data/prisms.json";
 import { esc, escAttr, gainChip, dChip, SRC, srcChip, modRows,
   type LadderRow, type CatalogRow, type Rung } from "./ui";
-import { renderLinear } from "./linear";
+import { renderLinear, resetLinearProgress } from "./linear";
 
 /* ---------- data written by dmg progression + catalog CLIs ---------- */
 const LADDER = ladderData as LadderRow[];
@@ -298,3 +298,18 @@ renderLinear(
   document.getElementById("linear-watchlist")!,
   document.getElementById("linear-nav"),
 );
+
+/* ---------- reset Linear progress (footer + confirm dialog) ---------- */
+{
+  const btn = document.getElementById("reset-progress") as HTMLButtonElement;
+  const dlg = document.getElementById("reset-dlg") as HTMLDialogElement;
+  btn.addEventListener("click", () => dlg.showModal());
+  dlg.addEventListener("click", e => {
+    const t = e.target as HTMLElement;
+    if (t === dlg || t.dataset.reset === "cancel") { dlg.close(); return; }
+    if (t.dataset.reset === "confirm") {
+      resetLinearProgress();
+      dlg.close();
+    }
+  });
+}
