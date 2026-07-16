@@ -291,4 +291,4 @@ function renderCatalog(){
 for (const id of ["cat-search","cat-tier","cat-show"])
   document.getElementById(id)!.addEventListener("input", renderCatalog);
 
-renderLinear(document.getElementById("linear-plan")!);
+renderLinear(document.getElementById("linear-plan")!, document.getElementById("linear-watchlist")!);

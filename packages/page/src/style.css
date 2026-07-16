@@ -199,3 +199,12 @@ footer{margin-top:80px;color:var(--faint);font-size:12px;font-family:"IBM Plex M
 .lstep .rung-mods,.lstep .fillers{margin:7px 0 0 24px}
 .lstep.done{opacity:.55}
 .lstep.done .l-title{text-decoration:line-through;text-decoration-color:rgba(124,142,160,.7)}
+
+/* linear path — watchlist rail */
+.linear-cols{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px;align-items:start}
+#linear-watchlist{position:sticky;top:12px;max-height:calc(100vh - 24px);overflow-y:auto}
+#linear-watchlist .l-parallel{grid-template-columns:1fr}
+@media (max-width:980px){
+  .linear-cols{grid-template-columns:1fr}
+  #linear-watchlist{position:static;max-height:none}
+}
