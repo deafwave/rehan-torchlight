@@ -228,24 +228,39 @@ const PHASES: Phase[] = [
   ]},
 ];
 
-/* ---------- render + progress state (Task 4 wires the interactivity) ---------- */
-const stepCard = (s: Step) =>
-  `<div class="lstep${s.seq ? " seq" : ""}">`
-  + `<label><input type="checkbox" data-step="${s.id}">`
-  + (s.seq ? `<span class="lseq">${esc(s.seq)}</span>` : "")
-  + (s.src ? srcChip(s.src) : "")
-  + `<span class="l-title">${s.title}</span>${s.chip ?? ""}</label>`
-  + (s.note ? `<p class="l-note">${s.note}</p>` : "")
-  + (s.detail ?? "")
-  + `</div>`;
+/* ---------- render + progress state ---------- */
+const KEY = "linear-done";
+/* localStorage can be unavailable (private mode) — degrade to per-session state, never crash */
+const loadDone = (): Record<string, true> => {
+  try { return JSON.parse(localStorage.getItem(KEY) ?? "{}"); } catch { return {}; }
+};
+const done: Record<string, true> = loadDone();
+const saveDone = () => { try { localStorage.setItem(KEY, JSON.stringify(done)); } catch { /* per-session only */ } };
+
+const TITLE: Record<string, string> = {};
+for (const p of PHASES) for (const s of p.steps) TITLE[s.id] = s.title;
+
+const stepCard = (s: Step) => {
+  const waiting = (s.needs ?? []).filter(id => !done[id]);
+  return `<div class="lstep${done[s.id] ? " done" : ""}${s.seq ? " seq" : ""}">`
+    + `<label><input type="checkbox" data-step="${s.id}"${done[s.id] ? " checked" : ""}>`
+    + (s.seq ? `<span class="lseq">${esc(s.seq)}</span>` : "")
+    + (s.src ? srcChip(s.src) : "")
+    + `<span class="l-title">${s.title}</span>${s.chip ?? ""}</label>`
+    + (s.note ? `<p class="l-note">${s.note}</p>` : "")
+    + (waiting.length ? `<p class="l-wait">⚠ waiting on: ${waiting.map(id => esc(TITLE[id])).join(" · ")}</p>` : "")
+    + (s.detail ?? "")
+    + `</div>`;
+};
 
 const phaseCard = (p: Phase) => {
+  const n = p.steps.filter(s => done[s.id]).length;
   const ordered = p.steps.filter(s => s.seq), free = p.steps.filter(s => !s.seq);
   return `<article class="bundle lphase">`
     + `<div class="bundle-head"><span class="l-gate">${esc(p.gate)}${p.cost ? ` · ${esc(p.cost)}` : ""}</span>`
     + `<h3>${esc(p.title)}</h3>`
     + (p.ongoing ? `<span class="l-ongoing">runs alongside everything below</span>` : "")
-    + `<span class="l-count" data-phase="${p.id}"></span></div>`
+    + `<span class="l-count">${n}/${p.steps.length}</span></div>`
     + (p.note ? `<p class="l-phase-note">${p.note}</p>` : "")
     + (ordered.length ? `<div class="l-ordered">${ordered.map(stepCard).join("")}</div>` : "")
     + (free.length ? `<div class="l-parallel">${free.map(stepCard).join("")}</div>` : "")
@@ -253,5 +268,16 @@ const phaseCard = (p: Phase) => {
 };
 
 export function renderLinear(el: HTMLElement): void {
-  el.innerHTML = PHASES.map(phaseCard).join("");
+  const render = () => { el.innerHTML = PHASES.map(phaseCard).join(""); };
+  /* one delegated listener survives re-renders; re-render refreshes counts + ⚠ lines
+     (fold-out open state intentionally resets — spec: not persisted) */
+  el.addEventListener("change", e => {
+    const t = e.target as HTMLInputElement;
+    const id = t.dataset.step;
+    if (!id) return;
+    if (t.checked) done[id] = true; else delete done[id];
+    saveDone();
+    render();
+  });
+  render();
 }
