@@ -196,6 +196,22 @@ footer{margin-top:80px;color:var(--faint);font-size:12px;font-family:"IBM Plex M
 .l-note{margin-top:5px;font-size:12px;color:var(--muted);line-height:1.5;padding-left:24px}
 .l-wait{margin-top:5px;font-size:11px;color:#c9a86a;padding-left:24px}
 .lstep .rung-mods,.lstep .fillers{margin:7px 0 0 24px}
+/* fold-out toggles inside steps are real buttons, not bare text */
+.lstep summary{
+  display:inline-flex;align-items:center;gap:6px;
+  list-style:none;cursor:pointer;user-select:none;
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.06em;
+  color:var(--muted);
+  border:1px solid var(--ice-line);border-radius:5px;
+  background:rgba(16,27,39,.9);
+  padding:3px 9px;
+}
+.lstep summary::-webkit-details-marker{display:none}
+.lstep summary::before{content:"▸";font-size:9px;color:var(--faint)}
+.lstep details[open]>summary{color:var(--frost);border-color:rgba(127,216,232,.35)}
+.lstep details[open]>summary::before{content:"▾";color:var(--frost)}
+.lstep summary:hover{color:var(--frost);border-color:rgba(127,216,232,.5)}
+.lstep summary:focus-visible{outline:1px solid var(--frost);outline-offset:2px}
 .lstep.done{opacity:.55}
 .lstep.done .l-title{text-decoration:line-through;text-decoration-color:rgba(124,142,160,.7)}
 

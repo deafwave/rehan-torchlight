@@ -188,7 +188,9 @@ describe("classify", () => {
     expect(classify("+30% additional Ailment Damage dealt by attacks")).toEqual(["ignore", null]);
     expect(classify("-10% Attack Speed")).toEqual(["rotation.attack_speed_inc_pct", -10.0]);
     expect(classify("+7% additional Attack and Cast Speed for Combo Starters"))
-      .toEqual(["rotation.attack_speed_inc_pct", 7.0]);
+      .toEqual(["rotation.starter_additional_as_pct", 7.0]);
+    expect(classify("+24% additional Attack and Cast Speed for Combo Finishers"))
+      .toEqual(["rotation.finisher_additional_as_pct", 24.0]);
   });
 
   test("undetermined fate slots credit increased damage", () => {
@@ -418,6 +420,14 @@ describe("legendary belt & necklace lines", () => {
       .toBe("special.addl_per_combo_crit");
     const [snap] = parseBuild(BUILD, 0);   // loadout 0 wears Bodhi, 7 points
     expect(snap.crit.additional_on_crit_pct ?? 0).toBeGreaterThanOrEqual(4 * snap.rotation.combo_points);
+  });
+
+  test("bodhi girdle: special pool finisher AS joins skill inherent -40%", () => {
+    // planner export omits specialModPool; Rehan.json restores the finisher roll (mechanics.md#bodhi-girdle)
+    const lines = extractLines(BUILD, 0).filter(l => l.slot === "belt");
+    expect(lines.some(l => /additional Attack and Cast Speed for Combo Finishers/.test(l.text))).toBe(true);
+    const [snap] = parseBuild(BUILD, 0);
+    expect(snap.rotation.finisher_additional_as_pct).toBe(-40 + 24);
   });
 
   test("vortex heart flat-to-attacks lands in base.flat_added", () => {

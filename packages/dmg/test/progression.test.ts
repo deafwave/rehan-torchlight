@@ -78,11 +78,12 @@ describe("gear ladder", () => {
     expect(rungs[1].gain!, "the 8th combo point + 80% finisher amp").toBeGreaterThan(10);
   });
 
-  test("belt is priced: Bodhi's crit line is the only real DPS drop", () => {
+  test("belt is priced: leaving Bodhi drops finisher AS and the crit line", () => {
     const rungs = slot("belt").rungs;
     expect(rungs.map(r => r.label)).toEqual(["Bodhi Girdle", "Light Hunter Belt", "Eternity"]);
     expect(rungs.every(r => r.linear && r.dps !== null)).toBe(true);
-    expect(rungs[1].gain!, "leaving Bodhi's +4%/combo-point-on-crit").toBeLessThan(0);
+    // Bodhi special-pool +24% finisher AS + +4%/pt-on-crit; Light Hunter loses both
+    expect(rungs[1].gain!, "leaving Bodhi's finisher AS + crit line").toBeLessThan(0);
   });
 
   test("Eternity prices at its map state (120 stacks + 10 Reign), flagged '(map)'", () => {

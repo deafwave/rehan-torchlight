@@ -88,6 +88,7 @@ const WATCHLIST: Phase = {
   title:"Watchlist", note:"Buy on price, not on schedule.", steps:[
   { id:"wl-animitta", src:"gear", chip: rungChip("necklace", "Heart of Animitta"),
     title:"Heart of Animitta", note:"Listed ~1300 FE — snipe way under. The #1 buy." },
+  { id:"wl-legion", src:"support", title:"Spectral Slash: Legion (Noble)" },
   { id:"wl-vorax", src:"gear", title:"Vorax boot base", note:"i86+, at least one decent mod." },
   { id:"wl-dawnbreak", src:"gear", title:"Dawn Break belt", note:"EV 950 FE." },
   { id:"wl-ghost", src:"gear", chip: rungChip("gloves", "Ghost Slaughter"),
@@ -103,33 +104,30 @@ const WATCHLIST: Phase = {
 ]};
 
 const PHASES: Phase[] = [
-  { id:"swap", cost:"~200b", gate:"Lv 90+", title:"Swap to Spectral Slash", steps:[
+  { id:"swap", cost:"~200b", gate:"Lv 86+", title:"Swap to Spectral Slash", steps:[
+    { id:"tree", src:"talent", title:"Copy the talent tree" },
     { id:"skill-setup", src:"skill", title:"Copy this bar",
       note:"Spectral Slash — Recuperation · Steamroll · Added Physical Damage · Willpower · Quick Decision. "
         + "Bull's Rage — Extended Duration · Preparation · Mass Effect · Well-Fought Battle. "
         + "Spiral Strike — Quick Mobility · Periodic Burst · Precision Strike. "
         + "Fixate — Preparation · Extended Duration · Mass Effect. Timid — Extended Duration · Terrain of Malice · Preparation." },
-    { id:"auras", src:"skill", title:"All 4 Precise Auras",
-      note:"Cruelty · Fearless · Domain Expansion · Frigid Domain, supported by Restrain · Aura Amplification · Increased Area · Seal Conversion." },
-    { id:"pactspirits", src:"pact", title:"Pactspirits",
-      note:"Red Umbrella + Azure Gunslinger (nodes 4–6: crit). Captain Kitty. Level Kitty only." },
+    { id:"weapons82", src:"gear", title:"i82 weapons — Unforgotten Long Blade ×2",
+      note:"Speed/crit roll mainhand, raw damage offhand." },
+    { id:"rings82", src:"gear", title:"i82 combo rings — Punished Lightning Ring ×2",
+      note:"+1 Combo Points + phys rolls." },
     { id:"cheap-uniques", src:"gear", title:"Buy cheap uniques",
       note:"Grace Boots (keep until the Focus Blessing slate) · Bodhi Girdle · Vortex Heart (~130 FE)." },
     { id:"slate-quickcheck", src:"slate", title:"Slate quick-checks",
       note:"3–4× 1-mod slates, full reveal each: +1 Attack skill level · +1 Physical skill level (not the no-conversion one) · +1 to all skills · 10% additional damage for 4s after Mobility skills." },
-    { id:"pedigree", src:"slate", title:"Snipe a Pedigree of Gods (~30 FE)",
-      detail: foldout("core talents to look for", cores.map(catRow).join("")) },
+    { id:"pactspirits", src:"pact", title:"Pactspirits",
+      note:"Red Umbrella + Azure Gunslinger (nodes 4–6: crit). Fog Scorpion or Knight of Pale Blue in the third slot." },
   ]},
 
-  { id:"linkbuys", cost:"~150b → ~420b", gate:"First skill buys", title:"Upgrade the link", steps:[
-    { id:"legion", seq:"FIRST", src:"support", title:"Buy Spectral Slash: Legion (Noble)",
-      note:"Socket it with an Activation Medium: Motionless — drop Added Physical Damage and Quick Decision. "
-        + "Add Ice Bond on a Root medium (Extended Duration · Mass Effect); drop Fixate." },
-    { id:"detonation", seq:"SECOND", src:"support", title:"Buy Spectral Slash: Detonation (Magnificent)",
-      note:"Then swap Bull's Rage + Timid → Shockwave Warcry (Elite medium · Extended Duration · Cooldown Reduction) "
-        + "+ Resurrection Warcry (Preparation medium · Cooldown Reduction · Extended Duration)." },
-    { id:"thunderspike", src:"skill", title:"Buy Thunder Spike: Rumbling Thunder (Noble)",
-      note:"Thunder Spike replaces Spiral Strike — Quick Mobility · Periodic Burst · Precision Strike · Recklessness." },
+  { id:"swap90", gate:"Lv 90+", title:"Auras + Pedigree", steps:[
+    { id:"auras", src:"skill", title:"All 4 Precise Auras",
+      note:"Cruelty · Fearless · Domain Expansion · Frigid Domain, supported by Restrain · Aura Amplification · Increased Area · Seal Conversion." },
+    { id:"pedigree", src:"slate", title:"Snipe a Pedigree of Gods (~30 FE)",
+      detail: foldout("core talents to look for", cores.map(catRow).join("")) },
   ]},
 
   { id:"core86", cost:"1B", gate:"8-0", title:"i86 core — in this order",
@@ -179,6 +177,18 @@ const PHASES: Phase[] = [
       title:"i86 ES helmet", note:"Crit Rating basic; Strength + Crit Damage advanced." },
     { id:"gloves86", src:"gear", chip: rungChip("gloves", "i86"),
       title:"i86 ES gloves", note:"%damage + Crit Rating basics; Crit Damage advanced." },
+  ]},
+
+  { id:"linkbuys", gate:"Skills", title:"Upgrade skills", steps:[
+    { id:"legion", seq:"FIRST", src:"support", title:"Socket Legion (Noble)", needs:["wl-legion"],
+      note:"With an Activation Medium: Motionless — drop Added Physical Damage and Quick Decision. "
+        + "Add Ice Bond on a Root medium (Extended Duration · Mass Effect); drop Fixate." },
+    { id:"detonation", seq:"SECOND", src:"support", title:"Buy Spectral Slash: Detonation (Magnificent)",
+      note:"Then swap Bull's Rage + Timid → Shockwave Warcry (Elite medium · Extended Duration · Cooldown Reduction) "
+        + "+ Resurrection Warcry (Preparation medium · Cooldown Reduction · Extended Duration). "
+        + "Swap Fog Scorpion / Knight of Pale Blue → Captain Kitty — level Kitty only." },
+    { id:"thunderspike", src:"skill", title:"Buy Thunder Spike: Rumbling Thunder (Noble)",
+      note:"Thunder Spike replaces Spiral Strike — Quick Mobility · Periodic Burst · Precision Strike · Recklessness." },
   ]},
 
   { id:"priceless", cost:"200B", gate:"Profound 8", title:"Priceless completes (8-1 + 8-2 open)", steps:[
