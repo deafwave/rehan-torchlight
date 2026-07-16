@@ -30,6 +30,17 @@ export function _load(name: string): any {
   return JSON.parse(fs.readFileSync(`${CACHE}/${name}`, "utf-8"));
 }
 
+/* A blend often exports as its talent NAME only ("Caged Fury"); the effect lines
+   live in the gear cache's beltBlends table. */
+let BELT_BLENDS: Record<string, any> | null = null;
+function blendLines(blend: any): string[] {
+  if (!blend) return [];
+  BELT_BLENDS ??= _load("SS12.5-gear-en.json")["gear/trinket/belt/i18n/en"]?.beltBlends ?? {};
+  const texts = BELT_BLENDS![blend.blendId]?.aromaticModifiers
+    ?.map((m: any) => m.rawText).filter(Boolean);
+  return texts?.length ? texts : [blend.description ?? ""];
+}
+
 function* gearLines(lo: any): Generator<Line> {
   const inv = new Map<string, any>(lo.gear.inventory.map((it: any) => [it.id, it]));
   for (const [slot, itemId] of Object.entries<string>(lo.gear.equipped)) {
@@ -39,14 +50,18 @@ function* gearLines(lo: any): Generator<Line> {
     for (const m of it.legendaryMods ?? []) yield { source: src, slot, text: m.description };
     const base = it.baseItem ?? {};
     for (const imp of base.implicits ?? []) yield { source: src, slot, text: imp.description };
-    for (const aff of [...(it.prefixes ?? []), ...(it.suffixes ?? [])]) {
+    // empty crafted slots export as null entries
+    for (const aff of [...(it.prefixes ?? []), ...(it.suffixes ?? [])].filter(Boolean)) {
       const vals = (aff.rolledValues ?? []).map((rv: any) => rv.value);
-      yield { source: src, slot, text: substitute(aff.modifierDescription, vals) };
+      // multi-line affixes (ring "+1 Combo Points / ±% damage") classify per line
+      for (const line of substitute(aff.modifierDescription, vals).split("\n")) {
+        if (line.trim()) yield { source: src, slot, text: line.trim() };
+      }
     }
-    // tower sequences and base/dream/corrosion affixes carry final text (no # placeholders)
+    // tower sequences, belt blends and base/dream/corrosion affixes carry final text (no # placeholders)
     const extra = [it.towerSequence?.description, it.baseAffix?.description,
                    it.baseAffix2?.description, it.sweetDreamAffix?.description,
-                   it.corrosionImplicit?.description];
+                   it.corrosionImplicit?.description, ...blendLines(it.beltBlend)];
     for (const desc of extra) {
       for (const line of (desc ?? "").split("\n")) {
         if (line.trim()) yield { source: src, slot, text: line.trim() };
@@ -71,6 +86,31 @@ function* treeLines(lo: any): Generator<Line> {
         if (line.trim()) {
           yield { source: `tree:${slot.treeId}:${node.name}`,
                   slot: "tree", text: line.trim(), points };
+        }
+      }
+    }
+    // notables are picked per tier in selectedNotable<level> fields, outside nodePoints
+    for (const [field, guid] of Object.entries<string>(slot)) {
+      if (!/^selectedNotable/.test(field) || !guid) continue;
+      const notable = (tree.notables ?? {})[guid];
+      if (notable == null) {
+        yield { source: `tree:${slot.treeId}:${guid}`, slot: "tree",
+                text: `UNRESOLVED NOTABLE ${guid}` };
+        continue;
+      }
+      for (const line of notable.description.split(/<br>|\n/)) {
+        const t = line.replace(/\s*\(Max Divinity Effect: \d+\)\s*$/, "").trim();
+        if (t) yield { source: `tree:${slot.treeId}:${notable.name}`, slot: "tree", text: t };
+      }
+    }
+    // Ethereal Prism core-talent overrides (e.g. Unmatched Valor's fixed Fervor
+    // Rating) replace a core talent and live outside nodePoints
+    const prism = slot.prismCoreTalentOverride;
+    if (prism?.description) {
+      for (const line of prism.description.split(/<br>|\n/)) {
+        if (line.trim()) {
+          yield { source: `tree:${slot.treeId}:prism:${prism.name ?? "core"}`,
+                  slot: "tree", text: line.trim() };
         }
       }
     }
@@ -183,6 +223,21 @@ function* pactspiritLines(lo: any): Generator<Line> {
   }
 }
 
+/* Vorax gear (Dawn Break boots) sits in lo.vorax.inventory, not gear.inventory, and its
+   mods live in `affixes` with values already baked into modifierDescription. */
+function* voraxLines(lo: any): Generator<Line> {
+  for (const it of lo.vorax?.inventory ?? []) {
+    const src = `vorax:${it.limbType ?? "?"}`;
+    const descs = [it.baseAffix?.description,
+                   ...(it.affixes ?? []).filter(Boolean).map((a: any) => a.modifierDescription)];
+    for (const desc of descs) {
+      for (const line of (desc ?? "").split("\n")) {
+        if (line.trim()) yield { source: src, slot: "vorax", text: line.trim() };
+      }
+    }
+  }
+}
+
 function pickLoadout(build: any, loadoutIndex?: number | null): any {
   const loadouts = build.loadouts.loadouts;
   if (loadoutIndex != null) return loadouts[loadoutIndex];
@@ -196,18 +251,24 @@ export function extractLines(buildOrPath: string | object, loadoutIndex?: number
     ? JSON.parse(fs.readFileSync(buildOrPath, "utf-8"))
     : buildOrPath;
   const lo = pickLoadout(build, loadoutIndex);
-  return [...gearLines(lo), ...treeLines(lo), ...traitLines(lo),
+  return [...gearLines(lo), ...voraxLines(lo), ...treeLines(lo), ...traitLines(lo),
           ...memoryLines(lo), ...divinityLines(lo), ...pactspiritLines(lo)];
 }
 
 export const NUM = "([+-]?\\d+(?:\\.\\d+)?)";
 
-export const FERVOR_RATING = 100;   // tlidb Fervor_rating: max is 100; sustained by Ronin/Dawn Break
+// tlidb Fervor_rating default cap; "Has # fixed Fervor Rating" (Unmatched Valor prism)
+// bypasses it via extras.fervor_rating — 130 confirmed in-game (user 2026-07-16)
+export const FERVOR_RATING = 100;
+// mechanics.md#assumptions: sustained Life deficit under Ghost Slaughter's 12%/s drain,
+// held above the 35% Low Life line (user 2026-07-16); scales "per 1% of Life lost" talents
+export const LIFE_LOST_PCT = 60;
+const LOW_LIFE_ENEMY_HP = 0.35;              // Low Life = below 35% Life (user 2026-07-16)
 const FERVOR_CRIT_RATING_PER_POINT = 2;      // Fervor's native base effect
 const PRECISE_FEARLESS_RATING_PCT = 100;     // aura, not gear: +80% crit rating x 1.25 aura effect
 const PARALYSIS_TAKEN_PCT = 15;              // tlidb Paralysis: +15% damage taken, 4s, 1 stack
 const PURE_HEART_PER_STACK = 5;              // +5% additional Attack Damage per stack, MULTIPLIES
-const PURE_HEART_STACKS = 5;                 // cap; full-uptime assumption (see RANKINGS caveats)
+const PURE_HEART_STACKS = 5;                 // cap; full-uptime assumption (mechanics.md#assumptions)
 const SHOCKWAVE_PER_ENEMY = 5.95;            // Shockwave Warcry at L20, per enemy affected
 const MARK_TAKEN_PCT = 30;                   // Spectral Slash starter's Mark, skill-inherent
 const TIMID_CURSE_TAKEN_PCT = 39;            // Timid at L20: +39% additional Hit Damage taken
@@ -236,8 +297,36 @@ export const PATTERNS: [string, string][] = [
   [`^${NUM} Critical Strike Rating$`, "crit.rating_flat"],
   [`^${NUM} Attack Speed$`, "base.weapon_attack_speed_set"],
   [`\\+${NUM}% gear Attack Speed`, "base.gear_attack_speed_pct"],
-  [`\\+${NUM}% Combo Damage Enhancement`, "rotation.finisher_amp_pct"],
+  // Enhancement is NOT Amplification: Enhancement affixes sum into ONE additional
+  // multiplier on all Combo Skill damage; only Amplification joins the per-point amp
+  [`\\+${NUM}% Combo Damage Enhancement if the Combo Finisher cast recently consumes at least ${NUM} Combo Point`,
+   "special.combo_enh_conditional"],
+  [`\\+${NUM}% Combo Damage Enhancement`, "special.combo_enhancement"],
   [`\\+${NUM}% Combo Finisher Amplification`, "rotation.finisher_amp_pct"],
+  [`\\+${NUM} Combo Points? gained from Combo Starters`, "special.combo_per_starter"],
+  [`\\+${NUM} Combo Finisher charge`, "special.finisher_charges"],
+  [`^Gains ${NUM} Combo Point\\(s\\) on Critical Strike`, "ignore"],
+  [`\\+${NUM}% additional damage for every ${NUM} Combo Point consumed on Critical Strike`,
+   "special.addl_per_combo_crit"],
+  [`Adds ${NUM} - ${NUM} Physical Damage to Attacks and Spells`, "special.flat_added_phys"],
+  [`${NUM}% Attack Critical Strike Rating for this gear`, "special.local_crit_rating"],
+  [`Adds ${NUM}% of the damage of the Off-Hand Weapon to the final damage of the Main-Hand Weapon`,
+   "special.joined_force"],
+  [`^Off-Hand Weapons do not participate in Attacks`, "ignore"],
+  [`\\+${NUM}% Attack Speed and \\+${NUM}% additional Attack Damage when having Attack Aggression`,
+   "special.attack_aggression"],
+  [`\\+${NUM}% additional damage and -${NUM}% Critical Strike Rating on Critical Strike`,
+   "special.keep_it_up"],
+  [`Attacks eliminate enemies under ${NUM}% Life`, "ignore"],
+  // Caged Fury's moved-mode; the still mode (+35% additional) is the live one while bossing
+  [`^If you have moved ${NUM}\\s?m or more`, "ignore"],
+  [`Doubles Max Warcry Skill Effects`, "ignore"],
+  [`Gains additional Fervor Rating`, "ignore"],
+  [`Fervor Rating lost`, "ignore"],
+  [`Unable to evade`, "ignore"],
+  [`Gains Attack Aggression when casting`, "ignore"],
+  [`You can only deal Cold Damage`, "ignore"],
+  [`Mana Multiplier`, "ignore"],
   [`\\+${NUM}% Warcry Effect`, "extras.warcry_effect_pct"],
   [`\\+${NUM}% Fervor effect`, "extras.fervor_effect_pct"],
   [`\\+${NUM} to Max Frostbite Rating`, "extras.max_frostbite_rating"],
@@ -248,6 +337,16 @@ export const PATTERNS: [string, string][] = [
   [`${NUM}% Critical Strike Damage per Fervor Rating`, "extras.crit_dmg_per_fervor_rating"],
   [`additional base effect: \\+${NUM}% additional [\\w ]*Damage for every ${NUM} Fervor Rating`,
    "special.fervor_dmg"],
+  // Dawn Break's plain wording — a rate, but NOT a Fervor base effect, so no Effect scaling
+  [`\\+${NUM}% additional damage per ${NUM} Fervor Rating`, "special.fervor_dmg_plain"],
+  [`^Have Fervor$`, "special.has_fervor"],
+  [`Has ${NUM} point\\(s\\) of fixed Fervor Rating`, "special.fixed_fervor_rating"],
+  // must outrank the generic '% Attack Speed' / '% additional damage' patterns below
+  [`${NUM}% Attack Speed for every ${NUM}% of Life lost`, "special.as_per_life_lost"],
+  [`\\+${NUM}% additional damage against Low Life enemies`, "special.low_life_enemy"],
+  // increased variant: must outrank the generic '+#% damage' or the gate is dropped
+  [`\\+${NUM}% damage against Low Life enemies`, "extras.low_life_inc_pct"],
+  [`^Has Hasten$`, "ignore"],
   [`\\+${NUM} \\* ${NUM}% Minion Damage`, "ignore"],
   [`\\+${NUM} \\* ${NUM}% damage`, "special.fate_slots"],
   [`\\+${NUM}% Warcry Skill Effect Duration`, "ignore"],
@@ -264,6 +363,8 @@ export const PATTERNS: [string, string][] = [
   [`stack of Pure Heart when using an Attack Mobility Skill`, "special.pure_heart"],
   [`\\+${NUM}% additional Attack and Cast Speed`, "rotation.attack_speed_inc_pct"],
   [`additional Ailment Damage`, "ignore"],
+  // a ring suffix's paired roll can be negative ("-5% additional damage") below i86
+  [`^(-\\d+(?:\\.\\d+)?)% additional damage$`, "additional.misc"],
   [`\\+${NUM}% additional .*[Dd]amage`, "additional.misc"],
   [`\\+${NUM}% (?:increased )?Physical Damage`, "increased.physical"],
   [`\\+${NUM}% (?:increased )?Attack Damage`, "increased.attack"],
@@ -289,7 +390,8 @@ export const PATTERNS: [string, string][] = [
    + "|Resistance|Movement Speed|Skill Cost|Life Regain|Mana Regain|on defeat"
    + "|Sealed Mana Compensation|Warcry Cooldown|additional damage taken|Skill Area"
    + "|Energy Shield Regain|Barrier|Consumes|Loses Fervor|chance to gain|chance to Mark"
-   + "|Charging Energy Shield|回复"
+   + "|Charging Energy Shield|Energy Shield [Cc]harge|回复"
+   + "|Non-Critical Strikes to grant|Minions?['’]|\\+\\d+% Minion (?:Damage|Attack and Cast Speed)"
    + "|[Ii]mmune to|Fortitude|Injury Buffer|Missing Energy Shield"
    + "|Converts 100% of(?: Minion)? Physical Damage to Cold"
    + "|Inflicts Frostbite|Copies the last Talent"
@@ -322,20 +424,28 @@ const nums = (text: string): number[] => (text.match(/\d+(?:\.\d+)?/g) ?? []).ma
 function apply(snap: Snapshot, extras: Record<string, number>, path: string, value: number, line: Line): void {
   const mult = line.slot === "tree" ? (line.points ?? 1) : 1;
   if (path === "base.weapon_phys") {
+    const m = nums(line.text);
     if (line.slot === "mainHand") {
-      const m = nums(line.text);
       snap.base.weapon_phys_min = m[0];
       snap.base.weapon_phys_max = m[1];
+    } else if (line.slot === "offHand") {
+      // stashed for Joined Force (mechanics.md#joined-force); dropped without it
+      extras.offhand_phys_min = (extras.offhand_phys_min ?? 0) + m[0];
+      extras.offhand_phys_max = (extras.offhand_phys_max ?? 0) + m[1];
     }
     return;
   }
   if (path === "base.weapon_flat_cold" || path === "base.weapon_flat_phys_added") {
-    if (line.slot !== "mainHand") {
-      extras.offhand_flat_ignored = (extras.offhand_flat_ignored ?? 0) + 1;
+    const [lo, hi] = nums(line.text);
+    const cold = path === "base.weapon_flat_cold";
+    if (line.slot === "offHand") {
+      const key = cold ? "offhand_cold" : "offhand_phys";
+      extras[`${key}_min`] = (extras[`${key}_min`] ?? 0) + lo;
+      extras[`${key}_max`] = (extras[`${key}_max`] ?? 0) + hi;
       return;
     }
-    const [lo, hi] = nums(line.text);
-    if (path === "base.weapon_flat_cold") {
+    if (line.slot !== "mainHand") return;
+    if (cold) {
       snap.base.weapon_flat_cold_min += lo;
       snap.base.weapon_flat_cold_max += hi;
     } else {
@@ -344,13 +454,73 @@ function apply(snap: Snapshot, extras: Record<string, number>, path: string, val
     }
     return;
   }
+  if (path === "special.joined_force") {
+    extras.joined_force_pct = value;
+    return;
+  }
+  if (path === "special.attack_aggression") {
+    // full uptime: Attack Aggression is granted by casting any Attack Skill
+    const [as, addl] = nums(line.text);
+    snap.rotation.attack_speed_inc_pct += as;
+    snap.additional.misc = ((1 + snap.additional.misc / 100) * (1 + addl / 100) - 1) * 100;
+    return;
+  }
+  if (path === "special.keep_it_up") {
+    // 4s buff refreshed on crit (77%+ chance, 0.5s interval) -> full uptime,
+    // including its own -25% crit rating drawback; nums() would grab the "4s" first
+    const m = /\+(\d+(?:\.\d+)?)% additional damage and -(\d+(?:\.\d+)?)% Critical Strike Rating/.exec(line.text)!;
+    snap.additional.misc = ((1 + snap.additional.misc / 100) * (1 + parseFloat(m[1]) / 100) - 1) * 100;
+    extras.rating_inc_pct = (extras.rating_inc_pct ?? 0) - parseFloat(m[2]);
+    return;
+  }
   if (path === "base.weapon_attack_speed_set") {
     if (line.slot === "mainHand") snap.base.weapon_attack_speed = value;
     return;
   }
+  // weapon-local lines count from the mainhand only (mechanics.md 'Offhand / dual wield');
+  // off-hand gear-phys is stashed for Joined Force, its rating/AS never participate
+  if (path === "base.gear_phys_pct" || path === "crit.rating_flat"
+      || path === "special.local_crit_rating") {
+    if (line.slot === "offHand") {
+      if (path === "base.gear_phys_pct") {
+        extras.offhand_gear_phys_pct = (extras.offhand_gear_phys_pct ?? 0) + value;
+      } else {
+        extras.offhand_local_ignored = (extras.offhand_local_ignored ?? 0) + 1;
+      }
+      return;
+    }
+    if (path === "base.gear_phys_pct") snap.base.gear_phys_pct += value;
+    else extras[path === "crit.rating_flat" ? "rating_flat" : "rating_inc_pct"] =
+      (extras[path === "crit.rating_flat" ? "rating_flat" : "rating_inc_pct"] ?? 0) + value;
+    return;
+  }
+  if (path === "special.flat_added_phys") {
+    const [lo, hi] = nums(line.text);
+    snap.base.flat_added_min += lo;
+    snap.base.flat_added_max += hi;
+    return;
+  }
+  if (path === "special.combo_per_starter" || path === "special.finisher_charges"
+      || path === "special.combo_enhancement") {
+    const key = path.split(".")[1];
+    extras[key] = (extras[key] ?? 0) + value;
+    return;
+  }
+  if (path === "special.combo_enh_conditional") {
+    // credited in resolveExtras only if the derived point count meets the threshold
+    const [pct, threshold] = nums(line.text);
+    extras[`combo_enh_if_ge_${threshold}`] =
+      (extras[`combo_enh_if_ge_${threshold}`] ?? 0) + pct;
+    return;
+  }
+  if (path === "special.addl_per_combo_crit") {
+    const [pct, per] = nums(line.text);
+    extras.addl_per_combo_point_crit = (extras.addl_per_combo_point_crit ?? 0) + pct / per;
+    return;
+  }
   if (path === "special.cold_infiltration") {
     // mechanics.md#cold-infiltration: 13% additional Cold taken + -10% enemy cold res;
-    // boss Freeze uptime assumed (see RANKINGS caveats)
+    // boss Freeze uptime assumed (mechanics.md#assumptions)
     snap.enemy_taken.cold_infiltration = 13;
     snap.penetration.cold_pct += 10;
     return;
@@ -393,6 +563,31 @@ function apply(snap: Snapshot, extras: Record<string, number>, path: string, val
     const [pct, per] = nums(line.text);
     extras.additional_dmg_per_fervor_rating =
       (extras.additional_dmg_per_fervor_rating ?? 0) + pct / per;
+    return;
+  }
+  if (path === "special.fervor_dmg_plain") {
+    const [pct, per] = nums(line.text);
+    extras.additional_dmg_per_fervor_rating_plain =
+      (extras.additional_dmg_per_fervor_rating_plain ?? 0) + pct / per;
+    return;
+  }
+  if (path === "special.has_fervor") {
+    extras.has_fervor = 1;
+    return;
+  }
+  if (path === "special.fixed_fervor_rating") {
+    extras.fervor_rating = Math.max(extras.fervor_rating ?? 0, value);
+    return;
+  }
+  if (path === "special.as_per_life_lost") {
+    const [rate, per] = nums(line.text);
+    snap.rotation.attack_speed_inc_pct += (rate / per) * LIFE_LOST_PCT;
+    return;
+  }
+  if (path === "special.low_life_enemy") {
+    const ev = lowLifeExecEvPct(value);
+    snap.additional.low_life_execute =
+      ((1 + (snap.additional.low_life_execute ?? 0) / 100) * (1 + ev / 100) - 1) * 100;
     return;
   }
   if (path === "base.gear_attack_speed_pct") {
@@ -508,11 +703,21 @@ export function applyOverrides(snap: Snapshot, report: Report, overridesPath = O
   return snap;
 }
 
-/** mechanics.md#crit: base rating x (1 + parsed% + Fervor's native base effect + Fearless aura). */
+/** mechanics.md#crit: base rating x (1 + parsed% + Fervor's native base effect + Fearless aura).
+    Fervor's contribution needs a "Have Fervor" source (Dawn Break boots) — without one it is 0. */
 export function critChance(d: Record<string, number>): number {
-  const fervor = FERVOR_RATING * FERVOR_CRIT_RATING_PER_POINT * (1 + d.fervor_effect_pct / 100);
+  const fervor = d.has_fervor
+    ? (d.fervor_rating || FERVOR_RATING) * FERVOR_CRIT_RATING_PER_POINT
+      * (1 + d.fervor_effect_pct / 100)
+    : 0;
   const increased = (d.rating_inc_pct + fervor + PRECISE_FEARLESS_RATING_PCT) / 100;
   return d.rating_flat * (1 + increased) / 100;
+}
+
+/** mechanics.md 'Low Life enemies': the buff is live only for the last 35% of boss HP,
+    so its DPS-equivalent is the harmonic mean over HP share, not the headline %. */
+export function lowLifeExecEvPct(pct: number): number {
+  return (1 / (1 - LOW_LIFE_ENEMY_HP + LOW_LIFE_ENEMY_HP / (1 + pct / 100)) - 1) * 100;
 }
 
 /** mechanics.md#warcry: Shockwave %/enemy x enemies x Effect x additional Effect. */
@@ -533,15 +738,21 @@ function prismPct(sup: any): number {
 
 /* mechanics.md#supports: closed-form per-gem values, keyed by support GUID.
    lvl = gem level + Support Skill Levels; level tables cited in mechanics.md. */
-const SUPPORT_GEMS: Record<string, [string, (s: Snapshot, sup: any, lvl: number) => number]> = {
+const SUPPORT_GEMS: Record<string, [string, (s: Snapshot, sup: any, lvl: number, extras: Record<string, number>) => number]> = {
   // Activation Medium: Still Attack grants Lv(20-30) Willpower; per-stack value is level-flat
   "adac0b98-ac92-5ebf-8bda-c7ccd47f8f4b": ["Still Attack -> Willpower",
     s => s.additional.willpower = WILLPOWER_PCT],
   "d9d16cba-b18f-58bf-bd94-88b1cb14a53c": ["Willpower",
     s => s.additional.willpower = WILLPOWER_PCT],
-  // amp 5.5 (Lv1) -> 15.5 (Lv21) -> 21.5 (Lv41); its +1 Combo Point lives in rotation.combo_points
-  "4fc73492-c05c-5f7e-bd34-40db624901b1": ["Recuperation amp",
-    (s, _sup, lvl) => s.rotation.finisher_amp_pct += lvl <= 21 ? 5.5 + (lvl - 1) * 0.5 : 15.5 + (lvl - 21) * 0.3],
+  // grants Combo Damage Enhancement (5.5 Lv1 -> 15.5 Lv21 -> 21.5 Lv41), which is the
+  // summed-pool stat, NOT per-point amp; its +1 point/starter feeds mechanics.md#combo-economy
+  "4fc73492-c05c-5f7e-bd34-40db624901b1": ["Recuperation",
+    (_s, _sup, lvl, extras) => {
+      extras.combo_per_starter = (extras.combo_per_starter ?? 0) + 1;
+      const enh = lvl <= 21 ? 5.5 + (lvl - 1) * 0.5 : 15.5 + (lvl - 21) * 0.3;
+      extras.combo_enhancement = (extras.combo_enhancement ?? 0) + enh;
+      return enh;
+    }],
   // 26 (Lv1) + 0.5/level, multiplies crit hits only
   "dcb47367-34df-5e86-a9df-0b5d5f130998": ["Critical Strike Damage Increase",
     (s, _sup, lvl) => s.crit.additional_on_crit_pct = (s.crit.additional_on_crit_pct ?? 0) + 26 + (lvl - 1) * 0.5],
@@ -585,7 +796,7 @@ export function applySupports(snap: Snapshot, lo: any, extras: Record<string, nu
         continue;
       }
       const [name, fn] = entry;
-      const v = fn(snap, sup, (sup.level ?? 20) + supportLevels);
+      const v = fn(snap, sup, (sup.level ?? 20) + supportLevels, extras);
       report.manual.push({ path: `support.${name}`, value: pyG(v), mode: "derived",
                            source: "mechanics.md#supports" });
     }
@@ -646,6 +857,53 @@ export function resolveExtras(snap: Snapshot, report: Report): Snapshot {
                          value: `${pyG(snap.rotation.mark_taken_pct)}% from ${MARK_TAKEN_PCT}% Mark x +${pyG(markEffect)}% Mark effect`,
                          source: "mechanics.md#mark" });
   }
+  // mechanics.md#combo-economy: each starter grants 1 point + "gained from Combo
+  // Starters" stats; every finisher consumes the same full pool
+  const perStarter = 1 + pop("combo_per_starter");
+  snap.rotation.combo_points = snap.rotation.starters_per_cycle * perStarter;
+  snap.rotation.finishers_per_cycle = 1 + pop("finisher_charges");
+  report.manual.push({ path: "rotation.combo_points", mode: "derived",
+                       value: `${snap.rotation.starters_per_cycle}x${pyG(perStarter)} points, `
+                            + `${snap.rotation.finishers_per_cycle} finisher(s)/cycle`,
+                       source: "mechanics.md#combo-economy" });
+  let comboEnh = pop("combo_enhancement");
+  for (const key of Object.keys(extras).filter(k => k.startsWith("combo_enh_if_ge_"))) {
+    const threshold = parseFloat(key.slice("combo_enh_if_ge_".length));
+    const pct = pop(key);
+    if (snap.rotation.combo_points >= threshold) comboEnh += pct;
+    report.manual.push({ path: "additional.combo_enhancement", mode: "derived",
+                         value: `${snap.rotation.combo_points >= threshold ? "+" + pyG(pct) : "0 (condition failed)"} from "consumes at least ${pyG(threshold)}" lines`,
+                         source: "mechanics.md#combo-economy" });
+  }
+  if (comboEnh) {
+    // Enhancement affixes sum, then act as ONE additional multiplier on Combo Skills
+    snap.additional.combo_enhancement = comboEnh;
+    report.manual.push({ path: "additional.combo_enhancement", mode: "derived",
+                         value: `+${pyG(comboEnh)}% (summed pool, one multiplier)`,
+                         source: "mechanics.md#combo-economy" });
+  }
+  const perPointCrit = pop("addl_per_combo_point_crit");
+  if (perPointCrit) {
+    const pts = perPointCrit * snap.rotation.combo_points;
+    snap.crit.additional_on_crit_pct = (snap.crit.additional_on_crit_pct ?? 0) + pts;
+    report.manual.push({ path: "crit.additional_on_crit_pct", mode: "derived",
+                         value: `+${pyG(pts)}% from ${pyG(perPointCrit)}%/point x ${snap.rotation.combo_points} points`,
+                         source: "mechanics.md 'Bodhi Girdle'" });
+  }
+  // mechanics.md#joined-force: 60% of the off-hand weapon's own final damage joins
+  // the main hand; without the notable the stashed off-hand locals are dropped
+  const jf = pop("joined_force_pct");
+  const ohPhys = (pop("offhand_phys_min") + pop("offhand_phys_max")) / 2
+               * (1 + pop("offhand_gear_phys_pct") / 100);
+  const ohColdMin = pop("offhand_cold_min"), ohColdMax = pop("offhand_cold_max");
+  if (jf && (ohPhys || ohColdMax)) {
+    snap.base.joined_weapon_phys = (snap.base.joined_weapon_phys ?? 0) + ohPhys * jf / 100;
+    snap.base.weapon_flat_cold_min += ohColdMin * jf / 100;
+    snap.base.weapon_flat_cold_max += ohColdMax * jf / 100;
+    report.manual.push({ path: "base.joined_weapon_phys", mode: "derived",
+                         value: `${pyG(jf)}% of off-hand ${pyG(ohPhys)} phys + ${pyG((ohColdMin + ohColdMax) / 2)} cold`,
+                         source: "mechanics.md#joined-force" });
+  }
   const gemLevels = pop("attack_skill_level") + pop("active_skill_level");
   if (gemLevels) {
     const pts = skillLevelAdditionalPct(gemLevels);
@@ -660,6 +918,8 @@ export function resolveExtras(snap: Snapshot, report: Report): Snapshot {
     rating_flat: pop("rating_flat"),
     rating_inc_pct: pop("rating_inc_pct"),
     fervor_effect_pct: extras.fervor_effect_pct ?? 0,
+    fervor_rating: pop("fervor_rating") || FERVOR_RATING,
+    has_fervor: pop("has_fervor"),
     warcry_min_enemies: pop("warcry_min_enemies"),
     warcry_effect_pct: pop("warcry_effect_pct"),
     warcry_additional_effect_pct: pop("warcry_additional_effect_pct"),
@@ -681,17 +941,24 @@ export function resolveExtras(snap: Snapshot, report: Report): Snapshot {
   }
 
   const perRating = pop("additional_dmg_per_fervor_rating");
-  if (perRating) {
-    // mechanics.md#fervor: Fervor's base effects scale with Fervor Effect, and this
-    // build sustains the 100 cap. fervor_effect_pct is peeked, not popped — the
-    // crit.chance_pct override consumes it too.
-    const pts = FERVOR_RATING * perRating * (1 + (extras.fervor_effect_pct ?? 0) / 100);
+  const perRatingPlain = pop("additional_dmg_per_fervor_rating_plain");
+  // the catalog rescales the fervor layer from these rates when scoring Fervor Effect mods
+  d.fervor_dmg_per_rating = perRating;
+  d.fervor_dmg_per_rating_plain = perRatingPlain;
+  if ((perRating || perRatingPlain) && d.has_fervor) {
+    // mechanics.md#fervor: Fervor BASE effects (Ghost Slaughter wording) scale with
+    // Fervor Effect; plain per-rating wording (Dawn Break) does not. Both need a
+    // "Have Fervor" source; rating is fixed at 130 by the Unmatched Valor prism.
+    // fervor_effect_pct is peeked, not popped — the crit.chance_pct override consumes it too.
+    const pts = d.fervor_rating * (perRating * (1 + (extras.fervor_effect_pct ?? 0) / 100)
+                                   + perRatingPlain);
     snap.additional.fervor = pts;
     report.manual.push({ path: "additional.fervor", mode: "derived",
-                         value: `+${pyG(pts)}% from ${pyG(perRating)}%/rating x ${FERVOR_RATING} rating`,
+                         value: `+${pyG(pts)}% from ${pyG(perRating)}%/rating scaled `
+                              + `+ ${pyG(perRatingPlain)}%/rating plain x ${pyG(d.fervor_rating)} rating`,
                          source: "mechanics.md#fervor" });
   }
   delete extras.fervor_effect_pct;   // read above by BOTH crit chance and fervor damage
-  delete extras.offhand_flat_ignored;
+  delete extras.offhand_local_ignored;
   return snap;
 }

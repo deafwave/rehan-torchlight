@@ -3,7 +3,8 @@
    packages/page/src/data/catalog.json for the Vite page (main.ts imports it). */
 import fs from "node:fs";
 import { fromRoot, pyRound, deepCopy, asciiJson } from "./py.js";
-import { _load, classify, critChance, warcryLayer, skillLevelAdditionalPct, NUM } from "./buildParser.js";
+import { _load, classify, critChance, warcryLayer, skillLevelAdditionalPct, NUM,
+         FERVOR_RATING, LIFE_LOST_PCT, lowLifeExecEvPct } from "./buildParser.js";
 import { cycleDps, type Snapshot } from "./damageModel.js";
 
 export const SNAPSHOT = fromRoot("data/snapshot.json");
@@ -12,26 +13,27 @@ export const OUT = fromRoot("packages/page/src/data/catalog.json");
 const RANGE = /\((\d+(?:\.\d+)?)\s*[–\-~]\s*(\d+(?:\.\d+)?)\)/g;
 // Tags Spectral Slash (Attack/Melee/Area/Physical->Cold/Combo) can never benefit from
 const NOT_THIS_BUILD = new RegExp(
-  "\\b(Focus Skill|Spell (?:Damage|Skill)|Cast Speed(?! and)|Minion|Spirit Magus|Sentry|Totem|Summon"
+  "\\b(Focus Skill|Spell (?:Damage|Skill)|Minion|Spirit Magus|Sentry|Totem|Summon"
   + "|Wilt|Erosion|Fire Damage|Lightning Damage|Ignite|Shock Effect|Trauma|Blur"
   + "|Projectile|Bow|Crossbow|Pistol|Cannon|Staff|Wand|Two-Handed|Dual Wield"
   + "|Channeled|Curse Skill|Mobility Skill|Persistent Damage|Damage over Time|DoT|Elixir"
-  + "|Min Physical Damage|Erosion Resistance"
+  + "|Min Physical Damage|Erosion Resistance|Tenacity Blessing"
   + "|empty (?:Active|Passive) Skill [Ss]lot"
   + "|Spell Burst"
   + "|(?<![Nn]ot )at Low Life)", "i");   // no Spell Burst skill in build; "recently moved" stays valid (move -> stand -> attack cycle)   // build has 5 actives + 4 auras: no empty slots;
+  // no Cast Speed entry: "Attack (Speed) and Cast Speed" hybrids must reach the
+  // Attack Speed patterns; cast-only lines never classify, so they stay null anyway
   // ES is the defensive layer, so "at Low Life" gains are unsustainable ("not at Low Life" stays valid)
   // no trailing \b: plurals ("Projectiles", "Minions") must match too
 
 // Whole-mod dealbreakers: any line matching kills the entire mod for this build
 const MOD_DISQUALIFIERS = /(?:Max )?Energy Shield is fixed at 0/i;   // defense is ES-based
 const CONDITIONAL =
-  /\b(when|after|if |for every|per stack|recently|while|next|on \w+ing|devoured|chance to)\b/i;
+  /\b(when|after|if |for every|for each|per stack|recently|while|next|on \w+ing|devoured|chance to)\b/i;
 
 // Crit and warcry are NOT mirrored here: they are derived by build_parser from the
 // snapshot's own _derived inputs, so a new source in the build reaches this catalog too.
 // The rest still mirror manual_overrides.json (_sources).
-const FERVOR_RATING = 100;
 // [aura value, own multiplier]: Fearless, Cruelty (x2 from +100% ADDITIONAL aura
 // effect self-ramp at 40 stacks, full on Elites/bosses), Domain Expansion; all
 // share the +25% increased aura effect
@@ -40,6 +42,7 @@ const AURAS: [number, number][] = [[30, 1], [22, 2], [33, 1]];
 const FROSTBITE_CAP = 157;
 const FROSTBITE_EFFECT = 0.20;
 const GEM_LEVELS = 9;               // net +levels already on the gem (snapshot additional.skill_levels = 90)
+const CHAR_LEVEL = 100;             // endgame; "for every N levels" mods scale off this
 
 /** Best-roll text: '#' placeholders take each range's maximum from rawText. */
 export function maxRollText(template: string, rawText: string): string {
@@ -83,7 +86,29 @@ export function applyStat(s: Snapshot, path: string, value: number): boolean {
   } else if (path === "extras.strength") {
     compound(s.additional, "strength", value * 0.5);
   } else if (path === "extras.fervor_effect_pct") {
-    s.crit.chance_pct = critChance({ ...d, fervor_effect_pct: d.fervor_effect_pct + value });
+    // Fervor Effect pays twice: the crit-rating base effect AND the Ghost Slaughter
+    // damage layer (mechanics.md#fervor) — the plain Dawn Break term stays unscaled
+    const eff = d.fervor_effect_pct + value;
+    s.crit.chance_pct = critChance({ ...d, fervor_effect_pct: eff });
+    if (d.fervor_dmg_per_rating || d.fervor_dmg_per_rating_plain) {
+      s.additional.fervor = (d.fervor_rating || FERVOR_RATING)
+        * ((d.fervor_dmg_per_rating ?? 0) * (1 + eff / 100)
+           + (d.fervor_dmg_per_rating_plain ?? 0));
+    }
+  } else if (path === "special.attack_aggression") {
+    // symmetric wording "+X% Attack Speed and +X% additional Attack Damage";
+    // Aggression comes from casting any Attack Skill -> full uptime (mechanics.md 'Hidden Mastery')
+    s.rotation.attack_speed_inc_pct += value;
+    compound(s.additional, "misc", value);
+  } else if (path === "special.as_per_life_lost") {
+    s.rotation.attack_speed_inc_pct += value * LIFE_LOST_PCT;   // slate wording is per 1% lost
+  } else if (path === "special.low_life_enemy") {
+    compound(s.additional, "low_life_execute", lowLifeExecEvPct(value));
+  } else if (path === "extras.low_life_inc_pct") {
+    // increased-bucket bonus gated below 35% boss HP: its multiplier is diluted by
+    // the pool it joins, then HP-weighted (mechanics.md 'Low Life enemies')
+    const inc = Object.values(s.increased).reduce((a, v) => a + v, 0);
+    compound(s.additional, "low_life_execute", lowLifeExecEvPct(value * 100 / (100 + inc)));
   } else if (path === "extras.frostbite_effect_pct") {
     s.enemy_taken.frostbite = FROSTBITE_CAP * (1 + FROSTBITE_EFFECT + value / 100);
   } else if (path === "extras.max_frostbite_rating") {
@@ -97,7 +122,7 @@ export function applyStat(s: Snapshot, path: string, value: number): boolean {
   } else if (path === "extras.warcry_min_enemies") {
     s.additional.warcry_buffs = warcryLayer({ ...d, warcry_min_enemies: d.warcry_min_enemies + value });
   } else if (path === "extras.crit_dmg_per_fervor_rating") {
-    s.crit.damage_pct += value * FERVOR_RATING;
+    s.crit.damage_pct += value * (d.fervor_rating || FERVOR_RATING);
   } else if (path === "crit.rating_inc_pct") {
     s.crit.chance_pct = critChance({ ...d, rating_inc_pct: d.rating_inc_pct + value });
   } else if (path === "crit.rating_flat") {
@@ -162,7 +187,10 @@ export function buildCatalog(): CatalogRow[] {
   const snapshot: Snapshot = JSON.parse(fs.readFileSync(SNAPSHOT, "utf-8"));
   const clean = deepCopy(snapshot);
   delete clean._extras;
-  const baseDps = cycleDps(clean).dps;
+  const baseCycle = cycleDps(clean);
+  const baseDps = baseCycle.dps;
+  const usesPerSec = (clean.rotation.starters_per_cycle
+    + (clean.rotation.finishers_per_cycle ?? 1)) / baseCycle.cycle_time;
   const groups = new Map<string, { cat: string; name: string; text: string; tier: string; ons: Set<string> }>();
   for (const [cat, name, rawDesc, tier, on] of [...slateMods(), ...memoryMods()]) {
     const desc = (rawDesc ?? "").replace(/(\d) %/g, "$1%").trim();
@@ -179,6 +207,12 @@ export function buildCatalog(): CatalogRow[] {
     const meta = { cat, name, text: desc, tier: g.tier, on: [...g.ons].sort().join(", ") };
     if (MOD_DISQUALIFIERS.test(desc)) {
       rows.push({ ...meta, bucket: "— (kills ES defense)", delta: null, cond: false });
+      continue;
+    }
+    if (/Doubles Max Warcry Skill Effects/i.test(desc)) {
+      // load-bearing but priced in: the snapshot's warcry layer already assumes the
+      // multi-warcry loop this enables (mechanics.md 'Formless'), no separate numeric
+      rows.push({ ...meta, bucket: "enables the assumed warcry loop", delta: null, cond: false });
       continue;
     }
     const nullify = /Critical Strikes do not deal additional damage/i.test(desc);
@@ -205,6 +239,26 @@ export function buildCatalog(): CatalogRow[] {
         continue;
       }
       if (NOT_THIS_BUILD.test(line)) continue;
+      const nextUse = new RegExp(
+        `\\+${NUM}% additional Attack Damage for the next Main Skill every ${NUM} s`, "i").exec(line);
+      if (nextUse) {
+        // one buffed use armed per interval, consumed by whichever skill use comes next —
+        // alignment with the finisher is not controllable, so every use has the same
+        // probability: EV = value x min(1, armed-per-sec / uses-per-sec) (mechanics.md#next-skill-ev)
+        procEvs.push(parseFloat(nextUse[1])
+          * Math.min(1, 1 / parseFloat(nextUse[2]) / usesPerSec));
+        continue;
+      }
+      const perLevel = new RegExp(
+        `^${NUM}% additional (?:\\w+ )?Damage for every ${NUM} level`, "i").exec(line);
+      if (perLevel) {
+        // level-scaled lines pay out floor(level/N) times at endgame (mechanics.md#per-level)
+        if (applyStat(s, "additional.misc",
+            parseFloat(perLevel[1]) * Math.floor(CHAR_LEVEL / parseFloat(perLevel[2])))) {
+          applied.push("additional.misc (per level)");
+        }
+        continue;
+      }
       const proc = new RegExp(`${NUM}% chance [^\\n]*?to deal \\+${NUM}% additional`, "i").exec(line);
       if (proc) {
         // per-cast proc: expected value, not the headline number (50%x16 = +8);
@@ -221,7 +275,10 @@ export function buildCatalog(): CatalogRow[] {
         }
       }
       if (path === null || path === "ignore" || path === "special.cold_infiltration") continue;
-      if (applyStat(s, path, value ?? 0)) applied.push(path);
+      // per-stack lines ("+X% ... for every/each Y. Stacks up to N time(s)") pay full
+      // stacks: the ◑ full-uptime-ceiling convention, same as other CONDITIONAL rows
+      const stacks = /for (?:every|each)[^\n]*?Stacks up to (\d+) time/i.exec(line);
+      if (applyStat(s, path, (value ?? 0) * (stacks ? parseInt(stacks[1], 10) : 1))) applied.push(path);
     }
     if (procEvs.length) {
       usedEv = true;

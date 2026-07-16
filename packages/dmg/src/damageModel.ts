@@ -43,11 +43,14 @@ export const DEFAULT_SNAPSHOT: Snapshot = {
   rotation: { starters_per_cycle: 2, starter_weapon_pct: 100,
               attack_speed_inc_pct: 0, finisher_additional_as_pct: -40,
               extra_clones: 0, clone_falloff: 0.7, mark_taken_pct: 30,
-              combo_points: 4, finisher_amp_pct: 30 },
+              combo_points: 4, finisher_amp_pct: 30, finishers_per_cycle: 1 },
 };
 
 function weaponPhysAvg(b: Record<string, number>): number {
-  return (b.weapon_phys_min + b.weapon_phys_max) / 2 * (1 + b.gear_phys_pct / 100);
+  // joined_weapon_phys (Joined Force) is the off-hand's FINAL damage — its own
+  // gear-phys already applied, so the main hand's must not scale it again
+  return (b.weapon_phys_min + b.weapon_phys_max) / 2 * (1 + b.gear_phys_pct / 100)
+       + (b.joined_weapon_phys ?? 0);
 }
 
 function weaponAvg(b: Record<string, number>): number {
@@ -100,8 +103,12 @@ export function cycleDps(s: Snapshot) {
   // one clone per combo point consumed + Legion extras; shotgun falloff applies
   // to every hit after the finisher's own, AFTER all other calculations
   const clones = r.combo_points + (r.extra_clones ?? 0);
-  const finisher = expectedHit(s) * amp * (1 + clones * r.clone_falloff) * mark;
-  const cycleTime = r.starters_per_cycle / aps + 1 / finisherAps;
+  const oneFinisher = expectedHit(s) * amp * (1 + clones * r.clone_falloff);
+  // extra finisher charges recast at the SAME consumed points (mechanics.md#combo-economy);
+  // the first finisher consumes Mark, so the extras hit unmarked
+  const nFin = r.finishers_per_cycle ?? 1;
+  const finisher = oneFinisher * mark + (nFin - 1) * oneFinisher;
+  const cycleTime = r.starters_per_cycle / aps + nFin / finisherAps;
   return { dps: (starter + finisher) / cycleTime,
            finisher_damage: finisher, starter_damage: starter,
            cycle_time: cycleTime };

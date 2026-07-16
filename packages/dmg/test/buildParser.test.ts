@@ -25,10 +25,11 @@ describe("spectral slash support gems", () => {
     // (1.06^6 - 1) * 100; stationary bossing = full uptime
     expect(snap.additional.willpower).toBeCloseTo(41.85, 1);
   });
-  test("recuperation amp read at L30: gem 20 + 10 support levels", () => {
+  test("recuperation grants Enhancement at L30 (gem 20 + 10 support levels), not amp", () => {
     const [snap] = parseBuild(BUILD);
-    // amp table 5.5 (Lv1) -> 15.5 (Lv21) -> 21.5 (Lv41); L30 = 18.2; skill 30 + gear 203 parsed
-    expect(snap.rotation.finisher_amp_pct).toBeCloseTo(251.2, 1);
+    // amp = skill 30 + Animitta 80 only; Recuperation's 18.2 sits in the Enhancement pool
+    expect(snap.rotation.finisher_amp_pct).toBeCloseTo(110, 1);
+    expect(snap.additional.combo_enhancement).toBeCloseTo(18.2 + 62 + 61, 1);
   });
   test("prisms score both lines: base 20% and the actual roll", () => {
     const [snap] = parseBuild(BUILD);
@@ -77,7 +78,7 @@ describe("mark, blessings, fixate", () => {
     expect(classify("+8% Elemental and Erosion Resistance Penetration"))
       .toEqual(["penetration.cold_pct", 8.0]);
     expect(classify("-20% Attack Critical Strike Rating for this gear"))
-      .toEqual(["crit.rating_inc_pct", -20.0]);
+      .toEqual(["special.local_crit_rating", -20.0]);
     expect(classify("Triggers Lv. 20 Timid Curse upon inflicting damage. Cooldown: 0.2 s")[0])
       .toBe("special.timid_curse");
     expect(classify("Adds 20% of Physical Damage to Cold Damage"))
@@ -107,6 +108,25 @@ describe("mark, blessings, fixate", () => {
     const [snap] = parseBuild(BUILD);
     expect(snap.enemy_taken.timid_curse).toBeCloseTo(39, 6);   // mechanics.md#timid, Lv.20
     expect(snap.base.gain_phys_as_cold_pct).toBeCloseTo(20, 6);
+  });
+
+  test("vorax boots parse: Have Fervor gates the engine, boots lines land", () => {
+    const [snap] = parseBuild(BUILD);
+    // ghost slaughter 1%/rating x 100 x (1 + 208% effect) scaled, PLUS Dawn Break's
+    // plain-worded 1%/2 rating x 100 unscaled (no 'base effect' wording -> no Effect scaling)
+    expect(snap.additional.fervor).toBeGreaterThan(350);
+    expect(snap._derived!.has_fervor).toBe(1);
+  });
+
+  test("without the vorax boots, Fervor-fed damage and crit turn off", () => {
+    const build = JSON.parse(fs.readFileSync(BUILD, "utf-8"));
+    const lo = build.loadouts.loadouts.find((l: any) => l.id === build.loadouts.currentLoadoutId);
+    lo.vorax.inventory = [];
+    const [snap] = parseBuild(build);
+    const [full] = parseBuild(BUILD);
+    expect(snap.additional.fervor ?? 0).toBe(0);
+    expect(snap.crit.chance_pct, "no Fervor -> the +800.8% rating pile is gone")
+      .toBeLessThan(full.crit.chance_pct - 20);
   });
 
   test("fixate override: crit damage taken 10, additional 1.1", () => {
@@ -216,14 +236,51 @@ describe("fervor damage base effect", () => {
   });
 
   test("scales with rating and effect", () => {
-    // corroded Ghost Slaughter: 1%/rating x 100 sustained rating x (1 + 2.08 Fervor Effect)
+    // corroded Ghost Slaughter: 1%/rating x 130 rating x (1 + 2.08 Fervor Effect) = 400.4,
+    // plus Dawn Break's plain 1%/2 rating x 130 = 65 (unscaled — not a base effect)
     const [snap] = parseBuild(BUILD);                    // more_1: Ghost Slaughter equipped
-    expect(Math.abs(snap.additional.fervor - 308)).toBeLessThanOrEqual(1);
+    expect(Math.abs(snap.additional.fervor - 465.4)).toBeLessThanOrEqual(1);
   });
 
   test("no fervor damage source means no fervor bucket", () => {
     const [snap] = parseBuild(BUILD, 0);                 // no Ghost Slaughter
     expect(snap.additional.fervor).toBe(0);
+  });
+});
+
+describe("life-lost attack speed, fixed fervor rating, low-life execute", () => {
+  test("AS-per-life-lost is a rate, not a flat +0.3% attack speed", () => {
+    expect(classify("0.3% Attack Speed for every 1% of Life lost")[0])
+      .toBe("special.as_per_life_lost");
+  });
+
+  // the Warrior slate carrying both lines is placed in loadout 5's grid only
+  test("loadout 5: the talent credits 0.3 x 60% sustained deficit = +18 AS", () => {
+    const build = JSON.parse(fs.readFileSync(BUILD, "utf-8"));
+    const [withTalent] = parseBuild(build, 5);
+    for (const s of build.loadouts.loadouts[5].divinity.inventory) {
+      for (const a of s.affixes ?? []) {
+        if (/Life lost/.test(a.description ?? "")) a.description = "";
+      }
+    }
+    const [without] = parseBuild(build, 5);
+    expect(withTalent.rotation.attack_speed_inc_pct - without.rotation.attack_speed_inc_pct)
+      .toBeCloseTo(18, 1);
+  });
+
+  test("Unmatched Valor prism core-talent override parses: fixed 130 Fervor Rating", () => {
+    expect(classify("Has 130 point(s) of fixed Fervor Rating")[0])
+      .toBe("special.fixed_fervor_rating");
+    const [snap] = parseBuild(BUILD);
+    expect(snap._derived!.fervor_rating).toBe(130);
+  });
+
+  test("low-life-enemy execute scores at HP-weighted EV, not the headline 25%", () => {
+    expect(classify("+25% additional damage against Low Life enemies")[0])
+      .toBe("special.low_life_enemy");
+    const [snap] = parseBuild(BUILD, 5);
+    // active only below the 35% Low Life line: 1/(0.65 + 0.35/1.25) - 1 = +7.53%
+    expect(snap.additional.low_life_execute).toBeCloseTo(7.53, 1);
   });
 });
 
@@ -259,13 +316,150 @@ describe("pactspirits", () => {
 
 describe("derived layers", () => {
   test("crit chance is derived from parsed rating", () => {
-    // pactspirit crit-rating nodes must actually land, not vanish into a constant
+    // pactspirit crit-rating nodes must actually land, not vanish into a constant;
+    // 500 x (1 + 5.71 parsed - 0.25 Keep It Up + 8.008 fervor at 130 + 1.00 fearless) / 100
     const [snap] = parseBuild(BUILD);
-    expect(Math.abs(snap.crit.chance_pct - 69.35)).toBeLessThanOrEqual(0.1);
+    expect(Math.abs(snap.crit.chance_pct - 77.34)).toBeLessThanOrEqual(0.1);
   });
 
   test("warcry layer is derived from parsed effect", () => {
     const [snap] = parseBuild(BUILD);
     expect(Math.abs(snap.additional.warcry_buffs - 109.7)).toBeLessThanOrEqual(0.5);
+  });
+});
+
+describe("off-hand local lines (mechanics.md 'Offhand / dual wield')", () => {
+  test("dual-wield loadout 0: off-hand implicits and local mods do not credit the build", () => {
+    const [snap] = parseBuild(BUILD, 0);
+    expect(snap._derived!.rating_flat, "one 500-rating weapon implicit, not two").toBe(500);
+    const mainhandPhys = extractLines(BUILD, 0)
+      .filter(l => l.slot === "mainHand" && /Gear Physical Damage/.test(l.text))
+      .reduce((a, l) => a + parseFloat(l.text), 0);
+    expect(snap.base.gear_phys_pct, "off-hand +49% Gear Phys must not land").toBe(mainhandPhys);
+  });
+
+  test("'for this gear' crit rating classifies locally, generic rating stays global", () => {
+    expect(classify("+61% Attack Critical Strike Rating for this gear")[0]).toBe("special.local_crit_rating");
+    expect(classify("+108% Critical Strike Rating")[0]).toBe("crit.rating_inc_pct");
+  });
+});
+
+describe("combo economy (mechanics.md#combo-economy)", () => {
+  test("reference derives 8 points: 2 starters x (1 base + recuperation + 2 ring lines)", () => {
+    const [snap] = parseBuild(BUILD, 6);
+    expect(snap.rotation.combo_points).toBe(8);
+  });
+
+  test("Animitta's +1 Finisher charge means TWO finishers, each consuming the full pool", () => {
+    const [ref] = parseBuild(BUILD, 6);      // Heart of Animitta equipped
+    expect(ref.rotation.finishers_per_cycle).toBe(2);
+    const [lo0] = parseBuild(BUILD, 0);      // Vortex Heart — no charge
+    expect(lo0.rotation.finishers_per_cycle).toBe(1);
+    expect(lo0.rotation.combo_points, "points don't cap: rings + recuperation still count").toBe(8);
+  });
+
+  test("combo lines classify", () => {
+    expect(classify("+1 Combo Points gained from Combo Starters")[0]).toBe("special.combo_per_starter");
+    expect(classify("+1 Combo Finisher charge(s)")[0]).toBe("special.finisher_charges");
+    expect(classify("+62% Combo Damage Enhancement if the Combo Finisher cast recently consumes at least 8 Combo Point(s)")[0])
+      .toBe("special.combo_enh_conditional");
+    expect(classify("+50% Combo Damage Enhancement")[0]).toBe("special.combo_enhancement");
+    expect(classify("+80% Combo Finisher Amplification")[0]).toBe("rotation.finisher_amp_pct");
+    expect(classify("Gains 2 Combo Point(s) on Critical Strike from Combo Finishers. Each skill cast can only trigger this effect once.")[0])
+      .toBe("ignore");
+  });
+
+  test("enhancement is a summed pool, one multiplier — not per-point amp", () => {
+    const [ref] = parseBuild(BUILD, 6);
+    // amp = skill 30 + Animitta Amplification only; Enhancement (recuperation +
+    // weapon/shield conditionals at 8 points) sums into additional.combo_enhancement
+    expect(ref.rotation.finisher_amp_pct).toBeLessThan(150);
+    expect(ref.additional.combo_enhancement).toBeGreaterThan(100);
+  });
+});
+
+describe("legendary belt & necklace lines", () => {
+  test("multi-line gear affixes split: ring's '+1 Combo Points' line is parsed, not swallowed", () => {
+    const lines = extractLines(BUILD, 6).filter(l => l.slot === "ring1");
+    expect(lines.some(l => l.text === "+1 Combo Points gained from Combo Starters")).toBe(true);
+  });
+
+  test("negative paired additional roll classifies with its sign", () => {
+    const [path, value] = classify("-5% additional damage");
+    expect(path).toBe("additional.misc");
+    expect(value).toBe(-5);
+  });
+
+  test("positive standalone additional (Eternal Reign map pricing) classifies too", () => {
+    const [path, value] = classify("+100% additional damage");
+    expect(path).toBe("additional.misc");
+    expect(value).toBe(100);
+  });
+
+  test("bodhi girdle: +4%/combo-point on crit is crit-gated and scaled by points", () => {
+    expect(classify("+4% additional damage for every 1 Combo Point consumed on Critical Strike from Combo Finishers")[0])
+      .toBe("special.addl_per_combo_crit");
+    const [snap] = parseBuild(BUILD, 0);   // loadout 0 wears Bodhi, 7 points
+    expect(snap.crit.additional_on_crit_pct ?? 0).toBeGreaterThanOrEqual(4 * snap.rotation.combo_points);
+  });
+
+  test("vortex heart flat-to-attacks lands in base.flat_added", () => {
+    expect(classify("Adds 46 - 56 Physical Damage to Attacks and Spells")[0]).toBe("special.flat_added_phys");
+    const [snap] = parseBuild(BUILD, 0);   // loadout 0 wears Vortex Heart
+    expect(snap.base.flat_added_min).toBeGreaterThanOrEqual(46);
+    expect(snap.base.flat_added_max).toBeGreaterThanOrEqual(56);
+  });
+
+  test("belt blend is extracted: Light Hunter's +1 Attack Skill Level", () => {
+    const lines = extractLines(BUILD, 2).filter(l => l.slot === "belt");
+    expect(lines.some(l => l.text === "+1 to Attack Skill Level")).toBe(true);
+  });
+
+  test("new ignores: ES charge lines, minion halves, Grace's non-crit Focus trigger", () => {
+    for (const t of [
+      "Energy Shield charge cannot be interrupted",
+      "-6% additional Energy Shield Charge Speed for every 5% Energy Shield currently owned",
+      "+77% Minion Damage",
+      "Minions' Area Skills deal up to 32% additional damage to enemies at the center",
+      "+20% chance for Non-Critical Strikes to grant 1 stack of Focus Blessing",
+    ]) expect(classify(t)[0], t).toBe("ignore");
+  });
+});
+
+describe("joined force (mechanics.md#joined-force)", () => {
+  test("notables are extracted from selectedNotable* fields", () => {
+    const lines = extractLines(BUILD, 0);
+    expect(lines.some(l => /Off-Hand Weapon to the final damage/.test(l.text))).toBe(true);
+  });
+
+  test("60% of the off-hand weapon's own final damage rides into the main hand", () => {
+    const [snap] = parseBuild(BUILD, 0);
+    // off-hand: 154-154 implicit + 22-26 flat phys, x1.49 own gear phys, x0.6
+    expect(snap.base.joined_weapon_phys).toBeCloseTo((154 + 24) * 1.49 * 0.6, 0);
+    // off-hand 49-65 cold flat x0.6 joins the cold pool on top of the mainhand's
+    const mh = extractLines(BUILD, 0).filter(l =>
+      l.slot === "mainHand" && /Cold Damage to the gear/.test(l.text));
+    expect(mh.length).toBeGreaterThan(0);
+    expect(snap.base.weapon_flat_cold_min).toBeGreaterThan(49 * 0.6 - 1);
+  });
+
+  test("without the notable (sword+shield reference) nothing joins", () => {
+    const [snap] = parseBuild(BUILD, 6);
+    expect(snap.base.joined_weapon_phys ?? 0).toBe(0);
+  });
+});
+
+describe("belt blend resolution", () => {
+  test("named blends expand to their aromatic modifier lines via the gear cache", () => {
+    const texts = extractLines(BUILD, 6).filter(l => l.slot === "belt").map(l => l.text);
+    expect(texts).not.toContain("Caged Fury");
+    expect(texts.some(t => /moved less than 12m.*\+35% additional damage/.test(t))).toBe(true);
+  });
+
+  test("still mode credits, moved mode ignores", () => {
+    expect(classify("If you have moved less than 12m in the last 1s, +35% additional damage and +35% Physique")[0])
+      .toBe("additional.misc");
+    expect(classify("If you have moved 12m or more in the last 1s, +15% additional Attack Speed and +15% Movement Speed")[0])
+      .toBe("ignore");
   });
 });

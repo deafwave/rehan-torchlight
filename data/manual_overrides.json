@@ -1,16 +1,15 @@
 {
  "set": {
-  "rotation.combo_points": 8,
   "rotation.starter_weapon_pct": 406,
   "additional.precise_auras": 201.04,
-  "additional.ice_bond": 33,
+  "additional.ice_bond": 28,
   "enemy_taken.frostbite": 188
  },
  "add": {
-  "crit.damage_pct": 150,
+  "crit.damage_pct": 195,
   "crit.crit_dmg_taken_pct": 10,
-  "rotation.attack_speed_inc_pct": 10,
-  "additional.misc": 107.2,
+  "rotation.attack_speed_inc_pct": 50,
+  "additional.misc": 258.85,
   "enemy_taken.fixate": 1.1
  },
  "_consumes": [
@@ -20,15 +19,14 @@
   "aura_effect_pct"
  ],
  "_sources": {
-  "crit.damage_pct": "mechanics.md#crit: 0.5% crit damage per Fervor Rating x3 sources (ranger node + 2 slates) x 100 rating = +150",
-  "rotation.combo_points": "weapon+shield mods condition 'consumes at least 8 Combo Point(s)'; Heart of Animitta +1 charge; Recuperation +1 point per starter",
+  "crit.damage_pct": "mechanics.md#crit: 0.5% crit damage per Fervor Rating x3 sources (ranger node + 2 slates) x 130 fixed rating (Unmatched Valor prism, user-confirmed in-game 2026-07-16) = +195",
   "rotation.starter_weapon_pct": "tlidb Spectral_Slash: main hit 406% weapon attack at L20 (finisher 127% stays in base.skill_weapon_pct); +skill-level scaling unknown, not modeled",
-  "rotation.attack_speed_inc_pct": "mechanics.md#precise-fearless: +8% melee attack speed x 1.25 aura effect",
+  "rotation.attack_speed_inc_pct": "mechanics.md#precise-fearless: +8% melee attack speed x 1.25 aura effect = 10; mechanics.md#rehan-traits: Seething Silhouette +1% AS per 5 Rage, doubled Max-Rage bonuses while Berserk, ~100 max rage => +40",
   "additional.precise_auras": "mechanics.md#precise: Fearless 30x1.25, Cruelty 22x(1.25 + 1.00 self-ramp at 40 stacks, user-confirmed full on Elites incl. bosses 2026-07-15), Domain Expansion 33x1.25; 1.375x1.55x1.4125 = +201.04% (Energy Fortress is defensive)",
   "crit.crit_dmg_taken_pct": "mechanics.md#fixate: Fixate warcry, +10% additional Critical Strike Damage taken (user-provided 2026-07-15), multiplies the crit portion only",
   "enemy_taken.fixate": "mechanics.md#fixate: Fixate warcry, +1.1% additional damage taken (user-provided 2026-07-15)",
-  "additional.ice_bond": "mechanics.md#ice-bond: Euphoria buff +33% additional Cold at L20 vs Frostbitten enemies",
-  "additional.misc": "mechanics.md#rehan-traits: Fury's Onslaught +48% and Rage Infusion +40% (tier 5, full stacks, 100% Berserk uptime), compounded 1.48x1.40 = +107.2%",
+  "additional.ice_bond": "mechanics.md#ice-bond: Euphoria buff +28% additional Cold at L20 vs Frostbitten enemies (patch 2026-07: 33 -> 28)",
+  "additional.misc": "mechanics.md#rehan-traits: Seething Silhouette +44% (Berserk) x Fury's Onslaught +78% (tlidb current; SS12.5 cache had 48) x Rage Infusion +40% (tier 5, full stacks, 100% Berserk uptime), 1.44x1.78x1.40 = +258.85%",
   "enemy_taken.frostbite": "mechanics.md#frostbite: +1% additional Cold taken per rating; cap 120 base + 25 ring + 12 memory = 157, x1.20 slate Frostbite Effect = 188; sustained boss hits assumed to cap it",
   "_derived": "crit.chance_pct and additional.warcry_buffs are no longer set here: build_parser.resolve_extras derives them from parsed rating/effect so new sources (gear, tree, pactspirits) land. Constants + citations live in build_parser."
  }

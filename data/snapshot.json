@@ -24,17 +24,18 @@
  "additional": {
   "strength": 166,
   "warcry_buffs": 109.67039999999999,
-  "ice_bond": 33,
-  "fervor": 308,
+  "ice_bond": 28,
+  "fervor": 465.40000000000003,
   "sealed_life_mana": 0,
   "blessings": 35.00000000000001,
   "precise_auras": 201.04,
-  "misc": 342.04115795840016,
+  "misc": 1171.748675323837,
   "steamroll": 42.99999999999999,
   "pure_heart": 27.628156250000035,
   "willpower": 41.851911225600034,
   "detonation_prism": 56.00000000000001,
   "legion_prism": 15.199999999999992,
+  "combo_enhancement": 141.2,
   "skill_levels": 90
  },
  "enemy_taken": {
@@ -45,8 +46,8 @@
   "fixate": 1.0999999999999899
  },
  "crit": {
-  "chance_pct": 69.35,
-  "damage_pct": 588.5,
+  "chance_pct": 77.34,
+  "damage_pct": 711.5,
   "additional_on_crit_pct": 40.5,
   "crit_dmg_taken_pct": 10
  },
@@ -61,20 +62,25 @@
  "rotation": {
   "starters_per_cycle": 2,
   "starter_weapon_pct": 406,
-  "attack_speed_inc_pct": 210,
+  "attack_speed_inc_pct": 270,
   "finisher_additional_as_pct": -40,
   "extra_clones": 1,
   "clone_falloff": 0.7,
   "mark_taken_pct": 36,
   "combo_points": 8,
-  "finisher_amp_pct": 251.2
+  "finisher_amp_pct": 110,
+  "finishers_per_cycle": 2
  },
  "_derived": {
   "rating_flat": 500,
-  "rating_inc_pct": 571,
+  "rating_inc_pct": 546,
   "fervor_effect_pct": 208,
+  "fervor_rating": 130,
+  "has_fervor": 1,
   "warcry_min_enemies": 8,
   "warcry_effect_pct": 92,
-  "warcry_additional_effect_pct": 20
+  "warcry_additional_effect_pct": 20,
+  "fervor_dmg_per_rating": 1,
+  "fervor_dmg_per_rating_plain": 0.5
  }
 }

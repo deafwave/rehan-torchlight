@@ -109,6 +109,75 @@ describe("applicability rules", () => {
     }
   });
 
+  test("Tenacity-devour mods unmodeled: build has no Tenacity Blessing source", () => {
+    const dd = rows.filter(r => r.name === "Dying Dragon");
+    expect(dd.length, "Dying Dragon missing from catalog").toBeGreaterThan(0);
+    expect(dd.every(r => r.delta === null)).toBe(true);
+  });
+
+  test("'next Main Skill every 0.5s' buffs one use per interval, not every hit", () => {
+    const m = rows.filter(r => /next Main Skill every 0\.5 s/.test(r.text));
+    expect(m.length, "Momentum missing from catalog").toBeGreaterThan(0);
+    // ~6.2 skill uses/s vs 2 armed buffs/s: 30 x 2/6.2 = ~9.7 EV, not the +30 headline
+    expect(m[0].delta).not.toBeNull();
+    expect(m[0].delta!).toBeGreaterThan(8);
+    expect(m[0].delta!).toBeLessThan(11);
+    expect(m[0].cond).toBe(false);   // EV is not a full-uptime ceiling
+  });
+
+  test("per-level elemental malus scales with character level and hits converted cold", () => {
+    const b = rows.filter(r => r.name === "Brutality" && /for every 3 level/.test(r.text));
+    expect(b.length, "Brutality missing from catalog").toBeGreaterThan(0);
+    // all damage converts to cold, so the elemental malus applies to everything:
+    // 1.30 x (1 - 33/100) = 0.871 -> net negative
+    expect(b[0].delta).not.toBeNull();
+    expect(b[0].delta!).toBeLessThan(0);
+  });
+
+  test("enemy Injury Buffer is a deduction delay, not mitigation: ignored", () => {
+    const blunt = rows.filter(r => r.name === "Blunt" && r.text.includes("Injury Buffer"));
+    expect(blunt.length, "Blunt missing from catalog").toBeGreaterThan(0);
+    expect(blunt[0].delta).toBe(30);   // its +30% phys line alone (mechanics.md Injury Buffer row)
+  });
+
+  test("Hidden Mastery scores its Aggression line at full uptime", () => {
+    const hm = rows.find(r => r.name === "Hidden Mastery");
+    expect(hm, "Hidden Mastery missing from catalog").toBeTruthy();
+    // +15% AS and x1.15 additional: the additional alone is +15
+    expect(hm!.delta).not.toBeNull();
+    expect(hm!.delta!).toBeGreaterThan(15);
+    expect(hm!.cond).toBe(true);
+  });
+
+  test("Formless annotated as the warcry-loop enabler, not left unmodeled", () => {
+    const f = rows.find(r => r.name === "Formless");
+    expect(f, "Formless missing from catalog").toBeTruthy();
+    expect(f!.delta).toBeNull();
+    expect(f!.bucket).toMatch(/warcry/i);
+  });
+
+  test("'Attack Speed and Cast Speed' survives the cast-only filter; per-stack lines pay full stacks", () => {
+    // 7%/3m x 3 stacks = +21% attack speed; move->stand->attack keeps movement 'recent'
+    const t = rows.find(r => r.name === "Third time's a charm");
+    expect(t, "Third time's a charm missing from catalog").toBeTruthy();
+    expect(t!.delta).not.toBeNull();
+    expect(t!.cond).toBe(true);
+    const plain = rows.find(r => r.text === "+6% Attack and Cast Speed");
+    expect(plain, "plain hybrid-speed mod missing").toBeTruthy();
+    expect(plain!.delta).not.toBeNull();
+    // "for each time you have Regained ... Stacks up to 8": a full-uptime ceiling, so ◑
+    const regained = rows.find(r => /for each time you have Regained.*Stacks up to 8/.test(r.text));
+    expect(regained, "Regained-stacks mod missing").toBeTruthy();
+    expect(regained!.delta).not.toBeNull();
+    expect(regained!.cond).toBe(true);
+  });
+
+  test("pure Cast Speed mods still score nothing", () => {
+    const pure = rows.find(r => r.text === "+6% Cast Speed");
+    expect(pure, "pure cast-speed mod missing").toBeTruthy();
+    expect(pure!.delta).toBeNull();
+  });
+
   test("memory base stats excluded", () => {
     expect(rows.filter(r => r.cat === "memory baseStats")).toEqual([]);
   });
@@ -136,6 +205,14 @@ describe("applicability rules", () => {
     const lowlife = rows.filter(r => /(?<!not )at Low Life/.test(r.text) && r.delta !== null);
     expect(lowlife.filter(r => r.bucket.includes("additional")
                             && !r.text.includes("not at Low Life"))).toEqual([]);
+  });
+
+  test("increased 'damage against Low Life enemies' is HP-gated, not full uptime", () => {
+    const r = rows.find(r => r.text === "+50% damage against Low Life enemies")!;
+    expect(r.bucket).not.toBe("increased.global");
+    // +50 joins the increased pool only below 35% boss HP: harmonic EV over HP share
+    expect(r.delta!).toBeGreaterThan(0);
+    expect(r.delta!).toBeLessThan(4);
   });
 
   test("'not at Low Life' still modeled", () => {
