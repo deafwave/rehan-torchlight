@@ -175,6 +175,8 @@ const PHASES: Phase[] = [
       detail: () => skillBarHtml("skill-setup", "Full precise auras", "active") },
     { id:"auras-early", src:"skill", title:"All 4 Auras (non-precise)",
       detail: () => skillBarHtml("auras-early", "150b", "passive", { stripPrecise: true }) },
+    { id:"pactspirits", src:"pact", title:"Pactspirits",
+      note:"Red Umbrella + Azure Gunslinger (nodes 4–6: crit). Fog Scorpion or Knight of Pale Blue in the third slot." },
     { id:"mh82", src:"gear", chip: rungChip("mainHand", "i82"),
       title:"i82 mainhand — Unforgotten Long Blade (speed/crit)",
       detail: craftDetail("mh82", "mainHand", "i82") },
@@ -194,8 +196,6 @@ const PHASES: Phase[] = [
     { id:"slate-quickcheck", src:"slate", title:"Slate quick-checks",
       note:"3–4× slates",
       detail: foldout("best legendary-medium fillers — skill-level lines stack", fillers.map(catRow).join("")) },
-    { id:"pactspirits", src:"pact", title:"Pactspirits",
-      note:"Red Umbrella + Azure Gunslinger (nodes 4–6: crit). Fog Scorpion or Knight of Pale Blue in the third slot." },
   ]},
 
   { id:"swap90", cost:"~200m", gate:"Lv 90+", title:"Auras + Pedigree", steps:[
@@ -629,18 +629,25 @@ const stepCard = (s: Step, remind = false) => {
     + `</div>`;
 };
 
+/* fully-complete phases collapse to their title; header click peeks back in (session-only) */
+const peekDone = new Set<string>();
+
 const phaseCard = (p: Phase) => {
   const n = p.steps.filter(s => done[s.id]).length;
+  const complete = n === p.steps.length;
+  const collapsed = complete && !peekDone.has(p.id);
   const ordered = p.steps.filter(s => s.seq), free = p.steps.filter(s => !s.seq);
   const reminds = (p.remind ?? []).map(id => stepCard(STEP[id], true)).join("");
-  return `<article class="bundle lphase" id="phase-${escAttr(p.id)}" data-phase="${escAttr(p.id)}">`
-    + `<div class="bundle-head"><span class="l-gate">${esc(p.gate)}${p.cost ? ` · ${esc(p.cost)}` : ""}</span>`
+  return `<article class="bundle lphase${complete ? " complete" : ""}" id="phase-${escAttr(p.id)}" data-phase="${escAttr(p.id)}">`
+    + `<div class="bundle-head"${complete ? ` title="${collapsed ? "show" : "hide"} the completed steps"` : ""}>`
+    + `<span class="l-gate">${esc(p.gate)}${p.cost ? ` · ${esc(p.cost)}` : ""}</span>`
     + `<h3>${esc(p.title)}</h3>`
-    + `<span class="l-count">${n}/${p.steps.length}</span></div>`
-    + (p.note ? `<p class="l-phase-note">${p.note}</p>` : "")
-    + (reminds ? `<div class="l-ordered l-reminds">${reminds}</div>` : "")
-    + (ordered.length ? `<div class="l-ordered">${ordered.map(s => stepCard(s)).join("")}</div>` : "")
-    + (free.length ? `<div class="l-parallel">${free.map(s => stepCard(s)).join("")}</div>` : "")
+    + `<span class="l-count">${complete ? "✓" : `${n}/${p.steps.length}`}</span></div>`
+    + (collapsed ? "" :
+      (p.note ? `<p class="l-phase-note">${p.note}</p>` : "")
+      + (reminds ? `<div class="l-ordered l-reminds">${reminds}</div>` : "")
+      + (ordered.length ? `<div class="l-ordered">${ordered.map(s => stepCard(s)).join("")}</div>` : "")
+      + (free.length ? `<div class="l-parallel">${free.map(s => stepCard(s)).join("")}</div>` : ""))
     + `</article>`;
 };
 
@@ -743,9 +750,16 @@ export function renderLinear(main: HTMLElement, aside: HTMLElement, nav?: HTMLEl
     }, true);
     el.addEventListener("click", e => {
       const b = (e.target as HTMLElement).closest<HTMLElement>(".tree-btn");
-      if (!b) return;
-      const v = b.dataset.treeStage!;
-      openTalents(v === "cur" ? undefined : +v);
+      if (b) {
+        const v = b.dataset.treeStage!;
+        openTalents(v === "cur" ? undefined : +v);
+        return;
+      }
+      const head = (e.target as HTMLElement).closest<HTMLElement>(".lphase.complete > .bundle-head");
+      if (!head) return;
+      const id = head.parentElement!.dataset.phase!;
+      if (peekDone.has(id)) peekDone.delete(id); else peekDone.add(id);
+      render();
     });
   }
   window.addEventListener("scroll", onScroll, { passive: true });
