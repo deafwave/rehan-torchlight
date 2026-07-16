@@ -252,14 +252,6 @@ const PHASES: Phase[] = [
       note:"+12% additional Attack Damage when holding a One-Handed Weapon. "
         + "Socket on any non-core talent — it overrides that node." },
     { id:"lv93", src:"talent", title:"Lv 93 talent tree" },
-    { id:"kismets", src:"pact", title:"Kismet layout",
-      detail: itemsDetail("kismets", [
-        { name:"2× Peerless", note:"Dual pair — never move" },
-        { name:"Tiger's Chain", note:"never move" },
-        { name:"Ascetic" },
-        { name:"1× Medium Crit Rating" },
-        { name:"9× Micro Crit Rating" },
-      ]) },
   ]},
 
   { id:"slates", gate:"Slates", title:"Slate priority — buy in this order", steps:[
@@ -335,6 +327,14 @@ const PHASES: Phase[] = [
     { id:"ring-combo", src:"gear", chip: rungChip("ring2", "priceless combo"),
       title:"Priceless combo ring",
       detail: craftDetail("ring-combo", "ring2", "priceless combo") },
+    { id:"kismets", src:"pact", title:"Kismet layout",
+      detail: itemsDetail("kismets", [
+        { name:"2× Peerless", note:"Dual pair — never move" },
+        { name:"Tiger's Chain", note:"never move" },
+        { name:"Ascetic" },
+        { name:"1× Medium Crit Rating" },
+        { name:"9× Micro Crit Rating" },
+      ]) },
   ]},
 
   { id:"pre-fervor", gate:"Before Fervor", title:"Late power spikes", steps:[
