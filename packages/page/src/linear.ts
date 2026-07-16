@@ -327,14 +327,6 @@ const PHASES: Phase[] = [
     { id:"ring-combo", src:"gear", chip: rungChip("ring2", "priceless combo"),
       title:"Priceless combo ring",
       detail: craftDetail("ring-combo", "ring2", "priceless combo") },
-    { id:"kismets", src:"pact", title:"Kismet layout",
-      detail: itemsDetail("kismets", [
-        { name:"2× Peerless", note:"Dual pair — never move" },
-        { name:"Tiger's Chain", note:"never move" },
-        { name:"Ascetic" },
-        { name:"1× Medium Crit Rating" },
-        { name:"9× Micro Crit Rating" },
-      ]) },
   ]},
 
   { id:"pre-fervor", gate:"Before Fervor", title:"Late power spikes", steps:[
@@ -348,6 +340,14 @@ const PHASES: Phase[] = [
     { id:"memory-leg", title:"Hero Memory legendary",
       note:"REVIVED: +% Attack Speed for every main-attack skill cast (stacks to 6).",
       detail: memoryDetail("memory-leg") },
+    { id:"kismets", src:"pact", title:"Kismet layout",
+      detail: itemsDetail("kismets", [
+        { name:"2× Peerless", note:"Dual pair — never move" },
+        { name:"Tiger's Chain", note:"never move" },
+        { name:"Ascetic" },
+        { name:"1× Medium Crit Rating" },
+        { name:"9× Micro Crit Rating" },
+      ]) },
   ]},
 
   { id:"fervor", gate:"All or nothing", title:"The Fervor engine — ONE purchase",
