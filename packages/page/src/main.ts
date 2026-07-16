@@ -2,66 +2,12 @@ import "./style.css";
 import ladderData from "./data/ladder.json";
 import catalogData from "./data/catalog.json";
 import prismData from "./data/prisms.json";
+import { esc, escAttr, gainChip, dChip, SRC, srcChip, modRows,
+  type LadderRow, type CatalogRow, type Rung } from "./ui";
 
 /* ---------- data written by dmg progression + catalog CLIs ---------- */
-interface Rework { label: string }
-interface ModRow {
-  text: string; pool: string | null; cost: number | null;
-  gain: number; per: number | null; vs: string | null;
-}
-interface Rung {
-  label: string; name: string; rarity: string | null;
-  dps: number | null; gain: number | null; gainTop: number | null;
-  gainNote: string | null;
-  rangeNote: string | null; rangeLabel: string | null;
-  linear: boolean; note: string | null; rework: Rework | null;
-  mods: ModRow[] | null;
-}
-interface LadderRow { slot: string; rungs: Rung[] }
-interface CatalogRow {
-  cat: string; tier: string; name: string; text: string; on: string;
-  bucket: string; delta: number | null; cond: boolean;
-}
 const LADDER = ladderData as LadderRow[];
 const CATALOG = catalogData as CatalogRow[];
-
-const esc = (t: unknown) => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;");
-const escAttr = (t: string) => esc(t).replace(/"/g, "&quot;");
-const gainCls = (g: number) => g >= 25 ? "d-hot" : g > 0 ? "d-mid" : g < 0 ? "d-neg" : "d-none";
-/* "+20 → +84.5%" = the rung's rangeNote, e.g. entry roll → fully crafted */
-const gainChip = (r: {gain: number | null; gainTop: number | null; gainNote?: string | null; rangeNote?: string | null}, cls = ""): string => {
-  if (r.gain === null) return "";
-  const f = (g: number) => (g >= 0 ? "+" : "−") + Math.abs(g).toFixed(1);
-  const top = r.gainTop !== null && r.gainTop !== r.gain;
-  return `<span class="${cls} ${gainCls(r.gainTop ?? r.gain)}"`
-    + (top && r.rangeNote ? ` title="${escAttr(r.rangeNote)}"` : "")
-    + `>${top ? `${f(r.gain)} → ${f(r.gainTop!)}` : f(r.gain)}%${r.gainNote ? ` (${esc(r.gainNote)})` : ""}</span>`;
-};
-
-/* src = where a purchase comes from (little tag) */
-const SRC = {
-  gear:    {label:"gear",    color:"#c9a86a"},
-  skill:   {label:"skill",   color:"#d7e2ec"},
-  support: {label:"support", color:"#8fb8c9"},
-  prism:   {label:"prism",   color:"#7fd8e8"},
-  talent:  {label:"talent",  color:"#9d85dd"},
-  slate:   {label:"slate",   color:"#cfc3a8"},
-  pact:    {label:"pactspirit", color:"#79c8a6"},
-};
-
-/* ---------- render: the progression tree ---------- */
-const POOL_COLOR: Record<string, string> = { basic:"#7c8ea0", advanced:"#7fd8e8", ultimate:"#c9a86a" };
-/* rows arrive pre-sorted by ΔDPS-per-ember (`per`); the number itself stays hidden */
-const modRows = (mods: ModRow[], summary: string) =>
-  `<details class="rung-mods"><summary>${esc(summary)}</summary>`
-  + mods.map(m => {
-      const col = m.pool ? POOL_COLOR[m.pool] : "#54677a";
-      return `<div class="mod-row">`
-        + `<span class="src-chip" style="background:${col}22;color:${col}">${m.pool ? `${m.pool} ×${m.cost}` : "unpooled"}</span>`
-        + `<span class="mod-text">${esc(m.text).replace(/\n/g," · ")}`
-        + `<span class="mod-vs">vs ${m.vs ? esc(m.vs).replace(/\n/g," · ") : "an empty slot (bottom tier)"}</span></span>`
-        + `<span class="delta-chip ${m.gain > 0 ? gainCls(m.gain) : "d-none"}">+${m.gain.toFixed(1)}%</span></div>`;
-    }).join("") + `</details>`;
 
 {
   const STAGES = ["start", "i86", "priceless", "mirror-worthy"];
@@ -98,16 +44,8 @@ const modRows = (mods: ModRow[], summary: string) =>
     }).join("");
 }
 
-/* enabler = load-bearing but already assumed in the snapshot, so no marginal number */
-const dChip = (d: number | null, cond = false) =>
-  (d === null ? `<span class="delta-chip d-none">enabler</span>`
-    : `<span class="delta-chip ${d >= 8 ? "d-hot" : d >= 3 ? "d-mid" : "d-low"}">+${d.toFixed(2)}%</span>`)
-  + (cond ? ` <span class="cond-mark" title="conditional — value is a full-uptime ceiling">◑</span>` : "");
-
 /* ---------- slate + prism progression: the gear tree's visual language ---------- */
 interface TNode { lbl: string; chip?: string; name?: string; note?: string; src?: keyof typeof SRC }
-const srcChip = (s: keyof typeof SRC) =>
-  `<span class="src-chip" style="background:${SRC[s].color}22;color:${SRC[s].color}">${SRC[s].label}</span>`;
 const miniTree = (headers: string[], rows: { label: string; nodes: (TNode | null)[] }[]) =>
   `<div class="tree static cols-3">`
   + `<div class="tree-row tree-head"><span></span>${headers.map(h => `<span>${h}</span>`).join("")}</div>`
