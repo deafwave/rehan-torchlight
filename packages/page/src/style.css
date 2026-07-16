@@ -278,11 +278,18 @@ footer{margin-top:80px;color:var(--faint);font-size:12px;font-family:"IBM Plex M
 .sub-item.done .sub-check span{
   text-decoration:line-through;text-decoration-color:rgba(124,142,160,.7);color:var(--faint);
 }
-/* hero-memory craft: Fixed/Random checklists under the Craft fold */
+/* hero-memory craft: Fixed/Random priority lists under the Craft fold (not checkboxes) */
 .mem-body{margin:6px 0 0 0;display:flex;flex-direction:column;gap:8px}
 .mem-shared{margin-top:2px}
 .mem-row{display:grid;grid-template-columns:52px 1fr;gap:8px;align-items:start}
-.mem-row .sublist{margin:0}
+.mem-prio{
+  margin:0;padding:0 0 0 1.35em;
+  display:flex;flex-direction:column;gap:1px;
+  font-size:12px;color:var(--muted);line-height:1.45;
+}
+.mem-prio li::marker{
+  font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--faint);
+}
 .mem-lbl{
   font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.06em;
   text-transform:uppercase;color:#c9a86a;padding-top:3px;

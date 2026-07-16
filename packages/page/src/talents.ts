@@ -51,12 +51,15 @@ export function initTalents(stages: TreeStage[], done: () => Record<string, true
   getDone = done;
 }
 
-/* the furthest stage whose trigger step is checked — checkbox-driven, order-free */
+/* first stage whose trigger is still unchecked — completes advance `now` to the next.
+   Stages with no trigger never block. All complete → final stage. */
 export function currentStageIdx(): number {
   const done = getDone();
-  let cur = 0;
-  STAGES.forEach((s, i) => { if (s.trigger && done[s.trigger]) cur = Math.max(cur, i); });
-  return cur;
+  for (let i = 0; i < STAGES.length; i++) {
+    const t = STAGES[i].trigger;
+    if (t && !done[t]) return i;
+  }
+  return Math.max(0, STAGES.length - 1);
 }
 
 export function openTalents(idx?: number): void {

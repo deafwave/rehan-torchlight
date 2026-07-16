@@ -122,9 +122,19 @@ const MEM_FIXED_DPS = memRank("Fixed Affix");
 const MEM_RANDOM = memRank("Random Affix");
 if (!MEM_FIXED_DPS.length || !MEM_RANDOM.length)
   throw new Error("linear: memory Fixed/Random priorities empty — regenerate catalog");
-/* Catalog only ranks DPS Fixed lines; ES build also shops these defense Fixed rolls. */
+/* Catalog ΔDPS ranks Fixed "% damage" first (+52% → +7.4%), but on this crit/AS
+   build it's never better shopping than Crit Damage / Crit Rating / Attack Speed —
+   demote it under those three. Catalog only ranks DPS Fixed lines; ES build also
+   shops the defense Fixed rolls below. */
+const FIXED_ABOVE_PCT = new Set(["Crit Damage", "Crit Rating", "Attack Speed"]);
+const memFixedDpsShop = (() => {
+  if (!MEM_FIXED_DPS.includes("% damage")) return MEM_FIXED_DPS;
+  const rest = MEM_FIXED_DPS.filter(x => x !== "% damage");
+  const lastPin = Math.max(-1, ...rest.map((x, i) => (FIXED_ABOVE_PCT.has(x) ? i : -1)));
+  return [...rest.slice(0, lastPin + 1), "% damage", ...rest.slice(lastPin + 1)];
+})();
 const MEM_FIXED = [
-  ...MEM_FIXED_DPS,
+  ...memFixedDpsShop,
   "Max Energy Shield",
   "Max Resistance",
   "Curse effect against you",
@@ -241,6 +251,7 @@ const PHASES: Phase[] = [
       title:"Ethereal Prism: Haze",
       note:"+12% additional Attack Damage when holding a One-Handed Weapon. "
         + "Socket on any non-core talent — it overrides that node." },
+    { id:"lv93", src:"talent", title:"Lv 93 talent tree" },
     { id:"kismets", src:"pact", title:"Kismet layout",
       detail: itemsDetail("kismets", [
         { name:"2× Peerless", note:"Dual pair — never move" },
@@ -382,7 +393,7 @@ const PHASES: Phase[] = [
 ];
 
 /* ---------- talent tree stages — hand-authored per-slot composition.
-   Stage shown in the modal = furthest stage whose trigger step is checked.
+   `now` = first stage whose trigger step is still unchecked (complete → advances).
    A stage picks each of the 4 tree slots from its own loadout so a diff lands
    on the step that causes it: the planner's "420b" bundles the warcry tree
    swaps AND the Prophet frostbite respec, but the respec is paid for by the
@@ -390,8 +401,8 @@ const PHASES: Phase[] = [
    stripped: Haze stays on bladerunner until the 420b tree swap orphans it). */
 const all = (loadout: string) => Array.from({ length: 4 }, () => ({ loadout }));
 const TREE_STAGES: TreeStage[] = [
-  { label:"Lv 86 — swap",    trigger:null,           slots: all("Full precise auras") },
-  { label:"150b — Legion",   trigger:"legion",       slots: all("150b") },
+  { label:"Lv 86 — swap",    trigger:"tree",         slots: all("Full precise auras") },
+  { label:"Lv 93",           trigger:"lv93",         slots: all("150b") },
   { label:"Frostbite slate", trigger:"sl-frostbite",
     slots: [{loadout:"150b"}, {loadout:"150b"}, {loadout:"420b", prism:false}, {loadout:"150b"}] },
   { label:"420b — warcries", trigger:"warcries",     slots: all("420b") },
@@ -400,7 +411,7 @@ const TREE_STAGES: TreeStage[] = [
   { label:"Prophet → Ronin", trigger:"sl-convert",   slots: all("more_1") },
 ];
 /* steps that respec the tree get a jump-straight-to-that-stage button */
-const TREE_BTN: Record<string, number> = { tree: 0, "end-crit": 6 };
+const TREE_BTN: Record<string, number> = { "end-crit": 6 };
 TREE_STAGES.forEach((s, i) => { if (s.trigger) TREE_BTN[s.trigger] = i; });
 const treeBtn = (stage: number | "cur", label: string) =>
   `<button type="button" class="tree-btn" data-tree-stage="${stage}">✦ ${esc(label)}</button>`;
@@ -471,8 +482,8 @@ function itemsHtml(stepId: string, items: SubItem[]): string {
     + `</ul>`;
 }
 
-/** Hero memories: Origin → Progress → Discipline (order = priority). Fixed/Random craft
-    lines are shared across all three and sit behind a Craft fold (same pattern as gear). */
+/** Hero memories: Origin → Progress → Discipline (boxes are checkable). Fixed/Random
+    craft lines are a shared priority list behind a Craft fold — not checkboxes. */
 function memoryBoxesHtml(stepId: string): string {
   const boxes: { key: string; type: string; base: string }[] = [
     { key:"Origin", type:"Origin", base:"Strength" },
@@ -481,8 +492,9 @@ function memoryBoxesHtml(stepId: string): string {
   ];
   const prioBlock = (label: string, items: string[]) =>
     `<div class="mem-row"><span class="mem-lbl">${esc(label)}</span>`
-    + linesHtml(`${stepId}|${label}`, items)
-    + `</div>`;
+    + `<ol class="mem-prio">`
+    + items.map(line => `<li>${esc(line)}</li>`).join("")
+    + `</ol></div>`;
   const open = craftOpen.has(stepId) ? " open" : "";
   return `<ul class="skill-bar">`
     + boxes.map(b => {
