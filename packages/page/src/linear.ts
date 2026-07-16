@@ -2,9 +2,11 @@
    Phase/step ORDER is personal judgment (hand-authored); every ΔDPS number is
    looked up from the generated JSON via the strict helpers below, never typed.
    Notes are WHAT-only: commands, not explanations (spec revision 2026-07-16).
-   Skill-buy steps mirror data/Rehan.json's loadout sequence: swap link has no
-   Legion — Legion (Noble)/Motionless land at "150b", Detonation (Magnificent) +
-   warcries at "420b", Still Attack at "5t Eternity", CSDI + Defensive Buffer at more_1. */
+   Skill-buy steps derive gem checklists from skillbars.json loadout diffs so every
+   support type is listed (activation mediums, nobles, magnificents, plain supports):
+   Legion + Motionless/Root at "150b", Detonation then warcries at "420b",
+   Thunder Spike at "Inverse-Warcry", Still Attack at "5t Eternity",
+   CSDI + Defensive Buffer at more_1. */
 import ladderData from "./data/ladder.json";
 import catalogData from "./data/catalog.json";
 import prismData from "./data/prisms.json";
@@ -49,10 +51,15 @@ const itemsDetail = (stepId: string, items: SubItem[]) =>
   () => itemsHtml(stepId, items);
 const memoryDetail = (stepId: string) =>
   () => memoryBoxesHtml(stepId);
-/* plain skill rows in a fold-out — no checkboxes (checking re-renders and snaps <details> shut) */
-const barFold = (loadout: string) =>
-  () => `<details class="bar-fold"><summary>the full bar after this buy</summary>`
-    + skillBarView(loadout, "active") + `</details>`;
+/** Gems to buy between two loadouts — new skills and new supports (activation mediums included). */
+const skillBuysDetail = (
+  stepId: string, from: string, to: string,
+  which: "active" | "passive" = "active",
+  filter?: GemFilter,
+) =>
+  () => skillBuysHtml(stepId, from, to, which, filter)
+    + `<details class="bar-fold"><summary>the full bar after this buy</summary>`
+    + skillBarView(to, which) + `</details>`;
 
 const rungChip = (slot: string, prefix: string) => gainChip(rung(slot, prefix), "delta-chip");
 const slateChip = (prefix: string) => { const c = slateRow(prefix); return dChip(c.delta, c.cond); };
@@ -136,6 +143,8 @@ interface Step {
 interface Phase {
   id: string; cost?: string; gate: string; title: string; note?: string;
   steps: Step[];
+  /** slate-step ids echoed here as timeline reminders — same checkbox state, not counted */
+  remind?: string[];
 }
 
 /* the standing watchlist — rendered as the sticky right rail */
@@ -160,10 +169,12 @@ const WATCHLIST: Phase = {
 ]};
 
 const PHASES: Phase[] = [
-  { id:"swap", cost:"~200b", gate:"Lv 86+", title:"Swap to Spectral Slash", steps:[
+  { id:"swap", cost:"~100m", gate:"Lv 86+", title:"Swap to Spectral Slash", steps:[
     { id:"tree", src:"talent", title:"Copy the talent tree" },
     { id:"skill-setup", src:"skill", title:"Copy this bar",
       detail: () => skillBarHtml("skill-setup", "Full precise auras", "active") },
+    { id:"auras-early", src:"skill", title:"All 4 Auras (non-precise)",
+      detail: () => skillBarHtml("auras-early", "150b", "passive", { stripPrecise: true }) },
     { id:"mh82", src:"gear", chip: rungChip("mainHand", "i82"),
       title:"i82 mainhand — Unforgotten Long Blade (speed/crit)",
       detail: craftDetail("mh82", "mainHand", "i82") },
@@ -179,8 +190,6 @@ const PHASES: Phase[] = [
     { id:"cheap-uniques", src:"gear", title:"Buy cheap uniques",
       detail: itemsDetail("cheap-uniques", [
         { name:"Grace Boots", note:"keep until the Focus Blessing slate" },
-        { name:"Bodhi Girdle" },
-        { name:"Vortex Heart", note:"~130 FE" },
       ]) },
     { id:"slate-quickcheck", src:"slate", title:"Slate quick-checks",
       note:"3–4× slates",
@@ -189,11 +198,16 @@ const PHASES: Phase[] = [
       note:"Red Umbrella + Azure Gunslinger (nodes 4–6: crit). Fog Scorpion or Knight of Pale Blue in the third slot." },
   ]},
 
-  { id:"swap90", gate:"Lv 90+", title:"Auras + Pedigree", steps:[
-    { id:"auras", src:"skill", title:"All 4 Precise Auras",
-      detail: () => skillBarHtml("auras", "Full precise auras", "passive") },
+  { id:"swap90", cost:"~200m", gate:"Lv 90+", title:"Auras + Pedigree", steps:[
+    { id:"auras", src:"skill", title:"All 4 Precise Auras (Precise Frigid Domain)",
+      detail: () => skillBarHtml("auras", "150b", "passive") },
     { id:"pedigree", src:"slate", title:"Snipe a Pedigree of Gods (~30 FE)",
       detail: foldout("core talents to look for", cores.map(catRow).join("")) },
+    { id:"cheap-uniques-90", src:"gear", title:"Buy cheap uniques",
+      detail: itemsDetail("cheap-uniques-90", [
+        { name:"Bodhi Girdle" },
+        { name:"Vortex Heart", note:"~130 FE" },
+      ]) },
   ]},
 
   { id:"core86", cost:"1B", gate:"8-0", title:"i86 core — in this order",
@@ -249,7 +263,8 @@ const PHASES: Phase[] = [
   ]},
 
   { id:"armor86", cost:"10B–20B", gate:"Traveler 8", title:"i86 armor pieces",
-    note:"Traveler 8 done → check 8-1/8-2 priceless pieces every session.", steps:[
+    note:"Traveler 8 done → check 8-1/8-2 priceless pieces every session.",
+    remind:["sl-blessing"], steps:[
     { id:"boots86", src:"gear", chip: rungChip("boots", "i86"), needs:["sl-blessing"],
       title:"i86 ES boots — Long Night Sorcerer's Boots",
       detail: craftDetail("boots86", "boots", "i86") },
@@ -261,26 +276,29 @@ const PHASES: Phase[] = [
       detail: craftDetail("gloves86", "gloves", "i86") },
   ]},
 
-  { id:"linkbuys", gate:"Skills", title:"Upgrade skills", steps:[
-    { id:"legion", seq:"FIRST", src:"support", title:"Socket Legion (Noble)", needs:["wl-legion"],
-      note:"With an Activation Medium: Motionless — drop Added Physical Damage and Quick Decision. "
-        + "Add Ice Bond on a Root medium (Extended Duration · Mass Effect); drop Fixate.",
-      detail: barFold("150b") },
+  { id:"linkbuys", gate:"Skills", title:"Upgrade skills",
+    remind:["sl-frostbite", "sl-warcry"], steps:[
+    { id:"legion", seq:"FIRST", src:"support", title:"Socket Legion (Noble) + mediums", needs:["wl-legion"],
+      note:"Drop Added Physical Damage and Quick Decision on Slash. Drop Fixate for Ice Bond.",
+      detail: skillBuysDetail("legion", "Full precise auras", "150b") },
     { id:"detonation", seq:"SECOND", src:"support", title:"Buy Spectral Slash: Detonation (Magnificent)",
-      note:"Socket it now; max to L5 later (+20% damage) before Fervor." },
+      note:"Socket it now; max to L5 later (+20% damage) before Fervor.",
+      // filter: only the magnificent gem — the 420b bar also lands warcries (next step)
+      detail: () => skillBuysHtml("detonation", "150b", "420b", "active",
+        n => /Detonation/i.test(n)) },
     { id:"warcries", seq:"THIRD", src:"skill", title:"Swap to warcries",
-      detail: () => itemsHtml("warcries", [
-        { name:"Shockwave Warcry", note:"replaces Bull's Rage",
-          lines:["Activation Medium: Elite", "Extended Duration", "Cooldown Reduction"] },
-        { name:"Resurrection Warcry", note:"replaces Timid",
-          lines:["Activation Medium: Preparation", "Cooldown Reduction", "Extended Duration"] },
-        { name:"Captain Kitty of the Furious Sea",
-          note:"replaces Fog Scorpion / Knight of Pale Blue · level this only" },
-      ]) + `<details class="bar-fold"><summary>the full bar after this buy</summary>`
+      note:"Shockwave replaces Bull's Rage · Resurrection replaces Timid.",
+      detail: () => skillBuysHtml("warcries", "150b", "420b", "active",
+          n => !/Detonation/i.test(n))
+        + itemsHtml("warcries", [
+          { name:"Captain Kitty of the Furious Sea",
+            note:"replaces Fog Scorpion / Knight of Pale Blue · level this only" },
+        ])
+        + `<details class="bar-fold"><summary>the full bar after this buy</summary>`
         + skillBarView("420b", "active") + `</details>` },
     { id:"thunderspike", src:"skill", title:"Buy Thunder Spike: Rumbling Thunder (Noble)",
-      note:"Thunder Spike replaces Spiral Strike — Quick Mobility · Periodic Burst · Precision Strike · Recklessness.",
-      detail: barFold("Inverse-Warcry") },
+      note:"Thunder Spike replaces Spiral Strike.",
+      detail: skillBuysDetail("thunderspike", "420b", "Inverse-Warcry") },
   ]},
 
   { id:"priceless", cost:"200B", gate:"Profound 8", title:"Priceless completes (8-1 + 8-2 open)", steps:[
@@ -332,10 +350,11 @@ const PHASES: Phase[] = [
     { id:"fv-eternity", src:"gear", chip: rungChip("belt", "Eternity"), needs:["wl-eternity"],
       title:"Eternity (from the 5 blueprints)",
       note:"Swap Motionless → Still Attack medium on the link. Precise: Energy Shield once the flat-ES belt is gone.",
-      detail: barFold("5t Eternity") },
+      detail: skillBuysDetail("fv-eternity", "3t", "5t Eternity") },
   ]},
 
-  { id:"endgame", cost:"150B+", gate:"Timemark 8 / Atlas", title:"Endgame layers", steps:[
+  { id:"endgame", cost:"150B+", gate:"Timemark 8 / Atlas", title:"Endgame layers",
+    remind:["sl-convert"], steps:[
     { id:"end-mammoth", src:"pact", title:"2× Unending Fate + 2× Mammoth",
       note:"2× Unending Fate unlock the dual sockets · 2× Mammoth self-casts Lv.20 Resurrection Warcry on hit every 3s (hands-free −60% additional damage taken).",
       detail: itemsDetail("end-mammoth", [
@@ -343,9 +362,9 @@ const PHASES: Phase[] = [
         { name:"2× Mammoth", note:"self-casts Resurrection Warcry" },
       ]) },
     { id:"final-link", src:"support", title:"Finish the link", needs:["end-mammoth"],
-      note:"Buy Critical Strike Damage Increase — replaces Steamroll. "
-        + "Defensive Buffer (Preparation medium · Iron Fortification · Cooldown Reduction) replaces Resurrection Warcry — Mammoth is casting it.",
-      detail: barFold("more_1") },
+      note:"Critical Strike Damage Increase replaces Steamroll. "
+        + "Defensive Buffer replaces Resurrection Warcry — Mammoth is casting it.",
+      detail: skillBuysDetail("final-link", "5t Eternity", "more_1") },
     { id:"end-crit", src:"talent", title:"Crit converters",
       note:"Take the 0.5% Crit Damage-per-rating converters: tree legendary + 2 slate copies." },
     { id:"end-prairie", src:"slate", title:"When Sparks Set the Prairie Ablaze",
@@ -474,12 +493,56 @@ function memoryBoxesHtml(stepId: string): string {
     + `</div></details>`;
 }
 
-/** Interactive skill → support checklist (Copy this bar / Precise Auras). */
-function skillBarHtml(stepId: string, loadout: string, which: "active" | "passive" = "active"): string {
+function getBar(loadout: string): SkillBar {
   const bar = SKILLBARS.find(b => b.loadout === loadout);
   if (!bar) throw new Error(`linear: no skillbar "${loadout}"`);
+  return bar;
+}
+
+/** Keep a gem name in a skill-buy diff. Applied to skill names and support names. */
+type GemFilter = (name: string) => boolean;
+
+/**
+ * New skills and new supports present in `to` but not `from`.
+ * Activation mediums / noble / magnificent supports are first-class — never dropped.
+ * `filter` keeps a gem by skill or support name (default: keep all).
+ */
+function skillBuys(
+  from: string, to: string,
+  which: "active" | "passive" = "active",
+  filter: GemFilter = () => true,
+): { name: string; supports: BarSupport[] }[] {
+  const prev = new Map(getBar(from)[which].map(s => [s.name, new Set(s.supports.map(u => u.name))]));
+  const out: { name: string; supports: BarSupport[] }[] = [];
+  for (const sk of getBar(to)[which]) {
+    const old = prev.get(sk.name);
+    if (!old) {
+      // brand-new skill — list it when the skill name passes, with filtered supports
+      if (!filter(sk.name)) continue;
+      out.push({ name: sk.name, supports: sk.supports.filter(u => filter(u.name)) });
+      continue;
+    }
+    // existing skill — only newly socketed supports (incl. activation mediums)
+    const supports = sk.supports.filter(u => !old.has(u.name) && filter(u.name));
+    if (supports.length) out.push({ name: sk.name, supports });
+  }
+  if (!out.length) throw new Error(`linear: no skill buys ${from} → ${to} (${which})`);
+  return out;
+}
+
+/** Type-tinted support label — mediums / nobles / magnificents stand out in checklists. */
+const supLabel = (u: BarSupport) =>
+  `<span class="sup-name sup-${u.type}">${esc(u.name)}</span>`;
+
+/** Interactive checklist of gems this step buys (derived from loadout skillbars). */
+function skillBuysHtml(
+  stepId: string, from: string, to: string,
+  which: "active" | "passive" = "active",
+  filter?: GemFilter,
+): string {
+  const buys = skillBuys(from, to, which, filter);
   return `<ul class="skill-bar">`
-    + bar[which].map(s => {
+    + buys.map(s => {
       const skillKey = `${stepId}|${s.name}`;
       return `<li class="skill-item${done[skillKey] ? " done" : ""}">`
         + checkLabel(skillKey, `<span>${esc(s.name)}</span>`, "skill-check")
@@ -487,7 +550,36 @@ function skillBarHtml(stepId: string, loadout: string, which: "active" | "passiv
           ? `<ul class="skill-supports">${s.supports.map(u => {
               const supKey = `${skillKey}|${u.name}`;
               return `<li class="support-item${done[supKey] ? " done" : ""}">`
-                + checkLabel(supKey, `<span>${esc(u.name)}</span>`, "support-check")
+                + checkLabel(supKey, supLabel(u), "support-check")
+                + `</li>`;
+            }).join("")}</ul>`
+          : "")
+        + `</li>`;
+    }).join("")
+    + `</ul>`;
+}
+
+/** Interactive skill → support checklist (Copy this bar / Precise Auras).
+ *  `stripPrecise` rewrites "Precise: X" → "X" so the early-game bar is a 1:1 of
+ *  the precise loadout with non-precise skill names (supports unchanged). */
+function skillBarHtml(
+  stepId: string, loadout: string, which: "active" | "passive" = "active",
+  opts: { stripPrecise?: boolean } = {},
+): string {
+  const bar = getBar(loadout);
+  const skillName = (n: string) =>
+    opts.stripPrecise ? n.replace(/^Precise:\s*/, "") : n;
+  return `<ul class="skill-bar">`
+    + bar[which].map(s => {
+      const name = skillName(s.name);
+      const skillKey = `${stepId}|${name}`;
+      return `<li class="skill-item${done[skillKey] ? " done" : ""}">`
+        + checkLabel(skillKey, `<span>${esc(name)}</span>`, "skill-check")
+        + (s.supports.length
+          ? `<ul class="skill-supports">${s.supports.map(u => {
+              const supKey = `${skillKey}|${u.name}`;
+              return `<li class="support-item${done[supKey] ? " done" : ""}">`
+                + checkLabel(supKey, supLabel(u), "support-check")
                 + `</li>`;
             }).join("")}</ul>`
           : "")
@@ -498,8 +590,7 @@ function skillBarHtml(stepId: string, loadout: string, which: "active" | "passiv
 
 /** Read-only skill bar for fold-outs (no checkboxes — avoids re-render closing <details>). */
 function skillBarView(loadout: string, which: "active" | "passive" = "active"): string {
-  const bar = SKILLBARS.find(b => b.loadout === loadout);
-  if (!bar) throw new Error(`linear: no skillbar "${loadout}"`);
+  const bar = getBar(loadout);
   return `<div class="skillbar">` + bar[which].map(sk =>
     `<div class="sb-row">`
       + `<span class="sb-row-head"><span class="sb-skill">${esc(sk.name)}</span></span>`
@@ -510,21 +601,28 @@ function skillBarView(loadout: string, which: "active" | "passive" = "active"): 
 }
 
 const TITLE: Record<string, string> = {};
-for (const p of [WATCHLIST, ...PHASES]) for (const s of p.steps) TITLE[s.id] = s.title;
+const STEP: Record<string, Step> = {};
+for (const p of [WATCHLIST, ...PHASES]) for (const s of p.steps) { TITLE[s.id] = s.title; STEP[s.id] = s; }
 
-for (const p of [WATCHLIST, ...PHASES]) for (const s of p.steps)
-  for (const id of s.needs ?? []) if (!(id in TITLE)) throw new Error(`linear: needs "${id}" on ${s.id} has no step`);
+for (const p of [WATCHLIST, ...PHASES]) {
+  for (const s of p.steps)
+    for (const id of s.needs ?? []) if (!(id in TITLE)) throw new Error(`linear: needs "${id}" on ${s.id} has no step`);
+  for (const id of p.remind ?? []) if (!(id in TITLE)) throw new Error(`linear: remind "${id}" on ${p.id} has no step`);
+}
 
-const stepCard = (s: Step) => {
+const stepCard = (s: Step, remind = false) => {
   const waiting = (s.needs ?? []).filter(id => !done[id]);
   const body = done[s.id] ? ""
     : (s.note ? `<p class="l-note">${s.note}</p>` : "")
       + (waiting.length ? `<p class="l-wait">⚠ waiting on: ${waiting.map(id => esc(TITLE[id])).join(" · ")}</p>` : "")
       + (s.id in TREE_BTN ? `<p class="l-tree">${treeBtn(TREE_BTN[s.id], "view this talent tree")}</p>` : "")
+      + (remind ? `<p class="l-wait">↩ echoed from <a href="#step-${escAttr(s.id)}">Slate priority</a> — same checkbox</p>` : "")
       + (typeof s.detail === "function" ? s.detail() : (s.detail ?? ""));
-  return `<div class="lstep${done[s.id] ? " done" : ""}${s.seq ? " seq" : ""}" id="step-${escAttr(s.id)}">`
+  /* reminder copies drop the DOM id (the canonical card keeps it) but share data-step state */
+  return `<div class="lstep${done[s.id] ? " done" : ""}${s.seq ? " seq" : ""}${remind ? " remind" : ""}"${remind ? "" : ` id="step-${escAttr(s.id)}"`}>`
     + `<label class="lstep-head"><input type="checkbox" data-step="${escAttr(s.id)}"${done[s.id] ? " checked" : ""}>`
-    + (s.seq ? `<span class="lseq">${esc(s.seq)}</span>` : "")
+    + (remind ? `<span class="lseq">SLATE</span>` : "")
+    + (s.seq && !remind ? `<span class="lseq">${esc(s.seq)}</span>` : "")
     + (s.src ? srcChip(s.src) : "")
     + `<span class="l-title">${s.title}</span>${s.chip ?? ""}</label>`
     + body
@@ -534,13 +632,15 @@ const stepCard = (s: Step) => {
 const phaseCard = (p: Phase) => {
   const n = p.steps.filter(s => done[s.id]).length;
   const ordered = p.steps.filter(s => s.seq), free = p.steps.filter(s => !s.seq);
+  const reminds = (p.remind ?? []).map(id => stepCard(STEP[id], true)).join("");
   return `<article class="bundle lphase" id="phase-${escAttr(p.id)}" data-phase="${escAttr(p.id)}">`
     + `<div class="bundle-head"><span class="l-gate">${esc(p.gate)}${p.cost ? ` · ${esc(p.cost)}` : ""}</span>`
     + `<h3>${esc(p.title)}</h3>`
     + `<span class="l-count">${n}/${p.steps.length}</span></div>`
     + (p.note ? `<p class="l-phase-note">${p.note}</p>` : "")
-    + (ordered.length ? `<div class="l-ordered">${ordered.map(stepCard).join("")}</div>` : "")
-    + (free.length ? `<div class="l-parallel">${free.map(stepCard).join("")}</div>` : "")
+    + (reminds ? `<div class="l-ordered l-reminds">${reminds}</div>` : "")
+    + (ordered.length ? `<div class="l-ordered">${ordered.map(s => stepCard(s)).join("")}</div>` : "")
+    + (free.length ? `<div class="l-parallel">${free.map(s => stepCard(s)).join("")}</div>` : "")
     + `</article>`;
 };
 

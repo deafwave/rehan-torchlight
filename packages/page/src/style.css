@@ -215,6 +215,9 @@ footer{margin-top:80px;color:var(--faint);font-size:12px;font-family:"IBM Plex M
 .lseq{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:#c9a86a;min-width:46px}
 .l-note{margin-top:5px;font-size:12px;color:var(--muted);line-height:1.5;padding-left:24px}
 .l-wait{margin-top:5px;font-size:11px;color:#c9a86a;padding-left:24px}
+.l-wait a{color:inherit}
+.lstep.remind{border-style:dashed;background:rgba(16,27,39,.3)}
+.l-reminds{margin-top:12px}
 .lstep .rung-mods,.lstep .fillers,.lstep .craft-fold{margin:7px 0 0 24px}
 /* craft menu: button is the summary; checklist sits under it when open */
 .craft-fold .sublist{margin-left:0;margin-top:8px}
@@ -236,6 +239,10 @@ footer{margin-top:80px;color:var(--faint);font-size:12px;font-family:"IBM Plex M
 }
 .support-check{gap:6px}
 .support-check span{font-size:12px;color:var(--muted);line-height:1.45}
+/* type-tint supports in interactive checklists (mirrors .sb-sup chips) */
+.support-check .sup-activation_medium{color:var(--frost);font-weight:500}
+.support-check .sup-noble_support{color:#c9a86a;font-weight:500}
+.support-check .sup-magnificent_support{color:#b7a5ec;font-weight:500}
 /* craft-order stat lines under a gear step */
 .sublist{
   margin:6px 0 0 24px;padding:0;list-style:none;
