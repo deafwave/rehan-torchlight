@@ -3,8 +3,8 @@
   "name": "Rehan SS13",
   "notes": "",
   "patch": "SS12.5",
-  "createdAt": 1784173810192,
-  "updatedAt": 1784173810192,
+  "createdAt": 1784194203787,
+  "updatedAt": 1784194203787,
   "loadouts": {
     "loadouts": [
       {
@@ -134,7 +134,7 @@
             "gloves": "gear-1784088818937-lqyb0hm05",
             "boots": "gear-1784086101849-ml25syq82",
             "belt": "gear-1784086116883-9l5szc8r0",
-            "ring1": "gear-1784086311344-sy5eutwjr",
+            "ring1": "21941508-6101-48f3-93b6-6660a47b9ecd",
             "ring2": "d0cb9663-f56e-4eb3-a63d-aa41e3ad4542",
             "necklace": "gear-1784086128642-0ocxbs99f",
             "mainHand": "gear-1784088928370-20bwqp46o",
@@ -395,116 +395,6 @@
               "displayIcon": "/images/legendaries/trinket/necklace/Icon_Equip_Amulet_Epic_402_128.webp"
             },
             {
-              "id": "gear-1784086311344-sy5eutwjr",
-              "rarity": "Rare",
-              "gearCategory": "trinket",
-              "gearSubType": "ring",
-              "baseItem": {
-                "baseItemId": "e05779a7-e3d7-50b1-a2f7-51420c22cee3",
-                "name": "Punished Lightning Ring",
-                "icon": "/images/rare-gear/trinket/ring/Icon_Equip_Ring_Norm_001_02_128.webp",
-                "requiredLevel": 76,
-                "implicits": [
-                  {
-                    "description": "+11% Lightning Resistance",
-                    "rawText": "+11% Lightning Resistance",
-                    "values": [
-                      {
-                        "value": 11,
-                        "minValue": 11,
-                        "maxValue": 11,
-                        "sign": "+",
-                        "unit": "%"
-                      }
-                    ]
-                  }
-                ]
-              },
-              "beltBlend": null,
-              "towerSequence": null,
-              "sweetDreamAffix": null,
-              "baseAffix": null,
-              "baseAffix2": null,
-              "corrosionImplicit": null,
-              "prefixes": [
-                {
-                  "affixId": "8b35a1eb-328a-5a8a-b0bf-226565c9f776",
-                  "tierId": "5552e8ec-f8b9-5cf7-af41-4318fcc039ab",
-                  "modifierDescription": "Adds # - # Physical Damage to Attacks and Spells",
-                  "rolledValues": [
-                    {
-                      "value": 26,
-                      "minValue": 26,
-                      "maxValue": 28
-                    },
-                    {
-                      "value": 32,
-                      "minValue": 32,
-                      "maxValue": 34
-                    }
-                  ],
-                  "tier": "2"
-                },
-                {
-                  "affixId": "8eab2769-311e-54a1-8116-7b86de5ba08d",
-                  "tierId": "538525ba-f7d8-5761-9d82-eaccda917c7c",
-                  "modifierDescription": "+#% damage",
-                  "rolledValues": [
-                    {
-                      "value": 30,
-                      "minValue": 30,
-                      "maxValue": 36,
-                      "sign": "+",
-                      "unit": "%"
-                    }
-                  ],
-                  "tier": "3"
-                }
-              ],
-              "suffixes": [
-                {
-                  "affixId": "2ccad311-db92-573c-9a78-388927cb14d7",
-                  "tierId": "2ccad311-db92-573c-9a78-388927cb14d7",
-                  "modifierDescription": "+# Combo Points gained from Combo Starters\n#% additional damage",
-                  "rolledValues": [
-                    {
-                      "value": 1,
-                      "minValue": 1,
-                      "maxValue": 1,
-                      "sign": "+"
-                    },
-                    {
-                      "value": -5,
-                      "minValue": -5,
-                      "maxValue": -3,
-                      "sign": "-",
-                      "unit": "%"
-                    }
-                  ],
-                  "tier": "2"
-                },
-                {
-                  "affixId": "f5196b5b-7fe4-5ec7-9356-c90278b83e86",
-                  "tierId": "e439a6d3-39c4-582f-8af1-5bdf056c6d38",
-                  "modifierDescription": "+#% Critical Strike Rating",
-                  "rolledValues": [
-                    {
-                      "value": 45,
-                      "minValue": 45,
-                      "maxValue": 61,
-                      "sign": "+",
-                      "unit": "%"
-                    }
-                  ],
-                  "tier": "3"
-                }
-              ],
-              "displayName": "Punished Lightning Ring",
-              "displayIcon": "/images/rare-gear/trinket/ring/Icon_Equip_Ring_Norm_001_02_128.webp",
-              "customName": "i82 +1 combo & phys",
-              "itemLevel": 82
-            },
-            {
               "id": "d0cb9663-f56e-4eb3-a63d-aa41e3ad4542",
               "rarity": "Rare",
               "gearCategory": "trinket",
@@ -594,19 +484,33 @@
                   "tier": "2"
                 },
                 {
+                  "affixId": "37acc15f-0b30-580d-beaf-34504e2607ae",
+                  "tierId": "2b982e4d-2902-520a-8fff-16ebc9b2c5e1",
+                  "modifierDescription": "+# to Max Frostbite Rating",
+                  "rolledValues": [
+                    {
+                      "value": 12,
+                      "minValue": 11,
+                      "maxValue": 14,
+                      "sign": "+"
+                    }
+                  ],
+                  "tier": "2"
+                },
+                {
                   "affixId": "f5196b5b-7fe4-5ec7-9356-c90278b83e86",
-                  "tierId": "e439a6d3-39c4-582f-8af1-5bdf056c6d38",
+                  "tierId": "10e23d76-96a6-5b5d-8570-1f3c275e650d",
                   "modifierDescription": "+#% Critical Strike Rating",
                   "rolledValues": [
                     {
-                      "value": 45,
-                      "minValue": 45,
-                      "maxValue": 61,
+                      "value": 71,
+                      "minValue": 62,
+                      "maxValue": 86,
                       "sign": "+",
                       "unit": "%"
                     }
                   ],
-                  "tier": "3"
+                  "tier": "2"
                 }
               ],
               "displayName": "Punished Lightning Ring",
@@ -1484,6 +1388,130 @@
               "displayName": "Unforgotten Long Blade",
               "displayIcon": "/images/rare-gear/one_handed/one-handed_sword/Icon_Equip_Weapon_1HSword_Norm_001_128.webp",
               "customName": "i82 Mainhand SPEED/CRIT",
+              "itemLevel": 82
+            },
+            {
+              "id": "21941508-6101-48f3-93b6-6660a47b9ecd",
+              "rarity": "Rare",
+              "gearCategory": "trinket",
+              "gearSubType": "ring",
+              "baseItem": {
+                "baseItemId": "e05779a7-e3d7-50b1-a2f7-51420c22cee3",
+                "name": "Punished Lightning Ring",
+                "icon": "/images/rare-gear/trinket/ring/Icon_Equip_Ring_Norm_001_02_128.webp",
+                "requiredLevel": 76,
+                "implicits": [
+                  {
+                    "description": "+11% Lightning Resistance",
+                    "rawText": "+11% Lightning Resistance",
+                    "values": [
+                      {
+                        "value": 11,
+                        "minValue": 11,
+                        "maxValue": 11,
+                        "sign": "+",
+                        "unit": "%"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "beltBlend": null,
+              "towerSequence": null,
+              "sweetDreamAffix": null,
+              "baseAffix": null,
+              "baseAffix2": null,
+              "corrosionImplicit": null,
+              "prefixes": [
+                {
+                  "affixId": "8b35a1eb-328a-5a8a-b0bf-226565c9f776",
+                  "tierId": "5552e8ec-f8b9-5cf7-af41-4318fcc039ab",
+                  "modifierDescription": "Adds # - # Physical Damage to Attacks and Spells",
+                  "rolledValues": [
+                    {
+                      "value": 26,
+                      "minValue": 26,
+                      "maxValue": 28
+                    },
+                    {
+                      "value": 32,
+                      "minValue": 32,
+                      "maxValue": 34
+                    }
+                  ],
+                  "tier": "2"
+                },
+                {
+                  "affixId": "8eab2769-311e-54a1-8116-7b86de5ba08d",
+                  "tierId": "538525ba-f7d8-5761-9d82-eaccda917c7c",
+                  "modifierDescription": "+#% damage",
+                  "rolledValues": [
+                    {
+                      "value": 30,
+                      "minValue": 30,
+                      "maxValue": 36,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "3"
+                }
+              ],
+              "suffixes": [
+                {
+                  "affixId": "2ccad311-db92-573c-9a78-388927cb14d7",
+                  "tierId": "2ccad311-db92-573c-9a78-388927cb14d7",
+                  "modifierDescription": "+# Combo Points gained from Combo Starters\n#% additional damage",
+                  "rolledValues": [
+                    {
+                      "value": 1,
+                      "minValue": 1,
+                      "maxValue": 1,
+                      "sign": "+"
+                    },
+                    {
+                      "value": -5,
+                      "minValue": -5,
+                      "maxValue": -3,
+                      "sign": "-",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "2"
+                },
+                {
+                  "affixId": "37acc15f-0b30-580d-beaf-34504e2607ae",
+                  "tierId": "2b982e4d-2902-520a-8fff-16ebc9b2c5e1",
+                  "modifierDescription": "+# to Max Frostbite Rating",
+                  "rolledValues": [
+                    {
+                      "value": 12,
+                      "minValue": 11,
+                      "maxValue": 14,
+                      "sign": "+"
+                    }
+                  ],
+                  "tier": "2"
+                },
+                {
+                  "affixId": "f5196b5b-7fe4-5ec7-9356-c90278b83e86",
+                  "tierId": "10e23d76-96a6-5b5d-8570-1f3c275e650d",
+                  "modifierDescription": "+#% Critical Strike Rating",
+                  "rolledValues": [
+                    {
+                      "value": 71,
+                      "minValue": 62,
+                      "maxValue": 86,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "2"
+                }
+              ],
+              "displayName": "Punished Lightning Ring",
+              "displayIcon": "/images/rare-gear/trinket/ring/Icon_Equip_Ring_Norm_001_02_128.webp",
+              "customName": "i82 +1 combo & phys",
               "itemLevel": 82
             }
           ]
@@ -19857,6 +19885,6 @@
         }
       }
     ],
-    "currentLoadoutId": "loadout_1784116632878_l410yqy2b"
+    "currentLoadoutId": "loadout_1784085786950_6q6s9zphl"
   }
 }
