@@ -179,3 +179,23 @@ footer{margin-top:80px;color:var(--faint);font-size:12px;font-family:"IBM Plex M
 @media (max-width:720px){
   .wrap{padding:0 18px}
 }
+
+/* ---------- linear path ---------- */
+.lphase{padding-bottom:16px}
+.l-gate{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#c9a86a}
+.l-count{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--faint);margin-left:auto}
+.l-ongoing{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--frost)}
+.l-phase-note{margin-top:8px;font-size:12.5px;font-style:italic;color:#c9a86a;line-height:1.5}
+.l-ordered{margin-top:12px;display:flex;flex-direction:column;gap:8px}
+.l-parallel{margin-top:12px;display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:8px}
+.lstep{border:1px solid var(--ice-line);border-radius:8px;background:rgba(16,27,39,.55);padding:9px 12px 8px}
+.lstep label{display:flex;align-items:baseline;gap:8px;cursor:pointer;flex-wrap:wrap}
+.lstep input{accent-color:var(--frost);transform:translateY(1px)}
+.l-title{font-size:13px;font-weight:500;color:var(--text)}
+.lstep .delta-chip{margin-left:auto;font-size:12px}
+.lseq{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:#c9a86a;min-width:46px}
+.l-note{margin-top:5px;font-size:12px;color:var(--muted);line-height:1.5;padding-left:24px}
+.l-wait{margin-top:5px;font-size:11px;color:#c9a86a;padding-left:24px}
+.lstep .rung-mods,.lstep .fillers{margin:7px 0 0 24px}
+.lstep.done{opacity:.55}
+.lstep.done .l-title{text-decoration:line-through;text-decoration-color:rgba(124,142,160,.7)}
