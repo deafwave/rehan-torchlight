@@ -4,6 +4,7 @@ import catalogData from "./data/catalog.json";
 import prismData from "./data/prisms.json";
 import { esc, escAttr, gainChip, dChip, SRC, srcChip, modRows,
   type LadderRow, type CatalogRow, type Rung } from "./ui";
+import { renderLinear } from "./linear";
 
 /* ---------- data written by dmg progression + catalog CLIs ---------- */
 const LADDER = ladderData as LadderRow[];
@@ -174,7 +175,7 @@ const SLATE_ITEMS: Record<string, {label: string; tiers: string[]; note: string}
 };
 let CAT_SOURCE = "slate";
 const SECTIONS: Record<string, string> = {
-  progression:"progression", slate:"catalog-tab", memory:"catalog-tab",
+  progression:"progression", linear:"linear", slate:"catalog-tab", memory:"catalog-tab",
 };
 const tabButtons = [...document.querySelectorAll<HTMLButtonElement>("#tabbar button")];
 function show(tab: string){
@@ -289,3 +290,5 @@ function renderCatalog(){
 }
 for (const id of ["cat-search","cat-tier","cat-show"])
   document.getElementById(id)!.addEventListener("input", renderCatalog);
+
+renderLinear(document.getElementById("linear-plan")!);
