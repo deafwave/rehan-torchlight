@@ -8,6 +8,7 @@
     "rank": "tsx src/cli.ts rank",
     "catalog": "tsx src/cli.ts catalog",
     "progression": "tsx src/cli.ts progression",
+    "pagedata": "tsx src/cli.ts pagedata",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },

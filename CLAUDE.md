@@ -7,7 +7,7 @@ parses the planner export and computes every % figure on the web page — nothin
 
 | Path | What it is |
 |---|---|
-| `packages/dmg/src` | `buildParser.ts` (export → snapshot, coverage-enforced), `damageModel.ts` (hit/crit/mitigation/cycle math), `catalog.ts` (slate/memory mod scoring), `progression.ts` (gear ladder + per-stat tier-step breakdowns), `cli.ts` |
+| `packages/dmg/src` | `buildParser.ts` (export → snapshot, coverage-enforced), `damageModel.ts` (hit/crit/mitigation/cycle math), `catalog.ts` (slate/memory mod scoring), `progression.ts` (gear ladder + per-stat tier-step breakdowns), `pagedata.ts` (loadouts → talent-tree stages + skill bars for the page; needs the manually-fetched `SS12.5-talent-tree-master.json` in the tli-build cache — it errors with the curl command if absent), `cli.ts` |
 | `packages/page` | Vite page: Bundles & Linear Upgrades / Slate Mods / Memory Mods tabs. `src/data/*.json` is **generated** by `pnpm page` — never hand-edit |
 | `data/` | `Rehan.json` (planner export), `snapshot.json` (parsed build, hand-editable knobs like boss res), `manual_overrides.json` (cited constants), `craft_pools.json` (ember pools, regen via `.claude/skills/tlidb-lookup/extract_craft_pools.py`), `gear-en.json` (tlicompendium affix tiers) |
 | `docs/mechanics.md` | **The mechanics truth.** Every modifier classified with bucket, citation, confidence — plus the "Assumptions & open interpretations" section. Code comments anchor to it (`mechanics.md#...`) |

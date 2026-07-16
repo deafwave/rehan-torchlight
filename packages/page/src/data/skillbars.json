@@ -1,0 +1,1318 @@
+[
+ {
+  "loadout": "Full precise auras",
+  "active": [
+   {
+    "name": "Spectral Slash",
+    "supports": [
+     {
+      "name": "Recuperation",
+      "type": "support"
+     },
+     {
+      "name": "Steamroll",
+      "type": "support"
+     },
+     {
+      "name": "Added Physical Damage",
+      "type": "support"
+     },
+     {
+      "name": "Willpower",
+      "type": "support"
+     },
+     {
+      "name": "Quick Decision",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Bull's Rage",
+    "supports": [
+     {
+      "name": "Extended Duration",
+      "type": "support"
+     },
+     {
+      "name": "Preparation",
+      "type": "support"
+     },
+     {
+      "name": "Mass Effect",
+      "type": "support"
+     },
+     {
+      "name": "Well-Fought Battle",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Spiral Strike",
+    "supports": [
+     {
+      "name": "Quick Mobility",
+      "type": "support"
+     },
+     {
+      "name": "Periodic Burst",
+      "type": "support"
+     },
+     {
+      "name": "Precision Strike",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Fixate",
+    "supports": [
+     {
+      "name": "Preparation",
+      "type": "support"
+     },
+     {
+      "name": "Extended Duration",
+      "type": "support"
+     },
+     {
+      "name": "Mass Effect",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Timid",
+    "supports": [
+     {
+      "name": "Extended Duration",
+      "type": "support"
+     },
+     {
+      "name": "Terrain of Malice",
+      "type": "support"
+     },
+     {
+      "name": "Preparation",
+      "type": "support"
+     }
+    ]
+   }
+  ],
+  "passive": [
+   {
+    "name": "Precise: Fearless",
+    "supports": [
+     {
+      "name": "Restrain",
+      "type": "support"
+     },
+     {
+      "name": "Aura Amplification",
+      "type": "support"
+     },
+     {
+      "name": "Increased Area",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Precise: Cruelty",
+    "supports": [
+     {
+      "name": "Restrain",
+      "type": "support"
+     },
+     {
+      "name": "Aura Amplification",
+      "type": "support"
+     },
+     {
+      "name": "Increased Area",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Precise: Domain Expansion",
+    "supports": [
+     {
+      "name": "Restrain",
+      "type": "support"
+     },
+     {
+      "name": "Aura Amplification",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Frigid Domain",
+    "supports": [
+     {
+      "name": "Seal Conversion",
+      "type": "support"
+     },
+     {
+      "name": "Restrain",
+      "type": "support"
+     },
+     {
+      "name": "Aura Amplification",
+      "type": "support"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "loadout": "150b",
+  "active": [
+   {
+    "name": "Spectral Slash",
+    "supports": [
+     {
+      "name": "Activation Medium: Motionless",
+      "type": "activation_medium"
+     },
+     {
+      "name": "Steamroll",
+      "type": "support"
+     },
+     {
+      "name": "Recuperation",
+      "type": "support"
+     },
+     {
+      "name": "Willpower",
+      "type": "support"
+     },
+     {
+      "name": "Spectral Slash: Legion (Noble)",
+      "type": "noble_support"
+     }
+    ]
+   },
+   {
+    "name": "Bull's Rage",
+    "supports": [
+     {
+      "name": "Extended Duration",
+      "type": "support"
+     },
+     {
+      "name": "Preparation",
+      "type": "support"
+     },
+     {
+      "name": "Mass Effect",
+      "type": "support"
+     },
+     {
+      "name": "Well-Fought Battle",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Spiral Strike",
+    "supports": [
+     {
+      "name": "Quick Mobility",
+      "type": "support"
+     },
+     {
+      "name": "Periodic Burst",
+      "type": "support"
+     },
+     {
+      "name": "Precision Strike",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Ice Bond",
+    "supports": [
+     {
+      "name": "Activation Medium: Root",
+      "type": "activation_medium"
+     },
+     {
+      "name": "Extended Duration",
+      "type": "support"
+     },
+     {
+      "name": "Mass Effect",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Timid",
+    "supports": [
+     {
+      "name": "Extended Duration",
+      "type": "support"
+     },
+     {
+      "name": "Terrain of Malice",
+      "type": "support"
+     },
+     {
+      "name": "Preparation",
+      "type": "support"
+     }
+    ]
+   }
+  ],
+  "passive": [
+   {
+    "name": "Precise: Fearless",
+    "supports": [
+     {
+      "name": "Restrain",
+      "type": "support"
+     },
+     {
+      "name": "Aura Amplification",
+      "type": "support"
+     },
+     {
+      "name": "Increased Area",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Precise: Cruelty",
+    "supports": [
+     {
+      "name": "Restrain",
+      "type": "support"
+     },
+     {
+      "name": "Aura Amplification",
+      "type": "support"
+     },
+     {
+      "name": "Increased Area",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Precise: Domain Expansion",
+    "supports": [
+     {
+      "name": "Restrain",
+      "type": "support"
+     },
+     {
+      "name": "Aura Amplification",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Precise: Frigid Domain",
+    "supports": [
+     {
+      "name": "Seal Conversion",
+      "type": "support"
+     },
+     {
+      "name": "Restrain",
+      "type": "support"
+     },
+     {
+      "name": "Aura Amplification",
+      "type": "support"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "loadout": "420b",
+  "active": [
+   {
+    "name": "Spectral Slash",
+    "supports": [
+     {
+      "name": "Recuperation",
+      "type": "support"
+     },
+     {
+      "name": "Steamroll",
+      "type": "support"
+     },
+     {
+      "name": "Spectral Slash: Detonation (Magnificent)",
+      "type": "magnificent_support"
+     },
+     {
+      "name": "Willpower",
+      "type": "support"
+     },
+     {
+      "name": "Spectral Slash: Legion (Noble)",
+      "type": "noble_support"
+     }
+    ]
+   },
+   {
+    "name": "Ice Bond",
+    "supports": [
+     {
+      "name": "Activation Medium: Root",
+      "type": "activation_medium"
+     },
+     {
+      "name": "Well-Fought Battle",
+      "type": "support"
+     },
+     {
+      "name": "Mass Effect",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Spiral Strike",
+    "supports": [
+     {
+      "name": "Quick Mobility",
+      "type": "support"
+     },
+     {
+      "name": "Periodic Burst",
+      "type": "support"
+     },
+     {
+      "name": "Precision Strike",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Shockwave Warcry",
+    "supports": [
+     {
+      "name": "Activation Medium: Elite",
+      "type": "activation_medium"
+     },
+     {
+      "name": "Extended Duration",
+      "type": "support"
+     },
+     {
+      "name": "Cooldown Reduction",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Resurrection Warcry",
+    "supports": [
+     {
+      "name": "Activation Medium: Preparation",
+      "type": "activation_medium"
+     },
+     {
+      "name": "Cooldown Reduction",
+      "type": "support"
+     },
+     {
+      "name": "Extended Duration",
+      "type": "support"
+     },
+     {
+      "name": "Concentration Warcry",
+      "type": "support"
+     }
+    ]
+   }
+  ],
+  "passive": [
+   {
+    "name": "Precise: Fearless",
+    "supports": [
+     {
+      "name": "Restrain",
+      "type": "support"
+     },
+     {
+      "name": "Aura Amplification",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Precise: Cruelty",
+    "supports": [
+     {
+      "name": "Restrain",
+      "type": "support"
+     },
+     {
+      "name": "Aura Amplification",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Precise: Domain Expansion",
+    "supports": [
+     {
+      "name": "Restrain",
+      "type": "support"
+     },
+     {
+      "name": "Aura Amplification",
+      "type": "support"
+     },
+     {
+      "name": "Increased Area",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Precise: Frigid Domain",
+    "supports": [
+     {
+      "name": "Seal Conversion",
+      "type": "support"
+     },
+     {
+      "name": "Aura Amplification",
+      "type": "support"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "loadout": "Inverse-Warcry",
+  "active": [
+   {
+    "name": "Spectral Slash",
+    "supports": [
+     {
+      "name": "Activation Medium: Motionless",
+      "type": "activation_medium"
+     },
+     {
+      "name": "Recuperation",
+      "type": "support"
+     },
+     {
+      "name": "Spectral Slash: Detonation (Magnificent)",
+      "type": "magnificent_support"
+     },
+     {
+      "name": "Willpower",
+      "type": "support"
+     },
+     {
+      "name": "Spectral Slash: Legion (Noble)",
+      "type": "noble_support"
+     }
+    ]
+   },
+   {
+    "name": "Ice Bond",
+    "supports": [
+     {
+      "name": "Activation Medium: Root",
+      "type": "activation_medium"
+     },
+     {
+      "name": "Well-Fought Battle",
+      "type": "support"
+     },
+     {
+      "name": "Mass Effect",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Thunder Spike",
+    "supports": [
+     {
+      "name": "Quick Mobility",
+      "type": "support"
+     },
+     {
+      "name": "Periodic Burst",
+      "type": "support"
+     },
+     {
+      "name": "Precision Strike",
+      "type": "support"
+     },
+     {
+      "name": "Melee Knockback",
+      "type": "support"
+     },
+     {
+      "name": "Thunder Spike: Rumbling Thunder (Noble)",
+      "type": "noble_support"
+     }
+    ]
+   },
+   {
+    "name": "Shockwave Warcry",
+    "supports": [
+     {
+      "name": "Activation Medium: Elite",
+      "type": "activation_medium"
+     },
+     {
+      "name": "Extended Duration",
+      "type": "support"
+     },
+     {
+      "name": "Cooldown Reduction",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Resurrection Warcry",
+    "supports": [
+     {
+      "name": "Activation Medium: Preparation",
+      "type": "activation_medium"
+     },
+     {
+      "name": "Cooldown Reduction",
+      "type": "support"
+     },
+     {
+      "name": "Extended Duration",
+      "type": "support"
+     }
+    ]
+   }
+  ],
+  "passive": [
+   {
+    "name": "Precise: Fearless",
+    "supports": [
+     {
+      "name": "Restrain",
+      "type": "support"
+     },
+     {
+      "name": "Aura Amplification",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Precise: Cruelty",
+    "supports": [
+     {
+      "name": "Restrain",
+      "type": "support"
+     },
+     {
+      "name": "Aura Amplification",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Precise: Domain Expansion",
+    "supports": [
+     {
+      "name": "Restrain",
+      "type": "support"
+     },
+     {
+      "name": "Aura Amplification",
+      "type": "support"
+     },
+     {
+      "name": "Increased Area",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Precise: Frigid Domain",
+    "supports": [
+     {
+      "name": "Seal Conversion",
+      "type": "support"
+     },
+     {
+      "name": "Aura Amplification",
+      "type": "support"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "loadout": "3t",
+  "active": [
+   {
+    "name": "Spectral Slash",
+    "supports": [
+     {
+      "name": "Activation Medium: Motionless",
+      "type": "activation_medium"
+     },
+     {
+      "name": "Recuperation",
+      "type": "support"
+     },
+     {
+      "name": "Spectral Slash: Detonation (Magnificent)",
+      "type": "magnificent_support"
+     },
+     {
+      "name": "Willpower",
+      "type": "support"
+     },
+     {
+      "name": "Spectral Slash: Legion (Noble)",
+      "type": "noble_support"
+     }
+    ]
+   },
+   {
+    "name": "Ice Bond",
+    "supports": [
+     {
+      "name": "Activation Medium: Root",
+      "type": "activation_medium"
+     },
+     {
+      "name": "Well-Fought Battle",
+      "type": "support"
+     },
+     {
+      "name": "Mass Effect",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Thunder Spike",
+    "supports": [
+     {
+      "name": "Quick Mobility",
+      "type": "support"
+     },
+     {
+      "name": "Periodic Burst",
+      "type": "support"
+     },
+     {
+      "name": "Precision Strike",
+      "type": "support"
+     },
+     {
+      "name": "Recklessness",
+      "type": "support"
+     },
+     {
+      "name": "Thunder Spike: Rumbling Thunder (Noble)",
+      "type": "noble_support"
+     }
+    ]
+   },
+   {
+    "name": "Shockwave Warcry",
+    "supports": [
+     {
+      "name": "Activation Medium: Elite",
+      "type": "activation_medium"
+     },
+     {
+      "name": "Extended Duration",
+      "type": "support"
+     },
+     {
+      "name": "Cooldown Reduction",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Resurrection Warcry",
+    "supports": [
+     {
+      "name": "Activation Medium: Preparation",
+      "type": "activation_medium"
+     },
+     {
+      "name": "Cooldown Reduction",
+      "type": "support"
+     },
+     {
+      "name": "Extended Duration",
+      "type": "support"
+     }
+    ]
+   }
+  ],
+  "passive": [
+   {
+    "name": "Precise: Fearless",
+    "supports": [
+     {
+      "name": "Restrain",
+      "type": "support"
+     },
+     {
+      "name": "Aura Amplification",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Precise: Cruelty",
+    "supports": [
+     {
+      "name": "Restrain",
+      "type": "support"
+     },
+     {
+      "name": "Aura Amplification",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Precise: Domain Expansion",
+    "supports": [
+     {
+      "name": "Restrain",
+      "type": "support"
+     },
+     {
+      "name": "Aura Amplification",
+      "type": "support"
+     },
+     {
+      "name": "Increased Area",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Precise: Frigid Domain",
+    "supports": [
+     {
+      "name": "Seal Conversion",
+      "type": "support"
+     },
+     {
+      "name": "Aura Amplification",
+      "type": "support"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "loadout": "5t Eternity",
+  "active": [
+   {
+    "name": "Spectral Slash",
+    "supports": [
+     {
+      "name": "Activation Medium: Still Attack",
+      "type": "activation_medium"
+     },
+     {
+      "name": "Recuperation",
+      "type": "support"
+     },
+     {
+      "name": "Spectral Slash: Detonation (Magnificent)",
+      "type": "magnificent_support"
+     },
+     {
+      "name": "Steamroll",
+      "type": "support"
+     },
+     {
+      "name": "Spectral Slash: Legion (Noble)",
+      "type": "noble_support"
+     }
+    ]
+   },
+   {
+    "name": "Ice Bond",
+    "supports": [
+     {
+      "name": "Activation Medium: Root",
+      "type": "activation_medium"
+     },
+     {
+      "name": "Mass Effect",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Thunder Spike",
+    "supports": [
+     {
+      "name": "Quick Mobility",
+      "type": "support"
+     },
+     {
+      "name": "Periodic Burst",
+      "type": "support"
+     },
+     {
+      "name": "Precision Strike",
+      "type": "support"
+     },
+     {
+      "name": "Recklessness",
+      "type": "support"
+     },
+     {
+      "name": "Thunder Spike: Rumbling Thunder (Noble)",
+      "type": "noble_support"
+     }
+    ]
+   },
+   {
+    "name": "Shockwave Warcry",
+    "supports": [
+     {
+      "name": "Activation Medium: Preparation",
+      "type": "activation_medium"
+     },
+     {
+      "name": "Extended Duration",
+      "type": "support"
+     },
+     {
+      "name": "Cooldown Reduction",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Resurrection Warcry",
+    "supports": [
+     {
+      "name": "Activation Medium: Preparation",
+      "type": "activation_medium"
+     },
+     {
+      "name": "Cooldown Reduction",
+      "type": "support"
+     },
+     {
+      "name": "Extended Duration",
+      "type": "support"
+     }
+    ]
+   }
+  ],
+  "passive": [
+   {
+    "name": "Precise: Fearless",
+    "supports": [
+     {
+      "name": "Restrain",
+      "type": "support"
+     },
+     {
+      "name": "Aura Amplification",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Precise: Cruelty",
+    "supports": [
+     {
+      "name": "Restrain",
+      "type": "support"
+     },
+     {
+      "name": "Aura Amplification",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Precise: Domain Expansion",
+    "supports": [
+     {
+      "name": "Seal Conversion",
+      "type": "support"
+     },
+     {
+      "name": "Aura Amplification",
+      "type": "support"
+     },
+     {
+      "name": "Restrain",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Precise: Frigid Domain",
+    "supports": [
+     {
+      "name": "Restrain",
+      "type": "support"
+     },
+     {
+      "name": "Aura Amplification",
+      "type": "support"
+     },
+     {
+      "name": "Precise: Disciplined",
+      "type": "support"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "loadout": "more_1",
+  "active": [
+   {
+    "name": "Spectral Slash",
+    "supports": [
+     {
+      "name": "Activation Medium: Still Attack",
+      "type": "activation_medium"
+     },
+     {
+      "name": "Recuperation",
+      "type": "support"
+     },
+     {
+      "name": "Spectral Slash: Detonation (Magnificent)",
+      "type": "magnificent_support"
+     },
+     {
+      "name": "Critical Strike Damage Increase",
+      "type": "support"
+     },
+     {
+      "name": "Spectral Slash: Legion (Noble)",
+      "type": "noble_support"
+     }
+    ]
+   },
+   {
+    "name": "Ice Bond",
+    "supports": [
+     {
+      "name": "Activation Medium: Root",
+      "type": "activation_medium"
+     },
+     {
+      "name": "Mass Effect",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Thunder Spike",
+    "supports": [
+     {
+      "name": "Quick Mobility",
+      "type": "support"
+     },
+     {
+      "name": "Periodic Burst",
+      "type": "support"
+     },
+     {
+      "name": "Precision Strike",
+      "type": "support"
+     },
+     {
+      "name": "Recklessness",
+      "type": "support"
+     },
+     {
+      "name": "Thunder Spike: Rumbling Thunder (Noble)",
+      "type": "noble_support"
+     }
+    ]
+   },
+   {
+    "name": "Shockwave Warcry",
+    "supports": [
+     {
+      "name": "Activation Medium: Preparation",
+      "type": "activation_medium"
+     },
+     {
+      "name": "Extended Duration",
+      "type": "support"
+     },
+     {
+      "name": "Cooldown Reduction",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Defensive Buffer",
+    "supports": [
+     {
+      "name": "Activation Medium: Preparation",
+      "type": "activation_medium"
+     },
+     {
+      "name": "Iron Fortification",
+      "type": "support"
+     },
+     {
+      "name": "Cooldown Reduction",
+      "type": "support"
+     }
+    ]
+   }
+  ],
+  "passive": [
+   {
+    "name": "Precise: Fearless",
+    "supports": [
+     {
+      "name": "Restrain",
+      "type": "support"
+     },
+     {
+      "name": "Precise: Stand as One",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Precise: Cruelty",
+    "supports": [
+     {
+      "name": "Restrain",
+      "type": "support"
+     },
+     {
+      "name": "Precise: Stand as One",
+      "type": "support"
+     },
+     {
+      "name": "Precise: Disciplined",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Precise: Domain Expansion",
+    "supports": [
+     {
+      "name": "Seal Conversion",
+      "type": "support"
+     },
+     {
+      "name": "Precise: Stand as One",
+      "type": "support"
+     },
+     {
+      "name": "Restrain",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Precise: Energy Fortress",
+    "supports": [
+     {
+      "name": "Restrain",
+      "type": "support"
+     },
+     {
+      "name": "Precise: Stand as One",
+      "type": "support"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "loadout": "more_2",
+  "active": [
+   {
+    "name": "Spectral Slash",
+    "supports": [
+     {
+      "name": "Activation Medium: Still Attack",
+      "type": "activation_medium"
+     },
+     {
+      "name": "Recuperation",
+      "type": "support"
+     },
+     {
+      "name": "Spectral Slash: Detonation (Magnificent)",
+      "type": "magnificent_support"
+     },
+     {
+      "name": "Critical Strike Damage Increase",
+      "type": "support"
+     },
+     {
+      "name": "Spectral Slash: Legion (Noble)",
+      "type": "noble_support"
+     }
+    ]
+   },
+   {
+    "name": "Ice Bond",
+    "supports": [
+     {
+      "name": "Activation Medium: Root",
+      "type": "activation_medium"
+     },
+     {
+      "name": "Mass Effect",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Thunder Spike",
+    "supports": [
+     {
+      "name": "Quick Mobility",
+      "type": "support"
+     },
+     {
+      "name": "Periodic Burst",
+      "type": "support"
+     },
+     {
+      "name": "Precision Strike",
+      "type": "support"
+     },
+     {
+      "name": "Recklessness",
+      "type": "support"
+     },
+     {
+      "name": "Thunder Spike: Rumbling Thunder (Noble)",
+      "type": "noble_support"
+     }
+    ]
+   },
+   {
+    "name": "Shockwave Warcry",
+    "supports": [
+     {
+      "name": "Activation Medium: Preparation",
+      "type": "activation_medium"
+     },
+     {
+      "name": "Extended Duration",
+      "type": "support"
+     },
+     {
+      "name": "Cooldown Reduction",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Defensive Buffer",
+    "supports": [
+     {
+      "name": "Activation Medium: Preparation",
+      "type": "activation_medium"
+     },
+     {
+      "name": "Iron Fortification",
+      "type": "support"
+     },
+     {
+      "name": "Cooldown Reduction",
+      "type": "support"
+     }
+    ]
+   }
+  ],
+  "passive": [
+   {
+    "name": "Precise: Fearless",
+    "supports": [
+     {
+      "name": "Restrain",
+      "type": "support"
+     },
+     {
+      "name": "Precise: Stand as One",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Precise: Cruelty",
+    "supports": [
+     {
+      "name": "Restrain",
+      "type": "support"
+     },
+     {
+      "name": "Precise: Stand as One",
+      "type": "support"
+     },
+     {
+      "name": "Precise: Disciplined",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Precise: Domain Expansion",
+    "supports": [
+     {
+      "name": "Seal Conversion",
+      "type": "support"
+     },
+     {
+      "name": "Precise: Stand as One",
+      "type": "support"
+     },
+     {
+      "name": "Restrain",
+      "type": "support"
+     }
+    ]
+   },
+   {
+    "name": "Precise: Energy Fortress",
+    "supports": [
+     {
+      "name": "Restrain",
+      "type": "support"
+     },
+     {
+      "name": "Precise: Stand as One",
+      "type": "support"
+     }
+    ]
+   }
+  ]
+ }
+]

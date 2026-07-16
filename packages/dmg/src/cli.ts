@@ -86,8 +86,9 @@ try {
   else if (cmd === "rank") await rankCmd(rest);
   else if (cmd === "catalog") await catalogCmd();
   else if (cmd === "progression") await progressionCmd();
+  else if (cmd === "pagedata") (await import("./pagedata.js")).writePagedata();
   else {
-    console.error("usage: cli.ts <snapshot|rank|catalog|progression> [args]");
+    console.error("usage: cli.ts <snapshot|rank|catalog|progression|pagedata> [args]");
     process.exit(2);
   }
 } catch (e) {

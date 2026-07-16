@@ -237,9 +237,10 @@ for (const b of tabButtons) b.addEventListener("click", () => show(b.dataset.tab
     {label:"offense", nodes:[
       {src:"pact", lbl:"2× Peerless · Tiger's Chain",
        name:"the Dual pair is +1 Combo Finisher charge and a fixed 0.3s Combo Sequence reset · Tiger's Chain adds +(4–6)% additional Combo Skill Damage — these three sockets never move"},
-      {src:"pact", lbl:"2× Mammoth · Ascetic",
-       name:"Mammoth pair self-casts Lv.20 Resurrection Warcry on hit every 3s (the −60% additional-damage-taken layer, hands-free) · Ascetic: +(1.7–1.9)% Double Damage Chance for Finishers per Combo Point consumed"},
-      null]},
+      {src:"pact", lbl:"Ascetic",
+       name:"+(1.7–1.9)% Double Damage Chance for Finishers per Combo Point consumed"},
+      {src:"pact", lbl:"2× Unending Fate + 2× Mammoth",
+       name:"2× Unending Fate for the dual sockets · Mammoth pair self-casts Lv.20 Resurrection Warcry on hit every 3s (the −60% additional-damage-taken layer, hands-free) — frees the bar slot for Defensive Buffer"}]},
     {label:"crit fates", nodes:[
       {src:"pact", lbl:"1× Medium + 9× Micro Crit Rating", name:"+(48–60)% / +(24–30)% Crit Strike Rating each — cheap filler for every remaining node"},
       {lbl:"free 3 sockets", name:"the Medium and 2 Micros give way to the buys on this ladder — 7 Micro Crit stay for good"},
@@ -292,4 +293,8 @@ function renderCatalog(){
 for (const id of ["cat-search","cat-tier","cat-show"])
   document.getElementById(id)!.addEventListener("input", renderCatalog);
 
-renderLinear(document.getElementById("linear-plan")!, document.getElementById("linear-watchlist")!);
+renderLinear(
+  document.getElementById("linear-plan")!,
+  document.getElementById("linear-watchlist")!,
+  document.getElementById("linear-nav"),
+);

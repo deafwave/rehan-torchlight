@@ -52,7 +52,7 @@ export const srcChip = (s: keyof typeof SRC) =>
   `<span class="src-chip" style="background:${SRC[s].color}22;color:${SRC[s].color}">${SRC[s].label}</span>`;
 
 const POOL_COLOR: Record<string, string> = { basic:"#7c8ea0", advanced:"#7fd8e8", ultimate:"#c9a86a" };
-/* rows arrive pre-sorted by ΔDPS-per-ember (`per`); the number itself stays hidden */
+/* rows arrive pre-sorted by full-line ΔDPS (`gain`); pool cost is a chip only */
 export const modRows = (mods: ModRow[], summary: string) =>
   `<details class="rung-mods"><summary>${esc(summary)}</summary>`
   + mods.map(m => {
@@ -60,6 +60,6 @@ export const modRows = (mods: ModRow[], summary: string) =>
       return `<div class="mod-row">`
         + `<span class="src-chip" style="background:${col}22;color:${col}">${m.pool ? `${m.pool} ×${m.cost}` : "unpooled"}</span>`
         + `<span class="mod-text">${esc(m.text).replace(/\n/g," · ")}`
-        + `<span class="mod-vs">vs ${m.vs ? esc(m.vs).replace(/\n/g," · ") : "an empty slot (bottom tier)"}</span></span>`
+        + `<span class="mod-vs">vs ${m.vs ? esc(m.vs).replace(/\n/g," · ") : "an empty slot"}</span></span>`
         + `<span class="delta-chip ${m.gain > 0 ? gainCls(m.gain) : "d-none"}">+${m.gain.toFixed(1)}%</span></div>`;
     }).join("") + `</details>`;

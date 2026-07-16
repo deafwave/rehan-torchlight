@@ -8,13 +8,20 @@
 import ladderData from "./data/ladder.json";
 import catalogData from "./data/catalog.json";
 import prismData from "./data/prisms.json";
-import { esc, gainChip, dChip, srcChip, modRows, SRC,
+import skillbarsData from "./data/skillbars.json";
+import { esc, escAttr, gainChip, dChip, srcChip, SRC,
   type LadderRow, type CatalogRow, type Rung } from "./ui";
+import { initTalents, openTalents, type TreeStage } from "./talents";
 
 const LADDER = ladderData as LadderRow[];
 const CATALOG = catalogData as CatalogRow[];
 interface PrismRung { label: string; delta: number | null; note: string | null }
 const PRISMS = prismData as { name: string; rungs: PrismRung[] }[];
+interface BarSupport { name: string; type: string }
+interface BarSkill { name: string; supports: BarSupport[] }
+interface SkillBar { loadout: string; active: BarSkill[]; passive: BarSkill[] }
+interface SubItem { name: string; note?: string; lines?: string[] }
+const SKILLBARS = skillbarsData as SkillBar[];
 
 /* ---------- strict lookups: a renamed label must break loudly, never render stale ---------- */
 function rung(slot: string, prefix: string): Rung {
@@ -22,11 +29,6 @@ function rung(slot: string, prefix: string): Rung {
     ?.rungs.find(r => r.label.toLowerCase().startsWith(prefix.toLowerCase()));
   if (!rg) throw new Error(`linear: no rung ${slot}/${prefix}`);
   return rg;
-}
-function modgain(r: Rung, prefix: string): number {
-  const m = r.mods?.find(m => m.text.startsWith(prefix));
-  if (!m) throw new Error(`linear: no mod "${prefix}" on ${r.label}`);
-  return m.gain;
 }
 function slateRow(prefix: string): CatalogRow {
   const c = CATALOG.find(c => c.cat === "slate" && c.text.startsWith(prefix));
@@ -39,6 +41,19 @@ function prismRung(name: string, label: string): PrismRung {
   if (!rg) throw new Error(`linear: no prism ${name}/${label}`);
   return rg;
 }
+
+/* detail thunks resolve at render time against live `done` (helpers defined after state) */
+const craftDetail = (stepId: string, slot: string, prefix: string) =>
+  () => craftLinesHtml(stepId, slot, prefix);
+const itemsDetail = (stepId: string, items: SubItem[]) =>
+  () => itemsHtml(stepId, items);
+const memoryDetail = (stepId: string) =>
+  () => memoryBoxesHtml(stepId);
+/* plain skill rows in a fold-out — no checkboxes (checking re-renders and snaps <details> shut) */
+const barFold = (loadout: string) =>
+  () => `<details class="bar-fold"><summary>the full bar after this buy</summary>`
+    + skillBarView(loadout, "active") + `</details>`;
+
 const rungChip = (slot: string, prefix: string) => gainChip(rung(slot, prefix), "delta-chip");
 const slateChip = (prefix: string) => { const c = slateRow(prefix); return dChip(c.delta, c.cond); };
 const g = (x: number) => `${x >= 0 ? "+" : "−"}${Math.abs(x).toFixed(1)}%`;
@@ -67,6 +82,47 @@ const immRow = (r: CatalogRow) =>
   `<div class="mod-row"><span class="mod-text"><b>${esc(r.on)}</b> · ${esc(r.text).replace(/\n/g, " · ")}</span>`
   + `<span class="delta-chip d-none">defense</span></div>`;
 
+/* Hero-memory shopping: Fixed Affix + Random Affix only (no Special Random). Ranked by
+   catalog ΔDPS for this build; one entry per affix family (best roll). */
+const memShort = (r: CatalogRow): string => {
+  const t = r.text.replace(/\n/g, " · ");
+  if (/Combo Starters/i.test(t) && /Combo Finishers/i.test(t))
+    return "Combo starter AS + finisher Crit Damage";
+  if (/Attack and Cast Speed/i.test(t) && /Minion/i.test(t)) return "Attack Speed";
+  if (/^Attack Damage$/i.test(r.name)) return "Attack Damage";
+  if (/^Physical Damage$/i.test(r.name)) return "Physical Damage";
+  if (/^Cold Damage$/i.test(r.name)) return "Cold Damage";
+  if (/Physical Skill Critical Strike Damage/i.test(r.name)) return "Phys Skill Crit Damage";
+  if (/Attack Critical Strike Rating/i.test(r.name)) return "Attack Crit Rating";
+  if (/^Critical Strike Damage$/i.test(r.name)) return "Crit Damage";
+  if (/^Critical Strike Rating$/i.test(r.name)) return "Crit Rating";
+  if (/^Attack Speed$/i.test(r.name)) return "Attack Speed";
+  if (/^damage$/i.test(r.name)) return "% damage";
+  return r.name;
+};
+const memRank = (tier: "Fixed Affix" | "Random Affix"): string[] => {
+  const best = new Map<string, CatalogRow>();
+  for (const r of CATALOG) {
+    if (r.cat !== "memory" || r.tier !== tier || r.delta === null || r.delta <= 0) continue;
+    const prev = best.get(r.name);
+    if (!prev || r.delta > (prev.delta ?? 0)) best.set(r.name, r);
+  }
+  return [...best.values()]
+    .sort((a, b) => (b.delta ?? 0) - (a.delta ?? 0))
+    .map(memShort);
+};
+const MEM_FIXED_DPS = memRank("Fixed Affix");
+const MEM_RANDOM = memRank("Random Affix");
+if (!MEM_FIXED_DPS.length || !MEM_RANDOM.length)
+  throw new Error("linear: memory Fixed/Random priorities empty — regenerate catalog");
+/* Catalog only ranks DPS Fixed lines; ES build also shops these defense Fixed rolls. */
+const MEM_FIXED = [
+  ...MEM_FIXED_DPS,
+  "Max Energy Shield",
+  "Max Resistance",
+  "Curse effect against you",
+];
+
 /* ---------- the spine — hand-authored order (see spec: personal judgment, not derivable) ---------- */
 interface Step {
   id: string;              // stable localStorage key — never rename casually
@@ -75,7 +131,7 @@ interface Step {
   chip?: string;           // pre-rendered gainChip/dChip html
   seq?: string;            // "FIRST"… — ordered within the phase
   needs?: string[];        // step ids this is gated on
-  detail?: string;         // <details> fold-out html
+  detail?: string | (() => string); // fold-out / checklist html (fn = live checked state)
 }
 interface Phase {
   id: string; cost?: string; gate: string; title: string; note?: string;
@@ -107,19 +163,27 @@ const PHASES: Phase[] = [
   { id:"swap", cost:"~200b", gate:"Lv 86+", title:"Swap to Spectral Slash", steps:[
     { id:"tree", src:"talent", title:"Copy the talent tree" },
     { id:"skill-setup", src:"skill", title:"Copy this bar",
-      note:"Spectral Slash — Recuperation · Steamroll · Added Physical Damage · Willpower · Quick Decision. "
-        + "Bull's Rage — Extended Duration · Preparation · Mass Effect · Well-Fought Battle. "
-        + "Spiral Strike — Quick Mobility · Periodic Burst · Precision Strike. "
-        + "Fixate — Preparation · Extended Duration · Mass Effect. Timid — Extended Duration · Terrain of Malice · Preparation." },
-    { id:"weapons82", src:"gear", title:"i82 weapons — Unforgotten Long Blade ×2",
-      note:"Speed/crit roll mainhand, raw damage offhand." },
-    { id:"rings82", src:"gear", title:"i82 combo rings — Punished Lightning Ring ×2",
-      note:"+1 Combo Points + phys rolls." },
+      detail: () => skillBarHtml("skill-setup", "Full precise auras", "active") },
+    { id:"mh82", src:"gear", chip: rungChip("mainHand", "i82"),
+      title:"i82 mainhand — Unforgotten Long Blade (speed/crit)",
+      detail: craftDetail("mh82", "mainHand", "i82") },
+    { id:"oh82", src:"gear", chip: rungChip("offHand", "i82"),
+      title:"i82 offhand — Unforgotten Long Blade (raw damage)",
+      detail: craftDetail("oh82", "offHand", "i82") },
+    { id:"ring82a", src:"gear", chip: rungChip("ring1", "i82"),
+      title:"i82 combo ring 1 — Punished Lightning Ring",
+      detail: craftDetail("ring82a", "ring1", "i82") },
+    { id:"ring82b", src:"gear", chip: rungChip("ring2", "i82"),
+      title:"i82 combo ring 2 — Punished Lightning Ring",
+      detail: craftDetail("ring82b", "ring2", "i82") },
     { id:"cheap-uniques", src:"gear", title:"Buy cheap uniques",
-      note:"Grace Boots (keep until the Focus Blessing slate) · Bodhi Girdle · Vortex Heart (~130 FE)." },
+      detail: itemsDetail("cheap-uniques", [
+        { name:"Grace Boots", note:"keep until the Focus Blessing slate" },
+        { name:"Bodhi Girdle" },
+        { name:"Vortex Heart", note:"~130 FE" },
+      ]) },
     { id:"slate-quickcheck", src:"slate", title:"Slate quick-checks",
-      note:"3–4× 1-mod slates, full reveal each — keep Legendary Mediums: "
-        + fillers.map(r => r.text.split("\n")[0]).join(" · ") + ".",
+      note:"3–4× slates",
       detail: foldout("best legendary-medium fillers — skill-level lines stack", fillers.map(catRow).join("")) },
     { id:"pactspirits", src:"pact", title:"Pactspirits",
       note:"Red Umbrella + Azure Gunslinger (nodes 4–6: crit). Fog Scorpion or Knight of Pale Blue in the third slot." },
@@ -127,7 +191,7 @@ const PHASES: Phase[] = [
 
   { id:"swap90", gate:"Lv 90+", title:"Auras + Pedigree", steps:[
     { id:"auras", src:"skill", title:"All 4 Precise Auras",
-      note:"Cruelty · Fearless · Domain Expansion · Frigid Domain, supported by Restrain · Aura Amplification · Increased Area · Seal Conversion." },
+      detail: () => skillBarHtml("auras", "Full precise auras", "passive") },
     { id:"pedigree", src:"slate", title:"Snipe a Pedigree of Gods (~30 FE)",
       detail: foldout("core talents to look for", cores.map(catRow).join("")) },
   ]},
@@ -135,20 +199,33 @@ const PHASES: Phase[] = [
   { id:"core86", cost:"1B", gate:"8-0", title:"i86 core — in this order",
     note:`Priceless waits until after Traveler 8. i86 chest = ES/defense only (${rngTxt(rung("chest", "i86"))}).`, steps:[
     { id:"mh86", seq:"FIRST", src:"gear", chip: rungChip("mainHand", "i86"),
-      title:"i86 mainhand — Shadowless Swordsman's Blade, speed/crit roll",
-      note:"Craft in the fold-out's order; skip the crit-rating advanced line.",
-      detail: modRows(rung("mainHand", "i86").mods!, "craft order — best ΔDPS per ember first") },
+      title:"i86 mainhand — Shadowless Swordsman's Blade (speed/crit)",
+      detail: craftDetail("mh86", "mainHand", "i86") },
     { id:"oh86", seq:"SECOND", src:"gear", chip: rungChip("offHand", "i86"),
-      title:"i86 offhand — same base, raw damage roll",
-      detail: modRows(rung("offHand", "i86").mods!, "craft order — best ΔDPS per ember first") },
-    { id:"ring86", seq:"THIRD", src:"gear", chip: rungChip("ring2", "i86"),
-      title:"i86 frostbite ring",
-      note:`The +1 Combo Points suffix is the item — never lose it. Barrier ring last (${rngTxt(rung("ring1", "i86"))}).` },
-    { id:"memory-leg", title:"Hero Memory legendary",
-      note:"REVIVED #% Attack Speed for every main attack skill cast. Base: Strength / ES / Attack Speed. "
-        + "Fixed: %ES. Random: Phys/Cold Crit Damage · Phys/Cold/Attack Crit Rating · Attack Speed · Cold Damage · Damage." },
+      title:"i86 offhand — Shadowless Swordsman's Blade (raw damage)",
+      detail: craftDetail("oh86", "offHand", "i86") },
+    { id:"ring86fb", seq:"THIRD", src:"gear", chip: rungChip("ring2", "i86"),
+      title:"i86 frostbite ring — Perishing Inferno Flame Ring",
+      note:"The +1 Combo Points suffix is the item — never lose it.",
+      detail: craftDetail("ring86fb", "ring2", "i86") },
+    { id:"ring86bar", seq:"FOURTH", src:"gear", chip: rungChip("ring1", "i86"),
+      title:"i86 barrier ring — Perishing Inferno Flame Ring",
+      note:"Last of the i86 core rings.",
+      detail: craftDetail("ring86bar", "ring1", "i86") },
+    { id:"haze", src:"prism", chip: dChip(prismRung("Ethereal", "Haze").delta),
+      title:"Ethereal Prism: Haze",
+      note:"+12% additional Attack Damage when holding a One-Handed Weapon. "
+        + "Socket on any non-core talent — it overrides that node." },
+    { id:"memory-epic", title:"Hero Memory epic",
+      detail: memoryDetail("memory-epic") },
     { id:"kismets", src:"pact", title:"Kismet layout",
-      note:"2× Peerless + Tiger's Chain — never move. 2× Mammoth + Ascetic. Rest: 1× Medium + 9× Micro Crit Rating." },
+      detail: itemsDetail("kismets", [
+        { name:"2× Peerless", note:"Dual pair — never move" },
+        { name:"Tiger's Chain", note:"never move" },
+        { name:"Ascetic" },
+        { name:"1× Medium Crit Rating" },
+        { name:"9× Micro Crit Rating" },
+      ]) },
   ]},
 
   { id:"slates", gate:"Slates", title:"Slate priority — buy in this order", steps:[
@@ -174,69 +251,131 @@ const PHASES: Phase[] = [
   { id:"armor86", cost:"10B–20B", gate:"Traveler 8", title:"i86 armor pieces",
     note:"Traveler 8 done → check 8-1/8-2 priceless pieces every session.", steps:[
     { id:"boots86", src:"gear", chip: rungChip("boots", "i86"), needs:["sl-blessing"],
-      title:"i86 ES boots", note:"Hasten + Crit Rating / Crit Damage." },
+      title:"i86 ES boots — Long Night Sorcerer's Boots",
+      detail: craftDetail("boots86", "boots", "i86") },
     { id:"helm86", src:"gear", chip: rungChip("helmet", "i86"),
-      title:"i86 ES helmet", note:"Crit Rating basic; Strength + Crit Damage advanced." },
+      title:"i86 ES helmet — Long Night Sorcerer's Mask",
+      detail: craftDetail("helm86", "helmet", "i86") },
     { id:"gloves86", src:"gear", chip: rungChip("gloves", "i86"),
-      title:"i86 ES gloves", note:"%damage + Crit Rating basics; Crit Damage advanced." },
+      title:"i86 ES gloves — Long Night Sorcerer's Wristband",
+      detail: craftDetail("gloves86", "gloves", "i86") },
   ]},
 
   { id:"linkbuys", gate:"Skills", title:"Upgrade skills", steps:[
     { id:"legion", seq:"FIRST", src:"support", title:"Socket Legion (Noble)", needs:["wl-legion"],
       note:"With an Activation Medium: Motionless — drop Added Physical Damage and Quick Decision. "
-        + "Add Ice Bond on a Root medium (Extended Duration · Mass Effect); drop Fixate." },
+        + "Add Ice Bond on a Root medium (Extended Duration · Mass Effect); drop Fixate.",
+      detail: barFold("150b") },
     { id:"detonation", seq:"SECOND", src:"support", title:"Buy Spectral Slash: Detonation (Magnificent)",
-      note:"Then swap Bull's Rage + Timid → Shockwave Warcry (Elite medium · Extended Duration · Cooldown Reduction) "
-        + "+ Resurrection Warcry (Preparation medium · Cooldown Reduction · Extended Duration). "
-        + "Swap Fog Scorpion / Knight of Pale Blue → Captain Kitty — level Kitty only." },
+      note:"Socket it now; max to L5 later (+20% damage) before Fervor." },
+    { id:"warcries", seq:"THIRD", src:"skill", title:"Swap to warcries",
+      detail: () => itemsHtml("warcries", [
+        { name:"Shockwave Warcry", note:"replaces Bull's Rage",
+          lines:["Activation Medium: Elite", "Extended Duration", "Cooldown Reduction"] },
+        { name:"Resurrection Warcry", note:"replaces Timid",
+          lines:["Activation Medium: Preparation", "Cooldown Reduction", "Extended Duration"] },
+        { name:"Captain Kitty of the Furious Sea",
+          note:"replaces Fog Scorpion / Knight of Pale Blue · level this only" },
+      ]) + `<details class="bar-fold"><summary>the full bar after this buy</summary>`
+        + skillBarView("420b", "active") + `</details>` },
     { id:"thunderspike", src:"skill", title:"Buy Thunder Spike: Rumbling Thunder (Noble)",
-      note:"Thunder Spike replaces Spiral Strike — Quick Mobility · Periodic Burst · Precision Strike · Recklessness." },
+      note:"Thunder Spike replaces Spiral Strike — Quick Mobility · Periodic Burst · Precision Strike · Recklessness.",
+      detail: barFold("Inverse-Warcry") },
   ]},
 
   { id:"priceless", cost:"200B", gate:"Profound 8", title:"Priceless completes (8-1 + 8-2 open)", steps:[
     { id:"mh100", src:"gear", chip: rungChip("mainHand", "priceless"),
-      title:"Priceless mainhand",
-      note:"Ultimates: Armor Mitigation Pen / Combo Damage Enhancement. Basics: gear Attack Speed + flat Phys.",
-      detail: modRows(rung("mainHand", "priceless").mods!, "craft order — best ΔDPS per ember first") },
+      title:"Priceless mainhand — Shadowless Swordsman's Blade",
+      detail: craftDetail("mh100", "mainHand", "priceless") },
     { id:"oh100", src:"gear", chip: rungChip("offHand", "priceless"), needs:["boots86"],
       title:"Priceless offhand — Ninth Apostle's Magic Shield",
-      note:`+4 Active Skill Level (${g(modgain(rung("offHand", "priceless"), "+4 Active Skill Level"))}) is the line. `
-        + "Buy as a package with the i86 Hasten boots + God of Might / Brave tree changes." },
+      note:"Buy as a package with the i86 Hasten boots + God of Might / Brave tree changes.",
+      detail: craftDetail("oh100", "offHand", "priceless") },
     { id:"ring-timid", src:"gear", chip: rungChip("ring1", "priceless timid"), needs:["wl-timid"],
-      title:"Wear the timid curse-on-hit ring" },
+      title:"Priceless timid curse-on-hit ring",
+      detail: craftDetail("ring-timid", "ring1", "priceless timid") },
     { id:"ring-combo", src:"gear", chip: rungChip("ring2", "priceless combo"),
-      title:"Priceless combo ring", note:"Fervor Effect + Elemental/Erosion Pen ultimates." },
+      title:"Priceless combo ring",
+      detail: craftDetail("ring-combo", "ring2", "priceless combo") },
+  ]},
+
+  { id:"pre-fervor", gate:"Before Fervor", title:"Late power spikes", steps:[
+    { id:"det-max", seq:"1st", src:"support",
+      chip:`<span class="delta-chip d-hot">+20%</span>`,
+      title:"Max Spectral Slash: Detonation (Magnificent) to L5",
+      note:"+20% damage at level 5.", needs:["detonation"] },
+    { id:"end-warcry", seq:"2nd", src:"prism",
+      chip: dChip(prismRung("Inverse", "good inverse").delta), needs:["wl-inverse"],
+      title:"Socket the Inverse Prism" },
+    { id:"memory-leg", title:"Hero Memory legendary",
+      note:"REVIVED: +% Attack Speed for every main-attack skill cast (stacks to 6).",
+      detail: memoryDetail("memory-leg") },
   ]},
 
   { id:"fervor", gate:"All or nothing", title:"The Fervor engine — ONE purchase",
     note:"Any piece alone is a dead slot. Budget the 12% of current Life and ES per second it drains.", steps:[
     { id:"fv-boots", src:"gear", chip: rungChip("boots", "Dawn Break"), needs:["wl-vorax", "wl-dawnbreak"],
-      title:"Vorax boots + Dawn Break belt" },
+      title:"Vorax boots + Dawn Break belt",
+      detail: itemsDetail("fv-boots", [
+        { name:"Vorax boot base", note:"i86+, at least one decent mod" },
+        { name:"Dawn Break belt", note:"EV 950 FE" },
+      ]) },
     { id:"fv-gloves", src:"gear", chip: rungChip("gloves", "Ghost Slaughter"), needs:["wl-ghost", "fv-boots"],
-      title:"Corroded Ghost Slaughter" },
+      title:"Corroded Ghost Slaughter",
+      note:"Corroded 1%-per-rating roll only." },
     { id:"fv-helm", src:"gear", chip: rungChip("helmet", "priceless"),
-      title:"Priceless sealed-mana helmet", note:"Craft the Sealed Mana Compensation ultimate." },
+      title:"Priceless sealed-mana helmet",
+      detail: craftDetail("fv-helm", "helmet", "priceless") },
     { id:"fv-prism", src:"prism", chip: dChip(prismRung("Ethereal", "Unmatched Valor").delta),
       needs:["fv-helm", "fv-boots", "wl-valor"],
       title:"Socket Unmatched Valor", note:"Ranger slot; Centralize becomes a respec candidate." },
     { id:"fv-eternity", src:"gear", chip: rungChip("belt", "Eternity"), needs:["wl-eternity"],
       title:"Eternity (from the 5 blueprints)",
-      note:"Swap Motionless → Still Attack medium on the link. Precise: Energy Shield once the flat-ES belt is gone." },
+      note:"Swap Motionless → Still Attack medium on the link. Precise: Energy Shield once the flat-ES belt is gone.",
+      detail: barFold("5t Eternity") },
   ]},
 
   { id:"endgame", cost:"150B+", gate:"Timemark 8 / Atlas", title:"Endgame layers", steps:[
-    { id:"final-link", src:"support", title:"Finish the link",
+    { id:"end-mammoth", src:"pact", title:"2× Unending Fate + 2× Mammoth",
+      note:"2× Unending Fate unlock the dual sockets · 2× Mammoth self-casts Lv.20 Resurrection Warcry on hit every 3s (hands-free −60% additional damage taken).",
+      detail: itemsDetail("end-mammoth", [
+        { name:"2× Unending Fate", note:"required dual sockets" },
+        { name:"2× Mammoth", note:"self-casts Resurrection Warcry" },
+      ]) },
+    { id:"final-link", src:"support", title:"Finish the link", needs:["end-mammoth"],
       note:"Buy Critical Strike Damage Increase — replaces Steamroll. "
-        + "Defensive Buffer (Preparation medium · Iron Fortification · Cooldown Reduction) replaces Resurrection Warcry — the Mammoth kismets self-cast it." },
+        + "Defensive Buffer (Preparation medium · Iron Fortification · Cooldown Reduction) replaces Resurrection Warcry — Mammoth is casting it.",
+      detail: barFold("more_1") },
     { id:"end-crit", src:"talent", title:"Crit converters",
       note:"Take the 0.5% Crit Damage-per-rating converters: tree legendary + 2 slate copies." },
-    { id:"end-warcry", src:"prism", chip: dChip(prismRung("Inverse", "good inverse").delta), needs:["wl-inverse"],
-      title:"Socket the Inverse Prism", note:"Level Captain Kitty." },
-    { id:"mh-mw", src:"gear", chip: rungChip("mainHand", "MIRROR"),
-      title:"Mirror-worthy mainhand",
-      note:`Only the +4 Attack Skill Level roll (${g(modgain(rung("mainHand", "MIRROR"), "+4 to Attack Skill Level"))}) beats priceless.` },
+    { id:"end-prairie", src:"slate", title:"When Sparks Set the Prairie Ablaze",
+      note:"Copies the last Talent on all adjacent slates (not Core Talents) — use for the converter copies." },
   ]},
 ];
+
+/* ---------- talent tree stages — hand-authored per-slot composition.
+   Stage shown in the modal = furthest stage whose trigger step is checked.
+   A stage picks each of the 4 tree slots from its own loadout so a diff lands
+   on the step that causes it: the planner's "420b" bundles the warcry tree
+   swaps AND the Prophet frostbite respec, but the respec is paid for by the
+   sl-frostbite slate — so that stage advances only the Prophet slot (prism
+   stripped: Haze stays on bladerunner until the 420b tree swap orphans it). */
+const all = (loadout: string) => Array.from({ length: 4 }, () => ({ loadout }));
+const TREE_STAGES: TreeStage[] = [
+  { label:"Lv 86 — swap",    trigger:null,           slots: all("Full precise auras") },
+  { label:"150b — Legion",   trigger:"legion",       slots: all("150b") },
+  { label:"Frostbite slate", trigger:"sl-frostbite",
+    slots: [{loadout:"150b"}, {loadout:"150b"}, {loadout:"420b", prism:false}, {loadout:"150b"}] },
+  { label:"420b — warcries", trigger:"warcries",     slots: all("420b") },
+  { label:"Inverse prism",   trigger:"end-warcry",   slots: all("Inverse-Warcry") },
+  { label:"Sealed helmet",   trigger:"fv-helm",      slots: all("5t Eternity") },
+  { label:"Prophet → Ronin", trigger:"sl-convert",   slots: all("more_1") },
+];
+/* steps that respec the tree get a jump-straight-to-that-stage button */
+const TREE_BTN: Record<string, number> = { tree: 0, "end-crit": 6 };
+TREE_STAGES.forEach((s, i) => { if (s.trigger) TREE_BTN[s.trigger] = i; });
+const treeBtn = (stage: number | "cur", label: string) =>
+  `<button type="button" class="tree-btn" data-tree-stage="${stage}">✦ ${esc(label)}</button>`;
 
 /* ---------- render + progress state ---------- */
 const KEY = "linear-done";
@@ -250,6 +389,126 @@ const loadDone = (): Record<string, true> => {
 const done: Record<string, true> = loadDone();
 const saveDone = () => { try { localStorage.setItem(KEY, JSON.stringify(done)); } catch { /* per-session only */ } };
 
+/* Craft fold-outs stay open across checkbox re-renders (checking a line would otherwise snap shut). */
+const craftOpen = new Set<string>();
+
+/* Nested checklist keys live in `done`: stepId|item|line — re-rendered on every check. */
+const checkLabel = (id: string, labelHtml: string, cls: string) =>
+  `<label class="${cls}"><input type="checkbox" data-step="${escAttr(id)}"${done[id] ? " checked" : ""}>`
+  + labelHtml + `</label>`;
+
+/** Flat checkable lines under a step (craft order stats, no Δ chips). */
+function linesHtml(stepId: string, lines: string[]): string {
+  return `<ul class="sublist">`
+    + lines.map(line => {
+      const id = `${stepId}|${line}`;
+      return `<li class="sub-item${done[id] ? " done" : ""}">`
+        + checkLabel(id, `<span>${esc(line)}</span>`, "sub-check")
+        + `</li>`;
+    }).join("")
+    + `</ul>`;
+}
+
+/** Expected craft stats for a ladder rung — collapsed behind a Craft button. */
+function craftLinesHtml(stepId: string, slot: string, prefix: string): string {
+  const r = rung(slot, prefix);
+  if (!r.mods?.length) throw new Error(`linear: no craft mods on ${slot}/${prefix}`);
+  const open = craftOpen.has(stepId) ? " open" : "";
+  return `<details class="craft-fold" data-craft="${escAttr(stepId)}"${open}>`
+    + `<summary>Craft</summary>`
+    + linesHtml(stepId, r.mods.map(m => m.text.replace(/\n/g, " · ")))
+    + `</details>`;
+}
+
+/** Parent step → checkable sub-items (uniques, kismets); optional nested lines per item. */
+function itemsHtml(stepId: string, items: SubItem[]): string {
+  return `<ul class="skill-bar">`
+    + items.map(it => {
+      const key = `${stepId}|${it.name}`;
+      const title = `<span>${esc(it.name)}`
+        + (it.note ? ` <span class="sub-note">${esc(it.note)}</span>` : "")
+        + `</span>`;
+      return `<li class="skill-item${done[key] ? " done" : ""}">`
+        + checkLabel(key, title, "skill-check")
+        + (it.lines?.length
+          ? `<ul class="skill-supports">${it.lines.map(line => {
+              const lid = `${key}|${line}`;
+              return `<li class="support-item${done[lid] ? " done" : ""}">`
+                + checkLabel(lid, `<span>${esc(line)}</span>`, "support-check")
+                + `</li>`;
+            }).join("")}</ul>`
+          : "")
+        + `</li>`;
+    }).join("")
+    + `</ul>`;
+}
+
+/** Hero memories: Origin → Progress → Discipline (order = priority). Fixed/Random craft
+    lines are shared across all three and sit behind a Craft fold (same pattern as gear). */
+function memoryBoxesHtml(stepId: string): string {
+  const boxes: { key: string; type: string; base: string }[] = [
+    { key:"Origin", type:"Origin", base:"Strength" },
+    { key:"Progress", type:"Progress", base:"Attack Speed" },
+    { key:"Discipline", type:"Discipline", base:"Energy Shield" },
+  ];
+  const prioBlock = (label: string, items: string[]) =>
+    `<div class="mem-row"><span class="mem-lbl">${esc(label)}</span>`
+    + linesHtml(`${stepId}|${label}`, items)
+    + `</div>`;
+  const open = craftOpen.has(stepId) ? " open" : "";
+  return `<ul class="skill-bar">`
+    + boxes.map(b => {
+      const id = `${stepId}|${b.key}`;
+      return `<li class="skill-item mem-box${done[id] ? " done" : ""}">`
+        + checkLabel(id,
+          `<span><b>${esc(b.type)}</b> <span class="sub-note">${esc(b.base)}</span></span>`,
+          "skill-check")
+        + `</li>`;
+    }).join("")
+    + `</ul>`
+    + `<details class="craft-fold" data-craft="${escAttr(stepId)}"${open}>`
+    + `<summary>Craft</summary>`
+    + `<div class="mem-body mem-shared">`
+    + prioBlock("Fixed", MEM_FIXED)
+    + prioBlock("Random", MEM_RANDOM)
+    + `</div></details>`;
+}
+
+/** Interactive skill → support checklist (Copy this bar / Precise Auras). */
+function skillBarHtml(stepId: string, loadout: string, which: "active" | "passive" = "active"): string {
+  const bar = SKILLBARS.find(b => b.loadout === loadout);
+  if (!bar) throw new Error(`linear: no skillbar "${loadout}"`);
+  return `<ul class="skill-bar">`
+    + bar[which].map(s => {
+      const skillKey = `${stepId}|${s.name}`;
+      return `<li class="skill-item${done[skillKey] ? " done" : ""}">`
+        + checkLabel(skillKey, `<span>${esc(s.name)}</span>`, "skill-check")
+        + (s.supports.length
+          ? `<ul class="skill-supports">${s.supports.map(u => {
+              const supKey = `${skillKey}|${u.name}`;
+              return `<li class="support-item${done[supKey] ? " done" : ""}">`
+                + checkLabel(supKey, `<span>${esc(u.name)}</span>`, "support-check")
+                + `</li>`;
+            }).join("")}</ul>`
+          : "")
+        + `</li>`;
+    }).join("")
+    + `</ul>`;
+}
+
+/** Read-only skill bar for fold-outs (no checkboxes — avoids re-render closing <details>). */
+function skillBarView(loadout: string, which: "active" | "passive" = "active"): string {
+  const bar = SKILLBARS.find(b => b.loadout === loadout);
+  if (!bar) throw new Error(`linear: no skillbar "${loadout}"`);
+  return `<div class="skillbar">` + bar[which].map(sk =>
+    `<div class="sb-row">`
+      + `<span class="sb-row-head"><span class="sb-skill">${esc(sk.name)}</span></span>`
+      + `<span class="sb-sups">`
+      + sk.supports.map(x => `<span class="sb-sup sb-${x.type}">${esc(x.name)}</span>`).join("")
+      + `</span></div>`
+  ).join("") + `</div>`;
+}
+
 const TITLE: Record<string, string> = {};
 for (const p of [WATCHLIST, ...PHASES]) for (const s of p.steps) TITLE[s.id] = s.title;
 
@@ -258,21 +517,24 @@ for (const p of [WATCHLIST, ...PHASES]) for (const s of p.steps)
 
 const stepCard = (s: Step) => {
   const waiting = (s.needs ?? []).filter(id => !done[id]);
-  return `<div class="lstep${done[s.id] ? " done" : ""}${s.seq ? " seq" : ""}">`
-    + `<label><input type="checkbox" data-step="${s.id}"${done[s.id] ? " checked" : ""}>`
+  const body = done[s.id] ? ""
+    : (s.note ? `<p class="l-note">${s.note}</p>` : "")
+      + (waiting.length ? `<p class="l-wait">⚠ waiting on: ${waiting.map(id => esc(TITLE[id])).join(" · ")}</p>` : "")
+      + (s.id in TREE_BTN ? `<p class="l-tree">${treeBtn(TREE_BTN[s.id], "view this talent tree")}</p>` : "")
+      + (typeof s.detail === "function" ? s.detail() : (s.detail ?? ""));
+  return `<div class="lstep${done[s.id] ? " done" : ""}${s.seq ? " seq" : ""}" id="step-${escAttr(s.id)}">`
+    + `<label class="lstep-head"><input type="checkbox" data-step="${escAttr(s.id)}"${done[s.id] ? " checked" : ""}>`
     + (s.seq ? `<span class="lseq">${esc(s.seq)}</span>` : "")
     + (s.src ? srcChip(s.src) : "")
     + `<span class="l-title">${s.title}</span>${s.chip ?? ""}</label>`
-    + (s.note ? `<p class="l-note">${s.note}</p>` : "")
-    + (waiting.length ? `<p class="l-wait">⚠ waiting on: ${waiting.map(id => esc(TITLE[id])).join(" · ")}</p>` : "")
-    + (s.detail ?? "")
+    + body
     + `</div>`;
 };
 
 const phaseCard = (p: Phase) => {
   const n = p.steps.filter(s => done[s.id]).length;
   const ordered = p.steps.filter(s => s.seq), free = p.steps.filter(s => !s.seq);
-  return `<article class="bundle lphase">`
+  return `<article class="bundle lphase" id="phase-${escAttr(p.id)}" data-phase="${escAttr(p.id)}">`
     + `<div class="bundle-head"><span class="l-gate">${esc(p.gate)}${p.cost ? ` · ${esc(p.cost)}` : ""}</span>`
     + `<h3>${esc(p.title)}</h3>`
     + `<span class="l-count">${n}/${p.steps.length}</span></div>`
@@ -282,19 +544,109 @@ const phaseCard = (p: Phase) => {
     + `</article>`;
 };
 
-export function renderLinear(main: HTMLElement, aside: HTMLElement): void {
-  const render = () => {
-    main.innerHTML = PHASES.map(phaseCard).join("");
-    aside.innerHTML = phaseCard(WATCHLIST);
+/** Which phase is in view — only that phase expands step links in the left rail. */
+let activePhaseId = PHASES[0]?.id ?? "";
+
+/** Left rail: one link per phase + n/total; step children only under the active phase. */
+const sideNav = (phases: Phase[], activeId: string) => {
+  let doneN = 0, totalN = 0;
+  const items = phases.map(p => {
+    const n = p.steps.filter(s => done[s.id]).length;
+    doneN += n; totalN += p.steps.length;
+    const all = n === p.steps.length && p.steps.length > 0;
+    const here = p.id === activeId;
+    const phase = `<a class="sidenav-item${all ? " complete" : n ? " partial" : ""}${here ? " active" : ""}" href="#phase-${escAttr(p.id)}">`
+      + `<span class="sidenav-label">${esc(p.title)}</span>`
+      + `<span class="sidenav-count">${all ? "✓" : `${n}/${p.steps.length}`}</span>`
+      + `</a>`;
+    if (!here) return phase;
+    const subs = p.steps.map(s => {
+      const sd = !!done[s.id];
+      return `<a class="sidenav-sub${sd ? " complete" : ""}" href="#step-${escAttr(s.id)}">`
+        + `<span class="sidenav-sub-label">${esc(s.title)}</span>`
+        + (sd ? `<span class="sidenav-sub-mark">✓</span>` : "")
+        + `</a>`;
+    }).join("");
+    return phase + `<div class="sidenav-subs">${subs}</div>`;
+  }).join("");
+  const allDone = doneN === totalN && totalN > 0;
+  return `<div class="sidenav-head">`
+    + `<span class="sidenav-title">Sections</span>`
+    + `<span class="sidenav-total${allDone ? " complete" : ""}">${allDone ? "✓" : `${doneN}/${totalN}`}</span>`
+    + `</div>` + items;
+};
+
+/** Phase whose top is closest under the sticky offset wins (classic scroll-spy). */
+function phaseInView(main: HTMLElement): string {
+  const anchor = 96; // ~ sticky topnav + a little air
+  let best = PHASES[0]?.id ?? "";
+  let bestTop = -Infinity;
+  for (const p of PHASES) {
+    const el = main.querySelector<HTMLElement>(`#phase-${CSS.escape(p.id)}`);
+    if (!el) continue;
+    const top = el.getBoundingClientRect().top;
+    if (top <= anchor && top >= bestTop) {
+      bestTop = top;
+      best = p.id;
+    }
+  }
+  // above the first phase → still first; past last with nothing above anchor → last seen
+  if (bestTop === -Infinity) {
+    const first = main.querySelector<HTMLElement>(`#phase-${CSS.escape(PHASES[0]?.id ?? "")}`);
+    if (first && first.getBoundingClientRect().top > anchor) return PHASES[0]?.id ?? "";
+  }
+  return best;
+}
+
+export function renderLinear(main: HTMLElement, aside: HTMLElement, nav?: HTMLElement | null): void {
+  for (const id of Object.keys(TREE_BTN))
+    if (!(id in TITLE)) throw new Error(`linear: tree trigger "${id}" has no step`);
+  initTalents(TREE_STAGES, () => done);
+
+  const paintNav = () => {
+    if (!nav) return;
+    nav.innerHTML = sideNav(PHASES, activePhaseId);
   };
-  /* delegated listeners survive re-renders; fold-out open state intentionally resets */
-  for (const el of [main, aside]) el.addEventListener("change", e => {
-    const t = e.target as HTMLInputElement;
-    const id = t.dataset.step;
-    if (!id) return;
-    if (t.checked) done[id] = true; else delete done[id];
-    saveDone();
-    render();
-  });
+
+  const render = () => {
+    main.innerHTML = `<div class="l-toolbar">${treeBtn("cur", "talent tree — current stage")}</div>`
+      + PHASES.map(phaseCard).join("");
+    aside.innerHTML = phaseCard(WATCHLIST);
+    activePhaseId = phaseInView(main) || activePhaseId;
+    paintNav();
+  };
+
+  const onScroll = () => {
+    const next = phaseInView(main);
+    if (next === activePhaseId) return;
+    activePhaseId = next;
+    paintNav();
+  };
+
+  /* delegated listeners survive re-renders; craft fold open state is kept in craftOpen */
+  for (const el of [main, aside]) {
+    el.addEventListener("change", e => {
+      const t = e.target as HTMLInputElement;
+      const id = t.dataset.step;
+      if (!id) return;
+      if (t.checked) done[id] = true; else delete done[id];
+      saveDone();
+      render();
+    });
+    el.addEventListener("toggle", e => {
+      const d = e.target as HTMLDetailsElement;
+      if (!(d instanceof HTMLDetailsElement) || !d.classList.contains("craft-fold")) return;
+      const id = d.dataset.craft;
+      if (!id) return;
+      if (d.open) craftOpen.add(id); else craftOpen.delete(id);
+    }, true);
+    el.addEventListener("click", e => {
+      const b = (e.target as HTMLElement).closest<HTMLElement>(".tree-btn");
+      if (!b) return;
+      const v = b.dataset.treeStage!;
+      openTalents(v === "cur" ? undefined : +v);
+    });
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
   render();
 }

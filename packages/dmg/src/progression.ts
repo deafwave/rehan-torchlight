@@ -134,32 +134,25 @@ function tierBelowBest(item: any, aff: any): number[] | null {
   return vals && vals.length === (aff.rolledValues ?? []).length ? vals : null;
 }
 
-/** Marginal ΔDPS of each crafted line — the TIER STEP: this roll vs the same affix at
-    the best roll of one tier lower (user 2026-07-15: a T0 craft replaces a T1 line, so
-    +124% Gear Phys vs T1's 100 is worth 24 points, not 124). Bottom-tier or unpooled
-    lines fall back to line-vs-nothing. per = gain / ember cost. */
+/** Full-line ΔDPS of each crafted affix (line-vs-nothing). Craft order is "which mods
+    carry the damage on this piece" (user 2026-07-16: combo → frostbite → rest → ES),
+    not the last-tier polish step — that lives in the rung's entry→top range.
+    per = gain / ember cost (shown on the pool chip; sort is by gain). */
 function statBreakdown(build: any, slot: string, item: any, fullDps: number): ModRow[] {
   const rows: ModRow[] = [];
   for (const side of ["prefixes", "suffixes"] as const) {
     (item[side] ?? []).forEach((aff: any, i: number) => {
       const variant = deepCopy(item);
-      const below = tierBelowBest(item, aff);
-      let vs: string | null = null;
-      if (below) {
-        variant[side][i].rolledValues.forEach((rv: any, k: number) => { rv.value = below[k]; });
-        vs = substitute(aff.modifierDescription, below);
-      } else {
-        variant[side].splice(i, 1);
-      }
+      variant[side].splice(i, 1);
       const gain = pyRound((fullDps / dpsWith(build, slot, variant) - 1) * 100, 1);
       const pool = poolOf(item, aff);
       const cost = pool ? POOL_COST[pool] : null;
       rows.push({ text: substitute(aff.modifierDescription,
                                    (aff.rolledValues ?? []).map((rv: any) => rv.value)),
-                  pool, cost, gain, per: cost ? pyRound(gain / cost, 2) : null, vs });
+                  pool, cost, gain, per: cost ? pyRound(gain / cost, 2) : null, vs: null });
     });
   }
-  rows.sort((a, b) => (b.per ?? -1) - (a.per ?? -1));
+  rows.sort((a, b) => b.gain - a.gain || (b.per ?? -1) - (a.per ?? -1));
   return rows;
 }
 

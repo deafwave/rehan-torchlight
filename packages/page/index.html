@@ -7,7 +7,7 @@
 <!-- pre-CSS paint guard: style.css arrives via the JS module, so without this the
      first frame after refresh is browser-default white. Keep in sync with --night. -->
 <style>html{background:#0c141d;color-scheme:dark}</style>
-<title>Rehan SS13 — Progression</title>
+<title>Rehan2</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -15,23 +15,20 @@
 <body>
 <nav class="topnav" id="tabbar">
   <div class="topnav-inner">
+    <span class="topnav-title">Rehan2</span>
     <div class="topnav-tabs">
       <button data-tab="linear" class="active">Linear</button>
       <button data-tab="progression">Progression</button>
       <button data-tab="slate">Slate Mods</button>
       <button data-tab="memory">Memory Mods</button>
     </div>
-    <a class="topnav-cta"
+    <a class="topnav-fallback"
        href="https://tlicompendium.com/en/build-planner?code=zEh9StdPyaqq4UiX8NfQtb-kcM9KR3dR"
-       target="_blank" rel="noopener noreferrer">Open in TLI Compendium ↗</a>
+       target="_blank" rel="noopener noreferrer">static compendium ↗</a>
   </div>
 </nav>
 
 <div class="wrap">
-<header>
-  <h1>REHAN <span class="hero-sub">· SEETHING SILHOUETTE</span></h1>
-</header>
-
 <section class="bundles" id="progression" hidden>
   <h2>Items</h2>
   <div class="tree" id="tree"></div>
@@ -75,6 +72,7 @@
 
 <section class="bundles" id="linear">
   <div class="linear-cols">
+    <nav id="linear-nav" class="sidenav" aria-label="Linear sections"></nav>
     <div id="linear-plan"></div>
     <aside id="linear-watchlist"></aside>
   </div>

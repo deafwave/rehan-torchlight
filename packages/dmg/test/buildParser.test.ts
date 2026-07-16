@@ -345,6 +345,15 @@ describe("derived layers", () => {
     expect(warcryLayer({ ...d, warcry_min_enemies: 12, warcry_max_doubled: 0 }))
       .toBeCloseTo(5.95 * 8, 6);
   });
+
+  test("frostbite is derived from max rating + effect, not a manual constant", () => {
+    // mechanics.md#frostbite: base 120 + ring 25 + memory 12 = 157, x +20% Effect = 188.4.
+    // Gear Max Frostbite must move DPS (craft order on rings), so this cannot be a set override.
+    const [snap] = parseBuild(BUILD);
+    expect(snap._derived!.frostbite_max).toBe(157);
+    expect(snap._derived!.frostbite_effect_pct).toBe(20);
+    expect(snap.enemy_taken.frostbite).toBeCloseTo(188.4, 6);
+  });
 });
 
 describe("off-hand local lines (mechanics.md 'Offhand / dual wield')", () => {

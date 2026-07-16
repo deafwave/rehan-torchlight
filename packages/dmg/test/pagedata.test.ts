@@ -60,6 +60,29 @@ describe("talents page data", () => {
     }
   });
 
+  test("prism sockets: named, on a real node, and tracked as they move", () => {
+    const slot = (lo: string, tree: string) =>
+      TAL.stages.find(s => s.loadout === lo)!.slots.find(s => s.tree === tree)!;
+    for (const st of TAL.stages) for (const sl of st.slots) {
+      if (!sl.prism) continue;
+      expect(sl.prism.name.length, `${st.loadout}/${sl.tree}`).toBeGreaterThan(0);
+      expect(TAL.trees[sl.tree].nodes.some(n => n.id === sl.prism!.node),
+        `${st.loadout}/${sl.tree}/${sl.prism.node}`).toBe(true);
+    }
+    const haze = slot("Full precise auras", "bladerunner").prism!;
+    expect(haze.name).toMatch(/Haze/);
+    // Haze overrides the socketed node — the page must surface the base affix, not
+    // the original Bladerunner move-speed legendary text
+    expect(haze.effect).toMatch(/additional Attack Damage when holding a One-Handed Weapon/i);
+    expect(haze.effect).not.toMatch(/Movement Speed/i);
+    expect(slot("420b", "prophet").prism!.name).toMatch(/Haze/);
+    expect(slot("Inverse-Warcry", "the_brave").prism!.name).toMatch(/Inverse/);
+    expect(slot("more_1", "ranger").prism!.name).toMatch(/Valor/);
+    // the 5t socket replaces the tree's core talent — the page must say so
+    expect(slot("5t Eternity", "ranger").prism!.replacesCore).toBe(true);
+    expect(slot("5t Eternity", "ranger").prism!.effect).toMatch(/Fervor Rating/i);
+  });
+
   test("inverse image: mirrored nodes carry position, source desc, and points", () => {
     const inv = TAL.stages.find(s => s.loadout === "more_1")!
       .slots.find(s => s.mirrored)!;

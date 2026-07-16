@@ -1,0 +1,3769 @@
+{
+ "trees": {
+  "goddess_of_hunting": {
+   "name": "Goddess of Hunting",
+   "maxPoints": 31,
+   "nodes": [
+    {
+     "id": "3686eb36-ad57-5c43-814d-1f87f9dad1ca",
+     "type": "micro",
+     "x": 608,
+     "y": 80,
+     "max": 3,
+     "desc": "+3% Attack and Cast Speed"
+    },
+    {
+     "id": "5f5debbc-93cc-5f67-ad1f-b3aff77ed601",
+     "type": "medium",
+     "x": 736,
+     "y": 80,
+     "max": 3,
+     "desc": "+40% Attack Critical Strike Rating"
+    },
+    {
+     "id": "a54603ef-e8f7-55a3-956e-74b5de991eea",
+     "type": "legendary",
+     "x": 864,
+     "y": 80,
+     "max": 1,
+     "desc": "+6% additional Attack Speed if you have dealt a Critical Strike recently"
+    },
+    {
+     "id": "d95ba2cd-4dce-53b6-9b39-eaa0e0267a54",
+     "type": "micro",
+     "x": 224,
+     "y": 176,
+     "max": 3,
+     "desc": "+3% Attack and Cast Speed\n+2% Movement Speed"
+    },
+    {
+     "id": "c2078be8-6145-552f-8553-5b023a2903f7",
+     "type": "medium",
+     "x": 352,
+     "y": 176,
+     "max": 3,
+     "desc": "+6% Attack and Cast Speed\n+4% Movement Speed\n-4 Skill Cost"
+    },
+    {
+     "id": "106f1e55-6635-53a5-8d1e-35c29c7dba71",
+     "type": "micro",
+     "x": 480,
+     "y": 176,
+     "max": 3,
+     "desc": "+8 Dexterity"
+    },
+    {
+     "id": "41f13b75-a2d1-560a-88e3-93bc0311a734",
+     "type": "medium",
+     "x": 608,
+     "y": 176,
+     "max": 3,
+     "desc": "+16 Dexterity"
+    },
+    {
+     "id": "abd01635-e04c-5c0c-bca7-3766f98ab303",
+     "type": "medium",
+     "x": 736,
+     "y": 176,
+     "max": 3,
+     "desc": "+40% Spell Critical Strike Rating"
+    },
+    {
+     "id": "7136a10e-d56b-5713-bef4-e47cb5631d5a",
+     "type": "legendary",
+     "x": 864,
+     "y": 176,
+     "max": 1,
+     "desc": "+6% additional Cast Speed if you have dealt a Critical Strike recently"
+    },
+    {
+     "id": "06d2ad49-d9c1-50c3-a15c-6aa71660fda9",
+     "type": "micro",
+     "x": 96,
+     "y": 272,
+     "max": 3,
+     "desc": "+9% damage"
+    },
+    {
+     "id": "d6a53af5-f37b-5d1f-a30e-b940982add8d",
+     "type": "medium",
+     "x": 224,
+     "y": 272,
+     "max": 3,
+     "desc": "+18% damage"
+    },
+    {
+     "id": "ebd0d8e4-41ef-55ec-9b13-1e00552bc1b7",
+     "type": "micro",
+     "x": 352,
+     "y": 272,
+     "max": 3,
+     "desc": "+6% Skill Area\n+6% Projectile Speed"
+    },
+    {
+     "id": "16fea382-d50e-5568-a1d7-80bd38ed3501",
+     "type": "medium",
+     "x": 480,
+     "y": 272,
+     "max": 3,
+     "desc": "+12% Skill Area\n+12% Projectile Speed"
+    },
+    {
+     "id": "17c3e113-e566-54c3-b4e7-cf997e008f7d",
+     "type": "micro",
+     "x": 736,
+     "y": 272,
+     "max": 3,
+     "desc": "1.25% Life Regain\n1.25% Energy Shield Regain"
+    },
+    {
+     "id": "567a9dd5-b43b-57c3-b111-e2522116fc5a",
+     "type": "medium",
+     "x": 864,
+     "y": 272,
+     "max": 3,
+     "desc": "2.5% Life Regain\n2.5% Energy Shield Regain"
+    },
+    {
+     "id": "3921cdd2-5b09-514c-b25f-07b5a001a7f3",
+     "type": "micro",
+     "x": 224,
+     "y": 368,
+     "max": 3,
+     "desc": "+3% Max Life\n+3% Max Energy Shield"
+    },
+    {
+     "id": "8151795d-25da-51f4-843e-5770ad79f236",
+     "type": "medium",
+     "x": 352,
+     "y": 368,
+     "max": 3,
+     "desc": "+6% Max Life\n+6% Max Energy Shield"
+    },
+    {
+     "id": "be01c476-54e4-5af3-9e43-e8bebef0b462",
+     "type": "micro",
+     "x": 480,
+     "y": 368,
+     "max": 3,
+     "desc": "+12% damage if you have defeated an enemy recently"
+    },
+    {
+     "id": "4f376978-b286-513c-9f14-1331d64d960f",
+     "type": "legendary",
+     "x": 608,
+     "y": 368,
+     "max": 1,
+     "desc": "+5% damage and +1% Movement Speed for 4 s on defeat. Stacks up to 8 time(s)"
+    },
+    {
+     "id": "3b576d34-ae16-5cd0-8898-ce95f64433c5",
+     "type": "micro",
+     "x": 736,
+     "y": 368,
+     "max": 3,
+     "desc": "+10% Agility Blessing Duration\n+3% Attack Speed and Cast Speed when having Agility Blessing"
+    },
+    {
+     "id": "cfab9dd7-1fbf-5c25-a772-6605f57f439d",
+     "type": "legendary",
+     "x": 864,
+     "y": 368,
+     "max": 1,
+     "desc": "+1 to Max Agility Blessing Stacks"
+    },
+    {
+     "id": "d4327d5e-59bb-5bde-8cd0-015c5a70d53a",
+     "type": "micro",
+     "x": 352,
+     "y": 464,
+     "max": 3,
+     "desc": "+7% Evasion"
+    },
+    {
+     "id": "026e0b9a-4be8-521c-b8a2-5b20a8fc801a",
+     "type": "medium",
+     "x": 480,
+     "y": 464,
+     "max": 3,
+     "desc": "+14% Evasion"
+    },
+    {
+     "id": "48214679-8d96-5a68-b0e8-f9e662e5bc86",
+     "type": "micro",
+     "x": 608,
+     "y": 464,
+     "max": 3,
+     "desc": "+9% damage"
+    },
+    {
+     "id": "a1528c87-fa44-581d-aa95-f7e6a967a756",
+     "type": "legendary",
+     "x": 736,
+     "y": 464,
+     "max": 1,
+     "desc": "+10% additional damage for 4s after using Mobility Skills"
+    }
+   ],
+   "edges": [
+    [
+     "3686eb36-ad57-5c43-814d-1f87f9dad1ca",
+     "5f5debbc-93cc-5f67-ad1f-b3aff77ed601"
+    ],
+    [
+     "3686eb36-ad57-5c43-814d-1f87f9dad1ca",
+     "abd01635-e04c-5c0c-bca7-3766f98ab303"
+    ],
+    [
+     "5f5debbc-93cc-5f67-ad1f-b3aff77ed601",
+     "a54603ef-e8f7-55a3-956e-74b5de991eea"
+    ],
+    [
+     "c2078be8-6145-552f-8553-5b023a2903f7",
+     "d95ba2cd-4dce-53b6-9b39-eaa0e0267a54"
+    ],
+    [
+     "106f1e55-6635-53a5-8d1e-35c29c7dba71",
+     "41f13b75-a2d1-560a-88e3-93bc0311a734"
+    ],
+    [
+     "7136a10e-d56b-5713-bef4-e47cb5631d5a",
+     "abd01635-e04c-5c0c-bca7-3766f98ab303"
+    ],
+    [
+     "06d2ad49-d9c1-50c3-a15c-6aa71660fda9",
+     "d6a53af5-f37b-5d1f-a30e-b940982add8d"
+    ],
+    [
+     "16fea382-d50e-5568-a1d7-80bd38ed3501",
+     "ebd0d8e4-41ef-55ec-9b13-1e00552bc1b7"
+    ],
+    [
+     "17c3e113-e566-54c3-b4e7-cf997e008f7d",
+     "567a9dd5-b43b-57c3-b111-e2522116fc5a"
+    ],
+    [
+     "3921cdd2-5b09-514c-b25f-07b5a001a7f3",
+     "8151795d-25da-51f4-843e-5770ad79f236"
+    ],
+    [
+     "4f376978-b286-513c-9f14-1331d64d960f",
+     "be01c476-54e4-5af3-9e43-e8bebef0b462"
+    ],
+    [
+     "3b576d34-ae16-5cd0-8898-ce95f64433c5",
+     "cfab9dd7-1fbf-5c25-a772-6605f57f439d"
+    ],
+    [
+     "026e0b9a-4be8-521c-b8a2-5b20a8fc801a",
+     "d4327d5e-59bb-5bde-8cd0-015c5a70d53a"
+    ],
+    [
+     "48214679-8d96-5a68-b0e8-f9e662e5bc86",
+     "a1528c87-fa44-581d-aa95-f7e6a967a756"
+    ]
+   ],
+   "notables": [
+    {
+     "id": "5b18377d-33e0-55ec-9d21-077e1b64d5d7",
+     "threshold": 12,
+     "name": "Perception",
+     "desc": "+100% chance to gain 1 stacks of Agility Blessing on hit\n+1 to Max Agility Blessing Stacks (Max Divinity Effect: 1)"
+    },
+    {
+     "id": "1a380896-8198-5bb3-8465-dcb2342b7d5f",
+     "threshold": 12,
+     "name": "Third time's a charm",
+     "desc": "Has Hasten\nWhen you have Hasten, +7% Attack Speed and Cast Speed for every 3m of movement made recently. Stacks up to 3 time(s) (Max Divinity Effect: 1)"
+    },
+    {
+     "id": "7cc5739a-f29e-5199-ab05-1acf2cda6e7b",
+     "threshold": 12,
+     "name": "Impermanence",
+     "desc": "-90% additional Min Physical Damage, and +80% additional Max Physical Damage\n-32% additional min damage\n+32% additional Max Damage (Max Divinity Effect: 1)"
+    },
+    {
+     "id": "59185299-0b6e-5d9b-87a2-85a658d9c11a",
+     "threshold": 24,
+     "name": "Rushed",
+     "desc": "+30% additional damage if you have recently moved more than 5 m (Max Divinity Effect: 1)"
+    },
+    {
+     "id": "7c5c0738-ca24-5513-afe2-a69f46072475",
+     "threshold": 24,
+     "name": "Three Birds with One Stone",
+     "desc": "Projectile Quantity +2\n+2 to Parabolic Projectile Splits quantity\n+10% additional Projectile Damage (Max Divinity Effect: 1)"
+    },
+    {
+     "id": "820fa0af-97b8-590b-96b3-58e45d491b79",
+     "threshold": 24,
+     "name": "Steady Accumulation",
+     "desc": "+40% additional Hit Damage\nAdditional -30% Skill Effect Duration (Max Divinity Effect: 1)"
+    }
+   ]
+  },
+  "bladerunner": {
+   "name": "Bladerunner",
+   "maxPoints": 34,
+   "nodes": [
+    {
+     "id": "22888ca6-5a98-51fb-b691-1bc3ba2f4d24",
+     "type": "micro",
+     "x": 96,
+     "y": 80,
+     "max": 3,
+     "desc": "+9% Attack Damage"
+    },
+    {
+     "id": "c24ff1cf-bca7-5cbc-8f17-49d2c3e55e7b",
+     "type": "medium",
+     "x": 224,
+     "y": 80,
+     "max": 3,
+     "desc": "+18% Attack Damage"
+    },
+    {
+     "id": "7581983f-c876-5772-bdc0-eb871e61dc1d",
+     "type": "micro",
+     "x": 352,
+     "y": 80,
+     "max": 3,
+     "desc": "+15% Critical Strike Rating"
+    },
+    {
+     "id": "fe3fd8f1-eb55-5132-923a-04b81c2326f7",
+     "type": "medium",
+     "x": 480,
+     "y": 80,
+     "max": 3,
+     "desc": "+20% Critical Strike Rating\n+5% Critical Strike Damage"
+    },
+    {
+     "id": "5fe2593a-2586-5707-8bbd-9fbaa897c39c",
+     "type": "micro",
+     "x": 608,
+     "y": 80,
+     "max": 3,
+     "desc": "+9% Attack Damage while Dual Wielding"
+    },
+    {
+     "id": "7ca6f420-04a9-5b51-8d01-107fa58e6877",
+     "type": "medium",
+     "x": 736,
+     "y": 80,
+     "max": 3,
+     "desc": "+6% Attack Speed while Dual Wielding"
+    },
+    {
+     "id": "453257ba-d45d-50f2-9fce-2751ad6f56b2",
+     "type": "legendary",
+     "x": 864,
+     "y": 80,
+     "max": 1,
+     "desc": "+6% additional Attack Speed while Dual Wielding"
+    },
+    {
+     "id": "f6777ab4-f0dd-574c-ad31-3797ff71a0ed",
+     "type": "micro",
+     "x": 224,
+     "y": 176,
+     "max": 3,
+     "desc": "+3% Attack Speed"
+    },
+    {
+     "id": "8c80db24-d481-5526-97ae-6b1bdb1c6962",
+     "type": "medium",
+     "x": 352,
+     "y": 176,
+     "max": 3,
+     "desc": "+6% Attack Speed"
+    },
+    {
+     "id": "58714219-4265-5dc7-9465-ee53f3c899fd",
+     "type": "legendary",
+     "x": 480,
+     "y": 176,
+     "max": 1,
+     "desc": "25% chance to gain Attack Aggression on defeat"
+    },
+    {
+     "id": "9c64cb21-e652-507e-bf5a-253df0ab79b9",
+     "type": "medium",
+     "x": 736,
+     "y": 176,
+     "max": 3,
+     "desc": "+18% Attack Damage while Dual Wielding"
+    },
+    {
+     "id": "a31122f1-00fe-5fe1-b651-a3b4cfb1037d",
+     "type": "legendary",
+     "x": 864,
+     "y": 176,
+     "max": 1,
+     "desc": "+5% additional Attack Damage for each unique type of weapon equipped while Dual Wielding"
+    },
+    {
+     "id": "4ac3000c-9ea6-5faf-8a59-5e9422ab27cd",
+     "type": "micro",
+     "x": 96,
+     "y": 272,
+     "max": 3,
+     "desc": "+3% Max Life\n+3% Max Energy Shield"
+    },
+    {
+     "id": "4e90045c-f3e9-5f89-aece-5c9747db6bb0",
+     "type": "medium",
+     "x": 224,
+     "y": 272,
+     "max": 3,
+     "desc": "+6% Max Life\n+6% Max Energy Shield"
+    },
+    {
+     "id": "57f3f442-ecde-520c-8d1d-44c61ad56b2a",
+     "type": "micro",
+     "x": 352,
+     "y": 272,
+     "max": 3,
+     "desc": "1.25% Life Regain\n1.25% Energy Shield Regain"
+    },
+    {
+     "id": "01e612e0-881b-5328-b495-bd3d3e521c40",
+     "type": "medium",
+     "x": 480,
+     "y": 272,
+     "max": 3,
+     "desc": "2.5% Life Regain\n2.5% Energy Shield Regain"
+    },
+    {
+     "id": "29a5a155-3c3c-5dce-9082-3efae5a4a8df",
+     "type": "micro",
+     "x": 608,
+     "y": 272,
+     "max": 3,
+     "desc": "+2% Movement Speed"
+    },
+    {
+     "id": "33b32a80-f4cf-5189-9a06-7e5a4d159ac4",
+     "type": "legendary",
+     "x": 736,
+     "y": 272,
+     "max": 1,
+     "desc": "35% of the bonuses for Movement Speed is also applied to the Cooldown Recovery Speed of Mobility skills\n70% of the bonuses for Movement Speed is also applied to the Attack and Cast Speed of Mobility Skills"
+    },
+    {
+     "id": "e6fa240f-686c-5529-a637-446ffb38f4f8",
+     "type": "legendary",
+     "x": 864,
+     "y": 272,
+     "max": 1,
+     "desc": "Gains a stack Agility Blessing when using Mobility Skills"
+    },
+    {
+     "id": "c3f657a5-dc73-58e6-977d-f5a5aedbb8bc",
+     "type": "micro",
+     "x": 224,
+     "y": 368,
+     "max": 3,
+     "desc": "+6% Projectile Speed"
+    },
+    {
+     "id": "e252f129-f3b2-5834-ada2-7881e958475a",
+     "type": "medium",
+     "x": 352,
+     "y": 368,
+     "max": 3,
+     "desc": "+12% Projectile Speed"
+    },
+    {
+     "id": "7971d453-e493-574a-82d7-35b9a4e2cef6",
+     "type": "micro",
+     "x": 608,
+     "y": 368,
+     "max": 3,
+     "desc": "+6% chance to Multistrike\n+6% Minion Multistrike chance"
+    },
+    {
+     "id": "3ed60e35-134e-5234-9c46-e4e429a17f37",
+     "type": "medium",
+     "x": 736,
+     "y": 368,
+     "max": 3,
+     "desc": "+3% additional Attack Speed when performing Multistrikes"
+    },
+    {
+     "id": "5dc37b5e-2b6b-51dd-81cf-9b4594633eca",
+     "type": "legendary",
+     "x": 864,
+     "y": 368,
+     "max": 1,
+     "desc": "Multistrikes deal 16% increasing damage"
+    },
+    {
+     "id": "e1283e33-9c42-53ff-bcc1-70f9a516a95d",
+     "type": "micro",
+     "x": 96,
+     "y": 464,
+     "max": 3,
+     "desc": "+3% Attack Speed"
+    },
+    {
+     "id": "d49a0c4f-494b-532b-8fc9-fbeb3edbd02f",
+     "type": "medium",
+     "x": 224,
+     "y": 464,
+     "max": 3,
+     "desc": "+6% Attack Speed\n-4 Skill Cost"
+    },
+    {
+     "id": "aa0edcc4-b3fd-5db6-90be-e612f15ee28f",
+     "type": "micro",
+     "x": 352,
+     "y": 464,
+     "max": 3,
+     "desc": "+7% Evasion"
+    },
+    {
+     "id": "e42b37db-c8dd-52f3-ab0c-a691b7d09331",
+     "type": "medium",
+     "x": 480,
+     "y": 464,
+     "max": 3,
+     "desc": "+14% Evasion"
+    },
+    {
+     "id": "9510dc08-43c9-5ae7-92fc-7953c5e7a456",
+     "type": "micro",
+     "x": 736,
+     "y": 464,
+     "max": 3,
+     "desc": "+8 Dexterity"
+    },
+    {
+     "id": "f5b21b0a-c967-5e21-9ddf-9244070d8100",
+     "type": "legendary",
+     "x": 864,
+     "y": 464,
+     "max": 1,
+     "desc": "+1% Attack and Cast Speed per 40 Dexterity"
+    }
+   ],
+   "edges": [
+    [
+     "22888ca6-5a98-51fb-b691-1bc3ba2f4d24",
+     "c24ff1cf-bca7-5cbc-8f17-49d2c3e55e7b"
+    ],
+    [
+     "7581983f-c876-5772-bdc0-eb871e61dc1d",
+     "fe3fd8f1-eb55-5132-923a-04b81c2326f7"
+    ],
+    [
+     "5fe2593a-2586-5707-8bbd-9fbaa897c39c",
+     "7ca6f420-04a9-5b51-8d01-107fa58e6877"
+    ],
+    [
+     "5fe2593a-2586-5707-8bbd-9fbaa897c39c",
+     "9c64cb21-e652-507e-bf5a-253df0ab79b9"
+    ],
+    [
+     "453257ba-d45d-50f2-9fce-2751ad6f56b2",
+     "7ca6f420-04a9-5b51-8d01-107fa58e6877"
+    ],
+    [
+     "8c80db24-d481-5526-97ae-6b1bdb1c6962",
+     "f6777ab4-f0dd-574c-ad31-3797ff71a0ed"
+    ],
+    [
+     "58714219-4265-5dc7-9465-ee53f3c899fd",
+     "8c80db24-d481-5526-97ae-6b1bdb1c6962"
+    ],
+    [
+     "9c64cb21-e652-507e-bf5a-253df0ab79b9",
+     "a31122f1-00fe-5fe1-b651-a3b4cfb1037d"
+    ],
+    [
+     "4ac3000c-9ea6-5faf-8a59-5e9422ab27cd",
+     "4e90045c-f3e9-5f89-aece-5c9747db6bb0"
+    ],
+    [
+     "01e612e0-881b-5328-b495-bd3d3e521c40",
+     "57f3f442-ecde-520c-8d1d-44c61ad56b2a"
+    ],
+    [
+     "29a5a155-3c3c-5dce-9082-3efae5a4a8df",
+     "33b32a80-f4cf-5189-9a06-7e5a4d159ac4"
+    ],
+    [
+     "33b32a80-f4cf-5189-9a06-7e5a4d159ac4",
+     "e6fa240f-686c-5529-a637-446ffb38f4f8"
+    ],
+    [
+     "c3f657a5-dc73-58e6-977d-f5a5aedbb8bc",
+     "e252f129-f3b2-5834-ada2-7881e958475a"
+    ],
+    [
+     "3ed60e35-134e-5234-9c46-e4e429a17f37",
+     "7971d453-e493-574a-82d7-35b9a4e2cef6"
+    ],
+    [
+     "3ed60e35-134e-5234-9c46-e4e429a17f37",
+     "5dc37b5e-2b6b-51dd-81cf-9b4594633eca"
+    ],
+    [
+     "d49a0c4f-494b-532b-8fc9-fbeb3edbd02f",
+     "e1283e33-9c42-53ff-bcc1-70f9a516a95d"
+    ],
+    [
+     "aa0edcc4-b3fd-5db6-90be-e612f15ee28f",
+     "e42b37db-c8dd-52f3-ab0c-a691b7d09331"
+    ],
+    [
+     "9510dc08-43c9-5ae7-92fc-7953c5e7a456",
+     "f5b21b0a-c967-5e21-9ddf-9244070d8100"
+    ]
+   ],
+   "notables": [
+    {
+     "id": "c8de9458-a4bf-50eb-b160-b4626c570076",
+     "threshold": 24,
+     "name": "Waiting Attack",
+     "desc": "Consumes all Agility Blessing every 8s. For each stack consumed, +5% additional damage in the next 8s (Max Divinity Effect: 1)"
+    },
+    {
+     "id": "00afe3a1-4105-5b6d-86e9-d6f5896587dc",
+     "threshold": 24,
+     "name": "Joined Force",
+     "desc": "Off-Hand Weapons do not participate in Attacks while Dual Wielding\nAdds 60% of the damage of the Off-Hand Weapon to the final damage of the Main-Hand Weapon (Max Divinity Effect: 1)"
+    },
+    {
+     "id": "0f621de3-3c71-5496-8555-5a20c8ba480f",
+     "threshold": 24,
+     "name": "Quick Advancement",
+     "desc": "Multistrikes deal 55% increasing damage\nMinions' Multistrikes deal 55% increasing damage (Max Divinity Effect: 1)"
+    },
+    {
+     "id": "1656d935-b2a9-5863-b65b-063930dfc2e2",
+     "threshold": 24,
+     "name": "Preemptive Strike",
+     "desc": "+1 initial Multistrike Count\n-20% Attack Speed when performing Multistrikes (Max Divinity Effect: 1)"
+    }
+   ]
+  },
+  "prophet": {
+   "name": "Prophet",
+   "maxPoints": 35,
+   "nodes": [
+    {
+     "id": "db27fb2c-5f29-595c-83e1-08a39bfa3634",
+     "type": "micro",
+     "x": 96,
+     "y": 80,
+     "max": 3,
+     "desc": "+9% Cold Damage"
+    },
+    {
+     "id": "13d13eaf-98dd-5f9c-8f65-84ac3b6fddfb",
+     "type": "medium",
+     "x": 224,
+     "y": 80,
+     "max": 3,
+     "desc": "+18% Cold Damage"
+    },
+    {
+     "id": "4843dd81-a7f8-56d4-8730-a7913ab305ce",
+     "type": "micro",
+     "x": 352,
+     "y": 80,
+     "max": 3,
+     "desc": "+15% Critical Strike Rating\n+15% Minion Critical Strike Rating"
+    },
+    {
+     "id": "95cea0d3-122c-5ca1-8b23-781ac2777fe6",
+     "type": "medium",
+     "x": 480,
+     "y": 80,
+     "max": 3,
+     "desc": "+20% Critical Strike Rating\n+20% Minion Critical Strike Rating\n+5% Critical Strike Damage\n+5% Minion Critical Strike Damage"
+    },
+    {
+     "id": "dede12b8-f16e-5282-91f6-e6471b48f8e8",
+     "type": "micro",
+     "x": 608,
+     "y": 80,
+     "max": 3,
+     "desc": "+2 to Max Frostbite Rating"
+    },
+    {
+     "id": "851d38e7-7f6b-5d7c-a006-54f5b32b5de6",
+     "type": "medium",
+     "x": 736,
+     "y": 80,
+     "max": 3,
+     "desc": "+5 to Max Frostbite Rating"
+    },
+    {
+     "id": "ab8176f5-aeb5-56d3-9eba-865c7fa36f41",
+     "type": "legendary",
+     "x": 864,
+     "y": 80,
+     "max": 1,
+     "desc": "+10% additional damage against Frozen enemies"
+    },
+    {
+     "id": "c71a9bdc-7ff6-5fde-804b-349207d57287",
+     "type": "micro",
+     "x": 224,
+     "y": 176,
+     "max": 3,
+     "desc": "+3% Attack and Cast Speed\n+3% Minion Attack and Cast Speed"
+    },
+    {
+     "id": "e1655069-6532-5099-9987-e78bfd4bfa90",
+     "type": "medium",
+     "x": 352,
+     "y": 176,
+     "max": 3,
+     "desc": "+6% Attack and Cast Speed\n+6% Minion Attack and Cast Speed"
+    },
+    {
+     "id": "a89c3a65-264d-529d-852f-66a681788ee1",
+     "type": "legendary",
+     "x": 480,
+     "y": 176,
+     "max": 1,
+     "desc": "Inflicts Frostbite when dealing Hit Cold Damage"
+    },
+    {
+     "id": "c14ef5de-c749-5c6b-b36e-961fe61dae5c",
+     "type": "micro",
+     "x": 608,
+     "y": 176,
+     "max": 3,
+     "desc": "+4% Frostbite Effect"
+    },
+    {
+     "id": "b873d2df-cdfa-545c-9e1a-63306aca9fd7",
+     "type": "medium",
+     "x": 736,
+     "y": 176,
+     "max": 3,
+     "desc": "+8% Frostbite Effect"
+    },
+    {
+     "id": "8f43486c-521c-5c85-893c-87de6dde1a3e",
+     "type": "legendary",
+     "x": 864,
+     "y": 176,
+     "max": 1,
+     "desc": "+20% Frostbite Effect"
+    },
+    {
+     "id": "db8ca318-7e79-5b86-8f39-1d91b02bd0c5",
+     "type": "micro",
+     "x": 96,
+     "y": 272,
+     "max": 3,
+     "desc": "+3% Max Life\n+3% Max Energy Shield"
+    },
+    {
+     "id": "8b718f8f-cc4a-505d-aa30-88783c10cd49",
+     "type": "medium",
+     "x": 224,
+     "y": 272,
+     "max": 3,
+     "desc": "+6% Max Life\n+6% Max Energy Shield"
+    },
+    {
+     "id": "69304d7e-fac2-5d15-97be-2b05ff4eb5c5",
+     "type": "micro",
+     "x": 352,
+     "y": 272,
+     "max": 3,
+     "desc": "+4% Cold Resistance"
+    },
+    {
+     "id": "8aef5ee2-ba98-5d1a-89fc-35a7e69f1ce0",
+     "type": "legendary",
+     "x": 480,
+     "y": 272,
+     "max": 1,
+     "desc": "+18% Cold Resistance\nMinions are immune to Cold Damage\nMinions are immune to Frostbite and Freeze"
+    },
+    {
+     "id": "4b4d5e58-564d-5436-8e79-f41f56c5a96a",
+     "type": "micro",
+     "x": 608,
+     "y": 272,
+     "max": 3,
+     "desc": "+8 Intelligence"
+    },
+    {
+     "id": "12f0fd41-a1de-501d-a2fb-4a90a0436229",
+     "type": "medium",
+     "x": 736,
+     "y": 272,
+     "max": 3,
+     "desc": "+5% Intelligence"
+    },
+    {
+     "id": "f3a542ad-e516-5063-9d98-236f54a4cf93",
+     "type": "micro",
+     "x": 224,
+     "y": 368,
+     "max": 3,
+     "desc": "+4% Max Mana"
+    },
+    {
+     "id": "daf9c1a5-24ca-5ff9-a79b-6989a791e794",
+     "type": "medium",
+     "x": 352,
+     "y": 368,
+     "max": 3,
+     "desc": "+8% Max Mana"
+    },
+    {
+     "id": "4116742a-9d91-5565-800e-63eef16aba02",
+     "type": "micro",
+     "x": 480,
+     "y": 368,
+     "max": 3,
+     "desc": "1.25% Life Regain\n1.25% Energy Shield Regain"
+    },
+    {
+     "id": "e03ff022-a43c-59a2-8489-b742fd493562",
+     "type": "medium",
+     "x": 608,
+     "y": 368,
+     "max": 3,
+     "desc": "2.5% Life Regain\n2.5% Energy Shield Regain"
+    },
+    {
+     "id": "92d73efc-7a7d-5364-b148-6500a58b0c49",
+     "type": "micro",
+     "x": 736,
+     "y": 368,
+     "max": 3,
+     "desc": "+10% Focus Blessing Duration\n+10% damage while Focus Blessing is active"
+    },
+    {
+     "id": "dbf7e418-17fa-56fd-af23-790aa7e620c3",
+     "type": "legendary",
+     "x": 864,
+     "y": 368,
+     "max": 1,
+     "desc": "+100% chance to gain a stack of Focus Blessing upon inflicting damage to a Frostbitten enemy. Interval: 0.1s"
+    },
+    {
+     "id": "17e11e32-9bcb-5115-bf1c-0fa9cc37f0f2",
+     "type": "micro",
+     "x": 96,
+     "y": 464,
+     "max": 3,
+     "desc": "+9% Cold Damage\n+9% Minion Cold Damage"
+    },
+    {
+     "id": "062eac4d-ca67-52a4-bdee-2719b45226de",
+     "type": "medium",
+     "x": 224,
+     "y": 464,
+     "max": 3,
+     "desc": "+18% Cold Damage\n+18% Minion Cold Damage"
+    },
+    {
+     "id": "d2b348a8-52a9-5650-a6cc-14d820d8efe9",
+     "type": "micro",
+     "x": 480,
+     "y": 464,
+     "max": 3,
+     "desc": "1.5% Cold Penetration\n1.5% Cold Penetration for Minions"
+    },
+    {
+     "id": "b31dbb72-05f9-5a3c-a40d-dad08a08a93c",
+     "type": "legendary",
+     "x": 608,
+     "y": 464,
+     "max": 1,
+     "desc": "Inflicts Cold Infiltration when dealing damage to Frozen enemies"
+    },
+    {
+     "id": "5f33f95a-00e8-56bf-bb93-3e5607ca2260",
+     "type": "micro",
+     "x": 736,
+     "y": 464,
+     "max": 3,
+     "desc": "+9% Cold Damage\n+9% Minion Cold Damage"
+    },
+    {
+     "id": "80b1a900-2d94-5af8-94a9-31f5929f25c0",
+     "type": "legendary",
+     "x": 864,
+     "y": 464,
+     "max": 1,
+     "desc": "Converts 100% of Physical Damage to Cold Damage\nConverts 100% of Minion Physical Damage to Cold Damage"
+    }
+   ],
+   "edges": [
+    [
+     "13d13eaf-98dd-5f9c-8f65-84ac3b6fddfb",
+     "db27fb2c-5f29-595c-83e1-08a39bfa3634"
+    ],
+    [
+     "4843dd81-a7f8-56d4-8730-a7913ab305ce",
+     "95cea0d3-122c-5ca1-8b23-781ac2777fe6"
+    ],
+    [
+     "851d38e7-7f6b-5d7c-a006-54f5b32b5de6",
+     "dede12b8-f16e-5282-91f6-e6471b48f8e8"
+    ],
+    [
+     "851d38e7-7f6b-5d7c-a006-54f5b32b5de6",
+     "ab8176f5-aeb5-56d3-9eba-865c7fa36f41"
+    ],
+    [
+     "c71a9bdc-7ff6-5fde-804b-349207d57287",
+     "e1655069-6532-5099-9987-e78bfd4bfa90"
+    ],
+    [
+     "a89c3a65-264d-529d-852f-66a681788ee1",
+     "e1655069-6532-5099-9987-e78bfd4bfa90"
+    ],
+    [
+     "b873d2df-cdfa-545c-9e1a-63306aca9fd7",
+     "c14ef5de-c749-5c6b-b36e-961fe61dae5c"
+    ],
+    [
+     "8f43486c-521c-5c85-893c-87de6dde1a3e",
+     "b873d2df-cdfa-545c-9e1a-63306aca9fd7"
+    ],
+    [
+     "8b718f8f-cc4a-505d-aa30-88783c10cd49",
+     "db8ca318-7e79-5b86-8f39-1d91b02bd0c5"
+    ],
+    [
+     "69304d7e-fac2-5d15-97be-2b05ff4eb5c5",
+     "8aef5ee2-ba98-5d1a-89fc-35a7e69f1ce0"
+    ],
+    [
+     "12f0fd41-a1de-501d-a2fb-4a90a0436229",
+     "4b4d5e58-564d-5436-8e79-f41f56c5a96a"
+    ],
+    [
+     "daf9c1a5-24ca-5ff9-a79b-6989a791e794",
+     "f3a542ad-e516-5063-9d98-236f54a4cf93"
+    ],
+    [
+     "4116742a-9d91-5565-800e-63eef16aba02",
+     "e03ff022-a43c-59a2-8489-b742fd493562"
+    ],
+    [
+     "92d73efc-7a7d-5364-b148-6500a58b0c49",
+     "dbf7e418-17fa-56fd-af23-790aa7e620c3"
+    ],
+    [
+     "062eac4d-ca67-52a4-bdee-2719b45226de",
+     "17e11e32-9bcb-5115-bf1c-0fa9cc37f0f2"
+    ],
+    [
+     "b31dbb72-05f9-5a3c-a40d-dad08a08a93c",
+     "d2b348a8-52a9-5650-a6cc-14d820d8efe9"
+    ],
+    [
+     "5f33f95a-00e8-56bf-bb93-3e5607ca2260",
+     "80b1a900-2d94-5af8-94a9-31f5929f25c0"
+    ]
+   ],
+   "notables": [
+    {
+     "id": "130a4a7d-c32c-56ca-addf-675dab2ca0c8",
+     "threshold": 24,
+     "name": "Frostbitten",
+     "desc": "Inflicts Frostbite when dealing Hit Cold Damage\n+40% Frostbite Effect (Max Divinity Effect: 1)"
+    },
+    {
+     "id": "43dba54e-5c78-5dab-a6c9-5e32b32a3978",
+     "threshold": 24,
+     "name": "Extreme Coldness",
+     "desc": "+50 to Max Frostbite Rating\nYou can only deal Cold Damage (Max Divinity Effect: 1)"
+    },
+    {
+     "id": "2591f089-c069-5c37-ab86-d798bbf2d0cb",
+     "threshold": 24,
+     "name": "Mind Blade",
+     "desc": "Adds 30% Physical Damage as Cold Damage when not wielding a Wand or Tin Staff\n+25% additional Cold Damage when wielding a Wand or Tin Staff (Max Divinity Effect: 1)"
+    },
+    {
+     "id": "acbde19b-76eb-5a57-8b65-34432f022067",
+     "threshold": 24,
+     "name": "Frozen Lotus",
+     "desc": "+25% additional Cold Damage\n+25% additional Minion Cold Damage\nSkills no longer cost Mana (Max Divinity Effect: 1)"
+    }
+   ]
+  },
+  "lich": {
+   "name": "Lich",
+   "maxPoints": 34,
+   "nodes": [
+    {
+     "id": "fa2211da-becf-5879-8b15-6a5bdbce8dd6",
+     "type": "micro",
+     "x": 96,
+     "y": 80,
+     "max": 3,
+     "desc": "+9% damage\n+9% Minion Damage"
+    },
+    {
+     "id": "dd4b6429-e4fb-5a3e-b4d7-9b106962455d",
+     "type": "medium",
+     "x": 224,
+     "y": 80,
+     "max": 3,
+     "desc": "+18% damage\n+18% Minion Damage"
+    },
+    {
+     "id": "b4353dd9-4126-5b2c-a0a6-342bece5e8a6",
+     "type": "micro",
+     "x": 352,
+     "y": 80,
+     "max": 3,
+     "desc": "+15% Critical Strike Rating\n+15% Minion Critical Strike Rating"
+    },
+    {
+     "id": "190ea9db-3328-5aea-9d56-4918d46275c0",
+     "type": "medium",
+     "x": 480,
+     "y": 80,
+     "max": 3,
+     "desc": "+20% Critical Strike Rating\n+20% Minion Critical Strike Rating\n+5% Critical Strike Damage\n+5% Minion Critical Strike Damage"
+    },
+    {
+     "id": "56ad33dc-b99e-5ce9-81a6-60d9debafafc",
+     "type": "micro",
+     "x": 608,
+     "y": 80,
+     "max": 3,
+     "desc": "+9% damage\n+9% Minion Damage"
+    },
+    {
+     "id": "b083728f-56c5-5dd8-86f6-e91c98ae7a89",
+     "type": "medium",
+     "x": 736,
+     "y": 80,
+     "max": 3,
+     "desc": "+6% Attack and Cast Speed\n+6% Minion Attack and Cast Speed"
+    },
+    {
+     "id": "7cb4d988-4716-5ba0-9ad1-f7a1638636cd",
+     "type": "legendary",
+     "x": 864,
+     "y": 80,
+     "max": 1,
+     "desc": "+1 to All Skills' Levels"
+    },
+    {
+     "id": "15a3b8b1-89c3-5c1c-9fe7-a11cac6eeccf",
+     "type": "micro",
+     "x": 224,
+     "y": 176,
+     "max": 3,
+     "desc": "+6% Affliction Effect"
+    },
+    {
+     "id": "3fe45992-e0cd-5f43-b90d-b46d09adb20c",
+     "type": "medium",
+     "x": 352,
+     "y": 176,
+     "max": 3,
+     "desc": "-4 Skill Cost\n+12% Affliction Effect"
+    },
+    {
+     "id": "7d8fc3ce-ce5e-58e3-80b4-8a6d08635372",
+     "type": "micro",
+     "x": 480,
+     "y": 176,
+     "max": 3,
+     "desc": "+5 to All Stats"
+    },
+    {
+     "id": "edc05d35-c66a-5e52-91a1-d5ba42c82425",
+     "type": "medium",
+     "x": 608,
+     "y": 176,
+     "max": 3,
+     "desc": "+10 to All Stats"
+    },
+    {
+     "id": "2a92f483-3cce-58b1-972b-e70dea4ed0af",
+     "type": "micro",
+     "x": 736,
+     "y": 176,
+     "max": 3,
+     "desc": "1.5% Cooldown Recovery Speed"
+    },
+    {
+     "id": "5b317ae0-709e-514f-a695-8161098f7739",
+     "type": "legendary",
+     "x": 864,
+     "y": 176,
+     "max": 1,
+     "desc": "+8% Cooldown Recovery Speed\n+1 Max Charges"
+    },
+    {
+     "id": "b24fd679-f96a-59c6-8087-3e17475b0c44",
+     "type": "micro",
+     "x": 96,
+     "y": 272,
+     "max": 3,
+     "desc": "+3% Max Life\n+3% Max Energy Shield"
+    },
+    {
+     "id": "ee039c3d-240e-519d-b4ed-c10927be7538",
+     "type": "medium",
+     "x": 224,
+     "y": 272,
+     "max": 3,
+     "desc": "+6% Max Life\n+6% Max Energy Shield"
+    },
+    {
+     "id": "784adde9-16ae-5a35-b8af-d385f933b811",
+     "type": "micro",
+     "x": 352,
+     "y": 272,
+     "max": 3,
+     "desc": "+3% Max Energy Shield\n+3% Energy Shield Charge Speed"
+    },
+    {
+     "id": "f537aa96-43ba-5279-9005-c86b037e9ae1",
+     "type": "legendary",
+     "x": 480,
+     "y": 272,
+     "max": 1,
+     "desc": "+10% Max Energy Shield\nGains Blur when Energy Shield starts to Charge"
+    },
+    {
+     "id": "e4aa5bf5-f752-5aac-8cae-7b976bcde76c",
+     "type": "micro",
+     "x": 608,
+     "y": 272,
+     "max": 3,
+     "desc": "+2% Skill Effect Duration"
+    },
+    {
+     "id": "1042b759-cd9c-5c18-9335-c1b26e95ee4e",
+     "type": "medium",
+     "x": 736,
+     "y": 272,
+     "max": 3,
+     "desc": "+4% Skill Effect Duration"
+    },
+    {
+     "id": "186c67af-20ef-511e-891a-7cd0cb6ca434",
+     "type": "micro",
+     "x": 224,
+     "y": 368,
+     "max": 3,
+     "desc": "+3% Attack and Cast Speed\n+3% Minion Attack and Cast Speed"
+    },
+    {
+     "id": "58f798e0-f1a0-5982-946a-dbaae88ecc02",
+     "type": "medium",
+     "x": 352,
+     "y": 368,
+     "max": 3,
+     "desc": "+6% Attack and Cast Speed\n+6% Minion Attack and Cast Speed\n-4 Skill Cost"
+    },
+    {
+     "id": "611555e4-1a78-5d6b-9be2-3e92910030a9",
+     "type": "micro",
+     "x": 480,
+     "y": 368,
+     "max": 3,
+     "desc": "1.5% Blur Effect"
+    },
+    {
+     "id": "4aa3ed3c-defd-5e24-8ac3-9b292dfbafd9",
+     "type": "legendary",
+     "x": 608,
+     "y": 368,
+     "max": 1,
+     "desc": "+10% Movement Speed while Blur is active\nMovement Speed cannot be reduced to below the base value while Blur is active"
+    },
+    {
+     "id": "8dace2f1-5227-5795-963c-9c9b6b7dfe63",
+     "type": "micro",
+     "x": 736,
+     "y": 368,
+     "max": 3,
+     "desc": "+3% Max Life\n+3% Max Energy Shield"
+    },
+    {
+     "id": "90361d36-f18f-58dc-9292-2ed68bf50f81",
+     "type": "legendary",
+     "x": 864,
+     "y": 368,
+     "max": 1,
+     "desc": "+10% additional damage when having both Sealed Mana and Life"
+    },
+    {
+     "id": "3f110cd2-dd79-5dba-917c-514ea9c0033c",
+     "type": "micro",
+     "x": 96,
+     "y": 464,
+     "max": 3,
+     "desc": "+4% Max Mana"
+    },
+    {
+     "id": "09d2d57f-21bf-5be8-8396-25092ae311c4",
+     "type": "medium",
+     "x": 224,
+     "y": 464,
+     "max": 3,
+     "desc": "+8% Max Mana"
+    },
+    {
+     "id": "1516455d-9ecf-5566-8ff2-2f32b9598b0d",
+     "type": "micro",
+     "x": 608,
+     "y": 464,
+     "max": 3,
+     "desc": "1.5% Sealed Mana Compensation"
+    },
+    {
+     "id": "5a3d2f4e-1b08-5d4d-b5cf-17c61e431974",
+     "type": "medium",
+     "x": 736,
+     "y": 464,
+     "max": 3,
+     "desc": "+3% Sealed Mana Compensation"
+    },
+    {
+     "id": "f7db9cd4-ebb6-5469-a8bc-1f806bb06e76",
+     "type": "legendary",
+     "x": 864,
+     "y": 464,
+     "max": 1,
+     "desc": "+8% Sealed Mana Compensation"
+    }
+   ],
+   "edges": [
+    [
+     "dd4b6429-e4fb-5a3e-b4d7-9b106962455d",
+     "fa2211da-becf-5879-8b15-6a5bdbce8dd6"
+    ],
+    [
+     "190ea9db-3328-5aea-9d56-4918d46275c0",
+     "b4353dd9-4126-5b2c-a0a6-342bece5e8a6"
+    ],
+    [
+     "56ad33dc-b99e-5ce9-81a6-60d9debafafc",
+     "b083728f-56c5-5dd8-86f6-e91c98ae7a89"
+    ],
+    [
+     "7cb4d988-4716-5ba0-9ad1-f7a1638636cd",
+     "b083728f-56c5-5dd8-86f6-e91c98ae7a89"
+    ],
+    [
+     "15a3b8b1-89c3-5c1c-9fe7-a11cac6eeccf",
+     "3fe45992-e0cd-5f43-b90d-b46d09adb20c"
+    ],
+    [
+     "7d8fc3ce-ce5e-58e3-80b4-8a6d08635372",
+     "edc05d35-c66a-5e52-91a1-d5ba42c82425"
+    ],
+    [
+     "2a92f483-3cce-58b1-972b-e70dea4ed0af",
+     "5b317ae0-709e-514f-a695-8161098f7739"
+    ],
+    [
+     "b24fd679-f96a-59c6-8087-3e17475b0c44",
+     "ee039c3d-240e-519d-b4ed-c10927be7538"
+    ],
+    [
+     "784adde9-16ae-5a35-b8af-d385f933b811",
+     "f537aa96-43ba-5279-9005-c86b037e9ae1"
+    ],
+    [
+     "1042b759-cd9c-5c18-9335-c1b26e95ee4e",
+     "e4aa5bf5-f752-5aac-8cae-7b976bcde76c"
+    ],
+    [
+     "186c67af-20ef-511e-891a-7cd0cb6ca434",
+     "58f798e0-f1a0-5982-946a-dbaae88ecc02"
+    ],
+    [
+     "4aa3ed3c-defd-5e24-8ac3-9b292dfbafd9",
+     "611555e4-1a78-5d6b-9be2-3e92910030a9"
+    ],
+    [
+     "8dace2f1-5227-5795-963c-9c9b6b7dfe63",
+     "90361d36-f18f-58dc-9292-2ed68bf50f81"
+    ],
+    [
+     "09d2d57f-21bf-5be8-8396-25092ae311c4",
+     "3f110cd2-dd79-5dba-917c-514ea9c0033c"
+    ],
+    [
+     "1516455d-9ecf-5566-8ff2-2f32b9598b0d",
+     "5a3d2f4e-1b08-5d4d-b5cf-17c61e431974"
+    ],
+    [
+     "5a3d2f4e-1b08-5d4d-b5cf-17c61e431974",
+     "f7db9cd4-ebb6-5469-a8bc-1f806bb06e76"
+    ]
+   ],
+   "notables": [
+    {
+     "id": "3455c3c0-cfde-5b36-bad6-e32b2b6727f9",
+     "threshold": 24,
+     "name": "Indifference",
+     "desc": "+1% additional damage and +1% additional Minion Damage for every 5 remaining Energy, up to +50% additional damage (Max Divinity Effect: 1)"
+    },
+    {
+     "id": "4b7d41bd-e861-5c69-be5b-e460b95acccd",
+     "threshold": 24,
+     "name": "Ward",
+     "desc": "Adds 13% of Sealed Mana as Energy Shield\nAdds 13% of Sealed Life as Energy Shield (Max Divinity Effect: 1)"
+    },
+    {
+     "id": "4241e65e-034b-5a28-a636-b2bbccf37167",
+     "threshold": 24,
+     "name": "Off The Beaten Track",
+     "desc": "+4 Support Skill Level\nSupport Skill's Mana Multiplier is fixed at 95%. (Max Divinity Effect: 1)"
+    },
+    {
+     "id": "169d133b-c337-55a8-9330-90f4d2f0f54e",
+     "threshold": 24,
+     "name": "Stab In The Back",
+     "desc": "While Blur is active, loses Blur after casting a Main Skill, and +40% additional damage for that cast (Max Divinity Effect: 1)"
+    }
+   ]
+  },
+  "god_of_might": {
+   "name": "God of Might",
+   "maxPoints": 32,
+   "nodes": [
+    {
+     "id": "8e2283bd-6ec2-573d-b921-074f3aadefd9",
+     "type": "micro",
+     "x": 352,
+     "y": 80,
+     "max": 3,
+     "desc": "+10% Attack Critical Strike Rating\n+3% Critical Strike Damage"
+    },
+    {
+     "id": "10a5f991-39fb-55a7-9df7-e4d0304be35b",
+     "type": "medium",
+     "x": 480,
+     "y": 80,
+     "max": 3,
+     "desc": "+20% Attack Critical Strike Rating\n+5% Critical Strike Damage"
+    },
+    {
+     "id": "67954cba-c73a-5f9d-a87b-af192aeeaca7",
+     "type": "micro",
+     "x": 608,
+     "y": 80,
+     "max": 3,
+     "desc": "+9% Attack Damage\n+2% Movement Speed"
+    },
+    {
+     "id": "ee7502cd-b304-50a9-9ff4-a1037916680e",
+     "type": "medium",
+     "x": 736,
+     "y": 80,
+     "max": 3,
+     "desc": "+18% Attack Damage\n+4% Movement Speed"
+    },
+    {
+     "id": "65770cbd-d201-5ca9-a031-608e1c472ac2",
+     "type": "legendary",
+     "x": 864,
+     "y": 80,
+     "max": 1,
+     "desc": "+1 to Attack Skill Level"
+    },
+    {
+     "id": "e1c48496-1a5b-5fa4-ac7a-5ed8367072d3",
+     "type": "micro",
+     "x": 224,
+     "y": 176,
+     "max": 3,
+     "desc": "+3% Attack Speed"
+    },
+    {
+     "id": "1647eefa-afa6-5fe3-a0ef-19986e47353f",
+     "type": "medium",
+     "x": 352,
+     "y": 176,
+     "max": 3,
+     "desc": "+6% Attack Speed\n-4 Attack Skill Cost"
+    },
+    {
+     "id": "7333a117-f9ca-564e-8a98-99fc2cc0a2df",
+     "type": "micro",
+     "x": 608,
+     "y": 176,
+     "max": 3,
+     "desc": "+2% Max Life\n1.25% Life Regain"
+    },
+    {
+     "id": "611c092a-9058-58f7-aa39-081180bea1e1",
+     "type": "medium",
+     "x": 736,
+     "y": 176,
+     "max": 3,
+     "desc": "+4% Max Life\n2.5% Life Regain"
+    },
+    {
+     "id": "831cd0e8-15e2-5f06-a100-9753ad8b90d4",
+     "type": "micro",
+     "x": 96,
+     "y": 272,
+     "max": 3,
+     "desc": "+9% damage"
+    },
+    {
+     "id": "6a98aa89-6f5a-5080-9661-a798b1bfd010",
+     "type": "medium",
+     "x": 224,
+     "y": 272,
+     "max": 3,
+     "desc": "+18% damage"
+    },
+    {
+     "id": "46b50a26-dc68-574f-96d6-d26a5e1969fb",
+     "type": "micro",
+     "x": 352,
+     "y": 272,
+     "max": 3,
+     "desc": "+5% Armor\n+2% Max Life"
+    },
+    {
+     "id": "d7761361-835b-564b-9057-71c75f6931b3",
+     "type": "medium",
+     "x": 480,
+     "y": 272,
+     "max": 3,
+     "desc": "+10% Armor\n+4% Max Life"
+    },
+    {
+     "id": "f23d213f-abad-5793-8cf1-5500152f0b53",
+     "type": "micro",
+     "x": 608,
+     "y": 272,
+     "max": 3,
+     "desc": "+10% Tenacity Blessing Duration\n+10% Attack Damage while Tenacity Blessing is active"
+    },
+    {
+     "id": "d2cf4e83-417d-5822-86e9-a6327e4c6fd5",
+     "type": "legendary",
+     "x": 736,
+     "y": 272,
+     "max": 1,
+     "desc": "+1 to Max Tenacity Blessing Stacks"
+    },
+    {
+     "id": "0f503813-06d8-5df4-b96f-3c1a6756c7d1",
+     "type": "micro",
+     "x": 224,
+     "y": 368,
+     "max": 3,
+     "desc": "+9% Attack Damage"
+    },
+    {
+     "id": "ac279dff-4fab-555a-a127-7dee71df9234",
+     "type": "medium",
+     "x": 352,
+     "y": 368,
+     "max": 3,
+     "desc": "+18% Attack Damage"
+    },
+    {
+     "id": "a3b66580-904a-5016-bdc9-c4409535d7c5",
+     "type": "micro",
+     "x": 480,
+     "y": 368,
+     "max": 3,
+     "desc": "+8 Strength"
+    },
+    {
+     "id": "3e6e3448-335d-5ce1-8c3c-abbc3d0760f5",
+     "type": "medium",
+     "x": 608,
+     "y": 368,
+     "max": 3,
+     "desc": "+16 Strength"
+    },
+    {
+     "id": "804a7cb9-9345-586e-a5a5-110219dd3f5b",
+     "type": "micro",
+     "x": 736,
+     "y": 368,
+     "max": 3,
+     "desc": "Regenerates 0.75% Life per second"
+    },
+    {
+     "id": "32b5d51d-cb93-5ab6-8c9f-82e4b3629fac",
+     "type": "legendary",
+     "x": 864,
+     "y": 368,
+     "max": 1,
+     "desc": "+2% Life Regeneration Speed per stack of Tenacity Blessing owned\nRegenerate 25 Life per second per stack of Tenacity Blessing owned"
+    },
+    {
+     "id": "64de3d1d-e8c0-59fc-ae80-7ca897fe0e73",
+     "type": "micro",
+     "x": 352,
+     "y": 464,
+     "max": 3,
+     "desc": "+6% Skill Area\n+6% Projectile Speed"
+    },
+    {
+     "id": "84c0ff2d-5931-5a68-944a-7507bde61253",
+     "type": "medium",
+     "x": 480,
+     "y": 464,
+     "max": 3,
+     "desc": "+12% Skill Area\n+12% Projectile Speed"
+    },
+    {
+     "id": "302e3e4b-be0f-51ff-9400-754d82a83450",
+     "type": "micro",
+     "x": 608,
+     "y": 464,
+     "max": 3,
+     "desc": "+9% Attack Damage"
+    },
+    {
+     "id": "824f1bfe-61d0-58b4-9291-28a5fe8cc6fd",
+     "type": "medium",
+     "x": 736,
+     "y": 464,
+     "max": 3,
+     "desc": "+10% Warcry Cooldown Recovery Speed"
+    },
+    {
+     "id": "cbc8ffc4-0c43-57dd-bfba-b2546fc47288",
+     "type": "legendary",
+     "x": 864,
+     "y": 464,
+     "max": 1,
+     "desc": "+8% additional Attack Damage if you have used a Warcry Skill in the last 8s"
+    }
+   ],
+   "edges": [
+    [
+     "10a5f991-39fb-55a7-9df7-e4d0304be35b",
+     "8e2283bd-6ec2-573d-b921-074f3aadefd9"
+    ],
+    [
+     "67954cba-c73a-5f9d-a87b-af192aeeaca7",
+     "ee7502cd-b304-50a9-9ff4-a1037916680e"
+    ],
+    [
+     "65770cbd-d201-5ca9-a031-608e1c472ac2",
+     "ee7502cd-b304-50a9-9ff4-a1037916680e"
+    ],
+    [
+     "1647eefa-afa6-5fe3-a0ef-19986e47353f",
+     "e1c48496-1a5b-5fa4-ac7a-5ed8367072d3"
+    ],
+    [
+     "611c092a-9058-58f7-aa39-081180bea1e1",
+     "7333a117-f9ca-564e-8a98-99fc2cc0a2df"
+    ],
+    [
+     "6a98aa89-6f5a-5080-9661-a798b1bfd010",
+     "831cd0e8-15e2-5f06-a100-9753ad8b90d4"
+    ],
+    [
+     "46b50a26-dc68-574f-96d6-d26a5e1969fb",
+     "d7761361-835b-564b-9057-71c75f6931b3"
+    ],
+    [
+     "d2cf4e83-417d-5822-86e9-a6327e4c6fd5",
+     "f23d213f-abad-5793-8cf1-5500152f0b53"
+    ],
+    [
+     "0f503813-06d8-5df4-b96f-3c1a6756c7d1",
+     "ac279dff-4fab-555a-a127-7dee71df9234"
+    ],
+    [
+     "3e6e3448-335d-5ce1-8c3c-abbc3d0760f5",
+     "a3b66580-904a-5016-bdc9-c4409535d7c5"
+    ],
+    [
+     "32b5d51d-cb93-5ab6-8c9f-82e4b3629fac",
+     "804a7cb9-9345-586e-a5a5-110219dd3f5b"
+    ],
+    [
+     "64de3d1d-e8c0-59fc-ae80-7ca897fe0e73",
+     "84c0ff2d-5931-5a68-944a-7507bde61253"
+    ],
+    [
+     "302e3e4b-be0f-51ff-9400-754d82a83450",
+     "824f1bfe-61d0-58b4-9291-28a5fe8cc6fd"
+    ],
+    [
+     "824f1bfe-61d0-58b4-9291-28a5fe8cc6fd",
+     "cbc8ffc4-0c43-57dd-bfba-b2546fc47288"
+    ]
+   ],
+   "notables": [
+    {
+     "id": "6e2bf80c-44ab-54b5-925b-a6afb180c590",
+     "threshold": 12,
+     "name": "Elimination",
+     "desc": "Attacks eliminate enemies under 18% Life on hit (Max Divinity Effect: 1)"
+    },
+    {
+     "id": "c841aa7c-8f69-594f-a098-f7882081c1b0",
+     "threshold": 12,
+     "name": "Momentum",
+     "desc": "+30% additional Attack Damage for the next Main Skill every 0.5 s. Refreshes the interval on defeat. (Max Divinity Effect: 1)"
+    },
+    {
+     "id": "38679642-80fc-5fcf-9f4b-e22a3142783c",
+     "threshold": 12,
+     "name": "Tenacity",
+     "desc": "+100% chance to gain 1 stack(s) of Tenacity Blessing when hitting an enemy\n+1 to Max Tenacity Blessing Stacks (Max Divinity Effect: 1)"
+    },
+    {
+     "id": "f64bef14-ce39-5c83-b427-97c8bbf6108a",
+     "threshold": 24,
+     "name": "Great Strength",
+     "desc": "-10% Attack Speed\n+30% additional Attack Damage\n+30% additional Ailment Damage dealt by attacks (Max Divinity Effect: 1)"
+    },
+    {
+     "id": "424e18c2-a87f-51fe-8bb2-cdc859eaf817",
+     "threshold": 24,
+     "name": "Hidden Mastery",
+     "desc": "Unable to evade\nGains Attack Aggression when casting an Attack Skill\n+15% Attack Speed and +15% additional Attack Damage when having Attack Aggression (Max Divinity Effect: 1)"
+    },
+    {
+     "id": "29f7a824-60d5-54bd-8eba-78f7cd0ca64a",
+     "threshold": 24,
+     "name": "Judgment",
+     "desc": "+100% chance for Attacks to inflict Paralysis on hit\n+25% additional Critical Strike Damage against Paralyzed enemies (Max Divinity Effect: 1)"
+    }
+   ]
+  },
+  "the_brave": {
+   "name": "The Brave",
+   "maxPoints": 36,
+   "nodes": [
+    {
+     "id": "893ef18f-571e-5227-88d1-fed9ab2caa42",
+     "type": "micro",
+     "x": 96,
+     "y": 80,
+     "max": 3,
+     "desc": "+9% Attack Damage"
+    },
+    {
+     "id": "4d90a301-63e1-5a28-b563-5d43fdd72cb2",
+     "type": "medium",
+     "x": 224,
+     "y": 80,
+     "max": 3,
+     "desc": "+18% Attack Damage"
+    },
+    {
+     "id": "c680f3d3-8ecc-5f3f-a0b7-971be92a356c",
+     "type": "micro",
+     "x": 352,
+     "y": 80,
+     "max": 3,
+     "desc": "+15% Attack Critical Strike Rating"
+    },
+    {
+     "id": "322817ff-346e-50b8-abbc-da45ea521f9d",
+     "type": "medium",
+     "x": 480,
+     "y": 80,
+     "max": 3,
+     "desc": "+20% Attack Critical Strike Rating\n+5% Critical Strike Damage"
+    },
+    {
+     "id": "a0a97811-e037-54e4-a616-66e0d4b855eb",
+     "type": "micro",
+     "x": 608,
+     "y": 80,
+     "max": 3,
+     "desc": "+9% Attack Damage when holding a One-Handed Weapon"
+    },
+    {
+     "id": "d41aa166-547d-52ca-a598-b38ffbda13d7",
+     "type": "medium",
+     "x": 736,
+     "y": 80,
+     "max": 3,
+     "desc": "+18% Attack Damage when holding a One-Handed Weapon"
+    },
+    {
+     "id": "cef5c5d0-9265-5b9f-91bf-9adfab420388",
+     "type": "legendary",
+     "x": 864,
+     "y": 80,
+     "max": 1,
+     "desc": "+8% additional Attack Damage when holding a One-Handed Weapon"
+    },
+    {
+     "id": "850b4b82-ca82-5da9-a4a7-718aa2189f81",
+     "type": "micro",
+     "x": 224,
+     "y": 176,
+     "max": 3,
+     "desc": "+3% Attack Speed"
+    },
+    {
+     "id": "848ba1c1-01e7-54a6-81fa-ef4b4f466132",
+     "type": "medium",
+     "x": 352,
+     "y": 176,
+     "max": 3,
+     "desc": "+6% Attack Speed\n-4 Skill Cost"
+    },
+    {
+     "id": "8d2a5abe-ef1e-51a4-87e9-2d5c826e7cfe",
+     "type": "micro",
+     "x": 480,
+     "y": 176,
+     "max": 3,
+     "desc": "1.25% Life Regain"
+    },
+    {
+     "id": "2b56d08f-026c-5c60-b20b-71673709791c",
+     "type": "medium",
+     "x": 608,
+     "y": 176,
+     "max": 3,
+     "desc": "2.5% Life Regain"
+    },
+    {
+     "id": "4cc7f40f-3833-5fa3-b83b-4a28c1fff579",
+     "type": "medium",
+     "x": 736,
+     "y": 176,
+     "max": 3,
+     "desc": "+12% damage dealt when holding a Shield\n+4% Attack Block Chance when holding a Shield"
+    },
+    {
+     "id": "076dad1e-b2e2-5a7c-af9d-eddaeeffa332",
+     "type": "legendary",
+     "x": 864,
+     "y": 176,
+     "max": 1,
+     "desc": "+5% Block Ratio when holding a Shield"
+    },
+    {
+     "id": "9dbffce2-ae55-5ed8-9cce-b48eaabb4e6a",
+     "type": "micro",
+     "x": 96,
+     "y": 272,
+     "max": 3,
+     "desc": "+3% Max Life"
+    },
+    {
+     "id": "6cc0d791-c5a6-5c54-838f-b94f1c34c55f",
+     "type": "medium",
+     "x": 224,
+     "y": 272,
+     "max": 3,
+     "desc": "+5% Max Life\nRegenerates 0.5% Life per second"
+    },
+    {
+     "id": "7daf353a-ef2d-5f79-ad9c-cf8196177cf9",
+     "type": "micro",
+     "x": 352,
+     "y": 272,
+     "max": 3,
+     "desc": "+4% Attack Block Chance"
+    },
+    {
+     "id": "f7e5380a-0855-51bf-88cf-59b6a74e623b",
+     "type": "medium",
+     "x": 480,
+     "y": 272,
+     "max": 3,
+     "desc": "+8% Attack Block Chance"
+    },
+    {
+     "id": "f3dac669-bcf5-568d-81e4-08abbba78b9b",
+     "type": "micro",
+     "x": 608,
+     "y": 272,
+     "max": 3,
+     "desc": "+5% Warcry Cooldown Recovery Speed"
+    },
+    {
+     "id": "02f8d1a7-4ae0-5733-a9a2-b13dc53f35a3",
+     "type": "medium",
+     "x": 736,
+     "y": 272,
+     "max": 3,
+     "desc": "+6% Warcry Effect"
+    },
+    {
+     "id": "0f899a9f-65dc-57d3-bf11-f60a2763b60f",
+     "type": "legendary",
+     "x": 864,
+     "y": 272,
+     "max": 1,
+     "desc": "+4 to the minimum number of enemies affected by Warcry"
+    },
+    {
+     "id": "9ee0e693-a602-50b0-ad32-f237e1ef5e1b",
+     "type": "micro",
+     "x": 224,
+     "y": 368,
+     "max": 3,
+     "desc": "+450 Armor"
+    },
+    {
+     "id": "504c1b7e-ec24-5bbd-9397-436d76c8cf53",
+     "type": "medium",
+     "x": 352,
+     "y": 368,
+     "max": 3,
+     "desc": "+900 Armor"
+    },
+    {
+     "id": "83d61e68-1195-5b00-9484-1a592914eb14",
+     "type": "micro",
+     "x": 480,
+     "y": 368,
+     "max": 3,
+     "desc": "+25% chance to gain 1 stacks of Tenacity Blessing when taking damage. Interval: 1 s"
+    },
+    {
+     "id": "8ca47fdf-7311-5a42-96ab-3039386d8bed",
+     "type": "legendary",
+     "x": 608,
+     "y": 368,
+     "max": 1,
+     "desc": "+6% Armor per stack of Tenacity Blessing owned"
+    },
+    {
+     "id": "9fff76e3-5fa9-5fb6-832b-32226185e9fb",
+     "type": "micro",
+     "x": 736,
+     "y": 368,
+     "max": 3,
+     "desc": "+8 Strength"
+    },
+    {
+     "id": "8d5e65a0-1a94-54d9-9bba-0250d6609044",
+     "type": "legendary",
+     "x": 864,
+     "y": 368,
+     "max": 1,
+     "desc": "+1% Armor for every 24 Strength"
+    },
+    {
+     "id": "53c7089a-f923-5c92-a401-dadafb9d277d",
+     "type": "micro",
+     "x": 96,
+     "y": 464,
+     "max": 3,
+     "desc": "+7% Armor"
+    },
+    {
+     "id": "f685add5-3014-5613-8278-23bd0b50d95f",
+     "type": "medium",
+     "x": 224,
+     "y": 464,
+     "max": 3,
+     "desc": "+14% Armor"
+    },
+    {
+     "id": "c0cb2d8d-dbe7-5cfa-b591-85c828c19f4c",
+     "type": "micro",
+     "x": 352,
+     "y": 464,
+     "max": 3,
+     "desc": "+7% Armor"
+    },
+    {
+     "id": "9b14fb36-95db-5a46-9d2a-d7568ab56c0f",
+     "type": "legendary",
+     "x": 480,
+     "y": 464,
+     "max": 1,
+     "desc": "+40% Defense gained from Chest Armor"
+    },
+    {
+     "id": "9916a902-96f9-5c08-a6c3-dab63f88198f",
+     "type": "micro",
+     "x": 736,
+     "y": 464,
+     "max": 3,
+     "desc": "+2% Elemental Resistance\n+2% Erosion Resistance"
+    },
+    {
+     "id": "e99ce491-2c6c-5fb1-98c1-eebddf29356a",
+     "type": "legendary",
+     "x": 864,
+     "y": 464,
+     "max": 1,
+     "desc": "0.5% Elemental Resistance per 3000 Armor. Stacks up to 6%\n0.5% Erosion Resistance per 3000 Armor. Stacks up to 6%"
+    }
+   ],
+   "edges": [
+    [
+     "4d90a301-63e1-5a28-b563-5d43fdd72cb2",
+     "893ef18f-571e-5227-88d1-fed9ab2caa42"
+    ],
+    [
+     "322817ff-346e-50b8-abbc-da45ea521f9d",
+     "c680f3d3-8ecc-5f3f-a0b7-971be92a356c"
+    ],
+    [
+     "a0a97811-e037-54e4-a616-66e0d4b855eb",
+     "d41aa166-547d-52ca-a598-b38ffbda13d7"
+    ],
+    [
+     "4cc7f40f-3833-5fa3-b83b-4a28c1fff579",
+     "a0a97811-e037-54e4-a616-66e0d4b855eb"
+    ],
+    [
+     "cef5c5d0-9265-5b9f-91bf-9adfab420388",
+     "d41aa166-547d-52ca-a598-b38ffbda13d7"
+    ],
+    [
+     "848ba1c1-01e7-54a6-81fa-ef4b4f466132",
+     "850b4b82-ca82-5da9-a4a7-718aa2189f81"
+    ],
+    [
+     "2b56d08f-026c-5c60-b20b-71673709791c",
+     "8d2a5abe-ef1e-51a4-87e9-2d5c826e7cfe"
+    ],
+    [
+     "076dad1e-b2e2-5a7c-af9d-eddaeeffa332",
+     "4cc7f40f-3833-5fa3-b83b-4a28c1fff579"
+    ],
+    [
+     "6cc0d791-c5a6-5c54-838f-b94f1c34c55f",
+     "9dbffce2-ae55-5ed8-9cce-b48eaabb4e6a"
+    ],
+    [
+     "7daf353a-ef2d-5f79-ad9c-cf8196177cf9",
+     "f7e5380a-0855-51bf-88cf-59b6a74e623b"
+    ],
+    [
+     "02f8d1a7-4ae0-5733-a9a2-b13dc53f35a3",
+     "f3dac669-bcf5-568d-81e4-08abbba78b9b"
+    ],
+    [
+     "02f8d1a7-4ae0-5733-a9a2-b13dc53f35a3",
+     "0f899a9f-65dc-57d3-bf11-f60a2763b60f"
+    ],
+    [
+     "504c1b7e-ec24-5bbd-9397-436d76c8cf53",
+     "9ee0e693-a602-50b0-ad32-f237e1ef5e1b"
+    ],
+    [
+     "83d61e68-1195-5b00-9484-1a592914eb14",
+     "8ca47fdf-7311-5a42-96ab-3039386d8bed"
+    ],
+    [
+     "8d5e65a0-1a94-54d9-9bba-0250d6609044",
+     "9fff76e3-5fa9-5fb6-832b-32226185e9fb"
+    ],
+    [
+     "53c7089a-f923-5c92-a401-dadafb9d277d",
+     "f685add5-3014-5613-8278-23bd0b50d95f"
+    ],
+    [
+     "9b14fb36-95db-5a46-9d2a-d7568ab56c0f",
+     "c0cb2d8d-dbe7-5cfa-b591-85c828c19f4c"
+    ],
+    [
+     "9916a902-96f9-5c08-a6c3-dab63f88198f",
+     "e99ce491-2c6c-5fb1-98c1-eebddf29356a"
+    ]
+   ],
+   "notables": [
+    {
+     "id": "7b22fcd6-0bed-5007-a152-288e039d551e",
+     "threshold": 24,
+     "name": "Static",
+     "desc": "+12% additional damage every 0.25s while standing still, up to +48% additional damage\nRemoves the effect when no longer standing still (Max Divinity Effect: 1)"
+    },
+    {
+     "id": "8fbbdf40-a6d9-50e8-9c04-db872139c12c",
+     "threshold": 24,
+     "name": "Formless",
+     "desc": "Doubles Max Warcry Skill Effects\n+66% Warcry Skill Area (Max Divinity Effect: 1)"
+    },
+    {
+     "id": "9b371f6f-9e84-58af-a408-524215006587",
+     "threshold": 24,
+     "name": "Resolve",
+     "desc": "+4% additional Armor per stack of Tenacity Blessing owned (Max Divinity Effect: 1)"
+    },
+    {
+     "id": "1090701e-4134-5769-abde-63bcb128c36b",
+     "threshold": 24,
+     "name": "Ember Armor",
+     "desc": "+25% Armor Effective Rate for Non-Physical Damage (Max Divinity Effect: 1)"
+    }
+   ]
+  },
+  "ranger": {
+   "name": "Ranger",
+   "maxPoints": 36,
+   "nodes": [
+    {
+     "id": "8592f8d3-49e6-5d63-b1db-32de6e71a9ff",
+     "type": "micro",
+     "x": 96,
+     "y": 80,
+     "max": 3,
+     "desc": "+15% Critical Strike Rating"
+    },
+    {
+     "id": "6434b29a-3b46-5f43-8198-03a810e9d19e",
+     "type": "medium",
+     "x": 224,
+     "y": 80,
+     "max": 3,
+     "desc": "+30% Critical Strike Rating"
+    },
+    {
+     "id": "f40d7856-e186-5d68-bd94-32af65743e10",
+     "type": "micro",
+     "x": 352,
+     "y": 80,
+     "max": 3,
+     "desc": "+3% Attack and Cast Speed"
+    },
+    {
+     "id": "abbd102f-0a2c-5abb-b0d8-f8ef9fadfdcf",
+     "type": "medium",
+     "x": 480,
+     "y": 80,
+     "max": 3,
+     "desc": "+6% Attack and Cast Speed"
+    },
+    {
+     "id": "4507e6a2-f1d0-5803-b565-3c8c63b399fb",
+     "type": "micro",
+     "x": 608,
+     "y": 80,
+     "max": 3,
+     "desc": "+4% Fervor effect"
+    },
+    {
+     "id": "c92fa88f-f974-57f7-816a-57c9f88bf57e",
+     "type": "legendary",
+     "x": 736,
+     "y": 80,
+     "max": 1,
+     "desc": "0.5% Critical Strike Damage per Fervor Rating"
+    },
+    {
+     "id": "f66ea86a-2501-567b-b0cd-648a452c5fa0",
+     "type": "legendary",
+     "x": 864,
+     "y": 80,
+     "max": 1,
+     "desc": "\u653b\u51fb\u66b4\u51fb\u65f6\uff0c\u56de\u590d 10% \u5df2\u635f\u751f\u547d\uff0c\u95f4\u9694 1 \u79d2"
+    },
+    {
+     "id": "f121da79-886b-5b3c-ace4-1416375c580b",
+     "type": "micro",
+     "x": 224,
+     "y": 176,
+     "max": 3,
+     "desc": "7.5% Critical Strike Damage"
+    },
+    {
+     "id": "51cd1b2d-f693-5f0b-87b3-240196c55754",
+     "type": "medium",
+     "x": 352,
+     "y": 176,
+     "max": 3,
+     "desc": "+15% Critical Strike Damage"
+    },
+    {
+     "id": "c3c701fb-f803-55f3-9671-661d0fa46f29",
+     "type": "legendary",
+     "x": 480,
+     "y": 176,
+     "max": 1,
+     "desc": "100% chance to gain Agility Blessing on Critical Strike"
+    },
+    {
+     "id": "5c0b337e-2238-51e9-89a4-c9ef25ca3865",
+     "type": "micro",
+     "x": 608,
+     "y": 176,
+     "max": 3,
+     "desc": "+3% Max Life\n+3% Max Energy Shield"
+    },
+    {
+     "id": "1f038b66-6651-51b2-8c34-5a7e102ce8dd",
+     "type": "medium",
+     "x": 736,
+     "y": 176,
+     "max": 3,
+     "desc": "+6% Max Life\n+6% Max Energy Shield"
+    },
+    {
+     "id": "bc824c9f-fac6-545e-ae1d-2954b9320e6f",
+     "type": "legendary",
+     "x": 864,
+     "y": 176,
+     "max": 1,
+     "desc": "Immediately starts Charging Energy Shield on attack Critical Strike. Interval: 2 s"
+    },
+    {
+     "id": "5e81d52a-6423-59e2-9299-123e74eb90ed",
+     "type": "micro",
+     "x": 96,
+     "y": 272,
+     "max": 3,
+     "desc": "+3% Max Life\n+3% Max Energy Shield"
+    },
+    {
+     "id": "054258c9-9719-5fbc-b5ef-3ab4ea76fc78",
+     "type": "medium",
+     "x": 224,
+     "y": 272,
+     "max": 3,
+     "desc": "+6% Max Life\n+6% Max Energy Shield"
+    },
+    {
+     "id": "724663d9-1ca9-5217-a173-f262d0d4801a",
+     "type": "micro",
+     "x": 352,
+     "y": 272,
+     "max": 3,
+     "desc": "+2% Attack Block Chance\n+2% Spell Block Chance"
+    },
+    {
+     "id": "71464f14-26e8-5f3c-9b6f-c37e2a432a7b",
+     "type": "medium",
+     "x": 480,
+     "y": 272,
+     "max": 3,
+     "desc": "+4% Attack Block Chance\n+4% Spell Block Chance"
+    },
+    {
+     "id": "afc3c99a-79ca-5204-9761-797630676bfc",
+     "type": "micro",
+     "x": 608,
+     "y": 272,
+     "max": 3,
+     "desc": "+15% Critical Strike Rating"
+    },
+    {
+     "id": "f678147c-2fa6-5450-b8a2-a4829d15f950",
+     "type": "legendary",
+     "x": 736,
+     "y": 272,
+     "max": 1,
+     "desc": "+25% chance to Mark the enemy on Critical Strike\n+20% Mark effect"
+    },
+    {
+     "id": "96925d13-4d24-5f1a-a88a-c223c4104a81",
+     "type": "medium",
+     "x": 224,
+     "y": 368,
+     "max": 3,
+     "desc": "+25% damage dealt to Nearby enemies"
+    },
+    {
+     "id": "6ab14ef5-7014-519c-bc9e-83ca0393384b",
+     "type": "micro",
+     "x": 352,
+     "y": 368,
+     "max": 3,
+     "desc": "+15% Critical Strike Rating"
+    },
+    {
+     "id": "62fd0849-e1ec-58ed-870d-3a8bb9104a59",
+     "type": "legendary",
+     "x": 480,
+     "y": 368,
+     "max": 1,
+     "desc": "Critical Strikes eliminate enemies under 8% Life"
+    },
+    {
+     "id": "1b5bb694-b6c8-5415-ba98-25942cbe3cb9",
+     "type": "micro",
+     "x": 608,
+     "y": 368,
+     "max": 3,
+     "desc": "+9% Melee Damage"
+    },
+    {
+     "id": "b799b521-31a5-5c9b-bd33-188967e95fca",
+     "type": "medium",
+     "x": 736,
+     "y": 368,
+     "max": 3,
+     "desc": "+18% Melee Damage"
+    },
+    {
+     "id": "24ace513-cc93-545f-9976-ce6ca6e3f1fd",
+     "type": "legendary",
+     "x": 864,
+     "y": 368,
+     "max": 1,
+     "desc": "+15% additional damage taken by enemies in Proximity"
+    },
+    {
+     "id": "794361ed-c8ad-5a23-911d-a014036e5bc3",
+     "type": "micro",
+     "x": 96,
+     "y": 464,
+     "max": 3,
+     "desc": "+9% damage"
+    },
+    {
+     "id": "bf27f771-1ab1-534f-b514-ae78e47931d2",
+     "type": "medium",
+     "x": 224,
+     "y": 464,
+     "max": 3,
+     "desc": "+25% damage to Distant enemies"
+    },
+    {
+     "id": "15dd6a95-d7b1-572e-ba0e-35db3be66a94",
+     "type": "micro",
+     "x": 352,
+     "y": 464,
+     "max": 3,
+     "desc": "4.5% Projectile Damage\n+3% Projectile Speed"
+    },
+    {
+     "id": "5b9c940e-8795-56c1-bb30-0a3bf04108ee",
+     "type": "medium",
+     "x": 480,
+     "y": 464,
+     "max": 3,
+     "desc": "+9% Projectile Damage\n+6% Projectile Speed"
+    },
+    {
+     "id": "60a703c4-5633-59a5-8cba-9e483ea22fd3",
+     "type": "micro",
+     "x": 608,
+     "y": 464,
+     "max": 3,
+     "desc": "+10% Knockback Chance"
+    },
+    {
+     "id": "7e742f84-b554-5112-acd6-1f6abcdb79d8",
+     "type": "medium",
+     "x": 736,
+     "y": 464,
+     "max": 3,
+     "desc": "+15% Knockback distance"
+    },
+    {
+     "id": "9aacbbd5-ce34-5f62-aece-e55321973b7a",
+     "type": "legendary",
+     "x": 864,
+     "y": 464,
+     "max": 1,
+     "desc": "120% of the increase/decrease on Knockback distance is also applied to damage bonus"
+    }
+   ],
+   "edges": [
+    [
+     "6434b29a-3b46-5f43-8198-03a810e9d19e",
+     "8592f8d3-49e6-5d63-b1db-32de6e71a9ff"
+    ],
+    [
+     "abbd102f-0a2c-5abb-b0d8-f8ef9fadfdcf",
+     "f40d7856-e186-5d68-bd94-32af65743e10"
+    ],
+    [
+     "4507e6a2-f1d0-5803-b565-3c8c63b399fb",
+     "c92fa88f-f974-57f7-816a-57c9f88bf57e"
+    ],
+    [
+     "1f038b66-6651-51b2-8c34-5a7e102ce8dd",
+     "f66ea86a-2501-567b-b0cd-648a452c5fa0"
+    ],
+    [
+     "51cd1b2d-f693-5f0b-87b3-240196c55754",
+     "f121da79-886b-5b3c-ace4-1416375c580b"
+    ],
+    [
+     "51cd1b2d-f693-5f0b-87b3-240196c55754",
+     "c3c701fb-f803-55f3-9671-661d0fa46f29"
+    ],
+    [
+     "1f038b66-6651-51b2-8c34-5a7e102ce8dd",
+     "5c0b337e-2238-51e9-89a4-c9ef25ca3865"
+    ],
+    [
+     "1f038b66-6651-51b2-8c34-5a7e102ce8dd",
+     "bc824c9f-fac6-545e-ae1d-2954b9320e6f"
+    ],
+    [
+     "054258c9-9719-5fbc-b5ef-3ab4ea76fc78",
+     "5e81d52a-6423-59e2-9299-123e74eb90ed"
+    ],
+    [
+     "71464f14-26e8-5f3c-9b6f-c37e2a432a7b",
+     "724663d9-1ca9-5217-a173-f262d0d4801a"
+    ],
+    [
+     "afc3c99a-79ca-5204-9761-797630676bfc",
+     "f678147c-2fa6-5450-b8a2-a4829d15f950"
+    ],
+    [
+     "794361ed-c8ad-5a23-911d-a014036e5bc3",
+     "96925d13-4d24-5f1a-a88a-c223c4104a81"
+    ],
+    [
+     "62fd0849-e1ec-58ed-870d-3a8bb9104a59",
+     "6ab14ef5-7014-519c-bc9e-83ca0393384b"
+    ],
+    [
+     "1b5bb694-b6c8-5415-ba98-25942cbe3cb9",
+     "b799b521-31a5-5c9b-bd33-188967e95fca"
+    ],
+    [
+     "24ace513-cc93-545f-9976-ce6ca6e3f1fd",
+     "b799b521-31a5-5c9b-bd33-188967e95fca"
+    ],
+    [
+     "794361ed-c8ad-5a23-911d-a014036e5bc3",
+     "bf27f771-1ab1-534f-b514-ae78e47931d2"
+    ],
+    [
+     "15dd6a95-d7b1-572e-ba0e-35db3be66a94",
+     "5b9c940e-8795-56c1-bb30-0a3bf04108ee"
+    ],
+    [
+     "60a703c4-5633-59a5-8cba-9e483ea22fd3",
+     "7e742f84-b554-5112-acd6-1f6abcdb79d8"
+    ],
+    [
+     "7e742f84-b554-5112-acd6-1f6abcdb79d8",
+     "9aacbbd5-ce34-5f62-aece-e55321973b7a"
+    ]
+   ],
+   "notables": [
+    {
+     "id": "8379af76-994c-5d13-800c-9d0998ec182a",
+     "threshold": 24,
+     "name": "Fluke",
+     "desc": "Lucky Critical Strike (Max Divinity Effect: 1)"
+    },
+    {
+     "id": "167956ee-19ef-59e4-a201-4feabb940b7f",
+     "threshold": 24,
+     "name": "Keep It Up",
+     "desc": "When triggering a Critical Strike, gains the following buff for the next 4s: +7% additional damage and -25% Critical Strike Rating on Critical Strike. Interval: 0.5s (Max Divinity Effect: 1)"
+    },
+    {
+     "id": "3c958057-2be8-5f42-831b-1f59c253be18",
+     "threshold": 24,
+     "name": "Impending",
+     "desc": "Every 0.25 s, +6% additional damage taken for enemies within 10 m. Stacks up to 5 times (Max Divinity Effect: 1)"
+    },
+    {
+     "id": "d6e7040a-ebad-54f6-85bf-22cf895904c9",
+     "threshold": 24,
+     "name": "Rapid Shots",
+     "desc": "Projectile Damage increases with the distance traveled, dealing up to +35% additional damage to Distant enemies (Max Divinity Effect: 1)"
+    }
+   ]
+  },
+  "ronin": {
+   "name": "Ronin",
+   "maxPoints": 33,
+   "nodes": [
+    {
+     "id": "5cc7c33a-2301-563f-928f-45fe3fefdc7a",
+     "type": "micro",
+     "x": 96,
+     "y": 80,
+     "max": 3,
+     "desc": "+9% Melee Damage"
+    },
+    {
+     "id": "22dfad6f-2cf9-54a4-9083-0958580bd442",
+     "type": "medium",
+     "x": 224,
+     "y": 80,
+     "max": 3,
+     "desc": "+18% Melee Damage"
+    },
+    {
+     "id": "177e3439-03eb-52df-8c82-c3cb74124954",
+     "type": "micro",
+     "x": 352,
+     "y": 80,
+     "max": 3,
+     "desc": "+15% Critical Strike Rating"
+    },
+    {
+     "id": "233d4b78-e293-5812-a865-fd664317b517",
+     "type": "medium",
+     "x": 480,
+     "y": 80,
+     "max": 3,
+     "desc": "+20% Critical Strike Rating\n+10% Critical Strike Damage"
+    },
+    {
+     "id": "bf7bd7f1-7156-575f-8bf6-0004b0ca22ce",
+     "type": "micro",
+     "x": 608,
+     "y": 80,
+     "max": 3,
+     "desc": "+6% Attack Speed\n-6% Melee Damage"
+    },
+    {
+     "id": "c7c824ff-4bab-5f7c-91f4-bfc2015d4131",
+     "type": "legendary",
+     "x": 736,
+     "y": 80,
+     "max": 1,
+     "desc": "+32% chance to Multistrike"
+    },
+    {
+     "id": "f8bbd657-3d84-5029-95ce-07bf49df8ae5",
+     "type": "legendary",
+     "x": 864,
+     "y": 80,
+     "max": 1,
+     "desc": "+12% Steep Strike chance."
+    },
+    {
+     "id": "e34dd3bb-20d3-5b5d-a4ca-e5a012417298",
+     "type": "micro",
+     "x": 224,
+     "y": 176,
+     "max": 3,
+     "desc": "+3% Attack Speed"
+    },
+    {
+     "id": "71ef69bb-2f97-5f41-9a36-7c5b2dee9f4f",
+     "type": "medium",
+     "x": 352,
+     "y": 176,
+     "max": 3,
+     "desc": "+6% Attack Speed"
+    },
+    {
+     "id": "0f3bbc36-47d7-5322-9aa3-6a52d5bce707",
+     "type": "micro",
+     "x": 480,
+     "y": 176,
+     "max": 3,
+     "desc": "+6 Strength\n+6 Dexterity"
+    },
+    {
+     "id": "860b8961-e6f1-5a37-9c02-70a016f089fc",
+     "type": "medium",
+     "x": 608,
+     "y": 176,
+     "max": 3,
+     "desc": "+4% Strength\n+4% Dexterity"
+    },
+    {
+     "id": "8d7fd255-d799-599e-8d4f-93dffa5ec446",
+     "type": "micro",
+     "x": 736,
+     "y": 176,
+     "max": 3,
+     "desc": "+9% Melee Damage"
+    },
+    {
+     "id": "601ce5fd-73f4-57d2-bd74-1a109977d81d",
+     "type": "legendary",
+     "x": 864,
+     "y": 176,
+     "max": 1,
+     "desc": "+33% Demolisher Charge Restoration Speed"
+    },
+    {
+     "id": "1ed82c55-c75d-5413-946a-1431f86b6992",
+     "type": "micro",
+     "x": 96,
+     "y": 272,
+     "max": 3,
+     "desc": "+3% Max Life\n+3% Max Energy Shield"
+    },
+    {
+     "id": "8eb1c754-1cdd-5758-b3b0-361274b7c3fa",
+     "type": "medium",
+     "x": 224,
+     "y": 272,
+     "max": 3,
+     "desc": "+6% Max Life\n+6% Max Energy Shield"
+    },
+    {
+     "id": "7fb177b1-5263-59ee-a1be-9bbe95d4bb90",
+     "type": "micro",
+     "x": 352,
+     "y": 272,
+     "max": 3,
+     "desc": "+2% Attack Block Chance\n+2% Spell Block Chance"
+    },
+    {
+     "id": "3b35706f-421b-50f5-9fcc-6c22d88840fc",
+     "type": "medium",
+     "x": 480,
+     "y": 272,
+     "max": 3,
+     "desc": "+4% Attack Block Chance\n+4% Spell Block Chance"
+    },
+    {
+     "id": "410ac3ec-f7ae-58f6-81dc-74f7983b5329",
+     "type": "micro",
+     "x": 608,
+     "y": 272,
+     "max": 3,
+     "desc": "+18% Melee Damage\n-4% Attack Speed"
+    },
+    {
+     "id": "04e21bcb-52d3-5837-9a07-9ceedfcc4ee7",
+     "type": "legendary",
+     "x": 736,
+     "y": 272,
+     "max": 1,
+     "desc": "Every 1 s, +10% additional Melee Damage for the next Main Skill used"
+    },
+    {
+     "id": "944443b1-b877-5578-a6c2-24365b6129a6",
+     "type": "legendary",
+     "x": 864,
+     "y": 272,
+     "max": 1,
+     "desc": "Shadow Quantity +1"
+    },
+    {
+     "id": "5537def7-0040-5d95-be56-85bce4a9b1e1",
+     "type": "micro",
+     "x": 224,
+     "y": 368,
+     "max": 3,
+     "desc": "+5% Armor\n+5% Evasion"
+    },
+    {
+     "id": "bba22f44-d53d-5884-a630-19d56819d724",
+     "type": "medium",
+     "x": 352,
+     "y": 368,
+     "max": 3,
+     "desc": "+10% Armor\n+10% Evasion"
+    },
+    {
+     "id": "de801a16-e16f-5fcc-b5da-89e444fa44f7",
+     "type": "micro",
+     "x": 608,
+     "y": 368,
+     "max": 3,
+     "desc": "1.25% Life Regain\n1.25% Energy Shield Regain"
+    },
+    {
+     "id": "f18e5a7e-533c-5889-869a-850b83099213",
+     "type": "medium",
+     "x": 736,
+     "y": 368,
+     "max": 3,
+     "desc": "2.5% Life Regain\n2.5% Energy Shield Regain"
+    },
+    {
+     "id": "4a89e07f-f636-5194-aed5-60bcfd555288",
+     "type": "micro",
+     "x": 96,
+     "y": 464,
+     "max": 3,
+     "desc": "+9% Attack Damage"
+    },
+    {
+     "id": "d36a40bd-692e-587f-82ae-7bc625a0b918",
+     "type": "medium",
+     "x": 224,
+     "y": 464,
+     "max": 3,
+     "desc": "+18% Attack Damage"
+    },
+    {
+     "id": "289ce6f5-7119-5f16-a9be-0395c826ed37",
+     "type": "micro",
+     "x": 608,
+     "y": 464,
+     "max": 3,
+     "desc": "+4% Fervor effect"
+    },
+    {
+     "id": "3eb94e85-a8e9-52fc-8a6c-96f72ad4981b",
+     "type": "medium",
+     "x": 736,
+     "y": 464,
+     "max": 3,
+     "desc": "+8% Fervor effect"
+    },
+    {
+     "id": "ec59585e-3e35-54a3-9de8-f12db9cbdd41",
+     "type": "legendary",
+     "x": 864,
+     "y": 464,
+     "max": 1,
+     "desc": "+20% Fervor effect"
+    }
+   ],
+   "edges": [
+    [
+     "22dfad6f-2cf9-54a4-9083-0958580bd442",
+     "5cc7c33a-2301-563f-928f-45fe3fefdc7a"
+    ],
+    [
+     "177e3439-03eb-52df-8c82-c3cb74124954",
+     "233d4b78-e293-5812-a865-fd664317b517"
+    ],
+    [
+     "bf7bd7f1-7156-575f-8bf6-0004b0ca22ce",
+     "c7c824ff-4bab-5f7c-91f4-bfc2015d4131"
+    ],
+    [
+     "8d7fd255-d799-599e-8d4f-93dffa5ec446",
+     "f8bbd657-3d84-5029-95ce-07bf49df8ae5"
+    ],
+    [
+     "71ef69bb-2f97-5f41-9a36-7c5b2dee9f4f",
+     "e34dd3bb-20d3-5b5d-a4ca-e5a012417298"
+    ],
+    [
+     "0f3bbc36-47d7-5322-9aa3-6a52d5bce707",
+     "860b8961-e6f1-5a37-9c02-70a016f089fc"
+    ],
+    [
+     "601ce5fd-73f4-57d2-bd74-1a109977d81d",
+     "8d7fd255-d799-599e-8d4f-93dffa5ec446"
+    ],
+    [
+     "8d7fd255-d799-599e-8d4f-93dffa5ec446",
+     "944443b1-b877-5578-a6c2-24365b6129a6"
+    ],
+    [
+     "1ed82c55-c75d-5413-946a-1431f86b6992",
+     "8eb1c754-1cdd-5758-b3b0-361274b7c3fa"
+    ],
+    [
+     "3b35706f-421b-50f5-9fcc-6c22d88840fc",
+     "7fb177b1-5263-59ee-a1be-9bbe95d4bb90"
+    ],
+    [
+     "04e21bcb-52d3-5837-9a07-9ceedfcc4ee7",
+     "410ac3ec-f7ae-58f6-81dc-74f7983b5329"
+    ],
+    [
+     "5537def7-0040-5d95-be56-85bce4a9b1e1",
+     "bba22f44-d53d-5884-a630-19d56819d724"
+    ],
+    [
+     "de801a16-e16f-5fcc-b5da-89e444fa44f7",
+     "f18e5a7e-533c-5889-869a-850b83099213"
+    ],
+    [
+     "4a89e07f-f636-5194-aed5-60bcfd555288",
+     "d36a40bd-692e-587f-82ae-7bc625a0b918"
+    ],
+    [
+     "289ce6f5-7119-5f16-a9be-0395c826ed37",
+     "3eb94e85-a8e9-52fc-8a6c-96f72ad4981b"
+    ],
+    [
+     "3eb94e85-a8e9-52fc-8a6c-96f72ad4981b",
+     "ec59585e-3e35-54a3-9de8-f12db9cbdd41"
+    ]
+   ],
+   "notables": [
+    {
+     "id": "bfcf9a26-baa9-5c6c-ae44-a6ff52136c16",
+     "threshold": 24,
+     "name": "Falling Leaves",
+     "desc": "-20% additional damage for Weapons\n+40% additional Attack Damage (Max Divinity Effect: 1)"
+    },
+    {
+     "id": "30f08c38-6632-56c2-b4cd-9e67b325c9e2",
+     "threshold": 24,
+     "name": "Tradeoff",
+     "desc": "+20% additional Attack Speed when Dexterity is no less than Strength\n+25% additional Attack Damage when Strength is no less than Dexterity (Max Divinity Effect: 1)"
+    },
+    {
+     "id": "e1c242fc-821e-5e26-90a0-bf917cbc83dc",
+     "threshold": 24,
+     "name": "Centralize",
+     "desc": "Gains additional Fervor Rating equal to 25% of the current Fervor Rating on hit. Cooldown: 0.3 s\nConsumes half of current Fervor Rating when hit. -0.8% additional damage per 1 point consumed (Max Divinity Effect: 1)"
+    },
+    {
+     "id": "32926736-1a71-5207-ba9d-f42fa723f32f",
+     "threshold": 24,
+     "name": "Endless Fervor",
+     "desc": "Have Fervor\n+12% Fervor effect (Max Divinity Effect: 1)"
+    }
+   ]
+  }
+ },
+ "stages": [
+  {
+   "loadout": "Full precise auras",
+   "slots": [
+    {
+     "tree": "goddess_of_hunting",
+     "points": {
+      "06d2ad49-d9c1-50c3-a15c-6aa71660fda9": 3,
+      "d6a53af5-f37b-5d1f-a30e-b940982add8d": 3,
+      "d95ba2cd-4dce-53b6-9b39-eaa0e0267a54": 3,
+      "c2078be8-6145-552f-8553-5b023a2903f7": 3,
+      "48214679-8d96-5a68-b0e8-f9e662e5bc86": 3,
+      "a1528c87-fa44-581d-aa95-f7e6a967a756": 1,
+      "3686eb36-ad57-5c43-814d-1f87f9dad1ca": 3,
+      "5f5debbc-93cc-5f67-ad1f-b3aff77ed601": 3,
+      "a54603ef-e8f7-55a3-956e-74b5de991eea": 1,
+      "3921cdd2-5b09-514c-b25f-07b5a001a7f3": 1
+     },
+     "notable12": "1a380896-8198-5bb3-8465-dcb2342b7d5f",
+     "notable24": "59185299-0b6e-5d9b-87a2-85a658d9c11a",
+     "mirrored": null,
+     "prism": null
+    },
+    {
+     "tree": "bladerunner",
+     "points": {
+      "e1283e33-9c42-53ff-bcc1-70f9a516a95d": 3,
+      "d49a0c4f-494b-532b-8fc9-fbeb3edbd02f": 3,
+      "f6777ab4-f0dd-574c-ad31-3797ff71a0ed": 3,
+      "8c80db24-d481-5526-97ae-6b1bdb1c6962": 3,
+      "58714219-4265-5dc7-9465-ee53f3c899fd": 1,
+      "5fe2593a-2586-5707-8bbd-9fbaa897c39c": 3,
+      "7ca6f420-04a9-5b51-8d01-107fa58e6877": 3,
+      "453257ba-d45d-50f2-9fce-2751ad6f56b2": 1,
+      "9c64cb21-e652-507e-bf5a-253df0ab79b9": 3,
+      "e6fa240f-686c-5529-a637-446ffb38f4f8": 1
+     },
+     "notable12": null,
+     "notable24": "00afe3a1-4105-5b6d-86e9-d6f5896587dc",
+     "mirrored": null,
+     "prism": {
+      "name": "Ethereal Prism: Haze",
+      "node": "33b32a80-f4cf-5189-9a06-7e5a4d159ac4",
+      "replacesCore": false,
+      "effect": "+12% additional Attack Damage when holding a One-Handed Weapon\n+12% additional Base Damage for Two-Handed Weapons"
+     }
+    },
+    {
+     "tree": "prophet",
+     "points": {
+      "db8ca318-7e79-5b86-8f39-1d91b02bd0c5": 3,
+      "8b718f8f-cc4a-505d-aa30-88783c10cd49": 3,
+      "c71a9bdc-7ff6-5fde-804b-349207d57287": 3,
+      "e1655069-6532-5099-9987-e78bfd4bfa90": 3,
+      "a89c3a65-264d-529d-852f-66a681788ee1": 1,
+      "c14ef5de-c749-5c6b-b36e-961fe61dae5c": 3,
+      "dede12b8-f16e-5282-91f6-e6471b48f8e8": 3,
+      "851d38e7-7f6b-5d7c-a006-54f5b32b5de6": 3,
+      "5f33f95a-00e8-56bf-bb93-3e5607ca2260": 3,
+      "80b1a900-2d94-5af8-94a9-31f5929f25c0": 1
+     },
+     "notable12": null,
+     "notable24": "43dba54e-5c78-5dab-a6c9-5e32b32a3978",
+     "mirrored": null,
+     "prism": null
+    },
+    {
+     "tree": "lich",
+     "points": {
+      "fa2211da-becf-5879-8b15-6a5bdbce8dd6": 3,
+      "dd4b6429-e4fb-5a3e-b4d7-9b106962455d": 3,
+      "186c67af-20ef-511e-891a-7cd0cb6ca434": 3,
+      "58f798e0-f1a0-5982-946a-dbaae88ecc02": 3,
+      "56ad33dc-b99e-5ce9-81a6-60d9debafafc": 3,
+      "b083728f-56c5-5dd8-86f6-e91c98ae7a89": 3,
+      "7cb4d988-4716-5ba0-9ad1-f7a1638636cd": 1,
+      "1516455d-9ecf-5566-8ff2-2f32b9598b0d": 3,
+      "5a3d2f4e-1b08-5d4d-b5cf-17c61e431974": 3,
+      "f7db9cd4-ebb6-5469-a8bc-1f806bb06e76": 1,
+      "8dace2f1-5227-5795-963c-9c9b6b7dfe63": 3,
+      "90361d36-f18f-58dc-9292-2ed68bf50f81": 1
+     },
+     "notable12": null,
+     "notable24": "4241e65e-034b-5a28-a636-b2bbccf37167",
+     "mirrored": null,
+     "prism": null
+    }
+   ]
+  },
+  {
+   "loadout": "150b",
+   "slots": [
+    {
+     "tree": "goddess_of_hunting",
+     "points": {
+      "06d2ad49-d9c1-50c3-a15c-6aa71660fda9": 3,
+      "d6a53af5-f37b-5d1f-a30e-b940982add8d": 3,
+      "d95ba2cd-4dce-53b6-9b39-eaa0e0267a54": 3,
+      "c2078be8-6145-552f-8553-5b023a2903f7": 3,
+      "48214679-8d96-5a68-b0e8-f9e662e5bc86": 3,
+      "a1528c87-fa44-581d-aa95-f7e6a967a756": 1,
+      "3686eb36-ad57-5c43-814d-1f87f9dad1ca": 3,
+      "5f5debbc-93cc-5f67-ad1f-b3aff77ed601": 3,
+      "a54603ef-e8f7-55a3-956e-74b5de991eea": 1,
+      "3921cdd2-5b09-514c-b25f-07b5a001a7f3": 3
+     },
+     "notable12": "1a380896-8198-5bb3-8465-dcb2342b7d5f",
+     "notable24": "59185299-0b6e-5d9b-87a2-85a658d9c11a",
+     "mirrored": null,
+     "prism": null
+    },
+    {
+     "tree": "bladerunner",
+     "points": {
+      "e1283e33-9c42-53ff-bcc1-70f9a516a95d": 3,
+      "d49a0c4f-494b-532b-8fc9-fbeb3edbd02f": 3,
+      "f6777ab4-f0dd-574c-ad31-3797ff71a0ed": 3,
+      "8c80db24-d481-5526-97ae-6b1bdb1c6962": 3,
+      "58714219-4265-5dc7-9465-ee53f3c899fd": 1,
+      "5fe2593a-2586-5707-8bbd-9fbaa897c39c": 3,
+      "7ca6f420-04a9-5b51-8d01-107fa58e6877": 3,
+      "453257ba-d45d-50f2-9fce-2751ad6f56b2": 1,
+      "9c64cb21-e652-507e-bf5a-253df0ab79b9": 3,
+      "e6fa240f-686c-5529-a637-446ffb38f4f8": 1
+     },
+     "notable12": null,
+     "notable24": "00afe3a1-4105-5b6d-86e9-d6f5896587dc",
+     "mirrored": null,
+     "prism": {
+      "name": "Ethereal Prism: Haze",
+      "node": "33b32a80-f4cf-5189-9a06-7e5a4d159ac4",
+      "replacesCore": false,
+      "effect": "+12% additional Attack Damage when holding a One-Handed Weapon\n+12% additional Base Damage for Two-Handed Weapons"
+     }
+    },
+    {
+     "tree": "prophet",
+     "points": {
+      "db8ca318-7e79-5b86-8f39-1d91b02bd0c5": 3,
+      "8b718f8f-cc4a-505d-aa30-88783c10cd49": 3,
+      "c71a9bdc-7ff6-5fde-804b-349207d57287": 3,
+      "e1655069-6532-5099-9987-e78bfd4bfa90": 3,
+      "a89c3a65-264d-529d-852f-66a681788ee1": 1,
+      "c14ef5de-c749-5c6b-b36e-961fe61dae5c": 3,
+      "dede12b8-f16e-5282-91f6-e6471b48f8e8": 3,
+      "851d38e7-7f6b-5d7c-a006-54f5b32b5de6": 3,
+      "5f33f95a-00e8-56bf-bb93-3e5607ca2260": 3,
+      "80b1a900-2d94-5af8-94a9-31f5929f25c0": 1,
+      "d2b348a8-52a9-5650-a6cc-14d820d8efe9": 3,
+      "b31dbb72-05f9-5a3c-a40d-dad08a08a93c": 1,
+      "b873d2df-cdfa-545c-9e1a-63306aca9fd7": 3,
+      "8f43486c-521c-5c85-893c-87de6dde1a3e": 1,
+      "ab8176f5-aeb5-56d3-9eba-865c7fa36f41": 1
+     },
+     "notable12": null,
+     "notable24": "43dba54e-5c78-5dab-a6c9-5e32b32a3978",
+     "mirrored": null,
+     "prism": null
+    },
+    {
+     "tree": "lich",
+     "points": {
+      "fa2211da-becf-5879-8b15-6a5bdbce8dd6": 3,
+      "dd4b6429-e4fb-5a3e-b4d7-9b106962455d": 3,
+      "186c67af-20ef-511e-891a-7cd0cb6ca434": 3,
+      "58f798e0-f1a0-5982-946a-dbaae88ecc02": 3,
+      "56ad33dc-b99e-5ce9-81a6-60d9debafafc": 3,
+      "b083728f-56c5-5dd8-86f6-e91c98ae7a89": 3,
+      "7cb4d988-4716-5ba0-9ad1-f7a1638636cd": 1,
+      "1516455d-9ecf-5566-8ff2-2f32b9598b0d": 3,
+      "5a3d2f4e-1b08-5d4d-b5cf-17c61e431974": 3,
+      "f7db9cd4-ebb6-5469-a8bc-1f806bb06e76": 1
+     },
+     "notable12": null,
+     "notable24": "4241e65e-034b-5a28-a636-b2bbccf37167",
+     "mirrored": null,
+     "prism": null
+    }
+   ]
+  },
+  {
+   "loadout": "420b",
+   "slots": [
+    {
+     "tree": "god_of_might",
+     "points": {
+      "831cd0e8-15e2-5f06-a100-9753ad8b90d4": 3,
+      "e1c48496-1a5b-5fa4-ac7a-5ed8367072d3": 3,
+      "6a98aa89-6f5a-5080-9661-a798b1bfd010": 2,
+      "1647eefa-afa6-5fe3-a0ef-19986e47353f": 3,
+      "a3b66580-904a-5016-bdc9-c4409535d7c5": 3,
+      "3e6e3448-335d-5ce1-8c3c-abbc3d0760f5": 3,
+      "67954cba-c73a-5f9d-a87b-af192aeeaca7": 3,
+      "ee7502cd-b304-50a9-9ff4-a1037916680e": 3,
+      "65770cbd-d201-5ca9-a031-608e1c472ac2": 1
+     },
+     "notable12": "6e2bf80c-44ab-54b5-925b-a6afb180c590",
+     "notable24": "424e18c2-a87f-51fe-8bb2-cdc859eaf817",
+     "mirrored": null,
+     "prism": null
+    },
+    {
+     "tree": "the_brave",
+     "points": {
+      "893ef18f-571e-5227-88d1-fed9ab2caa42": 3,
+      "4d90a301-63e1-5a28-b563-5d43fdd72cb2": 3,
+      "c680f3d3-8ecc-5f3f-a0b7-971be92a356c": 3,
+      "322817ff-346e-50b8-abbc-da45ea521f9d": 3,
+      "850b4b82-ca82-5da9-a4a7-718aa2189f81": 3,
+      "848ba1c1-01e7-54a6-81fa-ef4b4f466132": 3,
+      "f3dac669-bcf5-568d-81e4-08abbba78b9b": 3,
+      "02f8d1a7-4ae0-5733-a9a2-b13dc53f35a3": 3,
+      "0f899a9f-65dc-57d3-bf11-f60a2763b60f": 1
+     },
+     "notable12": null,
+     "notable24": "7b22fcd6-0bed-5007-a152-288e039d551e",
+     "mirrored": null,
+     "prism": null
+    },
+    {
+     "tree": "prophet",
+     "points": {
+      "db8ca318-7e79-5b86-8f39-1d91b02bd0c5": 3,
+      "8b718f8f-cc4a-505d-aa30-88783c10cd49": 3,
+      "c71a9bdc-7ff6-5fde-804b-349207d57287": 3,
+      "c14ef5de-c749-5c6b-b36e-961fe61dae5c": 3,
+      "dede12b8-f16e-5282-91f6-e6471b48f8e8": 3,
+      "851d38e7-7f6b-5d7c-a006-54f5b32b5de6": 3,
+      "80b1a900-2d94-5af8-94a9-31f5929f25c0": 1,
+      "d2b348a8-52a9-5650-a6cc-14d820d8efe9": 3,
+      "b31dbb72-05f9-5a3c-a40d-dad08a08a93c": 1,
+      "b873d2df-cdfa-545c-9e1a-63306aca9fd7": 3,
+      "8f43486c-521c-5c85-893c-87de6dde1a3e": 1,
+      "ab8176f5-aeb5-56d3-9eba-865c7fa36f41": 1,
+      "4116742a-9d91-5565-800e-63eef16aba02": 3,
+      "e03ff022-a43c-59a2-8489-b742fd493562": 2
+     },
+     "notable12": null,
+     "notable24": "43dba54e-5c78-5dab-a6c9-5e32b32a3978",
+     "mirrored": null,
+     "prism": {
+      "name": "Ethereal Prism: Haze",
+      "node": "5f33f95a-00e8-56bf-bb93-3e5607ca2260",
+      "replacesCore": false,
+      "effect": "+12% additional Attack Damage when holding a One-Handed Weapon\n+12% additional Base Damage for Two-Handed Weapons"
+     }
+    },
+    {
+     "tree": "lich",
+     "points": {
+      "fa2211da-becf-5879-8b15-6a5bdbce8dd6": 3,
+      "dd4b6429-e4fb-5a3e-b4d7-9b106962455d": 3,
+      "186c67af-20ef-511e-891a-7cd0cb6ca434": 3,
+      "58f798e0-f1a0-5982-946a-dbaae88ecc02": 3,
+      "56ad33dc-b99e-5ce9-81a6-60d9debafafc": 3,
+      "b083728f-56c5-5dd8-86f6-e91c98ae7a89": 3,
+      "7cb4d988-4716-5ba0-9ad1-f7a1638636cd": 1,
+      "1516455d-9ecf-5566-8ff2-2f32b9598b0d": 3,
+      "5a3d2f4e-1b08-5d4d-b5cf-17c61e431974": 3,
+      "f7db9cd4-ebb6-5469-a8bc-1f806bb06e76": 1,
+      "8dace2f1-5227-5795-963c-9c9b6b7dfe63": 3,
+      "90361d36-f18f-58dc-9292-2ed68bf50f81": 1
+     },
+     "notable12": null,
+     "notable24": "4241e65e-034b-5a28-a636-b2bbccf37167",
+     "mirrored": null,
+     "prism": null
+    }
+   ]
+  },
+  {
+   "loadout": "Inverse-Warcry",
+   "slots": [
+    {
+     "tree": "god_of_might",
+     "points": {
+      "831cd0e8-15e2-5f06-a100-9753ad8b90d4": 3,
+      "e1c48496-1a5b-5fa4-ac7a-5ed8367072d3": 3,
+      "6a98aa89-6f5a-5080-9661-a798b1bfd010": 2,
+      "1647eefa-afa6-5fe3-a0ef-19986e47353f": 3,
+      "a3b66580-904a-5016-bdc9-c4409535d7c5": 3,
+      "3e6e3448-335d-5ce1-8c3c-abbc3d0760f5": 3,
+      "67954cba-c73a-5f9d-a87b-af192aeeaca7": 3,
+      "ee7502cd-b304-50a9-9ff4-a1037916680e": 3,
+      "65770cbd-d201-5ca9-a031-608e1c472ac2": 1
+     },
+     "notable12": "6e2bf80c-44ab-54b5-925b-a6afb180c590",
+     "notable24": "424e18c2-a87f-51fe-8bb2-cdc859eaf817",
+     "mirrored": null,
+     "prism": null
+    },
+    {
+     "tree": "the_brave",
+     "points": {
+      "a0a97811-e037-54e4-a616-66e0d4b855eb": 3,
+      "d41aa166-547d-52ca-a598-b38ffbda13d7": 3,
+      "cef5c5d0-9265-5b9f-91bf-9adfab420388": 1,
+      "f3dac669-bcf5-568d-81e4-08abbba78b9b": 3,
+      "02f8d1a7-4ae0-5733-a9a2-b13dc53f35a3": 3,
+      "0f899a9f-65dc-57d3-bf11-f60a2763b60f": 1
+     },
+     "notable12": null,
+     "notable24": "8fbbdf40-a6d9-50e8-9c04-db872139c12c",
+     "mirrored": [
+      {
+       "id": "mirrored_a0a97811-e037-54e4-a616-66e0d4b855eb_1_M9",
+       "from": "a0a97811-e037-54e4-a616-66e0d4b855eb",
+       "x": 352,
+       "y": 464,
+       "points": 0
+      },
+      {
+       "id": "mirrored_d41aa166-547d-52ca-a598-b38ffbda13d7_1_M8",
+       "from": "d41aa166-547d-52ca-a598-b38ffbda13d7",
+       "x": 224,
+       "y": 464,
+       "points": 3
+      },
+      {
+       "id": "mirrored_cef5c5d0-9265-5b9f-91bf-9adfab420388_1_M7",
+       "from": "cef5c5d0-9265-5b9f-91bf-9adfab420388",
+       "x": 96,
+       "y": 464,
+       "points": 1
+      },
+      {
+       "id": "mirrored_2b56d08f-026c-5c60-b20b-71673709791c_1_M6",
+       "from": "2b56d08f-026c-5c60-b20b-71673709791c",
+       "x": 352,
+       "y": 368,
+       "points": 0
+      },
+      {
+       "id": "mirrored_4cc7f40f-3833-5fa3-b83b-4a28c1fff579_1_M5",
+       "from": "4cc7f40f-3833-5fa3-b83b-4a28c1fff579",
+       "x": 224,
+       "y": 368,
+       "points": 3
+      },
+      {
+       "id": "mirrored_076dad1e-b2e2-5a7c-af9d-eddaeeffa332_1_M4",
+       "from": "076dad1e-b2e2-5a7c-af9d-eddaeeffa332",
+       "x": 96,
+       "y": 368,
+       "points": 0
+      },
+      {
+       "id": "mirrored_f3dac669-bcf5-568d-81e4-08abbba78b9b_1_M3",
+       "from": "f3dac669-bcf5-568d-81e4-08abbba78b9b",
+       "x": 352,
+       "y": 272,
+       "points": 0
+      },
+      {
+       "id": "mirrored_02f8d1a7-4ae0-5733-a9a2-b13dc53f35a3_1_M2",
+       "from": "02f8d1a7-4ae0-5733-a9a2-b13dc53f35a3",
+       "x": 224,
+       "y": 272,
+       "points": 3
+      },
+      {
+       "id": "mirrored_0f899a9f-65dc-57d3-bf11-f60a2763b60f_1_M1",
+       "from": "0f899a9f-65dc-57d3-bf11-f60a2763b60f",
+       "x": 96,
+       "y": 272,
+       "points": 1
+      }
+     ],
+     "prism": {
+      "name": "Inverse Image Prism",
+      "node": "4cc7f40f-3833-5fa3-b83b-4a28c1fff579",
+      "replacesCore": false,
+      "effect": null
+     }
+    },
+    {
+     "tree": "prophet",
+     "points": {
+      "db8ca318-7e79-5b86-8f39-1d91b02bd0c5": 3,
+      "8b718f8f-cc4a-505d-aa30-88783c10cd49": 3,
+      "c71a9bdc-7ff6-5fde-804b-349207d57287": 3,
+      "c14ef5de-c749-5c6b-b36e-961fe61dae5c": 3,
+      "dede12b8-f16e-5282-91f6-e6471b48f8e8": 3,
+      "851d38e7-7f6b-5d7c-a006-54f5b32b5de6": 3,
+      "80b1a900-2d94-5af8-94a9-31f5929f25c0": 1,
+      "d2b348a8-52a9-5650-a6cc-14d820d8efe9": 3,
+      "b31dbb72-05f9-5a3c-a40d-dad08a08a93c": 1,
+      "b873d2df-cdfa-545c-9e1a-63306aca9fd7": 3,
+      "8f43486c-521c-5c85-893c-87de6dde1a3e": 1,
+      "ab8176f5-aeb5-56d3-9eba-865c7fa36f41": 1,
+      "4116742a-9d91-5565-800e-63eef16aba02": 3,
+      "e03ff022-a43c-59a2-8489-b742fd493562": 1
+     },
+     "notable12": null,
+     "notable24": "43dba54e-5c78-5dab-a6c9-5e32b32a3978",
+     "mirrored": null,
+     "prism": {
+      "name": "Ethereal Prism: Haze",
+      "node": "5f33f95a-00e8-56bf-bb93-3e5607ca2260",
+      "replacesCore": false,
+      "effect": "+12% additional Attack Damage when holding a One-Handed Weapon\n+12% additional Base Damage for Two-Handed Weapons"
+     }
+    },
+    {
+     "tree": "lich",
+     "points": {
+      "fa2211da-becf-5879-8b15-6a5bdbce8dd6": 3,
+      "dd4b6429-e4fb-5a3e-b4d7-9b106962455d": 3,
+      "186c67af-20ef-511e-891a-7cd0cb6ca434": 3,
+      "58f798e0-f1a0-5982-946a-dbaae88ecc02": 3,
+      "56ad33dc-b99e-5ce9-81a6-60d9debafafc": 3,
+      "b083728f-56c5-5dd8-86f6-e91c98ae7a89": 3,
+      "7cb4d988-4716-5ba0-9ad1-f7a1638636cd": 1,
+      "1516455d-9ecf-5566-8ff2-2f32b9598b0d": 3,
+      "5a3d2f4e-1b08-5d4d-b5cf-17c61e431974": 3,
+      "f7db9cd4-ebb6-5469-a8bc-1f806bb06e76": 1,
+      "8dace2f1-5227-5795-963c-9c9b6b7dfe63": 3,
+      "90361d36-f18f-58dc-9292-2ed68bf50f81": 1
+     },
+     "notable12": null,
+     "notable24": "4241e65e-034b-5a28-a636-b2bbccf37167",
+     "mirrored": null,
+     "prism": null
+    }
+   ]
+  },
+  {
+   "loadout": "3t",
+   "slots": [
+    {
+     "tree": "god_of_might",
+     "points": {
+      "831cd0e8-15e2-5f06-a100-9753ad8b90d4": 3,
+      "e1c48496-1a5b-5fa4-ac7a-5ed8367072d3": 3,
+      "6a98aa89-6f5a-5080-9661-a798b1bfd010": 2,
+      "1647eefa-afa6-5fe3-a0ef-19986e47353f": 3,
+      "a3b66580-904a-5016-bdc9-c4409535d7c5": 3,
+      "3e6e3448-335d-5ce1-8c3c-abbc3d0760f5": 3,
+      "67954cba-c73a-5f9d-a87b-af192aeeaca7": 3,
+      "ee7502cd-b304-50a9-9ff4-a1037916680e": 3,
+      "65770cbd-d201-5ca9-a031-608e1c472ac2": 1
+     },
+     "notable12": "6e2bf80c-44ab-54b5-925b-a6afb180c590",
+     "notable24": "424e18c2-a87f-51fe-8bb2-cdc859eaf817",
+     "mirrored": null,
+     "prism": null
+    },
+    {
+     "tree": "the_brave",
+     "points": {
+      "a0a97811-e037-54e4-a616-66e0d4b855eb": 3,
+      "d41aa166-547d-52ca-a598-b38ffbda13d7": 3,
+      "cef5c5d0-9265-5b9f-91bf-9adfab420388": 1,
+      "f3dac669-bcf5-568d-81e4-08abbba78b9b": 3,
+      "02f8d1a7-4ae0-5733-a9a2-b13dc53f35a3": 3,
+      "0f899a9f-65dc-57d3-bf11-f60a2763b60f": 1,
+      "893ef18f-571e-5227-88d1-fed9ab2caa42": 1
+     },
+     "notable12": null,
+     "notable24": "8fbbdf40-a6d9-50e8-9c04-db872139c12c",
+     "mirrored": [
+      {
+       "id": "mirrored_a0a97811-e037-54e4-a616-66e0d4b855eb_1_M9",
+       "from": "a0a97811-e037-54e4-a616-66e0d4b855eb",
+       "x": 352,
+       "y": 464,
+       "points": 0
+      },
+      {
+       "id": "mirrored_d41aa166-547d-52ca-a598-b38ffbda13d7_1_M8",
+       "from": "d41aa166-547d-52ca-a598-b38ffbda13d7",
+       "x": 224,
+       "y": 464,
+       "points": 3
+      },
+      {
+       "id": "mirrored_cef5c5d0-9265-5b9f-91bf-9adfab420388_1_M7",
+       "from": "cef5c5d0-9265-5b9f-91bf-9adfab420388",
+       "x": 96,
+       "y": 464,
+       "points": 1
+      },
+      {
+       "id": "mirrored_2b56d08f-026c-5c60-b20b-71673709791c_1_M6",
+       "from": "2b56d08f-026c-5c60-b20b-71673709791c",
+       "x": 352,
+       "y": 368,
+       "points": 0
+      },
+      {
+       "id": "mirrored_4cc7f40f-3833-5fa3-b83b-4a28c1fff579_1_M5",
+       "from": "4cc7f40f-3833-5fa3-b83b-4a28c1fff579",
+       "x": 224,
+       "y": 368,
+       "points": 3
+      },
+      {
+       "id": "mirrored_076dad1e-b2e2-5a7c-af9d-eddaeeffa332_1_M4",
+       "from": "076dad1e-b2e2-5a7c-af9d-eddaeeffa332",
+       "x": 96,
+       "y": 368,
+       "points": 0
+      },
+      {
+       "id": "mirrored_f3dac669-bcf5-568d-81e4-08abbba78b9b_1_M3",
+       "from": "f3dac669-bcf5-568d-81e4-08abbba78b9b",
+       "x": 352,
+       "y": 272,
+       "points": 0
+      },
+      {
+       "id": "mirrored_02f8d1a7-4ae0-5733-a9a2-b13dc53f35a3_1_M2",
+       "from": "02f8d1a7-4ae0-5733-a9a2-b13dc53f35a3",
+       "x": 224,
+       "y": 272,
+       "points": 3
+      },
+      {
+       "id": "mirrored_0f899a9f-65dc-57d3-bf11-f60a2763b60f_1_M1",
+       "from": "0f899a9f-65dc-57d3-bf11-f60a2763b60f",
+       "x": 96,
+       "y": 272,
+       "points": 1
+      }
+     ],
+     "prism": {
+      "name": "Inverse Image Prism",
+      "node": "4cc7f40f-3833-5fa3-b83b-4a28c1fff579",
+      "replacesCore": false,
+      "effect": null
+     }
+    },
+    {
+     "tree": "prophet",
+     "points": {
+      "db8ca318-7e79-5b86-8f39-1d91b02bd0c5": 3,
+      "8b718f8f-cc4a-505d-aa30-88783c10cd49": 3,
+      "c71a9bdc-7ff6-5fde-804b-349207d57287": 3,
+      "c14ef5de-c749-5c6b-b36e-961fe61dae5c": 3,
+      "dede12b8-f16e-5282-91f6-e6471b48f8e8": 3,
+      "851d38e7-7f6b-5d7c-a006-54f5b32b5de6": 3,
+      "d2b348a8-52a9-5650-a6cc-14d820d8efe9": 3,
+      "b31dbb72-05f9-5a3c-a40d-dad08a08a93c": 1,
+      "b873d2df-cdfa-545c-9e1a-63306aca9fd7": 3,
+      "8f43486c-521c-5c85-893c-87de6dde1a3e": 1,
+      "ab8176f5-aeb5-56d3-9eba-865c7fa36f41": 1,
+      "4116742a-9d91-5565-800e-63eef16aba02": 3,
+      "e03ff022-a43c-59a2-8489-b742fd493562": 1,
+      "80b1a900-2d94-5af8-94a9-31f5929f25c0": 1
+     },
+     "notable12": null,
+     "notable24": "43dba54e-5c78-5dab-a6c9-5e32b32a3978",
+     "mirrored": null,
+     "prism": {
+      "name": "Ethereal Prism: Haze",
+      "node": "5f33f95a-00e8-56bf-bb93-3e5607ca2260",
+      "replacesCore": false,
+      "effect": "While standing still, +12% additional Attack Damage and Ailment Damage dealt by attacks. -5% additional damage taken"
+     }
+    },
+    {
+     "tree": "lich",
+     "points": {
+      "fa2211da-becf-5879-8b15-6a5bdbce8dd6": 3,
+      "dd4b6429-e4fb-5a3e-b4d7-9b106962455d": 3,
+      "186c67af-20ef-511e-891a-7cd0cb6ca434": 3,
+      "58f798e0-f1a0-5982-946a-dbaae88ecc02": 3,
+      "56ad33dc-b99e-5ce9-81a6-60d9debafafc": 3,
+      "b083728f-56c5-5dd8-86f6-e91c98ae7a89": 3,
+      "7cb4d988-4716-5ba0-9ad1-f7a1638636cd": 1,
+      "1516455d-9ecf-5566-8ff2-2f32b9598b0d": 3,
+      "5a3d2f4e-1b08-5d4d-b5cf-17c61e431974": 3,
+      "f7db9cd4-ebb6-5469-a8bc-1f806bb06e76": 1,
+      "8dace2f1-5227-5795-963c-9c9b6b7dfe63": 3,
+      "90361d36-f18f-58dc-9292-2ed68bf50f81": 1
+     },
+     "notable12": null,
+     "notable24": "4241e65e-034b-5a28-a636-b2bbccf37167",
+     "mirrored": null,
+     "prism": null
+    }
+   ]
+  },
+  {
+   "loadout": "5t Eternity",
+   "slots": [
+    {
+     "tree": "god_of_might",
+     "points": {
+      "831cd0e8-15e2-5f06-a100-9753ad8b90d4": 3,
+      "e1c48496-1a5b-5fa4-ac7a-5ed8367072d3": 3,
+      "6a98aa89-6f5a-5080-9661-a798b1bfd010": 3,
+      "1647eefa-afa6-5fe3-a0ef-19986e47353f": 3,
+      "a3b66580-904a-5016-bdc9-c4409535d7c5": 3,
+      "3e6e3448-335d-5ce1-8c3c-abbc3d0760f5": 3,
+      "67954cba-c73a-5f9d-a87b-af192aeeaca7": 3,
+      "ee7502cd-b304-50a9-9ff4-a1037916680e": 3,
+      "65770cbd-d201-5ca9-a031-608e1c472ac2": 1
+     },
+     "notable12": "6e2bf80c-44ab-54b5-925b-a6afb180c590",
+     "notable24": "424e18c2-a87f-51fe-8bb2-cdc859eaf817",
+     "mirrored": null,
+     "prism": null
+    },
+    {
+     "tree": "the_brave",
+     "points": {
+      "a0a97811-e037-54e4-a616-66e0d4b855eb": 3,
+      "d41aa166-547d-52ca-a598-b38ffbda13d7": 3,
+      "cef5c5d0-9265-5b9f-91bf-9adfab420388": 1,
+      "f3dac669-bcf5-568d-81e4-08abbba78b9b": 3,
+      "02f8d1a7-4ae0-5733-a9a2-b13dc53f35a3": 3,
+      "0f899a9f-65dc-57d3-bf11-f60a2763b60f": 1,
+      "893ef18f-571e-5227-88d1-fed9ab2caa42": 1,
+      "c0cb2d8d-dbe7-5cfa-b591-85c828c19f4c": 3,
+      "9b14fb36-95db-5a46-9d2a-d7568ab56c0f": 1,
+      "9916a902-96f9-5c08-a6c3-dab63f88198f": 3
+     },
+     "notable12": null,
+     "notable24": "7b22fcd6-0bed-5007-a152-288e039d551e",
+     "mirrored": [
+      {
+       "id": "mirrored_a0a97811-e037-54e4-a616-66e0d4b855eb_1_M9",
+       "from": "a0a97811-e037-54e4-a616-66e0d4b855eb",
+       "x": 352,
+       "y": 464,
+       "points": 0
+      },
+      {
+       "id": "mirrored_d41aa166-547d-52ca-a598-b38ffbda13d7_1_M8",
+       "from": "d41aa166-547d-52ca-a598-b38ffbda13d7",
+       "x": 224,
+       "y": 464,
+       "points": 3
+      },
+      {
+       "id": "mirrored_cef5c5d0-9265-5b9f-91bf-9adfab420388_1_M7",
+       "from": "cef5c5d0-9265-5b9f-91bf-9adfab420388",
+       "x": 96,
+       "y": 464,
+       "points": 1
+      },
+      {
+       "id": "mirrored_2b56d08f-026c-5c60-b20b-71673709791c_1_M6",
+       "from": "2b56d08f-026c-5c60-b20b-71673709791c",
+       "x": 352,
+       "y": 368,
+       "points": 0
+      },
+      {
+       "id": "mirrored_4cc7f40f-3833-5fa3-b83b-4a28c1fff579_1_M5",
+       "from": "4cc7f40f-3833-5fa3-b83b-4a28c1fff579",
+       "x": 224,
+       "y": 368,
+       "points": 3
+      },
+      {
+       "id": "mirrored_076dad1e-b2e2-5a7c-af9d-eddaeeffa332_1_M4",
+       "from": "076dad1e-b2e2-5a7c-af9d-eddaeeffa332",
+       "x": 96,
+       "y": 368,
+       "points": 0
+      },
+      {
+       "id": "mirrored_f3dac669-bcf5-568d-81e4-08abbba78b9b_1_M3",
+       "from": "f3dac669-bcf5-568d-81e4-08abbba78b9b",
+       "x": 352,
+       "y": 272,
+       "points": 0
+      },
+      {
+       "id": "mirrored_02f8d1a7-4ae0-5733-a9a2-b13dc53f35a3_1_M2",
+       "from": "02f8d1a7-4ae0-5733-a9a2-b13dc53f35a3",
+       "x": 224,
+       "y": 272,
+       "points": 3
+      },
+      {
+       "id": "mirrored_0f899a9f-65dc-57d3-bf11-f60a2763b60f_1_M1",
+       "from": "0f899a9f-65dc-57d3-bf11-f60a2763b60f",
+       "x": 96,
+       "y": 272,
+       "points": 1
+      }
+     ],
+     "prism": {
+      "name": "Inverse Image Prism",
+      "node": "4cc7f40f-3833-5fa3-b83b-4a28c1fff579",
+      "replacesCore": false,
+      "effect": null
+     }
+    },
+    {
+     "tree": "prophet",
+     "points": {
+      "db8ca318-7e79-5b86-8f39-1d91b02bd0c5": 3,
+      "8b718f8f-cc4a-505d-aa30-88783c10cd49": 3,
+      "c71a9bdc-7ff6-5fde-804b-349207d57287": 3,
+      "c14ef5de-c749-5c6b-b36e-961fe61dae5c": 3,
+      "dede12b8-f16e-5282-91f6-e6471b48f8e8": 3,
+      "851d38e7-7f6b-5d7c-a006-54f5b32b5de6": 3,
+      "d2b348a8-52a9-5650-a6cc-14d820d8efe9": 3,
+      "b31dbb72-05f9-5a3c-a40d-dad08a08a93c": 1,
+      "b873d2df-cdfa-545c-9e1a-63306aca9fd7": 3,
+      "8f43486c-521c-5c85-893c-87de6dde1a3e": 1,
+      "ab8176f5-aeb5-56d3-9eba-865c7fa36f41": 1,
+      "e1655069-6532-5099-9987-e78bfd4bfa90": 3,
+      "5f33f95a-00e8-56bf-bb93-3e5607ca2260": 3,
+      "80b1a900-2d94-5af8-94a9-31f5929f25c0": 1
+     },
+     "notable12": null,
+     "notable24": "43dba54e-5c78-5dab-a6c9-5e32b32a3978",
+     "mirrored": null,
+     "prism": null
+    },
+    {
+     "tree": "ranger",
+     "points": {
+      "5e81d52a-6423-59e2-9299-123e74eb90ed": 3,
+      "054258c9-9719-5fbc-b5ef-3ab4ea76fc78": 3,
+      "f121da79-886b-5b3c-ace4-1416375c580b": 3,
+      "51cd1b2d-f693-5f0b-87b3-240196c55754": 3,
+      "c3c701fb-f803-55f3-9671-661d0fa46f29": 1,
+      "5c0b337e-2238-51e9-89a4-c9ef25ca3865": 3,
+      "1f038b66-6651-51b2-8c34-5a7e102ce8dd": 3,
+      "bc824c9f-fac6-545e-ae1d-2954b9320e6f": 1,
+      "4507e6a2-f1d0-5803-b565-3c8c63b399fb": 3,
+      "c92fa88f-f974-57f7-816a-57c9f88bf57e": 1,
+      "f678147c-2fa6-5450-b8a2-a4829d15f950": 1
+     },
+     "notable12": null,
+     "notable24": null,
+     "mirrored": null,
+     "prism": {
+      "name": "Ethereal Prism: Unmatched Valor",
+      "node": "afc3c99a-79ca-5204-9761-797630676bfc",
+      "replacesCore": true,
+      "effect": "Has 130 point(s) of fixed Fervor Rating"
+     }
+    }
+   ]
+  },
+  {
+   "loadout": "more_1",
+   "slots": [
+    {
+     "tree": "god_of_might",
+     "points": {
+      "831cd0e8-15e2-5f06-a100-9753ad8b90d4": 3,
+      "e1c48496-1a5b-5fa4-ac7a-5ed8367072d3": 3,
+      "6a98aa89-6f5a-5080-9661-a798b1bfd010": 2,
+      "1647eefa-afa6-5fe3-a0ef-19986e47353f": 3,
+      "a3b66580-904a-5016-bdc9-c4409535d7c5": 3,
+      "3e6e3448-335d-5ce1-8c3c-abbc3d0760f5": 3,
+      "67954cba-c73a-5f9d-a87b-af192aeeaca7": 3,
+      "ee7502cd-b304-50a9-9ff4-a1037916680e": 3,
+      "65770cbd-d201-5ca9-a031-608e1c472ac2": 1
+     },
+     "notable12": "6e2bf80c-44ab-54b5-925b-a6afb180c590",
+     "notable24": "424e18c2-a87f-51fe-8bb2-cdc859eaf817",
+     "mirrored": null,
+     "prism": null
+    },
+    {
+     "tree": "the_brave",
+     "points": {
+      "f3dac669-bcf5-568d-81e4-08abbba78b9b": 3,
+      "02f8d1a7-4ae0-5733-a9a2-b13dc53f35a3": 3,
+      "0f899a9f-65dc-57d3-bf11-f60a2763b60f": 1,
+      "9b14fb36-95db-5a46-9d2a-d7568ab56c0f": 1,
+      "9916a902-96f9-5c08-a6c3-dab63f88198f": 3,
+      "850b4b82-ca82-5da9-a4a7-718aa2189f81": 3,
+      "848ba1c1-01e7-54a6-81fa-ef4b4f466132": 3,
+      "893ef18f-571e-5227-88d1-fed9ab2caa42": 1,
+      "a0a97811-e037-54e4-a616-66e0d4b855eb": 3,
+      "d41aa166-547d-52ca-a598-b38ffbda13d7": 3,
+      "cef5c5d0-9265-5b9f-91bf-9adfab420388": 1
+     },
+     "notable12": null,
+     "notable24": "8fbbdf40-a6d9-50e8-9c04-db872139c12c",
+     "mirrored": [
+      {
+       "id": "mirrored_a0a97811-e037-54e4-a616-66e0d4b855eb_1_M9",
+       "from": "a0a97811-e037-54e4-a616-66e0d4b855eb",
+       "x": 352,
+       "y": 464,
+       "points": 0
+      },
+      {
+       "id": "mirrored_d41aa166-547d-52ca-a598-b38ffbda13d7_1_M8",
+       "from": "d41aa166-547d-52ca-a598-b38ffbda13d7",
+       "x": 224,
+       "y": 464,
+       "points": 3
+      },
+      {
+       "id": "mirrored_cef5c5d0-9265-5b9f-91bf-9adfab420388_1_M7",
+       "from": "cef5c5d0-9265-5b9f-91bf-9adfab420388",
+       "x": 96,
+       "y": 464,
+       "points": 1
+      },
+      {
+       "id": "mirrored_2b56d08f-026c-5c60-b20b-71673709791c_1_M6",
+       "from": "2b56d08f-026c-5c60-b20b-71673709791c",
+       "x": 352,
+       "y": 368,
+       "points": 0
+      },
+      {
+       "id": "mirrored_4cc7f40f-3833-5fa3-b83b-4a28c1fff579_1_M5",
+       "from": "4cc7f40f-3833-5fa3-b83b-4a28c1fff579",
+       "x": 224,
+       "y": 368,
+       "points": 0
+      },
+      {
+       "id": "mirrored_076dad1e-b2e2-5a7c-af9d-eddaeeffa332_1_M4",
+       "from": "076dad1e-b2e2-5a7c-af9d-eddaeeffa332",
+       "x": 96,
+       "y": 368,
+       "points": 0
+      },
+      {
+       "id": "mirrored_f3dac669-bcf5-568d-81e4-08abbba78b9b_1_M3",
+       "from": "f3dac669-bcf5-568d-81e4-08abbba78b9b",
+       "x": 352,
+       "y": 272,
+       "points": 0
+      },
+      {
+       "id": "mirrored_02f8d1a7-4ae0-5733-a9a2-b13dc53f35a3_1_M2",
+       "from": "02f8d1a7-4ae0-5733-a9a2-b13dc53f35a3",
+       "x": 224,
+       "y": 272,
+       "points": 3
+      },
+      {
+       "id": "mirrored_0f899a9f-65dc-57d3-bf11-f60a2763b60f_1_M1",
+       "from": "0f899a9f-65dc-57d3-bf11-f60a2763b60f",
+       "x": 96,
+       "y": 272,
+       "points": 1
+      }
+     ],
+     "prism": {
+      "name": "Inverse Image Prism",
+      "node": "4cc7f40f-3833-5fa3-b83b-4a28c1fff579",
+      "replacesCore": false,
+      "effect": null
+     }
+    },
+    {
+     "tree": "ronin",
+     "points": {
+      "1ed82c55-c75d-5413-946a-1431f86b6992": 3,
+      "8eb1c754-1cdd-5758-b3b0-361274b7c3fa": 3,
+      "e34dd3bb-20d3-5b5d-a4ca-e5a012417298": 3,
+      "71ef69bb-2f97-5f41-9a36-7c5b2dee9f4f": 3,
+      "de801a16-e16f-5fcc-b5da-89e444fa44f7": 3,
+      "289ce6f5-7119-5f16-a9be-0395c826ed37": 3,
+      "3eb94e85-a8e9-52fc-8a6c-96f72ad4981b": 3,
+      "ec59585e-3e35-54a3-9de8-f12db9cbdd41": 1,
+      "f18e5a7e-533c-5889-869a-850b83099213": 2
+     },
+     "notable12": null,
+     "notable24": "e1c242fc-821e-5e26-90a0-bf917cbc83dc",
+     "mirrored": null,
+     "prism": null
+    },
+    {
+     "tree": "ranger",
+     "points": {
+      "5e81d52a-6423-59e2-9299-123e74eb90ed": 3,
+      "054258c9-9719-5fbc-b5ef-3ab4ea76fc78": 3,
+      "f121da79-886b-5b3c-ace4-1416375c580b": 3,
+      "51cd1b2d-f693-5f0b-87b3-240196c55754": 3,
+      "c3c701fb-f803-55f3-9671-661d0fa46f29": 1,
+      "4507e6a2-f1d0-5803-b565-3c8c63b399fb": 3,
+      "c92fa88f-f974-57f7-816a-57c9f88bf57e": 1,
+      "5c0b337e-2238-51e9-89a4-c9ef25ca3865": 3,
+      "afc3c99a-79ca-5204-9761-797630676bfc": 3,
+      "f678147c-2fa6-5450-b8a2-a4829d15f950": 1,
+      "1b5bb694-b6c8-5415-ba98-25942cbe3cb9": 3,
+      "b799b521-31a5-5c9b-bd33-188967e95fca": 3,
+      "24ace513-cc93-545f-9976-ce6ca6e3f1fd": 1,
+      "bc824c9f-fac6-545e-ae1d-2954b9320e6f": 1,
+      "f66ea86a-2501-567b-b0cd-648a452c5fa0": 1
+     },
+     "notable12": null,
+     "notable24": "167956ee-19ef-59e4-a201-4feabb940b7f",
+     "mirrored": null,
+     "prism": {
+      "name": "Ethereal Prism: Unmatched Valor",
+      "node": "1f038b66-6651-51b2-8c34-5a7e102ce8dd",
+      "replacesCore": false,
+      "effect": "Has 130 point(s) of fixed Fervor Rating"
+     }
+    }
+   ]
+  },
+  {
+   "loadout": "more_2",
+   "slots": [
+    {
+     "tree": "god_of_might",
+     "points": {
+      "831cd0e8-15e2-5f06-a100-9753ad8b90d4": 3,
+      "e1c48496-1a5b-5fa4-ac7a-5ed8367072d3": 3,
+      "6a98aa89-6f5a-5080-9661-a798b1bfd010": 2,
+      "1647eefa-afa6-5fe3-a0ef-19986e47353f": 3,
+      "a3b66580-904a-5016-bdc9-c4409535d7c5": 3,
+      "3e6e3448-335d-5ce1-8c3c-abbc3d0760f5": 3,
+      "67954cba-c73a-5f9d-a87b-af192aeeaca7": 3,
+      "ee7502cd-b304-50a9-9ff4-a1037916680e": 3,
+      "65770cbd-d201-5ca9-a031-608e1c472ac2": 1
+     },
+     "notable12": "6e2bf80c-44ab-54b5-925b-a6afb180c590",
+     "notable24": "424e18c2-a87f-51fe-8bb2-cdc859eaf817",
+     "mirrored": null,
+     "prism": null
+    },
+    {
+     "tree": "the_brave",
+     "points": {
+      "f3dac669-bcf5-568d-81e4-08abbba78b9b": 3,
+      "02f8d1a7-4ae0-5733-a9a2-b13dc53f35a3": 3,
+      "0f899a9f-65dc-57d3-bf11-f60a2763b60f": 1,
+      "9b14fb36-95db-5a46-9d2a-d7568ab56c0f": 1,
+      "9916a902-96f9-5c08-a6c3-dab63f88198f": 3,
+      "850b4b82-ca82-5da9-a4a7-718aa2189f81": 3,
+      "848ba1c1-01e7-54a6-81fa-ef4b4f466132": 3,
+      "893ef18f-571e-5227-88d1-fed9ab2caa42": 1,
+      "a0a97811-e037-54e4-a616-66e0d4b855eb": 3,
+      "d41aa166-547d-52ca-a598-b38ffbda13d7": 3,
+      "cef5c5d0-9265-5b9f-91bf-9adfab420388": 1
+     },
+     "notable12": null,
+     "notable24": "8fbbdf40-a6d9-50e8-9c04-db872139c12c",
+     "mirrored": [
+      {
+       "id": "mirrored_a0a97811-e037-54e4-a616-66e0d4b855eb_1_M9",
+       "from": "a0a97811-e037-54e4-a616-66e0d4b855eb",
+       "x": 352,
+       "y": 464,
+       "points": 0
+      },
+      {
+       "id": "mirrored_d41aa166-547d-52ca-a598-b38ffbda13d7_1_M8",
+       "from": "d41aa166-547d-52ca-a598-b38ffbda13d7",
+       "x": 224,
+       "y": 464,
+       "points": 3
+      },
+      {
+       "id": "mirrored_cef5c5d0-9265-5b9f-91bf-9adfab420388_1_M7",
+       "from": "cef5c5d0-9265-5b9f-91bf-9adfab420388",
+       "x": 96,
+       "y": 464,
+       "points": 1
+      },
+      {
+       "id": "mirrored_2b56d08f-026c-5c60-b20b-71673709791c_1_M6",
+       "from": "2b56d08f-026c-5c60-b20b-71673709791c",
+       "x": 352,
+       "y": 368,
+       "points": 0
+      },
+      {
+       "id": "mirrored_4cc7f40f-3833-5fa3-b83b-4a28c1fff579_1_M5",
+       "from": "4cc7f40f-3833-5fa3-b83b-4a28c1fff579",
+       "x": 224,
+       "y": 368,
+       "points": 0
+      },
+      {
+       "id": "mirrored_076dad1e-b2e2-5a7c-af9d-eddaeeffa332_1_M4",
+       "from": "076dad1e-b2e2-5a7c-af9d-eddaeeffa332",
+       "x": 96,
+       "y": 368,
+       "points": 0
+      },
+      {
+       "id": "mirrored_f3dac669-bcf5-568d-81e4-08abbba78b9b_1_M3",
+       "from": "f3dac669-bcf5-568d-81e4-08abbba78b9b",
+       "x": 352,
+       "y": 272,
+       "points": 0
+      },
+      {
+       "id": "mirrored_02f8d1a7-4ae0-5733-a9a2-b13dc53f35a3_1_M2",
+       "from": "02f8d1a7-4ae0-5733-a9a2-b13dc53f35a3",
+       "x": 224,
+       "y": 272,
+       "points": 3
+      },
+      {
+       "id": "mirrored_0f899a9f-65dc-57d3-bf11-f60a2763b60f_1_M1",
+       "from": "0f899a9f-65dc-57d3-bf11-f60a2763b60f",
+       "x": 96,
+       "y": 272,
+       "points": 1
+      }
+     ],
+     "prism": {
+      "name": "Inverse Image Prism",
+      "node": "4cc7f40f-3833-5fa3-b83b-4a28c1fff579",
+      "replacesCore": false,
+      "effect": null
+     }
+    },
+    {
+     "tree": "ronin",
+     "points": {
+      "1ed82c55-c75d-5413-946a-1431f86b6992": 3,
+      "8eb1c754-1cdd-5758-b3b0-361274b7c3fa": 3,
+      "e34dd3bb-20d3-5b5d-a4ca-e5a012417298": 3,
+      "71ef69bb-2f97-5f41-9a36-7c5b2dee9f4f": 3,
+      "de801a16-e16f-5fcc-b5da-89e444fa44f7": 3,
+      "289ce6f5-7119-5f16-a9be-0395c826ed37": 3,
+      "3eb94e85-a8e9-52fc-8a6c-96f72ad4981b": 3,
+      "ec59585e-3e35-54a3-9de8-f12db9cbdd41": 1,
+      "f18e5a7e-533c-5889-869a-850b83099213": 2
+     },
+     "notable12": null,
+     "notable24": "e1c242fc-821e-5e26-90a0-bf917cbc83dc",
+     "mirrored": null,
+     "prism": null
+    },
+    {
+     "tree": "ranger",
+     "points": {
+      "5e81d52a-6423-59e2-9299-123e74eb90ed": 3,
+      "054258c9-9719-5fbc-b5ef-3ab4ea76fc78": 3,
+      "f121da79-886b-5b3c-ace4-1416375c580b": 3,
+      "51cd1b2d-f693-5f0b-87b3-240196c55754": 3,
+      "c3c701fb-f803-55f3-9671-661d0fa46f29": 1,
+      "4507e6a2-f1d0-5803-b565-3c8c63b399fb": 3,
+      "c92fa88f-f974-57f7-816a-57c9f88bf57e": 1,
+      "5c0b337e-2238-51e9-89a4-c9ef25ca3865": 3,
+      "afc3c99a-79ca-5204-9761-797630676bfc": 3,
+      "f678147c-2fa6-5450-b8a2-a4829d15f950": 1,
+      "1b5bb694-b6c8-5415-ba98-25942cbe3cb9": 3,
+      "b799b521-31a5-5c9b-bd33-188967e95fca": 3,
+      "24ace513-cc93-545f-9976-ce6ca6e3f1fd": 1,
+      "bc824c9f-fac6-545e-ae1d-2954b9320e6f": 1,
+      "f66ea86a-2501-567b-b0cd-648a452c5fa0": 1
+     },
+     "notable12": null,
+     "notable24": "167956ee-19ef-59e4-a201-4feabb940b7f",
+     "mirrored": null,
+     "prism": {
+      "name": "Ethereal Prism: Unmatched Valor",
+      "node": "1f038b66-6651-51b2-8c34-5a7e102ce8dd",
+      "replacesCore": false,
+      "effect": "Has 130 point(s) of fixed Fervor Rating"
+     }
+    }
+   ]
+  }
+ ]
+}

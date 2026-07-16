@@ -2,8 +2,7 @@
  "set": {
   "rotation.starter_weapon_pct": 406,
   "additional.precise_auras": 201.04,
-  "additional.ice_bond": 28,
-  "enemy_taken.frostbite": 188
+  "additional.ice_bond": 28
  },
  "add": {
   "crit.damage_pct": 195,
@@ -14,8 +13,6 @@
  },
  "_consumes": [
   "crit_dmg_per_fervor_rating",
-  "max_frostbite_rating",
-  "frostbite_effect_pct",
   "aura_effect_pct"
  ],
  "_sources": {
@@ -27,7 +24,6 @@
   "enemy_taken.fixate": "mechanics.md#fixate: Fixate warcry, +1.1% additional damage taken (user-provided 2026-07-15)",
   "additional.ice_bond": "mechanics.md#ice-bond: Euphoria buff +28% additional Cold at L20 vs Frostbitten enemies (patch 2026-07: 33 -> 28)",
   "additional.misc": "mechanics.md#rehan-traits: Seething Silhouette +44% (Berserk) x Fury's Onslaught +78% (tlidb current; SS12.5 cache had 48) x Rage Infusion +40% (tier 5, full stacks, 100% Berserk uptime), 1.44x1.78x1.40 = +258.85%",
-  "enemy_taken.frostbite": "mechanics.md#frostbite: +1% additional Cold taken per rating; cap 120 base + 25 ring + 12 memory = 157, x1.20 slate Frostbite Effect = 188; sustained boss hits assumed to cap it",
-  "_derived": "crit.chance_pct and additional.warcry_buffs are no longer set here: build_parser.resolve_extras derives them from parsed rating/effect so new sources (gear, tree, pactspirits) land. Constants + citations live in build_parser."
+  "_derived": "crit.chance_pct, additional.warcry_buffs, and enemy_taken.frostbite are derived in build_parser.resolve_extras from parsed rating/effect/max so new gear sources land. Constants + citations live in build_parser."
  }
 }

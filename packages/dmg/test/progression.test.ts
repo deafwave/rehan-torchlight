@@ -108,14 +108,33 @@ describe("gear ladder", () => {
     const phys = pr.mods!.find(m => m.text.includes("Gear Physical Damage"))!;
     expect(phys.pool, "tlidb craft page lists Gear Phys under Advanced").toBe("advanced");
     expect(phys.cost).toBe(3);
-    expect(phys.vs, "T0 roll is priced against the T1 ceiling, not against removal")
-      .toBe("+100% Gear Physical Damage");
+    expect(phys.vs, "craft order prices the full line, not the T0–T1 polish step").toBeNull();
     expect(phys.gain).toBeGreaterThan(0);
-    expect(phys.gain, "the tier step, not the whole +124% line").toBeLessThan(30);
-    const pers = pr.mods!.filter(m => m.per !== null).map(m => m.per!);
-    expect(pers, "sorted by ΔDPS per craft cost").toEqual([...pers].sort((a, b) => b - a));
+    const gains = pr.mods!.map(m => m.gain);
+    expect(gains, "sorted by full-line ΔDPS").toEqual([...gains].sort((a, b) => b - a));
     expect(pr.mods!.every(m => m.pool === null || ["basic","advanced","ultimate"].includes(m.pool)))
       .toBe(true);
+  });
+
+  test("ring Max Frostbite is a real damage line: after combo, above crit/ES", () => {
+    // user 2026-07-16: craft order is combo → frostbite → rest close → ES last.
+    // frostbite used to score 0 because enemy_taken.frostbite was a manual set constant;
+    // full-line pricing (not the +14→+16 tier step) is what the craft checklist ranks.
+    const r = slot("ring2").rungs.find(r => /frostbite/i.test(r.label))!;
+    const mods = r.mods!;
+    const combo = mods.find(m => /Combo Points gained/.test(m.text))!;
+    const frost = mods.find(m => /Max Frostbite Rating/.test(m.text))!;
+    const dmg = mods.find(m => /^\+\d+% damage$/.test(m.text))!;
+    const crit = mods.find(m => /Critical Strike Rating/.test(m.text))!;
+    const es = mods.find(m => /Max Energy Shield/.test(m.text))!;
+    expect(frost.gain, "max frostbite must move DPS").toBeGreaterThan(5);
+    expect(combo.gain).toBeGreaterThan(frost.gain);
+    expect(frost.gain).toBeGreaterThan(crit.gain);
+    expect(frost.gain).toBeGreaterThan(es.gain);
+    expect(mods.indexOf(combo)).toBe(0);
+    expect(mods.indexOf(es)).toBe(mods.length - 1);
+    // %damage is close to frostbite on this piece; either order is fine if both beat crit
+    expect(Math.min(frost.gain, dmg.gain)).toBeGreaterThan(crit.gain);
   });
 
   test("vorax boots appear as the top rung", () => {

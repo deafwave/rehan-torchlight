@@ -10,6 +10,6 @@
     "test": "pnpm --filter @rehan/dmg test",
     "snapshot": "pnpm --filter @rehan/dmg snapshot",
     "rank": "pnpm --filter @rehan/dmg rank sensitivity",
-    "page": "pnpm --filter @rehan/dmg snapshot && pnpm --filter @rehan/dmg catalog && pnpm --filter @rehan/dmg progression"
+    "page": "pnpm --filter @rehan/dmg snapshot && pnpm --filter @rehan/dmg catalog && pnpm --filter @rehan/dmg progression && pnpm --filter @rehan/dmg pagedata"
   }
 }

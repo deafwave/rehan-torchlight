@@ -54,6 +54,7 @@ r1_86, r2_86 = rung("ring1", "i86"), rung("ring2", "i86")
 timid, r2_100 = rung("ring1", "priceless timid"), rung("ring2", "priceless combo")
 heart = rung("necklace", "Heart of Animitta")
 eternity = rung("belt", "Eternity")
+haze = prism_rung("Ethereal", "Haze")
 valor = prism_rung("Ethereal", "Unmatched Valor")
 inverse = prism_rung("Inverse", "good inverse")
 
@@ -151,6 +152,10 @@ row(rng(r2_86), "",
     "i86 frostbite ring — THE +1 COMBO POINTS SUFFIX IS THE ITEM, NEVER LOSE IT.\n"
     f"The barrier ring is only {rng(r1_86)} — last in this gate.",
     "item tooltip: i86 ring with +1 Combo Points suffix circled")
+row(g(haze["delta"]), "",
+    "Ethereal Prism: Haze — +12% additional Attack Damage when holding a One-Handed Weapon. "
+    "Socket on any non-core talent — it overrides that node.",
+    "prism tooltip: Haze with the +12% 1H Attack Damage base affix")
 row("", "",
     "Hero Memory LEGENDARY\nREVIVED #% Attack Speed for every main attack skill cast\n"
     "Base Affix: Strength / ES / Attack Speed\nFixed Affix: %ES\n"

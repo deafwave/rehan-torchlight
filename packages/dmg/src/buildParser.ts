@@ -266,6 +266,8 @@ export const NUM = "([+-]?\\d+(?:\\.\\d+)?)";
 // tlidb Fervor_rating default cap; "Has # fixed Fervor Rating" (Unmatched Valor prism)
 // bypasses it via extras.fervor_rating — 130 confirmed in-game (user 2026-07-16)
 export const FERVOR_RATING = 100;
+// mechanics.md#frostbite: base Max Frostbite Rating before gear/tree/memory raises
+export const BASE_FROSTBITE_MAX = 120;
 // mechanics.md#assumptions: sustained Life deficit under Ghost Slaughter's 12%/s drain,
 // held above the 35% Low Life line (user 2026-07-16); scales "per 1% of Life lost" talents
 export const LIFE_LOST_PCT = 60;
@@ -996,5 +998,14 @@ export function resolveExtras(snap: Snapshot, report: Report): Snapshot {
   }
   delete extras.fervor_effect_pct;   // read above by BOTH crit chance and fervor damage
   delete extras.offhand_local_ignored;
+  // mechanics.md#frostbite: base max 120 + Max Frostbite Rating sources; Effect multiplies
+  // the debuff. Boss sustained hits assumed to reach the cap (same as the old override).
+  d.frostbite_max = BASE_FROSTBITE_MAX + pop("max_frostbite_rating");
+  d.frostbite_effect_pct = pop("frostbite_effect_pct");
+  snap.enemy_taken.frostbite = d.frostbite_max * (1 + d.frostbite_effect_pct / 100);
+  report.manual.push({ path: "enemy_taken.frostbite", mode: "derived",
+                       value: `${pyG(snap.enemy_taken.frostbite)}% from max ${pyG(d.frostbite_max)} `
+                            + `x (1 + ${pyG(d.frostbite_effect_pct)}% Effect)`,
+                       source: "mechanics.md#frostbite" });
   return snap;
 }

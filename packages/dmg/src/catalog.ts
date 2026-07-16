@@ -42,8 +42,10 @@ const CONDITIONAL =
 // share the +25% increased aura effect
 const AURA_EFFECT = 0.25;
 const AURAS: [number, number][] = [[30, 1], [22, 2], [33, 1]];
+// fallbacks when snapshot lacks _derived frostbite fields (pre-regen); live values
+// come from build_parser.resolve_extras (base 120 + max sources, effect %)
 const FROSTBITE_CAP = 157;
-const FROSTBITE_EFFECT = 0.20;
+const FROSTBITE_EFFECT_PCT = 20;
 const GEM_LEVELS = 9;               // net +levels already on the gem (snapshot additional.skill_levels = 1.1^9 = 135.8)
 const CHAR_LEVEL = 100;             // endgame; "for every N levels" mods scale off this
 
@@ -122,9 +124,14 @@ export function applyStat(s: Snapshot, path: string, value: number): boolean {
     const inc = Object.values(s.increased).reduce((a, v) => a + v, 0);
     compound(s.additional, "low_life_execute", lowLifeExecEvPct(value * 100 / (100 + inc)));
   } else if (path === "extras.frostbite_effect_pct") {
-    s.enemy_taken.frostbite = FROSTBITE_CAP * (1 + FROSTBITE_EFFECT + value / 100);
+    // mechanics.md#frostbite: Effect multiplies max rating into enemy_taken.frostbite
+    const max = d.frostbite_max ?? FROSTBITE_CAP;
+    const eff = (d.frostbite_effect_pct ?? FROSTBITE_EFFECT_PCT) + value;
+    s.enemy_taken.frostbite = max * (1 + eff / 100);
   } else if (path === "extras.max_frostbite_rating") {
-    s.enemy_taken.frostbite = (FROSTBITE_CAP + value) * (1 + FROSTBITE_EFFECT);
+    const max = (d.frostbite_max ?? FROSTBITE_CAP) + value;
+    const eff = (d.frostbite_effect_pct ?? FROSTBITE_EFFECT_PCT) / 100;
+    s.enemy_taken.frostbite = max * (1 + eff);
   } else if (path === "extras.aura_effect_pct") {
     let mult = 1.0;
     for (const [v, own] of AURAS) mult *= 1 + v * (1 + AURA_EFFECT + value / 100) * own / 100;

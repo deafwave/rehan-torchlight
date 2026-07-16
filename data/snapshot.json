@@ -39,7 +39,7 @@
   "skill_levels": 135.7947691000002
  },
  "enemy_taken": {
-  "frostbite": 188,
+  "frostbite": 188.4,
   "paralysis": 15,
   "cold_infiltration": 13,
   "timid_curse": 39,
@@ -83,6 +83,8 @@
   "warcry_effect_pct": 92,
   "warcry_additional_effect_pct": 20,
   "fervor_dmg_per_rating": 1,
-  "fervor_dmg_per_rating_plain": 0.5
+  "fervor_dmg_per_rating_plain": 0.5,
+  "frostbite_max": 157,
+  "frostbite_effect_pct": 20
  }
 }
