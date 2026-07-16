@@ -19,13 +19,13 @@
 </header>
 
 <nav class="tabbar" id="tabbar">
-  <button data-tab="progression" class="active">Progression</button>
-  <button data-tab="linear">Linear</button>
+  <button data-tab="linear" class="active">Linear</button>
+  <button data-tab="progression">Progression</button>
   <button data-tab="slate">Slate Mods</button>
   <button data-tab="memory">Memory Mods</button>
 </nav>
 
-<section class="bundles" id="progression">
+<section class="bundles" id="progression" hidden>
   <h2>Progression</h2>
   <p>Each slot from its current item to mirror-worthy. A range like <b>+20 → +84%</b> is the item at realistic
   tier-below rolls → fully crafted, the <b>craft order</b> rows (priceless gear only) are the steps between the two, and
@@ -77,7 +77,7 @@
   </article>
 </section>
 
-<section class="bundles" id="linear" hidden>
+<section class="bundles" id="linear">
   <h2>The Linear Path</h2>
   <p>Top to bottom, in order. Steps inside a phase can run in any order unless numbered.
   Check off what you own — ⚠ clears as dependencies get checked; progress saves in this
