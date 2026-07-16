@@ -4,7 +4,8 @@
 import fs from "node:fs";
 import { fromRoot, pyRound, deepCopy, asciiJson } from "./py.js";
 import { _load, classify, critChance, warcryLayer, skillLevelAdditionalPct, NUM,
-         FERVOR_RATING, LIFE_LOST_PCT, lowLifeExecEvPct } from "./buildParser.js";
+         FERVOR_RATING, LIFE_LOST_PCT, lowLifeExecEvPct,
+         FEARLESS_RATING_BASE_PCT, FEARLESS_AS_PCT } from "./buildParser.js";
 import { cycleDps, type Snapshot } from "./damageModel.js";
 
 export const SNAPSHOT = fromRoot("data/snapshot.json");
@@ -17,7 +18,7 @@ const NOT_THIS_BUILD = new RegExp(
   + "|Wilt|Erosion|Fire Damage|Lightning Damage|Ignite|Shock Effect|Trauma|Blur"
   + "|Projectile|Bow|Crossbow|Pistol|Cannon|Staff|Wand|Two-Handed|Dual Wield"
   + "|Channeled|Curse Skill|Mobility Skill|Persistent Damage|Damage over Time|DoT|Elixir"
-  + "|Min Physical Damage|Erosion Resistance|Tenacity Blessing"
+  + "|in Proximity|Erosion Resistance|Tenacity Blessing"
   + "|empty (?:Active|Passive) Skill [Ss]lot"
   + "|Spell Burst"
   + "|(?<![Nn]ot )at Low Life)", "i");   // no Spell Burst skill in build; "recently moved" stays valid (move -> stand -> attack cycle)   // build has 5 actives + 4 auras: no empty slots;
@@ -27,7 +28,9 @@ const NOT_THIS_BUILD = new RegExp(
   // no trailing \b: plurals ("Projectiles", "Minions") must match too
 
 // Whole-mod dealbreakers: any line matching kills the entire mod for this build
-const MOD_DISQUALIFIERS = /(?:Max )?Energy Shield is fixed at 0/i;   // defense is ES-based
+// (ES is the defense; the phys->cold conversion is the whole cold engine)
+const MOD_DISQUALIFIERS =
+  /(?:Max )?Energy Shield is fixed at 0|Physical Damage can't be converted/i;
 const CONDITIONAL =
   /\b(when|after|if |for every|for each|per stack|recently|while|next|on \w+ing|devoured|chance to)\b/i;
 
@@ -41,7 +44,7 @@ const AURA_EFFECT = 0.25;
 const AURAS: [number, number][] = [[30, 1], [22, 2], [33, 1]];
 const FROSTBITE_CAP = 157;
 const FROSTBITE_EFFECT = 0.20;
-const GEM_LEVELS = 9;               // net +levels already on the gem (snapshot additional.skill_levels = 90)
+const GEM_LEVELS = 9;               // net +levels already on the gem (snapshot additional.skill_levels = 1.1^9 = 135.8)
 const CHAR_LEVEL = 100;             // endgame; "for every N levels" mods scale off this
 
 /** Best-roll text: '#' placeholders take each range's maximum from rawText. */
@@ -81,10 +84,19 @@ export function applyStat(s: Snapshot, path: string, value: number): boolean {
     s.rotation.finisher_amp_pct += 0.3 * value;
     s.crit.additional_on_crit_pct = (s.crit.additional_on_crit_pct ?? 0) + 0.5 * value;
   } else if (path === "extras.attack_skill_level" || path === "extras.active_skill_level") {
-    s.additional.skill_levels = (s.additional.skill_levels ?? 0)
-      + skillLevelAdditionalPct(GEM_LEVELS + value) - skillLevelAdditionalPct(GEM_LEVELS);
+    // marginal levels multiply from the gem's current level, whatever the layer holds
+    const ratio = (100 + skillLevelAdditionalPct(GEM_LEVELS + value))
+                / (100 + skillLevelAdditionalPct(GEM_LEVELS));
+    compound(s.additional, "skill_levels", (ratio - 1) * 100);
+  } else if (path === "extras.all_skill_levels") {
+    applyStat(s, "extras.attack_skill_level", value);
+    applyStat(s, "extras.support_skill_level", value);
   } else if (path === "extras.strength") {
-    compound(s.additional, "strength", value * 0.5);
+    // strength points join ONE summed multiplier (mechanics.md 'Strength'), never compound
+    s.additional.strength += value * 0.5;
+  } else if (path === "extras.strength_pct") {
+    // scales the tracked pool: the layer's points are 0.5/Str, so %Str scales them linearly
+    s.additional.strength *= 1 + value / 100;
   } else if (path === "extras.fervor_effect_pct") {
     // Fervor Effect pays twice: the crit-rating base effect AND the Ghost Slaughter
     // damage layer (mechanics.md#fervor) — the plain Dawn Break term stays unscaled
@@ -117,6 +129,10 @@ export function applyStat(s: Snapshot, path: string, value: number): boolean {
     let mult = 1.0;
     for (const [v, own] of AURAS) mult *= 1 + v * (1 + AURA_EFFECT + value / 100) * own / 100;
     s.additional.precise_auras = (mult - 1) * 100;
+    // Precise: Fearless's +80% crit rating and +8% melee AS lines are aura values too
+    s.crit.chance_pct = critChance({ ...d,
+      fearless_rating_pct: FEARLESS_RATING_BASE_PCT * (1 + AURA_EFFECT + value / 100) });
+    s.rotation.attack_speed_inc_pct += FEARLESS_AS_PCT * value / 100;
   } else if (path === "extras.warcry_effect_pct") {
     s.additional.warcry_buffs = warcryLayer({ ...d, warcry_effect_pct: d.warcry_effect_pct + value });
   } else if (path === "extras.warcry_min_enemies") {
@@ -144,9 +160,11 @@ function* slateMods(): Generator<ModTuple> {
   for (const [guid, mod] of Object.entries<any>(ds.slateMods)) {
     const mm = master.get(guid) ?? {};
     const nt = mm.nodeType ?? "?";
-    // named nodeTypes (one per slate, nodeType == mod name) are the slate's Core Talent
+    // named nodeTypes (one per slate, nodeType == mod name) are the slate's Core Talent;
+    // the level matters: Pedigree of Gods' 3rd slot rolls Lv.1 cores only
     yield ["slate", mod.name ?? guid, mod.description ?? "",
-           generic.has(nt) ? nt : "Core Talent", mm.slateType ?? "?"];
+           generic.has(nt) ? nt : `Lv.${mm.coreTalentLevel ?? 1} Core Talent`,
+           mm.slateType ?? "?"];
   }
   for (const [guid, sl] of Object.entries<any>(ds.legendaryDivinitySlates)) {
     for (const m of sl.mods ?? []) {
@@ -194,8 +212,9 @@ export function buildCatalog(): CatalogRow[] {
   const groups = new Map<string, { cat: string; name: string; text: string; tier: string; ons: Set<string> }>();
   for (const [cat, name, rawDesc, tier, on] of [...slateMods(), ...memoryMods()]) {
     const desc = (rawDesc ?? "").replace(/(\d) %/g, "$1%").trim();
-    // dropped, not just unmodeled: build is committed to 1h+shield
-    if (!desc || /dual wield/i.test(desc)) continue;
+    // dropped, not just unmodeled: build is committed to 1h+shield, and slate-layout
+    // utility mods (talent copiers) are a human placement decision, not a DPS row
+    if (!desc || /dual wield/i.test(desc) || /Copies the .* Talent/i.test(desc)) continue;
     const gk = `${cat} ${desc} ${tier}`;
     let g = groups.get(gk);
     if (!g) groups.set(gk, g = { cat, name, text: desc, tier, ons: new Set() });
@@ -206,13 +225,16 @@ export function buildCatalog(): CatalogRow[] {
     const { cat, name, text: desc } = g;
     const meta = { cat, name, text: desc, tier: g.tier, on: [...g.ons].sort().join(", ") };
     if (MOD_DISQUALIFIERS.test(desc)) {
-      rows.push({ ...meta, bucket: "— (kills ES defense)", delta: null, cond: false });
+      rows.push({ ...meta, delta: null, cond: false,
+        bucket: /can't be converted/i.test(desc)
+          ? "— (blocks the phys→cold conversion)" : "— (kills ES defense)" });
       continue;
     }
     if (/Doubles Max Warcry Skill Effects/i.test(desc)) {
-      // load-bearing but priced in: the snapshot's warcry layer already assumes the
-      // multi-warcry loop this enables (mechanics.md 'Formless'), no separate numeric
-      rows.push({ ...meta, bucket: "enables the assumed warcry loop", delta: null, cond: false });
+      // load-bearing but priced in: the snapshot's warcry layer already assumes one
+      // doubling source (Formless / belt, mechanics.md#warcry), no separate numeric
+      rows.push({ ...meta, bucket: "doubles the Warcry stack cap 8 → 16 (assumed in the snapshot)",
+                  delta: null, cond: false });
       continue;
     }
     const nullify = /Critical Strikes do not deal additional damage/i.test(desc);
@@ -225,28 +247,38 @@ export function buildCatalog(): CatalogRow[] {
       applied.push("crit nullified");
     }
     const procEvs: number[] = [];
+    let minmaxShift: number | null = null;
     for (let line of desc.split("\n")) {
       line = line.trim();
       if (!line) continue;
-      const minmax = new RegExp(
-        `-${NUM}% additional Min Physical Damage, and \\+${NUM}% additional Max Physical Damage`, "i")
-        .exec(line);
-      if (minmax) {
-        // min/max roll shift changes the AVERAGE roll: (+B - A)/2, never compound the pair
-        if (applyStat(s, "additional.misc", (parseFloat(minmax[2]) - parseFloat(minmax[1])) / 2)) {
-          applied.push("additional.misc (avg roll)");
-        }
+      if (NOT_THIS_BUILD.test(line)) continue;
+      const minmax = [...line.matchAll(new RegExp(
+        `([+-]?\\d+(?:\\.\\d+)?)% additional (?:Min|Max)(?:imum)?(?: \\w+)? Damage`, "gi"))];
+      if (minmax.length) {
+        // Min/Max lines shift the AVERAGE roll: half of each signed value, summed across
+        // the whole mod into ONE multiplier — never the headline, never a compound of
+        // the pair (mechanics.md#min-max-avg)
+        minmaxShift = (minmaxShift ?? 0)
+          + minmax.reduce((a, m) => a + parseFloat(m[1]) / 2, 0);
         continue;
       }
-      if (NOT_THIS_BUILD.test(line)) continue;
+      // one buffed use armed per interval, consumed by whichever skill use comes next —
+      // alignment with the finisher is not controllable, so every use has the same
+      // probability: EV = value x min(1, armed-per-sec / uses-per-sec) (mechanics.md#next-skill-ev)
       const nextUse = new RegExp(
-        `\\+${NUM}% additional Attack Damage for the next Main Skill every ${NUM} s`, "i").exec(line);
+        `\\+${NUM}% additional (?:\\w+ )?Damage for the next Main Skill(?: used)? every ${NUM} s`, "i")
+        .exec(line);
       if (nextUse) {
-        // one buffed use armed per interval, consumed by whichever skill use comes next —
-        // alignment with the finisher is not controllable, so every use has the same
-        // probability: EV = value x min(1, armed-per-sec / uses-per-sec) (mechanics.md#next-skill-ev)
         procEvs.push(parseFloat(nextUse[1])
           * Math.min(1, 1 / parseFloat(nextUse[2]) / usesPerSec));
+        continue;
+      }
+      const nextUse2 = new RegExp(
+        `^Every ${NUM} s, \\+${NUM}% additional (?:\\w+ )?Damage for the next Main Skill`, "i")
+        .exec(line);
+      if (nextUse2) {
+        procEvs.push(parseFloat(nextUse2[2])
+          * Math.min(1, 1 / parseFloat(nextUse2[1]) / usesPerSec));
         continue;
       }
       const perLevel = new RegExp(
@@ -279,6 +311,10 @@ export function buildCatalog(): CatalogRow[] {
       // stacks: the ◑ full-uptime-ceiling convention, same as other CONDITIONAL rows
       const stacks = /for (?:every|each)[^\n]*?Stacks up to (\d+) time/i.exec(line);
       if (applyStat(s, path, (value ?? 0) * (stacks ? parseInt(stacks[1], 10) : 1))) applied.push(path);
+    }
+    if (minmaxShift !== null
+        && applyStat(s, "additional.misc", minmaxShift)) {
+      applied.push("additional.misc (avg roll)");
     }
     if (procEvs.length) {
       usedEv = true;

@@ -1,9 +1,10 @@
 import "./style.css";
 import ladderData from "./data/ladder.json";
 import catalogData from "./data/catalog.json";
+import prismData from "./data/prisms.json";
 
 /* ---------- data written by dmg progression + catalog CLIs ---------- */
-interface Rework { anchor: string | null; label: string; why: string }
+interface Rework { label: string }
 interface ModRow {
   text: string; pool: string | null; cost: number | null;
   gain: number; per: number | null; vs: string | null;
@@ -12,7 +13,7 @@ interface Rung {
   label: string; name: string; rarity: string | null;
   dps: number | null; gain: number | null; gainTop: number | null;
   gainNote: string | null;
-  rangeNote: string | null; rangeAnchor: string | null;
+  rangeNote: string | null; rangeLabel: string | null;
   linear: boolean; note: string | null; rework: Rework | null;
   mods: ModRow[] | null;
 }
@@ -48,112 +49,20 @@ const SRC = {
   pact:    {label:"pactspirit", color:"#79c8a6"},
 };
 
-interface Buy { src: keyof typeof SRC; html: string }
-/* A bundle = purchases that only pay off together. `math` is the computed impact,
-   `needs` the one hard prerequisite, `cost` the bill it comes with.
-   `slots` = which gear slots' popups list this bundle (hand-mapped from the buys). */
-interface Bundle {
-  id: string; name: string; core: string; math?: string;
-  buys: Buy[]; needs?: string; cost?: string; slots: string[];
-}
-
-/* ---------- the bundles, in the order the engines come online ---------- */
-const BUNDLES: Bundle[] = [
-  {id:"finisher", name:"The Finisher core — buy points, not percent",
-   core:"One skill carries the bar: <b>Combo Finisher = 127% weapon Attack Damage × (1 + 8 Combo Points × 110% Amplification)</b>, cast <b>twice per sequence</b> by Heart of Animitta's +1 Finisher charge — this card is every point, charge and amp source in the build.",
-   math:"<b>+1 Combo Point = +21.0% DPS — the #1 buy on the sheet</b> · +10% Finisher Amplification = +7.8% · <b>Combo Damage Enhancement is a different stat</b>: all Enhancement affixes sum (+141% here) and multiply all combo damage once.",
-   buys:[
-     {src:"gear", html:"<b>Heart of Animitta — +1 Finisher charge = a second full-power finisher every sequence</b> (both consume the same 8 points), plus +80% Finisher Amplification"},
-     {src:"gear", html:"<b>+1 Combo Points gained from Combo Starters</b> — a suffix on <i>either</i> ring; with both rings + Recuperation each starter grants 4 points"},
-     {src:"support", html:"Legion (clones) and Detonation on Spectral Slash; any Activation Medium so it self-casts"},
-     {src:"pact", html:"<b>Azure Gunslinger's Seven Steps</b> — <b>+5% additional Attack Damage per stack, multiplicative</b>: 5 stacks = ×1.28, fed by dashing with Thunder Spike (10s per stack), modelled at cap"},
-     {src:"pact", html:"Red Umbrella and Azure Gunslinger each pay <b>+48% Attack Damage, +16% Attack Speed</b>, plus +6% damage per fate slot"},
-   ],
-   slots:["necklace","ring1","ring2","mainHand"]},
-
-  {id:"cold", name:"Cold conversion + Frostbite — the enemy-side amp",
-   core:"Convert <b>100% Physical → Cold</b> (Physical, Cold, Elemental, Attack and Melee modifiers all still apply — dev-confirmed), then every hit stacks <b>Frostbite Rating</b>: +1% additional Cold damage <i>taken</i> per point, a ×2.88 at this build's caps — <b>the conversion slate first; everything else here is dead without it</b>.",
-   math:"<b>+10% Armor Mitigation Penetration = +11.0% DPS</b> · +10% Cold Penetration = +9.0% · +10% on an enemy-taken layer (Paralysis, Timid) = +8.7% · +10 Frostbite Effect/Max-Rating ≈ +3.5%.",
-   buys:[
-     {src:"slate", html:"<b>Physical→Cold conversion</b> — buy this first; nothing below works without it"},
-     {src:"slate", html:"the God of Knowledge line — inflict Frostbite on Cold hit, Focus Blessing off Frostbitten targets"},
-     {src:"talent", html:"Prophet's Frostbite legendaries — Effect, Cold Infiltration on Frozen, more-vs-Frozen"},
-     {src:"skill", html:"Ice Bond on an Activation Medium as the self-applicator"},
-     {src:"gear", html:"<b>Max Frostbite Rating</b> — a suffix that can land on any ring (120 base cap +25 from the ring)"},
-     {src:"pact", html:"<b>Red Umbrella's Frenzy inflicts Paralysis</b> — +15% damage taken (×1.15), effectively permanent on a boss at 19% chance per hit vs a 4s debuff"},
-   ],
-   needs:"needs the Finisher core — this bundle amplifies the hit, it doesn't create one",
-   slots:["ring1","ring2","boots"]},
-
-  {id:"fervor", name:"The Fervor engine — boots + gloves + the sustain bill",
-   core:"Three purchases that are <b>one purchase</b>: Dawn Break boots hold Fervor at all, <b>corroded Ghost Slaughter</b> gloves (+1% additional damage per rating, scaled by +208% Fervor Effect) turn the pool into a <b>+465% layer</b> at the tree change's 130 rating, and a real sustain plan pays the bill — any one alone is a dead slot or a death sentence.",
-   math:"gloves rung <b>+175.9%</b> · boots <b>+107.3% alone → +153.5%</b> with the tree change below · every +% Fervor Effect roll pays this line <i>and</i> the crit line at once.",
-   buys:[
-     {src:"gear", html:"Dawn Break 'Have Fervor' (Vorax boots) — nothing else in this card exists without them; they also pay +1% additional damage per 2 rating and +78% Crit Damage"},
-     {src:"gear", html:"<b>Ghost Slaughter, the corroded roll specifically</b> — the normal roll is 0.75%/pt, a third of the corroded 1%/pt; the variant is the item"},
-     {src:"gear", html:"<b>Fervor Effect anywhere</b> — two rings at +60% each, tree +68%, slate +20%"},
-     {src:"gear", html:"the sustain bill: Eternity belt — kill-fed blessing stacks — replacing the flat-ES belt"},
-     {src:"slate", html:"ES Regain / restore-on-Severe-Injury lines; or Resurrection Warcry (−60% additional damage taken + 1,160 Life over 4s at L20) in the second warcry slot"},
-   ],
-   cost:"<b>12% of current Life AND Energy Shield per second</b> while Fervor is active, and the top-rung roll loses Fervor at Low Life — sustain is inside this bundle, not next to it",
-   slots:["boots","gloves","belt","ring1","ring2"]},
-
-  {id:"fervor-tree", name:"The Fervor tree change — fix the rating at 130",
-   core:"One respec the boots want: the Ranger prism slot takes <b>Unmatched Valor — 130 point(s) of fixed Fervor Rating</b>, over the normal 100 cap and immune to Centralize's gain/consume swings.",
-   math:"the Dawn Break rung prices <b>+107.3% alone → +153.5% with this change</b>, and the same 130 rating feeds the +195% Crit Damage in the crit card.",
-   buys:[
-     {src:"prism", html:"<b>Unmatched Valor</b> on the Ranger tree — replaces the core talent with a fixed 130 Fervor Rating"},
-     {src:"talent", html:"the Ranger legendary node plus two slate copies of <b>0.5% Critical Strike Damage per Fervor Rating</b> — +195% Crit Damage at 130"},
-     {src:"talent", html:"<b>Centralize becomes a no-op</b> once the rating is fixed — its notable pick is a respec candidate"},
-   ],
-   needs:"needs Dawn Break holding Fervor — a fixed rating with no Fervor source is nothing",
-   slots:["boots"]},
-
-  {id:"crit", name:"Crit — Fervor spent twice",
-   core:"Fervor's native <b>+2% Crit Rating per point</b> at the fixed 130 rating (scaled by the same +208% Fervor Effect) drives the computed <b>77.3% crit chance</b>, and three 0.5%-per-rating converters spend the pool a <i>second</i> time as <b>+195% Crit Damage</b>.",
-   math:"<b>77.3% chance / 711.5% crit damage</b> · +5% chance ≈ +5.7% DPS vs +30% crit damage ≈ +4.1%.",
-   buys:[
-     {src:"support", html:"Critical Strike Damage Increase on Spectral Slash, in place of a plain damage support"},
-     {src:"slate", html:"the Fervor→Crit-Damage converter lines that open in the expanded divinity page"},
-     {src:"prism", html:"Crit Rating banded onto the Micro Talents around the still-stance prism"},
-     {src:"pact", html:"<b>Red Umbrella and Azure Gunslinger</b> — nodes 4–6 on each are pure Attack Crit Rating (+89% / +88%)"},
-   ],
-   needs:"needs the Fervor engine running — without it the chance pool collapses",
-   slots:["boots","mainHand"]},
-
-  {id:"warcry", name:"The Warcry layer — free multipliers on a timer",
-   core:"Self-cast Warcries buff damage per enemy affected — <b>≈ a ×2.10 layer on a boss</b> — and the curse-on-hit ring frees their skill slot while carrying its own <b>×1.39 Timid layer</b> (+39% additional Hit Damage taken, permanent on a boss).",
-   math:"5.95% per enemy × 8 enemies × 1.92 Warcry Effect × 1.20 “Beast” Roar ≈ ×2.10 · +10% warcry contribution ≈ +4.8% DPS.",
-   buys:[
-     {src:"gear", html:"a Warcry-Effect off-hand (Ninth Apostle's shield, +62%) plus its +Active Skill Level"},
-     {src:"gear", html:"the Timid curse-on-hit ring — frees the skill slot and carries the ×1.39 Timid layer"},
-     {src:"talent", html:"Formless / The Brave Warcry nodes"},
-     {src:"slate", html:"+min enemies affected by Warcry — floors the stack count on lone bosses"},
-     {src:"pact", html:"<b>Captain Kitty of the Furious Sea</b> — +12% Warcry Effect, “Beast” Roar (+20% additional Warcry Effect, self-casts); the one pactspirit worth levelling"},
-   ],
-   slots:["offHand","ring1"]},
-];
-
-/* ---------- render: bundle cards ---------- */
-{
-  const wrap = document.getElementById("bundle-cards")!;
-  const srcTag = (s: keyof typeof SRC) => `<span class="sys" style="background:${SRC[s].color}22;color:${SRC[s].color}">${SRC[s].label}</span>`;
-  BUNDLES.forEach((b, i) => {
-    const card = document.createElement("article");
-    card.className = "bundle"; card.id = "b-" + b.id;
-    card.dataset.slots = b.slots.join(" ");
-    let h = `<div class="bundle-head"><span class="bundle-num">${i+1}</span><h3>${b.name}</h3></div>`
-      + `<p class="core">${b.core}</p>`;
-    if (b.math) h += `<div class="enabler"><span class="key-lbl">what the math says</span>${b.math}</div>`;
-    h += `<ul class="chain">${b.buys.map(x => `<li>${srcTag(x.src)}${x.html}</li>`).join("")}</ul>`;
-    if (b.cost) h += `<p class="cost-note">cost · ${b.cost}</p>`;
-    if (b.needs) h += `<p class="gate-note">needs · ${b.needs}</p>`;
-    card.innerHTML = h;
-    wrap.appendChild(card);
-  });
-}
-
 /* ---------- render: the progression tree ---------- */
+const POOL_COLOR: Record<string, string> = { basic:"#7c8ea0", advanced:"#7fd8e8", ultimate:"#c9a86a" };
+/* rows arrive pre-sorted by ΔDPS-per-ember (`per`); the number itself stays hidden */
+const modRows = (mods: ModRow[], summary: string) =>
+  `<details class="rung-mods"><summary>${esc(summary)}</summary>`
+  + mods.map(m => {
+      const col = m.pool ? POOL_COLOR[m.pool] : "#54677a";
+      return `<div class="mod-row">`
+        + `<span class="src-chip" style="background:${col}22;color:${col}">${m.pool ? `${m.pool} ×${m.cost}` : "unpooled"}</span>`
+        + `<span class="mod-text">${esc(m.text).replace(/\n/g," · ")}`
+        + `<span class="mod-vs">vs ${m.vs ? esc(m.vs).replace(/\n/g," · ") : "an empty slot (bottom tier)"}</span></span>`
+        + `<span class="delta-chip ${m.gain > 0 ? gainCls(m.gain) : "d-none"}">+${m.gain.toFixed(1)}%</span></div>`;
+    }).join("") + `</details>`;
+
 {
   const STAGES = ["start", "i86", "priceless", "mirror-worthy"];
   const slotName = (s: string) => s.replace(/([a-z])([A-Z0-9])/g, "$1 $2").toLowerCase();
@@ -161,82 +70,171 @@ const BUNDLES: Bundle[] = [
     const m = r.label.match(/^(i\d+|priceless|mirror[- ]?worthy)/i);
     return m ? m[1].toLowerCase() : r.label;
   };
+  // craft order is only useful on priceless gear — i100 labels (and the mainhand
+  // PRICELESS / MIRROR-WORTHY rungs that still use the older naming)
+  const isPriceless = (r: Rung) => /^(i100|priceless|mirror[- ]?worthy)/i.test(r.label);
   const wrap = document.getElementById("tree")!;
   wrap.innerHTML =
     `<div class="tree-row tree-head"><span></span>${STAGES.map(s => `<span>${s}</span>`).join("")}</div>`
     + LADDER.map(row => {
       const cells = ["", "", "", ""];
+      const crafts: string[] = [];
       row.rungs.forEach((r, i) => {
         const col = Math.min(i, 3);
         const rw = r.rework;
         const lbl = shortLabel(r);
         let name = r.name.replace(/^\(Priceless\):\s*/, "");
         if (name === r.label || name === lbl) name = "";
-        const tip = rw?.why ?? r.note;
-        cells[col] = `<div class="tnode c${col}${rw ? " rework" : ""}${i ? "" : " first"}"${tip ? ` title="${escAttr(tip)}"` : ""}>`
+        cells[col] = `<div class="tnode c${col}${rw ? " rework" : ""}${i ? "" : " first"}">`
           + `<span class="t-lbl">${rw ? `<span class="rework-mark">⚠</span> ` : ""}${esc(lbl)}</span>${gainChip(r, "t-gain")}`
           + (name ? `<span class="t-name">${esc(name)}</span>` : "")
-          + (rw ? `<span class="t-branch">${esc(rw.label)}</span>` : "")
-          + (r.rangeAnchor ? `<span class="t-branch">+ tree change</span>` : "")
+          + (rw ? rw.label.split(" · ").map(l => `<span class="t-branch">${esc(l)}</span>`).join("") : "")
+          + (r.rangeLabel ? `<span class="t-branch">${esc(r.rangeLabel)}</span>` : "")
+          + (r.note ? `<span class="t-note">${esc(r.note)}</span>` : "")
           + `</div>`;
+        if (r.mods?.length && isPriceless(r)) crafts.push(modRows(r.mods, `craft order — ${lbl}`));
       });
-      return `<div class="tree-row" data-slot="${escAttr(row.slot)}" role="button" tabindex="0" `
-        + `aria-label="${escAttr(slotName(row.slot))} — upgrade path and bundles">`
-        + `<span class="t-slot">${esc(slotName(row.slot))}</span>`
-        + cells.map(c => `<div class="tcell">${c}</div>`).join("") + `</div>`;
+      return `<div class="tree-row"><span class="t-slot">${esc(slotName(row.slot))}</span>`
+        + cells.map(c => `<div class="tcell">${c}</div>`).join("") + crafts.join("") + `</div>`;
     }).join("");
 }
 
-/* ---------- render: the gear ladder (upgrades tab) ---------- */
-const SIMPLE = [
-  {lever:"item level", html:"<b>i82 → i86 is the same affix, one tier better</b> — the ring's +Combo Point suffix flips its paired damage roll from <span class='add'>−5%</span> to <b>+1–2%</b>."},
-  {lever:"corrosion", html:"<b>Mirror-worthy is the priceless item with better rolls</b> — +161% Gear Phys instead of +75%, +4 Attack Skill Level on top — roll quality, not a new item."},
-  {lever:"pactspirit", html:"<b>Captain Kitty is the one pactspirit worth levelling</b> — its notable is the only cumulative node (L2 +11% Warcry Cooldown Recovery, L3 a Warcry charge)."},
-];
+/* enabler = load-bearing but already assumed in the snapshot, so no marginal number */
+const dChip = (d: number | null, cond = false) =>
+  (d === null ? `<span class="delta-chip d-none">enabler</span>`
+    : `<span class="delta-chip ${d >= 8 ? "d-hot" : d >= 3 ? "d-mid" : "d-low"}">+${d.toFixed(2)}%</span>`)
+  + (cond ? ` <span class="cond-mark" title="conditional — value is a full-uptime ceiling">◑</span>` : "");
+
+/* ---------- slate + prism progression: the gear tree's visual language ---------- */
+interface TNode { lbl: string; chip?: string; name?: string; note?: string; src?: keyof typeof SRC }
+const srcChip = (s: keyof typeof SRC) =>
+  `<span class="src-chip" style="background:${SRC[s].color}22;color:${SRC[s].color}">${SRC[s].label}</span>`;
+const miniTree = (headers: string[], rows: { label: string; nodes: (TNode | null)[] }[]) =>
+  `<div class="tree static cols-3">`
+  + `<div class="tree-row tree-head"><span></span>${headers.map(h => `<span>${h}</span>`).join("")}</div>`
+  + rows.map(row => {
+      let first = true;
+      return `<div class="tree-row"><span class="t-slot">${row.label}</span>`
+        + row.nodes.map((n, i) => {
+            if (!n) return `<div class="tcell"></div>`;
+            const cls = `tnode c${i}${first ? " first" : ""}`; first = false;
+            return `<div class="tcell"><div class="${cls}">`
+              + `<span class="t-lbl">${n.src ? srcChip(n.src) : ""}${n.lbl}</span>${n.chip ?? ""}`
+              + (n.name ? `<span class="t-name">${n.name}</span>` : "")
+              + (n.note ? `<span class="t-note">${n.note}</span>` : "")
+              + `</div></div>`;
+          }).join("")
+        + `</div>`;
+    }).join("")
+  + `</div>`;
 
 {
-  const POOL_COLOR: Record<string, string> = { basic:"#7c8ea0", advanced:"#7fd8e8", ultimate:"#c9a86a" };
-  /* rows arrive pre-sorted by ΔDPS-per-ember (`per`); the number itself stays hidden */
-  const modRows = (mods: ModRow[]) =>
-    `<details class="rung-mods"><summary>craft order</summary>`
-    + mods.map(m => {
-        const col = m.pool ? POOL_COLOR[m.pool] : "#54677a";
-        return `<div class="mod-row">`
-          + `<span class="src-chip" style="background:${col}22;color:${col}">${m.pool ? `${m.pool} ×${m.cost}` : "unpooled"}</span>`
-          + `<span class="mod-text">${esc(m.text).replace(/\n/g," · ")}`
-          + `<span class="mod-vs">vs ${m.vs ? esc(m.vs).replace(/\n/g," · ") : "an empty slot (bottom tier)"}</span></span>`
-          + `<span class="delta-chip ${m.gain > 0 ? gainCls(m.gain) : "d-none"}">+${m.gain.toFixed(1)}%</span></div>`;
-      }).join("") + `</details>`;
-  const wrap0 = document.getElementById("ladder-list")!;
-  LADDER.forEach(row => {
-    const card = document.createElement("article");
-    card.className = "bundle ladder";
-    card.id = "l-" + row.slot;
-    card.innerHTML = `<div class="bundle-head"><h3>${esc(row.slot)}</h3></div>`
-      + row.rungs.map((r,i) => {
-        const rw = r.rework;
-        return `<div class="rung${rw?" rework":""}">`
-          + `<span class="rung-step">${i ? "→" : "&nbsp;"}</span>`
-          + `<span class="rung-lbl">${esc(r.label)}${rw?` <span class="rework-mark" title="needs something outside this slot first">⚠</span>`:""}</span>`
-          + `<span class="rung-name">${r.name===r.label?"":esc(r.name)}</span>`
-          + (r.gain===null ? `<span class="delta-chip d-none">start</span>` : gainChip(r, "delta-chip"))
-          + (rw?`<div class="rung-why">${rw.anchor?`<a href="${rw.anchor}" data-goto="bundles">${esc(rw.why)}</a>`:esc(rw.why)}</div>`:"")
-          + (r.note?`<div class="rung-why">${esc(r.note)}</div>`:"")
-          + (r.rangeAnchor?`<div class="rung-why"><a href="${r.rangeAnchor}" data-goto="bundles">${esc(r.rangeNote ?? "")} — see the tree-change bundle</a></div>`:"")
-          + (r.mods?.length ? modRows(r.mods) : "")
-          + `</div>`;
-      }).join("");
-    wrap0.appendChild(card);
-  });
+  /* catalog text prefixes -> ΔDPS chips; also excluded from the filler list */
+  const FIND = {
+    frostbite: "Inflicts Frostbite when dealing Hit Cold Damage",
+    blessing:  "+100% chance to gain a stack of Focus Blessing",
+    warcry:    "+4 to the minimum number of enemies affected by Warcry",
+    convert:   "Converts 100% of Physical Damage to Cold",
+  };
+  const slateChip = (find: string) => {
+    const r = CATALOG.find(c => c.cat === "slate" && c.text.startsWith(find));
+    return dChip(r?.delta ?? null, r?.cond);
+  };
+  const rows: { label: string; nodes: (TNode | null)[] }[] = [
+    {label:"frostbite", nodes:[
+      {src:"talent", lbl:"4 Prophet points", name:"the tree line paying for it today"},
+      {lbl:"Frostbite on Cold hit", chip:slateChip(FIND.frostbite), name:"Frostbitten core or Prophet line"},
+      {src:"talent", lbl:"Frostbite legendaries",
+       name:"respec the freed points into Effect · Cold Infiltration · more-vs-Frozen"}]},
+    {label:"focus blessing", nodes:[
+      {src:"gear", lbl:"Grace Boots", name:"carry it today"},
+      {lbl:"Focus Blessing on Frostbitten hit", chip:slateChip(FIND.blessing), name:"Prophet"},
+      {src:"gear", lbl:"boots ladder opens", name:"Grace Boots freed → i86 → Dawn Break"}]},
+    {label:"warcry floor", nodes:[
+      {src:"talent", lbl:"The Brave nodes", name:"+4 min enemies from the tree talent"},
+      {lbl:"+4 min Warcry enemies", chip:slateChip(FIND.warcry),
+       name:"The Brave · 1 copy · floor 8 of the 16-stack cap (Formless doubles it) — the inverse copy adds 4–6 more"},
+      {src:"skill", lbl:"Shockwave Warcry", name:"onto the freed bar slot"}]},
+    {label:"conversion", nodes:[
+      {src:"talent", lbl:"Prophet tree conversion", name:"covers it until endgame"},
+      {lbl:"Phys→Cold conversion", chip:slateChip(FIND.convert), name:"Prophet · the last buy"},
+      {src:"talent", lbl:"Prophet → Ronin respec",
+       name:"re-cover conversion · Cold Infiltration on Frozen · Frostbite Effect/Rating first"}]},
+  ];
 
-  const wrap = document.getElementById("simple-list")!;
-  const card = document.createElement("article");
-  card.className = "bundle";
-  card.innerHTML = SIMPLE.map(u => `<div class="simple-row"><span class="lever">${u.lever}</span><span>${u.html}</span></div>`).join("");
-  wrap.appendChild(card);
+  /* cores + fillers computed live from the catalog (pre-sorted by ΔDPS), never hand-picked.
+     God source (`r.on`) is omitted — Pedigree rolls any god's talents, so the chip is noise. */
+  const modRow = (r: CatalogRow) =>
+    `<div class="mod-row"><span class="mod-text"><b>${esc(r.name)}</b> · ${esc(r.text).replace(/\n/g, " · ")}</span>${dChip(r.delta, r.cond)}</div>`;
+  const cores = CATALOG.filter(r =>
+    r.cat === "slate" && /Core Talent/.test(r.tier) && r.delta !== null && r.delta > 0).slice(0, 12);
+  const planned = Object.values(FIND);
+  const rollable = CATALOG.filter(r =>
+    r.cat === "slate" && r.delta !== null && r.delta > 0
+    && !planned.some(f => r.text.startsWith(f)));
+  /* per-tier sections so Mediums/Micros aren't drowned out by Legendary Medium deltas;
+     capped to the standouts — the full list lives in the Slate Mods tab */
+  const fillerTier = (tier: string, n: number) =>
+    rollable.filter(r => r.tier === tier).slice(0, n);
+  const fillerSection = (title: string, rows2: CatalogRow[], tail = "") =>
+    `<details class="fillers"><summary>${title}</summary>`
+    + rows2.map(modRow).join("") + tail + `</details>`;
+  /* Deep Space (the endgame Netherrealm plane) is gated on ailment immunity —
+     defensive buys, so no ΔDPS; the god is what you shop for */
+  const immunities = CATALOG.filter(r => r.cat === "slate" && /^Immune to (Trauma|Wilt|Ignite)/.test(r.text));
+  const defRow = (r: CatalogRow) =>
+    `<div class="mod-row"><span class="mod-text"><b>${esc(r.on)}</b> · ${esc(r.text).replace(/\n/g, " · ")}</span>`
+    + `<span class="delta-chip d-none">defense</span></div>`;
+  document.getElementById("slate-plan")!.innerHTML =
+    miniTree(["today", "buy on slate", "what it frees"], rows)
+    + `<details class="fillers" open><summary>pedigree cores — best Core Talents its slots can roll (3rd slot: Lv.1 only)</summary>`
+    + cores.map(modRow).join("") + `</details>`
+    + `<details class="fillers" open><summary>deep space — the immunity lines (Legendary Mediums) to hold before farming it</summary>`
+    + immunities.map(defRow).join("") + `</details>`
+    + fillerSection("fillers · legendary mediums — best rollable lines beyond the plan",
+        fillerTier("Legendary Medium Talent", 8),
+        `<p class="cost-note">skill-level lines stack across slates — the build runs four +1 Attack Skill Level</p>`)
+    + fillerSection("fillers · mediums — standouts for the Medium slots",
+        fillerTier("Medium Talent", 5))
+    + fillerSection("fillers · micros — standouts for the Micro slots",
+        fillerTier("Micro Talent", 5));
+}
+
+{
+  interface PrismRung { label: string; delta: number | null; note: string | null }
+  const split = (s: string): [string, string] => {
+    const i = s.indexOf(" — ");
+    return i < 0 ? [s, ""] : [s.slice(0, i), s.slice(i + 3)];
+  };
+  const rows = (prismData as { name: string; rungs: PrismRung[] }[]).map(l => ({
+    label: esc(split(l.name)[0]),
+    nodes: l.rungs.map((r, j): TNode => {
+      const [lbl, name] = split(r.label);
+      return {lbl: esc(lbl), name: name ? esc(name) : undefined,
+        chip: !j && r.delta === null ? `<span class="delta-chip d-none">start</span>` : dChip(r.delta),
+        note: r.note ? esc(r.note) : undefined};
+    }),
+  }));
+  document.getElementById("prism-plan")!.innerHTML = miniTree(["start", "upgrade", "endgame"], rows);
 }
 
 /* ---------- tabs ---------- */
+/* slate mods are browsed by the slate item they roll on, not by tier —
+   each entry lists which mod tiers that purchase can produce (user-verified slot structures) */
+const SLATE_ITEMS: Record<string, {label: string; tiers: string[]; note: string}> = {
+  corner:    {label: "A Corner of Divinity (max 3)",
+              tiers: ["Legendary Medium Talent"],
+              note: "legendary slate · rolls 2× Legendary Medium Talent, any god"},
+  starlight: {label: "Fallen Starlight (max 3)",
+              tiers: ["Micro Talent", "Medium Talent", "Legendary Medium Talent"],
+              note: "legendary slate · 3× Micro (3rd can reach Medium / Legendary Medium) + 1× Medium / Legendary Medium, any god — typically lands 1 Legendary Medium + 1 Medium"},
+  pedigree:  {label: "Pedigree of Gods (max 1)",
+              tiers: ["Micro Talent", "Medium Talent", "Legendary Medium Talent", "Lv.1 Core Talent", "Lv.2 Core Talent"],
+              note: "legendary slate · 2× Micro/Medium/Legendary Medium + 1× Medium / Lv.1 Core / Legendary Medium + 1× any Core Talent — typically 2 Micro, 1 Medium-or-better, 1 Core"},
+  god:       {label: "God slates (2 fixed + 3 random)",
+              tiers: ["Micro Talent", "Medium Talent", "Legendary Medium Talent"],
+              note: "Deception / Hunting / Knowledge / Machines / Might / War · no Core Talents here — those are Pedigree-only; the 3 random slots pay per slot type and cap at Micro / Medium / Legendary Medium — aim for 1× Medium + 2× Legendary Medium, or 3× Legendary Medium"},
+};
 let CAT_SOURCE = "slate";
 const SECTIONS: Record<string, string> = {
   progression:"progression", slate:"catalog-tab", memory:"catalog-tab",
@@ -250,71 +248,85 @@ function show(tab: string){
     CAT_SOURCE = tab;
     document.getElementById("cat-title")!.textContent =
       (tab === "slate" ? "Divinity Slate Mods" : "Hero Memory Mods") + " — impact for this build";
-    const tiers = [...new Set(CATALOG.filter(r => r.cat === tab).map(r => r.tier))].sort();
-    document.getElementById("cat-tier")!.innerHTML =
-      `<option value="">all tiers</option>` + tiers.map(t => `<option>${t}</option>`).join("");
+    const tierOpts = [...new Set(CATALOG.filter(r => r.cat === tab).map(r => r.tier))].sort()
+      .map(t => `<option>${t}</option>`).join("");
+    document.getElementById("cat-tier")!.innerHTML = tab === "slate"
+      ? `<option value="">all slates</option>`
+        + `<optgroup label="by slate item">` + Object.entries(SLATE_ITEMS)
+            .map(([k, s]) => `<option value="${k}">${s.label}</option>`).join("") + `</optgroup>`
+        + `<optgroup label="by tier">${tierOpts}</optgroup>`
+      : `<option value="">all tiers</option>` + tierOpts;
     renderCatalog();
   }
 }
 for (const b of tabButtons) b.addEventListener("click", () => show(b.dataset.tab!));
 
-/* ---------- item detail popup (tree node → its ladder + bundles) ---------- */
-const detail = document.getElementById("detail") as HTMLDialogElement;
-function openSlot(slot: string){
-  const row = LADDER.find(r => r.slot === slot);
-  if (!row) return;
-  const related = new Set(BUNDLES.filter(b => b.slots.includes(slot)).map(b => "#b-" + b.id));
-  for (const r of row.rungs) {
-    if (r.rework?.anchor) related.add(r.rework.anchor);
-    if (r.rangeAnchor) related.add(r.rangeAnchor);
-  }
-  for (const card of document.querySelectorAll<HTMLElement>("#ladder-list > article"))
-    card.hidden = card.id !== "l-" + slot;
-  for (const card of document.querySelectorAll<HTMLElement>("#bundle-cards > article"))
-    card.hidden = !related.has("#" + card.id);
-  document.getElementById("bundles")!.hidden = related.size === 0;
-  detail.showModal();
-  detail.scrollTop = 0;
+/* ---------- skills + pactspirits: the non-gear buys the engines need ---------- */
+{
+  const rows: { label: string; nodes: (TNode | null)[] }[] = [
+    {label:"spectral slash", nodes:[
+      {src:"support", lbl:"Legion · Detonation · Critical Strike Damage Increase",
+       name:"plus the Quick Decision / Added Phys placeholders — crit runs 77.3% chance / 711.5% crit damage"},
+      {src:"support", lbl:"Legion (Noble)", name:"replaces whichever of Quick Decision / Added Phys the Motionless buy leaves"},
+      null]},
+    {label:"mediums", nodes:[
+      {src:"skill", lbl:"3 Activation Mediums", name:"one each for Spectral Slash · the warcries · Ice Bond (the Frostbite self-applicator)"},
+      {src:"support", lbl:"Motionless on the Slash medium", name:"replaces Quick Decision or Added Phys"},
+      {src:"support", lbl:"CDR on the rest", name:"Elite or Preparation on the warcry medium · Root on the Ice Bond medium"}]},
+    {label:"precise auras", nodes:[
+      {src:"skill", lbl:"all 4 Precise Auras",
+       name:"Cruelty +15% additional Attack · Fearless +8% Melee Attack Speed · Domain Expansion +4% additional Area · "
+           +"Frigid Domain +5% additional Cold — all scaled by Aura Effect and skill levels"},
+      {src:"support", lbl:"Precise: Disciplined", name:"on Cruelty"},
+      {src:"support", lbl:"Precise: Energy Shield", name:"post-Eternity, once the flat-ES belt is gone"}]},
+    {label:"skill bar", nodes:[
+      null,
+      {src:"skill", lbl:"Shockwave Warcry", name:"onto the slot the Timid curse-on-hit ring frees (the ring carries its own ×1.39 Timid layer)"},
+      {src:"skill", lbl:"Resurrection Warcry", name:"second warcry slot — −60% additional damage taken + 1,160 Life over 4s (L20) pays the Fervor drain"}]},
+    {label:"pactspirit", nodes:[
+      {src:"pact", lbl:"Red Umbrella · Azure Gunslinger", name:"+48% Attack Damage +16% Attack Speed each · nodes 4–6 pure Attack Crit Rating (+89% / +88%) · Frenzy inflicts Paralysis (×1.15 on a boss) · Seven Steps ×1.28 at 5 stacks, fed by Thunder Spike dashes"},
+      {src:"pact", lbl:"Captain Kitty of the Furious Sea", name:"+12% Warcry Effect · “Beast” Roar: +20% additional Warcry Effect, self-casts"},
+      {src:"pact", lbl:"level Captain Kitty", name:"the one pactspirit worth levelling — L2 +11% Warcry Cooldown Recovery, L3 a Warcry charge"}]},
+  ];
+  document.getElementById("skillpact-plan")!.innerHTML = miniTree(["today", "buy", "endgame"], rows);
 }
-const tree = document.getElementById("tree")!;
-tree.addEventListener("click", e => {
-  const node = (e.target as HTMLElement).closest<HTMLElement>("[data-slot]");
-  if (node?.dataset.slot) openSlot(node.dataset.slot);
-});
-tree.addEventListener("keydown", e => {
-  if (e.key !== "Enter" && e.key !== " ") return;
-  const node = (e.target as HTMLElement).closest<HTMLElement>("[data-slot]");
-  if (node?.dataset.slot) {
-    e.preventDefault();
-    openSlot(node.dataset.slot);
-  }
-});
-document.getElementById("detail-close")!.addEventListener("click", () => detail.close());
-detail.addEventListener("click", e => { if (e.target === detail) detail.close(); });
 
-/* rework links (ladder rung / tree node → its bundle card in the dialog) */
-document.addEventListener("click", e => {
-  const a = (e.target as HTMLElement).closest<HTMLAnchorElement>("a[data-goto]");
-  if (!a) return;
-  e.preventDefault();
-  const target = document.querySelector<HTMLElement>(a.getAttribute("href")!);
-  if (!target) return;
-  target.hidden = false;
-  document.getElementById("bundles")!.hidden = false;
-  if (!detail.open) detail.showModal();
-  target.scrollIntoView(matchMedia("(prefers-reduced-motion: reduce)").matches
-    ? undefined : {behavior:"smooth"});
-});
+/* ---------- kismets: pactspirit node replacements (planner more_1 → more_2 sets) ---------- */
+{
+  const def = `<span class="delta-chip d-none">defense</span>`;
+  const rows: { label: string; nodes: (TNode | null)[] }[] = [
+    {label:"offense", nodes:[
+      {src:"pact", lbl:"2× Peerless · Tiger's Chain",
+       name:"the Dual pair is +1 Combo Finisher charge and a fixed 0.3s Combo Sequence reset · Tiger's Chain adds +(4–6)% additional Combo Skill Damage — these three sockets never move"},
+      {src:"pact", lbl:"2× Mammoth · Ascetic",
+       name:"Mammoth pair self-casts Lv.20 Resurrection Warcry on hit every 3s (the −60% additional-damage-taken layer, hands-free) · Ascetic: +(1.7–1.9)% Double Damage Chance for Finishers per Combo Point consumed"},
+      null]},
+    {label:"crit fates", nodes:[
+      {src:"pact", lbl:"1× Medium + 9× Micro Crit Rating", name:"+(48–60)% / +(24–30)% Crit Strike Rating each — cheap filler for every remaining node"},
+      {lbl:"free 3 sockets", name:"the Medium and 2 Micros give way to the buys on this ladder — 7 Micro Crit stay for good"},
+      {src:"pact", lbl:"Micro Strength", name:"+(12–15) Strength in the last spare node"}]},
+    {label:"defense", nodes:[
+      null,
+      {lbl:"Medium ES Restored on Defeat", chip:def, name:"restores (0.2–0.4)% of Energy Shield per kill — the mapping sustain layer"},
+      {lbl:"Micro Energy Shield", chip:def, name:"+(5–6)% Max Energy Shield"}]},
+    {label:"deep space", nodes:[
+      null, null,
+      {lbl:"2× Micro Numbed Mitigation", chip:def, name:"−(45–55)% Numbed Effect received each — near-immunity, same role as the slate immunity lines above"}]},
+  ];
+  document.getElementById("kismet-plan")!.innerHTML = miniTree(["today", "buy", "endgame"], rows);
+}
 
 /* ---------- mod catalog ---------- */
 const CAT_LIMIT = 400;
 function renderCatalog(){
   const q = (document.getElementById("cat-search") as HTMLInputElement).value.trim().toLowerCase();
-  const tier = (document.getElementById("cat-tier") as HTMLSelectElement).value;
+  const sel = (document.getElementById("cat-tier") as HTMLSelectElement).value;
+  const slate = CAT_SOURCE === "slate" ? SLATE_ITEMS[sel] : undefined;
+  document.getElementById("cat-note")!.textContent = slate?.note ?? "";
   const showAll = (document.getElementById("cat-show") as HTMLSelectElement).value === "all";
   const rows = CATALOG.filter(r =>
     r.cat === CAT_SOURCE &&
-    (!tier || r.tier === tier) &&
+    (!sel || (slate ? slate.tiers.includes(r.tier) : r.tier === sel)) &&
     (showAll || (r.delta !== null && r.delta > 0)) &&
     (!q || (r.text + " " + r.name + " " + r.tier + " " + r.on).toLowerCase().includes(q)));
   const chip = (d: number | null) => d === null ? `<span class="delta-chip d-none">—</span>`

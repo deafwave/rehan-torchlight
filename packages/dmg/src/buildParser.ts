@@ -238,9 +238,15 @@ function* voraxLines(lo: any): Generator<Line> {
   }
 }
 
+/* The planner's "current" loadout is whatever the user last touched — often a scratch
+   pad. Every consumer (catalog, ladder, page prose) prices against the finished build,
+   so the default target is the reference loadout by name; current is only a fallback. */
+export const PARSE_TARGET = "more_1";
+
 function pickLoadout(build: any, loadoutIndex?: number | null): any {
   const loadouts = build.loadouts.loadouts;
   if (loadoutIndex != null) return loadouts[loadoutIndex];
+  for (const lo of loadouts) if (lo.name?.trim() === PARSE_TARGET) return lo;
   const current = build.loadouts.currentLoadoutId;
   for (const lo of loadouts) if (lo.id === current) return lo;
   return loadouts[0];
@@ -265,11 +271,14 @@ export const FERVOR_RATING = 100;
 export const LIFE_LOST_PCT = 60;
 const LOW_LIFE_ENEMY_HP = 0.35;              // Low Life = below 35% Life (user 2026-07-16)
 const FERVOR_CRIT_RATING_PER_POINT = 2;      // Fervor's native base effect
+export const FEARLESS_RATING_BASE_PCT = 80;  // Precise: Fearless, before aura effect
+export const FEARLESS_AS_PCT = 8;            // its melee attack speed line, before aura effect
 const PRECISE_FEARLESS_RATING_PCT = 100;     // aura, not gear: +80% crit rating x 1.25 aura effect
 const PARALYSIS_TAKEN_PCT = 15;              // tlidb Paralysis: +15% damage taken, 4s, 1 stack
 const PURE_HEART_PER_STACK = 5;              // +5% additional Attack Damage per stack, MULTIPLIES
 const PURE_HEART_STACKS = 5;                 // cap; full-uptime assumption (mechanics.md#assumptions)
 const SHOCKWAVE_PER_ENEMY = 5.95;            // Shockwave Warcry at L20, per enemy affected
+const SHOCKWAVE_MAX_STACKS = 8;              // "stacking up to 8 time(s)" — cache:SS12.5-skill-en.json; doubled to 16 by "Doubles Max Warcry Skill Effects" (user 2026-07-16)
 const MARK_TAKEN_PCT = 30;                   // Spectral Slash starter's Mark, skill-inherent
 const TIMID_CURSE_TAKEN_PCT = 39;            // Timid at L20: +39% additional Hit Damage taken
 // tower-sequence Steamroll; tlidb: +31% additional Melee at Lv1, +41 Lv21, +51 Lv41
@@ -320,7 +329,7 @@ export const PATTERNS: [string, string][] = [
   [`Attacks eliminate enemies under ${NUM}% Life`, "ignore"],
   // Caged Fury's moved-mode; the still mode (+35% additional) is the live one while bossing
   [`^If you have moved ${NUM}\\s?m or more`, "ignore"],
-  [`Doubles Max Warcry Skill Effects`, "ignore"],
+  [`Doubles Max Warcry Skill Effects`, "extras.warcry_max_doubled"],
   [`Gains additional Fervor Rating`, "ignore"],
   [`Fervor Rating lost`, "ignore"],
   [`Unable to evade`, "ignore"],
@@ -383,9 +392,13 @@ export const PATTERNS: [string, string][] = [
   [`\\+${NUM}% (?:increased )?Elemental Damage`, "increased.elemental"],
   [`\\+${NUM}% Elemental Penetration`, "penetration.cold_pct"],
   [`\\+${NUM}% Cold Penetration`, "penetration.cold_pct"],
+  [`\\+${NUM}% Strength`, "extras.strength_pct"],
   [`\\+${NUM} Strength`, "extras.strength"],
   [`\\+${NUM} to Attack Skill Level`, "extras.attack_skill_level"],
   [`\\+${NUM} Active Skill Level`, "extras.active_skill_level"],
+  // Spectral Slash carries the Persistent and Physical tags (user 2026-07-16)
+  [`\\+${NUM} (?:Persistent|Physical) Skill Level`, "extras.attack_skill_level"],
+  [`\\+${NUM} to All Skills' Levels`, "extras.all_skill_levels"],
   ["(Max Life|Max Mana|Max Energy Shield|gear Energy Shield|Armor|Evasion"
    + "|Resistance|Movement Speed|Skill Cost|Life Regain|Mana Regain|on defeat"
    + "|Sealed Mana Compensation|Warcry Cooldown|additional damage taken|Skill Area"
@@ -575,6 +588,11 @@ function apply(snap: Snapshot, extras: Record<string, number>, path: string, val
     extras.has_fervor = 1;
     return;
   }
+  // presence flag, not a sum: two doubling sources (Formless + belt) still mean one x2
+  if (path === "extras.warcry_max_doubled") {
+    extras.warcry_max_doubled = 1;
+    return;
+  }
   if (path === "special.fixed_fervor_rating") {
     extras.fervor_rating = Math.max(extras.fervor_rating ?? 0, value);
     return;
@@ -710,7 +728,8 @@ export function critChance(d: Record<string, number>): number {
     ? (d.fervor_rating || FERVOR_RATING) * FERVOR_CRIT_RATING_PER_POINT
       * (1 + d.fervor_effect_pct / 100)
     : 0;
-  const increased = (d.rating_inc_pct + fervor + PRECISE_FEARLESS_RATING_PCT) / 100;
+  const increased = (d.rating_inc_pct + fervor
+    + (d.fearless_rating_pct ?? PRECISE_FEARLESS_RATING_PCT)) / 100;
   return d.rating_flat * (1 + increased) / 100;
 }
 
@@ -720,9 +739,11 @@ export function lowLifeExecEvPct(pct: number): number {
   return (1 / (1 - LOW_LIFE_ENEMY_HP + LOW_LIFE_ENEMY_HP / (1 + pct / 100)) - 1) * 100;
 }
 
-/** mechanics.md#warcry: Shockwave %/enemy x enemies x Effect x additional Effect. */
+/** mechanics.md#warcry: Shockwave %/enemy x min(enemies, stack cap) x Effect x additional
+    Effect; the cap is 8, or 16 with a "Doubles Max Warcry Skill Effects" source. */
 export function warcryLayer(d: Record<string, number>): number {
-  return (SHOCKWAVE_PER_ENEMY * d.warcry_min_enemies
+  const cap = SHOCKWAVE_MAX_STACKS * (d.warcry_max_doubled ? 2 : 1);
+  return (SHOCKWAVE_PER_ENEMY * Math.min(d.warcry_min_enemies, cap)
           * (1 + d.warcry_effect_pct / 100) * (1 + d.warcry_additional_effect_pct / 100));
 }
 
@@ -784,7 +805,9 @@ function supportName(guid: string): string {
 
 /** Spectral Slash's support gems, valued at gem level + Support Skill Levels. */
 export function applySupports(snap: Snapshot, lo: any, extras: Record<string, number>, report: Report): void {
-  const supportLevels = extras.support_skill_level ?? 0;
+  // "+N to All Skills' Levels" raises the supports too; its main-gem share is
+  // consumed later in resolveExtras
+  const supportLevels = (extras.support_skill_level ?? 0) + (extras.all_skill_levels ?? 0);
   delete extras.support_skill_level;
   for (const skill of lo.skills?.activeSkills ?? []) {
     if (skill.skillGuid !== SPECTRAL_SLASH || skill.enabled === false) continue;
@@ -803,9 +826,11 @@ export function applySupports(snap: Snapshot, lo: any, extras: Record<string, nu
   }
 }
 
-/** mechanics.md#skill-levels: gem is L20; +10% additional damage per level 21-30, +8% past 30. */
+/** mechanics.md#skill-levels: gem is L20; each level is its own additional multiplier —
+    x1.10 per level 21-30, x1.08 past 30 (never a summed pool: the marginal level is
+    always worth its full band value, user 2026-07-16). */
 export function skillLevelAdditionalPct(levels: number): number {
-  return Math.min(levels, 10) * 10 + Math.max(levels - 10, 0) * 8;
+  return (1.10 ** Math.min(levels, 10) * 1.08 ** Math.max(levels - 10, 0) - 1) * 100;
 }
 
 /** Mechanical extras conversions that need no researched constants. */
@@ -823,7 +848,9 @@ export function resolveExtras(snap: Snapshot, report: Report): Snapshot {
                          value: `x${pyG(1 + gas / 100)} from +${pyG(gas)}% gear Attack Speed`,
                          source: "build_parser.resolve_extras" });
   }
-  const strength = pop("strength");
+  // %Strength scales the export-visible pool only — hero base attributes are not
+  // in the export (mechanics.md#assumptions)
+  const strength = pop("strength") * (1 + pop("strength_pct") / 100);
   if (strength) {
     // +0.5% additional damage per point, one multiplier (mechanics.md 'Strength')
     const pts = strength * 0.5;
@@ -904,7 +931,8 @@ export function resolveExtras(snap: Snapshot, report: Report): Snapshot {
                          value: `${pyG(jf)}% of off-hand ${pyG(ohPhys)} phys + ${pyG((ohColdMin + ohColdMax) / 2)} cold`,
                          source: "mechanics.md#joined-force" });
   }
-  const gemLevels = pop("attack_skill_level") + pop("active_skill_level");
+  const gemLevels = pop("attack_skill_level") + pop("active_skill_level")
+    + pop("all_skill_levels");
   if (gemLevels) {
     const pts = skillLevelAdditionalPct(gemLevels);
     snap.additional.skill_levels = (snap.additional.skill_levels ?? 0) + pts;
@@ -921,6 +949,7 @@ export function resolveExtras(snap: Snapshot, report: Report): Snapshot {
     fervor_rating: pop("fervor_rating") || FERVOR_RATING,
     has_fervor: pop("has_fervor"),
     warcry_min_enemies: pop("warcry_min_enemies"),
+    warcry_max_doubled: pop("warcry_max_doubled"),
     warcry_effect_pct: pop("warcry_effect_pct"),
     warcry_additional_effect_pct: pop("warcry_additional_effect_pct"),
   };
@@ -936,7 +965,9 @@ export function resolveExtras(snap: Snapshot, report: Report): Snapshot {
     snap.additional.warcry_buffs = warcryLayer(d);
     report.manual.push({ path: "additional.warcry_buffs", mode: "derived",
                          value: `+${snap.additional.warcry_buffs.toPrecision(4)}% from `
-                              + `${SHOCKWAVE_PER_ENEMY}%/enemy x ${pyG(d.warcry_min_enemies)} enemies`,
+                              + `${SHOCKWAVE_PER_ENEMY}%/enemy x ${pyG(d.warcry_min_enemies)} enemies `
+                              + `(stack cap ${SHOCKWAVE_MAX_STACKS * (d.warcry_max_doubled ? 2 : 1)}`
+                              + `${d.warcry_max_doubled ? ", doubled by Formless/belt" : ""})`,
                          source: "mechanics.md#warcry" });
   }
 

@@ -3210,26 +3210,12 @@
               "corrosionImplicit": null,
               "prefixes": [
                 {
-                  "affixId": "8bcf640a-e8e2-5e07-9771-ab4625b96eff",
-                  "tierId": "0aca8250-c11d-5e52-8dfd-5f2da1f54014",
-                  "modifierDescription": "+# Physical Skill Level",
-                  "rolledValues": [
-                    {
-                      "value": 1,
-                      "minValue": 1,
-                      "maxValue": 1,
-                      "sign": "+"
-                    }
-                  ],
-                  "tier": "1"
-                },
-                {
                   "affixId": "51082d86-fb73-579d-ba5d-59993d9e5aac",
                   "tierId": "fa6ae9e4-c380-59f5-a8c3-8be61a487d45",
                   "modifierDescription": "+# gear Energy Shield",
                   "rolledValues": [
                     {
-                      "value": 298,
+                      "value": 300,
                       "minValue": 239,
                       "maxValue": 340,
                       "sign": "+"
@@ -3243,9 +3229,24 @@
                   "modifierDescription": "+#% gear Energy Shield",
                   "rolledValues": [
                     {
-                      "value": 55,
+                      "value": 61,
                       "minValue": 47,
                       "maxValue": 66,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                },
+                {
+                  "affixId": "48951f89-9f9c-5452-92dd-52085fcdc17f",
+                  "tierId": "05ad1fb9-795e-511d-b917-0bec1071b62e",
+                  "modifierDescription": "+#% damage",
+                  "rolledValues": [
+                    {
+                      "value": 60,
+                      "minValue": 51,
+                      "maxValue": 72,
                       "sign": "+",
                       "unit": "%"
                     }
@@ -3260,9 +3261,24 @@
                   "modifierDescription": "+#% Critical Strike Damage",
                   "rolledValues": [
                     {
-                      "value": 53,
+                      "value": 52,
                       "minValue": 44,
                       "maxValue": 60,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                },
+                {
+                  "affixId": "d6600abd-62aa-5536-9de9-bbcbcaf84672",
+                  "tierId": "6ee0d26d-f0ef-5649-b1b8-bfeb379fb066",
+                  "modifierDescription": "Has Hasten\n+#% Attack Speed, Cast Speed, and Movement Speed when having Hasten",
+                  "rolledValues": [
+                    {
+                      "value": 6,
+                      "minValue": 5,
+                      "maxValue": 8,
                       "sign": "+",
                       "unit": "%"
                     }
@@ -3275,24 +3291,9 @@
                   "modifierDescription": "+#% Critical Strike Rating",
                   "rolledValues": [
                     {
-                      "value": 112,
+                      "value": 104,
                       "minValue": 87,
                       "maxValue": 120,
-                      "sign": "+",
-                      "unit": "%"
-                    }
-                  ],
-                  "tier": "1"
-                },
-                {
-                  "affixId": "6c8e8cb6-fb55-5296-8a1e-9bbd08ef8e6e",
-                  "tierId": "8a5f8034-68df-5b5e-a7bb-afd67bce227d",
-                  "modifierDescription": "+#% Lightning Resistance",
-                  "rolledValues": [
-                    {
-                      "value": 23,
-                      "minValue": 19,
-                      "maxValue": 27,
                       "sign": "+",
                       "unit": "%"
                     }
@@ -4557,7 +4558,7 @@
               ],
               "displayName": "(Priceless): Perishing Inferno Flame Ring",
               "displayIcon": "/images/rare-gear/trinket/ring/Icon_Equip_Ring_Norm_002_02_128.webp",
-              "customName": "Timid Ring",
+              "customName": "i100 Timid Ring",
               "itemLevel": 100
             },
             {
@@ -5165,26 +5166,12 @@
               "corrosionImplicit": null,
               "prefixes": [
                 {
-                  "affixId": "8bcf640a-e8e2-5e07-9771-ab4625b96eff",
-                  "tierId": "0aca8250-c11d-5e52-8dfd-5f2da1f54014",
-                  "modifierDescription": "+# Physical Skill Level",
-                  "rolledValues": [
-                    {
-                      "value": 1,
-                      "minValue": 1,
-                      "maxValue": 1,
-                      "sign": "+"
-                    }
-                  ],
-                  "tier": "1"
-                },
-                {
                   "affixId": "51082d86-fb73-579d-ba5d-59993d9e5aac",
                   "tierId": "fa6ae9e4-c380-59f5-a8c3-8be61a487d45",
                   "modifierDescription": "+# gear Energy Shield",
                   "rolledValues": [
                     {
-                      "value": 298,
+                      "value": 300,
                       "minValue": 239,
                       "maxValue": 340,
                       "sign": "+"
@@ -5198,9 +5185,24 @@
                   "modifierDescription": "+#% gear Energy Shield",
                   "rolledValues": [
                     {
-                      "value": 55,
+                      "value": 61,
                       "minValue": 47,
                       "maxValue": 66,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                },
+                {
+                  "affixId": "48951f89-9f9c-5452-92dd-52085fcdc17f",
+                  "tierId": "05ad1fb9-795e-511d-b917-0bec1071b62e",
+                  "modifierDescription": "+#% damage",
+                  "rolledValues": [
+                    {
+                      "value": 60,
+                      "minValue": 51,
+                      "maxValue": 72,
                       "sign": "+",
                       "unit": "%"
                     }
@@ -5215,9 +5217,24 @@
                   "modifierDescription": "+#% Critical Strike Damage",
                   "rolledValues": [
                     {
-                      "value": 53,
+                      "value": 52,
                       "minValue": 44,
                       "maxValue": 60,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                },
+                {
+                  "affixId": "d6600abd-62aa-5536-9de9-bbcbcaf84672",
+                  "tierId": "6ee0d26d-f0ef-5649-b1b8-bfeb379fb066",
+                  "modifierDescription": "Has Hasten\n+#% Attack Speed, Cast Speed, and Movement Speed when having Hasten",
+                  "rolledValues": [
+                    {
+                      "value": 6,
+                      "minValue": 5,
+                      "maxValue": 8,
                       "sign": "+",
                       "unit": "%"
                     }
@@ -5230,24 +5247,9 @@
                   "modifierDescription": "+#% Critical Strike Rating",
                   "rolledValues": [
                     {
-                      "value": 112,
+                      "value": 104,
                       "minValue": 87,
                       "maxValue": 120,
-                      "sign": "+",
-                      "unit": "%"
-                    }
-                  ],
-                  "tier": "1"
-                },
-                {
-                  "affixId": "6c8e8cb6-fb55-5296-8a1e-9bbd08ef8e6e",
-                  "tierId": "8a5f8034-68df-5b5e-a7bb-afd67bce227d",
-                  "modifierDescription": "+#% Lightning Resistance",
-                  "rolledValues": [
-                    {
-                      "value": 23,
-                      "minValue": 19,
-                      "maxValue": 27,
                       "sign": "+",
                       "unit": "%"
                     }
@@ -5726,7 +5728,7 @@
               ],
               "displayName": "(Priceless): Ninth Apostle's Magic Shield",
               "displayIcon": "/images/rare-gear/shield/int_shield/Icon_Equip_Shield_Int_Norm_004_128.webp",
-              "customName": "PRICELESS ATTACK/COMBO",
+              "customName": "i100 ATTACK/COMBO",
               "itemLevel": 100
             }
           ]
@@ -6922,7 +6924,7 @@
               ],
               "displayName": "(Priceless): Perishing Inferno Flame Ring",
               "displayIcon": "/images/rare-gear/trinket/ring/Icon_Equip_Ring_Norm_002_02_128.webp",
-              "customName": "Timid Ring",
+              "customName": "i100 Timid Ring",
               "itemLevel": 100
             },
             {
@@ -8092,7 +8094,7 @@
               ],
               "displayName": "(Priceless): Ninth Apostle's Magic Shield",
               "displayIcon": "/images/rare-gear/shield/int_shield/Icon_Equip_Shield_Int_Norm_004_128.webp",
-              "customName": "PRICELESS ATTACK/COMBO",
+              "customName": "i100 ATTACK/COMBO",
               "itemLevel": 100
             }
           ]
@@ -9476,7 +9478,7 @@
               ],
               "displayName": "(Priceless): Perishing Inferno Flame Ring",
               "displayIcon": "/images/rare-gear/trinket/ring/Icon_Equip_Ring_Norm_002_02_128.webp",
-              "customName": "Timid Ring",
+              "customName": "i100 Timid Ring",
               "itemLevel": 100
             },
             {
@@ -10646,7 +10648,7 @@
               ],
               "displayName": "(Priceless): Ninth Apostle's Magic Shield",
               "displayIcon": "/images/rare-gear/shield/int_shield/Icon_Equip_Shield_Int_Norm_004_128.webp",
-              "customName": "PRICELESS ATTACK/COMBO",
+              "customName": "i100 ATTACK/COMBO",
               "itemLevel": 100
             }
           ]
@@ -12038,7 +12040,7 @@
               ],
               "displayName": "(Priceless): Perishing Inferno Flame Ring",
               "displayIcon": "/images/rare-gear/trinket/ring/Icon_Equip_Ring_Norm_002_02_128.webp",
-              "customName": "Timid Ring",
+              "customName": "i100 Timid Ring",
               "itemLevel": 100
             },
             {
@@ -12166,7 +12168,7 @@
               ],
               "displayName": "Long Night Sorcerer's Mask",
               "displayIcon": "/images/rare-gear/helmet/int_helmet/Icon_Equip_Helmet_Int_Norm_004_02_128.webp",
-              "customName": "i86 ES",
+              "customName": "i100 sealed mana",
               "itemLevel": 82
             },
             {
@@ -12872,7 +12874,7 @@
               ],
               "displayName": "(Priceless): Ninth Apostle's Magic Shield",
               "displayIcon": "/images/rare-gear/shield/int_shield/Icon_Equip_Shield_Int_Norm_004_128.webp",
-              "customName": "PRICELESS ATTACK/COMBO",
+              "customName": "i100 ATTACK/COMBO",
               "itemLevel": 100
             },
             {
@@ -14693,7 +14695,7 @@
               ],
               "displayName": "(Priceless): Perishing Inferno Flame Ring",
               "displayIcon": "/images/rare-gear/trinket/ring/Icon_Equip_Ring_Norm_002_02_128.webp",
-              "customName": "Timid Ring",
+              "customName": "i100 Timid Ring",
               "itemLevel": 100
             },
             {
@@ -14821,7 +14823,7 @@
               ],
               "displayName": "Long Night Sorcerer's Mask",
               "displayIcon": "/images/rare-gear/helmet/int_helmet/Icon_Equip_Helmet_Int_Norm_004_02_128.webp",
-              "customName": "i86 ES",
+              "customName": "i100 sealed mana",
               "itemLevel": 82
             },
             {
@@ -15564,7 +15566,7 @@
               ],
               "displayName": "(Priceless): Ninth Apostle's Magic Shield",
               "displayIcon": "/images/rare-gear/shield/int_shield/Icon_Equip_Shield_Int_Norm_004_128.webp",
-              "customName": "PRICELESS ATTACK/COMBO",
+              "customName": "i100 ATTACK/COMBO",
               "itemLevel": 100
             },
             {
@@ -17495,7 +17497,7 @@
               ],
               "displayName": "(Priceless): Perishing Inferno Flame Ring",
               "displayIcon": "/images/rare-gear/trinket/ring/Icon_Equip_Ring_Norm_002_02_128.webp",
-              "customName": "Timid Ring",
+              "customName": "i100 Timid Ring",
               "itemLevel": 100
             },
             {
@@ -17623,7 +17625,7 @@
               ],
               "displayName": "Long Night Sorcerer's Mask",
               "displayIcon": "/images/rare-gear/helmet/int_helmet/Icon_Equip_Helmet_Int_Norm_004_02_128.webp",
-              "customName": "i86 ES",
+              "customName": "i100 sealed mana",
               "itemLevel": 82
             },
             {
@@ -18366,7 +18368,7 @@
               ],
               "displayName": "(Priceless): Ninth Apostle's Magic Shield",
               "displayIcon": "/images/rare-gear/shield/int_shield/Icon_Equip_Shield_Int_Norm_004_128.webp",
-              "customName": "PRICELESS ATTACK/COMBO",
+              "customName": "i100 ATTACK/COMBO",
               "itemLevel": 100
             },
             {

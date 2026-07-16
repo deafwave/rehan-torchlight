@@ -24,9 +24,10 @@ parses the planner export and computes every % figure on the web page — nothin
 2. **Rankings are never hand-written into docs** — run `pnpm rank`. (`RANKINGS.md` was retired
    because it went stale on every model pass; its caveats live in mechanics.md#assumptions.)
 3. **After any model or parser change**: `pnpm test && pnpm page`, then refresh the page's prose
-   numbers — bundle `math` lines in `packages/page/src/main.ts` and the damage-note in
-   `packages/page/index.html` — from the fresh `pnpm rank` output. Stale prose is a bug.
+   numbers — the mini-tree notes in `packages/page/src/main.ts` — from the fresh
+   `pnpm rank` output. Stale prose is a bug.
 4. **Failing test first.** The e2e test enforces ≥90% affix-line coverage and an empty leftover
    `_extras` — a newly parsed line needs a mapping or an explicit ignore, never silence.
-5. The parser targets the planner's **current loadout**; the ladder prices against the fixed
-   reference loadout in `progression.ts` (`REFERENCE`).
+5. The parser targets the **reference loadout by name** (`PARSE_TARGET`/`REFERENCE` =
+   `more_1`), falling back to the planner's current loadout — a re-export with a scratch
+   loadout current must not silently rebase the page.

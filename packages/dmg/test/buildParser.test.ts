@@ -1,21 +1,22 @@
 import fs from "node:fs";
 import { describe, expect, test } from "vitest";
-import { extractLines, substitute, fillTemplate, classify, parseBuild, skillLevelAdditionalPct } from "../src/buildParser.js";
+import { extractLines, substitute, fillTemplate, classify, parseBuild, skillLevelAdditionalPct, warcryLayer, PARSE_TARGET } from "../src/buildParser.js";
 import { cycleDps } from "../src/damageModel.js";
 import { fromRoot } from "../src/py.js";
 
 const BUILD = fromRoot("data/Rehan.json");
 
 describe("skill levels past 20", () => {
-  test("bands: +10%/level for 21-30, +8%/level past 30", () => {
+  test("bands compound: x1.10/level for 21-30, x1.08/level past 30 (user 2026-07-16)", () => {
     expect(skillLevelAdditionalPct(0)).toBe(0);
-    expect(skillLevelAdditionalPct(9)).toBe(90);
-    expect(skillLevelAdditionalPct(10)).toBe(100);
-    expect(skillLevelAdditionalPct(12)).toBe(116);
+    expect(skillLevelAdditionalPct(1)).toBeCloseTo(10, 6);
+    expect(skillLevelAdditionalPct(9)).toBeCloseTo(135.79, 1);    // 1.1^9
+    expect(skillLevelAdditionalPct(10)).toBeCloseTo(159.37, 1);   // 1.1^10
+    expect(skillLevelAdditionalPct(12)).toBeCloseTo(202.53, 1);   // 1.1^10 x 1.08^2
   });
   test("real build: +9 net gem levels land in additional.skill_levels", () => {
     const [snap] = parseBuild(BUILD);
-    expect(snap.additional.skill_levels).toBe(90);
+    expect(snap.additional.skill_levels).toBeCloseTo(135.79, 1);
   });
 });
 
@@ -90,7 +91,7 @@ describe("mark, blessings, fixate", () => {
 
   test("socketed Steamroll (re-socket counterfactual) is modeled", () => {
     const build = JSON.parse(fs.readFileSync(BUILD, "utf-8"));
-    const lo = build.loadouts.loadouts.find((l: any) => l.id === build.loadouts.currentLoadoutId);
+    const lo = build.loadouts.loadouts.find((l: any) => l.name?.trim() === PARSE_TARGET);
     for (const sk of lo.skills.activeSkills) {
       for (const sup of (sk.supports ?? []).filter(Boolean)) {
         if (sup.supportGuid === "dcb47367-34df-5e86-a9df-0b5d5f130998") {
@@ -120,7 +121,7 @@ describe("mark, blessings, fixate", () => {
 
   test("without the vorax boots, Fervor-fed damage and crit turn off", () => {
     const build = JSON.parse(fs.readFileSync(BUILD, "utf-8"));
-    const lo = build.loadouts.loadouts.find((l: any) => l.id === build.loadouts.currentLoadoutId);
+    const lo = build.loadouts.loadouts.find((l: any) => l.name?.trim() === PARSE_TARGET);
     lo.vorax.inventory = [];
     const [snap] = parseBuild(build);
     const [full] = parseBuild(BUILD);
@@ -325,6 +326,22 @@ describe("derived layers", () => {
   test("warcry layer is derived from parsed effect", () => {
     const [snap] = parseBuild(BUILD);
     expect(Math.abs(snap.additional.warcry_buffs - 109.7)).toBeLessThanOrEqual(0.5);
+  });
+
+  test("warcry floor parses to 8; Formless doubles Shockwave's 8-stack cap to 16", () => {
+    // mechanics.md#warcry (user 2026-07-16): floor = 4 Brave talent + 4 slate; the
+    // inverse prism's scaled COPY adds 4/6 on top (not in the export — priced by the
+    // prism rungs). "Doubles Max Warcry Skill Effects" (Brave tree / belt) caps 8 -> 16.
+    const [snap] = parseBuild(BUILD);
+    expect(snap._derived!.warcry_min_enemies).toBe(8);
+    expect(snap._derived!.warcry_max_doubled).toBeGreaterThan(0);
+    const d = { warcry_effect_pct: 0, warcry_additional_effect_pct: 0 };
+    expect(warcryLayer({ ...d, warcry_min_enemies: 14, warcry_max_doubled: 1 }))
+      .toBeCloseTo(5.95 * 14, 6);
+    expect(warcryLayer({ ...d, warcry_min_enemies: 20, warcry_max_doubled: 1 }))
+      .toBeCloseTo(5.95 * 16, 6);
+    expect(warcryLayer({ ...d, warcry_min_enemies: 12, warcry_max_doubled: 0 }))
+      .toBeCloseTo(5.95 * 8, 6);
   });
 });
 

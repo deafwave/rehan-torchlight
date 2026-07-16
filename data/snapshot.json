@@ -36,7 +36,7 @@
   "detonation_prism": 56.00000000000001,
   "legion_prism": 15.199999999999992,
   "combo_enhancement": 141.2,
-  "skill_levels": 90
+  "skill_levels": 135.7947691000002
  },
  "enemy_taken": {
   "frostbite": 188,
@@ -78,6 +78,7 @@
   "fervor_rating": 130,
   "has_fervor": 1,
   "warcry_min_enemies": 8,
+  "warcry_max_doubled": 1,
   "warcry_effect_pct": 92,
   "warcry_additional_effect_pct": 20,
   "fervor_dmg_per_rating": 1,

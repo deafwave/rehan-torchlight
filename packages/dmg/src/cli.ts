@@ -66,9 +66,12 @@ async function catalogCmd(): Promise<void> {
 }
 
 async function progressionCmd(): Promise<void> {
-  const { buildRows, inject } = await import("./progression.js");
+  const { buildRows, inject, buildPrisms, injectPrisms } = await import("./progression.js");
   const rows = buildRows();
   inject(rows);
+  const prisms = buildPrisms();
+  injectPrisms(prisms);
+  console.log(`prisms: ${prisms.length} ladders injected`);
   for (const r of rows) {
     console.log(r.slot.padEnd(9), r.rungs.map(g =>
       `${g.label} ${g.dps}M` + (g.gain !== null ? ` (${g.gain >= 0 ? "+" : ""}${g.gain.toFixed(1)}%)` : "")

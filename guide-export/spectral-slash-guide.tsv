@@ -1,102 +1,92 @@
-~200b	Lv 90+	SWAP TO SPECTRAL SLASH — everything below assumes the swap is done
+~200b	Lv 90+	SWAP TO SPECTRAL SLASH
 	Copy this	"Spectral Slash - Legion - Detonation - Critical Strike Damage Increase + Quick Decision / Added Phys
-3x Activation Medium: one each for Spectral Slash / the warcries / Ice Bond (the Frostbite self-applicator)
+3x Activation Medium: Spectral Slash / warcries / Ice Bond (Frostbite self-applicator)
 All 4 Precise Auras: Cruelty (+Disciplined) - Fearless - Domain Expansion - Frigid Domain"
-	PACTSPIRIT	"Red Umbrella + Azure Gunslinger (+48% Attack Damage, +16% Attack Speed each; nodes 4-6 are pure crit)
-Captain Kitty of the Furious Sea (+12% Warcry Effect, “Beast” Roar)
-KITTY IS THE ONLY PACTSPIRIT WORTH LEVELLING (L2 warcry CDR, L3 a warcry charge)"
-	Buy ASAP (cheap)	"Grace Boots — KEEP until the Focus Blessing slate (see SLATE PRIORITY below)
+	PACTSPIRIT	"Red Umbrella + Azure Gunslinger (+48% Attack Damage, +16% Attack Speed each; nodes 4-6 pure crit)
+Captain Kitty (+12% Warcry Effect, “Beast” Roar)
+ONLY KITTY IS WORTH LEVELLING (L2 warcry CDR, L3 a charge)"
+	Buy ASAP (cheap)	"Grace Boots — KEEP until the Focus Blessing slate
 Bodhi Girdle
 Vortex Heart (~130 FE)"
 	Check and move on	"3-4x SLATE 1mod + full reveal:
 +1 Attack skill level
 +1 Physical skill level (not the no-conversion one)
 +1 to all skill
-10% additional damage for 4s after using Mobility skills"
-	Check and move on	"PEDIGREE (~30 FE, snipe one). Best cores it can roll:
-Steady Accumulation (+40%) — +40% additional Hit Damage
-Focused Strike (+32%) — Area Skills deal up to +32% additional damage to enemies at the center
-Survival Will (+30%) — +30% additional Attack Damage when not at Low Life
-Rushed (+30%) — +30% additional damage if you have recently moved more than 5 m
-Blunt (+30%) — +30% additional Physical Damage
-Great Strength (+26.49%) — -10% Attack Speed
-Judgment (+25%) — +100% chance for Attacks to inflict Paralysis on hit
-Frozen Lotus (+25%) — +25% additional Cold Damage"
+10% additional damage for 4s after Mobility skills"
+	Check and move on	"PEDIGREE (~30 FE, snipe one). Best cores:
+Steady Accumulation (+40%), Focused Strike (+32%), Survival Will (+30%), Rushed (+30%), Blunt (+30%), Great Strength (+26.49%), Judgment (+25%), Frozen Lotus (+25%)"
 		
-	EVERY SESSION	STANDING WATCHLIST — CHECK AH EVERY SESSION. BUY ON PRICE, NOT ON SCHEDULE.
-+84.3%	listed ~1300 FE	Heart of Animitta — snipe it WAY under list. +1 Finisher charge = a second full-power finisher every sequence, +80% Finisher Amplification. THE #1 BUY ON THIS SHEET.
-	its own hunt	Vorax boot base — i86 or above with at least one decent mod (the vessel for Have Fervor)
-	EV 950 FE	Dawn Break belt — supplies “Have Fervor” onto the Vorax boots. Dead without the base above.
-+175.9%	corroded only	Ghost Slaughter — THE CORRODED 1%/pt ROLL ONLY (normal roll is a third of the value). Dead slot until the Vorax boots hold Fervor — buy the engine, not the glove.
-+490.8% map	5 blueprints	Eternity — DO NOT pay the ~4k FE item price; buy the 5 BLUEPRINTS instead. Kill-fed stacks = a mapping monster, and it pays the Fervor sustain bill.
-+118% → +146.8%	from Traveler 8	i100 Timid curse-on-hit ring — frees the warcry bar slot and carries its own ×1.39 boss layer. Monitor continuously once Traveler 8 is done.
-+90.44%	high effect ranges	Inverse Prism (Brave tree) — want POSITIVE Legendary-Medium AND Medium effect ranges (+38%/+17% roll modeled). Copies +6 min warcry enemies — floor 14 of the 16-stack cap.
-+38.05%	needs helm + boots	Ethereal Prism: Unmatched Valor — fixed 130 Fervor Rating. NEEDS the i100 sealed-mana helmet + Dawn Break first (Ranger slot). God roll: “no longer replaces” keeps the Ranger core too.
+	EVERY SESSION	STANDING WATCHLIST — BUY ON PRICE, NOT ON SCHEDULE
++84.3%	listed ~1300 FE	Heart of Animitta — snipe WAY under list. +1 Finisher charge = a second full-power finisher per sequence. THE #1 BUY.
+	its own hunt	Vorax boot base — i86+, at least one decent mod (Have Fervor vessel)
+	EV 950 FE	Dawn Break belt — feeds “Have Fervor” onto the Vorax base. Dead without it.
++175.9%	corroded only	Ghost Slaughter — CORRODED 1%/pt ROLL ONLY (normal roll = a third). Dead until the boots hold Fervor.
++490.8% map	5 blueprints	Eternity — buy the 5 BLUEPRINTS, never the ~4k FE item. Mapping monster + the Fervor sustain bill.
++118% → +146.8%	from Traveler 8	i100 Timid curse-on-hit ring — frees the warcry bar slot, carries a ×1.39 boss layer.
++90.44%	high effect ranges	Inverse Prism (Brave tree) — POSITIVE Legendary-Medium AND Medium ranges (+38%/+17% modeled). +6 min warcry enemies — floor 14 of 16.
++38.05%	needs helm + boots	Ethereal Prism: Unmatched Valor — fixed 130 Fervor Rating. NEEDS the i100 sealed-mana helmet + Dawn Break (Ranger slot). God roll “no longer replaces” keeps the Ranger core too.
 		
 1B	8-0	i86 CORE — IN THIS ORDER. PRICELESS WAITS UNTIL AFTER TRAVELER 8.
 +20% → +84.5%	FIRST	"i86 mainhand — Shadowless Swordsman's Blade, speed/crit roll.
-Lines in order: T1 flat Cold (+17.1%) > gear Attack Speed (+8.2%) > flat Phys (+5.9%)
-Advanced ember: Gear Phys% (+9%, 3x cost). SKIP the crit-rating line (+0.3%)."
+Craft: flat Cold (+17.1%) > gear Attack Speed (+8.2%) > flat Phys (+5.9%); advanced: Gear Phys% (+9%, 3x). SKIP crit rating (+0.3%)."
 +15.4% → +35.9%	SECOND	"i86 offhand — same base, raw damage roll.
-Lines: flat Cold (+5.1%) > Elemental% (+2.6%) > flat Phys / Phys%
-Advanced: Gear Phys% / Crit Damage (~+2.5% each)"
-+6.7% → +8.5%		"i86 ring, frostbite roll — THE +1 COMBO POINTS SUFFIX IS THE ITEM, NEVER LOSE IT.
-The second (barrier) ring is only +1.2% → +2.6% — lowest priority in this gate."
+Craft: flat Cold (+5.1%) > Elemental% (+2.6%) > flat Phys / Phys%; advanced: Gear Phys% / Crit Damage (~+2.5% each)"
++6.7% → +8.5%		"i86 frostbite ring — THE +1 COMBO POINTS SUFFIX IS THE ITEM, NEVER LOSE IT.
+The barrier ring is only +1.2% → +2.6% — last in this gate."
 		"Hero Memory LEGENDARY
 REVIVED #% Attack Speed for every main attack skill cast
 Base Affix: Strength / ES / Attack Speed
 Fixed Affix: %ES
 Random Affix: Phys/Cold Crit Damage / Phys/Cold/Attack Crit Rating / Attack Speed / Cold Damage / Damage"
-	KISMET	"2x Peerless + Tiger's Chain — the Dual pair is +1 Finisher charge + fixed 0.3s sequence reset; never move these
-2x Mammoth + Ascetic — Mammoth pair self-casts Lv.20 Resurrection Warcry on hit every 3s
-Fill the rest: 1x Medium + 9x Micro Crit Rating"
-±0%		i86 chest = defense/ES only — buy it for survivability, don't chase damage lines here.
+	KISMET	"2x Peerless + Tiger's Chain — +1 Finisher charge + fixed 0.3s sequence reset; never move
+2x Mammoth + Ascetic — Mammoth pair self-casts Lv.20 Resurrection Warcry every 3s
+Rest: 1x Medium + 9x Micro Crit Rating"
+±0%		i86 chest = ES/defense only — no damage lines to chase.
 		
 	SLATES	SLATE PRIORITY — buy in this order
-enabler	1st	Focus Blessing on Frostbitten hit (God of Knowledge line) — REQUIRED BEFORE THE i86 BOOTS: it unlocks the whole boots ladder (Grace Boots freed → i86 → Dawn Break).
-+21.94%	2nd	Frostbite on Cold hit (Frostbitten core / Prophet line) — frees 4 Prophet tree points; respec them into the Frostbite legendaries (Effect / Cold Infiltration / more-vs-Frozen).
-+26.15%	3rd	+4 min enemies affected by Warcry (The Brave, 1 copy) — floors the boss stack count at 8 of 16; the Inverse Prism copy adds 4-6 more.
-enabler	LAST	Phys→Cold conversion slate — the Prophet tree already covers conversion today. Buying the slate frees the Prophet → Ronin respec (re-cover conversion, then Cold Infiltration on Frozen / Frostbite Effect first).
-	What to shop	"A Corner of Divinity (max 3) — rolls 2x Legendary Medium, any god
+enabler	1st	Focus Blessing on Frostbitten hit (God of Knowledge) — REQUIRED BEFORE THE i86 BOOTS: unlocks the boots ladder (Grace freed → i86 → Dawn Break).
++21.94%	2nd	Frostbite on Cold hit (Frostbitten core / Prophet) — frees 4 Prophet points → respec into the Frostbite legendaries.
++26.15%	3rd	+4 min enemies affected by Warcry (The Brave, 1 copy) — floors the boss stack at 8 of 16.
+enabler	LAST	Phys→Cold conversion slate — the Prophet tree covers it today; the slate frees the Prophet → Ronin respec.
+	What to shop	"A Corner of Divinity (max 3) — 2x Legendary Medium, any god
 Fallen Starlight (max 3) — 3x Micro + 1x Medium/Legendary Medium
-Pedigree of Gods (max 1) — the Core Talent carrier (see the pedigree row above)
+Pedigree of Gods (max 1) — the Core Talent carrier
 God slates — 2 fixed + 3 random; aim 1x Medium + 2x Legendary Medium or better"
-	Bonus damage mods	"Best rollable Legendary Medium fillers beyond the plan:
+	Bonus damage mods	"Best Legendary Medium fillers:
 +20% Frostbite Effect (+11.04%)
 +1 to All Skills' Levels (+10.64%)
 +1 to Attack Skill Level (+10%)
 +10% additional damage against Frozen enemies (+10%)
 +1 Physical Skill Level (+10%)
 +1 Persistent Skill Level (+10%)
-Skill-level lines STACK across slates — the build runs four +1 Attack Skill Level."
-defense	Before Deep Space	"Hold the immunity Legendary Mediums before farming Deep Space:
+Skill-level lines STACK — the build runs four +1 Attack Skill Level."
+defense	Before Deep Space	"Hold the immunity Legendary Mediums first:
 Immune to Ignite (Warlord) / Immune to Trauma (Shadowdancer) / Immune to Wilt (Shadowmaster)"
 		
 10B-20B	Traveler 8	i86 ARMOR PIECES
-+23.6% → +28.6%	slate first	i86 ES boots — ONLY AFTER the Focus Blessing slate above (they drop Grace Boots' trigger). Get the Hasten line + Crit Rating / Crit Damage.
-+8.9% → +14.1%		i86 ES helmet — Crit Rating basic, Strength + Crit Damage advanced.
-+6.8% → +11.6%		i86 ES gloves — %damage + Crit Rating basics, Crit Damage advanced.
-	TRAVELER 8 DONE?	PRICELESS SHOPPING OPENS NOW — check 8-1/8-2 pieces EVERY session and buy on price. Timid ring joins the standing watchlist (see above).
++23.6% → +28.6%	slate first	i86 ES boots — ONLY AFTER the Focus Blessing slate (they drop Grace Boots' trigger). Want Hasten + Crit Rating / Crit Damage.
++8.9% → +14.1%		i86 ES helmet — Crit Rating basic; Strength + Crit Damage advanced.
++6.8% → +11.6%		i86 ES gloves — %damage + Crit Rating basics; Crit Damage advanced.
+	TRAVELER 8 DONE?	PRICELESS SHOPPING OPENS NOW — check 8-1/8-2 pieces every session, buy on price. Timid ring → watchlist.
 		
 200B	Profound 8	PRICELESS COMPLETES (8-1 + 8-2 open)
-+74% → +137%		PRICELESS mainhand — ultimate lines: Armor Mitigation Penetration (+5.2%) / Combo Damage Enhancement (+5.2%); basics: gear Attack Speed (+6.8%) + flat Phys.
-+16.4% → +44.9%	package	"i100 offhand — Ninth Apostle's Magic Shield. +4 Active Skill Level (+10%) is the big line, plus Warcry Effect + Strength.
-Lands as a PACKAGE with i86 Hasten boots + God of Might / Brave tree changes."
-+118% → +146.8%	watchlist	i100 Timid curse-on-hit ring — from the watchlist; frees the warcry slot, ×1.39 boss layer.
++74% → +137%		PRICELESS mainhand — ultimates: Armor Mitigation Pen (+5.2%) / Combo Damage Enhancement (+5.2%); basics: gear Attack Speed (+6.8%) + flat Phys.
++16.4% → +44.9%	package	i100 offhand — Ninth Apostle's Magic Shield. +4 Active Skill Level (+10%) is the big line. A PACKAGE with i86 Hasten boots + God of Might / Brave tree changes.
++118% → +146.8%	watchlist	i100 Timid curse-on-hit ring — from the watchlist.
 +76.1% → +100.2%		i100 second ring, phys-as-extra roll — Fervor Effect + Elemental/Erosion Pen ultimates.
 		
-	ALL OR NOTHING	"THE FERVOR ENGINE — buy as ONE purchase; any piece alone is a dead slot.
-COST: 12% of current Life AND ES per second while Fervor is active — sustain is INSIDE this bundle, not next to it."
-+107.3% → +153.5%	boots	Dawn Break belt onto the Vorax boot base (both from the watchlist) — +1% additional damage per 2 rating + 78% Crit Damage. Range = boots alone → with the tree change.
+	ALL OR NOTHING	"THE FERVOR ENGINE — ONE purchase; any piece alone is a dead slot.
+COST: 12% of current Life AND ES per second while Fervor is active — sustain is part of the bill."
++107.3% → +153.5%	boots	Vorax base + Dawn Break belt (watchlist) — +1% additional damage per 2 rating, +78% Crit Damage. Range = alone → with the tree change.
 +175.9%	gloves	Corroded Ghost Slaughter (watchlist) — +1% additional damage per rating.
-+2.6% → +43.9% w/ prism	helmet	i100 sealed-mana helmet — near-zero alone, the range lands with the fixed-rating prism. Craft Sealed Mana Compensation ultimate.
-+38.05%	prism	Ethereal Prism: Unmatched Valor — fixed 130 Fervor Rating in the Ranger slot (over the 100 cap, immune to Centralize swings; Centralize becomes a respec candidate).
-+490.8% map	belt	"Eternity (from the 5 blueprints) + Precise: Energy Shield support once the flat-ES belt is gone.
-Resurrection Warcry in the second warcry slot (or let the Mammoth kismets self-cast it)."
++2.6% → +43.9% w/ prism	helmet	i100 sealed-mana helmet — near-zero alone; the range lands with the prism. Craft the Sealed Mana Compensation ultimate.
++38.05%	prism	Ethereal Prism: Unmatched Valor — fixed 130 in the Ranger slot (over the 100 cap; Centralize becomes a respec candidate).
++490.8% map	belt	"Eternity (5 blueprints) + Precise: Energy Shield once the flat-ES belt is gone.
+Resurrection Warcry in slot 2 — or let the Mammoth kismets self-cast it."
 		
 150B+	Timemark 8 / ATLAS	ENDGAME LAYERS
-	Crit	"Fervor spent twice: native +2% Crit Rating per point AND the 0.5% Crit Damage per rating converters (tree legendary + two slate copies) = +195% Crit Damage at 130 rating.
-Support bar: Critical Strike Damage Increase stays over a plain damage support."
-	Warcry	"Shockwave Warcry onto the slot the Timid ring freed; level Captain Kitty.
-Inverse Prism good roll (+90.44%) — floor 14 of 16 warcry stacks."
-−9.7% → +33%		MIRROR-WORTHY mainhand — only worth it for the +4 Attack Skill Level roll (+10%); otherwise priceless is the stop.
+	Crit	"Fervor spent twice: +2% Crit Rating per point AND the 0.5% Crit Damage/rating converters (tree legendary + 2 slate copies) = +195% Crit Damage at 130.
+Keep the Critical Strike Damage Increase support."
+	Warcry	"Shockwave Warcry in the freed slot; level Captain Kitty.
+Inverse Prism good roll (+90.44%) — floor 14 of 16 stacks."
+−9.7% → +33%		MIRROR-WORTHY mainhand — only the +4 Attack Skill Level roll (+10%) beats priceless.

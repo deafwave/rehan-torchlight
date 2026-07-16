@@ -48,83 +48,14 @@ h1 .hero-sub{color:var(--frost)}
   padding:20px 24px 18px;
   scroll-margin-top:24px;
 }
-.bundle:target{border-color:rgba(127,216,232,.5);box-shadow:0 0 0 1px rgba(127,216,232,.25), 0 8px 40px rgba(0,0,0,.4)}
 .bundle-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
-.bundle-num{
-  font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--night);
-  background:var(--frost);border-radius:4px;padding:2px 8px;font-weight:500;
-  transform:translateY(-2px);
-}
 .bundle h3{font-family:Marcellus,serif;font-weight:400;font-size:20px;letter-spacing:.05em;color:#e9f1f7}
-.core{margin-top:12px;font-size:15px;line-height:1.55;color:var(--text)}
-.core b{color:#e9f1f7;font-weight:600}
-
-/* multiplier callout (reused shell) */
-.enabler{
-  margin-top:14px;padding:10px 14px;border-radius:6px;
-  border:1px solid rgba(127,216,232,.28);background:rgba(127,216,232,.05);
-  font-size:13.5px;line-height:1.55;
-}
-.enabler .key-lbl{
-  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.16em;
-  text-transform:uppercase;color:var(--frost);display:block;margin-bottom:3px;
-}
-
-/* buy list */
-.chain{list-style:none;margin-top:14px}
-.chain li{
-  position:relative;padding:6px 0 6px 26px;font-size:13.5px;line-height:1.55;color:var(--muted);
-}
-.chain li::before{
-  content:"⇒";position:absolute;left:2px;top:6px;color:var(--faint);
-  font-family:"IBM Plex Mono",monospace;
-}
-.chain li b{color:var(--text);font-weight:500}
-.chain .sys{
-  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.06em;
-  padding:1px 6px;border-radius:3px;margin-right:7px;white-space:nowrap;vertical-align:1px;
-}
-
-/* tags */
-.mini-lbl{
-  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.16em;
-  text-transform:uppercase;color:var(--faint);display:block;margin-bottom:6px;
-}
-.tagrow{margin-top:14px;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);letter-spacing:.05em;line-height:1.5}
-.gate-note{margin-top:14px;font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.05em;color:var(--frost)}
 .cost-note{margin-top:9px;font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.05em;color:#c9a86a}
 
-/* ladder + unpriced rungs list */
-.simple-row{
-  display:flex;gap:14px;align-items:baseline;padding:10px 0;
-  border-bottom:1px solid rgba(29,44,59,.6);font-size:13.5px;line-height:1.5;color:var(--muted);
-}
-.simple-row:last-child{border-bottom:0}
-.simple-row b{color:var(--text);font-weight:500}
-.simple-row .lever{
-  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;
-  color:var(--frost);white-space:nowrap;min-width:82px;
-}
-
-/* ladder rungs */
-.ladder .bundle-head h3{font-family:"IBM Plex Mono",monospace;font-size:13px;letter-spacing:.1em;text-transform:lowercase}
-.rung{
-  display:flex;gap:12px;align-items:baseline;flex-wrap:wrap;padding:9px 0;
-  border-bottom:1px solid rgba(29,44,59,.6);font-size:13.5px;line-height:1.5;color:var(--muted);
-}
-.rung:last-child{border-bottom:0}
-.rung-step{font-family:"IBM Plex Mono",monospace;color:var(--faint);width:12px;flex:none}
-.rung-lbl{color:var(--text);font-weight:500;min-width:210px}
-.rung-name{flex:1;min-width:170px;color:var(--faint);font-size:12.5px}
-.rung .delta-chip{min-width:62px;text-align:right}
 .rework-mark{color:#c9a86a;cursor:help}
-.rung-why{
-  flex-basis:100%;margin:2px 0 0 24px;font-size:12.5px;font-style:italic;color:#c9a86a;line-height:1.5;
-}
-.rung-why a{color:#c9a86a}
 
-/* per-stat craft breakdown under a rung */
-.rung-mods{flex-basis:100%;margin:4px 0 2px 24px}
+/* per-stat craft breakdown under a tree row */
+.rung-mods{grid-column:1/-1;margin:2px 0 6px}
 .rung-mods summary{
   cursor:pointer;font-family:"IBM Plex Mono",monospace;font-size:10.5px;
   letter-spacing:.05em;color:var(--faint);
@@ -160,7 +91,6 @@ h1 .hero-sub{color:var(--frost)}
   position:relative;flex:1;border:1px solid var(--ice-line);border-radius:8px;
   background:rgba(16,27,39,.55);padding:7px 10px 6px;
   display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 8px;
-  cursor:pointer;
 }
 .tnode::before{
   content:"";position:absolute;right:100%;width:30px;top:50%;height:1px;
@@ -181,33 +111,28 @@ a.t-branch:hover,a.t-branch:focus-visible{text-decoration:underline}
 .tnode.c2 .t-lbl{color:#b7a5ec}
 .tnode.c3{border-color:rgba(201,168,106,.45)}
 .tnode.c3 .t-lbl{color:#c9a86a}
-.tnode:hover{background:rgba(127,216,232,.08)}
 .tnode.rework{border:1px dashed rgba(201,168,106,.6)}
 .tnode.rework::before{
   background:none;
   border-top:1px dashed rgba(201,168,106,.6);
 }
 .tnode.rework .t-lbl{color:#c9a86a}
-.tree-row[data-slot]{cursor:pointer}
-.tree-row[data-slot]:hover .t-slot{color:var(--frost)}
-.tree-row[data-slot]:focus-visible{outline:1px solid rgba(127,216,232,.5);outline-offset:2px}
+/* slate + prism mini-trees — 3 staged columns */
+.tree.cols-3 .tree-row{grid-template-columns:110px repeat(3,minmax(190px,1fr));min-width:700px}
+.tnode .delta-chip{margin-left:auto;font-size:12px}
+.tnode .src-chip{margin-right:6px}
+.t-note{flex-basis:100%;font-size:10.5px;font-style:italic;color:#c9a86a;line-height:1.45}
 
-/* ---------- item detail dialog ---------- */
-dialog#detail{
-  width:min(880px,92vw);max-height:86vh;overflow-y:auto;
-  background:var(--night-2);color:var(--text);
-  border:1px solid var(--ice-line);border-radius:12px;padding:6px 28px 28px;
+/* filler lines live behind a toggle, like the gear rungs' craft order */
+.fillers{margin-top:14px}
+.fillers summary{
+  cursor:pointer;font-family:"IBM Plex Mono",monospace;font-size:10.5px;
+  letter-spacing:.05em;color:var(--faint);
 }
-dialog#detail::backdrop{background:rgba(6,10,15,.7)}
-.dialog-close{
-  position:sticky;top:10px;float:right;appearance:none;
-  background:rgba(16,27,39,.9);border:1px solid var(--ice-line);border-radius:6px;
-  color:var(--muted);font-size:18px;line-height:1;width:32px;height:32px;cursor:pointer;
-}
-.dialog-close:hover,.dialog-close:focus-visible{color:var(--text);border-color:rgba(127,216,232,.5)}
-dialog#detail .bundles{margin-top:16px}
+.fillers summary:hover{color:var(--frost)}
+.fillers .mod-row .src-chip{min-width:150px}
 
-/* ---------- ledger-style tables + rule lists (catalog, stop-paying-for) ---------- */
+/* ---------- ledger-style tables (catalog) ---------- */
 .ledger-table{width:100%;border-collapse:collapse;margin-top:14px;font-size:13.5px}
 .ledger-table th{
   text-align:left;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;
@@ -221,16 +146,6 @@ dialog#detail .bundles{margin-top:16px}
 .ledger-table tr.smallest td{color:var(--frost)}
 .ledger-table tr.smallest .mult{color:var(--frost);font-weight:600}
 .ledger-table .num{font-family:"IBM Plex Mono",monospace;color:var(--faint)}
-.ledger .subhead{
-  margin-top:22px;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.16em;
-  text-transform:uppercase;color:var(--marble);
-}
-.ledger .formula{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--marble)}
-.ledger .rule{list-style:none;margin-top:12px}
-.ledger .rule li{position:relative;padding:6px 0 6px 24px;font-size:13.5px;line-height:1.55;color:var(--muted)}
-.ledger .rule li::before{content:"\203a";position:absolute;left:5px;top:4px;color:var(--frost);font-family:"IBM Plex Mono",monospace;font-weight:600}
-.ledger .rule li b{color:var(--text);font-weight:500}
-.ledger .note{margin-top:12px;font-size:12.5px;color:var(--faint);font-style:italic;line-height:1.5}
 
 /* ---------- tabs ---------- */
 .tabbar{display:flex;gap:8px;margin-top:28px;border-bottom:1px solid var(--ice-line)}
@@ -259,21 +174,6 @@ dialog#detail .bundles{margin-top:16px}
   font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;
   padding:1px 7px;border-radius:3px;white-space:nowrap;
 }
-
-/* ---------- item detail popup ---------- */
-#detail{
-  background:var(--night);color:var(--text);
-  border:1px solid var(--ice-line);border-radius:10px;
-  width:min(940px,calc(100vw - 32px));max-height:calc(100vh - 64px);
-  padding:0 28px 28px;margin:auto;
-}
-#detail::backdrop{background:rgba(4,8,12,.72)}
-#detail .bundles{margin-top:20px}
-.dialog-close{
-  position:sticky;top:10px;float:right;appearance:none;border:0;background:none;
-  color:var(--muted);font-size:24px;line-height:1;cursor:pointer;padding:4px 8px;
-}
-.dialog-close:hover{color:var(--text)}
 
 footer{margin-top:80px;color:var(--faint);font-size:12px;font-family:"IBM Plex Mono",monospace}
 @media (max-width:720px){

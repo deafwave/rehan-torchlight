@@ -26,40 +26,32 @@
 
 <section class="bundles" id="progression">
   <h2>Progression</h2>
-  <p>Click any item to see its upgrade path and the bundles it's part of.</p>
+  <p>Each slot from its current item to mirror-worthy. A range like <b>+20 → +84%</b> is the item at realistic
+  tier-below rolls → fully crafted, the <b>craft order</b> rows (priceless / i100 gear only) are the steps between the two, and
+  ⚠ marks a rung that needs something outside its slot first — the note under it says what.</p>
   <div class="tree" id="tree"></div>
-</section>
 
-<dialog id="detail">
-<button class="dialog-close" id="detail-close" aria-label="Close">×</button>
-<section class="bundles" id="upgrades">
-  <h2>The Upgrade Path</h2>
-  <p>The same slot bought again with bigger numbers — a range like <b>+20 → +84%</b> is the item at realistic
-  tier-below rolls → fully crafted, and the <b>craft order</b> rows are the steps between the two.</p>
-  <div id="ladder-list"></div>
-  <div id="simple-list"></div>
-</section>
+  <h2>Slate Progression</h2>
+  <p>Same read as the gear ladder — what covers the line <b>today</b>, the slate copy to <b>buy</b>,
+  and what the buy <b>frees</b>. Pedigree of Gods anchors the plan: it is the only slate whose
+  slots roll the gods' Core Talents, ranked below.</p>
+  <div id="slate-plan"></div>
 
-<section class="bundles" id="bundles">
-  <h2>Part of these bundles</h2>
-  <p>Purchases that only pay off <b>together</b> — buy a card's pieces in any mix, but don't stop at half a card.</p>
-  <div id="bundle-cards"></div>
-  <article class="bundle ledger">
-    <div class="subhead">stop paying for</div>
-    <ul class="rule">
-      <li><b>Numb — dead.</b> It amplifies <i>Lightning</i> damage taken; this build deals cold.</li>
-      <li><b>Bladerunner “while Dual Wielding” nodes — dead with the shield equipped.</b> Respec candidates.</li>
-      <li><b>% increased damage of every flavor</b> — the worst stat on the sheet at +1.4% per 10%.</li>
-    </ul>
-    <div class="subhead">re-running the numbers</div>
-    <ul class="rule">
-      <li><span class="formula">pnpm page</span> rebuilds this data ·
-      <span class="formula">pnpm snapshot &amp;&amp; pnpm rank</span> re-ranks after a build change ·
-      assumptions live in <span class="formula">docs/mechanics.md</span>.</li>
-    </ul>
-  </article>
+  <h2>Prism Progression</h2>
+  <p>Each prism from its starter roll to the endgame roll.</p>
+  <div id="prism-plan"></div>
+
+  <h2>Skills &amp; Pactspirits</h2>
+  <p>The non-gear buys the gear rungs assume, in the same read.</p>
+  <div id="skillpact-plan"></div>
+
+  <h2>Kismet Progression</h2>
+  <p>Kismets replace pactspirit talent nodes — Micro/Medium Fates are cheap stat swaps, the named and
+  Dual ones are the build-changers. A <b>Dual</b> pair only activates with both copies on the
+  <b>same pact page</b>.</p>
+  <div id="kismet-plan"></div>
+
 </section>
-</dialog>
 
 <section class="bundles" id="catalog-tab" hidden>
   <h2 id="cat-title">Divinity Slate Mods — impact for this build</h2>
@@ -75,6 +67,7 @@
         <option value="all">include — / unmodeled</option>
       </select>
     </div>
+    <div class="cat-count" id="cat-note"></div>
     <div class="cat-count" id="cat-count"></div>
     <table class="ledger-table cat-table">
       <thead><tr><th>ΔDPS</th><th>tier</th><th>mod</th><th>rolls on</th><th>feeds</th></tr></thead>

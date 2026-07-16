@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { buildRows, ladders, _load, type LadderRow } from "../src/progression.js";
+import { buildRows, buildPrisms, ladders, _load, type LadderRow } from "../src/progression.js";
 
 const ROWS = buildRows();
 const slot = (name: string): LadderRow => ROWS.find(r => r.slot === name)!;
@@ -26,23 +26,35 @@ describe("gear ladder", () => {
     }
   });
 
-  test("reworks are dependency-based: only ES boots and Ghost Slaughter", () => {
+  test("reworks are dependency-based: shield, ES boots, Ghost Slaughter, sealed-mana helmet", () => {
     const flagged = ROWS.flatMap(r => r.rungs.filter(g => g.rework).map(g => [r.slot, g.label]));
-    expect(flagged).toEqual([["gloves", "Ghost Slaughter"], ["boots", "i86 ES"]]);
+    expect(flagged).toEqual([["offHand", "i100 ATTACK/COMBO"],
+                             ["gloves", "Ghost Slaughter"], ["helmet", "i100 sealed mana"],
+                             ["boots", "i86 ES"]]);
+  });
+
+  test("sealed-mana helmet is the Lich -> Ranger swap: 100-cap floor, prism range top", () => {
+    const h = ROWS.find(r => r.slot === "helmet")!.rungs.at(-1)!;
+    expect(h.label).toBe("i100 sealed mana");
+    expect(h.rework!.label).toBe("+ Vorax Fervor Boot");
+    // vs the crit i86 helmet priced back on the Lich-era tree — never negative,
+    // small at the 100 rating cap; the fixed-130 prism is the range top
+    expect(h.gain!).toBeGreaterThan(0);
+    expect(h.gainTop!).toBeGreaterThan(30);
+    expect(h.rangeNote).toMatch(/100 Fervor Rating cap/);
   });
 
   test("ghost slaughter is flagged (dead without the Fervor engine) and priced", () => {
     const gs = slot("gloves").rungs.at(-1)!;
     expect(gs.label).toBe("Ghost Slaughter");
-    expect(gs.rework!.anchor).toBe("#b-fervor");
-    expect(gs.rework!.label).toBe("+ Vorax boot");
+    expect(gs.rework!.label).toBe("+ Vorax Fervor Boot");
     expect(gs.gain!).toBeGreaterThan(100);
   });
 
   test("boots: Grace -> i86 ES is the rework (Focus Blessing source), Dawn Break is linear", () => {
     const rungs = slot("boots").rungs;
-    expect(rungs.map(r => [r.label.split(" ")[0], r.rework?.anchor ?? null])).toEqual([
-      ["Grace", null], ["i86", "#b-cold"], ["Dawn", null]]);
+    expect(rungs.map(r => [r.label.split(" ")[0], r.rework !== null])).toEqual([
+      ["Grace", false], ["i86", true], ["Dawn", false]]);
     expect(rungs[1].rework!.label).toBe("+ Focus Blessing on hit Slate");
     const db = rungs.at(-1)!;
     expect(db.linear, "pure gain, nothing breaks").toBe(true);
@@ -50,11 +62,11 @@ describe("gear ladder", () => {
       .toBeGreaterThan(100);
   });
 
-  test("offhand: sword rungs carry Joined Force's 60%; the shield is a small linear step over them", () => {
+  test("offhand: sword rungs carry Joined Force's 60%; the shield needs the warcry kit first", () => {
     const row = slot("offHand");
-    expect(row.rungs.map(r => r.linear)).toEqual([true, true, true]);
+    expect(row.rungs.map(r => r.linear)).toEqual([true, true, false]);
     const shield = row.rungs[2];
-    expect(shield.rework).toBeNull();
+    expect(shield.rework!.label).toBe("+ i86 Hasten boots · → God of Might tree · → Brave tree");
     expect(shield.gain!, "shield utility ≈ the sword's Joined Force contribution, plus a bit")
       .toBeGreaterThan(0);
   });
@@ -78,8 +90,7 @@ describe("gear ladder", () => {
     expect(et.label).toBe("Eternity");
     expect(et.gainNote).toBe("map");
     expect(et.gain!, "SS13 Morale/Nightmare/Reign at 120/120/10 stacks").toBeGreaterThan(0);
-    expect(et.note).toMatch(/kill-fed/);
-    expect(et.note).toMatch(/120 stacks/);
+    expect(et.note).toBeNull();
   });
 
   test("rare rungs price as a range: entry at tier-below rolls, top when fully crafted", () => {
@@ -110,5 +121,33 @@ describe("gear ladder", () => {
     const labels = slot("boots").rungs.map(r => r.label);
     expect(labels.at(-1)!.startsWith("Dawn Break"),
            "never imply a rare rung is the top of this slot").toBe(true);
+  });
+});
+
+describe("prism progression", () => {
+  const LADDERS = buildPrisms();
+
+  test("two ladders: ethereal prism and the Brave-tree inverse", () => {
+    expect(LADDERS.length).toBe(2);
+    expect(LADDERS[0].name).toMatch(/Ethereal Prism/);
+    expect(LADDERS[1].name).toMatch(/Inverse/);
+  });
+
+  test("Unmatched Valor priced by parse: fixed 130 vs the 100 cap, on the full build", () => {
+    const valor = LADDERS[0].rungs.find(r => /Unmatched Valor/.test(r.label))!;
+    expect(valor.delta!).toBeGreaterThan(20);
+    // the "no longer replaces" roll is a keep-both enabler, not a priced row
+    expect(LADDERS[0].rungs.at(-1)!.delta).toBeNull();
+  });
+
+  test("inverse rungs price the full scaled copy, not just min enemies (user 2026-07-16)", () => {
+    const [none, bad, good] = LADDERS[1].rungs;
+    expect(none.delta).toBeNull();
+    expect(good.label).toMatch(/\+38% Legendary Medium, \+17% Medium/);
+    // bad: +4 enemies (x1.262 on the warcry layer) + 9.4% additional AD (x1.094)
+    expect(bad.delta!).toBeGreaterThan(30);
+    // good: +6 enemies & +21.1% Effect + 105.2% increased + 11.0% additional
+    expect(good.delta!).toBeGreaterThan(60);
+    expect(good.delta!).toBeGreaterThan(bad.delta!);
   });
 });
