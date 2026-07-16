@@ -10,6 +10,7 @@ import { renderLinear } from "./linear";
 const LADDER = ladderData as LadderRow[];
 const CATALOG = catalogData as CatalogRow[];
 
+/* ---------- render: the progression tree ---------- */
 {
   const STAGES = ["start", "i86", "priceless", "mirror-worthy"];
   const slotName = (s: string) => s.replace(/([a-z])([A-Z0-9])/g, "$1 $2").toLowerCase();

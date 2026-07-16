@@ -79,13 +79,12 @@ interface Step {
 }
 interface Phase {
   id: string; cost?: string; gate: string; title: string; note?: string;
-  ongoing?: boolean;       // watchlist — runs alongside everything
   steps: Step[];
 }
 
 /* the standing watchlist — rendered as the sticky right rail */
 const WATCHLIST: Phase = {
-  id:"watchlist", gate:"Every session", ongoing:true,
+  id:"watchlist", gate:"Every session",
   title:"Watchlist", note:"Buy on price, not on schedule.", steps:[
   { id:"wl-animitta", src:"gear", chip: rungChip("necklace", "Heart of Animitta"),
     title:"Heart of Animitta", note:"Listed ~1300 FE — snipe way under. The #1 buy." },
@@ -231,13 +230,19 @@ const PHASES: Phase[] = [
 const KEY = "linear-done";
 /* localStorage can be unavailable (private mode) — degrade to per-session state, never crash */
 const loadDone = (): Record<string, true> => {
-  try { return JSON.parse(localStorage.getItem(KEY) ?? "{}"); } catch { return {}; }
+  try {
+    const v = JSON.parse(localStorage.getItem(KEY) ?? "{}");
+    return v && typeof v === "object" && !Array.isArray(v) ? v : {};
+  } catch { return {}; }
 };
 const done: Record<string, true> = loadDone();
 const saveDone = () => { try { localStorage.setItem(KEY, JSON.stringify(done)); } catch { /* per-session only */ } };
 
 const TITLE: Record<string, string> = {};
 for (const p of [WATCHLIST, ...PHASES]) for (const s of p.steps) TITLE[s.id] = s.title;
+
+for (const p of [WATCHLIST, ...PHASES]) for (const s of p.steps)
+  for (const id of s.needs ?? []) if (!(id in TITLE)) throw new Error(`linear: needs "${id}" on ${s.id} has no step`);
 
 const stepCard = (s: Step) => {
   const waiting = (s.needs ?? []).filter(id => !done[id]);
@@ -258,7 +263,6 @@ const phaseCard = (p: Phase) => {
   return `<article class="bundle lphase">`
     + `<div class="bundle-head"><span class="l-gate">${esc(p.gate)}${p.cost ? ` · ${esc(p.cost)}` : ""}</span>`
     + `<h3>${esc(p.title)}</h3>`
-    + (p.ongoing ? `<span class="l-ongoing">every session</span>` : "")
     + `<span class="l-count">${n}/${p.steps.length}</span></div>`
     + (p.note ? `<p class="l-phase-note">${p.note}</p>` : "")
     + (ordered.length ? `<div class="l-ordered">${ordered.map(stepCard).join("")}</div>` : "")

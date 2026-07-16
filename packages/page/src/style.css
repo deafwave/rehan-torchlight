@@ -184,7 +184,6 @@ footer{margin-top:80px;color:var(--faint);font-size:12px;font-family:"IBM Plex M
 .lphase{padding-bottom:16px}
 .l-gate{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#c9a86a}
 .l-count{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--faint);margin-left:auto}
-.l-ongoing{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--frost)}
 .l-phase-note{margin-top:8px;font-size:12.5px;font-style:italic;color:#c9a86a;line-height:1.5}
 .l-ordered{margin-top:12px;display:flex;flex-direction:column;gap:8px}
 .l-parallel{margin-top:12px;display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:8px}
