@@ -189,6 +189,15 @@ const PHASES: Phase[] = [
     { id:"ring82b", src:"gear", chip: rungChip("ring2", "i82"),
       title:"i82 combo ring 2 — Punished Lightning Ring",
       detail: craftDetail("ring82b", "ring2", "i82") },
+    { id:"helm82", src:"gear", chip: rungChip("helmet", "i82"),
+      title:"i82 ES helmet — All Magic Crown",
+      detail: craftDetail("helm82", "helmet", "i82") },
+    { id:"chest82", src:"gear", chip: rungChip("chest", "i82"),
+      title:"i82 ES chest — All Magic Secret Robe",
+      detail: craftDetail("chest82", "chest", "i82") },
+    { id:"gloves82", src:"gear", chip: rungChip("gloves", "i82"),
+      title:"i82 ES gloves — All Magic Grip",
+      detail: craftDetail("gloves82", "gloves", "i82") },
     { id:"cheap-uniques", src:"gear", title:"Buy cheap uniques",
       detail: itemsDetail("cheap-uniques", [
         { name:"Grace Boots", note:"keep until the Focus Blessing slate" },
@@ -199,10 +208,12 @@ const PHASES: Phase[] = [
   ]},
 
   { id:"swap90", cost:"~200m", gate:"Lv 90+", title:"Auras + Pedigree", steps:[
-    { id:"auras", src:"skill", title:"All 4 Precise Auras (Precise Frigid Domain)",
+    { id:"auras", src:"skill", title:"All 4 Precise Auras",
       detail: () => skillBarHtml("auras", "150b", "passive") },
     { id:"pedigree", src:"slate", title:"Snipe a Pedigree of Gods (~30 FE)",
       detail: foldout("core talents to look for", cores.map(catRow).join("")) },
+    { id:"memory-epic", title:"Hero Memory epic",
+      detail: memoryDetail("memory-epic") },
     { id:"cheap-uniques-90", src:"gear", title:"Buy cheap uniques",
       detail: itemsDetail("cheap-uniques-90", [
         { name:"Bodhi Girdle" },
@@ -230,8 +241,6 @@ const PHASES: Phase[] = [
       title:"Ethereal Prism: Haze",
       note:"+12% additional Attack Damage when holding a One-Handed Weapon. "
         + "Socket on any non-core talent — it overrides that node." },
-    { id:"memory-epic", title:"Hero Memory epic",
-      detail: memoryDetail("memory-epic") },
     { id:"kismets", src:"pact", title:"Kismet layout",
       detail: itemsDetail("kismets", [
         { name:"2× Peerless", note:"Dual pair — never move" },
