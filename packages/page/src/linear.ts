@@ -709,7 +709,8 @@ export function renderLinear(main: HTMLElement, aside: HTMLElement, nav?: HTMLEl
   };
 
   const render = () => {
-    main.innerHTML = `<div class="l-toolbar">${treeBtn("cur", "talent tree — current stage")}</div>`
+    main.innerHTML = `<p class="cat-count">Top→down — check off steps as you go; skipping ahead is fine, just listen to the orange ⚠ waiting-on notes.</p>`
+      + `<div class="l-toolbar">${treeBtn("cur", "talent tree — current stage")}</div>`
       + PHASES.map(phaseCard).join("");
     aside.innerHTML = phaseCard(WATCHLIST);
     activePhaseId = phaseInView(main) || activePhaseId;
