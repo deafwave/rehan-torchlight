@@ -44,14 +44,14 @@ def rng(rg):
 
 
 # ---- looked-up numbers ----------------------------------------------------
-mh86, mh100, mh_mw = rung("mainHand", "i86"), rung("mainHand", "PRICELESS"), rung("mainHand", "MIRROR")
-oh86, oh100 = rung("offHand", "i86"), rung("offHand", "i100")
+mh86, mh100, mh_mw = rung("mainHand", "i86"), rung("mainHand", "priceless"), rung("mainHand", "MIRROR")
+oh86, oh100 = rung("offHand", "i86"), rung("offHand", "priceless")
 boots86, dawn = rung("boots", "i86"), rung("boots", "Dawn Break")
-helm86, helm100 = rung("helmet", "i86"), rung("helmet", "i100")
+helm86, helm100 = rung("helmet", "i86"), rung("helmet", "priceless")
 gloves86, ghost = rung("gloves", "i86"), rung("gloves", "Ghost Slaughter")
 chest86 = rung("chest", "i86")
 r1_86, r2_86 = rung("ring1", "i86"), rung("ring2", "i86")
-timid, r2_100 = rung("ring1", "i100"), rung("ring2", "i100")
+timid, r2_100 = rung("ring1", "priceless timid"), rung("ring2", "priceless combo")
 heart = rung("necklace", "Heart of Animitta")
 eternity = rung("belt", "Eternity")
 valor = prism_rung("Ethereal", "Unmatched Valor")
@@ -123,13 +123,13 @@ row(g(eternity["gain"]) + " map", "5 blueprints",
     "Eternity — buy the 5 BLUEPRINTS, never the ~4k FE item. Mapping monster + the Fervor sustain bill.",
     "trade house: Eternity blueprint price vs finished item")
 row(rng(timid), "from Traveler 8",
-    "i100 Timid curse-on-hit ring — frees the warcry bar slot, carries a ×1.39 boss layer.", None)
+    "priceless timid curse-on-hit ring — frees the warcry bar slot, carries a ×1.39 boss layer.", None)
 row(g(inverse["delta"]), "high effect ranges",
     "Inverse Prism (Brave tree) — POSITIVE Legendary-Medium AND Medium ranges (+38%/+17% modeled). "
     "+6 min warcry enemies — floor 14 of 16.",
     "prism tooltip: Inverse Prism with both effect ranges positive")
 row(g(valor["delta"]), "needs helm + boots",
-    "Ethereal Prism: Unmatched Valor — fixed 130 Fervor Rating. NEEDS the i100 sealed-mana helmet "
+    "Ethereal Prism: Unmatched Valor — fixed 130 Fervor Rating. NEEDS the priceless sealed-mana helmet "
     "+ Dawn Break (Ranger slot). God roll “no longer replaces” keeps the Ranger core too.",
     "prism tooltip: Unmatched Valor")
 blank()
@@ -209,12 +209,12 @@ row(rng(mh100), "",
     f"basics: gear Attack Speed ({g(modgain(mh100, '+41% gear Attack Speed'))}) + flat Phys.",
     "item tooltip: priceless mainhand")
 row(rng(oh100), "package",
-    f"i100 offhand — Ninth Apostle's Magic Shield. +4 Active Skill Level ({g(modgain(oh100, '+4 Active Skill Level'))}) "
+    f"priceless offhand — Ninth Apostle's Magic Shield. +4 Active Skill Level ({g(modgain(oh100, '+4 Active Skill Level'))}) "
     "is the big line. A PACKAGE with i86 Hasten boots + God of Might / Brave tree changes.",
     "item tooltip: Ninth Apostle's Magic Shield")
-row(rng(timid), "watchlist", "i100 Timid curse-on-hit ring — from the watchlist.", None)
+row(rng(timid), "watchlist", "priceless timid curse-on-hit ring — from the watchlist.", None)
 row(rng(r2_100), "",
-    "i100 second ring, phys-as-extra roll — Fervor Effect + Elemental/Erosion Pen ultimates.", None)
+    "priceless combo ring — Fervor Effect + Elemental/Erosion Pen ultimates.", None)
 blank()
 
 # --- §7 fervor engine ---
@@ -227,9 +227,9 @@ row(rng(dawn), "boots",
     "item tooltip: Vorax boots with Have Fervor")
 row(g(ghost["gain"]), "gloves", "Corroded Ghost Slaughter (watchlist) — +1% additional damage per rating.", None)
 row(rng(helm100) + " w/ prism", "helmet",
-    "i100 sealed-mana helmet — near-zero alone; the range lands with the prism. "
+    "priceless sealed-mana helmet — near-zero alone; the range lands with the prism. "
     "Craft the Sealed Mana Compensation ultimate.",
-    "item tooltip: i100 helmet with Sealed Mana Compensation")
+    "item tooltip: priceless helmet with Sealed Mana Compensation")
 row(g(valor["delta"]), "prism",
     "Ethereal Prism: Unmatched Valor — fixed 130 in the Ranger slot (over the 100 cap; "
     "Centralize becomes a respec candidate).", None)

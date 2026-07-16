@@ -22,4 +22,4 @@ Screenshot each and drop it to the right of the named row.
 - **Row 193** (+74% → +137%): item tooltip: priceless mainhand
 - **Row 194** (+16.4% → +44.9%): item tooltip: Ninth Apostle's Magic Shield
 - **Row 199** (+107.3% → +153.5%): item tooltip: Vorax boots with Have Fervor
-- **Row 201** (+2.6% → +43.9% w/ prism): item tooltip: i100 helmet with Sealed Mana Compensation
+- **Row 201** (+2.6% → +43.9% w/ prism): item tooltip: priceless helmet with Sealed Mana Compensation

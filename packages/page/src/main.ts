@@ -70,9 +70,8 @@ const modRows = (mods: ModRow[], summary: string) =>
     const m = r.label.match(/^(i\d+|priceless|mirror[- ]?worthy)/i);
     return m ? m[1].toLowerCase() : r.label;
   };
-  // craft order is only useful on priceless gear — i100 labels (and the mainhand
-  // PRICELESS / MIRROR-WORTHY rungs that still use the older naming)
-  const isPriceless = (r: Rung) => /^(i100|priceless|mirror[- ]?worthy)/i.test(r.label);
+  // craft order is only useful on priceless gear. Mirror-worthy is a buy, not a craft path.
+  const isPriceless = (r: Rung) => /^priceless/i.test(r.label);
   const wrap = document.getElementById("tree")!;
   wrap.innerHTML =
     `<div class="tree-row tree-head"><span></span>${STAGES.map(s => `<span>${s}</span>`).join("")}</div>`

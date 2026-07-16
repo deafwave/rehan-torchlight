@@ -10,7 +10,7 @@ describe("gear ladder", () => {
     const rungs = ladders(_load()).mainHand;
     expect(rungs.map(r => r.label)).toEqual([
       "i82 Mainhand SPEED/CRIT", "i86 Mainhand SPEED/CRIT",
-      "PRICELESS Mainhand SPEED/CRIT", "MIRROR-WORTHY"]);
+      "priceless Mainhand SPEED/CRIT", "MIRROR-WORTHY"]);
   });
 
   test("mainhand ladder is linear and monotonic", () => {
@@ -28,14 +28,14 @@ describe("gear ladder", () => {
 
   test("reworks are dependency-based: shield, ES boots, Ghost Slaughter, sealed-mana helmet", () => {
     const flagged = ROWS.flatMap(r => r.rungs.filter(g => g.rework).map(g => [r.slot, g.label]));
-    expect(flagged).toEqual([["offHand", "i100 ATTACK/COMBO"],
-                             ["gloves", "Ghost Slaughter"], ["helmet", "i100 sealed mana"],
+    expect(flagged).toEqual([["offHand", "priceless ATTACK/COMBO"],
+                             ["gloves", "Ghost Slaughter"], ["helmet", "priceless sealed mana"],
                              ["boots", "i86 ES"]]);
   });
 
   test("sealed-mana helmet is the Lich -> Ranger swap: 100-cap floor, prism range top", () => {
     const h = ROWS.find(r => r.slot === "helmet")!.rungs.at(-1)!;
-    expect(h.label).toBe("i100 sealed mana");
+    expect(h.label).toBe("priceless sealed mana");
     expect(h.rework!.label).toBe("+ Vorax Fervor Boot");
     // vs the crit i86 helmet priced back on the Lich-era tree — never negative,
     // small at the 100 rating cap; the fixed-130 prism is the range top
@@ -94,7 +94,7 @@ describe("gear ladder", () => {
   });
 
   test("rare rungs price as a range: entry at tier-below rolls, top when fully crafted", () => {
-    const pr = slot("mainHand").rungs.find(r => r.label.startsWith("PRICELESS"))!;
+    const pr = slot("mainHand").rungs.find(r => r.label.startsWith("priceless"))!;
     expect(pr.gainTop).not.toBeNull();
     expect(pr.gainTop!).toBeGreaterThan(pr.gain!);
     const grace = slot("boots").rungs[0];
@@ -102,7 +102,7 @@ describe("gear ladder", () => {
   });
 
   test("priced rare rungs break down stat by stat with craft-pool costs", () => {
-    const pr = slot("mainHand").rungs.find(r => r.label.startsWith("PRICELESS"))!;
+    const pr = slot("mainHand").rungs.find(r => r.label.startsWith("priceless"))!;
     expect(pr.mods!.length).toBeGreaterThanOrEqual(5);
     const phys = pr.mods!.find(m => m.text.includes("Gear Physical Damage"))!;
     expect(phys.pool, "tlidb craft page lists Gear Phys under Advanced").toBe("advanced");

@@ -310,9 +310,9 @@ function dpsWith(build: any, slot: string, item: any, opts: { keepPrism?: boolea
 
 // Planner customNames can collide across rebuilds (two different helmets both named
 // "i86 ES"); an affix marker splits them into their own rungs so the swap is visible.
-// i100 = priceless designation used by the progression page craft-order filter.
+// "priceless" prefix = craft-order filter on the progression page.
 const RELABEL: [slot: string, marker: RegExp, label: string][] = [
-  ["helmet", /Sealed Mana Compensation/, "i100 sealed mana"],
+  ["helmet", /Sealed Mana Compensation/, "priceless sealed mana"],
 ];
 
 function rungLabel(it: any, slot: string): string {
