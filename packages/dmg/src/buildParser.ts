@@ -370,6 +370,11 @@ export const PATTERNS: [string, string][] = [
   [`Main Skill is supported by Lv\\. ${NUM} Steamroll`, "special.tower_steamroll"],
   [`Main Skill is supported by`, "ignore"],   // other tower supports: numerics unmodeled
   [`stack of Pure Heart when using an Attack Mobility Skill`, "special.pure_heart"],
+  // finisher/starter-gated AS must outrank the generic additional-AS line (Bodhi special pool)
+  [`\\+${NUM}% additional Attack and Cast Speed for Combo Finishers`,
+   "rotation.finisher_additional_as_pct"],
+  [`\\+${NUM}% additional Attack and Cast Speed for Combo Starters`,
+   "rotation.starter_additional_as_pct"],
   [`\\+${NUM}% additional Attack and Cast Speed`, "rotation.attack_speed_inc_pct"],
   [`additional Ailment Damage`, "ignore"],
   // a ring suffix's paired roll can be negative ("-5% additional damage") below i86

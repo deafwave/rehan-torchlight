@@ -273,6 +273,20 @@
                   ]
                 },
                 {
+                  "modId": "57d2a7be-6b14-59e2-ac26-843fd3ecf28d",
+                  "description": "+24% additional Attack and Cast Speed for Combo Finishers",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 24,
+                      "minValue": 20,
+                      "maxValue": 24,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ]
+                },
+                {
                   "modId": "6658c8a6-1b1d-5357-a763-e56465434cbc",
                   "description": "+4% additional damage for every 1 Combo Point consumed on Critical Strike from Combo Finishers",
                   "variant": "normal",

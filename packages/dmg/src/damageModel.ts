@@ -41,7 +41,8 @@ export const DEFAULT_SNAPSHOT: Snapshot = {
   // Spectral Slash: starter, starter, finisher; the first starter applies Mark
   // (+30% additional taken, skill-inherent), the finisher consumes it
   rotation: { starters_per_cycle: 2, starter_weapon_pct: 100,
-              attack_speed_inc_pct: 0, finisher_additional_as_pct: -40,
+              attack_speed_inc_pct: 0, starter_additional_as_pct: 0,
+              finisher_additional_as_pct: -40,
               extra_clones: 0, clone_falloff: 0.7, mark_taken_pct: 30,
               combo_points: 4, finisher_amp_pct: 30, finishers_per_cycle: 1 },
 };
@@ -95,6 +96,9 @@ export function expectedHit(s: Snapshot, skillPct?: number): number {
 export function cycleDps(s: Snapshot) {
   const r = s.rotation;
   const aps = s.base.weapon_attack_speed * (1 + r.attack_speed_inc_pct / 100);
+  // Bodhi special pool (and skill inherent −40%) are additional AS gated to one half
+  // of the sequence — they do not speed the other half (mechanics.md#bodhi-girdle)
+  const starterAps = aps * (1 + (r.starter_additional_as_pct ?? 0) / 100);
   const finisherAps = aps * (1 + r.finisher_additional_as_pct / 100);
   // Mark: the first starter applies it, so every later hit in the cycle benefits
   const mark = 1 + (r.mark_taken_pct ?? 0) / 100;
@@ -108,7 +112,7 @@ export function cycleDps(s: Snapshot) {
   // the first finisher consumes Mark, so the extras hit unmarked
   const nFin = r.finishers_per_cycle ?? 1;
   const finisher = oneFinisher * mark + (nFin - 1) * oneFinisher;
-  const cycleTime = r.starters_per_cycle / aps + nFin / finisherAps;
+  const cycleTime = r.starters_per_cycle / starterAps + nFin / finisherAps;
   return { dps: (starter + finisher) / cycleTime,
            finisher_damage: finisher, starter_damage: starter,
            cycle_time: cycleTime };
