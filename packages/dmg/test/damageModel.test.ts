@@ -14,6 +14,15 @@ describe("averageHit", () => {
     expect(averageHit(s)).toBe(150.0);
   });
 
+  test("gain phys as cold adds a share of the physical portion only", () => {
+    const s = baseOnly();
+    s.base.gain_phys_as_cold_pct = 20;
+    expect(averageHit(s)).toBeCloseTo(120.0, 6);
+    s.base.weapon_flat_cold_min = 50;
+    s.base.weapon_flat_cold_max = 50;
+    expect(averageHit(s)).toBeCloseTo(170.0, 6);   // cold portion is not re-gained
+  });
+
   test("weapon flat cold added after gear phys pct", () => {
     const s = baseOnly();
     s.base.gear_phys_pct = 50;
@@ -73,6 +82,14 @@ describe("multipliers", () => {
     expect(critMultiplier(s)).toBeCloseTo(1.9, 10);
   });
 
+  test("crit damage taken (Fixate) compounds on the crit portion only", () => {
+    const s = snap();
+    // 1 + 0.5*(2.0*1.4*1.1 - 1) = 2.04
+    s.crit = { chance_pct: 50, damage_pct: 200, additional_on_crit_pct: 40,
+               crit_dmg_taken_pct: 10 };
+    expect(critMultiplier(s)).toBeCloseTo(2.04, 10);
+  });
+
   test("mitigation res minus pen", () => {
     const s = snap();
     s.enemy = { cold_res_pct: 40, armor_reduction_pct: 0 };
@@ -116,8 +133,8 @@ export function rotationSnap(): Snapshot {
   const s = baseOnly();
   s.rotation = { starters_per_cycle: 2, starter_weapon_pct: 100,
                  attack_speed_inc_pct: 0, finisher_additional_as_pct: -50,
-                 clones: 4, clone_falloff: 0.7,
-                 combo_points: 0, finisher_amp_pct: 0 };
+                 extra_clones: 0, clone_falloff: 0.7, mark_taken_pct: 0,
+                 combo_points: 4, finisher_amp_pct: 0 };
   s.base.weapon_attack_speed = 1.0;
   s.base.skill_weapon_pct = 100;
   s.enemy.cold_res_pct = 0;
@@ -130,11 +147,28 @@ describe("cycleDps", () => {
     const r = cycleDps(rotationSnap());
     // starters: 2 hits * 100 = 200
     expect(r.starter_damage).toBe(200.0);
-    // finisher: 100 * (1 + 4 clones * 0.7) = 380
+    // one clone per combo point consumed: finisher 100 * (1 + 4 clones * 0.7) = 380
     expect(r.finisher_damage).toBeCloseTo(380.0, 9);
     // cycle: 2 starters at 1.0 aps (2s) + 1 finisher at 1.0*(1-0.5)=0.5 aps (2s) = 4s
     expect(r.cycle_time).toBe(4.0);
     expect(r.dps).toBeCloseTo((200.0 + 380.0) / 4.0, 9);
+  });
+
+  test("extra clones (Legion) add to the combo-point clones", () => {
+    const s = rotationSnap();
+    s.rotation.extra_clones = 1;
+    // 100 * (1 + 5 * 0.7) = 450
+    expect(cycleDps(s).finisher_damage).toBeCloseTo(450.0, 9);
+  });
+
+  test("Mark: first starter applies it unmarked; later starters and finisher benefit", () => {
+    const s = rotationSnap();
+    s.rotation.mark_taken_pct = 30;
+    const r = cycleDps(s);
+    // starter1 100 + starter2 100*1.3 = 230
+    expect(r.starter_damage).toBeCloseTo(230.0, 9);
+    // finisher consumes Mark but still benefits: 380 * 1.3 = 494
+    expect(r.finisher_damage).toBeCloseTo(494.0, 9);
   });
 
   test("attack speed inc shortens cycle", () => {
@@ -146,7 +180,6 @@ describe("cycleDps", () => {
   test("finisher amp multiplies points times amp sum", () => {
     // mechanics.md: finisher x= (1 + consumed_points * amp_sum%); starters untouched
     const s = rotationSnap();
-    s.rotation.combo_points = 4;
     s.rotation.finisher_amp_pct = 35.5;
     const r = cycleDps(s);
     expect(r.finisher_damage).toBeCloseTo(380.0 * (1 + 4 * 0.355), 6);

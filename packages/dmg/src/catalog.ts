@@ -32,8 +32,11 @@ const CONDITIONAL =
 // snapshot's own _derived inputs, so a new source in the build reaches this catalog too.
 // The rest still mirror manual_overrides.json (_sources).
 const FERVOR_RATING = 100;
+// [aura value, own multiplier]: Fearless, Cruelty (x2 from +100% ADDITIONAL aura
+// effect self-ramp at 40 stacks, full on Elites/bosses), Domain Expansion; all
+// share the +25% increased aura effect
 const AURA_EFFECT = 0.25;
-const AURA_VALUES = [30, 22, 33];
+const AURAS: [number, number][] = [[30, 1], [22, 2], [33, 1]];
 const FROSTBITE_CAP = 157;
 const FROSTBITE_EFFECT = 0.20;
 const GEM_LEVELS = 9;               // net +levels already on the gem (snapshot additional.skill_levels = 90)
@@ -87,7 +90,7 @@ export function applyStat(s: Snapshot, path: string, value: number): boolean {
     s.enemy_taken.frostbite = (FROSTBITE_CAP + value) * (1 + FROSTBITE_EFFECT);
   } else if (path === "extras.aura_effect_pct") {
     let mult = 1.0;
-    for (const v of AURA_VALUES) mult *= 1 + v * (1 + AURA_EFFECT + value / 100) / 100;
+    for (const [v, own] of AURAS) mult *= 1 + v * (1 + AURA_EFFECT + value / 100) * own / 100;
     s.additional.precise_auras = (mult - 1) * 100;
   } else if (path === "extras.warcry_effect_pct") {
     s.additional.warcry_buffs = warcryLayer({ ...d, warcry_effect_pct: d.warcry_effect_pct + value });

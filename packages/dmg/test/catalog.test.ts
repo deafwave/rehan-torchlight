@@ -17,8 +17,8 @@ describe("scoring", () => {
 
   test("impact of direct bucket", () => {
     const d = impactOf("penetration.cold_pct", 10, loadSnap());
-    expect(d).toBeGreaterThan(12.0);     // matches the sensitivity table row: 0.90/0.80
-    expect(d).toBeLessThan(13.0);
+    expect(d).toBeGreaterThan(8.5);      // res layer at 41 pen: 1.21/1.11 = +9.01
+    expect(d).toBeLessThan(9.5);
   });
 
   test("impact of extras conversion", () => {
@@ -28,6 +28,14 @@ describe("scoring", () => {
     expect(d!).toBeGreaterThan(0);
     // +0.3 finisher amp + 0.5 crit-gated additional per level (L30-band slopes)
     expect(impactOf("extras.support_skill_level", 10, s)).toBeGreaterThan(2);
+  });
+
+  test("aura closed form at +0% reproduces the snapshot's precise_auras", () => {
+    const s = loadSnap();
+    // Fearless 30x1.25, Cruelty 22x(1.25+1.00 self-ramp at 40 stacks), Domain 33x1.25
+    // 1.375 * 1.55 * 1.4125 - 1 = +201.0
+    expect(impactOf("extras.aura_effect_pct", 0, s)).toBeCloseTo(0, 1);
+    expect(s.additional.precise_auras).toBeCloseTo(201.0, 1);
   });
 
   test("impact of +N gem levels is marginal from the build's current level", () => {
@@ -54,7 +62,7 @@ describe("scoring", () => {
   test("penetration slate mods score against their mitigation layer", () => {
     const cold = rows.find(r => /^1.5% Cold Penetration/.test(r.text));
     expect(cold, "fixture mod vanished from catalog").toBeTruthy();
-    expect(cold!.delta).toBeGreaterThan(1.5);          // 30% layer at 10 pen: 0.815/0.80
+    expect(cold!.delta).toBeGreaterThan(1.3);          // res layer at 41 pen: 1.125/1.11 = +1.35
     const armor = rows.find(r => /^\+8% Armor DMG Mitigation Penetration/.test(r.text));
     expect(armor, "fixture mod vanished from catalog").toBeTruthy();
     expect(armor!.delta).toBeGreaterThan(8);           // ring has 21 pen: 0.99/0.91 = +8.79

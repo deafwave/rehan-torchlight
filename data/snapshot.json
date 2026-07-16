@@ -5,6 +5,7 @@
   "weapon_flat_cold_min": 0,
   "weapon_flat_cold_max": 0,
   "gear_phys_pct": 161,
+  "gain_phys_as_cold_pct": 20,
   "weapon_attack_speed": 2.235,
   "skill_weapon_pct": 127,
   "flat_added_min": 0,
@@ -21,14 +22,15 @@
   "global": 257
  },
  "additional": {
-  "strength": 146,
+  "strength": 166,
   "warcry_buffs": 109.67039999999999,
   "ice_bond": 33,
   "fervor": 308,
   "sealed_life_mana": 0,
-  "blessings": 0,
-  "precise_auras": 147.6,
+  "blessings": 35.00000000000001,
+  "precise_auras": 201.04,
   "misc": 342.04115795840016,
+  "steamroll": 42.99999999999999,
   "pure_heart": 27.628156250000035,
   "willpower": 41.851911225600034,
   "detonation_prism": 56.00000000000001,
@@ -39,15 +41,17 @@
   "frostbite": 188,
   "paralysis": 15,
   "cold_infiltration": 13,
-  "timid_curse": 0
+  "timid_curse": 39,
+  "fixate": 1.0999999999999899
  },
  "crit": {
   "chance_pct": 69.35,
   "damage_pct": 588.5,
-  "additional_on_crit_pct": 40.5
+  "additional_on_crit_pct": 40.5,
+  "crit_dmg_taken_pct": 10
  },
  "penetration": {
-  "cold_pct": 10,
+  "cold_pct": 41,
   "armor_pct": 21
  },
  "enemy": {
@@ -55,12 +59,13 @@
   "armor_reduction_pct": 30
  },
  "rotation": {
-  "starters_per_cycle": 3,
+  "starters_per_cycle": 2,
   "starter_weapon_pct": 406,
-  "attack_speed_inc_pct": 209,
+  "attack_speed_inc_pct": 210,
   "finisher_additional_as_pct": -40,
-  "clones": 5,
+  "extra_clones": 1,
   "clone_falloff": 0.7,
+  "mark_taken_pct": 36,
   "combo_points": 8,
   "finisher_amp_pct": 251.2
  },

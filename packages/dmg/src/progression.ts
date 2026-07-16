@@ -165,14 +165,29 @@ export function ladders(build: any): Record<string, RawRung[]> {
 }
 
 /** Reference build with this slot's item replaced. Everything else held constant. */
+const CRIT_DMG_SUPPORT = "dcb47367-34df-5e86-a9df-0b5d5f130998";
+const STEAMROLL_SUPPORT = "4830642f-32e5-56ef-9de7-61ed678cb883";
+
 function dpsWith(build: any, slot: string, item: any): number {
   const b = deepCopy(build);
   const lo = b.loadouts.loadouts.find((l: any) => l.name === REFERENCE);
   b.loadouts.currentLoadoutId = lo.id;
   lo.gear.inventory = [...lo.gear.inventory.filter((i: any) => i.id !== lo.gear.equipped[slot]), item];
   lo.gear.equipped[slot] = item.id;
-  const [snap] = parseBuild(b);
-  return cycleDps(snap).dps;
+  let dps = cycleDps(parseBuild(b)[0]).dps;
+  // A mainhand whose tower sequence grants Steamroll frees a support socket (user
+  // 2026-07-15: "whatever you add is your increase"). Rungs WITHOUT the sequence are
+  // priced with the player re-socketing Steamroll over Critical Strike Damage Increase
+  // (the one non-structural socket) — whichever config is better.
+  if (slot === "mainHand" && !/Steamroll/.test(item.towerSequence?.description ?? "")) {
+    for (const sk of lo.skills.activeSkills) {
+      for (const sup of (sk.supports ?? []).filter(Boolean)) {
+        if (sup.supportGuid === CRIT_DMG_SUPPORT) sup.supportGuid = STEAMROLL_SUPPORT;
+      }
+    }
+    dps = Math.max(dps, cycleDps(parseBuild(b)[0]).dps);
+  }
+  return dps;
 }
 
 function rungLabel(it: any): string {

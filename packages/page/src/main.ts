@@ -4,9 +4,11 @@ import catalogData from "./data/catalog.json";
 
 /* ---------- data written by dmg progression + catalog CLIs ---------- */
 interface Rework { anchor: string | null; why: string }
+interface ModRow { text: string; pool: string | null; cost: number | null; gain: number; per: number | null }
 interface Rung {
   label: string; name: string; rarity: string | null;
   dps: number | null; gain: number | null; linear: boolean; rework: Rework | null;
+  mods: ModRow[] | null;
 }
 interface LadderRow { slot: string; rungs: Rung[]; note: string | null }
 interface CatalogRow {
@@ -51,7 +53,7 @@ const BUNDLES: Bundle[] = [
 
   {id:"cold", name:"Cold conversion + Frostbite — the enemy-side amp",
    core:"Convert <b>100% Physical → Cold</b> (which double-dips: Physical, Cold, Elemental, Attack and Melee modifiers ALL still apply — dev-confirmed) and every hit builds <b>Frostbite Rating</b> on the enemy. It is not a DoT: each rating point is <b>+1% additional Cold damage TAKEN</b>, a ×2.88 sitting on the boss at this build's caps. <b>The conversion slate is the keystone</b> — every other line in this bundle is dead on an unconverted hit.",
-   math:"<span class='mult-tag'>Cold Penetration</span> becomes the computed #1 stat on the whole sheet: <b>+10% pen = +14.3% DPS</b> against a 40%-res boss (the Cold Infiltration slate already strips 10%), and it keeps working below zero resist. Armor penetration, by contrast, becomes a <b>no-op</b>. More Frostbite Effect/Max-Rating is ~+3.5% per 10.",
+   math:"<span class='mult-tag'>Cold Penetration</span> becomes the computed #1 stat on the whole sheet: <b>+10% pen = +14.3% DPS</b> against a 40%-res boss (the Cold Infiltration slate already strips 10%), and it keeps working below zero resist. Mitigation has a <b>second, independent layer</b> — the enemy's ~30% elemental reduction from armor — so <b>Armor DMG Mitigation Penetration</b> pays the same way there (user-corrected 2026-07-15). More Frostbite Effect/Max-Rating is ~+3.5% per 10.",
    buys:[
      {src:"slate", html:"<b>Physical→Cold conversion</b> — buy this first; nothing below works without it"},
      {src:"slate", html:"the God of Knowledge line — inflict Frostbite on Cold hit, Focus Blessing off Frostbitten targets"},
@@ -127,6 +129,17 @@ const SIMPLE = [
 {
   const esc = (t: unknown) => String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;");
   const gainCls = (g: number) => g >= 25 ? "d-hot" : g > 0 ? "d-mid" : "d-none";
+  const POOL_COLOR: Record<string, string> = { basic:"#7c8ea0", advanced:"#7fd8e8", ultimate:"#c9a86a" };
+  const modRows = (mods: ModRow[]) =>
+    `<details class="rung-mods"><summary>stat by stat · ΔDPS ÷ craft cost (basic ×1 · advanced ×3 · ultimate ×6)</summary>`
+    + mods.map(m => {
+        const col = m.pool ? POOL_COLOR[m.pool] : "#54677a";
+        return `<div class="mod-row">`
+          + `<span class="src-chip" style="background:${col}22;color:${col}">${m.pool ? `${m.pool} ×${m.cost}` : "unpooled"}</span>`
+          + `<span class="mod-text">${esc(m.text).replace(/\n/g," · ")}</span>`
+          + `<span class="delta-chip ${m.gain > 0 ? gainCls(m.gain) : "d-none"}">+${m.gain.toFixed(1)}%</span>`
+          + `<span class="mod-per">${m.per === null ? "—" : m.per.toFixed(1)}</span></div>`;
+      }).join("") + `</details>`;
   const wrap0 = document.getElementById("ladder-list")!;
   LADDER.forEach(row => {
     const card = document.createElement("article");
@@ -142,6 +155,7 @@ const SIMPLE = [
           + `<span class="delta-chip ${r.gain===null?"d-none":gainCls(r.gain)}">`
           + `${r.gain===null?(r.dps===null?"—":"start"):(r.gain>=0?"+":"")+r.gain.toFixed(1)+"%"}</span>`
           + (rw?`<div class="rung-why">not linear · ${rw.anchor?`<a href="${rw.anchor}">${esc(rw.why)}</a>`:esc(rw.why)}</div>`:"")
+          + (r.mods?.length ? modRows(r.mods) : "")
           + `</div>`;
       }).join("");
     wrap0.appendChild(card);

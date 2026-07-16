@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import { describe, expect, test } from "vitest";
 import { extractLines, substitute, fillTemplate, classify, parseBuild, skillLevelAdditionalPct } from "../src/buildParser.js";
 import { cycleDps } from "../src/damageModel.js";
@@ -38,17 +39,80 @@ describe("spectral slash support gems", () => {
     const [snap] = parseBuild(BUILD);
     expect(snap.crit.additional_on_crit_pct).toBeCloseTo(40.5, 1);  // 26 + 29 x 0.5
   });
-  test("legion adds one clone vs boss (1 enemy in range), loadout 0 stays at 4", () => {
+  test("legion adds one extra clone vs boss (1 enemy in range), loadout 0 has none", () => {
     const [snap] = parseBuild(BUILD);
-    expect(snap.rotation.clones).toBe(5);
+    expect(snap.rotation.extra_clones).toBe(1);
     const [snap0] = parseBuild(BUILD, 0);
-    expect(snap0.rotation.clones).toBe(4);
+    expect(snap0.rotation.extra_clones).toBe(0);
   });
 
   test("loadout 0 willpower support lands, unknown supports reported not dropped", () => {
     const [snap, report] = parseBuild(BUILD, 0);
     expect(snap.additional.willpower).toBeCloseTo(41.85, 1);
-    expect(report.manual.some(e => e.mode === "unmodeled" && String(e.path).includes("Steamroll"))).toBe(true);
+    expect(report.manual.some(e => e.mode === "unmodeled" && String(e.path).includes("Quick Decision"))).toBe(true);
+  });
+});
+
+describe("mark, blessings, fixate", () => {
+  test("mark effect scales the skill's inherent 30% Mark", () => {
+    const [snap] = parseBuild(BUILD);
+    // tree +20% Mark effect: 30 * 1.20 = 36
+    expect(snap.rotation.mark_taken_pct).toBeCloseTo(36, 6);
+  });
+
+  test("blessing grants classify to specials, not ignore", () => {
+    expect(classify("100% chance to gain Agility Blessing on Critical Strike")[0])
+      .toBe("special.agility_blessing");
+    expect(classify("+100% chance to gain a stack of Focus Blessing upon inflicting damage to a Frostbitten enemy. Interval: 0.1s")[0])
+      .toBe("special.focus_blessing");
+  });
+
+  test("blessings: Agility 8% + Focus 25% (4 base +1 from the sword's base affix), compounded", () => {
+    const [snap] = parseBuild(BUILD);
+    // (1.08 * 1.25 - 1) * 100 = 35; Agility's 4x4% attack speed lands in rotation
+    expect(snap.additional.blessings).toBeCloseTo(35, 1);
+  });
+
+  test("base-affix and tower-sequence line shapes classify", () => {
+    expect(classify("+8% Elemental and Erosion Resistance Penetration"))
+      .toEqual(["penetration.cold_pct", 8.0]);
+    expect(classify("-20% Attack Critical Strike Rating for this gear"))
+      .toEqual(["crit.rating_inc_pct", -20.0]);
+    expect(classify("Triggers Lv. 20 Timid Curse upon inflicting damage. Cooldown: 0.2 s")[0])
+      .toBe("special.timid_curse");
+    expect(classify("Adds 20% of Physical Damage to Cold Damage"))
+      .toEqual(["base.gain_phys_as_cold_pct", 20.0]);
+    expect(classify("Main Skill is supported by Lv. 25 Steamroll"))
+      .toEqual(["special.tower_steamroll", 25.0]);
+    expect(classify("+1 to Max Focus Blessing Stacks")[0]).toBe("extras.max_focus_blessing_stacks");
+  });
+
+  test("socketed Steamroll (re-socket counterfactual) is modeled", () => {
+    const build = JSON.parse(fs.readFileSync(BUILD, "utf-8"));
+    const lo = build.loadouts.loadouts.find((l: any) => l.id === build.loadouts.currentLoadoutId);
+    for (const sk of lo.skills.activeSkills) {
+      for (const sup of (sk.supports ?? []).filter(Boolean)) {
+        if (sup.supportGuid === "dcb47367-34df-5e86-a9df-0b5d5f130998") {
+          sup.supportGuid = "4830642f-32e5-56ef-9de7-61ed678cb883";   // Steamroll
+        }
+      }
+    }
+    const [snap] = parseBuild(build);
+    expect(snap.additional.steamroll, "L20 socket: 31 + 19*0.5, compounded with the sequence copy")
+      .toBeGreaterThan(40);
+    expect(snap.crit.additional_on_crit_pct ?? 0).toBe(0);
+  });
+
+  test("real build: Timid ring credited at 39%, ring base affix gains 20% phys as cold", () => {
+    const [snap] = parseBuild(BUILD);
+    expect(snap.enemy_taken.timid_curse).toBeCloseTo(39, 6);   // mechanics.md#timid, Lv.20
+    expect(snap.base.gain_phys_as_cold_pct).toBeCloseTo(20, 6);
+  });
+
+  test("fixate override: crit damage taken 10, additional 1.1", () => {
+    const [snap] = parseBuild(BUILD);
+    expect(snap.crit.crit_dmg_taken_pct).toBeCloseTo(10, 6);
+    expect(snap.enemy_taken.fixate).toBeCloseTo(1.1, 6);
   });
 });
 

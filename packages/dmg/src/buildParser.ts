@@ -43,6 +43,15 @@ function* gearLines(lo: any): Generator<Line> {
       const vals = (aff.rolledValues ?? []).map((rv: any) => rv.value);
       yield { source: src, slot, text: substitute(aff.modifierDescription, vals) };
     }
+    // tower sequences and base/dream/corrosion affixes carry final text (no # placeholders)
+    const extra = [it.towerSequence?.description, it.baseAffix?.description,
+                   it.baseAffix2?.description, it.sweetDreamAffix?.description,
+                   it.corrosionImplicit?.description];
+    for (const desc of extra) {
+      for (const line of (desc ?? "").split("\n")) {
+        if (line.trim()) yield { source: src, slot, text: line.trim() };
+      }
+    }
   }
 }
 
@@ -200,12 +209,26 @@ const PARALYSIS_TAKEN_PCT = 15;              // tlidb Paralysis: +15% damage tak
 const PURE_HEART_PER_STACK = 5;              // +5% additional Attack Damage per stack, MULTIPLIES
 const PURE_HEART_STACKS = 5;                 // cap; full-uptime assumption (see RANKINGS caveats)
 const SHOCKWAVE_PER_ENEMY = 5.95;            // Shockwave Warcry at L20, per enemy affected
+const MARK_TAKEN_PCT = 30;                   // Spectral Slash starter's Mark, skill-inherent
+const TIMID_CURSE_TAKEN_PCT = 39;            // Timid at L20: +39% additional Hit Damage taken
+// tower-sequence Steamroll; tlidb: +31% additional Melee at Lv1, +41 Lv21, +51 Lv41
+// (+0.5/level), -15% Attack Speed flat; the Ailment line is a no-op
+const steamrollAddlPct = (lvl: number): number => 31 + (lvl - 1) * 0.5;
+const STEAMROLL_AS_PCT = -15;
+// Blessings at base 4 stacks (user-confirmed 2026-07-15); granted on crit / on hitting
+// a Frostbitten enemy, so full stacks on a boss
+const BLESSING_BASE_STACKS = 4;
+const AGILITY_ADDL_PER_STACK = 2;
+const AGILITY_AS_PER_STACK = 4;
+const FOCUS_ADDL_PER_STACK = 5;
 
 // Bucket assignments come from docs/mechanics.md — reconcile after research.
 // Order matters: first regex that searches successfully wins.
 export const PATTERNS: [string, string][] = [
   [`\\+?${NUM}% Armor (?:Damage|DMG) Mitigation Penetration`, "penetration.armor_pct"],
   [`\\+?${NUM}% Cold Penetration(?! for Minions)`, "penetration.cold_pct"],
+  // only the elemental half matters (build deals cold); erosion pen is a no-op
+  [`\\+?${NUM}% Elemental and Erosion Resistance Penetration`, "penetration.cold_pct"],
   [`\\+${NUM}% Gear Physical Damage`, "base.gear_phys_pct"],
   [`Adds ${NUM} - ${NUM} Cold Damage to the gear`, "base.weapon_flat_cold"],
   [`Adds ${NUM} - ${NUM} Physical Damage to the gear`, "base.weapon_flat_phys_added"],
@@ -231,6 +254,13 @@ export const PATTERNS: [string, string][] = [
   [`\\+${NUM} Max Warcry Skill Charges`, "ignore"],
   [`\\+${NUM}% additional Warcry Skill Effect`, "extras.warcry_additional_effect_pct"],
   [`\\+${NUM}% chance for Attacks to inflict Paralysis`, "special.paralysis"],
+  [`chance to gain (?:a stack of )?Agility Blessing`, "special.agility_blessing"],
+  [`chance to gain a stack of Focus Blessing`, "special.focus_blessing"],
+  [`\\+${NUM} to Max Focus Blessing Stacks`, "extras.max_focus_blessing_stacks"],
+  [`Adds ${NUM}% of Physical Damage to Cold Damage`, "base.gain_phys_as_cold_pct"],
+  [`Triggers Lv\\. ${NUM} Timid Curse`, "special.timid_curse"],
+  [`Main Skill is supported by Lv\\. ${NUM} Steamroll`, "special.tower_steamroll"],
+  [`Main Skill is supported by`, "ignore"],   // other tower supports: numerics unmodeled
   [`stack of Pure Heart when using an Attack Mobility Skill`, "special.pure_heart"],
   [`\\+${NUM}% additional Attack and Cast Speed`, "rotation.attack_speed_inc_pct"],
   [`additional Ailment Damage`, "ignore"],
@@ -244,7 +274,7 @@ export const PATTERNS: [string, string][] = [
   [`\\+${NUM}% Physical Skill Critical Strike Damage`, "crit.damage_pct"],
   [`${NUM}% Critical Strike Damage`, "crit.damage_pct"],
   [`Inflicts Cold Infiltration`, "special.cold_infiltration"],
-  [`\\+${NUM}% Attack Critical Strike Rating`, "crit.rating_inc_pct"],
+  [`(?:^|\\s)${NUM}% Attack Critical Strike Rating`, "crit.rating_inc_pct"],
   [`\\+${NUM}% Critical Strike Rating`, "crit.rating_inc_pct"],
   [`(?:^|\\s)${NUM}% Attack Speed`, "rotation.attack_speed_inc_pct"],
   [`(?:^|\\s)${NUM}% Attack and Cast Speed`, "rotation.attack_speed_inc_pct"],
@@ -333,6 +363,24 @@ function apply(snap: Snapshot, extras: Record<string, number>, path: string, val
   if (path === "special.pure_heart") {
     const stacks = (1 + PURE_HEART_PER_STACK / 100) ** PURE_HEART_STACKS;
     snap.additional.pure_heart = (stacks - 1) * 100;
+    return;
+  }
+  if (path === "special.agility_blessing" || path === "special.focus_blessing") {
+    // stack-count modifiers (e.g. Max Focus Blessing Stacks) can appear on any line,
+    // so the blessing math waits until resolveExtras
+    extras[path.split(".")[1]] = 1;
+    return;
+  }
+  if (path === "special.tower_steamroll") {
+    snap.additional.steamroll =
+      ((1 + (snap.additional.steamroll ?? 0) / 100) * (1 + steamrollAddlPct(value) / 100) - 1) * 100;
+    snap.rotation.attack_speed_inc_pct += STEAMROLL_AS_PCT;
+    return;
+  }
+  if (path === "special.timid_curse") {
+    // ring baseAffix triggers Lv.20 Timid on hit, 0.2s cooldown -> full uptime;
+    // +39% additional Hit Damage taken at L20 (mechanics.md 'Timid curse')
+    snap.enemy_taken.timid_curse = TIMID_CURSE_TAKEN_PCT;
     return;
   }
   if (path === "special.fate_slots") {
@@ -500,9 +548,17 @@ const SUPPORT_GEMS: Record<string, [string, (s: Snapshot, sup: any, lvl: number)
   // clone-kill explosion never triggers on a boss
   "981fe3a9-f59e-5f36-b6b0-600bf08e790f": ["Detonation (Magnificent)",
     (s, sup) => s.additional.detonation_prism = prismPct(sup)],
+  // socketed copy for the re-socket counterfactual (tower sequence frees this socket)
+  "4830642f-32e5-56ef-9de7-61ed678cb883": ["Steamroll",
+    (s, _sup, lvl) => {
+      s.additional.steamroll =
+        ((1 + (s.additional.steamroll ?? 0) / 100) * (1 + steamrollAddlPct(lvl) / 100) - 1) * 100;
+      s.rotation.attack_speed_inc_pct += STEAMROLL_AS_PCT;
+      return steamrollAddlPct(lvl);
+    }],
   // +1 Clone per enemy within 15m: a boss is 1 enemy -> +1
   "3ee2f012-e08f-5eb7-b54a-8c58e9b4549c": ["Legion (Noble)",
-    (s, sup) => { s.rotation.clones += 1; return s.additional.legion_prism = prismPct(sup); }],
+    (s, sup) => { s.rotation.extra_clones += 1; return s.additional.legion_prism = prismPct(sup); }],
 };
 
 let SUPPORT_NAMES: Record<string, string> | null = null;
@@ -564,6 +620,31 @@ export function resolveExtras(snap: Snapshot, report: Report): Snapshot {
     report.manual.push({ path: "additional.strength", mode: "derived",
                          value: `+${pyG(pts)}% from ${pyG(strength)} Strength`,
                          source: "mechanics.md#strength" });
+  }
+  const compound = (key: string, pts: number): void => {
+    snap.additional[key] = ((1 + (snap.additional[key] ?? 0) / 100) * (1 + pts / 100) - 1) * 100;
+  };
+  if (pop("agility_blessing")) {
+    compound("blessings", BLESSING_BASE_STACKS * AGILITY_ADDL_PER_STACK);
+    snap.rotation.attack_speed_inc_pct += BLESSING_BASE_STACKS * AGILITY_AS_PER_STACK;
+    report.manual.push({ path: "additional.blessings", mode: "derived",
+                         value: `Agility: +${BLESSING_BASE_STACKS * AGILITY_ADDL_PER_STACK}% additional, +${BLESSING_BASE_STACKS * AGILITY_AS_PER_STACK}% attack speed (4 stacks)`,
+                         source: "mechanics.md 'Agility Blessing'" });
+  }
+  const focusMaxStacks = pop("max_focus_blessing_stacks");
+  if (pop("focus_blessing")) {
+    const stacks = BLESSING_BASE_STACKS + focusMaxStacks;
+    compound("blessings", stacks * FOCUS_ADDL_PER_STACK);
+    report.manual.push({ path: "additional.blessings", mode: "derived",
+                         value: `Focus: +${stacks * FOCUS_ADDL_PER_STACK}% additional (${stacks} stacks)`,
+                         source: "mechanics.md 'Focus Blessing'" });
+  }
+  const markEffect = pop("mark_effect_pct");
+  if (markEffect) {
+    snap.rotation.mark_taken_pct = MARK_TAKEN_PCT * (1 + markEffect / 100);
+    report.manual.push({ path: "rotation.mark_taken_pct", mode: "derived",
+                         value: `${pyG(snap.rotation.mark_taken_pct)}% from ${MARK_TAKEN_PCT}% Mark x +${pyG(markEffect)}% Mark effect`,
+                         source: "mechanics.md#mark" });
   }
   const gemLevels = pop("attack_skill_level") + pop("active_skill_level");
   if (gemLevels) {

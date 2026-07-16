@@ -144,6 +144,25 @@ h1 .hero-sub{color:var(--frost)}
 .rung-why a{color:#c9a86a}
 .slot-note{margin:2px 0 10px;font-size:12.5px;font-style:italic;color:var(--faint);line-height:1.5;max-width:80ch}
 
+/* per-stat craft breakdown under a rung */
+.rung-mods{flex-basis:100%;margin:4px 0 2px 24px}
+.rung-mods summary{
+  cursor:pointer;font-family:"IBM Plex Mono",monospace;font-size:10.5px;
+  letter-spacing:.05em;color:var(--faint);
+}
+.rung-mods summary:hover{color:var(--frost)}
+.mod-row{
+  display:flex;gap:10px;align-items:baseline;padding:5px 0 5px 14px;
+  border-bottom:1px solid rgba(29,44,59,.4);font-size:12.5px;color:var(--muted);
+}
+.mod-row:last-child{border-bottom:0}
+.mod-row .src-chip{flex:none;min-width:96px;text-align:center}
+.mod-text{flex:1;min-width:200px}
+.mod-row .delta-chip{min-width:56px;text-align:right}
+.mod-per{
+  font-family:"IBM Plex Mono",monospace;color:var(--marble);min-width:46px;text-align:right;
+}
+
 /* ---------- ledger-style tables + rule lists (catalog, stop-paying-for) ---------- */
 .ledger-table{width:100%;border-collapse:collapse;margin-top:14px;font-size:13.5px}
 .ledger-table th{
