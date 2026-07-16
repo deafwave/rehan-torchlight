@@ -15,7 +15,7 @@ const RANGE = /\((\d+(?:\.\d+)?)\s*[–\-~]\s*(\d+(?:\.\d+)?)\)/g;
 // Tags Spectral Slash (Attack/Melee/Area/Physical->Cold/Combo) can never benefit from
 const NOT_THIS_BUILD = new RegExp(
   "\\b(Focus Skill|Spell (?:Damage|Skill)|Minion|Spirit Magus|Sentry|Totem|Summon"
-  + "|Wilt|Erosion|Fire Damage|Lightning Damage|Ignite|Shock Effect|Trauma|Blur"
+  + "|Wilt|Deterioration|Erosion|Fire Damage|Lightning Damage|Ignite|Shock Effect|Trauma|Blur"
   + "|Projectile|Bow|Crossbow|Pistol|Cannon|Staff|Wand|Two-Handed|Dual Wield"
   + "|Channeled|Curse Skill|Mobility Skill|Persistent Damage|Damage over Time|DoT|Elixir"
   + "|in Proximity|Erosion Resistance|Tenacity Blessing"

@@ -165,6 +165,18 @@ describe("applicability rules", () => {
     expect(taken.delta).toBeNull();
   });
 
+  test("Deterioration mods are not this build: Spectral Slash never applies it", () => {
+    // "+8% additional Deterioration Damage" matches the generic additional-damage
+    // classifier and was scoring +8; the build never applies Deterioration
+    const det = rows.filter(r => /Deterioration/i.test(r.text));
+    expect(det.length, "Deterioration fixture vanished from catalog").toBeGreaterThan(0);
+    expect(det.every(r => r.delta === null)).toBe(true);
+    const headline = rows.find(r =>
+      r.text === "+8% additional Deterioration Damage\n+5% additional Deterioration Duration");
+    expect(headline, "Shadowmaster Legendary Medium missing").toBeTruthy();
+    expect(headline!.delta).toBeNull();
+  });
+
   test("standalone additional Min/Max Damage lines shift the average roll: half value", () => {
     const s = loadSnap();
     const max12 = rows.find(r => r.text.startsWith("+12% additional Max Damage"))!;

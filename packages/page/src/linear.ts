@@ -118,7 +118,9 @@ const PHASES: Phase[] = [
     { id:"cheap-uniques", src:"gear", title:"Buy cheap uniques",
       note:"Grace Boots (keep until the Focus Blessing slate) · Bodhi Girdle · Vortex Heart (~130 FE)." },
     { id:"slate-quickcheck", src:"slate", title:"Slate quick-checks",
-      note:"3–4× 1-mod slates, full reveal each: +1 Attack skill level · +1 Physical skill level (not the no-conversion one) · +1 to all skills · 10% additional damage for 4s after Mobility skills." },
+      note:"3–4× 1-mod slates, full reveal each — keep Legendary Mediums: "
+        + fillers.map(r => r.text.split("\n")[0]).join(" · ") + ".",
+      detail: foldout("best legendary-medium fillers — skill-level lines stack", fillers.map(catRow).join("")) },
     { id:"pactspirits", src:"pact", title:"Pactspirits",
       note:"Red Umbrella + Azure Gunslinger (nodes 4–6: crit). Fog Scorpion or Knight of Pale Blue in the third slot." },
   ]},
