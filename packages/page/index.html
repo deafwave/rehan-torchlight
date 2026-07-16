@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rehan SS13 — Bundles &amp; Linear Upgrades</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="patch">Torchlight Infinite · patch SS12.5/SS13 · build planner export + computed damage model</div>
+  <h1>REHAN <span class="hero-sub">· SEETHING SILHOUETTE</span></h1>
+  <p class="lede">
+    Rehan's damage is <strong>one skill</strong>: Spectral Slash's Combo Finisher. This page is grouped by
+    <strong>what you buy</strong>: <strong>bundles</strong> — purchases that only pay off together — and
+    <strong>linear upgrades</strong>, the same item bought again with bigger numbers, in any order, on any
+    budget. Every % figure on this page is
+    <strong>computed</strong> from the parsed build (<span style="font-family:'IBM Plex Mono',monospace">dmg/</span> model,
+    96% of affix lines parsed — gear, tree, traits, <strong>memories, divinity slates and pactspirits with their actual rolls</strong> —
+    boss single-target) — not eyeballed.
+  </p>
+</header>
+
+<nav class="tabbar" id="tabbar">
+  <button data-tab="bundles" class="active">Bundles &amp; Linear Upgrades</button>
+  <button data-tab="slate">Slate Mods</button>
+  <button data-tab="memory">Memory Mods</button>
+</nav>
+
+<div class="damage-note">
+  <span class="key-lbl">the one rule that decides every roll</span>
+  <b>“additional damage” multiplies; “+% damage” only adds</b> — dev-confirmed, and this build's additive
+  pile already sits at <b>+605%</b>, so a fat <span class="add">+30% damage</span> roll is worth ~+4% real DPS
+  while each <span class="mult-tag">additional</span> line from a <i>new source</i> pays face value. The
+  computed pecking order: <b>Cold Penetration &gt; Combo Points &gt; new additional sources &gt; Crit &gt;
+  Attack Speed &gt; everything “% increased.”</b> Two demotions from the old version of this page:
+  Fervor turned out to be a <b>crit-rating engine</b>, not an additional-damage line, and Frostbite is a
+  <b>damage-taken amp on the enemy</b>, not a DoT.
+  <div class="tagrow"><span class="mini-lbl">the core hit · Spectral Slash Combo Finisher</span>
+    127% weapon Attack Damage × <b>(1 + Combo Points × Finisher Amp)</b> — currently 8 × 238.5% ≈ ×20 —
+    then clones repeat it at 70% falloff.<br>
+    scales on tags: Attack · Melee · Area · Physical · Combo · Strength · Persistent</div>
+</div>
+
+<section class="bundles" id="bundles">
+  <h2>The Bundles</h2>
+  <p>Purchases that only pay off <b>together</b>. Each card is one engine: buy its pieces in any mix,
+  but don't stop at half a card — a Fervor glove without the boots that hold Fervor is a dead slot.
+  Cards are numbered in the order the engines come online; a <span style="color:var(--frost)">needs</span>
+  line is the only hard rule.</p>
+  <div id="bundle-cards"></div>
+  <article class="bundle ledger">
+    <div class="subhead">stop paying for</div>
+    <ul class="rule">
+      <li><b>Armor / armor-mitigation penetration — dead.</b> Fully converted cold hits check cold resistance only.</li>
+      <li><b>Numb — dead.</b> It amplifies <i>Lightning</i> damage taken; this build deals cold.</li>
+      <li><b>Bladerunner “while Dual Wielding” nodes — dead with the shield equipped.</b> Respec candidates.</li>
+      <li><b>% increased damage of every flavor</b> — not dead, just the worst stat on the sheet at +1.4% per 10%.</li>
+    </ul>
+    <div class="subhead">re-running the numbers</div>
+    <ul class="rule">
+      <li><b>Rebuild the page's data:</b> <span class="formula">pnpm page</span> · re-rank after a build change:
+      <span class="formula">pnpm snapshot &amp;&amp; pnpm rank</span> · known blind spots listed in
+      <span class="formula">docs/RANKINGS.md</span> — the biggest: <b>the equipped Timid ring's curse is
+      uncredited, so real boss DPS is ≈×1.39 above every number here</b>.</li>
+    </ul>
+  </article>
+</section>
+
+<section class="bundles" id="simple">
+  <h2>The Linear Upgrades</h2>
+  <p>The same slot, bought again and again: <b>i82 → i86 → priceless → mirror-worthy</b>. Almost none of these
+  rungs change how the build <i>works</i> — they are the same item with bigger numbers, which is why they can be
+  bought in any order, on any budget, without a rework.</p>
+  <p>Every rung is priced against one fixed <b>reference build</b>: every <i>other</i> slot pinned at the top of
+  its own ladder, only this slot's item swapped, model re-run. Only the <b>relative gain</b> is shown —
+  absolute DPS shifts with every surrounding detail, but each step's % is what that upgrade buys you.
+  Read a ladder downward as “what I give up by stopping here,” not as a route you must walk in
+  order. Rungs marked <span class="rework-mark">⚠</span> are the exception: they change the rules rather than the
+  numbers, and they belong to a bundle above.</p>
+  <div id="ladder-list"></div>
+  <div id="simple-list"></div>
+</section>
+
+<section class="bundles" id="catalog-tab" hidden>
+  <h2 id="cat-title">Divinity Slate Mods — impact for this build</h2>
+  <p>Every mod in the SS12.5 tlicompendium catalog (deduplicated; identical mods that roll on several
+  slates are merged with their spawn list), evaluated <b>at its best roll</b> against this build's snapshot
+  by the <span style="font-family:'IBM Plex Mono',monospace">dmg/</span> model.
+  <span class="cond-mark">◑</span> marks conditional wording — read those ΔDPS values as a
+  <i>ceiling at full uptime</i>. “—” means the mod doesn't touch this build's boss DPS
+  (defense, minions, other elements, ES-killers) or isn't modeled.</p>
+  <article class="bundle">
+    <div class="cat-controls">
+      <input id="cat-search" type="search" placeholder="search mods… (e.g. penetration, fervor, combo)">
+      <select id="cat-tier"><option value="">all tiers</option></select>
+      <select id="cat-show">
+        <option value="modeled">modeled only</option>
+        <option value="all">include — / unmodeled</option>
+      </select>
+    </div>
+    <div class="cat-count" id="cat-count"></div>
+    <table class="ledger-table cat-table">
+      <thead><tr><th>ΔDPS</th><th>tier</th><th>mod</th><th>rolls on</th><th>feeds</th></tr></thead>
+      <tbody id="cat-body"></tbody>
+    </table>
+  </article>
+</section>
+
+<footer>Generated from “Rehan SS13_update1.json” (loadout “more_1”, sword + shield) · grouped by bundle ·
+names resolved from tlicompendium SS12.5 data bundles · % figures computed by the dmg/ damage model
+(29 tests, mechanics cited in dmg/mechanics.md) · 2026-07-15</footer>
+</div>
+
+<script type="module" src="/src/main.ts"></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+node_modules/
+dist/
+__pycache__/
+.pytest_cache/
+.claude
+docs/superpowers
+
+# Include skills
+!.claude/skills/

@@ -1,0 +1,15 @@
+{
+  "name": "rehan-ss13-progression",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm --filter @rehan/page dev",
+    "build": "pnpm --filter @rehan/page build",
+    "preview": "pnpm --filter @rehan/page preview",
+    "test": "pnpm --filter @rehan/dmg test",
+    "snapshot": "pnpm --filter @rehan/dmg snapshot",
+    "rank": "pnpm --filter @rehan/dmg rank sensitivity",
+    "page": "pnpm --filter @rehan/dmg snapshot && pnpm --filter @rehan/dmg catalog && pnpm --filter @rehan/dmg progression"
+  }
+}

@@ -1,0 +1,75 @@
+{
+ "base": {
+  "weapon_phys_min": 227,
+  "weapon_phys_max": 237,
+  "weapon_flat_cold_min": 0,
+  "weapon_flat_cold_max": 0,
+  "gear_phys_pct": 161,
+  "weapon_attack_speed": 2.235,
+  "skill_weapon_pct": 127,
+  "flat_added_min": 0,
+  "flat_added_max": 0,
+  "added_damage_effectiveness_pct": 100
+ },
+ "increased": {
+  "physical": 0,
+  "attack": 267,
+  "melee": 81,
+  "area": 0,
+  "cold": 0,
+  "elemental": 0,
+  "global": 257
+ },
+ "additional": {
+  "strength": 146,
+  "warcry_buffs": 109.67039999999999,
+  "ice_bond": 33,
+  "fervor": 308,
+  "sealed_life_mana": 0,
+  "blessings": 0,
+  "precise_auras": 147.6,
+  "misc": 342.04115795840016,
+  "pure_heart": 27.628156250000035,
+  "willpower": 41.851911225600034,
+  "detonation_prism": 56.00000000000001,
+  "legion_prism": 15.199999999999992,
+  "skill_levels": 90
+ },
+ "enemy_taken": {
+  "frostbite": 188,
+  "paralysis": 15,
+  "cold_infiltration": 13,
+  "timid_curse": 0
+ },
+ "crit": {
+  "chance_pct": 69.35,
+  "damage_pct": 588.5,
+  "additional_on_crit_pct": 40.5
+ },
+ "penetration": {
+  "cold_pct": 10,
+  "armor_pct": 21
+ },
+ "enemy": {
+  "cold_res_pct": 30,
+  "armor_reduction_pct": 30
+ },
+ "rotation": {
+  "starters_per_cycle": 3,
+  "starter_weapon_pct": 406,
+  "attack_speed_inc_pct": 209,
+  "finisher_additional_as_pct": -40,
+  "clones": 5,
+  "clone_falloff": 0.7,
+  "combo_points": 8,
+  "finisher_amp_pct": 251.2
+ },
+ "_derived": {
+  "rating_flat": 500,
+  "rating_inc_pct": 571,
+  "fervor_effect_pct": 208,
+  "warcry_min_enemies": 8,
+  "warcry_effect_pct": 92,
+  "warcry_additional_effect_pct": 20
+ }
+}

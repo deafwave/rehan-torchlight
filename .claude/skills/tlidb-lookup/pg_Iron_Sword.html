@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Iron_Sword - Torchlight: Infinite Wiki</title>
+    <meta name="color-scheme" content="dark">
+    <link href="/favicon.ico" rel="shortcut icon" >
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.1/css/bootstrap.min.css" integrity="sha512-Z/def5z5u2aR89OuzYcxmDJ0Bnd5V1cKqBEbvLOiUNWdg9PQeXVvXLI90SE4QOHGlfLqUnDNVAYyZi8UwUTmWQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css" integrity="sha512-ELV+xyi8IhEApPS/pSj66+Jiw+sOT1Mqkzlh8ExXihe4zfqbWkxPRi8wptXIO9g73FSlhmquFlUOuMSoXz5IRw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.6.16/sweetalert2.min.css" integrity="sha512-NvuRGlPf6cHpxQqBGnPe7fPoACpyrjhlSNeXVUY7BZAj1nNhuNpRBq3osC4yr2vswUEuHq2HtCsY2vfLNCndYA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modal-video@2.4.6/css/modal-video.min.css" integrity="sha256-nd8IBqNn9uqwZKfZcLIXQcNxk5TjqrxiLx7PzN5PFW0=" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/stdtheme.css?1784128431"/>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.1/js/bootstrap.bundle.min.js" integrity="sha512-ToL6UYWePxjhDQKNioSi4AyJ5KkRxY+F1+Fi7Jgh0Hp5Kk2/s8FD7zusJDdonfe5B00Qw+B8taXxF6CFLnqNCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js" integrity="sha512-57oZ/vW8ANMjR/KQ6Be9v/+/h6bq9/l3f0Oc7vn6qMqyhvPd1cvKBRWWpzu0QoneImqr2SkmO4MSqU+RpHom3Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.countdown/2.2.0/jquery.countdown.min.js" integrity="sha512-lteuRD+aUENrZPTXWFRPTBcDDxIGWe5uu0apPEn+3ZKYDwDaEErIK9rvR0QzUGmUQ55KFE2RqGTVoZsKctGMVw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://unpkg.com/@popperjs/core@2" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://unpkg.com/tippy.js@6" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.6.16/sweetalert2.all.min.js" integrity="sha512-4tvE14sHIcdIHl/dUdMHp733PI6MpYA7BDnDfndQmx7aIovEkW+LfkonVO9+NPWP1jYzmrqXJMIT2tECv1TsEQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!--<script src="https://unpkg.com/mustache@latest" crossorigin="anonymous" referrerpolicy="no-referrer"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/modal-video@2.4.6/js/modal-video.min.js" integrity="sha256-VqINwNxkS4VEDMq5O52YTckX+Mx84X6bafO8NxF21Xw=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.3.1/tinymce.min.js" integrity="sha512-eV68QXP3t5Jbsf18jfqT8xclEJSGvSK5uClUuqayUbF5IRK8e2/VSXIFHzEoBnNcvLBkHngnnd3CY7AFpUhF7w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="/js/header.js?1784128431"></script>
+    <script src="/js/footer.js?1784128431"></script>
+
+<meta property="og:title" content="Iron Sword" />
+
+
+<script data-cfasync="false">window.nitroAds=window.nitroAds||{createAd:function(){return new Promise(e=>{window.nitroAds.queue.push(["createAd",arguments,e])})},addUserToken:function(){window.nitroAds.queue.push(["addUserToken",arguments])},queue:[]};</script>
+<script data-cfasync="false" async src="https://s.nitropay.com/ads-1573.js"></script>
+
+  </head>
+  <body>
+    <div class="background-image"></div>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P6KT6L9KX8"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    
+      gtag('config', 'G-P6KT6L9KX8');
+    </script>
+
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <div class="container">
+        <a class="navbar-brand" href="/en/" data-i18n="TLIDB">TLIDB</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item dropdown">
+              <a data-i18n="HeroRanking|name|1" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Hero
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" data-i18n="HeroRanking|name|1" href="/en/Hero">Hero</a></li>
+                <li><a class="dropdown-item" data-i18n="handbook|name|30010" href="/en/Talent">Talent</a></li>
+              </ul>
+            </li>
+    
+            <li class="nav-item dropdown">
+              <a data-i18n="function|name|115" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Stash
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" data-i18n="function|name|115" href="/en/Inventory">Stash</a></li>
+                <li><a class="dropdown-item" data-i18n="AuctionHouse_rough_search|description|1" href="/en/Legendary_Gear">Legendary Gear</a></li>
+                <li><a class="dropdown-item" data-i18n="item_type_list|name|100101" href="/en/Ethereal_Prism"></a></li>
+                <!--<li><a class="dropdown-item" data-i18n="TextTable_GameFunc|value|Func_Synthetic_Synthetic" href="/en/Recipe">Recipe</a></li>-->
+                <li><a class="dropdown-item" data-i18n="function|name|130" href="/en/Pactspirit">Pactspirit</a></li>
+                <!--<li><a class="dropdown-item" data-i18n="function|name|116" href="/en/Black_Market">Black Market</a></li>-->
+                <li><a class="dropdown-item" href="/en/Drop_Source" data-i18n="TextTable_GameFunc|value|Func_Tips_DropSource">Drop Source</a></li>
+                <li><a class="dropdown-item" href="/en/Destiny" data-i18n="manual_ruledes_filter|des|200503">Destiny</a></li>
+              </ul>
+            </li>
+    
+            <li class="nav-item dropdown">
+              <a data-i18n="function|name|100" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Skill
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" data-i18n="TextTable_GameFunc|value|Func_SkillBag_SkillType1" href="/en/Active_Skill">Active Skill</a></li>
+                <li><a class="dropdown-item" data-i18n="TextTable_GameFunc|value|Func_SkillBag_SkillType2" href="/en/Support_Skill">Support Skill</a></li>
+                <li><a class="dropdown-item" data-i18n="TextTable_GameFunc|value|Func_SkillBag_SkillType3" href="/en/Passive_Skill">Passive Skill</a></li>
+                <!--<li><a class="dropdown-item" data-i18n="TextTable_GameFunc|value|Func_SkillBag_SkillType4" href="/en/Triggered_Skill">Triggered Skill</a></li>-->
+                <li><a class="dropdown-item" data-i18n="TextTable_GameFunc|value|Func_SkillBag_SkillType5" href="/en/Activation_Medium_Skill">Activation Medium Skill</a></li>
+                <li><a class="dropdown-item" data-i18n="item_type_list|name|50605" href="/en/Magnificent_Support_Skill">Magnificent Support Skill</a></li>
+                <li><a class="dropdown-item" data-i18n="item_type_list|name|50606" href="/en/Noble_Support_Skill">Noble Support Skill</a></li>
+                <li><a class="dropdown-item" data-i18n="item_type_list|name|50607" href="/en/Modularization_Skill">Modularization Skill</a></li>
+              </ul>
+            </li>
+    
+            <li class="nav-item dropdown">
+              <a data-i18n="function|name|128" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Craft
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" data-i18n="function|name|128" href="/en/Craft">Craft</a></li>
+                <li><a class="dropdown-item" data-i18n="function|name|133" href="/en/Corrosion">Corrosion</a></li>
+                <li><a class="dropdown-item" data-i18n="function|name|901" href="/en/Gear_Empowerment">Gear Empowerment</a></li>
+                <li><a class="dropdown-item" data-i18n="system_help|name|38" href="/en/Blending_Rituals"></a></li>
+                <li><a class="dropdown-item" data-i18n="system_help|name|40" href="/en/TOWER_Sequence"></a></li>
+                <li><a class="dropdown-item" data-i18n="function|name|1501" href="/en/Graft"></a></li>
+                <li><a class="dropdown-item" data-i18n="function|name|518" href="/en/Memory_Revival"></a></li>
+                <li><a class="dropdown-item" data-i18n="item_type_list|name|80201" href="/en/Nether_Kings_Divinity">Nether King's Divinity</a></li>
+                <!--<li><a class="dropdown-item" data-i18n="function|name|131" href="/en/Enchant">Enchant</a></li>-->
+              </ul>
+            </li>
+    
+            <li class="nav-item dropdown">
+              <a data-i18n="function|name|125" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Merits
+              </a>
+              <ul class="dropdown-menu">
+                <!--
+                <li><a class="dropdown-item" data-i18n="TextTable_GameFunc|value|Func_Growth_Achievement_Title" href="/en/Path_of_Achievements">Path of Achievements</a></li>
+                -->
+                <li><a class="dropdown-item" data-i18n="TextTable_GameFunc|value|Func_Growth_GrowPath_Title" href="/en/Path_of_Progression">Path of Progression</a></li>
+                <!--<li><a class="dropdown-item" data-i18n="season|name1|101" href="/en/Dark_Surge_Season">Dark Surge Season</a></li>-->
+                <!--<li><a class="dropdown-item" data-i18n="TextTable_GameFunc|value|Func_SeasonBook_Title" href="/en/Season_Pass">Season Pass</a></li>-->
+                <!--
+                <li><a class="dropdown-item" data-i18n="function|name|139" href="/en/Event">Event</a></li>
+                -->
+                <li><a class="dropdown-item" data-i18n="function|name|122" href="/en/Help">Help</a></li>
+                <li><a class="dropdown-item" data-i18n="function|name|124" href="/en/Codex">Codex</a></li>
+                <li><a class="dropdown-item" data-i18n="TextTable_GameFunc|value|Func_Common_Mind" href="/en/Tip">Tip</a></li>
+                <li><a class="dropdown-item" href="/en/Hyperlink">Hyperlink</a></li>
+              </ul>
+            </li>
+    
+            <li class="nav-item dropdown">
+              <a data-i18n="system_help|name|8" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Netherrealm
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" data-i18n="system_help|name|8" href="/en/Netherrealm">Netherrealm</a></li>
+                <!--<li><a class="dropdown-item" data-i18n="TextTable_GameFunc|value|Func_MysteryCard_PlayerDeck" href="/en/Trait_Decks">Trait Decks</a></li>-->
+                <li><a class="dropdown-item" data-i18n="TextTable_GameFunc|value|Func_MysteryCard_AdditionDeck" href="/en/Confusion_Card_Library">Confusion Card Library</a></li>
+                <li><a class="dropdown-item" data-i18n="function|name|171" href="/en/Void_Chart">Void Chart</a></li>
+                <li><a class="dropdown-item" data-i18n="item_type_list|name|51001" href="/en/Compass">Compass</a></li>
+                <li><a class="dropdown-item" data-i18n="TextTable_GameFunc|value|Func_FarmReference_MysticOrb" href="/en/Probe">Probe</a></li>
+                <li><a class="dropdown-item" data-i18n="item_type_list|name|51002" href="/en/Season_Compass">Season Compass</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" data-i18n="function|name|137" href="/en/Path_of_the_Brave">Path of the Brave</a></li>
+              </ul>
+            </li>
+    
+            <li class="nav-item dropdown">
+              <a data-i18n="function|name|110" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Shop
+              </a>
+              <ul class="dropdown-menu">
+    <!--
+                <li><a class="dropdown-item" data-i18n="function|name|110" href="/en/Shop">Shop</a></li>
+    -->
+                <li><a class="dropdown-item" data-i18n="TextTable_GameFunc|value|Func_Fashion_Type1" href="/en/Outfit">Outfit</a></li>
+                <li><a class="dropdown-item" data-i18n="TextTable_GameFunc|value|Func_Pack_Currency_Tab" href="/en/Commodity">Commodity</a></li>
+                <li><a class="dropdown-item" data-i18n="function|name|132" href="/en/Boon">Boon</a></li>
+              </ul>
+            </li>
+    
+    <!--
+            <li class="nav-item">
+              <a class="nav-link" data-i18n="Guide" href="/en/guides?season=The%20Frozen%20Canvas%20Season">Guide</a>
+            </li>
+    -->
+    
+          </ul>
+    
+          <!--
+          <a class="nav-link2" style="padding-right: 10px" href="https://lihi1.com/cAO3Z" target="_blank">
+            <img style="height: 24px" 
+                src="https://cdn.tlidb.com/image/logo/torchlight-48.webp"
+            />
+          </a>
+    
+          <a class="nav-link2" style="padding-right: 10px"
+            href="https://lihi1.com/l1NmL"
+            target="_blank">
+            <img style="height: 24px" src="https://cdn.tlidb.com/image/logo/facebook-48.webp"/>
+          </a>
+    
+          <a class="nav-link2" style="padding-right: 10px"
+            href="https://lihi1.com/neCTK"
+            target="_blank">
+            <img style="height: 24px" src="https://cdn.tlidb.com/image/logo/youtube-48.webp"/>
+          </a>
+    
+          <a class="nav-link2" style="padding-right: 10px" href="https://lihi1.com/owKrQ" target="_blank">
+            <img style="height: 24px" src="https://cdn.tlidb.com/image/logo/discord-48.webp"/>
+          </a>
+          -->
+    
+          <ul class="navbar-nav">
+            <li class="nav-item dropdown">
+              <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="fas fa-language fa-lg"></i></a>
+              <ul class="dropdown-menu language-menu">
+                <li><a class='dropdown-item' href='/en/'>EN English</a></li>
+                <li><a class='dropdown-item' href='/tw/'>TW 繁體中文</a></li>
+                <li><a class='dropdown-item' href='/cn/'>CN 简体中文</a></li>
+                <li><a class='dropdown-item' href='/ko/'>KO 한국어</a></li>
+                <!--
+                <li><a class='dropdown-item' href='/ja/'>JA Japanese</a></li>
+                <li><a class='dropdown-item' href='/ru/'>RU Русский</a></li>
+                <li><a class='dropdown-item' href='/de/'>DE Deutsch</a></li>
+                <li><a class='dropdown-item' href='/es/'>ES Spanish</a></li>
+                <li><a class='dropdown-item' href='/fr/'>FR Français</a></li>
+                <li><a class='dropdown-item' href='/id/'>ID bahasa Indonesia</a></li>
+                <li><a class='dropdown-item' href='/pt/'>PT Português</a></li>
+                <li><a class='dropdown-item' href='/th/'>TH ภาษาไทย</a></li>
+                <li><a class='dropdown-item' href='/vi/'>VI Tiếng Việt</a></li>
+                -->
+              </ul>
+            </li>
+          </ul>
+    
+          <form class="d-flex" role="search" action="search">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="navautosearch" name="q">
+          </form>
+    
+        </div>
+      </div>
+    </nav>
+
+    <script> sidebar160("leftside_banner", "left"); </script>
+    <script> sidebar160("rightside_banner", "right"); </script>
+
+    <div class="page">
+    <div class="page-content container" role="main">
+    <div class="text-center">
+    <a href="Vorax_Season"><img src="https://cdn.tlidb.com/UI/Textures/Common/Icon/Item/UI_S13_LegendStitching_03.webp" class="size48 white-shadow"/></a>
+    <a href="Overrealm_Season"><img src="https://cdn.tlidb.com/UI/Textures/Common/Icon/Item/UI_S12_LengJing_White01.webp" class="size48 white-shadow"/></a>
+    <a href="Outlaw_Season"><img src="https://cdn.tlidb.com/UI/Textures/Common/Icon/GamePlay/UI_Item_S11ChipMatching0_Icon.webp" class="size48 white-shadow"/></a>
+    <a href="Sandlord_Season"><img src="https://cdn.tlidb.com/UI/Textures/Common/Icon/Coin/128/UI_Money_S10EquipEnchantMaterial_10_128.webp" class="size48 white-shadow"/></a>
+    <a href="Arcana_Season"><img src="https://cdn.tlidb.com/UI/Textures/Common/Icon/Item/128/UI_S9Pet_FateStar_128.webp" class="size48 white-shadow"/></a>
+    <a href="The_Frozen_Canvas_Season"><img src="https://cdn.tlidb.com/UI/Textures/Common/Icon/GamePlay/UI_Item_S8Gameplay_Snow2_128.webp" class="size48 white-shadow"/></a>
+    <a href="Clockwork_Ballet_Season"><img src="https://cdn.tlidb.com/UI/Textures/Common/Icon/Item/128/UI_MysticTreeRespecPoint_Icon_128.webp" class="size48 white-shadow"/></a>
+    <a href="Whispering_Mist_Season"><img src="https://cdn.tlidb.com/UI/Textures/Common/Icon/GamePlay/UI_S6Gameplay_Tile_bench.webp" class="size48 white-shadow"/></a>
+    <a href="Nightmare_Season"><img src="https://cdn.tlidb.com/UI/Textures/Common/Icon/GamePlay/UI_Item_S5Gameplay_DreamTreasure_Almighty_C_128.webp" class="size48 white-shadow"/></a>
+    <a href="Aeterna_Season"><img src="https://cdn.tlidb.com/UI/Textures/Common/Icon/Silhouette/Talent/S4/UI_S4Gameplay_talent01_Icon_128.webp" class="size48 white-shadow"/></a>
+    <a href="Cube_Season"><img src="https://cdn.tlidb.com/UI/Textures/Common/Icon/Item/128/UI_S3Gameplay_Beads_Icon_128.webp" class="size48 white-shadow"/></a>
+    <a href="Blacksail_Season"><img src="https://cdn.tlidb.com/UI/Textures/Common/Icon/Item/128/UI_S2BossTicket3_Icon_128.webp" class="size48 white-shadow"/></a>
+    <a href="Dark_Surge_Season"><img src="https://cdn.tlidb.com/UI/Textures/Common/Icon/Item/128/UI_Item_yimozhihe_Icon_128.webp" class="size48 white-shadow"/></a>
+    </div>
+    <div class="text-center mb-2"><a href="https://torchlight.xd.com" target="_blank"><img src="https://cdn.tlidb.com/image/torchlight/p3_20260609_us.webp" style="max-width: 100%;"/></a></div>
+    <script>
+if (document.title.indexOf("Iron Sword") == -1) {
+    document.title = "Iron Sword" + " - " + document.title;
+}
+</script>
+<h1>Iron Sword</h1>
+
+<div class="row row-cols-1 row-cols-lg-3 g-2">
+
+<div class="col">
+<div class="card ui_item popupItem">
+    <div class="item_ver">SS13Season</div>
+    <div class="text-center icon">
+        <img src="https://cdn.tlidb.com/UIV2/Common/Icon/UI/Textures/EquipCommon/NoAtlas_112_160/Icon_Equip_Weapon_1HSword_Norm_004_112.webp" alt="IconEquipWeapon1HSwordNorm004112" class="size128 ui_item_base ui_item_quality1" loading="lazy" />
+        <div class="level"></div>
+    </div>
+    <div class="text-center px-3 banner banner1">
+      <h5 class="card-title" style="margin-top: 0.5rem">Iron Sword</h5>
+      <div class="d-flex flex-wrap justify-content-center">
+        <span class="border p-1 mb-1 tag tlborder">One-Handed Sword</span>
+        <span class="border p-1 mb-1 tag tlborder">Require lv 9</span>
+      </div>
+    </div>
+
+    <div class="px-3 pt-1 pb-3">
+
+
+        <div>
+        </div>
+        <div data-block="attrs2"><div><span data-modifier-id="500004"><span class="text-mod">10</span> - <span class="text-mod">10</span> Physical Damage</span></div><div><span data-modifier-id="730000"><span class="text-mod">500</span> Critical Strike Rating</span></div><div><span data-modifier-id="730001"><span class="text-mod">1.5</span> Attack Speed</span></div></div>
+
+
+
+
+
+
+
+
+
+
+
+        <hr style="width: 80%" class="mx-auto my-1"/>
+        <div data-block="description2">One-Handed</div>
+
+    </div>
+</div>
+</div>
+
+<div class="col">
+<div class="card ui_item popupItem previousItem">
+    <div class="item_ver">SS12Season</div>
+    <div class="text-center icon">
+        <img src="https://cdn.tlidb.com/UIV2/Common/Icon/UI/Textures/EquipCommon/NoAtlas_112_160/Icon_Equip_Weapon_1HSword_Norm_004_112.webp" alt="IconEquipWeapon1HSwordNorm004112" class="size128 ui_item_base ui_item_quality1" loading="lazy" />
+        <div class="level"></div>
+    </div>
+    <div class="text-center px-3 banner banner1">
+      <h5 class="card-title" style="margin-top: 0.5rem">Iron Sword</h5>
+      <div class="d-flex flex-wrap justify-content-center">
+        <span class="border p-1 mb-1 tag tlborder">One-Handed Sword</span>
+        <span class="border p-1 mb-1 tag tlborder">Require lv 9</span>
+      </div>
+    </div>
+
+    <div class="px-3 pt-1 pb-3">
+
+
+        <div>
+        </div>
+        <div data-block="attrs2"><div><span data-modifier-id="500004"><span class="text-mod">10</span> - <span class="text-mod">10</span> Physical Damage</span></div><div><span data-modifier-id="730000"><span class="text-mod">500</span> Critical Strike Rating</span></div><div><span data-modifier-id="730001"><span class="text-mod">1.5</span> Attack Speed</span></div></div>
+
+
+
+
+
+
+
+
+
+
+
+        <hr style="width: 80%" class="mx-auto my-1"/>
+        <div data-block="description2">One-Handed</div>
+
+    </div>
+</div>
+</div>
+
+
+
+
+<div class="col">
+<div class="card ui_item">
+    <div class="card-header" data-i18n="TextTable_GameFunc|value|Func_Tips_DropSource">Drop Source</div>
+    <div class="card-body">
+    <li><a href="Drops_everywhere_in_Netherrealm">Drops everywhere in Netherrealm</a><hr class="my-1"/></li>
+    </div>
+</div>
+</div>
+
+
+
+
+
+
+<div class="col">
+<div class="card ui_item">
+    <div class="card-header">Info</div>
+    <div class="card-body">
+        <div>id: 403</div>
+    </div>
+</div>
+</div>
+
+</div>
+
+<div class="m-2">
+    <button id="hideSmall" class="btn btn-primary">Show Description</button>
+</div>
+<script>
+$(document).ready(function () {
+  if ($('small.description').length == 0) {
+    $('#hideSmall').hide();
+  }
+  $('#hideSmall').click(function() {
+    $(this).text(function(i, v) { return v == 'Show Description' ? 'Hide Description' : 'Show Description'; });
+    $('small.description').toggle();
+  });
+});
+</script>
+
+
+
+    </div>
+    </div>
+
+    <footer class="text-center text-lg-left container mt-2">
+      <div class="card p-4">
+        <div class="row">
+
+          <div class="col-lg-3 col-md-12 mb-4 mb-md-0">
+            <h5 class="text-uppercase">Sites</h5>
+            <ul class="list-unstyled mb-0">
+              <li> <a target="_blank" href="https://poedb.tw/">poedb.tw</a> </li>
+              <li> <a target="_blank" href="https://tlidb.com/">tlidb.com</a> </li>
+              <!--<li> <a target="_blank" href="https://diablo4.cc/">diablo4.cc</a> </li>-->
+              <li> <a target="_blank" href="https://poe2db.tw/">poe2db.tw</a> </li>
+              <li> <a target="_blank" href="https://paldb.cc/">paldb.cc</a> </li>
+            </ul>
+          </div>
+
+          <div class="col-lg-3 col-md-12 mb-4 mb-md-0">
+            <h5 class="text-uppercase">About Site</h5>
+            <ul class="list-unstyled mb-0">
+              <li><a href="privacy">Privacy</a></li>
+              <li> <a target="_blank" href="https://www.reddit.com/user/chuanhsing">About US</a> </li>
+            </ul>
+          </div>
+
+          <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+            <h5 class="text-uppercase">Community</h5>
+            <ul class="list-unstyled mb-0">
+            </ul>
+          </div>
+
+        </div>
+      </div>
+      <div class="p-3">
+
+      <span data-i18n="Disclaimer">The site is based on beta testing data, not the final official release. This site is fan-made and not affiliated with XD in any way.</span>
+      </div>
+    </footer>
+
+    <a href="#top" id="toTop"><span class="fas fa-arrow-circle-up fa-3x"></span></a>
+    <div id="consent-box" style="display:none">
+      <button onclick="window.__cmp('showModal');">
+        Update cookie preferences
+      </button>
+    </div>
+    
+    <script>
+      if (window["nitroAds"] && window["nitroAds"].loaded) {
+        document.getElementById("consent-box").style.display = window["__tcfapi"]
+          ? ""
+          : "none";
+      } else {
+        document.addEventListener(
+          "nitroAds.loaded",
+          () =>
+            (document.getElementById("consent-box").style.display = window["__tcfapi"]
+              ? ""
+              : "none")
+        );
+      }
+    </script>
+  </body>
+</html>
