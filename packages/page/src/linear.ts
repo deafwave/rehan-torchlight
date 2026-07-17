@@ -268,12 +268,6 @@ const PHASES: Phase[] = [
     { id:"sl-convert", seq:"LAST", src:"slate", chip: slateChip("Converts 100% of Physical Damage to Cold"),
       title:"Phys→Cold conversion (Goddess of Knowledge)",
       note:"Then respec Prophet → Ronin." },
-    { id:"sl-sealed", src:"slate", chip: slateChip("+3% Sealed Mana Compensation"),
-      title:"3% Sealed Mana Compensation (Goddess of Deception)",
-      note:"Hold until the priceless sealed-mana helmet lands." },
-    { id:"sl-shop", src:"slate", title:"What to shop",
-      note:"A Corner of Divinity (max 3) · Fallen Starlight (max 3) · Pedigree of Gods (max 1) · God slates: aim 1× Medium + 2× Legendary Medium or better.",
-      detail: foldout("best legendary-medium fillers — skill-level lines stack", fillers.map(catRow).join("")) },
   ]},
 
   { id:"armor86", cost:"10B–20B", gate:"Traveler 8", title:"i86 armor + the Frostbite package",
@@ -300,7 +294,7 @@ const PHASES: Phase[] = [
       note:"Keep the Bodhi Girdle for DPS — this belt trades damage for defense." },
   ]},
 
-  { id:"linkbuys", gate:"Skills", title:"Upgrade skills",
+  { id:"linkbuys", gate:"Skills", title:"The Spectral Slash link",
     remind:["sl-frostbite"], steps:[
     { id:"legion", seq:"FIRST", src:"support", title:"Socket Legion (Noble) + mediums", needs:["wl-legion"],
       note:"Drop whichever of Quick Decision / Added Phys the Motionless buy left.",
@@ -312,7 +306,10 @@ const PHASES: Phase[] = [
       // filter: only the magnificent gem — the 420b bar also lands warcries (next step)
       detail: () => skillBuysHtml("detonation", "150b", "420b", "active",
         n => /Detonation/i.test(n)) },
-    { id:"warcries", seq:"THIRD", src:"skill", title:"Swap to warcries",
+  ]},
+
+  { id:"warcrybar", gate:"Skills", title:"The warcry bar", steps:[
+    { id:"warcries", seq:"FIRST", src:"skill", title:"Swap to warcries",
       note:"Shockwave replaces Bull's Rage · Resurrection replaces Timid.",
       detail: () => skillBuysHtml("warcries", "150b", "420b", "active",
           n => !/Detonation/i.test(n))
@@ -324,9 +321,12 @@ const PHASES: Phase[] = [
         ])
         + `<details class="bar-fold"><summary>the full bar after this buy</summary>`
         + skillBarView("420b", "active") + `</details>` },
-    { id:"thunderspike", src:"skill", title:"Buy Thunder Spike: Rumbling Thunder (Noble)",
+    { id:"thunderspike", seq:"SECOND", src:"skill", title:"Buy Thunder Spike: Rumbling Thunder (Noble)",
       note:"Thunder Spike replaces Spiral Strike.",
       detail: skillBuysDetail("thunderspike", "420b", "Inverse-Warcry") },
+    { id:"sl-shop", src:"slate", title:"What to shop",
+      note:"A Corner of Divinity (max 3) · Fallen Starlight (max 3) · Pedigree of Gods (max 1) · God slates: aim 1× Medium + 2× Legendary Medium or better.",
+      detail: foldout("best legendary-medium fillers — skill-level lines stack", fillers.map(catRow).join("")) },
   ]},
 
   { id:"priceless", cost:"200B", gate:"Profound 8", title:"Priceless completes (8-1 + 8-2 open)", steps:[
