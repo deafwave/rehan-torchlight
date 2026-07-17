@@ -262,12 +262,9 @@ const PHASES: Phase[] = [
   ]},
 
   { id:"slates", gate:"Slates", title:"Slate priority", steps:[
-    { id:"sl-frostbite", seq:"1st", src:"slate", chip: slateChip("Inflicts Frostbite when dealing Hit Cold Damage"),
+    { id:"sl-frostbite", src:"slate", chip: slateChip("Inflicts Frostbite when dealing Hit Cold Damage"),
       title:"Frostbite on Cold hit (Goddess of Knowledge)",
       note:"Respec the 4 freed Prophet points into the Frostbite legendaries." },
-    { id:"sl-convert", seq:"LAST", src:"slate", chip: slateChip("Converts 100% of Physical Damage to Cold"),
-      title:"Phys→Cold conversion (Goddess of Knowledge)",
-      note:"Then respec Prophet → Ronin." },
   ]},
 
   { id:"armor86", cost:"10B–20B", gate:"Traveler 8", title:"i86 armor + the Frostbite package",
@@ -387,8 +384,10 @@ const PHASES: Phase[] = [
       title:"Socket Unmatched Valor", note:"Ranger slot; Centralize becomes a respec candidate." },
   ]},
 
-  { id:"endgame", cost:"150B+", gate:"Timemark 8 / Atlas", title:"Endgame layers",
-    remind:["sl-convert"], steps:[
+  { id:"endgame", cost:"150B+", gate:"Timemark 8 / Atlas", title:"Endgame layers", steps:[
+    { id:"sl-convert", src:"slate", chip: slateChip("Converts 100% of Physical Damage to Cold"),
+      title:"Phys→Cold conversion (Goddess of Knowledge)", needs:["fv-prism"],
+      note:"Then respec Prophet → Ronin — wait until Unmatched Valor makes Centralize a respec candidate." },
     { id:"fv-eternity", seq:"1st", src:"gear", chip: rungChip("belt", "Eternity"), needs:["wl-eternity"],
       title:"Eternity (from the 5 blueprints)",
       note:"Swap Motionless → Still Attack medium on the link. Precise: Energy Shield once the flat-ES belt is gone.",
