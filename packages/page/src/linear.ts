@@ -124,14 +124,14 @@ if (!MEM_FIXED_DPS.length || !MEM_RANDOM.length)
   throw new Error("linear: memory Fixed/Random priorities empty — regenerate catalog");
 /* Catalog ΔDPS ranks Fixed "% damage" first (+52% → +7.4%), but on this crit/AS
    build it's never better shopping than Crit Damage / Crit Rating / Attack Speed —
-   demote it under those three. Catalog only ranks DPS Fixed lines; ES build also
-   shops the defense Fixed rolls below. */
+   demote it under those three, with the unscored Skill Area line in between.
+   Catalog only ranks DPS Fixed lines; ES build also shops the defense Fixed rolls below. */
 const FIXED_ABOVE_PCT = new Set(["Crit Damage", "Crit Rating", "Attack Speed"]);
 const memFixedDpsShop = (() => {
   if (!MEM_FIXED_DPS.includes("% damage")) return MEM_FIXED_DPS;
   const rest = MEM_FIXED_DPS.filter(x => x !== "% damage");
   const lastPin = Math.max(-1, ...rest.map((x, i) => (FIXED_ABOVE_PCT.has(x) ? i : -1)));
-  return [...rest.slice(0, lastPin + 1), "% damage", ...rest.slice(lastPin + 1)];
+  return [...rest.slice(0, lastPin + 1), "Skill Area", "% damage", ...rest.slice(lastPin + 1)];
 })();
 const MEM_FIXED = [
   ...memFixedDpsShop,
@@ -225,6 +225,7 @@ const PHASES: Phase[] = [
     { id:"pedigree", src:"slate", title:"Snipe a Pedigree of Gods (~30 FE)",
       detail: foldout("core talents to look for", cores.map(catRow).join("")) },
     { id:"memory-epic", title:"Hero Memory epic",
+      note:"Spec all bottom nodes.",
       detail: memoryDetail("memory-epic") },
     { id:"cheap-uniques-90", src:"gear", title:"Buy cheap uniques",
       detail: itemsDetail("cheap-uniques-90", [
@@ -250,9 +251,6 @@ const PHASES: Phase[] = [
     { id:"oh86", seq:"SECOND", src:"gear", chip: rungChip("offHand", "i86"),
       title:"i86 offhand — Shadowless Swordsman's Blade (raw damage)",
       detail: craftDetail("oh86", "offHand", "i86") },
-    { id:"ring86bar", seq:"THIRD", src:"gear", chip: rungChip("ring1", "i86"),
-      title:"i86 barrier ring — Perishing Inferno Flame Ring",
-      detail: craftDetail("ring86bar", "ring1", "i86") },
     { id:"motionless", src:"support", title:"Activation Medium: Motionless",
       note:"On the Slash medium — replaces Quick Decision or Added Phys.",
       // filter: just the medium — the rest of the 150b bar lands with Legion (Skills phase)
@@ -261,31 +259,40 @@ const PHASES: Phase[] = [
     { id:"lv93", src:"talent", title:"Lv 93 talent tree" },
   ]},
 
-  { id:"slates", gate:"Slates", title:"Slate priority", steps:[
+  { id:"slates", gate:"Slates", title:"Slate + memory priority", steps:[
     { id:"sl-frostbite", src:"slate", chip: slateChip("Inflicts Frostbite when dealing Hit Cold Damage"),
       title:"Frostbite on Cold hit (Goddess of Knowledge)",
       note:"Respec the 4 freed Prophet points into the Frostbite legendaries." },
+    { id:"memory-leg", title:"Hero Memory epic (REVIVED)",
+      note:"REVIVED: +% Attack Speed for every main-attack skill cast (stacks to 6). Spec all bottom nodes.",
+      detail: memoryDetail("memory-leg") },
   ]},
 
-  { id:"armor86", cost:"10B–20B", gate:"Traveler 8", title:"i86 armor + the Frostbite package",
+  { id:"armor86-dps", cost:"10B–20B", gate:"Traveler 8", title:"i86 armor — DPS + the Frostbite package",
     note:"Traveler 8 done → check 8-1/8-2 priceless pieces every session.", steps:[
+    { id:"ring86bar", src:"gear", chip: rungChip("ring1", "i86"),
+      title:"i86 barrier ring — Perishing Inferno Flame Ring",
+      detail: craftDetail("ring86bar", "ring1", "i86") },
     { id:"icebond", src:"skill", title:"Ice Bond — the Frostbite self-applicator",
       note:"Replaces Fixate.",
       // filter: just Ice Bond + its gems — the rest of the 150b bar lands with Legion (Skills phase)
       detail: () => skillBuysHtml("icebond", "Full precise auras", "150b", "active",
         n => /Ice Bond/i.test(n)) },
-    { id:"helm86", src:"gear", chip: rungChip("helmet", "i86"),
-      title:"i86 ES helmet — Long Night Sorcerer's Mask",
-      detail: craftDetail("helm86", "helmet", "i86") },
-    { id:"gloves86", src:"gear", chip: rungChip("gloves", "i86"),
-      title:"i86 ES gloves — Long Night Sorcerer's Wristband",
-      detail: craftDetail("gloves86", "gloves", "i86") },
     { id:"ring86fb", src:"gear", chip: rungChip("ring2", "i86"),
       title:"i86 frostbite ring — Perishing Inferno Flame Ring",
       detail: craftDetail("ring86fb", "ring2", "i86") },
     { id:"haze", src:"prism", chip: dChip(prismRung("Ethereal", "Haze").delta),
       title:"Ethereal Prism: Haze",
       note:"+12% additional Attack Damage when holding a One-Handed Weapon." },
+  ]},
+
+  { id:"armor86-tank", gate:"Traveler 8", title:"i86 armor — tank", steps:[
+    { id:"helm86", src:"gear", chip: rungChip("helmet", "i86"),
+      title:"i86 ES helmet — Long Night Sorcerer's Mask",
+      detail: craftDetail("helm86", "helmet", "i86") },
+    { id:"gloves86", src:"gear", chip: rungChip("gloves", "i86"),
+      title:"i86 ES gloves — Long Night Sorcerer's Wristband",
+      detail: craftDetail("gloves86", "gloves", "i86") },
     { id:"belt-lh", src:"gear", chip: rungChip("belt", "Light Hunter"),
       title:"Light Hunter Belt — tank swap",
       note:"Keep the Bodhi Girdle for DPS — this belt trades damage for defense." },
@@ -350,9 +357,6 @@ const PHASES: Phase[] = [
     { id:"end-warcry", seq:"2nd", src:"prism",
       chip: dChip(prismRung("Inverse", "good inverse").delta), needs:["wl-inverse"],
       title:"Socket the Inverse Prism" },
-    { id:"memory-leg", title:"Hero Memory legendary",
-      note:"REVIVED: +% Attack Speed for every main-attack skill cast (stacks to 6).",
-      detail: memoryDetail("memory-leg") },
     { id:"kismets", src:"pact", title:"Kismet layout",
       detail: itemsDetail("kismets", [
         { name:"2× Peerless", note:"Dual pair — never move" },
@@ -654,7 +658,7 @@ const stepCard = (s: Step, remind = false) => {
     : (s.note ? `<p class="l-note">${s.note}</p>` : "")
       + (waiting.length ? `<p class="l-wait">⚠ waiting on: ${waiting.map(id => esc(TITLE[id])).join(" · ")}</p>` : "")
       + (s.id in TREE_BTN ? `<p class="l-tree">${treeBtn(TREE_BTN[s.id], "view this talent tree")}</p>` : "")
-      + (remind ? `<p class="l-wait">↩ echoed from <a href="#step-${escAttr(s.id)}">Slate priority</a> — same checkbox</p>` : "")
+      + (remind ? `<p class="l-wait">↩ echoed from <a href="#step-${escAttr(s.id)}">Slate + memory priority</a> — same checkbox</p>` : "")
       + (typeof s.detail === "function" ? s.detail() : (s.detail ?? ""));
   /* reminder copies drop the DOM id (the canonical card keeps it) but share data-step state */
   return `<div class="lstep${done[s.id] ? " done" : ""}${s.seq ? " seq" : ""}${remind ? " remind" : ""}"${remind ? "" : ` id="step-${escAttr(s.id)}"`}>`
