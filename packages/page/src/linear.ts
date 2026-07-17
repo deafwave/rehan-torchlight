@@ -233,6 +233,15 @@ const PHASES: Phase[] = [
       ]) },
   ]},
 
+  { id:"boots-blessing", gate:"Traveler 8", title:"Focus Blessing + i86 ES boots", steps:[
+    { id:"sl-blessing", src:"slate", chip: slateChip("+100% chance to gain a stack of Focus Blessing"),
+      title:"Focus Blessing on Frostbitten hit (Goddess of Knowledge)",
+      note:"Buy before the i86 boots." },
+    { id:"boots86", src:"gear", chip: rungChip("boots", "i86"), needs:["sl-blessing"],
+      title:"i86 ES boots — Long Night Sorcerer's Boots",
+      detail: craftDetail("boots86", "boots", "i86") },
+  ]},
+
   { id:"core86", cost:"1B", gate:"8-0", title:"i86 core — in this order",
     note:`Priceless waits until after Traveler 8. i86 chest = ES/defense only (${rngTxt(rung("chest", "i86"))}).`, steps:[
     { id:"mh86", seq:"FIRST", src:"gear", chip: rungChip("mainHand", "i86"),
@@ -241,27 +250,21 @@ const PHASES: Phase[] = [
     { id:"oh86", seq:"SECOND", src:"gear", chip: rungChip("offHand", "i86"),
       title:"i86 offhand — Shadowless Swordsman's Blade (raw damage)",
       detail: craftDetail("oh86", "offHand", "i86") },
-    { id:"ring86fb", seq:"THIRD", src:"gear", chip: rungChip("ring2", "i86"),
-      title:"i86 frostbite ring — Perishing Inferno Flame Ring",
-      detail: craftDetail("ring86fb", "ring2", "i86") },
-    { id:"ring86bar", seq:"FOURTH", src:"gear", chip: rungChip("ring1", "i86"),
+    { id:"ring86bar", seq:"THIRD", src:"gear", chip: rungChip("ring1", "i86"),
       title:"i86 barrier ring — Perishing Inferno Flame Ring",
       detail: craftDetail("ring86bar", "ring1", "i86") },
-    { id:"haze", src:"prism", chip: dChip(prismRung("Ethereal", "Haze").delta),
-      title:"Ethereal Prism: Haze",
-      note:"+12% additional Attack Damage when holding a One-Handed Weapon." },
+    { id:"motionless", src:"support", title:"Activation Medium: Motionless",
+      note:"On the Slash medium — replaces Quick Decision or Added Phys.",
+      // filter: just the medium — the rest of the 150b bar lands with Legion (Skills phase)
+      detail: () => skillBuysHtml("motionless", "Full precise auras", "150b", "active",
+        n => /Motionless/i.test(n)) },
     { id:"lv93", src:"talent", title:"Lv 93 talent tree" },
   ]},
 
   { id:"slates", gate:"Slates", title:"Slate priority", steps:[
-    { id:"sl-blessing", seq:"1st", src:"slate", chip: slateChip("+100% chance to gain a stack of Focus Blessing"),
-      title:"Focus Blessing on Frostbitten hit (Goddess of Knowledge)",
-      note:"Buy before the i86 boots." },
-    { id:"sl-frostbite", seq:"2nd", src:"slate", chip: slateChip("Inflicts Frostbite when dealing Hit Cold Damage"),
+    { id:"sl-frostbite", seq:"1st", src:"slate", chip: slateChip("Inflicts Frostbite when dealing Hit Cold Damage"),
       title:"Frostbite on Cold hit (Goddess of Knowledge)",
       note:"Respec the 4 freed Prophet points into the Frostbite legendaries." },
-    { id:"sl-warcry", seq:"3rd", src:"slate", chip: slateChip("+4 to the minimum number of enemies affected by Warcry"),
-      title:"+4 min enemies affected by Warcry (God of Might)" },
     { id:"sl-convert", seq:"LAST", src:"slate", chip: slateChip("Converts 100% of Physical Damage to Cold"),
       title:"Phys→Cold conversion (Goddess of Knowledge)",
       note:"Then respec Prophet → Ronin." },
@@ -273,28 +276,37 @@ const PHASES: Phase[] = [
       detail: foldout("best legendary-medium fillers — skill-level lines stack", fillers.map(catRow).join("")) },
   ]},
 
-  { id:"armor86", cost:"10B–20B", gate:"Traveler 8", title:"i86 armor pieces",
-    note:"Traveler 8 done → check 8-1/8-2 priceless pieces every session.",
-    remind:["sl-blessing"], steps:[
-    { id:"boots86", src:"gear", chip: rungChip("boots", "i86"), needs:["sl-blessing"],
-      title:"i86 ES boots — Long Night Sorcerer's Boots",
-      detail: craftDetail("boots86", "boots", "i86") },
+  { id:"armor86", cost:"10B–20B", gate:"Traveler 8", title:"i86 armor + the Frostbite package",
+    note:"Traveler 8 done → check 8-1/8-2 priceless pieces every session.", steps:[
+    { id:"icebond", src:"skill", title:"Ice Bond — the Frostbite self-applicator",
+      note:"Replaces Fixate.",
+      // filter: just Ice Bond + its gems — the rest of the 150b bar lands with Legion (Skills phase)
+      detail: () => skillBuysHtml("icebond", "Full precise auras", "150b", "active",
+        n => /Ice Bond/i.test(n)) },
     { id:"helm86", src:"gear", chip: rungChip("helmet", "i86"),
       title:"i86 ES helmet — Long Night Sorcerer's Mask",
       detail: craftDetail("helm86", "helmet", "i86") },
     { id:"gloves86", src:"gear", chip: rungChip("gloves", "i86"),
       title:"i86 ES gloves — Long Night Sorcerer's Wristband",
       detail: craftDetail("gloves86", "gloves", "i86") },
+    { id:"ring86fb", src:"gear", chip: rungChip("ring2", "i86"),
+      title:"i86 frostbite ring — Perishing Inferno Flame Ring",
+      detail: craftDetail("ring86fb", "ring2", "i86") },
+    { id:"haze", src:"prism", chip: dChip(prismRung("Ethereal", "Haze").delta),
+      title:"Ethereal Prism: Haze",
+      note:"+12% additional Attack Damage when holding a One-Handed Weapon." },
     { id:"belt-lh", src:"gear", chip: rungChip("belt", "Light Hunter"),
       title:"Light Hunter Belt — tank swap",
       note:"Keep the Bodhi Girdle for DPS — this belt trades damage for defense." },
   ]},
 
   { id:"linkbuys", gate:"Skills", title:"Upgrade skills",
-    remind:["sl-frostbite", "sl-warcry"], steps:[
+    remind:["sl-frostbite"], steps:[
     { id:"legion", seq:"FIRST", src:"support", title:"Socket Legion (Noble) + mediums", needs:["wl-legion"],
-      note:"Drop Added Physical Damage and Quick Decision on Slash. Drop Fixate for Ice Bond.",
-      detail: skillBuysDetail("legion", "Full precise auras", "150b") },
+      note:"Drop whichever of Quick Decision / Added Phys the Motionless buy left.",
+      // filter: Motionless (i86 core) and Ice Bond (armor phase) already have their own steps
+      detail: skillBuysDetail("legion", "Full precise auras", "150b", "active",
+        n => !/Motionless|Ice Bond/i.test(n)) },
     { id:"detonation", seq:"SECOND", src:"support", title:"Buy Spectral Slash: Detonation (Magnificent)",
       note:"Socket it now; max to L5 later (+20% damage) before Fervor.",
       // filter: only the magnificent gem — the 420b bar also lands warcries (next step)
@@ -307,6 +319,8 @@ const PHASES: Phase[] = [
         + itemsHtml("warcries", [
           { name:"Captain Kitty of the Furious Sea",
             note:"replaces Fog Scorpion / Knight of Pale Blue · level this only" },
+          { name:"+4 min enemies affected by Warcry slate",
+            note:"God of Might" },
         ])
         + `<details class="bar-fold"><summary>the full bar after this buy</summary>`
         + skillBarView("420b", "active") + `</details>` },
@@ -542,9 +556,9 @@ function skillBuys(
   for (const sk of getBar(to)[which]) {
     const old = prev.get(sk.name);
     if (!old) {
-      // brand-new skill — list it when the skill name passes, with filtered supports
+      // brand-new skill — the filter gates the whole skill; its supports come with it
       if (!filter(sk.name)) continue;
-      out.push({ name: sk.name, supports: sk.supports.filter(u => filter(u.name)) });
+      out.push({ name: sk.name, supports: sk.supports });
       continue;
     }
     // existing skill — only newly socketed supports (incl. activation mediums)
