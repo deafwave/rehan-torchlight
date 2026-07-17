@@ -2,7 +2,7 @@ import "./style.css";
 import ladderData from "./data/ladder.json";
 import catalogData from "./data/catalog.json";
 import prismData from "./data/prisms.json";
-import { esc, escAttr, gainChip, dChip, SRC, srcChip, modRows,
+import { esc, escAttr, gainChip, dChip, SRC, srcChip, modRows, godOf,
   type LadderRow, type CatalogRow, type Rung } from "./ui";
 import { renderLinear, resetLinearProgress } from "./linear";
 
@@ -82,21 +82,21 @@ const miniTree = (headers: string[], rows: { label: string; nodes: (TNode | null
   const rows: { label: string; nodes: (TNode | null)[] }[] = [
     {label:"frostbite", nodes:[
       {src:"talent", lbl:"4 Prophet points", name:"the tree line paying for it today"},
-      {lbl:"Frostbite on Cold hit", chip:slateChip(FIND.frostbite), name:"Frostbitten core or Prophet line"},
+      {lbl:"Frostbite on Cold hit", chip:slateChip(FIND.frostbite), name:"Goddess of Knowledge"},
       {src:"talent", lbl:"Frostbite legendaries",
        name:"respec the freed points into Effect · Cold Infiltration · more-vs-Frozen"}]},
     {label:"focus blessing", nodes:[
       {src:"gear", lbl:"Grace Boots", name:"carry it today"},
-      {lbl:"Focus Blessing on Frostbitten hit", chip:slateChip(FIND.blessing), name:"Prophet"},
+      {lbl:"Focus Blessing on Frostbitten hit", chip:slateChip(FIND.blessing), name:"Goddess of Knowledge"},
       {src:"gear", lbl:"boots ladder opens", name:"Grace Boots freed → i86 → Dawn Break"}]},
     {label:"warcry floor", nodes:[
       {src:"talent", lbl:"The Brave nodes", name:"+4 min enemies from the tree talent"},
       {lbl:"+4 min Warcry enemies", chip:slateChip(FIND.warcry),
-       name:"The Brave · 1 copy · floor 8 of the 16-stack cap (Formless doubles it) — the inverse copy adds 4–6 more"},
+       name:"God of Might · 1 copy · floor 8 of the 16-stack cap (Formless doubles it) — the inverse copy adds 4–6 more"},
       {src:"skill", lbl:"Shockwave Warcry", name:"onto the freed bar slot"}]},
     {label:"conversion", nodes:[
       {src:"talent", lbl:"Prophet tree conversion", name:"covers it until endgame"},
-      {lbl:"Phys→Cold conversion", chip:slateChip(FIND.convert), name:"Prophet · the last buy"},
+      {lbl:"Phys→Cold conversion", chip:slateChip(FIND.convert), name:"Goddess of Knowledge · the last buy"},
       {src:"talent", lbl:"Prophet → Ronin respec",
        name:"re-cover conversion · Cold Infiltration on Frozen · Frostbite Effect/Rating first"}]},
   ];
@@ -122,7 +122,7 @@ const miniTree = (headers: string[], rows: { label: string; nodes: (TNode | null
      defensive buys, so no ΔDPS; the god is what you shop for */
   const immunities = CATALOG.filter(r => r.cat === "slate" && /^Immune to (Trauma|Wilt|Ignite)/.test(r.text));
   const defRow = (r: CatalogRow) =>
-    `<div class="mod-row"><span class="mod-text"><b>${esc(r.on)}</b> · ${esc(r.text).replace(/\n/g, " · ")}</span>`
+    `<div class="mod-row"><span class="mod-text"><b>${esc(godOf(r.on))}</b> · ${esc(r.text).replace(/\n/g, " · ")}</span>`
     + `<span class="delta-chip d-none">defense</span></div>`;
   document.getElementById("slate-plan")!.innerHTML =
     miniTree(["today", "buy on slate", "what it frees"], rows)
@@ -277,8 +277,9 @@ function renderCatalog(){
     return `<span class="src-chip" style="background:${col}22;color:${col}">${esc(t)}</span>`;
   };
   const onCell = (s: string) => {
-    const parts = s.split(", ");
-    return esc(parts.length > 3 ? parts.slice(0,3).join(", ") + ` +${parts.length-3} more` : s);
+    const gods = godOf(s);
+    const parts = gods.split(", ");
+    return esc(parts.length > 3 ? parts.slice(0,3).join(", ") + ` +${parts.length-3} more` : gods);
   };
   document.getElementById("cat-body")!.innerHTML = rows.slice(0, CAT_LIMIT).map(r =>
     `<tr><td>${chip(r.delta)}${r.cond?` <span class="cond-mark" title="conditional — value is a full-uptime ceiling">◑</span>`:""}</td>`

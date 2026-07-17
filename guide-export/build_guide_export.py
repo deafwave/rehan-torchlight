@@ -170,16 +170,16 @@ blank()
 # --- §4 slates ---
 row("", "SLATES", "SLATE PRIORITY — buy in this order", None)
 row("enabler", "1st",
-    "Focus Blessing on Frostbitten hit (God of Knowledge) — REQUIRED BEFORE THE i86 BOOTS: "
+    "Focus Blessing on Frostbitten hit (Goddess of Knowledge) — REQUIRED BEFORE THE i86 BOOTS: "
     "unlocks the boots ladder (Grace freed → i86 → Dawn Break).",
     "slate tooltip: the Focus Blessing line")
 row(g(frostbite_sl["delta"]), "2nd",
-    "Frostbite on Cold hit (Frostbitten core / Prophet) — frees 4 Prophet points → respec into "
+    "Frostbite on Cold hit (Goddess of Knowledge) — frees 4 Prophet points → respec into "
     "the Frostbite legendaries.", None)
 row(g(warcry_sl["delta"]), "3rd",
-    "+4 min enemies affected by Warcry (The Brave, 1 copy) — floors the boss stack at 8 of 16.", None)
+    "+4 min enemies affected by Warcry (God of Might) — floors the boss stack at 8 of 16.", None)
 row("enabler", "LAST",
-    "Phys→Cold conversion slate — the Prophet tree covers it today; the slate frees the "
+    "Phys→Cold conversion (Goddess of Knowledge) — the Prophet tree covers it today; the slate frees the "
     "Prophet → Ronin respec.", None)
 row("", "What to shop",
     "A Corner of Divinity (max 3) — 2x Legendary Medium, any god\n"

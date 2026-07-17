@@ -330,4 +330,11 @@ describe("tier and spawn info", () => {
   test("duplicate descs merge spawn slates", () => {
     expect(rows.some(r => r.cat === "slate" && r.on.includes(","))).toBe(true);
   });
+
+  test("spawns stay bare panel names — the page's godOf map keys on them", () => {
+    // Lich is a Goddess of Deception panel; Arcanist a Goddess of Knowledge one
+    const smc = rows.filter(r => r.cat === "slate" && r.text === "+3% Sealed Mana Compensation");
+    expect(smc.length).toBeGreaterThan(0);
+    expect(smc[0].on).toBe("Arcanist, Lich");
+  });
 });

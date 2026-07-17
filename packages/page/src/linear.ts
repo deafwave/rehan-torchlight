@@ -11,7 +11,7 @@ import ladderData from "./data/ladder.json";
 import catalogData from "./data/catalog.json";
 import prismData from "./data/prisms.json";
 import skillbarsData from "./data/skillbars.json";
-import { esc, escAttr, gainChip, dChip, srcChip, SRC,
+import { esc, escAttr, gainChip, dChip, srcChip, SRC, godOf,
   type LadderRow, type CatalogRow, type Rung } from "./ui";
 import { initTalents, openTalents, type TreeStage } from "./talents";
 
@@ -86,7 +86,7 @@ const fillers = CATALOG.filter(r =>
 const immunities = CATALOG.filter(r =>
   r.cat === "slate" && /^Immune to (Trauma|Wilt|Ignite)/.test(r.text));
 const immRow = (r: CatalogRow) =>
-  `<div class="mod-row"><span class="mod-text"><b>${esc(r.on)}</b> · ${esc(r.text).replace(/\n/g, " · ")}</span>`
+  `<div class="mod-row"><span class="mod-text"><b>${esc(godOf(r.on))}</b> · ${esc(r.text).replace(/\n/g, " · ")}</span>`
   + `<span class="delta-chip d-none">defense</span></div>`;
 
 /* Hero-memory shopping: Fixed Affix + Random Affix only (no Special Random). Ranked by
@@ -186,7 +186,11 @@ const PHASES: Phase[] = [
     { id:"auras-early", src:"skill", title:"All 4 Auras (non-precise)",
       detail: () => skillBarHtml("auras-early", "150b", "passive", { stripPrecise: true }) },
     { id:"pactspirits", src:"pact", title:"Pactspirits",
-      note:"Red Umbrella + Azure Gunslinger (nodes 4–6: crit). Fog Scorpion or Knight of Pale Blue in the third slot." },
+      detail: itemsDetail("pactspirits", [
+        { name:"Red Umbrella", note:"nodes 4–6: crit" },
+        { name:"Azure Gunslinger", note:"nodes 4–6: crit" },
+        { name:"Fog Scorpion or Knight of Pale Blue" },
+      ]) },
     { id:"mh82", src:"gear", chip: rungChip("mainHand", "i82"),
       title:"i82 mainhand — Unforgotten Long Blade (speed/crit)",
       detail: craftDetail("mh82", "mainHand", "i82") },
@@ -208,10 +212,8 @@ const PHASES: Phase[] = [
     { id:"gloves82", src:"gear", chip: rungChip("gloves", "i82"),
       title:"i82 ES gloves — All Magic Grip",
       detail: craftDetail("gloves82", "gloves", "i82") },
-    { id:"cheap-uniques", src:"gear", title:"Buy cheap uniques",
-      detail: itemsDetail("cheap-uniques", [
-        { name:"Grace Boots", note:"keep until the Focus Blessing slate" },
-      ]) },
+    { id:"cheap-uniques", src:"gear", title:"Grace Boots",
+      note:"keep until the Focus Blessing slate" },
     { id:"slate-quickcheck", src:"slate", title:"Slate quick-checks",
       note:"3–4× slates",
       detail: foldout("best legendary-medium fillers — skill-level lines stack", fillers.map(catRow).join("")) },
@@ -241,31 +243,31 @@ const PHASES: Phase[] = [
       detail: craftDetail("oh86", "offHand", "i86") },
     { id:"ring86fb", seq:"THIRD", src:"gear", chip: rungChip("ring2", "i86"),
       title:"i86 frostbite ring — Perishing Inferno Flame Ring",
-      note:"The +1 Combo Points suffix is the item — never lose it.",
       detail: craftDetail("ring86fb", "ring2", "i86") },
     { id:"ring86bar", seq:"FOURTH", src:"gear", chip: rungChip("ring1", "i86"),
       title:"i86 barrier ring — Perishing Inferno Flame Ring",
-      note:"Last of the i86 core rings.",
       detail: craftDetail("ring86bar", "ring1", "i86") },
     { id:"haze", src:"prism", chip: dChip(prismRung("Ethereal", "Haze").delta),
       title:"Ethereal Prism: Haze",
-      note:"+12% additional Attack Damage when holding a One-Handed Weapon. "
-        + "Socket on any non-core talent — it overrides that node." },
+      note:"+12% additional Attack Damage when holding a One-Handed Weapon." },
     { id:"lv93", src:"talent", title:"Lv 93 talent tree" },
   ]},
 
-  { id:"slates", gate:"Slates", title:"Slate priority — buy in this order", steps:[
+  { id:"slates", gate:"Slates", title:"Slate priority", steps:[
     { id:"sl-blessing", seq:"1st", src:"slate", chip: slateChip("+100% chance to gain a stack of Focus Blessing"),
-      title:"Focus Blessing on Frostbitten hit (God of Knowledge)",
+      title:"Focus Blessing on Frostbitten hit (Goddess of Knowledge)",
       note:"Buy before the i86 boots." },
     { id:"sl-frostbite", seq:"2nd", src:"slate", chip: slateChip("Inflicts Frostbite when dealing Hit Cold Damage"),
-      title:"Frostbite on Cold hit (Frostbitten core / Prophet)",
+      title:"Frostbite on Cold hit (Goddess of Knowledge)",
       note:"Respec the 4 freed Prophet points into the Frostbite legendaries." },
     { id:"sl-warcry", seq:"3rd", src:"slate", chip: slateChip("+4 to the minimum number of enemies affected by Warcry"),
-      title:"+4 min enemies affected by Warcry (The Brave, 1 copy)" },
+      title:"+4 min enemies affected by Warcry (God of Might)" },
     { id:"sl-convert", seq:"LAST", src:"slate", chip: slateChip("Converts 100% of Physical Damage to Cold"),
-      title:"Phys→Cold conversion slate",
+      title:"Phys→Cold conversion (Goddess of Knowledge)",
       note:"Then respec Prophet → Ronin." },
+    { id:"sl-sealed", src:"slate", chip: slateChip("+3% Sealed Mana Compensation"),
+      title:"3% Sealed Mana Compensation (Goddess of Deception)",
+      note:"Hold until the priceless sealed-mana helmet lands." },
     { id:"sl-shop", src:"slate", title:"What to shop",
       note:"A Corner of Divinity (max 3) · Fallen Starlight (max 3) · Pedigree of Gods (max 1) · God slates: aim 1× Medium + 2× Legendary Medium or better.",
       detail: foldout("best legendary-medium fillers — skill-level lines stack", fillers.map(catRow).join("")) },
@@ -286,6 +288,9 @@ const PHASES: Phase[] = [
     { id:"gloves86", src:"gear", chip: rungChip("gloves", "i86"),
       title:"i86 ES gloves — Long Night Sorcerer's Wristband",
       detail: craftDetail("gloves86", "gloves", "i86") },
+    { id:"belt-lh", src:"gear", chip: rungChip("belt", "Light Hunter"),
+      title:"Light Hunter Belt — tank swap",
+      note:"Keep the Bodhi Girdle for DPS — this belt trades damage for defense." },
   ]},
 
   { id:"linkbuys", gate:"Skills", title:"Upgrade skills",

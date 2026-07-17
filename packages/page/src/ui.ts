@@ -21,6 +21,48 @@ export interface CatalogRow {
 
 export const esc = (t: unknown) => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;");
 export const escAttr = (t: string) => esc(t).replace(/"/g, "&quot;");
+
+/* Talent panels → the god you shop for. Catalog `on` is the panel the talent lives on
+   (Prophet, The Brave, …); god slates / trade filters are by god. Identity maps keep
+   the six main gods + New God as-is. */
+const TREE_GOD: Record<string, string> = {
+  "God of Might": "God of Might",
+  "The Brave": "God of Might",
+  "Onslaughter": "God of Might",
+  "Warlord": "God of Might",
+  "Warrior": "God of Might",
+  "Goddess of Knowledge": "Goddess of Knowledge",
+  "Prophet": "Goddess of Knowledge",
+  "Magister": "Goddess of Knowledge",
+  "Arcanist": "Goddess of Knowledge",
+  "Elementalist": "Goddess of Knowledge",
+  "Goddess of Hunting": "Goddess of Hunting",
+  "Marksman": "Goddess of Hunting",
+  "Bladerunner": "Goddess of Hunting",
+  "Druid": "Goddess of Hunting",
+  "Assassin": "Goddess of Hunting",
+  "God of War": "God of War",
+  "Shadowdancer": "God of War",
+  "Ronin": "God of War",
+  "Ranger": "God of War",
+  "Sentinel": "God of War",
+  "God of Machines": "God of Machines",
+  "Machinist": "God of Machines",
+  "Steel Vanguard": "God of Machines",
+  "Alchemist": "God of Machines",
+  "Artisan": "God of Machines",
+  "Goddess of Deception": "Goddess of Deception",
+  "Shadowmaster": "Goddess of Deception",
+  "Psychic": "Goddess of Deception",
+  "Warlock": "Goddess of Deception",
+  "Lich": "Goddess of Deception",
+  "New God": "New God",
+};
+/** Map a catalog `on` (one panel, or ", "-joined panels) to the god(s) you shop. */
+export const godOf = (on: string): string => {
+  const gods = on.split(", ").map(t => TREE_GOD[t] ?? t);
+  return [...new Set(gods)].join(", ");
+};
 const gainCls = (g: number) => g >= 25 ? "d-hot" : g > 0 ? "d-mid" : g < 0 ? "d-neg" : "d-none";
 /* "+20 → +84.5%" = the rung's rangeNote, e.g. entry roll → fully crafted */
 export const gainChip = (r: {gain: number | null; gainTop: number | null; gainNote?: string | null; rangeNote?: string | null}, cls = ""): string => {
