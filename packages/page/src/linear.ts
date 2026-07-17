@@ -271,9 +271,6 @@ const PHASES: Phase[] = [
     { id:"sl-shop", src:"slate", title:"What to shop",
       note:"A Corner of Divinity (max 3) · Fallen Starlight (max 3) · Pedigree of Gods (max 1) · God slates: aim 1× Medium + 2× Legendary Medium or better.",
       detail: foldout("best legendary-medium fillers — skill-level lines stack", fillers.map(catRow).join("")) },
-    { id:"sl-immunities", src:"slate", title:"Immunity lines",
-      note:"Hold before farming Deep Space.",
-      detail: foldout("the immunity Legendary Mediums", immunities.map(immRow).join("")) },
   ]},
 
   { id:"armor86", cost:"10B–20B", gate:"Traveler 8", title:"i86 armor pieces",
@@ -353,6 +350,9 @@ const PHASES: Phase[] = [
         { name:"1× Medium Crit Rating" },
         { name:"9× Micro Crit Rating" },
       ]) },
+    { id:"sl-immunities", src:"slate", title:"Immunity lines",
+      note:"Hold before farming Deep Space.",
+      detail: foldout("the immunity Legendary Mediums", immunities.map(immRow).join("")) },
   ]},
 
   { id:"fervor", gate:"Fervor", title:"The Fervor engine", steps:[
