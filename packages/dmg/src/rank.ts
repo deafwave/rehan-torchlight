@@ -10,9 +10,10 @@ export const STANDARD_PERTURBATIONS: [string, string, number][] = [
   ["+10% increased area damage", "increased.area", 10],
   ["+10% increased cold damage", "increased.cold", 10],
   ["+10 pts onto existing additional-damage pile", "additional.misc", 10],
-  // the layer holds 1.1^9; +1 level lands the exact x1.10 step only as this delta
-  ["+1 skill level (gem 29 -> 30, x1.10)", "additional.skill_levels",
-   skillLevelAdditionalPct(10) - skillLevelAdditionalPct(9)],
+  // live gem is 20+2 (user 2026-07-17); skill_levels is a MORE multiplier, so +1 level
+  // lands the exact x1.10 step as this band delta on the +2 baseline
+  ["+1 skill level (gem 22 -> 23, x1.10)", "additional.skill_levels",
+   skillLevelAdditionalPct(3) - skillLevelAdditionalPct(2)],
   // rank 5 base line is 36 vs 20: Detonation (1.36*1.30-1)-56, Legion (1.36*0.96-1)-15.2
   ["Detonation prism rank 1 -> 5", "additional.detonation_prism", 20.8],
   ["Legion prism rank 1 -> 5", "additional.legion_prism", 15.36],

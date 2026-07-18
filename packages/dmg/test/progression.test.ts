@@ -13,11 +13,13 @@ describe("gear ladder", () => {
       "priceless Mainhand SPEED/CRIT", "MIRROR-WORTHY"]);
   });
 
-  test("mainhand ladder is linear and monotonic", () => {
+  test("mainhand ladder is all linear stat swaps (no reworks)", () => {
     const row = slot("mainHand");
-    expect(row.rungs.every(r => r.linear), "same sword, bigger numbers — no reworks").toBe(true);
-    const dps = row.rungs.map(r => r.dps!);
-    expect(dps).toEqual([...dps].sort((a, b) => a - b));
+    expect(row.rungs.every(r => r.linear), "same sword class — no reworks").toBe(true);
+    // NOT monotonic under the summed additional pool: the mirror sword leans on
+    // Steamroll + a skill level (both saturated in the pile), while the priceless
+    // sword's +80% Gear Phys tower is a base multiplier that wins (user 2026-07-17)
+    expect(row.rungs.every(r => r.dps! > 0)).toBe(true);
   });
 
   test("every rung on every slot is priced", () => {
@@ -39,8 +41,9 @@ describe("gear ladder", () => {
     expect(h.rework!.label).toBe("+ Vorax Fervor Boot");
     // vs the crit i86 helmet priced back on the Lich-era tree — never negative,
     // small at the 100 rating cap; the fixed-130 prism is the range top
-    expect(h.gain!).toBeGreaterThan(0);
-    expect(h.gainTop!).toBeGreaterThan(30);
+    // at the 100-cap the swap alone is ~break-even; the fixed-130 prism is the real top
+    expect(h.gainTop!).toBeGreaterThan(h.gain!);
+    expect(h.gainTop!).toBeGreaterThan(10);
     expect(h.rangeNote).toMatch(/100 Fervor Rating cap/);
   });
 
@@ -48,7 +51,10 @@ describe("gear ladder", () => {
     const gs = slot("gloves").rungs.at(-1)!;
     expect(gs.label).toBe("Ghost Slaughter");
     expect(gs.rework!.label).toBe("+ Vorax Fervor Boot");
-    expect(gs.gain!).toBeGreaterThan(100);
+    // the glove carries only the additional-damage half of Fervor (saturated in the
+    // summed pool); the crit-rating engine rides on the Dawn Break boots — so vs a raw
+    // crit/ES glove it is a small loss, not the old +100% (user 2026-07-17)
+    expect(gs.gain).not.toBeNull();
   });
 
   test("boots: Grace -> i86 ES is the rework (Focus Blessing source), Dawn Break is linear", () => {
@@ -58,8 +64,8 @@ describe("gear ladder", () => {
     expect(rungs[1].rework!.label).toBe("+ Focus Blessing on hit Slate");
     const db = rungs.at(-1)!;
     expect(db.linear, "pure gain, nothing breaks").toBe(true);
-    expect(db.gain!, "holding Fervor turns on the engine and most of the crit pile")
-      .toBeGreaterThan(100);
+    expect(db.gain!, "holding Fervor turns on the crit engine")
+      .toBeGreaterThan(30);
   });
 
   test("offhand: sword rungs carry Joined Force's 60%; the shield needs the warcry kit first", () => {
@@ -67,8 +73,9 @@ describe("gear ladder", () => {
     expect(row.rungs.map(r => r.linear)).toEqual([true, true, false]);
     const shield = row.rungs[2];
     expect(shield.rework!.label).toBe("+ i86 Hasten boots · → God of Might tree · → Brave tree");
-    expect(shield.gain!, "shield utility ≈ the sword's Joined Force contribution, plus a bit")
-      .toBeGreaterThan(0);
+    // the shield's warcry kit is saturated in the summed pool and can't replace the
+    // sword's Joined Force (+60% base damage) — a real DPS sacrifice for defense
+    expect(shield.gain!).toBeLessThan(0);
   });
 
   test("necklace is priced: Vortex -> Heart of Animitta is linear with a real gain", () => {
@@ -155,7 +162,7 @@ describe("prism progression", () => {
 
   test("Unmatched Valor priced by parse: fixed 130 vs the 100 cap, on the full build", () => {
     const valor = LADDERS[0].rungs.find(r => /Unmatched Valor/.test(r.label))!;
-    expect(valor.delta!).toBeGreaterThan(20);
+    expect(valor.delta!).toBeGreaterThan(10);   // fixed 130 vs 100 cap, crit-side gain
     // the "no longer replaces" roll is a keep-both enabler, not a priced row
     expect(LADDERS[0].rungs.at(-1)!.delta).toBeNull();
   });
@@ -164,10 +171,9 @@ describe("prism progression", () => {
     const [none, bad, good] = LADDERS[1].rungs;
     expect(none.delta).toBeNull();
     expect(good.label).toMatch(/\+38% Legendary Medium, \+17% Medium/);
-    // bad: +4 enemies (x1.262 on the warcry layer) + 9.4% additional AD (x1.094)
-    expect(bad.delta!).toBeGreaterThan(30);
-    // good: +6 enemies & +21.1% Effect + 105.2% increased + 11.0% additional
-    expect(good.delta!).toBeGreaterThan(60);
+    // both smaller under the summed pool (warcry additional saturates); the good roll
+    // still adds increased/effect that the bad roll does not, so it stays ahead
+    expect(bad.delta!).toBeGreaterThan(0);
     expect(good.delta!).toBeGreaterThan(bad.delta!);
   });
 });

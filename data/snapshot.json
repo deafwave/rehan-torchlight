@@ -22,7 +22,7 @@
   "global": 257
  },
  "additional": {
-  "strength": 166,
+  "strength": 108,
   "warcry_buffs": 109.67039999999999,
   "ice_bond": 28,
   "fervor": 465.40000000000003,
@@ -36,7 +36,7 @@
   "detonation_prism": 56.00000000000001,
   "legion_prism": 15.199999999999992,
   "combo_enhancement": 141.2,
-  "skill_levels": 135.7947691000002
+  "skill_levels": 21
  },
  "enemy_taken": {
   "frostbite": 188.4,

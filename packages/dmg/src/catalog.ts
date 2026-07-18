@@ -46,7 +46,7 @@ const AURAS: [number, number][] = [[30, 1], [22, 2], [33, 1]];
 // come from build_parser.resolve_extras (base 120 + max sources, effect %)
 const FROSTBITE_CAP = 157;
 const FROSTBITE_EFFECT_PCT = 20;
-const GEM_LEVELS = 9;               // net +levels already on the gem (snapshot additional.skill_levels = 1.1^9 = 135.8)
+const GEM_LEVELS = 2;               // net +levels on the live gem (Spectral Slash 20+2, user 2026-07-17); snapshot additional.skill_levels = 1.1^2-1 = 21%
 const CHAR_LEVEL = 100;             // endgame; "for every N levels" mods scale off this
 
 /** Best-roll text: '#' placeholders take each range's maximum from rawText. */
@@ -77,8 +77,12 @@ export function applyStat(s: Snapshot, path: string, value: number): boolean {
   const d = s._derived ?? {};
   const root = path.split(".")[0];
   const key = path.split(".").pop()!;
-  if (root === "additional" || root === "enemy_taken") {
-    compound((s as any)[root], key, value);
+  if (root === "additional") {
+    // one summed "Additional Damage Bonus" pool: a mod adds its face value, so it
+    // shows true diminishing returns against the pile (mechanics.md#additional)
+    s.additional[key] = (s.additional[key] ?? 0) + value;
+  } else if (root === "enemy_taken") {
+    compound(s.enemy_taken, key, value);
   } else if (["increased", "crit", "penetration", "rotation", "base"].includes(root)
              && key in ((s as any)[root] ?? {})) {
     (s as any)[root][key] += value;
@@ -86,10 +90,9 @@ export function applyStat(s: Snapshot, path: string, value: number): boolean {
     s.rotation.finisher_amp_pct += 0.3 * value;
     s.crit.additional_on_crit_pct = (s.crit.additional_on_crit_pct ?? 0) + 0.5 * value;
   } else if (path === "extras.attack_skill_level" || path === "extras.active_skill_level") {
-    // marginal levels multiply from the gem's current level, whatever the layer holds
-    const ratio = (100 + skillLevelAdditionalPct(GEM_LEVELS + value))
-                / (100 + skillLevelAdditionalPct(GEM_LEVELS));
-    compound(s.additional, "skill_levels", (ratio - 1) * 100);
+    // marginal band value joins the summed pool (mechanics.md#additional)
+    s.additional.skill_levels = (s.additional.skill_levels ?? 0)
+      + skillLevelAdditionalPct(GEM_LEVELS + value) - skillLevelAdditionalPct(GEM_LEVELS);
   } else if (path === "extras.all_skill_levels") {
     applyStat(s, "extras.attack_skill_level", value);
     applyStat(s, "extras.support_skill_level", value);
@@ -113,16 +116,17 @@ export function applyStat(s: Snapshot, path: string, value: number): boolean {
     // symmetric wording "+X% Attack Speed and +X% additional Attack Damage";
     // Aggression comes from casting any Attack Skill -> full uptime (mechanics.md 'Hidden Mastery')
     s.rotation.attack_speed_inc_pct += value;
-    compound(s.additional, "misc", value);
+    s.additional.misc += value;
   } else if (path === "special.as_per_life_lost") {
     s.rotation.attack_speed_inc_pct += value * LIFE_LOST_PCT;   // slate wording is per 1% lost
   } else if (path === "special.low_life_enemy") {
-    compound(s.additional, "low_life_execute", lowLifeExecEvPct(value));
+    s.additional.low_life_execute = (s.additional.low_life_execute ?? 0) + lowLifeExecEvPct(value);
   } else if (path === "extras.low_life_inc_pct") {
-    // increased-bucket bonus gated below 35% boss HP: its multiplier is diluted by
-    // the pool it joins, then HP-weighted (mechanics.md 'Low Life enemies')
+    // increased-bucket bonus gated below 35% boss HP: diluted by the pool it joins,
+    // then HP-weighted (mechanics.md 'Low Life enemies')
     const inc = Object.values(s.increased).reduce((a, v) => a + v, 0);
-    compound(s.additional, "low_life_execute", lowLifeExecEvPct(value * 100 / (100 + inc)));
+    s.additional.low_life_execute = (s.additional.low_life_execute ?? 0)
+      + lowLifeExecEvPct(value * 100 / (100 + inc));
   } else if (path === "extras.frostbite_effect_pct") {
     // mechanics.md#frostbite: Effect multiplies max rating into enemy_taken.frostbite
     const max = d.frostbite_max ?? FROSTBITE_CAP;

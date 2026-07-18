@@ -47,11 +47,18 @@ describe("averageHit", () => {
     expect(averageHit(s)).toBe(200.0);   // x2.0, NOT 1.5*1.5=225
   });
 
-  test("additional layers multiply", () => {
+  test("additional layers sum into one pool", () => {
     const s = baseOnly();
     s.additional.strength = 20;
     s.additional.misc = 20;
-    expect(averageHit(s)).toBeCloseTo(144.0, 2);   // 1.2*1.2, NOT 1.4
+    expect(averageHit(s)).toBeCloseTo(140.0, 2);   // 1 + 0.20 + 0.20, NOT 1.2*1.2
+  });
+
+  test("willpower and pure_heart stay separate more-multipliers", () => {
+    const s = baseOnly();
+    s.additional.misc = 20;        // summed pool: x1.20
+    s.additional.willpower = 20;   // multiplies: x1.20
+    expect(averageHit(s)).toBeCloseTo(144.0, 2);   // 1.20 * 1.20
   });
 
   test("enemy_taken layers multiply too", () => {

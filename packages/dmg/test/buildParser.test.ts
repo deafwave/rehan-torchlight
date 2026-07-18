@@ -14,9 +14,11 @@ describe("skill levels past 20", () => {
     expect(skillLevelAdditionalPct(10)).toBeCloseTo(159.37, 1);   // 1.1^10
     expect(skillLevelAdditionalPct(12)).toBeCloseTo(202.53, 1);   // 1.1^10 x 1.08^2
   });
-  test("real build: +9 net gem levels land in additional.skill_levels", () => {
+  test("real build: skill levels pinned to the live gem (20+2 override)", () => {
     const [snap] = parseBuild(BUILD);
-    expect(snap.additional.skill_levels).toBeCloseTo(135.79, 1);
+    // parser derives +9 from the export affixes (mainhand +4, offhand +4, tree +1),
+    // then manual_overrides pins it to the live +2 (band 21%), user 2026-07-17
+    expect(snap.additional.skill_levels).toBeCloseTo(21, 1);
   });
 });
 

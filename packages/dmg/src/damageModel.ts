@@ -3,6 +3,12 @@
    Bucket semantics are fixed here; WHICH modifier goes in WHICH bucket is
    decided by docs/mechanics.md and encoded in the parser. Pure: no I/O. */
 
+// Genuine "more" multipliers that stay their own ×(1+v) factor instead of joining
+// the summed additional pool (mechanics.md#additional): the "(multiplies)" buffs
+// Willpower & Pure Heart, and skill/gem levels — a level scales the skill's BASE, so
+// it multiplies the whole pipeline (+10%/+8% per level), never diluted by the pile.
+export const MORE_MULTIPLIER_KEYS = new Set(["willpower", "pure_heart", "skill_levels"]);
+
 export interface Snapshot {
   base: Record<string, number>;
   increased: Record<string, number>;
@@ -69,7 +75,17 @@ export function averageHit(s: Snapshot, skillPct?: number): number {
   // portion (weapon phys + global flat adds, which are physical); flat cold is not re-gained
   hit += (weaponPhysAvg(b) * pct + flat) * (b.gain_phys_as_cold_pct ?? 0) / 100;
   hit *= 1 + Object.values(s.increased).reduce((a, v) => a + v, 0) / 100;
-  for (const v of Object.values(s.additional)) hit *= 1 + v / 100;
+  // TLI "Additional Damage Bonus": every "+X% additional damage" source sums into
+  // ONE additive pool (the in-game character-sheet stat), applied as a single
+  // multiplier — NOT a product of separate layers. Only genuine "(multiplies)"
+  // effects — Willpower, Pure Heart — are their own more-multipliers.
+  // mechanics.md#additional (user in-game sheet 2026-07-17: 2498% additional bonus).
+  let addlPool = 0;
+  for (const [k, v] of Object.entries(s.additional)) {
+    if (MORE_MULTIPLIER_KEYS.has(k)) hit *= 1 + v / 100;
+    else addlPool += v;
+  }
+  hit *= 1 + addlPool / 100;
   for (const v of Object.values(s.enemy_taken)) hit *= 1 + v / 100;
   return hit;
 }

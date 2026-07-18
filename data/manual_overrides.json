@@ -2,7 +2,9 @@
  "set": {
   "rotation.starter_weapon_pct": 406,
   "additional.precise_auras": 201.04,
-  "additional.ice_bond": 28
+  "additional.ice_bond": 28,
+  "additional.skill_levels": 21.0,
+  "additional.strength": 108.0
  },
  "add": {
   "crit.damage_pct": 195,
@@ -23,6 +25,8 @@
   "crit.crit_dmg_taken_pct": "mechanics.md#fixate: Fixate warcry, +10% additional Critical Strike Damage taken (user-provided 2026-07-15), multiplies the crit portion only",
   "enemy_taken.fixate": "mechanics.md#fixate: Fixate warcry, +1.1% additional damage taken (user-provided 2026-07-15)",
   "additional.ice_bond": "mechanics.md#ice-bond: Euphoria buff +28% additional Cold at L20 vs Frostbitten enemies (patch 2026-07: 33 -> 28)",
+  "additional.skill_levels": "user live build 2026-07-17: Spectral Slash is 20+2 (net +2 skill levels, band 1.1^2-1 = 21%), NOT the export's +9 aspirational gear (mainhand +4, offhand +4, tree +1). Skill levels are a MORE multiplier (mechanics.md#skill-levels)",
+  "additional.strength": "user live sheet 2026-07-17: 216 total Strength x 0.5% additional/pt = +108% (mechanics.md#strength), vs the export's 332 gear-visible pool",
   "additional.misc": "mechanics.md#rehan-traits: Seething Silhouette +44% (Berserk) x Fury's Onslaught +78% (tlidb current; SS12.5 cache had 48) x Rage Infusion +40% (tier 5, full stacks, 100% Berserk uptime), 1.44x1.78x1.40 = +258.85%",
   "_derived": "crit.chance_pct, additional.warcry_buffs, and enemy_taken.frostbite are derived in build_parser.resolve_extras from parsed rating/effect/max so new gear sources land. Constants + citations live in build_parser."
  }

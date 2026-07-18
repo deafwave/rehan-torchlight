@@ -163,7 +163,8 @@ const WATCHLIST: Phase = {
   title:"Watchlist", note:"Buy on price, not on schedule.", steps:[
   { id:"wl-animitta", src:"gear", chip: rungChip("necklace", "Heart of Animitta"),
     title:"Heart of Animitta", note:"Listed ~1300 FE — snipe way under. The #1 buy." },
-  { id:"wl-legion", src:"support", title:"Spectral Slash: Legion (Noble)" },
+  { id:"wl-legion", src:"support", title:"Spectral Slash: Legion (Noble)",
+    needs:["wl-animitta"] },
   { id:"wl-vorax", src:"gear", title:"Vorax boot base", note:"i86+, at least one decent mod." },
   { id:"wl-dawnbreak", src:"gear", title:"Dawn Break belt", note:"EV 950 FE." },
   { id:"wl-ghost", src:"gear", chip: rungChip("gloves", "Ghost Slaughter"),
@@ -245,10 +246,13 @@ const PHASES: Phase[] = [
 
   { id:"core86", cost:"1B", gate:"8-0", title:"i86 core — in this order",
     note:`Priceless waits until after Traveler 8. i86 chest = ES/defense only (${rngTxt(rung("chest", "i86"))}).`, steps:[
-    { id:"mh86", seq:"FIRST", src:"gear", chip: rungChip("mainHand", "i86"),
+    { id:"opening-heart", seq:"FIRST", src:"gear",
+      title:"Opening Heart unique helmet",
+      note:"Corroded grants [Endless Fervor] Have Fervor + 12% Fervor effect — turns the Fervor crit engine on early, a big crit-chance spike before it saturates." },
+    { id:"mh86", seq:"SECOND", src:"gear", chip: rungChip("mainHand", "i86"),
       title:"i86 mainhand — Shadowless Swordsman's Blade (speed/crit)",
       detail: craftDetail("mh86", "mainHand", "i86") },
-    { id:"oh86", seq:"SECOND", src:"gear", chip: rungChip("offHand", "i86"),
+    { id:"oh86", seq:"THIRD", src:"gear", chip: rungChip("offHand", "i86"),
       title:"i86 offhand — Shadowless Swordsman's Blade (raw damage)",
       detail: craftDetail("oh86", "offHand", "i86") },
     { id:"motionless", src:"support", title:"Activation Medium: Motionless",
@@ -283,13 +287,10 @@ const PHASES: Phase[] = [
       detail: craftDetail("ring86fb", "ring2", "i86") },
     { id:"haze", src:"prism", chip: dChip(prismRung("Ethereal", "Haze").delta),
       title:"Ethereal Prism: Haze",
-      note:"+12% additional Attack Damage when holding a One-Handed Weapon." },
+      note:"Mod priority: 1) +12% additional Attack Damage · 2) when holding a One-Handed Weapon." },
   ]},
 
   { id:"armor86-tank", gate:"Traveler 8", title:"i86 armor — tank", steps:[
-    { id:"helm86", src:"gear", chip: rungChip("helmet", "i86"),
-      title:"i86 ES helmet — Long Night Sorcerer's Mask",
-      detail: craftDetail("helm86", "helmet", "i86") },
     { id:"gloves86", src:"gear", chip: rungChip("gloves", "i86"),
       title:"i86 ES gloves — Long Night Sorcerer's Wristband",
       detail: craftDetail("gloves86", "gloves", "i86") },
@@ -314,7 +315,7 @@ const PHASES: Phase[] = [
 
   { id:"warcrybar", gate:"Skills", title:"The warcry bar", steps:[
     { id:"warcries", seq:"FIRST", src:"skill", title:"Swap to warcries",
-      note:"Shockwave replaces Bull's Rage · Resurrection replaces Timid.",
+      note:"Shockwave replaces Bull's Rage · Resurrection replaces Timid. Ice Bond only swaps Extended Duration → Well-Fought Battle — it's the same Ice Bond from above, not a re-setup.",
       detail: () => skillBuysHtml("warcries", "150b", "420b", "active",
           n => !/Detonation/i.test(n))
         + itemsHtml("warcries", [
@@ -410,6 +411,12 @@ const PHASES: Phase[] = [
       note:"Take the 0.5% Crit Damage-per-rating converters: tree legendary + 2 slate copies." },
     { id:"end-prairie", src:"slate", title:"When Sparks Set the Prairie Ablaze",
       note:"Copies the last Talent on all adjacent slates (not Core Talents) — use for the converter copies." },
+  ]},
+
+  { id:"tbd", gate:"—", title:"To be determined", steps:[
+    { id:"helm86", src:"gear", chip: rungChip("helmet", "i86"),
+      title:"i86 ES helmet — Long Night Sorcerer's Mask",
+      detail: craftDetail("helm86", "helmet", "i86") },
   ]},
 ];
 
@@ -656,7 +663,7 @@ const stepCard = (s: Step, remind = false) => {
   const waiting = (s.needs ?? []).filter(id => !done[id]);
   const body = done[s.id] ? ""
     : (s.note ? `<p class="l-note">${s.note}</p>` : "")
-      + (waiting.length ? `<p class="l-wait">⚠ waiting on: ${waiting.map(id => esc(TITLE[id])).join(" · ")}</p>` : "")
+      + (waiting.length ? `<p class="l-wait">⚠ waiting on: ${waiting.map(id => `<a href="#step-${escAttr(id)}">▸ ${esc(TITLE[id])}</a>`).join(" · ")}</p>` : "")
       + (s.id in TREE_BTN ? `<p class="l-tree">${treeBtn(TREE_BTN[s.id], "view this talent tree")}</p>` : "")
       + (remind ? `<p class="l-wait">↩ echoed from <a href="#step-${escAttr(s.id)}">Slate + memory priority</a> — same checkbox</p>` : "")
       + (typeof s.detail === "function" ? s.detail() : (s.detail ?? ""));

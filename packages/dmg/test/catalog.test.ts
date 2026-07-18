@@ -39,17 +39,18 @@ describe("scoring", () => {
     expect(s.additional.precise_auras).toBeCloseTo(201.0, 1);
   });
 
-  test("impact of +N gem levels is marginal from the build's current level", () => {
+  test("impact of +N gem levels multiplies the whole pipeline, not diluted by the pool", () => {
     const s = loadSnap();
-    // each level is its own multiplier: gem 29 -> 30 is exactly x1.10 (user 2026-07-16)
+    // a gem level scales the skill's BASE, so it is its own multiplier: 22 -> 23 is x1.10
     expect(impactOf("extras.attack_skill_level", 1, s)).toBeCloseTo(10.0, 1);
-    // 29 -> 31 crosses the band: 1.10 x 1.08 - 1 = +18.8%
-    expect(impactOf("extras.active_skill_level", 2, s)).toBeCloseTo(18.8, 1);
+    // 22 -> 24, both in the x1.10 band: 1.10^2 - 1 = +21%
+    expect(impactOf("extras.active_skill_level", 2, s)).toBeCloseTo(21.0, 1);
   });
 
   test("Persistent / Physical Skill Levels land on the main gem; All Skills' pays supports too", () => {
     const one = (t: string) => rows.find(r => r.text === t);
-    // Spectral Slash carries the Persistent and Physical tags (user 2026-07-16)
+    // Spectral Slash carries the Persistent and Physical tags (user 2026-07-16);
+    // each level is its own x1.10 multiplier on the main gem
     expect(one("+1 Persistent Skill Level")!.delta).toBeCloseTo(10.0, 0);
     expect(one("+1 Physical Skill Level")!.delta).toBeCloseTo(10.0, 0);
     const all = one("+1 to All Skills' Levels")!;
@@ -62,15 +63,15 @@ describe("scoring", () => {
   test("Strength joins ONE summed layer: %Strength scales the tracked pool, flat adds to it", () => {
     const s = loadSnap();
     // tracked strength = additional.strength / 0.5; +12% of 332 = +39.8 pts -> +19.9
-    // into the 166-pt layer: 2.859/2.66 - 1 = +7.5%, NOT a fresh x1.199 multiplier
+    // into the summed pool: diluted marginal, NOT a fresh x1.199 multiplier
     const pct = rows.find(r => r.text === "+12% Strength")!;
     expect(pct.delta).not.toBeNull();
-    expect(pct.delta!).toBeGreaterThan(6);
-    expect(pct.delta!).toBeLessThan(9);
-    // +30 flat Str = +15 pts summed: 2.81/2.66 - 1 = +5.6%, not +15%
+    expect(pct.delta!).toBeGreaterThan(0.4);
+    expect(pct.delta!).toBeLessThan(1.5);
+    // +30 flat Str = +15 pts added to the pool
     const flat = impactOf("extras.strength", 30, s)!;
-    expect(flat).toBeGreaterThan(4.5);
-    expect(flat).toBeLessThan(7);
+    expect(flat).toBeGreaterThan(0.3);
+    expect(flat).toBeLessThan(1.0);
   });
 
   test("aura effect scales the crit-rating and attack-speed aura lines too", () => {
@@ -93,7 +94,7 @@ describe("scoring", () => {
   test("'recently moved' is satisfiable (move -> stand -> attack cycle): conditional, not dead", () => {
     const moved = rows.find(r => /recently moved more than/.test(r.text));
     expect(moved, "fixture mod vanished from catalog").toBeTruthy();
-    expect(moved!.delta).toBe(30);
+    expect(moved!.delta!).toBeGreaterThan(0);   // +30 additional, diluted into the summed pool
     expect(moved!.cond).toBe(true);
   });
 
@@ -195,10 +196,11 @@ describe("applicability rules", () => {
   test("'next Main Skill every 0.5s' buffs one use per interval, not every hit", () => {
     const m = rows.filter(r => /next Main Skill every 0\.5 s/.test(r.text));
     expect(m.length, "Momentum missing from catalog").toBeGreaterThan(0);
-    // ~6.2 skill uses/s vs 2 armed buffs/s: 30 x 2/6.2 = ~9.7 EV, not the +30 headline
+    // ~6.2 skill uses/s vs 2 armed buffs/s: 30 x 2/6.2 = ~9.7 EV additional, then
+    // diluted into the summed pool -> sub-1% marginal
     expect(m[0].delta).not.toBeNull();
-    expect(m[0].delta!).toBeGreaterThan(8);
-    expect(m[0].delta!).toBeLessThan(11);
+    expect(m[0].delta!).toBeGreaterThan(0);
+    expect(m[0].delta!).toBeLessThan(1);
     expect(m[0].cond).toBe(false);   // EV is not a full-uptime ceiling
   });
 
@@ -214,15 +216,16 @@ describe("applicability rules", () => {
   test("enemy Injury Buffer is a deduction delay, not mitigation: ignored", () => {
     const blunt = rows.filter(r => r.name === "Blunt" && r.text.includes("Injury Buffer"));
     expect(blunt.length, "Blunt missing from catalog").toBeGreaterThan(0);
-    expect(blunt[0].delta).toBe(30);   // its +30% phys line alone (mechanics.md Injury Buffer row)
+    // its +30% additional line alone scores (Injury Buffer ignored), diluted into the pool
+    expect(blunt[0].delta!).toBeGreaterThan(0);
   });
 
   test("Hidden Mastery scores its Aggression line at full uptime", () => {
     const hm = rows.find(r => r.name === "Hidden Mastery");
     expect(hm, "Hidden Mastery missing from catalog").toBeTruthy();
-    // +15% AS and x1.15 additional: the additional alone is +15
+    // +15% attack speed (shortens the cycle) plus +15% additional (diluted into the pool)
     expect(hm!.delta).not.toBeNull();
-    expect(hm!.delta!).toBeGreaterThan(15);
+    expect(hm!.delta!).toBeGreaterThan(3);
     expect(hm!.cond).toBe(true);
   });
 
@@ -237,7 +240,7 @@ describe("applicability rules", () => {
     const r = rows.find(r => r.cat === "slate"
       && /minimum number of enemies affected by Warcry/.test(r.text));
     expect(r, "min-enemies slate mod missing").toBeTruthy();
-    expect(r!.delta!).toBeGreaterThan(10);
+    expect(r!.delta!).toBeGreaterThan(1.5);   // warcry layer grows, then diluted into the pool
   });
 
   test("'Attack Speed and Cast Speed' survives the cast-only filter; per-stack lines pay full stacks", () => {
