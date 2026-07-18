@@ -21,6 +21,8 @@
       <button data-tab="progression">Progression</button>
       <button data-tab="slate">Slate Mods</button>
       <button data-tab="memory">Memory Mods</button>
+      <button data-tab="pools">Damage pools</button>
+      <button data-tab="calc">DPS Calc</button>
     </div>
     <div class="topnav-links">
       <a class="topnav-fallback"
@@ -73,6 +75,29 @@
       <tbody id="cat-body"></tbody>
     </table>
   </article>
+</section>
+
+<section class="bundles" id="pools-tab" hidden>
+  <h2>Damage pools</h2>
+  <p>Every multiplicative "additional damage" pool the game exposes, by the name TLI uses —
+  and whether this build runs it. Each uniquely-named pool is its own ×(1+v) factor, so
+  stacking unique names compounds; same-named lines only sum.</p>
+  <div id="pools"></div>
+</section>
+
+<section class="bundles" id="calc-tab" hidden>
+  <h2>DPS Calc — live, runs the site's real damage model</h2>
+  <p>Every field is prefilled from the <b>150b setup</b> (an achievable loadout, not the
+  <code>more_1</code> BiS reference the rest of the site prices against) and is editable.
+  Output recomputes on each keystroke via the linked <code>@rehan/dmg</code> model — the
+  same <code>cycleDps</code> the rest of the site uses, so it vets the actual formula. The
+  <b>Additional Damage Bonus</b> is <code>∏(1+aᵢ)−1</code> across the additional buckets —
+  compare it to your in-game character sheet.</p>
+  <p><b>Heads-up:</b> a few fields (skill-level and Strength contributions in
+  <code>additional</code>, aura effect) are pinned to <code>more_1</code>'s live character by
+  <code>manual_overrides.json</code>, so correct them to your 150b values before trusting the
+  output.</p>
+  <div id="calc"></div>
 </section>
 
 <section class="bundles" id="linear">

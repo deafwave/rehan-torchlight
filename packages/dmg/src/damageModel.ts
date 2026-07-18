@@ -70,14 +70,24 @@ export function averageHit(s: Snapshot, skillPct?: number): number {
   // portion (weapon phys + global flat adds, which are physical); flat cold is not re-gained
   hit += (weaponPhysAvg(b) * pct + flat) * (b.gain_phys_as_cold_pct ?? 0) / 100;
   hit *= 1 + Object.values(s.increased).reduce((a, v) => a + v, 0) / 100;
-  // TLI "Additional Damage Bonus": every "+X% additional damage" source is its own
-  // ×(1+v) factor — the sheet stat is ∏(1+aᵢ)−1, NOT a summed pool. User toggle
-  // 2026-07-17: removing a +12% line moved the sheet 2165% → 1922% (÷1.12).
-  // mechanics.md#additional. Each bucket is already the product of its own lines
-  // (buildParser compounds within a bucket); multiplying buckets completes the product.
-  for (const v of Object.values(s.additional)) hit *= 1 + v / 100;
+  hit *= additionalMultiplier(s);
   for (const v of Object.values(s.enemy_taken)) hit *= 1 + v / 100;
   return hit;
+}
+
+// TLI "Additional Damage Bonus": every "+X% additional damage" source is its own
+// ×(1+v) factor — the sheet stat is ∏(1+aᵢ)−1, NOT a summed pool. User toggle
+// 2026-07-17: removing a +12% line moved the sheet 2165% → 1922% (÷1.12).
+// mechanics.md#additional. Each bucket is already the product of its own lines
+// (buildParser compounds within a bucket); multiplying buckets completes the product.
+export function additionalMultiplier(s: Snapshot): number {
+  let m = 1;
+  for (const v of Object.values(s.additional)) m *= 1 + v / 100;
+  return m;
+}
+/** The in-game "Additional Damage Bonus" character-sheet stat, for vetting. */
+export function additionalBonusPct(s: Snapshot): number {
+  return (additionalMultiplier(s) - 1) * 100;
 }
 
 export function critMultiplier(s: Snapshot): number {

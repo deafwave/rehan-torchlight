@@ -274,20 +274,20 @@ const PHASES: Phase[] = [
 
   { id:"armor86-dps", cost:"10B–20B", gate:"Traveler 8", title:"i86 armor — DPS + the Frostbite package",
     note:"Traveler 8 done → check 8-1/8-2 priceless pieces every session.", steps:[
-    { id:"ring86bar", src:"gear", chip: rungChip("ring1", "i86"),
-      title:"i86 barrier ring — Perishing Inferno Flame Ring",
-      detail: craftDetail("ring86bar", "ring1", "i86") },
     { id:"icebond", src:"skill", title:"Ice Bond — the Frostbite self-applicator",
       note:"Replaces Fixate.",
       // filter: just Ice Bond + its gems — the rest of the 150b bar lands with Legion (Skills phase)
       detail: () => skillBuysHtml("icebond", "Full precise auras", "150b", "active",
         n => /Ice Bond/i.test(n)) },
-    { id:"ring86fb", src:"gear", chip: rungChip("ring2", "i86"),
-      title:"i86 frostbite ring — Perishing Inferno Flame Ring",
-      detail: craftDetail("ring86fb", "ring2", "i86") },
     { id:"haze", src:"prism", chip: dChip(prismRung("Ethereal", "Haze").delta),
       title:"Ethereal Prism: Haze",
       note:"Mod priority: 1) +12% additional Attack Damage · 2) when holding a One-Handed Weapon." },
+    { id:"ring86bar", src:"gear", chip: rungChip("ring1", "i86"),
+      title:"i86 barrier ring — Perishing Inferno Flame Ring",
+      detail: craftDetail("ring86bar", "ring1", "i86") },
+    { id:"ring86fb", src:"gear", chip: rungChip("ring2", "i86"),
+      title:"i86 frostbite ring — Perishing Inferno Flame Ring",
+      detail: craftDetail("ring86fb", "ring2", "i86") },
   ]},
 
   { id:"armor86-tank", gate:"Traveler 8", title:"i86 armor — tank", steps:[
@@ -329,6 +329,9 @@ const PHASES: Phase[] = [
     { id:"thunderspike", seq:"SECOND", src:"skill", title:"Buy Thunder Spike: Rumbling Thunder (Noble)",
       note:"Thunder Spike replaces Spiral Strike.",
       detail: skillBuysDetail("thunderspike", "420b", "Inverse-Warcry") },
+    { id:"sl-starlight-agi", src:"slate",
+      title:"Fallen Starlight — Agility Blessing bridge",
+      note:"Bladerunner mod \"Gains a stack Agility Blessing when using Mobility Skills\". Holds Agility Blessing after this 420b swap drops the Bladerunner tree, until Ranger's on-crit node lands at Eternity." },
     { id:"sl-shop", src:"slate", title:"What to shop",
       note:"A Corner of Divinity (max 3) · Fallen Starlight (max 3) · Pedigree of Gods (max 1) · God slates: aim 1× Medium + 2× Legendary Medium or better.",
       detail: foldout("best legendary-medium fillers — skill-level lines stack", fillers.map(catRow).join("")) },

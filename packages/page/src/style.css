@@ -205,6 +205,26 @@ a.t-branch:hover,a.t-branch:focus-visible{text-decoration:underline}
 .delta-chip{font-family:"IBM Plex Mono",monospace;white-space:nowrap;font-weight:600}
 .d-hot{color:#7fe8b0}.d-mid{color:var(--frost)}.d-low{color:var(--muted)}.d-none{color:var(--faint);font-weight:400}.d-neg{color:#d89080}
 .cond-mark{color:#c9a86a;cursor:help}
+
+/* ---------- Damage pools tab ---------- */
+.pool-explainer{background:var(--night-2)}
+.pool-explainer h3{font-family:Marcellus,serif;font-weight:400;font-size:19px;letter-spacing:.05em;color:#e9f1f7;margin-bottom:8px}
+.pool-explainer p{color:var(--muted);font-size:13.5px;line-height:1.65;max-width:80ch}
+.pool-explainer p+p{margin-top:8px}
+.pool-explainer b{color:var(--text);font-weight:600}
+.pool-live .delta-chip{margin:0 2px}
+.pool-count{margin-left:auto;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--faint)}
+.pool-blurb{color:var(--muted);font-size:12.5px;line-height:1.55;margin-top:4px;max-width:80ch}
+.pool-table{margin-top:12px}
+.pool-table td:first-child{white-space:nowrap}
+.pool-table td:nth-child(2){white-space:nowrap;color:var(--text)}
+.pool-badge{
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.04em;
+  padding:2px 8px;border-radius:3px;white-space:nowrap;font-weight:500;
+}
+.pool-used{background:rgba(127,232,176,.14);color:#7fe8b0}
+.pool-gap{background:rgba(201,168,106,.16);color:#c9a86a}
+.pool-na{background:rgba(84,103,122,.18);color:var(--faint)}
 .src-chip{
   font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;
   padding:1px 7px;border-radius:3px;white-space:nowrap;
@@ -552,3 +572,31 @@ a.t-branch:hover,a.t-branch:focus-visible{text-decoration:underline}
   .linear-cols{grid-template-columns:1fr}
   #linear-watchlist{position:static;max-height:none}
 }
+
+/* ---------- DPS Calc tab ---------- */
+.calc-out{
+  position:sticky;top:64px;z-index:5;display:flex;flex-wrap:wrap;gap:24px;align-items:center;
+  margin-bottom:20px;padding:16px 20px;background:var(--night-2);
+  border:1px solid var(--ice-line);border-radius:12px;
+}
+.calc-stat{display:flex;flex-direction:column;gap:2px}
+.calc-num{font-family:"IBM Plex Mono",monospace;font-size:26px;font-weight:500;color:var(--frost);line-height:1.1}
+.calc-cap{font-size:11.5px;color:var(--muted)}
+.calc-out .reset-btn{margin-left:auto}
+.calc-form{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;
+}
+.calc-group{
+  border:1px solid var(--ice-line);border-radius:10px;padding:10px 12px 12px;margin:0;
+  display:flex;flex-direction:column;gap:6px;
+}
+.calc-group legend{
+  padding:0 6px;font-size:12px;color:var(--marble);text-transform:lowercase;letter-spacing:.02em;
+}
+.calc-field{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12.5px;color:var(--muted)}
+.calc-field span{flex:1;min-width:0}
+.calc-field input{
+  width:104px;flex:none;padding:5px 8px;font-family:"IBM Plex Mono",monospace;font-size:12.5px;
+  color:var(--text);background:var(--night);border:1px solid var(--ice-line);border-radius:6px;
+}
+.calc-field input:focus{outline:none;border-color:var(--frost)}

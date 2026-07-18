@@ -27,6 +27,15 @@ function snapshotCmd(args: string[]): void {
   printReport(report);
   fs.writeFileSync(out, asciiJson(snap, 1), "utf-8");
   console.log(`snapshot -> ${out}`);
+  // the DPS Calc tab prefills from the 150b setup (a real, achievable loadout), NOT the
+  // more_1 BiS reference the rest of the site prices against (generated, never hand-edited)
+  const CALC_LOADOUT = "150b";
+  const buildJson = loadJson(build);
+  const calcIdx = buildJson.loadouts.loadouts.findIndex((l: any) => l.name?.trim() === CALC_LOADOUT);
+  const [calcSnap] = parseBuild(buildJson, calcIdx >= 0 ? calcIdx : loadout);
+  const pageOut = fromRoot("packages/page/src/data/snapshot.json");
+  fs.writeFileSync(pageOut, asciiJson(calcSnap, 1), "utf-8");
+  console.log(`snapshot (${CALC_LOADOUT}) -> ${pageOut}`);
 }
 
 async function rankCmd(args: string[]): Promise<void> {

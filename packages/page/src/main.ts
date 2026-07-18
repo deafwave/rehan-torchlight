@@ -5,6 +5,8 @@ import prismData from "./data/prisms.json";
 import { esc, escAttr, gainChip, dChip, SRC, srcChip, modRows, godOf,
   type LadderRow, type CatalogRow, type Rung } from "./ui";
 import { renderLinear, resetLinearProgress } from "./linear";
+import { renderCalc } from "./calc";
+import { renderPools } from "./pools";
 
 /* ---------- data written by dmg progression + catalog CLIs ---------- */
 const LADDER = ladderData as LadderRow[];
@@ -177,6 +179,7 @@ const SLATE_ITEMS: Record<string, {label: string; tiers: string[]; note: string}
 let CAT_SOURCE = "slate";
 const SECTIONS: Record<string, string> = {
   progression:"progression", linear:"linear", slate:"catalog-tab", memory:"catalog-tab",
+  pools:"pools-tab", calc:"calc-tab",
 };
 const tabButtons = [...document.querySelectorAll<HTMLButtonElement>("#tabbar button")];
 function show(tab: string){
@@ -299,6 +302,10 @@ renderLinear(
   document.getElementById("linear-watchlist")!,
   document.getElementById("linear-nav"),
 );
+
+renderCalc(document.getElementById("calc")!);
+
+renderPools(document.getElementById("pools")!);
 
 /* ---------- reset Linear progress (footer + confirm dialog) ---------- */
 {

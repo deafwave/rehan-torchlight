@@ -3,6 +3,9 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "exports": {
+    "./damageModel": "./src/damageModel.ts"
+  },
   "scripts": {
     "snapshot": "tsx src/cli.ts snapshot",
     "rank": "tsx src/cli.ts rank",
