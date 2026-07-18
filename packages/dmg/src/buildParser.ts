@@ -320,6 +320,7 @@ export const PATTERNS: [string, string][] = [
   [`\\+${NUM}% additional damage for every ${NUM} Combo Point consumed on Critical Strike`,
    "special.addl_per_combo_crit"],
   [`Adds ${NUM} - ${NUM} Physical Damage to Attacks and Spells`, "special.flat_added_phys"],
+  [`Adds ${NUM} - ${NUM} Cold Damage to Attacks and Spells`, "special.flat_added_cold"],
   [`${NUM}% Attack Critical Strike Rating for this gear`, "special.local_crit_rating"],
   [`Adds ${NUM}% of the damage of the Off-Hand Weapon to the final damage of the Main-Hand Weapon`,
    "special.joined_force"],
@@ -518,6 +519,12 @@ function apply(snap: Snapshot, extras: Record<string, number>, path: string, val
     const [lo, hi] = nums(line.text);
     snap.base.flat_added_min += lo;
     snap.base.flat_added_max += hi;
+    return;
+  }
+  if (path === "special.flat_added_cold") {
+    const [lo, hi] = nums(line.text);
+    snap.base.flat_added_cold_min += lo;
+    snap.base.flat_added_cold_max += hi;
     return;
   }
   if (path === "special.combo_per_starter" || path === "special.finisher_charges"

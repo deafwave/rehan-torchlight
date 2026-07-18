@@ -27,6 +27,7 @@ export const DEFAULT_SNAPSHOT: Snapshot = {
     weapon_attack_speed: 1.5,
     skill_weapon_pct: 127,
     flat_added_min: 0, flat_added_max: 0,
+    flat_added_cold_min: 0, flat_added_cold_max: 0,
     added_damage_effectiveness_pct: 100,
   },
   increased: { physical: 0, attack: 0, melee: 0, area: 0,
@@ -65,7 +66,9 @@ export function averageHit(s: Snapshot, skillPct?: number): number {
   const b = s.base;
   const pct = (skillPct ?? b.skill_weapon_pct) / 100;
   const flat = (b.flat_added_min + b.flat_added_max) / 2 * b.added_damage_effectiveness_pct / 100;
-  let hit = weaponAvg(b) * pct + flat;
+  // "Adds Cold Damage to Attacks and Spells": already cold, so no phys->cold re-gain
+  const flatCold = ((b.flat_added_cold_min ?? 0) + (b.flat_added_cold_max ?? 0)) / 2 * b.added_damage_effectiveness_pct / 100;
+  let hit = weaponAvg(b) * pct + flat + flatCold;
   // "Adds X% of Physical Damage to Cold Damage": gained from the pre-conversion phys
   // portion (weapon phys + global flat adds, which are physical); flat cold is not re-gained
   hit += (weaponPhysAvg(b) * pct + flat) * (b.gain_phys_as_cold_pct ?? 0) / 100;

@@ -10,6 +10,8 @@
   "skill_weapon_pct": 127,
   "flat_added_min": 0,
   "flat_added_max": 0,
+  "flat_added_cold_min": 0,
+  "flat_added_cold_max": 0,
   "added_damage_effectiveness_pct": 100,
   "joined_weapon_phys": 226.00799999999998
  },
