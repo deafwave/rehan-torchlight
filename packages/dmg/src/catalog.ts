@@ -4,7 +4,7 @@
 import fs from "node:fs";
 import { fromRoot, pyRound, deepCopy, asciiJson } from "./py.js";
 import { _load, classify, critChance, warcryLayer, skillLevelAdditionalPct, NUM,
-         FERVOR_RATING, LIFE_LOST_PCT, lowLifeExecEvPct,
+         FERVOR_RATING, LIFE_LOST_PCT, lowLifeExecEvPct, FOCUS_ADDL_PER_STACK,
          FEARLESS_RATING_BASE_PCT, FEARLESS_AS_PCT } from "./buildParser.js";
 import { cycleDps, type Snapshot } from "./damageModel.js";
 
@@ -21,10 +21,12 @@ const NOT_THIS_BUILD = new RegExp(
   + "|in Proximity|Erosion Resistance|Tenacity Blessing"
   + "|empty (?:Active|Passive) Skill [Ss]lot"
   + "|Spell Burst"
-  + "|(?<![Nn]ot )at Low Life)", "i");   // no Spell Burst skill in build; "recently moved" stays valid (move -> stand -> attack cycle)   // build has 5 actives + 4 auras: no empty slots;
+  + "|at Full Mana"          // build seals most of its mana (Restrain x3), never full — but "Sealed Mana" gains stay valid
+  + "|(?<=[Nn]ot )at Low Life)", "i");   // no Spell Burst skill in build; "recently moved" stays valid (move -> stand -> attack cycle)   // build has 5 actives + 4 auras: no empty slots;
   // no Cast Speed entry: "Attack (Speed) and Cast Speed" hybrids must reach the
   // Attack Speed patterns; cast-only lines never classify, so they stay null anyway
-  // ES is the defensive layer, so "at Low Life" gains are unsustainable ("not at Low Life" stays valid)
+  // Seal Conversion reserves life below the 35% line, so the build sits permanently at
+  // Low Life (user 2026-07-17): "not at Low Life" gains are dead, "at Low Life" gains stay valid
   // no trailing \b: plurals ("Projectiles", "Minions") must match too
 
 // Whole-mod dealbreakers: any line matching kills the entire mod for this build
@@ -48,6 +50,7 @@ const FROSTBITE_CAP = 157;
 const FROSTBITE_EFFECT_PCT = 20;
 const GEM_LEVELS = 2;               // net +levels on the live gem (Spectral Slash 20+2, user 2026-07-17); snapshot additional.skill_levels = 1.1^2-1 = 21%
 const CHAR_LEVEL = 100;             // endgame; "for every N levels" mods scale off this
+const FOCUS_STACKS = 5;             // 4 base + 1 sword baseAffix (mechanics.md 'Focus Blessing'); a Focus Blessing generator is equipped, so +1 Max is realizable
 
 /** Best-roll text: '#' placeholders take each range's maximum from rawText. */
 export function maxRollText(template: string, rawText: string): string {
@@ -96,6 +99,13 @@ export function applyStat(s: Snapshot, path: string, value: number): boolean {
   } else if (path === "extras.all_skill_levels") {
     applyStat(s, "extras.attack_skill_level", value);
     applyStat(s, "extras.support_skill_level", value);
+  } else if (path === "extras.max_focus_blessing_stacks") {
+    // +1 Max Focus stack = one more +5% into the additive Focus pool; the blessings
+    // bucket is Agility × Focus, so scale it by the Focus-multiplier ratio (mechanics.md
+    // 'Focus Blessing'). At 5→6 stacks that is 1.30/1.25 = ×1.04 = +4%
+    const f = FOCUS_ADDL_PER_STACK / 100;
+    const r = (1 + (FOCUS_STACKS + value) * f) / (1 + FOCUS_STACKS * f);
+    s.additional.blessings = ((1 + s.additional.blessings / 100) * r - 1) * 100;
   } else if (path === "extras.strength") {
     // strength points join ONE summed multiplier (mechanics.md 'Strength'), never compound
     s.additional.strength += value * 0.5;

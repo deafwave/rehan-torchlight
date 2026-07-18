@@ -292,7 +292,7 @@ const STEAMROLL_AS_PCT = -15;
 const BLESSING_BASE_STACKS = 4;
 const AGILITY_ADDL_PER_STACK = 2;
 const AGILITY_AS_PER_STACK = 4;
-const FOCUS_ADDL_PER_STACK = 5;
+export const FOCUS_ADDL_PER_STACK = 5;
 
 // Bucket assignments come from docs/mechanics.md — reconcile after research.
 // Order matters: first regex that searches successfully wins.

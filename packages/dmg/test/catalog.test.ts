@@ -284,14 +284,12 @@ describe("applicability rules", () => {
     }
   });
 
-  test("ES-zeroing and low-life mods not applicable", () => {
+  test("ES-zeroing mods dead even though the build sits at Low Life", () => {
+    // No Loose Ends' "+40% additional at Low Life" is live now (build is at Low Life),
+    // but it also zeroes ES — the whole-mod disqualifier still kills it
     const es0 = rows.filter(r => r.text.includes("Energy Shield is fixed at 0"));
     expect(es0.length).toBeGreaterThan(0);
     expect(es0.every(r => r.delta === null)).toBe(true);
-    // gains gated on BEING at low life don't work with ES as the defensive layer
-    const lowlife = rows.filter(r => /(?<!not )at Low Life/.test(r.text) && r.delta !== null);
-    expect(lowlife.filter(r => r.bucket.includes("additional")
-                            && !r.text.includes("not at Low Life"))).toEqual([]);
   });
 
   test("increased 'damage against Low Life enemies' is HP-gated, not full uptime", () => {
@@ -302,10 +300,33 @@ describe("applicability rules", () => {
     expect(r.delta!).toBeLessThan(4);
   });
 
-  test("'not at Low Life' still modeled", () => {
-    const ok = rows.filter(r => r.text.includes("when not at Low Life"));
-    expect(ok.length).toBeGreaterThan(0);
-    expect(ok.some(r => r.delta !== null)).toBe(true);
+  test("'+1 Max Focus Blessing Stacks' scores the marginal 6th stack: +4%", () => {
+    // build has a Focus Blessing generator (Grace Boots / rare slate, user 2026-07-17)
+    // and sits at 5 stacks (+25% Focus); a 6th makes x1.30 -> 1.30/1.25 = +4%
+    const r = rows.find(r => r.text === "+1 to Max Focus Blessing Stacks");
+    expect(r, "standalone Max Focus Blessing mod missing").toBeTruthy();
+    expect(r!.delta).not.toBeNull();
+    expect(r!.delta!).toBeGreaterThan(3.8);
+    expect(r!.delta!).toBeLessThan(4.2);
+  });
+
+  test("'at Full Mana' gains are dead, but 'Sealed Mana' gains stay live", () => {
+    // the build seals most of its mana (Restrain x3 auras, user 2026-07-17), so it is
+    // never at Full Mana — the +20% Attack Speed line is dead
+    const full = rows.find(r => r.text.includes("when at Full Mana"));
+    expect(full, "Full Mana mod vanished from catalog").toBeTruthy();
+    expect(full!.delta).toBeNull();
+    // but mods that require sealed mana ARE active: the build seals mana AND life
+    const sealed = rows.find(r => r.text.includes("both Sealed Mana and Life"));
+    expect(sealed!.delta).toBe(10);
+  });
+
+  test("'not at Low Life' gains are dead: seal conversion holds the build at Low Life", () => {
+    // seal conversion reserves life below the 35% line (user 2026-07-17), so a
+    // "when not at Low Life" buff never activates — Survival Will's +30% is dead
+    const survival = rows.filter(r => r.text.includes("when not at Low Life"));
+    expect(survival.length, "Survival Will vanished from catalog").toBeGreaterThan(0);
+    expect(survival.every(r => r.delta === null)).toBe(true);
   });
 });
 
