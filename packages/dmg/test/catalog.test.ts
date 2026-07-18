@@ -60,18 +60,18 @@ describe("scoring", () => {
     expect(blocked.delta).toBeNull();
   });
 
-  test("Strength joins ONE summed layer: %Strength scales the tracked pool, flat adds to it", () => {
+  test("Strength is its own multiplier: %Strength scales the pool, flat adds points, both full-value", () => {
     const s = loadSnap();
-    // tracked strength = additional.strength / 0.5; +12% of 332 = +39.8 pts -> +19.9
-    // into the summed pool: diluted marginal, NOT a fresh x1.199 multiplier
+    // tracked strength = additional.strength / 0.5 (216 pts); +12% scales the pool then
+    // recompounds into additional.strength — a full ×(1+Δ) factor, not a diluted marginal
     const pct = rows.find(r => r.text === "+12% Strength")!;
     expect(pct.delta).not.toBeNull();
-    expect(pct.delta!).toBeGreaterThan(0.4);
-    expect(pct.delta!).toBeLessThan(1.5);
-    // +30 flat Str = +15 pts added to the pool
+    expect(pct.delta!).toBeGreaterThan(4);
+    expect(pct.delta!).toBeLessThan(8);
+    // +30 flat Str = +15 pts recompounded into the strength factor
     const flat = impactOf("extras.strength", 30, s)!;
-    expect(flat).toBeGreaterThan(0.3);
-    expect(flat).toBeLessThan(1.0);
+    expect(flat).toBeGreaterThan(5);
+    expect(flat).toBeLessThan(9);
   });
 
   test("aura effect scales the crit-rating and attack-speed aura lines too", () => {
@@ -196,11 +196,11 @@ describe("applicability rules", () => {
   test("'next Main Skill every 0.5s' buffs one use per interval, not every hit", () => {
     const m = rows.filter(r => /next Main Skill every 0\.5 s/.test(r.text));
     expect(m.length, "Momentum missing from catalog").toBeGreaterThan(0);
-    // ~6.2 skill uses/s vs 2 armed buffs/s: 30 x 2/6.2 = ~9.7 EV additional, then
-    // diluted into the summed pool -> sub-1% marginal
+    // ~6.2 skill uses/s vs 2 armed buffs/s: 30 x 2/6.2 = ~9.7 EV additional, its own
+    // ×(1+v) factor — well below the +30 headline's full-uptime ceiling
     expect(m[0].delta).not.toBeNull();
-    expect(m[0].delta!).toBeGreaterThan(0);
-    expect(m[0].delta!).toBeLessThan(1);
+    expect(m[0].delta!).toBeGreaterThan(5);
+    expect(m[0].delta!).toBeLessThan(20);
     expect(m[0].cond).toBe(false);   // EV is not a full-uptime ceiling
   });
 

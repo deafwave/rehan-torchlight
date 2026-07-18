@@ -16,9 +16,8 @@ describe("gear ladder", () => {
   test("mainhand ladder is all linear stat swaps (no reworks)", () => {
     const row = slot("mainHand");
     expect(row.rungs.every(r => r.linear), "same sword class — no reworks").toBe(true);
-    // NOT monotonic under the summed additional pool: the mirror sword leans on
-    // Steamroll + a skill level (both saturated in the pile), while the priceless
-    // sword's +80% Gear Phys tower is a base multiplier that wins (user 2026-07-17)
+    // the priceless sword's +80% Gear Phys tower (a base-damage multiplier) can
+    // outprice the mirror sword's stat spread — rungs need not be monotonic
     expect(row.rungs.every(r => r.dps! > 0)).toBe(true);
   });
 
@@ -51,10 +50,11 @@ describe("gear ladder", () => {
     const gs = slot("gloves").rungs.at(-1)!;
     expect(gs.label).toBe("Ghost Slaughter");
     expect(gs.rework!.label).toBe("+ Vorax Fervor Boot");
-    // the glove carries only the additional-damage half of Fervor (saturated in the
-    // summed pool); the crit-rating engine rides on the Dawn Break boots — so vs a raw
-    // crit/ES glove it is a small loss, not the old +100% (user 2026-07-17)
+    // with the Fervor engine on (Vorax boot rework), the glove's granted Fervor
+    // additional damage is a full ×(1+X) multiplier — a large gain, not the old
+    // dilution-flattened figure (user 2026-07-17)
     expect(gs.gain).not.toBeNull();
+    expect(gs.gain!).toBeGreaterThan(50);
   });
 
   test("boots: Grace -> i86 ES is the rework (Focus Blessing source), Dawn Break is linear", () => {
@@ -73,7 +73,7 @@ describe("gear ladder", () => {
     expect(row.rungs.map(r => r.linear)).toEqual([true, true, false]);
     const shield = row.rungs[2];
     expect(shield.rework!.label).toBe("+ i86 Hasten boots · → God of Might tree · → Brave tree");
-    // the shield's warcry kit is saturated in the summed pool and can't replace the
+    // even as a full multiplier, the shield's warcry additional can't out-weigh the
     // sword's Joined Force (+60% base damage) — a real DPS sacrifice for defense
     expect(shield.gain!).toBeLessThan(0);
   });
@@ -171,8 +171,7 @@ describe("prism progression", () => {
     const [none, bad, good] = LADDERS[1].rungs;
     expect(none.delta).toBeNull();
     expect(good.label).toMatch(/\+38% Legendary Medium, \+17% Medium/);
-    // both smaller under the summed pool (warcry additional saturates); the good roll
-    // still adds increased/effect that the bad roll does not, so it stays ahead
+    // the good roll adds increased/effect that the bad roll does not, so it stays ahead
     expect(bad.delta!).toBeGreaterThan(0);
     expect(good.delta!).toBeGreaterThan(bad.delta!);
   });

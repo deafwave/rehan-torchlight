@@ -78,9 +78,9 @@ export function applyStat(s: Snapshot, path: string, value: number): boolean {
   const root = path.split(".")[0];
   const key = path.split(".").pop()!;
   if (root === "additional") {
-    // one summed "Additional Damage Bonus" pool: a mod adds its face value, so it
-    // shows true diminishing returns against the pile (mechanics.md#additional)
-    s.additional[key] = (s.additional[key] ?? 0) + value;
+    // each "+X% additional damage" line is its own ×(1+v) factor (mechanics.md#additional),
+    // exactly as buildParser compounds them — never a diluted point-add to a summed pool
+    compound(s.additional, key, value);
   } else if (root === "enemy_taken") {
     compound(s.enemy_taken, key, value);
   } else if (["increased", "crit", "penetration", "rotation", "base"].includes(root)
@@ -116,17 +116,16 @@ export function applyStat(s: Snapshot, path: string, value: number): boolean {
     // symmetric wording "+X% Attack Speed and +X% additional Attack Damage";
     // Aggression comes from casting any Attack Skill -> full uptime (mechanics.md 'Hidden Mastery')
     s.rotation.attack_speed_inc_pct += value;
-    s.additional.misc += value;
+    compound(s.additional, "misc", value);
   } else if (path === "special.as_per_life_lost") {
     s.rotation.attack_speed_inc_pct += value * LIFE_LOST_PCT;   // slate wording is per 1% lost
   } else if (path === "special.low_life_enemy") {
-    s.additional.low_life_execute = (s.additional.low_life_execute ?? 0) + lowLifeExecEvPct(value);
+    compound(s.additional, "low_life_execute", lowLifeExecEvPct(value));
   } else if (path === "extras.low_life_inc_pct") {
-    // increased-bucket bonus gated below 35% boss HP: diluted by the pool it joins,
-    // then HP-weighted (mechanics.md 'Low Life enemies')
+    // increased-bucket bonus gated below 35% boss HP: HP-weighted, then its own
+    // additional-damage factor (mechanics.md 'Low Life enemies')
     const inc = Object.values(s.increased).reduce((a, v) => a + v, 0);
-    s.additional.low_life_execute = (s.additional.low_life_execute ?? 0)
-      + lowLifeExecEvPct(value * 100 / (100 + inc));
+    compound(s.additional, "low_life_execute", lowLifeExecEvPct(value * 100 / (100 + inc)));
   } else if (path === "extras.frostbite_effect_pct") {
     // mechanics.md#frostbite: Effect multiplies max rating into enemy_taken.frostbite
     const max = d.frostbite_max ?? FROSTBITE_CAP;

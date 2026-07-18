@@ -9,7 +9,9 @@ export const STANDARD_PERTURBATIONS: [string, string, number][] = [
   ["+10% increased melee damage", "increased.melee", 10],
   ["+10% increased area damage", "increased.area", 10],
   ["+10% increased cold damage", "increased.cold", 10],
-  ["+10 pts onto existing additional-damage pile", "additional.misc", 10],
+  // a fresh +10% additional line is its own ×1.10 factor (mechanics.md#additional);
+  // probe an empty bucket so it reads its full value, undiluted by the existing product
+  ["+10% additional damage line (fresh ×1.10)", "additional.sealed_life_mana", 10],
   // live gem is 20+2 (user 2026-07-17); skill_levels is a MORE multiplier, so +1 level
   // lands the exact x1.10 step as this band delta on the +2 baseline
   ["+1 skill level (gem 22 -> 23, x1.10)", "additional.skill_levels",
