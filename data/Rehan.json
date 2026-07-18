@@ -4892,31 +4892,37 @@
                   "tier": "1"
                 },
                 {
-                  "affixId": "adb0c6ae-62ee-5b88-918d-1528cd336c94",
-                  "tierId": "05515929-b12a-5c3b-8344-3692ede77c94",
-                  "modifierDescription": "+#% gear Energy Shield",
+                  "affixId": "a0d311c9-72fc-5a4b-8fac-eb99dc0c0dbb",
+                  "tierId": "a0d311c9-72fc-5a4b-8fac-eb99dc0c0dbb",
+                  "modifierDescription": "Adds # - # Physical Damage to Attacks and Spells",
                   "rolledValues": [
                     {
-                      "value": 61,
-                      "minValue": 47,
-                      "maxValue": 66,
-                      "sign": "+",
-                      "unit": "%"
+                      "value": 78,
+                      "minValue": 76,
+                      "maxValue": 78
+                    },
+                    {
+                      "value": 95,
+                      "minValue": 93,
+                      "maxValue": 95
                     }
                   ],
                   "tier": "1"
                 },
                 {
-                  "affixId": "964b0456-9236-52a0-b5eb-2a1dcd83b226",
-                  "tierId": "74821c9b-8c42-5bed-96dd-75abae573083",
-                  "modifierDescription": "+#% damage",
+                  "affixId": "b20b9b12-d959-533f-91d8-f75c9ca46569",
+                  "tierId": "b20b9b12-d959-533f-91d8-f75c9ca46569",
+                  "modifierDescription": "Adds # - # Cold Damage to Attacks and Spells",
                   "rolledValues": [
                     {
-                      "value": 65,
-                      "minValue": 51,
-                      "maxValue": 72,
-                      "sign": "+",
-                      "unit": "%"
+                      "value": 74,
+                      "minValue": 72,
+                      "maxValue": 74
+                    },
+                    {
+                      "value": 98,
+                      "minValue": 96,
+                      "maxValue": 98
                     }
                   ],
                   "tier": "1"
@@ -7258,31 +7264,37 @@
                   "tier": "1"
                 },
                 {
-                  "affixId": "adb0c6ae-62ee-5b88-918d-1528cd336c94",
-                  "tierId": "05515929-b12a-5c3b-8344-3692ede77c94",
-                  "modifierDescription": "+#% gear Energy Shield",
+                  "affixId": "a0d311c9-72fc-5a4b-8fac-eb99dc0c0dbb",
+                  "tierId": "a0d311c9-72fc-5a4b-8fac-eb99dc0c0dbb",
+                  "modifierDescription": "Adds # - # Physical Damage to Attacks and Spells",
                   "rolledValues": [
                     {
-                      "value": 61,
-                      "minValue": 47,
-                      "maxValue": 66,
-                      "sign": "+",
-                      "unit": "%"
+                      "value": 78,
+                      "minValue": 76,
+                      "maxValue": 78
+                    },
+                    {
+                      "value": 95,
+                      "minValue": 93,
+                      "maxValue": 95
                     }
                   ],
                   "tier": "1"
                 },
                 {
-                  "affixId": "964b0456-9236-52a0-b5eb-2a1dcd83b226",
-                  "tierId": "74821c9b-8c42-5bed-96dd-75abae573083",
-                  "modifierDescription": "+#% damage",
+                  "affixId": "b20b9b12-d959-533f-91d8-f75c9ca46569",
+                  "tierId": "b20b9b12-d959-533f-91d8-f75c9ca46569",
+                  "modifierDescription": "Adds # - # Cold Damage to Attacks and Spells",
                   "rolledValues": [
                     {
-                      "value": 65,
-                      "minValue": 51,
-                      "maxValue": 72,
-                      "sign": "+",
-                      "unit": "%"
+                      "value": 74,
+                      "minValue": 72,
+                      "maxValue": 74
+                    },
+                    {
+                      "value": 98,
+                      "minValue": 96,
+                      "maxValue": 98
                     }
                   ],
                   "tier": "1"
@@ -9812,31 +9824,37 @@
                   "tier": "1"
                 },
                 {
-                  "affixId": "adb0c6ae-62ee-5b88-918d-1528cd336c94",
-                  "tierId": "05515929-b12a-5c3b-8344-3692ede77c94",
-                  "modifierDescription": "+#% gear Energy Shield",
+                  "affixId": "a0d311c9-72fc-5a4b-8fac-eb99dc0c0dbb",
+                  "tierId": "a0d311c9-72fc-5a4b-8fac-eb99dc0c0dbb",
+                  "modifierDescription": "Adds # - # Physical Damage to Attacks and Spells",
                   "rolledValues": [
                     {
-                      "value": 61,
-                      "minValue": 47,
-                      "maxValue": 66,
-                      "sign": "+",
-                      "unit": "%"
+                      "value": 78,
+                      "minValue": 76,
+                      "maxValue": 78
+                    },
+                    {
+                      "value": 95,
+                      "minValue": 93,
+                      "maxValue": 95
                     }
                   ],
                   "tier": "1"
                 },
                 {
-                  "affixId": "964b0456-9236-52a0-b5eb-2a1dcd83b226",
-                  "tierId": "74821c9b-8c42-5bed-96dd-75abae573083",
-                  "modifierDescription": "+#% damage",
+                  "affixId": "b20b9b12-d959-533f-91d8-f75c9ca46569",
+                  "tierId": "b20b9b12-d959-533f-91d8-f75c9ca46569",
+                  "modifierDescription": "Adds # - # Cold Damage to Attacks and Spells",
                   "rolledValues": [
                     {
-                      "value": 65,
-                      "minValue": 51,
-                      "maxValue": 72,
-                      "sign": "+",
-                      "unit": "%"
+                      "value": 74,
+                      "minValue": 72,
+                      "maxValue": 74
+                    },
+                    {
+                      "value": 98,
+                      "minValue": 96,
+                      "maxValue": 98
                     }
                   ],
                   "tier": "1"

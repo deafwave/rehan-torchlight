@@ -255,6 +255,10 @@ const PHASES: Phase[] = [
     { id:"oh86", seq:"THIRD", src:"gear", chip: rungChip("offHand", "i86"),
       title:"i86 offhand — Shadowless Swordsman's Blade (raw damage)",
       detail: craftDetail("oh86", "offHand", "i86") },
+    { id:"gloves86", seq:"FOURTH", src:"gear", chip: rungChip("gloves", "i86"),
+      title:"i86 gloves — Long Night Sorcerer's Wristband",
+      note:"Two flat damage prefixes (Physical + Cold to Attacks) over the flat ES.",
+      detail: craftDetail("gloves86", "gloves", "i86") },
     { id:"motionless", src:"support", title:"Activation Medium: Motionless",
       note:"On the Slash medium — replaces Quick Decision or Added Phys.",
       // filter: just the medium — the rest of the 150b bar lands with Legion (Skills phase)
@@ -290,10 +294,7 @@ const PHASES: Phase[] = [
       detail: craftDetail("ring86fb", "ring2", "i86") },
   ]},
 
-  { id:"armor86-tank", gate:"Traveler 8", title:"i86 armor — tank", steps:[
-    { id:"gloves86", src:"gear", chip: rungChip("gloves", "i86"),
-      title:"i86 ES gloves — Long Night Sorcerer's Wristband",
-      detail: craftDetail("gloves86", "gloves", "i86") },
+  { id:"armor86-tank", gate:"Traveler 8", title:"Tank swap — Light Hunter Belt", steps:[
     { id:"belt-lh", src:"gear", chip: rungChip("belt", "Light Hunter"),
       title:"Light Hunter Belt — tank swap",
       note:"Keep the Bodhi Girdle for DPS — this belt trades damage for defense." },
