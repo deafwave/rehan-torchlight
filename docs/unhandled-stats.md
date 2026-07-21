@@ -87,6 +87,25 @@ Life recently` · `… while standing still` (ramping) · `… for every Blessin
 is active` — all **MODEL/UPTIME**: each is an `additional.*` or `increased.*` gated on a state
 this build likely satisfies at full uptime, but none is parsed. `[slate, unique, trait, pact]`.
 
+## Bing export parse status (data/bing1/real_buld_3.json)
+
+Coverage **67% → 77%** over this session (deterioration/bomb/demolisher/projectile/weapon
+routing). The remaining ~47 unmatched fall into three buckets, none a simple parser gap:
+
+- **Trait tier-arrays** (`Projectile Quantity (+2/+2/+3/+3/+4)`, `(+10/…/+26)% additional Bomb
+  Damage`, Frenzy Hound, Blast Barrage — and Rehan's Rage traits) — **intentionally not
+  parser-resolved.** The export keys traits by unlock slot (`level1/45/60/75`) but encodes **no
+  active rank**, and the 5-value array can't be safely indexed. Per `mechanics.md#real-build`'s
+  **sheet-first** rule, traits are read from the character sheet into the hand-encoded snapshot
+  (e.g. Projectile Quantity is `proj_added` calibrated to the sheet's 6, not the trait's `+4`).
+  Closing this would need a confirmed rank-selection rule or continued sheet-reads — **not** a
+  tier-array parser, which would fabricate numbers that conflict with the calibrated snapshot.
+- **Ruinous Star / Obliterate base** (`… True Damage once every 0.33s … 40% increment, up to 6`)
+  — structurally parseable, but the base tick %/chance is calibration (chance sums to 148 raw vs
+  the sheet-calibrated 98). Kept **inert** on parse; the base stays authoritative in the hand snapshot.
+- **UPTIME geometry & stack engines** — Projectile Speed/Size, bomb-count riders, Repentance /
+  Feline Stimulant stacks: folded into `hits_per_bomb` or need in-game measurement.
+
 ## 3. Rehan Rage / Berserk / Seething engine (trait) — MODEL, mostly full-uptime today
 
 The Fury's Onslaught / Rage Infusion / Growing Anger trait chain drives a whole subsystem the
