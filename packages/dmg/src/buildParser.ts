@@ -384,6 +384,14 @@ export const PATTERNS: [string, string][] = [
   [`\\+${NUM}% additional Attack and Cast Speed`, "rotation.attack_speed_inc_pct"],
   [`additional Ailment Damage`, "ignore"],
   // a ring suffix's paired roll can be negative ("-5% additional damage") below i86
+  // mechanics.md#deterioration + #bing-bombs — route to model fields; must outrank the
+  // generic "additional .* damage" → misc rule below (Bomb Damage, Deterioration Duration)
+  [`\\+${NUM}% Deterioration Damage`, "deterioration.damage_inc_pct"],
+  [`\\+${NUM}% Deterioration Chance`, "deterioration.chance_pct"],
+  [`\\+${NUM}% additional Deterioration Duration`, "deterioration.duration_inc_pct"],
+  [`\\+${NUM}% Demolisher Charge Restoration Speed`, "rotation.demolisher_resto_pct"],
+  [`\\+${NUM}% additional Bomb Damage`, "additional.bomb"],
+  [`Projectile Quantity \\+${NUM}`, "rotation.proj_added"],
   [`^(-\\d+(?:\\.\\d+)?)% additional damage$`, "additional.misc"],
   [`\\+${NUM}% additional .*[Dd]amage`, "additional.misc"],
   [`\\+${NUM}% (?:increased )?Physical Damage`, "increased.physical"],
@@ -451,6 +459,13 @@ const nums = (text: string): number[] => (text.match(/\d+(?:\.\d+)?/g) ?? []).ma
 /** Route a classified value into the snapshot. Special paths handled here. */
 function apply(snap: Snapshot, extras: Record<string, number>, path: string, value: number, line: Line): void {
   const mult = line.slot === "tree" ? (line.points ?? 1) : 1;
+  if (path.startsWith("deterioration.")) {
+    // mechanics.md#deterioration — accumulate modifier mods additively into a lazily
+    // created section; stays inert until an Obliterate base supplies hit_damage_pct
+    const key = path.split(".")[1];
+    (snap.deterioration ??= {})[key] = (snap.deterioration[key] ?? 0) + value * mult;
+    return;
+  }
   if (path === "base.weapon_phys") {
     const m = nums(line.text);
     if (line.slot === "mainHand") {

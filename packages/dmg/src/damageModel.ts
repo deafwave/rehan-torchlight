@@ -460,7 +460,10 @@ export function cycleDps(s: Snapshot) {
   let detDps = 0;
   let dotNode: TNode | undefined;
   const d = s.deterioration;
-  if (d && d.chance_pct > 0) {
+  // mechanics.md#deterioration — the DoT needs an Obliterate base (hit_damage_pct, the
+  // base tick %); a parsed build that only accumulated the modifier mods (Deterioration
+  // Damage/Chance/Duration) has no base ⇒ inert, like Passivation on a zero-erosion build
+  if (d && d.chance_pct > 0 && d.hit_damage_pct > 0) {
     const enhancedShare = Math.min(1, cycleTime / d.obliterate_interval_s / uses);
     // "+X% Deterioration Damage" is a non-additional (increased) line: it joins the
     // increased SUM for the deterioration envelope — ticks ×(incSum+X)/incSum, since

@@ -300,6 +300,15 @@ describe("cycleDps", () => {
 /* mechanics.md#deterioration — Ruinous Star SS13: Obliterate-enhanced skill uses
    deal Erosion and inflict Deterioration; each stack ticks True Damage every
    0.33s for its duration, ramping +30% additional per tick up to 5 times. */
+describe("deterioration is inert without an Obliterate base", () => {
+  test("accumulated modifier mods (chance/damage/duration) but no base tick → no DoT", () => {
+    const s = baseOnly();
+    // what a parsed build gets from gear/slate mods alone, with no Obliterate source
+    s.deterioration = { chance_pct: 80, damage_inc_pct: 20, duration_inc_pct: 30 };
+    expect(cycleDps(s).deterioration_dps).toBe(0);   // hit_damage_pct absent ⇒ dormant, not NaN
+  });
+});
+
 describe("deterioration", () => {
   const det = () => ({ chance_pct: 100, hit_damage_pct: 60,
                        duration_s: 1, duration_inc_pct: 0, tick_interval_s: 0.33,

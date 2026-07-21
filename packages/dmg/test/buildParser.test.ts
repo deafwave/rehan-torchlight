@@ -195,6 +195,23 @@ describe("classify", () => {
     expect(classify("+9% Cold Damage")).toEqual(["increased.cold", 9.0]);
   });
 
+  test("deterioration / bomb / demolisher / projectile modifiers route to model fields", () => {
+    expect(classify("+8% Deterioration Damage")).toEqual(["deterioration.damage_inc_pct", 8.0]);
+    expect(classify("+50% Deterioration Chance")).toEqual(["deterioration.chance_pct", 50.0]);
+    expect(classify("+5% additional Deterioration Duration")).toEqual(["deterioration.duration_inc_pct", 5.0]);
+    expect(classify("+33% Demolisher Charge Restoration Speed")).toEqual(["rotation.demolisher_resto_pct", 33.0]);
+    expect(classify("+26% additional Bomb Damage")).toEqual(["additional.bomb", 26.0]);
+    expect(classify("Projectile Quantity +2")).toEqual(["rotation.proj_added", 2.0]);
+    // "additional Bomb Damage" must outrank the generic "additional .* damage" → misc rule
+    expect(classify("+10% additional Attack Damage")).toEqual(["additional.misc", 10.0]);
+  });
+
+  test("parsing the Bing export lazily builds a deterioration section from its mods", () => {
+    const [snap] = parseBuild(fromRoot("data/bing1/real_buld_3.json"));
+    expect(snap.deterioration).toBeDefined();
+    expect(snap.deterioration!.duration_inc_pct).toBeGreaterThanOrEqual(30);   // Ruinous Star +30% + slates
+  });
+
   test("weapon-base element adds route to their own slots (mechanics.md#weapon-base-elements)", () => {
     expect(classify("Adds 10 - 20 Fire Damage to the gear")).toEqual(["base.weapon_flat_fire", 10.0]);
     expect(classify("Adds 5 - 15 Lightning Damage to the gear")).toEqual(["base.weapon_flat_lightning", 5.0]);
