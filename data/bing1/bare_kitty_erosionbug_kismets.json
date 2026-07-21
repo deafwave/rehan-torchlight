@@ -1,0 +1,399 @@
+{
+  "id": "build_1784553377517_x2pmtxd3q",
+  "name": "New Build",
+  "notes": "",
+  "patch": "SS12.5",
+  "createdAt": 1784553377517,
+  "updatedAt": 1784553377517,
+  "loadouts": {
+    "loadouts": [
+      {
+        "id": "loadout_1784552407269_t13n83rka",
+        "name": "Default",
+        "order": 0,
+        "hiddenInGuide": false,
+        "hero": {
+          "heroGuid": "c89dce15-cbeb-562d-83ec-993059bbf0ec",
+          "heroId": "Bing: Blast Nova",
+          "traits": {
+            "level1": "7eb1ad5c-35ab-5ae8-a003-ba6cde830ade",
+            "level45": null,
+            "level60": null,
+            "level75": null
+          }
+        },
+        "heroMemories": {
+          "equipped": {
+            "slot45": null,
+            "slot60": null,
+            "slot75": null,
+            "slotLevel1Special": null
+          },
+          "inventory": []
+        },
+        "etherealPrisms": {
+          "equipped": {
+            "slot1": null,
+            "slot2": null,
+            "slot3": null
+          },
+          "inventory": []
+        },
+        "gear": {
+          "equipped": {
+            "helmet": null,
+            "chest": null,
+            "gloves": null,
+            "boots": null,
+            "belt": null,
+            "ring1": null,
+            "ring2": null,
+            "necklace": null,
+            "mainHand": null,
+            "offHand": null
+          },
+          "inventory": [
+            {
+              "id": "gear-1784552445243-evc869anz",
+              "rarity": "Rare",
+              "gearCategory": "two_handed",
+              "gearSubType": "two-handed_hammer",
+              "baseItem": {
+                "baseItemId": "44db9e00-ac26-5ac3-bf59-cd3f275c840d",
+                "name": "Destroyer Mallet",
+                "icon": "/images/rare-gear/two_handed/two-handed_hammer/Icon_Equip_Weapon_2HMace_Norm_001_128.webp",
+                "requiredLevel": 82,
+                "implicits": [
+                  {
+                    "description": "175 - 175 Physical Damage",
+                    "rawText": "175 - 175 Physical Damage",
+                    "values": [
+                      {
+                        "value": 175,
+                        "minValue": 175,
+                        "maxValue": 175
+                      },
+                      {
+                        "value": 175,
+                        "minValue": 175,
+                        "maxValue": 175
+                      }
+                    ]
+                  },
+                  {
+                    "description": "500 Critical Strike Rating",
+                    "rawText": "500 Critical Strike Rating",
+                    "values": [
+                      {
+                        "value": 500,
+                        "minValue": 500,
+                        "maxValue": 500
+                      }
+                    ]
+                  },
+                  {
+                    "description": "1.5 Attack Speed",
+                    "rawText": "1.5 Attack Speed",
+                    "values": [
+                      {
+                        "value": 1.5,
+                        "minValue": 1.5,
+                        "maxValue": 1.5
+                      }
+                    ]
+                  }
+                ]
+              },
+              "beltBlend": null,
+              "towerSequence": null,
+              "sweetDreamAffix": null,
+              "baseAffix": null,
+              "baseAffix2": null,
+              "corrosionImplicit": null,
+              "prefixes": [],
+              "suffixes": [],
+              "displayName": "Destroyer Mallet",
+              "displayIcon": "/images/rare-gear/two_handed/two-handed_hammer/Icon_Equip_Weapon_2HMace_Norm_001_128.webp",
+              "itemLevel": 80
+            }
+          ]
+        },
+        "vorax": {
+          "equipped": {
+            "chest": null,
+            "head": null,
+            "hands": null,
+            "legs": null,
+            "neck": null,
+            "digits": null,
+            "waist": null
+          },
+          "inventory": []
+        },
+        "skills": {
+          "activeSkills": [
+            {
+              "skillGuid": "6f020b6a-022b-50eb-8299-e5fc7492ea8f",
+              "enabled": true,
+              "level": 20,
+              "supports": [
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            },
+            {
+              "skillGuid": null,
+              "enabled": false,
+              "level": 20,
+              "supports": [
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            },
+            {
+              "skillGuid": null,
+              "enabled": false,
+              "level": 20,
+              "supports": [
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            },
+            {
+              "skillGuid": null,
+              "enabled": false,
+              "level": 20,
+              "supports": [
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            },
+            {
+              "skillGuid": null,
+              "enabled": false,
+              "level": 20,
+              "supports": [
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            }
+          ],
+          "passiveSkills": [
+            {
+              "skillGuid": null,
+              "enabled": false,
+              "level": 20,
+              "supports": [
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            },
+            {
+              "skillGuid": null,
+              "enabled": false,
+              "level": 20,
+              "supports": [
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            },
+            {
+              "skillGuid": null,
+              "enabled": false,
+              "level": 20,
+              "supports": [
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            },
+            {
+              "skillGuid": null,
+              "enabled": false,
+              "level": 20,
+              "supports": [
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            }
+          ]
+        },
+        "skillTree": {
+          "slots": [
+            {
+              "treeId": null,
+              "nodePoints": {},
+              "selectedNotable12": null,
+              "selectedNotable24": null,
+              "prismId": null,
+              "equippedPrism": null,
+              "prismCoreTalentOverride": null,
+              "inverseImageState": null
+            },
+            {
+              "treeId": null,
+              "nodePoints": {},
+              "selectedNotable12": null,
+              "selectedNotable24": null,
+              "prismId": null,
+              "equippedPrism": null,
+              "prismCoreTalentOverride": null,
+              "inverseImageState": null
+            },
+            {
+              "treeId": null,
+              "nodePoints": {},
+              "selectedNotable12": null,
+              "selectedNotable24": null,
+              "prismId": null,
+              "equippedPrism": null,
+              "prismCoreTalentOverride": null,
+              "inverseImageState": null
+            },
+            {
+              "treeId": null,
+              "nodePoints": {},
+              "selectedNotable12": null,
+              "selectedNotable24": null,
+              "prismId": null,
+              "equippedPrism": null,
+              "prismCoreTalentOverride": null,
+              "inverseImageState": null
+            }
+          ],
+          "allocationOrder": [],
+          "recordOrder": true
+        },
+        "divinity": {
+          "inventory": [],
+          "placements": []
+        },
+        "pactspirits": [
+          {
+            "guid": "d8207355-823b-5132-a2c2-66d6eae0a5be",
+            "level": 6,
+            "allocatedNodes": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11"
+            ],
+            "expansions": {}
+          },
+          null,
+          {
+            "guid": "131210d1-0e5b-561d-b906-332223543916",
+            "level": 6,
+            "allocatedNodes": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11"
+            ],
+            "expansions": {}
+          }
+        ],
+        "kismets": [
+          {
+            "pactspritIndex": 2,
+            "nodeId": "slot_2_3",
+            "kismetGuid": "86317498-95cb-5801-a57e-d4e79a625775"
+          },
+          {
+            "pactspritIndex": 2,
+            "nodeId": "slot_2_7",
+            "kismetGuid": "e90de0cd-4fc8-5b81-9a43-9fb08ad74b2e",
+            "rollValues": [
+              3
+            ]
+          },
+          {
+            "pactspritIndex": 0,
+            "nodeId": "slot_0_4",
+            "kismetGuid": "51903683-4656-52f9-a768-4f93f25d6829",
+            "rollValues": [
+              13
+            ]
+          },
+          {
+            "pactspritIndex": 0,
+            "nodeId": "slot_0_5",
+            "kismetGuid": "51903683-4656-52f9-a768-4f93f25d6829",
+            "rollValues": [
+              14
+            ]
+          },
+          {
+            "pactspritIndex": 0,
+            "nodeId": "slot_0_6",
+            "kismetGuid": "86317498-95cb-5801-a57e-d4e79a625775"
+          }
+        ],
+        "scentBottle": {
+          "activeScent": "basic",
+          "basic": {
+            "skillGuid": null,
+            "damageIngredient": null,
+            "defenseIngredient": null,
+            "functionalIngredient": null,
+            "specialIngredients": [
+              null,
+              null
+            ]
+          },
+          "special": {
+            "skillGuid": null,
+            "damageIngredient": null,
+            "defenseIngredient": null,
+            "functionalIngredient": null,
+            "specialIngredients": [
+              null,
+              null
+            ]
+          }
+        }
+      }
+    ],
+    "currentLoadoutId": "loadout_1784552407269_t13n83rka"
+  }
+}

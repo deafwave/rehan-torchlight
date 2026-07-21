@@ -1,0 +1,77 @@
+{
+ "skill_type": "bomb",
+ "base": {
+  "weapon_phys_min": 175,
+  "weapon_phys_max": 175,
+  "weapon_flat_cold_min": 0,
+  "weapon_flat_cold_max": 0,
+  "gear_phys_pct": 0,
+  "gain_phys_as_cold_pct": 0,
+  "weapon_attack_speed": 1.5,
+  "skill_weapon_pct": 369,
+  "flat_added_min": 0,
+  "flat_added_max": 0,
+  "flat_added_cold_min": 0,
+  "flat_added_cold_max": 0,
+  "flat_added_erosion_min": 50,
+  "flat_added_erosion_max": 50,
+  "added_damage_effectiveness_pct": 369
+ },
+ "increased": {
+  "physical": 0,
+  "fire": 0,
+  "attack": 0,
+  "melee": 0,
+  "area": 0,
+  "projectile": 0,
+  "elemental": 0,
+  "erosion": 14,
+  "global": 0
+ },
+ "additional": {
+  "strength": 0,
+  "frenzy_hound": 0,
+  "blast_barrage": 0,
+  "misc": 0
+ },
+ "enemy_taken": {
+  "ignite": 0,
+  "misc": 0
+ },
+ "crit": {
+  "chance_pct": 5,
+  "damage_pct": 150
+ },
+ "penetration": {
+  "cold_pct": 0,
+  "armor_pct": 0,
+  "erosion_pct": 0
+ },
+ "enemy": {
+  "cold_res_pct": 30,
+  "armor_reduction_pct": 0,
+  "erosion_res_pct": 30
+ },
+ "rotation": {
+  "bombs_per_throw": 2,
+  "throw_rate_base": 1,
+  "attack_speed_inc_pct": 0,
+  "hits_per_bomb": 0.8353,
+  "proj_base": 5,
+  "proj_added": 0,
+  "demolisher_empower_mult": 3.65,
+  "demolisher_resto_pct": 0
+ },
+ "deterioration": {
+  "chance_pct": 0,
+  "hit_damage_pct": 60,
+  "duration_s": 1,
+  "duration_inc_pct": 0,
+  "tick_interval_s": 0.33,
+  "ramp_pct": 30,
+  "ramp_max_ticks": 5,
+  "damage_inc_pct": 0,
+  "additional_damage_pct": 0,
+  "obliterate_interval_s": 0.5
+ }
+}

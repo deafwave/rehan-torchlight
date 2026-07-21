@@ -1,0 +1,2434 @@
+{
+  "id": "build_1784553377517_x2pmtxd3q",
+  "name": "b1",
+  "notes": "",
+  "patch": "SS13",
+  "createdAt": 1784590959853,
+  "updatedAt": 1784590959853,
+  "loadouts": {
+    "loadouts": [
+      {
+        "id": "loadout_1784552407269_t13n83rka",
+        "name": "Default",
+        "order": 0,
+        "hiddenInGuide": false,
+        "hero": {
+          "heroGuid": "c89dce15-cbeb-562d-83ec-993059bbf0ec",
+          "heroId": "Bing: Blast Nova",
+          "traits": {
+            "level1": "7eb1ad5c-35ab-5ae8-a003-ba6cde830ade",
+            "level45": "4fbc0d8e-39e8-5033-bb23-c0352e019946",
+            "level60": "837b91e7-cf64-5e20-bb97-98d247d24906",
+            "level75": "e5c77ce6-703d-582a-a21a-327d918f5a85"
+          }
+        },
+        "heroMemories": {
+          "equipped": {
+            "slot45": "memory-1784555918710-pvzvlbme7",
+            "slot60": "memory-1784588865552-dnkaozfg9",
+            "slot75": "memory-1784589111965-ss211q7tn",
+            "slotLevel1Special": null
+          },
+          "inventory": [
+            {
+              "memoryType": "Origin",
+              "rarity": "Legendary",
+              "baseStat": {
+                "guid": "f9fac104-b654-5dfd-96f8-f35075b806f0",
+                "value": 90,
+                "sign": "+",
+                "unit": null,
+                "tier": 1
+              },
+              "fixedAffixes": [
+                {
+                  "guid": "721c03aa-72b5-5b97-b18d-bab957c6f180",
+                  "value": 28,
+                  "sign": "+",
+                  "unit": "%",
+                  "tier": 3,
+                  "values": [
+                    {
+                      "value": 28,
+                      "sign": "+",
+                      "unit": "%",
+                      "minValue": 20,
+                      "maxValue": 28
+                    }
+                  ]
+                },
+                {
+                  "guid": "75b8f26f-fe44-5549-81fa-6232ac09341b",
+                  "value": 80,
+                  "sign": "+",
+                  "unit": "%",
+                  "tier": 1
+                }
+              ],
+              "randomAffixes": [
+                {
+                  "guid": "fcaa93bd-46fd-538e-b328-8b5f645d0df7",
+                  "value": 47,
+                  "sign": "+",
+                  "unit": "%",
+                  "tier": 1,
+                  "values": [
+                    {
+                      "value": 47,
+                      "sign": "+",
+                      "unit": "%",
+                      "minValue": 44,
+                      "maxValue": 52
+                    }
+                  ]
+                },
+                {
+                  "guid": "9ad07448-733b-5b57-93f2-be4f255a347e",
+                  "value": 53,
+                  "sign": "+",
+                  "unit": "%",
+                  "tier": 1,
+                  "values": [
+                    {
+                      "value": 53,
+                      "sign": "+",
+                      "unit": "%",
+                      "minValue": 43,
+                      "maxValue": 53
+                    }
+                  ]
+                }
+              ],
+              "waxAndWane": false,
+              "id": "memory-1784555918710-pvzvlbme7"
+            },
+            {
+              "memoryType": "Discipline",
+              "rarity": "Legendary",
+              "baseStat": {
+                "guid": "2b4cc1aa-aaf1-5eb3-a264-f524da9bebc6",
+                "value": 180,
+                "sign": "+",
+                "unit": null,
+                "tier": 1
+              },
+              "fixedAffixes": [
+                {
+                  "guid": "fdd68cc1-a72e-55a3-a08c-371f8ca3e25d",
+                  "value": 38,
+                  "sign": "+",
+                  "unit": "%",
+                  "tier": 1,
+                  "values": [
+                    {
+                      "value": 38,
+                      "sign": "+",
+                      "unit": "%",
+                      "minValue": 38,
+                      "maxValue": 42
+                    }
+                  ]
+                },
+                {
+                  "guid": "51e496f2-b504-5fd8-98b1-2f4f1d9202bf",
+                  "value": 80,
+                  "sign": "+",
+                  "unit": "%",
+                  "tier": 1
+                }
+              ],
+              "randomAffixes": [
+                {
+                  "guid": "a97fbe48-fc26-5693-91b9-67c52a838b5b",
+                  "value": 80,
+                  "sign": "+",
+                  "unit": "%",
+                  "tier": 1,
+                  "values": [
+                    {
+                      "value": 80,
+                      "sign": "+",
+                      "unit": "%",
+                      "minValue": 80,
+                      "maxValue": 80
+                    }
+                  ]
+                },
+                {
+                  "guid": "0b5f9936-32bd-5dcf-b128-4706088965ac",
+                  "value": 51,
+                  "sign": "+",
+                  "unit": "%",
+                  "tier": 1,
+                  "values": [
+                    {
+                      "value": 51,
+                      "sign": "+",
+                      "unit": "%",
+                      "minValue": 44,
+                      "maxValue": 52
+                    }
+                  ]
+                }
+              ],
+              "waxAndWane": false,
+              "id": "memory-1784588865552-dnkaozfg9"
+            },
+            {
+              "memoryType": "Progress",
+              "rarity": "Legendary",
+              "baseStat": {
+                "guid": "bedad5e0-38dc-5c57-b243-33c7a21cc0c4",
+                "value": 36,
+                "sign": "+",
+                "unit": "%",
+                "tier": 1
+              },
+              "fixedAffixes": [
+                {
+                  "guid": "2b0f662e-d487-51bf-9815-02e8278929dc",
+                  "value": 23,
+                  "sign": "+",
+                  "unit": "%",
+                  "tier": 2,
+                  "values": [
+                    {
+                      "value": 23,
+                      "sign": "+",
+                      "unit": "%",
+                      "minValue": 23,
+                      "maxValue": 23
+                    }
+                  ]
+                },
+                {
+                  "guid": "1e701e19-2df6-5877-adcc-051b9a2c432e",
+                  "value": null,
+                  "sign": null,
+                  "unit": null,
+                  "tier": 1
+                }
+              ],
+              "randomAffixes": [
+                {
+                  "guid": "0086f761-9daf-564e-89d2-a53b858e549d",
+                  "value": 52,
+                  "sign": "+",
+                  "unit": "%",
+                  "tier": 1,
+                  "values": [
+                    {
+                      "value": 52,
+                      "sign": "+",
+                      "unit": "%",
+                      "minValue": 44,
+                      "maxValue": 52
+                    }
+                  ]
+                },
+                {
+                  "guid": "28a235b1-799d-5370-ab27-d60c3bcffe3e",
+                  "value": 80,
+                  "sign": "+",
+                  "unit": "%",
+                  "tier": 1,
+                  "values": [
+                    {
+                      "value": 80,
+                      "sign": "+",
+                      "unit": "%",
+                      "minValue": 80,
+                      "maxValue": 80
+                    }
+                  ]
+                }
+              ],
+              "lunarPhaseAffix": {
+                "guid": "b372d9bd-fc31-5589-b755-b9c6e98bd384",
+                "value": 20,
+                "sign": "+",
+                "unit": "%",
+                "tier": 1
+              },
+              "waxAndWane": true,
+              "id": "memory-1784589111965-ss211q7tn"
+            }
+          ]
+        },
+        "etherealPrisms": {
+          "equipped": {
+            "slot1": null,
+            "slot2": null,
+            "slot3": null
+          },
+          "inventory": [
+            {
+              "id": "prism-1784588401817-qnu99zax4",
+              "baseId": "ff7dac44-1bcc-564a-88e9-d39a2d46d269",
+              "prismType": "ethereal",
+              "selectedBaseAffixId": "21be8bdb-b202-5a21-aaf3-bd1f5b590d18",
+              "randomAffixes": [
+                "b288ef67-8f2c-5c63-8eb4-9e82170143cf",
+                "1d81fe10-b461-54f2-9940-e26dea619c53"
+              ]
+            }
+          ]
+        },
+        "gear": {
+          "equipped": {
+            "helmet": "gear-1784586522294-uy8ex1bqm",
+            "chest": "gear-1784586545733-qxjpl53fi",
+            "gloves": "gear-1784586475310-r16qgor01",
+            "boots": "gear-1784587731245-rsuf4ke79",
+            "belt": "gear-1784587774167-ggyu692om",
+            "ring1": "gear-1784586674255-f3xcmvvw6",
+            "ring2": "gear-1784586704028-jaap9iaty",
+            "necklace": "gear-1784586409811-xnwxvrcnz",
+            "mainHand": "gear-1784586645312-ih3bi8wav",
+            "offHand": null
+          },
+          "inventory": [
+            {
+              "id": "gear-1784586409811-xnwxvrcnz",
+              "rarity": "Legendary",
+              "gearCategory": "trinket",
+              "gearSubType": "necklace",
+              "legendaryItem": {
+                "legendaryId": "3de81e40-6ce0-5d29-9901-baa9c468273c",
+                "name": "Broken Sun Ring",
+                "icon": "/images/legendaries/trinket/necklace/Icon_Equip_Amulet_Epic_303_112.webp",
+                "requiredLevel": 1
+              },
+              "legendaryMods": [
+                {
+                  "modId": "2d325f94-5993-5173-9deb-a3138305bdf7",
+                  "description": "+222 Max Life",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 222,
+                      "minValue": 220,
+                      "maxValue": 264,
+                      "sign": "+"
+                    }
+                  ]
+                },
+                {
+                  "modId": "96e5e686-c1e5-53e8-ac88-f72905a1985f",
+                  "description": "+11% Elemental Resistance",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 11,
+                      "minValue": 9,
+                      "maxValue": 12,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ]
+                },
+                {
+                  "modId": "4eff974a-f744-5dc2-99fd-ab278fae7165",
+                  "description": "Solar Ring",
+                  "variant": "normal",
+                  "rolledValues": []
+                }
+              ],
+              "corrosionImplicit": null,
+              "beltBlend": null,
+              "randomAffixSlots": [
+                {
+                  "slotIndex": 0,
+                  "modId": "f5e828a5-d30f-5c10-beae-8f5225569323",
+                  "description": "+41% additional Area Damage for this skill when Demolisher Charge is consumed.",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 41,
+                      "minValue": 34,
+                      "maxValue": 45,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ]
+                }
+              ],
+              "displayName": "Broken Sun Ring",
+              "displayIcon": "/images/legendaries/trinket/necklace/Icon_Equip_Amulet_Epic_303_112.webp"
+            },
+            {
+              "id": "gear-1784586475310-r16qgor01",
+              "rarity": "Legendary",
+              "gearCategory": "gloves",
+              "gearSubType": "str_gloves",
+              "legendaryItem": {
+                "legendaryId": "cbe06f10-b094-5b30-b09d-75f108568e1b",
+                "name": "Death's Touch",
+                "icon": "/images/legendaries/gloves/str_gloves/Icon_Equip_Gloves_Epic_429_112.webp",
+                "requiredLevel": 1
+              },
+              "legendaryMods": [
+                {
+                  "modId": "bcb904ae-bc86-593d-ac23-3df8be89f66c",
+                  "description": "+250 Max Life",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 250,
+                      "minValue": 231,
+                      "maxValue": 330,
+                      "sign": "+"
+                    }
+                  ]
+                },
+                {
+                  "modId": "e53327e4-679f-5a4a-82a2-50b580c52e42",
+                  "description": "+85% additional Base Damage for Two-Handed Weapons",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 85,
+                      "minValue": 80,
+                      "maxValue": 90,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ]
+                },
+                {
+                  "modId": "cfef3d61-7eb8-5473-a3bc-94437b562a93",
+                  "description": "The Critical Strike Rating is fixed at 500 for the Weapon",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 500,
+                      "minValue": 500,
+                      "maxValue": 500
+                    }
+                  ]
+                },
+                {
+                  "modId": "78c1df03-2846-54f6-937b-11e230b2a37a",
+                  "description": "+14% Main-Hand Weapon Attack Speed",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 14,
+                      "minValue": 13,
+                      "maxValue": 16,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ]
+                }
+              ],
+              "corrosionImplicit": null,
+              "beltBlend": null,
+              "randomAffixSlots": [
+                {
+                  "slotIndex": 0,
+                  "modId": "14ad1dc7-a33f-5923-8973-0dd469c56db9",
+                  "description": "Adds 58 - 71 Physical Damage to the Main-Hand Weapon",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 58,
+                      "minValue": 58,
+                      "maxValue": 60
+                    },
+                    {
+                      "value": 71,
+                      "minValue": 71,
+                      "maxValue": 73
+                    }
+                  ]
+                }
+              ],
+              "displayName": "Death's Touch",
+              "displayIcon": "/images/legendaries/gloves/str_gloves/Icon_Equip_Gloves_Epic_429_112.webp"
+            },
+            {
+              "id": "gear-1784586522294-uy8ex1bqm",
+              "rarity": "Legendary",
+              "gearCategory": "helmet",
+              "gearSubType": "str_helmet",
+              "legendaryItem": {
+                "legendaryId": "917e998e-9a94-5dd7-8092-923abe134a92",
+                "name": "Fool's Crown",
+                "icon": "/images/legendaries/helmet/str_helmet/Icon_Equip_Helmet_Epic_311_112.webp",
+                "requiredLevel": 1
+              },
+              "legendaryMods": [
+                {
+                  "modId": "6d093be4-7afb-5130-be23-804ada012119",
+                  "description": "+4185 Gear Armor",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 4185,
+                      "minValue": 4176,
+                      "maxValue": 4464,
+                      "sign": "+"
+                    }
+                  ]
+                },
+                {
+                  "modId": "c344acff-3771-51b8-a984-89fb09b87cd7",
+                  "description": "-99% additional Intelligence",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 99,
+                      "minValue": 99,
+                      "maxValue": 99,
+                      "sign": "-",
+                      "unit": "%"
+                    }
+                  ]
+                },
+                {
+                  "modId": "6eaa54f0-0491-54e8-bc98-16c32bb3e5ac",
+                  "description": "Adds 95 - 125 Physical Damage to the Main-Hand Weapon",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 95,
+                      "minValue": 92,
+                      "maxValue": 108
+                    },
+                    {
+                      "value": 125,
+                      "minValue": 122,
+                      "maxValue": 138
+                    }
+                  ]
+                },
+                {
+                  "modId": "d0f7de5a-6120-53a9-ad54-f309bb8a2f87",
+                  "description": "+148 Strength",
+                  "variant": "corroded",
+                  "rolledValues": [
+                    {
+                      "value": 148,
+                      "minValue": 120,
+                      "maxValue": 150,
+                      "sign": "+"
+                    }
+                  ]
+                },
+                {
+                  "modId": "6b12a139-a597-55ff-ac59-8b5d7152691d",
+                  "description": "+2% Fire Resistance",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 2,
+                      "minValue": 2,
+                      "maxValue": 4,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ]
+                }
+              ],
+              "corrosionImplicit": null,
+              "beltBlend": null,
+              "displayName": "Fool's Crown",
+              "displayIcon": "/images/legendaries/helmet/str_helmet/Icon_Equip_Helmet_Epic_311_112.webp"
+            },
+            {
+              "id": "gear-1784586545733-qxjpl53fi",
+              "rarity": "Legendary",
+              "gearCategory": "chest_armor",
+              "gearSubType": "int_chest_armor",
+              "legendaryItem": {
+                "legendaryId": "cc6070fc-c30a-5155-a882-caa1e7fff825",
+                "name": "Ruinous Star",
+                "icon": "/images/legendaries/chest_armor/int_chest_armor/Icon_Equip_Armor_Epic_325_112.webp",
+                "requiredLevel": 1
+              },
+              "legendaryMods": [
+                {
+                  "modId": "73997c3a-26f9-5d90-a145-a79aaa83dc0b",
+                  "description": "+24% Erosion Resistance",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 24,
+                      "minValue": 20,
+                      "maxValue": 30,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ]
+                },
+                {
+                  "modId": "0719b424-8ddd-58f4-a608-544ba6e7d05f",
+                  "description": "+30% additional Deterioration Duration",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 30,
+                      "minValue": 15,
+                      "maxValue": 30,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ]
+                },
+                {
+                  "modId": "30857598-0d40-5664-8f03-d1ffda9600be",
+                  "description": "Every 0.5 s, your next non-Channeled Main Skill is enhanced by Obliterate\nSkills not enhanced by Obliterate cannot inflict Deterioration",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 0.5,
+                      "minValue": 0.5,
+                      "maxValue": 0.5
+                    }
+                  ]
+                },
+                {
+                  "modId": "5f207071-d332-5137-b1f8-305531c274a2",
+                  "description": "Deterioration no longer deals True Damage when it expires. Instead, it deals True Damage once every 0.33s while it lasts. The damage gains a 40% additional damage increment each time, up to 6 time(s)",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 0.33,
+                      "minValue": 0.33,
+                      "maxValue": 0.33
+                    },
+                    {
+                      "value": 40,
+                      "minValue": 40,
+                      "maxValue": 40,
+                      "unit": "%"
+                    },
+                    {
+                      "value": 6,
+                      "minValue": 6,
+                      "maxValue": 6
+                    }
+                  ]
+                }
+              ],
+              "corrosionImplicit": null,
+              "beltBlend": null,
+              "displayName": "Ruinous Star",
+              "displayIcon": "/images/legendaries/chest_armor/int_chest_armor/Icon_Equip_Armor_Epic_325_112.webp"
+            },
+            {
+              "id": "gear-1784586645312-ih3bi8wav",
+              "rarity": "Rare",
+              "gearCategory": "two_handed",
+              "gearSubType": "two-handed_hammer",
+              "baseItem": {
+                "baseItemId": "c41e5cc1-3a43-535d-98a7-11018a94e2ec",
+                "name": "Sierra Reverberation Maul",
+                "icon": "/images/rare-gear/two_handed/two-handed_hammer/Icon_Equip_Weapon_2HMace_Norm_001_112.webp",
+                "requiredLevel": 86,
+                "implicits": [
+                  {
+                    "description": "220 - 220 Physical Damage",
+                    "rawText": "220 - 220 Physical Damage",
+                    "values": [
+                      {
+                        "value": 220,
+                        "minValue": 220,
+                        "maxValue": 220
+                      },
+                      {
+                        "value": 220,
+                        "minValue": 220,
+                        "maxValue": 220
+                      }
+                    ]
+                  },
+                  {
+                    "description": "500 Critical Strike Rating",
+                    "rawText": "500 Critical Strike Rating",
+                    "values": [
+                      {
+                        "value": 500,
+                        "minValue": 500,
+                        "maxValue": 500
+                      }
+                    ]
+                  },
+                  {
+                    "description": "1.5 Attack Speed",
+                    "rawText": "1.5 Attack Speed",
+                    "values": [
+                      {
+                        "value": 1.5,
+                        "minValue": 1.5,
+                        "maxValue": 1.5
+                      }
+                    ]
+                  }
+                ]
+              },
+              "beltBlend": null,
+              "towerSequence": {
+                "sequenceId": "e4f57531-73a6-53fa-a3ad-304cb9cf8c76",
+                "description": "+16% additional damage for Main-Hand Weapons",
+                "sequenceType": "Intermediate Sequence 1|2|6",
+                "modifierId": "",
+                "chips": [
+                  1,
+                  2,
+                  6
+                ]
+              },
+              "sweetDreamAffix": null,
+              "baseAffix": null,
+              "baseAffix2": null,
+              "corrosionImplicit": null,
+              "prefixes": [
+                {
+                  "affixId": "04689f5a-3991-5ae8-a599-414e60fe5248",
+                  "tierId": "0088f499-2ff8-5733-b397-09d6bf6da96d",
+                  "modifierDescription": "+#% Gear Physical Damage",
+                  "rolledValues": [
+                    {
+                      "value": 62,
+                      "minValue": 49,
+                      "maxValue": 80,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                },
+                {
+                  "affixId": "1570d415-83c3-50ab-85b9-13446ca4cf29",
+                  "tierId": "705899be-b93e-5002-a7f0-40480b837b51",
+                  "modifierDescription": "+#% Melee Damage",
+                  "rolledValues": [
+                    {
+                      "value": 174,
+                      "minValue": 152,
+                      "maxValue": 216,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                },
+                {
+                  "affixId": "a298b297-ce66-5778-96f8-c25b1039b6d0",
+                  "tierId": "a02cced7-7217-5e6a-9f4e-90411dac2181",
+                  "modifierDescription": "Adds # - # Physical Damage to the gear",
+                  "rolledValues": [
+                    {
+                      "value": 71,
+                      "minValue": 71,
+                      "maxValue": 73
+                    },
+                    {
+                      "value": 87,
+                      "minValue": 87,
+                      "maxValue": 89
+                    }
+                  ],
+                  "tier": "1"
+                }
+              ],
+              "suffixes": [
+                {
+                  "affixId": "eb8e123a-88be-51ca-bba7-4f2d23a523a7",
+                  "tierId": "9ac5afa8-cdbf-5b9e-909d-3e6763f8e37d",
+                  "modifierDescription": "+#% additional Attack Damage after standing still for #.#s. -#% additional Attack Speed",
+                  "rolledValues": [
+                    {
+                      "value": 99,
+                      "minValue": 80,
+                      "maxValue": 100,
+                      "sign": "+",
+                      "unit": "%"
+                    },
+                    {
+                      "value": 0.1,
+                      "minValue": 0.1,
+                      "maxValue": 0.1
+                    },
+                    {
+                      "value": 20,
+                      "minValue": 20,
+                      "maxValue": 20,
+                      "sign": "-",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                },
+                {
+                  "affixId": "5c9a5f09-e3e1-5acd-a38d-601ad32b965d",
+                  "tierId": "76120a8a-cc38-5fd6-b8a8-28d43ea5c66f",
+                  "modifierDescription": "+#% Critical Strike Rating",
+                  "rolledValues": [
+                    {
+                      "value": 273,
+                      "minValue": 252,
+                      "maxValue": 360,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                },
+                {
+                  "affixId": "8cbb0303-42b1-5307-93df-47c7c62a12b9",
+                  "tierId": "ef84c6b7-3ee3-5db4-a742-bc8425f7c0a4",
+                  "modifierDescription": "+#% Physical Damage",
+                  "rolledValues": [
+                    {
+                      "value": 176,
+                      "minValue": 152,
+                      "maxValue": 216,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                }
+              ],
+              "displayName": "Sierra Reverberation Maul",
+              "displayIcon": "/images/rare-gear/two_handed/two-handed_hammer/Icon_Equip_Weapon_2HMace_Norm_001_112.webp",
+              "itemLevel": 100
+            },
+            {
+              "id": "gear-1784586674255-f3xcmvvw6",
+              "rarity": "Legendary",
+              "gearCategory": "trinket",
+              "gearSubType": "ring",
+              "legendaryItem": {
+                "legendaryId": "1e12420a-d347-537b-abd9-e59cb93bbad1",
+                "name": "Kaleidoscope",
+                "icon": "/images/legendaries/trinket/ring/Icon_Equip_Ring_Epic_211_112.webp",
+                "requiredLevel": 1
+              },
+              "legendaryMods": [
+                {
+                  "modId": "8f97a2c3-447b-553e-9d47-07adb6ef70b0",
+                  "description": "+66 Max Life",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 66,
+                      "minValue": 66,
+                      "maxValue": 66,
+                      "sign": "+"
+                    }
+                  ]
+                },
+                {
+                  "modId": "6d47e182-9524-5bd5-bd71-62cdadf8f1a8",
+                  "description": "+7% Attack and Cast Speed",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 7,
+                      "minValue": 7,
+                      "maxValue": 10,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ]
+                },
+                {
+                  "modId": "807f5278-71b8-5b17-a90f-676099b2bbd8",
+                  "description": "Gains the following buffs by turns. Each buff lasts for 8 s:\n+48% additional Erosion Damage\n+48% additional Elemental Damage\n+48% additional Physical Damage",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 8,
+                      "minValue": 8,
+                      "maxValue": 8
+                    },
+                    {
+                      "value": 48,
+                      "minValue": 35,
+                      "maxValue": 50,
+                      "sign": "+",
+                      "unit": "%"
+                    },
+                    {
+                      "value": 48,
+                      "minValue": 35,
+                      "maxValue": 50,
+                      "sign": "+",
+                      "unit": "%"
+                    },
+                    {
+                      "value": 48,
+                      "minValue": 35,
+                      "maxValue": 50,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ]
+                }
+              ],
+              "corrosionImplicit": null,
+              "beltBlend": null,
+              "displayName": "Kaleidoscope",
+              "displayIcon": "/images/legendaries/trinket/ring/Icon_Equip_Ring_Epic_211_112.webp"
+            },
+            {
+              "id": "gear-1784586704028-jaap9iaty",
+              "rarity": "Legendary",
+              "gearCategory": "trinket",
+              "gearSubType": "ring",
+              "legendaryItem": {
+                "legendaryId": "1e12420a-d347-537b-abd9-e59cb93bbad1",
+                "name": "Kaleidoscope",
+                "icon": "/images/legendaries/trinket/ring/Icon_Equip_Ring_Epic_211_112.webp",
+                "requiredLevel": 1
+              },
+              "legendaryMods": [
+                {
+                  "modId": "8f97a2c3-447b-553e-9d47-07adb6ef70b0",
+                  "description": "+66 Max Life",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 66,
+                      "minValue": 66,
+                      "maxValue": 66,
+                      "sign": "+"
+                    }
+                  ]
+                },
+                {
+                  "modId": "6d47e182-9524-5bd5-bd71-62cdadf8f1a8",
+                  "description": "+7% Attack and Cast Speed",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 7,
+                      "minValue": 7,
+                      "maxValue": 10,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ]
+                },
+                {
+                  "modId": "807f5278-71b8-5b17-a90f-676099b2bbd8",
+                  "description": "Gains the following buffs by turns. Each buff lasts for 8 s:\n+60% additional Erosion Damage\n+60% additional Elemental Damage\n+60% additional Physical Damage",
+                  "variant": "corroded",
+                  "rolledValues": [
+                    {
+                      "value": 8,
+                      "minValue": 8,
+                      "maxValue": 8
+                    },
+                    {
+                      "value": 60,
+                      "minValue": 55,
+                      "maxValue": 65,
+                      "sign": "+",
+                      "unit": "%"
+                    },
+                    {
+                      "value": 60,
+                      "minValue": 55,
+                      "maxValue": 65,
+                      "sign": "+",
+                      "unit": "%"
+                    },
+                    {
+                      "value": 60,
+                      "minValue": 55,
+                      "maxValue": 65,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ]
+                }
+              ],
+              "corrosionImplicit": null,
+              "beltBlend": null,
+              "displayName": "Kaleidoscope",
+              "displayIcon": "/images/legendaries/trinket/ring/Icon_Equip_Ring_Epic_211_112.webp"
+            },
+            {
+              "id": "gear-1784586742630-c8g8nrosi",
+              "rarity": "Legendary",
+              "gearCategory": "boots",
+              "gearSubType": "str_boots",
+              "legendaryItem": {
+                "legendaryId": "0ce50800-b72c-5ca6-a332-f17fd97b0b8d",
+                "name": "Boots of Devastation",
+                "icon": "/images/legendaries/boots/str_boots/Icon_Equip_Shoes_Epic_427_112.webp",
+                "requiredLevel": 1
+              },
+              "legendaryMods": [
+                {
+                  "modId": "4b264fed-2207-550a-aed3-7ad4187e007d",
+                  "description": "+1404 Gear Armor",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 1404,
+                      "minValue": 1000,
+                      "maxValue": 1500,
+                      "sign": "+"
+                    }
+                  ]
+                },
+                {
+                  "modId": "7136d180-cb71-575b-9824-a2f529082bb3",
+                  "description": "+16% Movement Speed",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 16,
+                      "minValue": 15,
+                      "maxValue": 20,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ]
+                },
+                {
+                  "modId": "0dcd82ff-0970-57cd-9f72-91fa05434892",
+                  "description": "+27% Warcry Effect",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 27,
+                      "minValue": 24,
+                      "maxValue": 30,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ]
+                },
+                {
+                  "modId": "76a74bce-01ab-5abe-b5f9-23fdab05693e",
+                  "description": "+40% additional skill damage when Demolisher Charge is consumed",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 40,
+                      "minValue": 30,
+                      "maxValue": 40,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ]
+                }
+              ],
+              "corrosionImplicit": null,
+              "beltBlend": null,
+              "displayName": "Boots of Devastation",
+              "displayIcon": "/images/legendaries/boots/str_boots/Icon_Equip_Shoes_Epic_427_112.webp"
+            },
+            {
+              "id": "gear-1784587731245-rsuf4ke79",
+              "rarity": "Legendary",
+              "gearCategory": "boots",
+              "gearSubType": "dex_boots",
+              "legendaryItem": {
+                "legendaryId": "fe9382e9-2ac5-5b45-9ba1-6c3d74a11f40",
+                "name": "Blade-dancer's Steps",
+                "icon": "/images/legendaries/boots/dex_boots/Icon_Equip_Shoes_Epic_207_112.webp",
+                "requiredLevel": 1
+              },
+              "legendaryMods": [
+                {
+                  "modId": "8483ae9e-3402-52d5-b0b4-e8666a742f0c",
+                  "description": "+1 Mobility Skill Level",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 1,
+                      "minValue": 1,
+                      "maxValue": 2,
+                      "sign": "+"
+                    }
+                  ]
+                },
+                {
+                  "modId": "9e465e35-d269-50e2-8303-d80b75013658",
+                  "description": "+35% Movement Speed if you have used a Mobility Skill recently",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 35,
+                      "minValue": 30,
+                      "maxValue": 40,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ]
+                },
+                {
+                  "modId": "8f69d920-1cc7-5fd3-9979-5d30041a8c15",
+                  "description": "+45% additional damage for 5 s after using Mobility Skills",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 45,
+                      "minValue": 35,
+                      "maxValue": 45,
+                      "sign": "+",
+                      "unit": "%"
+                    },
+                    {
+                      "value": 5,
+                      "minValue": 5,
+                      "maxValue": 5
+                    }
+                  ]
+                },
+                {
+                  "modId": "d22cc414-5059-5bac-9193-8c4f80b58808",
+                  "description": "When using a Mobility Skill, you can use 1 stack(s) of Agility Blessing to reset the Mobility Skill's cooldown. Interval: 0.6 s",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 1,
+                      "minValue": 1,
+                      "maxValue": 1
+                    },
+                    {
+                      "value": 0.6,
+                      "minValue": 0.6,
+                      "maxValue": 0.6
+                    }
+                  ]
+                }
+              ],
+              "corrosionImplicit": null,
+              "beltBlend": null,
+              "displayName": "Blade-dancer's Steps",
+              "displayIcon": "/images/legendaries/boots/dex_boots/Icon_Equip_Shoes_Epic_207_112.webp"
+            },
+            {
+              "id": "gear-1784587774167-ggyu692om",
+              "rarity": "Legendary",
+              "gearCategory": "trinket",
+              "gearSubType": "belt",
+              "legendaryItem": {
+                "legendaryId": "a03159dd-0ee6-514b-aa3a-0f8cd762868f",
+                "name": "Formation Breaker",
+                "icon": "/images/legendaries/trinket/belt/Icon_Equip_Belt_Epic_214_112.webp",
+                "requiredLevel": 1
+              },
+              "legendaryMods": [
+                {
+                  "modId": "ca51d4da-5b3a-578e-b5d1-3f6b31b8b741",
+                  "description": "-7% additional Attack and Cast Speed for Sentry Skills",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": -7,
+                      "minValue": -10,
+                      "maxValue": 10,
+                      "sign": "-",
+                      "unit": "%"
+                    }
+                  ]
+                },
+                {
+                  "modId": "438026da-1dde-5ff8-8b6a-189fc409a32b",
+                  "description": "+48% Skill Area",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 48,
+                      "minValue": 48,
+                      "maxValue": 48,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ]
+                },
+                {
+                  "modId": "74c4be4a-eae0-527d-8649-f76b5edbd0be",
+                  "description": "+30% additional damage taken by enemies in proximity to Sentries",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 30,
+                      "minValue": 30,
+                      "maxValue": 30,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ]
+                },
+                {
+                  "modId": "456c3a22-6615-5ca7-a2cb-49cfc750e4b3",
+                  "description": "Gains Demolisher Charge when using Sentry Skills. Interval: 0.25s",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 0.25,
+                      "minValue": 0.25,
+                      "maxValue": 0.25
+                    }
+                  ]
+                }
+              ],
+              "corrosionImplicit": null,
+              "beltBlend": null,
+              "displayName": "Formation Breaker",
+              "displayIcon": "/images/legendaries/trinket/belt/Icon_Equip_Belt_Epic_214_112.webp"
+            }
+          ]
+        },
+        "vorax": {
+          "equipped": {
+            "chest": null,
+            "head": null,
+            "hands": null,
+            "legs": null,
+            "neck": null,
+            "digits": null,
+            "waist": null
+          },
+          "inventory": []
+        },
+        "skills": {
+          "activeSkills": [
+            {
+              "skillGuid": "6f020b6a-022b-50eb-8299-e5fc7492ea8f",
+              "enabled": true,
+              "level": 20,
+              "supports": [
+                {
+                  "supportGuid": "433ae805-68e7-5dba-ac84-fd317aa7a968",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_ElemetalFocus_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "6ad66630-a244-575e-9b4e-a7d15ad8b1d1",
+                  "type": "support",
+                  "icon": "/images/skill/UI_Skill_Passivation_Icon_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "4ba9d077-d4f6-5a60-bd8e-423319a27f97",
+                  "type": "magnificent_support",
+                  "icon": "/images/skill/UI_Skill_Emberslam_support01_Icon_128.webp",
+                  "tier": 2,
+                  "rollValues": [
+                    32
+                  ],
+                  "rank": 1
+                },
+                {
+                  "supportGuid": "4830642f-32e5-56ef-9de7-61ed678cb883",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_Crush_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "56c49853-7d67-5a43-bfe7-0cfe5c7e3d84",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_SlowerProjectiles_128.webp",
+                  "level": 19
+                }
+              ]
+            },
+            {
+              "skillGuid": "9172a1e0-739c-518b-992b-196e9fc82a1f",
+              "enabled": true,
+              "level": 20,
+              "supports": [
+                {
+                  "supportGuid": "0dc9d1be-7284-5f07-b218-979b72b43e42",
+                  "type": "support",
+                  "icon": "/images/skill/UI_Skill_AccelerateAfterSpell_Icon_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "695b62ab-9582-5981-80c8-4678f5359fc5",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_FasterTravel_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "f4d8b862-1282-5365-9efc-62c87f049434",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_CooldownReduce_128.webp",
+                  "level": 20
+                },
+                null,
+                null
+              ]
+            },
+            {
+              "skillGuid": "316c6383-2fa1-552a-82d8-9c9ffd03fe95",
+              "enabled": true,
+              "level": 20,
+              "supports": [
+                {
+                  "supportGuid": "d88409f6-9f98-5e3a-a824-461c70f1c439",
+                  "type": "activation_medium",
+                  "icon": "/images/skill/UI_Skill_CMWreck_Icon_128.webp",
+                  "tier": 1,
+                  "rollValues": [
+                    18,
+                    12
+                  ]
+                },
+                {
+                  "supportGuid": "2fd5c01f-311c-57ad-b2cc-5a2f46aa210e",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_IncreasedDuration_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "f4d8b862-1282-5365-9efc-62c87f049434",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_CooldownReduce_128.webp",
+                  "level": 20
+                },
+                null,
+                null
+              ]
+            },
+            {
+              "skillGuid": null,
+              "enabled": false,
+              "level": 20,
+              "supports": [
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            },
+            {
+              "skillGuid": "c1a2d376-53fb-5432-81c9-673cf188de36",
+              "enabled": true,
+              "level": 16,
+              "supports": [
+                {
+                  "supportGuid": "2a5b5be6-f54e-58fc-9acb-47facff516e0",
+                  "type": "activation_medium",
+                  "icon": "/images/skill/UI_Skill_CMStationaryUse_Icon_128.webp",
+                  "tier": 0,
+                  "rollValues": [
+                    15
+                  ]
+                },
+                {
+                  "supportGuid": "33b9e2f7-ca2b-51ef-949b-885add3142e3",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_FasterCasting_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "5e4d72ba-3685-5174-9329-05a17f6559b9",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_Frozen_128.webp",
+                  "level": 16
+                },
+                {
+                  "supportGuid": "3c0703d7-2f3d-51da-9f3a-dc419356932a",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_AddedIceDamage_128.webp",
+                  "level": 16
+                },
+                null
+              ]
+            }
+          ],
+          "passiveSkills": [
+            {
+              "skillGuid": "abc928d2-f617-56b8-8d90-faf38f473b80",
+              "enabled": true,
+              "level": 20,
+              "supports": [
+                {
+                  "supportGuid": "3fefae98-44ff-510d-a6ea-57acd1063669",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_Enlightenment_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "a69e9a49-3163-52c0-9d64-f2d08ccb9e00",
+                  "type": "support",
+                  "icon": "/images/skill/UI_SkillIcon_Support_BloodMagic_Icon_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "97c67888-18c1-5bed-aae2-cdea40f2c1e5",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_IncreasedArea_128.webp",
+                  "level": 20
+                },
+                null,
+                null
+              ]
+            },
+            {
+              "skillGuid": "d8394b2c-dadf-5bd4-8939-28b10bdc14de",
+              "enabled": true,
+              "level": 20,
+              "supports": [
+                {
+                  "supportGuid": "3fefae98-44ff-510d-a6ea-57acd1063669",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_Enlightenment_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "ae0fb5dd-d7ff-5107-971b-ace6c95fed64",
+                  "type": "support",
+                  "icon": "/images/skill/UI_Skill_AuraEnhance_Icon_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "97c67888-18c1-5bed-aae2-cdea40f2c1e5",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_IncreasedArea_128.webp",
+                  "level": 20
+                },
+                null,
+                null
+              ]
+            },
+            {
+              "skillGuid": "82fd97c1-f6b9-5dae-8040-adaf043a0c88",
+              "enabled": true,
+              "level": 20,
+              "supports": [
+                {
+                  "supportGuid": "3fefae98-44ff-510d-a6ea-57acd1063669",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_Enlightenment_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "ae0fb5dd-d7ff-5107-971b-ace6c95fed64",
+                  "type": "support",
+                  "icon": "/images/skill/UI_Skill_AuraEnhance_Icon_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "97c67888-18c1-5bed-aae2-cdea40f2c1e5",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_IncreasedArea_128.webp",
+                  "level": 20
+                },
+                null,
+                null
+              ]
+            },
+            {
+              "skillGuid": "278bf979-ad40-5598-8e6c-781d844b8b67",
+              "enabled": true,
+              "level": 20,
+              "supports": [
+                {
+                  "supportGuid": "3fefae98-44ff-510d-a6ea-57acd1063669",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_Enlightenment_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "ae0fb5dd-d7ff-5107-971b-ace6c95fed64",
+                  "type": "support",
+                  "icon": "/images/skill/UI_Skill_AuraEnhance_Icon_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "97c67888-18c1-5bed-aae2-cdea40f2c1e5",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_IncreasedArea_128.webp",
+                  "level": 20
+                },
+                null,
+                null
+              ]
+            }
+          ]
+        },
+        "skillTree": {
+          "slots": [
+            {
+              "treeId": "goddess_of_deception",
+              "nodePoints": {
+                "4d6fcca9-6e41-55d0-af3a-59f3a53d4495": 3,
+                "1fed99d4-2632-5207-8505-9a3739a6fa90": 3,
+                "cd305c57-4f52-50ee-ac0c-982184fa1a02": 3,
+                "da498580-47e0-5b63-8ef8-af9b926c9e32": 3,
+                "02f9107a-eefa-5c83-b835-c2812a1cafc1": 3,
+                "79dfebd0-4c6a-5cd6-a6be-f31db4f8edc8": 3,
+                "9105a76f-68d9-5ddf-8509-d78e363b4dc5": 1,
+                "2667feba-8822-5a13-ba44-3f5ad93c4e2f": 3,
+                "cbde0b51-47af-5b79-bac7-0e4175bc50cc": 3
+              },
+              "selectedNotable12": "0fcd4300-808f-5a99-81c0-1eb7e9ff12d1",
+              "selectedNotable24": "e7869180-c8e2-5a28-99a3-c2e2b3381010",
+              "prismId": null,
+              "equippedPrism": null,
+              "prismCoreTalentOverride": null,
+              "inverseImageState": null
+            },
+            {
+              "treeId": "shadowmaster",
+              "nodePoints": {
+                "8e6a6a59-342a-547c-9cce-021d1fbbc993": 3,
+                "f6c0c0d8-9113-5a14-a5a5-3e2dd220039a": 3,
+                "0b8369ac-18f5-516e-a376-26c51e5afb25": 3,
+                "c8581635-c300-57b9-9bd7-ffffe19ba76f": 3,
+                "fc5c7cb1-c5eb-5465-bab2-e0f81aa4725e": 3,
+                "d56be2ef-c16a-5ed7-a309-0530582501b1": 3,
+                "3ca78cc4-3a0c-5205-a571-d0338a30e6a6": 1,
+                "a4d8c758-cda5-565e-8adc-e7b6789200de": 3,
+                "401c54ef-43e2-5032-ae96-47d2727a5135": 2
+              },
+              "selectedNotable12": null,
+              "selectedNotable24": "31aca981-bc23-54a4-a2b2-b48d4a149549",
+              "prismId": "prism-1784588401817-qnu99zax4",
+              "equippedPrism": {
+                "prismId": "prism-1784588401817-qnu99zax4",
+                "nodeId": "3b88b601-2711-55f0-bd10-42ee947e62b1",
+                "affectedNodeIds": [
+                  "c8581635-c300-57b9-9bd7-ffffe19ba76f",
+                  "fc5c7cb1-c5eb-5465-bab2-e0f81aa4725e",
+                  "fc7c8b47-b161-5e51-af60-ab574dd4970b",
+                  "c34499e5-6e1d-5ba3-8202-a4371f8e8f47",
+                  "dc1cef89-7a62-5f4a-8797-36708a3901fd",
+                  "3b88b601-2711-55f0-bd10-42ee947e62b1",
+                  "d56be2ef-c16a-5ed7-a309-0530582501b1",
+                  "3ca78cc4-3a0c-5205-a571-d0338a30e6a6",
+                  "73b179e1-86b1-597d-9506-649765c3d8b0",
+                  "32b63e9a-1dbe-5137-91d4-4c9680a8a5e9",
+                  "3e713485-8b6a-53e4-aaa7-57dcbdf8110b"
+                ],
+                "replacesCoreTalent": false
+              },
+              "prismCoreTalentOverride": null,
+              "inverseImageState": null
+            },
+            {
+              "treeId": "onslaughter",
+              "nodePoints": {
+                "abb78ec5-32bd-5ca2-ae76-9f7905731a7f": 3,
+                "88eaf2a3-20c6-5a65-94bb-5e45b0e5a0ee": 3,
+                "402d8dc9-67c3-5fda-917e-5419b94f5d01": 3,
+                "8bb7c2a6-5fbc-5ccf-8453-02c235d905e0": 3,
+                "dd71174a-76f6-51c8-8c36-0c0183050704": 3,
+                "c49d13de-6124-5c0f-90ab-d6971e08c1eb": 3,
+                "a5d4f8f6-32de-5f20-9b8b-eb8a25d200ac": 1,
+                "5b039e64-6352-5541-b096-d7345c8e3e40": 3,
+                "6452dcce-6f9e-53e0-939b-0fd4cb10cade": 1,
+                "0a5c7d50-242f-50f6-a937-25fc8d8cde17": 3,
+                "48a75c83-0372-5707-a758-066f4814206f": 1,
+                "7677860b-84bc-529b-884d-d1385294ebbc": 3,
+                "ea092ed6-3a6b-5dde-a4d2-5b9d5f2448cc": 2
+              },
+              "selectedNotable12": null,
+              "selectedNotable24": "124ec562-eea6-5fa7-a680-a844686ee40e",
+              "prismId": null,
+              "equippedPrism": null,
+              "prismCoreTalentOverride": null,
+              "inverseImageState": null
+            },
+            {
+              "treeId": "lich",
+              "nodePoints": {
+                "fa2211da-becf-5879-8b15-6a5bdbce8dd6": 3,
+                "dd4b6429-e4fb-5a3e-b4d7-9b106962455d": 3,
+                "b4353dd9-4126-5b2c-a0a6-342bece5e8a6": 3,
+                "190ea9db-3328-5aea-9d56-4918d46275c0": 3,
+                "56ad33dc-b99e-5ce9-81a6-60d9debafafc": 3,
+                "b083728f-56c5-5dd8-86f6-e91c98ae7a89": 3,
+                "7cb4d988-4716-5ba0-9ad1-f7a1638636cd": 1,
+                "1516455d-9ecf-5566-8ff2-2f32b9598b0d": 3,
+                "5a3d2f4e-1b08-5d4d-b5cf-17c61e431974": 3,
+                "f7db9cd4-ebb6-5469-a8bc-1f806bb06e76": 1
+              },
+              "selectedNotable12": null,
+              "selectedNotable24": "4241e65e-034b-5a28-a636-b2bbccf37167",
+              "prismId": null,
+              "equippedPrism": null,
+              "prismCoreTalentOverride": null,
+              "inverseImageState": null
+            }
+          ],
+          "allocationOrder": [
+            {
+              "slot": 3,
+              "nodeId": "fa2211da-becf-5879-8b15-6a5bdbce8dd6"
+            },
+            {
+              "slot": 3,
+              "nodeId": "fa2211da-becf-5879-8b15-6a5bdbce8dd6"
+            },
+            {
+              "slot": 3,
+              "nodeId": "fa2211da-becf-5879-8b15-6a5bdbce8dd6"
+            },
+            {
+              "slot": 3,
+              "nodeId": "dd4b6429-e4fb-5a3e-b4d7-9b106962455d"
+            },
+            {
+              "slot": 3,
+              "nodeId": "dd4b6429-e4fb-5a3e-b4d7-9b106962455d"
+            },
+            {
+              "slot": 3,
+              "nodeId": "dd4b6429-e4fb-5a3e-b4d7-9b106962455d"
+            },
+            {
+              "slot": 3,
+              "nodeId": "b4353dd9-4126-5b2c-a0a6-342bece5e8a6"
+            },
+            {
+              "slot": 3,
+              "nodeId": "b4353dd9-4126-5b2c-a0a6-342bece5e8a6"
+            },
+            {
+              "slot": 3,
+              "nodeId": "b4353dd9-4126-5b2c-a0a6-342bece5e8a6"
+            },
+            {
+              "slot": 3,
+              "nodeId": "190ea9db-3328-5aea-9d56-4918d46275c0"
+            },
+            {
+              "slot": 3,
+              "nodeId": "190ea9db-3328-5aea-9d56-4918d46275c0"
+            },
+            {
+              "slot": 3,
+              "nodeId": "190ea9db-3328-5aea-9d56-4918d46275c0"
+            },
+            {
+              "slot": 3,
+              "nodeId": "56ad33dc-b99e-5ce9-81a6-60d9debafafc"
+            },
+            {
+              "slot": 3,
+              "nodeId": "56ad33dc-b99e-5ce9-81a6-60d9debafafc"
+            },
+            {
+              "slot": 3,
+              "nodeId": "56ad33dc-b99e-5ce9-81a6-60d9debafafc"
+            },
+            {
+              "slot": 3,
+              "nodeId": "b083728f-56c5-5dd8-86f6-e91c98ae7a89"
+            },
+            {
+              "slot": 3,
+              "nodeId": "b083728f-56c5-5dd8-86f6-e91c98ae7a89"
+            },
+            {
+              "slot": 3,
+              "nodeId": "b083728f-56c5-5dd8-86f6-e91c98ae7a89"
+            },
+            {
+              "slot": 3,
+              "nodeId": "7cb4d988-4716-5ba0-9ad1-f7a1638636cd"
+            },
+            {
+              "slot": 3,
+              "nodeId": "1516455d-9ecf-5566-8ff2-2f32b9598b0d"
+            },
+            {
+              "slot": 3,
+              "nodeId": "1516455d-9ecf-5566-8ff2-2f32b9598b0d"
+            },
+            {
+              "slot": 3,
+              "nodeId": "1516455d-9ecf-5566-8ff2-2f32b9598b0d"
+            },
+            {
+              "slot": 3,
+              "nodeId": "5a3d2f4e-1b08-5d4d-b5cf-17c61e431974"
+            },
+            {
+              "slot": 3,
+              "nodeId": "5a3d2f4e-1b08-5d4d-b5cf-17c61e431974"
+            },
+            {
+              "slot": 3,
+              "nodeId": "5a3d2f4e-1b08-5d4d-b5cf-17c61e431974"
+            },
+            {
+              "slot": 3,
+              "nodeId": "f7db9cd4-ebb6-5469-a8bc-1f806bb06e76"
+            },
+            {
+              "slot": 2,
+              "nodeId": "abb78ec5-32bd-5ca2-ae76-9f7905731a7f"
+            },
+            {
+              "slot": 2,
+              "nodeId": "abb78ec5-32bd-5ca2-ae76-9f7905731a7f"
+            },
+            {
+              "slot": 2,
+              "nodeId": "abb78ec5-32bd-5ca2-ae76-9f7905731a7f"
+            },
+            {
+              "slot": 2,
+              "nodeId": "88eaf2a3-20c6-5a65-94bb-5e45b0e5a0ee"
+            },
+            {
+              "slot": 2,
+              "nodeId": "88eaf2a3-20c6-5a65-94bb-5e45b0e5a0ee"
+            },
+            {
+              "slot": 2,
+              "nodeId": "88eaf2a3-20c6-5a65-94bb-5e45b0e5a0ee"
+            },
+            {
+              "slot": 2,
+              "nodeId": "402d8dc9-67c3-5fda-917e-5419b94f5d01"
+            },
+            {
+              "slot": 2,
+              "nodeId": "402d8dc9-67c3-5fda-917e-5419b94f5d01"
+            },
+            {
+              "slot": 2,
+              "nodeId": "402d8dc9-67c3-5fda-917e-5419b94f5d01"
+            },
+            {
+              "slot": 2,
+              "nodeId": "8bb7c2a6-5fbc-5ccf-8453-02c235d905e0"
+            },
+            {
+              "slot": 2,
+              "nodeId": "8bb7c2a6-5fbc-5ccf-8453-02c235d905e0"
+            },
+            {
+              "slot": 2,
+              "nodeId": "8bb7c2a6-5fbc-5ccf-8453-02c235d905e0"
+            },
+            {
+              "slot": 2,
+              "nodeId": "dd71174a-76f6-51c8-8c36-0c0183050704"
+            },
+            {
+              "slot": 2,
+              "nodeId": "dd71174a-76f6-51c8-8c36-0c0183050704"
+            },
+            {
+              "slot": 2,
+              "nodeId": "dd71174a-76f6-51c8-8c36-0c0183050704"
+            },
+            {
+              "slot": 2,
+              "nodeId": "c49d13de-6124-5c0f-90ab-d6971e08c1eb"
+            },
+            {
+              "slot": 2,
+              "nodeId": "c49d13de-6124-5c0f-90ab-d6971e08c1eb"
+            },
+            {
+              "slot": 2,
+              "nodeId": "c49d13de-6124-5c0f-90ab-d6971e08c1eb"
+            },
+            {
+              "slot": 2,
+              "nodeId": "a5d4f8f6-32de-5f20-9b8b-eb8a25d200ac"
+            },
+            {
+              "slot": 2,
+              "nodeId": "5b039e64-6352-5541-b096-d7345c8e3e40"
+            },
+            {
+              "slot": 2,
+              "nodeId": "5b039e64-6352-5541-b096-d7345c8e3e40"
+            },
+            {
+              "slot": 2,
+              "nodeId": "5b039e64-6352-5541-b096-d7345c8e3e40"
+            },
+            {
+              "slot": 2,
+              "nodeId": "6452dcce-6f9e-53e0-939b-0fd4cb10cade"
+            },
+            {
+              "slot": 2,
+              "nodeId": "0a5c7d50-242f-50f6-a937-25fc8d8cde17"
+            },
+            {
+              "slot": 2,
+              "nodeId": "0a5c7d50-242f-50f6-a937-25fc8d8cde17"
+            },
+            {
+              "slot": 2,
+              "nodeId": "0a5c7d50-242f-50f6-a937-25fc8d8cde17"
+            },
+            {
+              "slot": 2,
+              "nodeId": "48a75c83-0372-5707-a758-066f4814206f"
+            },
+            {
+              "slot": 1,
+              "nodeId": "8e6a6a59-342a-547c-9cce-021d1fbbc993"
+            },
+            {
+              "slot": 1,
+              "nodeId": "8e6a6a59-342a-547c-9cce-021d1fbbc993"
+            },
+            {
+              "slot": 1,
+              "nodeId": "8e6a6a59-342a-547c-9cce-021d1fbbc993"
+            },
+            {
+              "slot": 1,
+              "nodeId": "f6c0c0d8-9113-5a14-a5a5-3e2dd220039a"
+            },
+            {
+              "slot": 1,
+              "nodeId": "f6c0c0d8-9113-5a14-a5a5-3e2dd220039a"
+            },
+            {
+              "slot": 1,
+              "nodeId": "f6c0c0d8-9113-5a14-a5a5-3e2dd220039a"
+            },
+            {
+              "slot": 1,
+              "nodeId": "0b8369ac-18f5-516e-a376-26c51e5afb25"
+            },
+            {
+              "slot": 1,
+              "nodeId": "0b8369ac-18f5-516e-a376-26c51e5afb25"
+            },
+            {
+              "slot": 1,
+              "nodeId": "0b8369ac-18f5-516e-a376-26c51e5afb25"
+            },
+            {
+              "slot": 1,
+              "nodeId": "c8581635-c300-57b9-9bd7-ffffe19ba76f"
+            },
+            {
+              "slot": 1,
+              "nodeId": "c8581635-c300-57b9-9bd7-ffffe19ba76f"
+            },
+            {
+              "slot": 1,
+              "nodeId": "c8581635-c300-57b9-9bd7-ffffe19ba76f"
+            },
+            {
+              "slot": 1,
+              "nodeId": "fc5c7cb1-c5eb-5465-bab2-e0f81aa4725e"
+            },
+            {
+              "slot": 1,
+              "nodeId": "fc5c7cb1-c5eb-5465-bab2-e0f81aa4725e"
+            },
+            {
+              "slot": 1,
+              "nodeId": "fc5c7cb1-c5eb-5465-bab2-e0f81aa4725e"
+            },
+            {
+              "slot": 1,
+              "nodeId": "d56be2ef-c16a-5ed7-a309-0530582501b1"
+            },
+            {
+              "slot": 1,
+              "nodeId": "d56be2ef-c16a-5ed7-a309-0530582501b1"
+            },
+            {
+              "slot": 1,
+              "nodeId": "d56be2ef-c16a-5ed7-a309-0530582501b1"
+            },
+            {
+              "slot": 1,
+              "nodeId": "3ca78cc4-3a0c-5205-a571-d0338a30e6a6"
+            },
+            {
+              "slot": 1,
+              "nodeId": "a4d8c758-cda5-565e-8adc-e7b6789200de"
+            },
+            {
+              "slot": 1,
+              "nodeId": "a4d8c758-cda5-565e-8adc-e7b6789200de"
+            },
+            {
+              "slot": 1,
+              "nodeId": "a4d8c758-cda5-565e-8adc-e7b6789200de"
+            },
+            {
+              "slot": 1,
+              "nodeId": "401c54ef-43e2-5032-ae96-47d2727a5135"
+            },
+            {
+              "slot": 1,
+              "nodeId": "401c54ef-43e2-5032-ae96-47d2727a5135"
+            },
+            {
+              "slot": 0,
+              "nodeId": "4d6fcca9-6e41-55d0-af3a-59f3a53d4495"
+            },
+            {
+              "slot": 0,
+              "nodeId": "4d6fcca9-6e41-55d0-af3a-59f3a53d4495"
+            },
+            {
+              "slot": 0,
+              "nodeId": "4d6fcca9-6e41-55d0-af3a-59f3a53d4495"
+            },
+            {
+              "slot": 0,
+              "nodeId": "1fed99d4-2632-5207-8505-9a3739a6fa90"
+            },
+            {
+              "slot": 0,
+              "nodeId": "1fed99d4-2632-5207-8505-9a3739a6fa90"
+            },
+            {
+              "slot": 0,
+              "nodeId": "1fed99d4-2632-5207-8505-9a3739a6fa90"
+            },
+            {
+              "slot": 0,
+              "nodeId": "cd305c57-4f52-50ee-ac0c-982184fa1a02"
+            },
+            {
+              "slot": 0,
+              "nodeId": "cd305c57-4f52-50ee-ac0c-982184fa1a02"
+            },
+            {
+              "slot": 0,
+              "nodeId": "cd305c57-4f52-50ee-ac0c-982184fa1a02"
+            },
+            {
+              "slot": 0,
+              "nodeId": "da498580-47e0-5b63-8ef8-af9b926c9e32"
+            },
+            {
+              "slot": 0,
+              "nodeId": "da498580-47e0-5b63-8ef8-af9b926c9e32"
+            },
+            {
+              "slot": 0,
+              "nodeId": "da498580-47e0-5b63-8ef8-af9b926c9e32"
+            },
+            {
+              "slot": 0,
+              "nodeId": "02f9107a-eefa-5c83-b835-c2812a1cafc1"
+            },
+            {
+              "slot": 0,
+              "nodeId": "02f9107a-eefa-5c83-b835-c2812a1cafc1"
+            },
+            {
+              "slot": 0,
+              "nodeId": "02f9107a-eefa-5c83-b835-c2812a1cafc1"
+            },
+            {
+              "slot": 0,
+              "nodeId": "79dfebd0-4c6a-5cd6-a6be-f31db4f8edc8"
+            },
+            {
+              "slot": 0,
+              "nodeId": "79dfebd0-4c6a-5cd6-a6be-f31db4f8edc8"
+            },
+            {
+              "slot": 0,
+              "nodeId": "79dfebd0-4c6a-5cd6-a6be-f31db4f8edc8"
+            },
+            {
+              "slot": 0,
+              "nodeId": "9105a76f-68d9-5ddf-8509-d78e363b4dc5"
+            },
+            {
+              "slot": 0,
+              "nodeId": "2667feba-8822-5a13-ba44-3f5ad93c4e2f"
+            },
+            {
+              "slot": 0,
+              "nodeId": "2667feba-8822-5a13-ba44-3f5ad93c4e2f"
+            },
+            {
+              "slot": 0,
+              "nodeId": "2667feba-8822-5a13-ba44-3f5ad93c4e2f"
+            },
+            {
+              "slot": 0,
+              "nodeId": "cbde0b51-47af-5b79-bac7-0e4175bc50cc"
+            },
+            {
+              "slot": 0,
+              "nodeId": "cbde0b51-47af-5b79-bac7-0e4175bc50cc"
+            },
+            {
+              "slot": 0,
+              "nodeId": "cbde0b51-47af-5b79-bac7-0e4175bc50cc"
+            },
+            {
+              "slot": 2,
+              "nodeId": "7677860b-84bc-529b-884d-d1385294ebbc"
+            },
+            {
+              "slot": 2,
+              "nodeId": "7677860b-84bc-529b-884d-d1385294ebbc"
+            },
+            {
+              "slot": 2,
+              "nodeId": "7677860b-84bc-529b-884d-d1385294ebbc"
+            },
+            {
+              "slot": 2,
+              "nodeId": "ea092ed6-3a6b-5dde-a4d2-5b9d5f2448cc"
+            },
+            {
+              "slot": 2,
+              "nodeId": "ea092ed6-3a6b-5dde-a4d2-5b9d5f2448cc"
+            }
+          ],
+          "recordOrder": false
+        },
+        "divinity": {
+          "inventory": [
+            {
+              "id": "slate-1784588606606-a4wf91",
+              "type": "legendary",
+              "shapeId": "O1",
+              "orientation": {
+                "rotation": 0,
+                "flipH": false,
+                "flipV": false
+              },
+              "affixes": [
+                {
+                  "modGuid": "af9fa0ca-ac04-55a9-9b46-da484be1da93",
+                  "nodeType": "Micro Talent",
+                  "slateType": "Warlord",
+                  "description": "1.25 % Life Regain\n1.25 % Energy Shield Regain",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/JL_Defence02_64.webp",
+                  "slotIndex": 0
+                },
+                {
+                  "modGuid": "602d7e67-b120-5420-8039-a9a0b834297b",
+                  "nodeType": "Micro Talent",
+                  "slateType": "Elementalist",
+                  "description": "+9 % damage for Channeled Skills",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/ZS_DmgAll_64.webp",
+                  "slotIndex": 1
+                },
+                {
+                  "modGuid": "d6686686-fa3a-5673-83d9-e2a8ad631635",
+                  "nodeType": "Legendary Medium Talent",
+                  "slateType": "Shadowmaster",
+                  "description": "+8 % additional Deterioration Damage\n+5 % additional Deterioration Duration",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/QZ_DmgChaos_64.webp",
+                  "slotIndex": 2
+                },
+                {
+                  "modGuid": "e3f96de2-2b47-5d17-9f13-b639cc3b781a",
+                  "nodeType": "Mixture",
+                  "slateType": "Goddess of Deception",
+                  "description": "+50 % Deterioration Chance",
+                  "icon": "https://cdn.tlidb.com/UI/Textures/Common/Icon/Skill/CoreTalentIcon/128/UI_CoreTalentIcon_hunru_Icon_128.webp",
+                  "slotIndex": 3
+                }
+              ],
+              "legendaryTemplate": "Pedigree of Gods",
+              "legendaryTemplateId": "5f2cbc48-103e-5414-bf74-6fa22583438b",
+              "legendaryIcon": "/images/divinity-slate/UI_MI_TalantNG_Gold_ZZ1_0_Icon_112.webp"
+            },
+            {
+              "id": "slate-1784588631092-14sl2h",
+              "type": "legendary",
+              "shapeId": "O1",
+              "orientation": {
+                "rotation": 0,
+                "flipH": false,
+                "flipV": false
+              },
+              "affixes": [
+                {
+                  "modGuid": "4efc3f1b-f0bb-5ea2-b3d5-bbe10b1ade5a",
+                  "nodeType": "Micro Talent",
+                  "slateType": "Goddess of Hunting",
+                  "description": "+7 % Evasion",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/SL_Evasion_64.webp",
+                  "slotIndex": 0
+                },
+                {
+                  "modGuid": "5c38f399-6168-5d97-b711-bac08a9f5df9",
+                  "nodeType": "Micro Talent",
+                  "slateType": "Elementalist",
+                  "description": "+3 % chance to avoid Elemental Ailments",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/ZS_DmgAll_64.webp",
+                  "slotIndex": 1
+                },
+                {
+                  "modGuid": "f5008aba-de20-581e-93c6-baaaf9782341",
+                  "nodeType": "Micro Talent",
+                  "slateType": "God of Might",
+                  "description": "+8 Strength",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/JL_DmgEle_64.webp",
+                  "slotIndex": 2
+                },
+                {
+                  "modGuid": "d6686686-fa3a-5673-83d9-e2a8ad631635",
+                  "nodeType": "Legendary Medium Talent",
+                  "slateType": "Shadowmaster",
+                  "description": "+8 % additional Deterioration Damage\n+5 % additional Deterioration Duration",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/QZ_DmgChaos_64.webp",
+                  "slotIndex": 3
+                }
+              ],
+              "legendaryTemplate": "Fallen Starlight",
+              "legendaryTemplateId": "10e9d7b4-8b2e-59b6-89c4-988b5a0da7ef",
+              "legendaryIcon": "/images/divinity-slate/UI_MI_TalantNG_Gold_I1_0_Icon_112.webp"
+            },
+            {
+              "id": "slate-1784588648951-3ndxw7",
+              "type": "legendary",
+              "shapeId": "O1",
+              "orientation": {
+                "rotation": 0,
+                "flipH": true,
+                "flipV": false
+              },
+              "affixes": [
+                {
+                  "modGuid": "f5f98c33-8168-5537-9d35-46ee1fed5d75",
+                  "nodeType": "Legendary Medium Talent",
+                  "slateType": "Marksman",
+                  "description": "+60 % Projectile Damage against enemies in proximity",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/SL_DmgExtra_64.webp",
+                  "slotIndex": 0
+                },
+                {
+                  "modGuid": "cd81bf42-c147-5211-8204-5ee9103547eb",
+                  "nodeType": "Legendary Medium Talent",
+                  "slateType": "Ranger",
+                  "description": "+15 % additional damage taken by enemies in Proximity",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/ZZ_Flask01_64.webp",
+                  "slotIndex": 1
+                }
+              ],
+              "legendaryTemplate": "A Corner of Divinity",
+              "legendaryTemplateId": "11cbdf43-aa58-5743-8884-cbed0838a790",
+              "legendaryIcon": "/images/divinity-slate/UI_MI_TalantNG_Gold_V1_0_Icon_112.webp"
+            },
+            {
+              "id": "slate-1784588673455-a2h80y",
+              "type": "legendary",
+              "shapeId": "O1",
+              "orientation": {
+                "rotation": 0,
+                "flipH": false,
+                "flipV": true
+              },
+              "affixes": [
+                {
+                  "modGuid": "8ac40a1b-b082-5cf8-9f07-daa399199c54",
+                  "nodeType": "Legendary Medium Talent",
+                  "slateType": "Machinist",
+                  "description": "+1 to Max Summonable Synthetic Troops",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/JX_DmgExtra_64.webp",
+                  "slotIndex": 0
+                },
+                {
+                  "modGuid": "d6686686-fa3a-5673-83d9-e2a8ad631635",
+                  "nodeType": "Legendary Medium Talent",
+                  "slateType": "Shadowmaster",
+                  "description": "+8 % additional Deterioration Damage\n+5 % additional Deterioration Duration",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/QZ_DmgChaos_64.webp",
+                  "slotIndex": 1
+                }
+              ],
+              "legendaryTemplate": "A Corner of Divinity",
+              "legendaryTemplateId": "11cbdf43-aa58-5743-8884-cbed0838a790",
+              "legendaryIcon": "/images/divinity-slate/UI_MI_TalantNG_Gold_V1_0_Icon_112.webp"
+            },
+            {
+              "id": "slate-1784588689454-3foly2",
+              "type": "legendary",
+              "shapeId": "O1",
+              "orientation": {
+                "rotation": 0,
+                "flipH": true,
+                "flipV": true
+              },
+              "affixes": [
+                {
+                  "modGuid": "f5f98c33-8168-5537-9d35-46ee1fed5d75",
+                  "nodeType": "Legendary Medium Talent",
+                  "slateType": "Marksman",
+                  "description": "+60 % Projectile Damage against enemies in proximity",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/SL_DmgExtra_64.webp",
+                  "slotIndex": 0
+                },
+                {
+                  "modGuid": "333635f6-ea94-5f9f-96b6-b4806aefb5d5",
+                  "nodeType": "Legendary Medium Talent",
+                  "slateType": "Ranger",
+                  "description": "120 % of the increase/decrease on Knockback distance is also applied to damage bonus",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/ZZ_Dual01_64.webp",
+                  "slotIndex": 1
+                }
+              ],
+              "legendaryTemplate": "A Corner of Divinity",
+              "legendaryTemplateId": "11cbdf43-aa58-5743-8884-cbed0838a790",
+              "legendaryIcon": "/images/divinity-slate/UI_MI_TalantNG_Gold_V1_0_Icon_112.webp"
+            },
+            {
+              "id": "slate-1784588725675-idearw",
+              "type": "legendary",
+              "shapeId": "O1",
+              "orientation": {
+                "rotation": 0,
+                "flipH": false,
+                "flipV": false
+              },
+              "affixes": [
+                {
+                  "modGuid": "d1139144-0831-5d99-887f-caee1f19b6d0",
+                  "nodeType": "Micro Talent",
+                  "slateType": "Goddess of Knowledge",
+                  "description": "+15 % Spell Critical Strike Rating",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/ZS_Crit04_64.webp",
+                  "slotIndex": 0
+                },
+                {
+                  "modGuid": "f044a48e-a079-5035-b4fd-e09762897eb6",
+                  "nodeType": "Micro Talent",
+                  "slateType": "God of Might",
+                  "description": "+9 % damage",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/JL_DmgAll_64.webp",
+                  "slotIndex": 1
+                },
+                {
+                  "modGuid": "8f5310b8-ef0c-5c8e-853e-1e602e9017f9",
+                  "nodeType": "Micro Talent",
+                  "slateType": "Goddess of Knowledge",
+                  "description": "+4 % Max Mana",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/ZS_Defence03_64.webp",
+                  "slotIndex": 2
+                },
+                {
+                  "modGuid": "d6686686-fa3a-5673-83d9-e2a8ad631635",
+                  "nodeType": "Legendary Medium Talent",
+                  "slateType": "Shadowmaster",
+                  "description": "+8 % additional Deterioration Damage\n+5 % additional Deterioration Duration",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/QZ_DmgChaos_64.webp",
+                  "slotIndex": 3
+                }
+              ],
+              "legendaryTemplate": "Fallen Starlight",
+              "legendaryTemplateId": "10e9d7b4-8b2e-59b6-89c4-988b5a0da7ef",
+              "legendaryIcon": "/images/divinity-slate/UI_MI_TalantNG_Gold_I1_0_Icon_112.webp"
+            },
+            {
+              "id": "slate-1784588821510-z3ej1f",
+              "type": "legendary",
+              "shapeId": "O1",
+              "orientation": {
+                "rotation": 90,
+                "flipH": false,
+                "flipV": false
+              },
+              "affixes": [
+                {
+                  "modGuid": "9aa169a3-f37f-569e-bf59-7018d8e6c4cf",
+                  "nodeType": "Micro Talent",
+                  "slateType": "Goddess of Knowledge",
+                  "description": "+8 Intelligence",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/ZS_Blind_64.webp",
+                  "slotIndex": 0
+                },
+                {
+                  "modGuid": "fba19cb2-b3b9-50d0-9c3e-32cc2a199589",
+                  "nodeType": "Micro Talent",
+                  "slateType": "God of Might",
+                  "description": "+10 % Tenacity Blessing Duration\n+10 % Attack Damage while Tenacity Blessing is active",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/JL_Dagger01_64.webp",
+                  "slotIndex": 1
+                },
+                {
+                  "modGuid": "52ca0f1b-8b92-5c18-b85a-c60457da5aa7",
+                  "nodeType": "Micro Talent",
+                  "slateType": "Goddess of Hunting",
+                  "description": "+3 % Attack and Cast Speed",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/SL_Atk_64.webp",
+                  "slotIndex": 2
+                },
+                {
+                  "modGuid": "d6686686-fa3a-5673-83d9-e2a8ad631635",
+                  "nodeType": "Legendary Medium Talent",
+                  "slateType": "Shadowmaster",
+                  "description": "+8 % additional Deterioration Damage\n+5 % additional Deterioration Duration",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/QZ_DmgChaos_64.webp",
+                  "slotIndex": 3
+                }
+              ],
+              "legendaryTemplate": "Fallen Starlight",
+              "legendaryTemplateId": "10e9d7b4-8b2e-59b6-89c4-988b5a0da7ef",
+              "legendaryIcon": "/images/divinity-slate/UI_MI_TalantNG_Gold_I1_0_Icon_112.webp"
+            }
+          ],
+          "placements": [
+            {
+              "slateId": "slate-1784588821510-z3ej1f",
+              "row": 0,
+              "col": 2
+            },
+            {
+              "slateId": "slate-1784588673455-a2h80y",
+              "row": 1,
+              "col": 1
+            },
+            {
+              "slateId": "slate-1784588648951-3ndxw7",
+              "row": 1,
+              "col": 2
+            },
+            {
+              "slateId": "slate-1784588725675-idearw",
+              "row": 2,
+              "col": 0
+            },
+            {
+              "slateId": "slate-1784588631092-14sl2h",
+              "row": 2,
+              "col": 5
+            },
+            {
+              "slateId": "slate-1784588606606-a4wf91",
+              "row": 3,
+              "col": 1
+            },
+            {
+              "slateId": "slate-1784588689454-3foly2",
+              "row": 3,
+              "col": 3
+            }
+          ]
+        },
+        "pactspirits": [
+          {
+            "guid": "f3abd1bc-addd-5d34-8d40-d9996f62181c",
+            "level": 1,
+            "allocatedNodes": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11"
+            ],
+            "expansions": {}
+          },
+          {
+            "guid": "cca9fc14-d6ad-540c-8579-dd1aa084d471",
+            "level": 4,
+            "allocatedNodes": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11"
+            ],
+            "expansions": {}
+          },
+          {
+            "guid": "131210d1-0e5b-561d-b906-332223543916",
+            "level": 6,
+            "allocatedNodes": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11"
+            ],
+            "expansions": {}
+          }
+        ],
+        "kismets": [
+          {
+            "pactspritIndex": 2,
+            "nodeId": "slot_2_3",
+            "kismetGuid": "86317498-95cb-5801-a57e-d4e79a625775"
+          },
+          {
+            "pactspritIndex": 2,
+            "nodeId": "slot_2_7",
+            "kismetGuid": "e90de0cd-4fc8-5b81-9a43-9fb08ad74b2e",
+            "rollValues": [
+              3
+            ]
+          },
+          {
+            "pactspritIndex": 0,
+            "nodeId": "slot_0_4",
+            "kismetGuid": "51903683-4656-52f9-a768-4f93f25d6829",
+            "rollValues": [
+              13
+            ]
+          },
+          {
+            "pactspritIndex": 0,
+            "nodeId": "slot_0_5",
+            "kismetGuid": "51903683-4656-52f9-a768-4f93f25d6829",
+            "rollValues": [
+              14
+            ]
+          },
+          {
+            "pactspritIndex": 0,
+            "nodeId": "slot_0_6",
+            "kismetGuid": "86317498-95cb-5801-a57e-d4e79a625775"
+          }
+        ],
+        "scentBottle": {
+          "activeScent": "basic",
+          "basic": {
+            "skillGuid": null,
+            "damageIngredient": null,
+            "defenseIngredient": null,
+            "functionalIngredient": null,
+            "specialIngredients": [
+              null,
+              null
+            ]
+          },
+          "special": {
+            "skillGuid": null,
+            "damageIngredient": null,
+            "defenseIngredient": null,
+            "functionalIngredient": null,
+            "specialIngredients": [
+              null,
+              null
+            ]
+          }
+        }
+      }
+    ],
+    "currentLoadoutId": "loadout_1784552407269_t13n83rka"
+  }
+}

@@ -232,6 +232,8 @@ def summarize(build):
                 out.append(f"  {slot:9}: {refs.get(ref, ref)}")
 
         for p in lo.get("pactspirits") or []:
+            if not p:
+                continue
             n = len(p.get("allocatedNodes") or [])
             out.append(f'  pactspirit: {p.get("guid")} L{p.get("level")} ({n} nodes)')
 

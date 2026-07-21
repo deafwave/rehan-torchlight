@@ -1,0 +1,2483 @@
+{
+  "id": "build_1784553377517_x2pmtxd3q",
+  "name": "b1",
+  "notes": "",
+  "patch": "SS13",
+  "createdAt": 1784589346747,
+  "updatedAt": 1784589346747,
+  "loadouts": {
+    "loadouts": [
+      {
+        "id": "loadout_1784552407269_t13n83rka",
+        "name": "Default",
+        "order": 0,
+        "hiddenInGuide": false,
+        "hero": {
+          "heroGuid": "Bing",
+          "heroId": "Bing: Blast Nova",
+          "traits": {
+            "level1": "Blast Nova",
+            "level45": "Firepower Coverage",
+            "level60": "Blast Barrage",
+            "level75": "Frenzy Hound"
+          }
+        },
+        "heroMemories": {
+          "equipped": {
+            "slot45": "memory-1784555918710-pvzvlbme7",
+            "slot60": "memory-1784588865552-dnkaozfg9",
+            "slot75": "memory-1784589111965-ss211q7tn",
+            "slotLevel1Special": null
+          },
+          "inventory": [
+            {
+              "memoryType": "Origin",
+              "rarity": "Legendary",
+              "baseStat": {
+                "guid": "+90 Strength",
+                "value": 90,
+                "sign": "+",
+                "unit": null,
+                "tier": 1
+              },
+              "fixedAffixes": [
+                {
+                  "guid": "+(20–28)% damage",
+                  "value": 28,
+                  "sign": "+",
+                  "unit": "%",
+                  "tier": 3,
+                  "values": [
+                    {
+                      "value": 28,
+                      "sign": "+",
+                      "unit": "%",
+                      "minValue": 20,
+                      "maxValue": 28
+                    }
+                  ]
+                },
+                {
+                  "guid": "+80% Critical Strike Rating",
+                  "value": 80,
+                  "sign": "+",
+                  "unit": "%",
+                  "tier": 1
+                }
+              ],
+              "randomAffixes": [
+                {
+                  "guid": "+(44–52)% Attack Damage",
+                  "value": 47,
+                  "sign": "+",
+                  "unit": "%",
+                  "tier": 1,
+                  "values": [
+                    {
+                      "value": 47,
+                      "sign": "+",
+                      "unit": "%",
+                      "minValue": 44,
+                      "maxValue": 52
+                    }
+                  ]
+                },
+                {
+                  "guid": "+(43–53)% Fire Skill Critical Strike Damage",
+                  "value": 53,
+                  "sign": "+",
+                  "unit": "%",
+                  "tier": 1,
+                  "values": [
+                    {
+                      "value": 53,
+                      "sign": "+",
+                      "unit": "%",
+                      "minValue": 43,
+                      "maxValue": 53
+                    }
+                  ]
+                }
+              ],
+              "waxAndWane": false,
+              "id": "memory-1784555918710-pvzvlbme7"
+            },
+            {
+              "memoryType": "Discipline",
+              "rarity": "Legendary",
+              "baseStat": {
+                "guid": "+180 Max Mana",
+                "value": 180,
+                "sign": "+",
+                "unit": null,
+                "tier": 1
+              },
+              "fixedAffixes": [
+                {
+                  "guid": "+(38–42)% Critical Strike Damage",
+                  "value": 38,
+                  "sign": "+",
+                  "unit": "%",
+                  "tier": 1,
+                  "values": [
+                    {
+                      "value": 38,
+                      "sign": "+",
+                      "unit": "%",
+                      "minValue": 38,
+                      "maxValue": 42
+                    }
+                  ]
+                },
+                {
+                  "guid": "+80% Critical Strike Rating",
+                  "value": 80,
+                  "sign": "+",
+                  "unit": "%",
+                  "tier": 1
+                }
+              ],
+              "randomAffixes": [
+                {
+                  "guid": "+80% Attack Critical Strike Rating",
+                  "value": 80,
+                  "sign": "+",
+                  "unit": "%",
+                  "tier": 1,
+                  "values": [
+                    {
+                      "value": 80,
+                      "sign": "+",
+                      "unit": "%",
+                      "minValue": 80,
+                      "maxValue": 80
+                    }
+                  ]
+                },
+                {
+                  "guid": "+(44–52)% Attack Damage",
+                  "value": 51,
+                  "sign": "+",
+                  "unit": "%",
+                  "tier": 1,
+                  "values": [
+                    {
+                      "value": 51,
+                      "sign": "+",
+                      "unit": "%",
+                      "minValue": 44,
+                      "maxValue": 52
+                    }
+                  ]
+                }
+              ],
+              "waxAndWane": false,
+              "id": "memory-1784588865552-dnkaozfg9"
+            },
+            {
+              "memoryType": "Progress",
+              "rarity": "Legendary",
+              "baseStat": {
+                "guid": "+36% Cast Speed",
+                "value": 36,
+                "sign": "+",
+                "unit": "%",
+                "tier": 1
+              },
+              "fixedAffixes": [
+                {
+                  "guid": "+23% Skill Area",
+                  "value": 23,
+                  "sign": "+",
+                  "unit": "%",
+                  "tier": 2,
+                  "values": [
+                    {
+                      "value": 23,
+                      "sign": "+",
+                      "unit": "%",
+                      "minValue": 23,
+                      "maxValue": 23
+                    }
+                  ]
+                },
+                {
+                  "guid": "Immune to Weaken",
+                  "value": null,
+                  "sign": null,
+                  "unit": null,
+                  "tier": 1
+                }
+              ],
+              "randomAffixes": [
+                {
+                  "guid": "+(44–52)% Fire Damage",
+                  "value": 52,
+                  "sign": "+",
+                  "unit": "%",
+                  "tier": 1,
+                  "values": [
+                    {
+                      "value": 52,
+                      "sign": "+",
+                      "unit": "%",
+                      "minValue": 44,
+                      "maxValue": 52
+                    }
+                  ]
+                },
+                {
+                  "guid": "+80% Attack Critical Strike Rating",
+                  "value": 80,
+                  "sign": "+",
+                  "unit": "%",
+                  "tier": 1,
+                  "values": [
+                    {
+                      "value": 80,
+                      "sign": "+",
+                      "unit": "%",
+                      "minValue": 80,
+                      "maxValue": 80
+                    }
+                  ]
+                }
+              ],
+              "lunarPhaseAffix": {
+                "guid": "40% of the bonus to Erosion Damage also applied to Deterioration Damage, up to +80%",
+                "value": 20,
+                "sign": "+",
+                "unit": "%",
+                "tier": 1
+              },
+              "waxAndWane": true,
+              "id": "memory-1784589111965-ss211q7tn"
+            }
+          ]
+        },
+        "etherealPrisms": {
+          "equipped": {
+            "slot1": null,
+            "slot2": null,
+            "slot3": null
+          },
+          "inventory": [
+            {
+              "id": "prism-1784588401817-qnu99zax4",
+              "baseId": "Ethereal Prism: Haze",
+              "prismType": "ethereal",
+              "selectedBaseAffixId": "+12% additional Attack Damage when holding a One-Handed Weapon+12% additional Base Damage for Two-Handed Weapons",
+              "randomAffixes": [
+                "The Effect Area expands to 4x3 Rectangle",
+                "All Medium Talent within the area also gain: +6% Critical Strike Damage\n+6% Minion Critical Strike Damage"
+              ]
+            }
+          ]
+        },
+        "gear": {
+          "equipped": {
+            "helmet": "gear-1784586522294-uy8ex1bqm",
+            "chest": "gear-1784586545733-qxjpl53fi",
+            "gloves": "gear-1784586475310-r16qgor01",
+            "boots": "gear-1784587731245-rsuf4ke79",
+            "belt": "gear-1784587774167-ggyu692om",
+            "ring1": "gear-1784586674255-f3xcmvvw6",
+            "ring2": "gear-1784586704028-jaap9iaty",
+            "necklace": "gear-1784586409811-xnwxvrcnz",
+            "mainHand": "gear-1784586645312-ih3bi8wav",
+            "offHand": null
+          },
+          "inventory": [
+            {
+              "id": "gear-1784586409811-xnwxvrcnz",
+              "rarity": "Legendary",
+              "gearCategory": "trinket",
+              "gearSubType": "necklace",
+              "legendaryItem": {
+                "legendaryId": "Broken Sun Ring",
+                "name": "Broken Sun Ring",
+                "icon": "/images/legendaries/trinket/necklace/Icon_Equip_Amulet_Epic_303_112.webp",
+                "requiredLevel": 1
+              },
+              "legendaryMods": [
+                {
+                  "modId": "+(220–264) Max Life",
+                  "description": "+222 Max Life",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 222,
+                      "minValue": 220,
+                      "maxValue": 264,
+                      "sign": "+"
+                    }
+                  ]
+                },
+                {
+                  "modId": "+(9–12)% Elemental Resistance",
+                  "description": "+11% Elemental Resistance",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 11,
+                      "minValue": 9,
+                      "maxValue": 12,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ]
+                },
+                {
+                  "modId": "Solar Ring",
+                  "description": "Solar Ring",
+                  "variant": "normal",
+                  "rolledValues": []
+                }
+              ],
+              "corrosionImplicit": null,
+              "beltBlend": null,
+              "randomAffixSlots": [
+                {
+                  "slotIndex": 0,
+                  "modId": "+(34–45)% additional Area Damage for this skill when Demolisher Charge is consumed.",
+                  "description": "+41% additional Area Damage for this skill when Demolisher Charge is consumed.",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 41,
+                      "minValue": 34,
+                      "maxValue": 45,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ]
+                }
+              ],
+              "displayName": "Broken Sun Ring",
+              "displayIcon": "/images/legendaries/trinket/necklace/Icon_Equip_Amulet_Epic_303_112.webp"
+            },
+            {
+              "id": "gear-1784586475310-r16qgor01",
+              "rarity": "Legendary",
+              "gearCategory": "gloves",
+              "gearSubType": "str_gloves",
+              "legendaryItem": {
+                "legendaryId": "Death's Touch",
+                "name": "Death's Touch",
+                "icon": "/images/legendaries/gloves/str_gloves/Icon_Equip_Gloves_Epic_429_112.webp",
+                "requiredLevel": 1
+              },
+              "legendaryMods": [
+                {
+                  "modId": "+(231–330) Max Life",
+                  "description": "+250 Max Life",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 250,
+                      "minValue": 231,
+                      "maxValue": 330,
+                      "sign": "+"
+                    }
+                  ]
+                },
+                {
+                  "modId": "+(80–90)% additional Base Damage for Two-Handed Weapons",
+                  "description": "+85% additional Base Damage for Two-Handed Weapons",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 85,
+                      "minValue": 80,
+                      "maxValue": 90,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ]
+                },
+                {
+                  "modId": "The Critical Strike Rating is fixed at 500 for the Weapon",
+                  "description": "The Critical Strike Rating is fixed at 500 for the Weapon",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 500,
+                      "minValue": 500,
+                      "maxValue": 500
+                    }
+                  ]
+                },
+                {
+                  "modId": "+(13–16)% Main-Hand Weapon Attack Speed",
+                  "description": "+14% Main-Hand Weapon Attack Speed",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 14,
+                      "minValue": 13,
+                      "maxValue": 16,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ]
+                }
+              ],
+              "corrosionImplicit": null,
+              "beltBlend": null,
+              "randomAffixSlots": [
+                {
+                  "slotIndex": 0,
+                  "modId": "Adds (58–60) - (71–73) Physical Damage to the Main-Hand Weapon",
+                  "description": "Adds 58 - 71 Physical Damage to the Main-Hand Weapon",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 58,
+                      "minValue": 58,
+                      "maxValue": 60
+                    },
+                    {
+                      "value": 71,
+                      "minValue": 71,
+                      "maxValue": 73
+                    }
+                  ]
+                }
+              ],
+              "displayName": "Death's Touch",
+              "displayIcon": "/images/legendaries/gloves/str_gloves/Icon_Equip_Gloves_Epic_429_112.webp"
+            },
+            {
+              "id": "gear-1784586522294-uy8ex1bqm",
+              "rarity": "Legendary",
+              "gearCategory": "helmet",
+              "gearSubType": "str_helmet",
+              "legendaryItem": {
+                "legendaryId": "Fool's Crown",
+                "name": "Fool's Crown",
+                "icon": "/images/legendaries/helmet/str_helmet/Icon_Equip_Helmet_Epic_311_112.webp",
+                "requiredLevel": 1
+              },
+              "legendaryMods": [
+                {
+                  "modId": "+(4176–4464) Gear Armor",
+                  "description": "+4185 Gear Armor",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 4185,
+                      "minValue": 4176,
+                      "maxValue": 4464,
+                      "sign": "+"
+                    }
+                  ]
+                },
+                {
+                  "modId": "-99% additional Intelligence",
+                  "description": "-99% additional Intelligence",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 99,
+                      "minValue": 99,
+                      "maxValue": 99,
+                      "sign": "-",
+                      "unit": "%"
+                    }
+                  ]
+                },
+                {
+                  "modId": "Adds (92–108) - (122–138) Physical Damage to the Main-Hand Weapon",
+                  "description": "Adds 95 - 125 Physical Damage to the Main-Hand Weapon",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 95,
+                      "minValue": 92,
+                      "maxValue": 108
+                    },
+                    {
+                      "value": 125,
+                      "minValue": 122,
+                      "maxValue": 138
+                    }
+                  ]
+                },
+                {
+                  "modId": "+(60–90) Strength",
+                  "description": "+148 Strength",
+                  "variant": "corroded",
+                  "rolledValues": [
+                    {
+                      "value": 148,
+                      "minValue": 120,
+                      "maxValue": 150,
+                      "sign": "+"
+                    }
+                  ]
+                },
+                {
+                  "modId": "+(2–4)% Fire Resistance",
+                  "description": "+2% Fire Resistance",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 2,
+                      "minValue": 2,
+                      "maxValue": 4,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ]
+                }
+              ],
+              "corrosionImplicit": null,
+              "beltBlend": null,
+              "displayName": "Fool's Crown",
+              "displayIcon": "/images/legendaries/helmet/str_helmet/Icon_Equip_Helmet_Epic_311_112.webp"
+            },
+            {
+              "id": "gear-1784586545733-qxjpl53fi",
+              "rarity": "Legendary",
+              "gearCategory": "chest_armor",
+              "gearSubType": "int_chest_armor",
+              "legendaryItem": {
+                "legendaryId": "Ruinous Star",
+                "name": "Ruinous Star",
+                "icon": "/images/legendaries/chest_armor/int_chest_armor/Icon_Equip_Armor_Epic_325_112.webp",
+                "requiredLevel": 1
+              },
+              "legendaryMods": [
+                {
+                  "modId": "+(20–30)% Erosion Resistance",
+                  "description": "+24% Erosion Resistance",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 24,
+                      "minValue": 20,
+                      "maxValue": 30,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ]
+                },
+                {
+                  "modId": "+(15–30)% additional Deterioration Duration",
+                  "description": "+30% additional Deterioration Duration",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 30,
+                      "minValue": 15,
+                      "maxValue": 30,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ]
+                },
+                {
+                  "modId": "Every 0.5 s, your next non-Channeled Main Skill is enhanced by Obliterate\nSkills not enhanced by Obliterate cannot infli",
+                  "description": "Every 0.5 s, your next non-Channeled Main Skill is enhanced by Obliterate\nSkills not enhanced by Obliterate cannot inflict Deterioration",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 0.5,
+                      "minValue": 0.5,
+                      "maxValue": 0.5
+                    }
+                  ]
+                },
+                {
+                  "modId": "Deterioration no longer deals True Damage when it expires. Instead, it deals True Damage once every 0.33s while it lasts",
+                  "description": "Deterioration no longer deals True Damage when it expires. Instead, it deals True Damage once every 0.33s while it lasts. The damage gains a 40% additional damage increment each time, up to 6 time(s)",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 0.33,
+                      "minValue": 0.33,
+                      "maxValue": 0.33
+                    },
+                    {
+                      "value": 40,
+                      "minValue": 40,
+                      "maxValue": 40,
+                      "unit": "%"
+                    },
+                    {
+                      "value": 6,
+                      "minValue": 6,
+                      "maxValue": 6
+                    }
+                  ]
+                }
+              ],
+              "corrosionImplicit": null,
+              "beltBlend": null,
+              "displayName": "Ruinous Star",
+              "displayIcon": "/images/legendaries/chest_armor/int_chest_armor/Icon_Equip_Armor_Epic_325_112.webp"
+            },
+            {
+              "id": "gear-1784586645312-ih3bi8wav",
+              "rarity": "Rare",
+              "gearCategory": "two_handed",
+              "gearSubType": "two-handed_hammer",
+              "baseItem": {
+                "baseItemId": "Sierra Reverberation Maul",
+                "name": "Sierra Reverberation Maul",
+                "icon": "/images/rare-gear/two_handed/two-handed_hammer/Icon_Equip_Weapon_2HMace_Norm_001_112.webp",
+                "requiredLevel": 86,
+                "implicits": [
+                  {
+                    "description": "220 - 220 Physical Damage",
+                    "rawText": "220 - 220 Physical Damage",
+                    "values": [
+                      {
+                        "value": 220,
+                        "minValue": 220,
+                        "maxValue": 220
+                      },
+                      {
+                        "value": 220,
+                        "minValue": 220,
+                        "maxValue": 220
+                      }
+                    ]
+                  },
+                  {
+                    "description": "500 Critical Strike Rating",
+                    "rawText": "500 Critical Strike Rating",
+                    "values": [
+                      {
+                        "value": 500,
+                        "minValue": 500,
+                        "maxValue": 500
+                      }
+                    ]
+                  },
+                  {
+                    "description": "1.5 Attack Speed",
+                    "rawText": "1.5 Attack Speed",
+                    "values": [
+                      {
+                        "value": 1.5,
+                        "minValue": 1.5,
+                        "maxValue": 1.5
+                      }
+                    ]
+                  }
+                ]
+              },
+              "beltBlend": null,
+              "towerSequence": {
+                "sequenceId": "+16% additional damage for Main-Hand Weapons",
+                "description": "+16% additional damage for Main-Hand Weapons",
+                "sequenceType": "Intermediate Sequence 1|2|6",
+                "modifierId": "",
+                "chips": [
+                  1,
+                  2,
+                  6
+                ]
+              },
+              "sweetDreamAffix": null,
+              "baseAffix": null,
+              "baseAffix2": null,
+              "corrosionImplicit": null,
+              "prefixes": [
+                {
+                  "affixId": "+(121–136)% Gear Physical Damage",
+                  "tierId": "+(49–80)% Gear Physical Damage",
+                  "modifierDescription": "+#% Gear Physical Damage",
+                  "rolledValues": [
+                    {
+                      "value": 62,
+                      "minValue": 49,
+                      "maxValue": 80,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                },
+                {
+                  "affixId": "+(324–365)% Melee Damage",
+                  "tierId": "+(152–216)% Melee Damage",
+                  "modifierDescription": "+#% Melee Damage",
+                  "rolledValues": [
+                    {
+                      "value": 174,
+                      "minValue": 152,
+                      "maxValue": 216,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                },
+                {
+                  "affixId": "Adds (121–123) - (149–151) Physical Damage to the gear",
+                  "tierId": "Adds (71–73) - (87–89) Physical Damage to the gear",
+                  "modifierDescription": "Adds # - # Physical Damage to the gear",
+                  "rolledValues": [
+                    {
+                      "value": 71,
+                      "minValue": 71,
+                      "maxValue": 73
+                    },
+                    {
+                      "value": 87,
+                      "minValue": 87,
+                      "maxValue": 89
+                    }
+                  ],
+                  "tier": "1"
+                }
+              ],
+              "suffixes": [
+                {
+                  "affixId": "+(143–153)% additional Attack Damage after standing still for 0.1s. -20% additional Attack Speed",
+                  "tierId": "+(80–100)% additional Attack Damage after standing still for 0.1s. -20% additional Attack Speed",
+                  "modifierDescription": "+#% additional Attack Damage after standing still for #.#s. -#% additional Attack Speed",
+                  "rolledValues": [
+                    {
+                      "value": 99,
+                      "minValue": 80,
+                      "maxValue": 100,
+                      "sign": "+",
+                      "unit": "%"
+                    },
+                    {
+                      "value": 0.1,
+                      "minValue": 0.1,
+                      "maxValue": 0.1
+                    },
+                    {
+                      "value": 20,
+                      "minValue": 20,
+                      "maxValue": 20,
+                      "sign": "-",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                },
+                {
+                  "affixId": "+(539–608)% Critical Strike Rating",
+                  "tierId": "+(252–360)% Critical Strike Rating",
+                  "modifierDescription": "+#% Critical Strike Rating",
+                  "rolledValues": [
+                    {
+                      "value": 273,
+                      "minValue": 252,
+                      "maxValue": 360,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                },
+                {
+                  "affixId": "+(324–365)% Physical Damage",
+                  "tierId": "+(152–216)% Physical Damage",
+                  "modifierDescription": "+#% Physical Damage",
+                  "rolledValues": [
+                    {
+                      "value": 176,
+                      "minValue": 152,
+                      "maxValue": 216,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                }
+              ],
+              "displayName": "Sierra Reverberation Maul",
+              "displayIcon": "/images/rare-gear/two_handed/two-handed_hammer/Icon_Equip_Weapon_2HMace_Norm_001_112.webp",
+              "itemLevel": 100
+            },
+            {
+              "id": "gear-1784586674255-f3xcmvvw6",
+              "rarity": "Legendary",
+              "gearCategory": "trinket",
+              "gearSubType": "ring",
+              "legendaryItem": {
+                "legendaryId": "Kaleidoscope",
+                "name": "Kaleidoscope",
+                "icon": "/images/legendaries/trinket/ring/Icon_Equip_Ring_Epic_211_112.webp",
+                "requiredLevel": 1
+              },
+              "legendaryMods": [
+                {
+                  "modId": "+66 Max Life",
+                  "description": "+66 Max Life",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 66,
+                      "minValue": 66,
+                      "maxValue": 66,
+                      "sign": "+"
+                    }
+                  ]
+                },
+                {
+                  "modId": "+(7–10)% Attack and Cast Speed",
+                  "description": "+7% Attack and Cast Speed",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 7,
+                      "minValue": 7,
+                      "maxValue": 10,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ]
+                },
+                {
+                  "modId": "Gains the following buffs by turns. Each buff lasts for 8 s:\n+(35–50)% additional Erosion Damage\n+(35–50)% additional El",
+                  "description": "Gains the following buffs by turns. Each buff lasts for 8 s:\n+48% additional Erosion Damage\n+48% additional Elemental Damage\n+48% additional Physical Damage",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 8,
+                      "minValue": 8,
+                      "maxValue": 8
+                    },
+                    {
+                      "value": 48,
+                      "minValue": 35,
+                      "maxValue": 50,
+                      "sign": "+",
+                      "unit": "%"
+                    },
+                    {
+                      "value": 48,
+                      "minValue": 35,
+                      "maxValue": 50,
+                      "sign": "+",
+                      "unit": "%"
+                    },
+                    {
+                      "value": 48,
+                      "minValue": 35,
+                      "maxValue": 50,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ]
+                }
+              ],
+              "corrosionImplicit": null,
+              "beltBlend": null,
+              "displayName": "Kaleidoscope",
+              "displayIcon": "/images/legendaries/trinket/ring/Icon_Equip_Ring_Epic_211_112.webp"
+            },
+            {
+              "id": "gear-1784586704028-jaap9iaty",
+              "rarity": "Legendary",
+              "gearCategory": "trinket",
+              "gearSubType": "ring",
+              "legendaryItem": {
+                "legendaryId": "Kaleidoscope",
+                "name": "Kaleidoscope",
+                "icon": "/images/legendaries/trinket/ring/Icon_Equip_Ring_Epic_211_112.webp",
+                "requiredLevel": 1
+              },
+              "legendaryMods": [
+                {
+                  "modId": "+66 Max Life",
+                  "description": "+66 Max Life",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 66,
+                      "minValue": 66,
+                      "maxValue": 66,
+                      "sign": "+"
+                    }
+                  ]
+                },
+                {
+                  "modId": "+(7–10)% Attack and Cast Speed",
+                  "description": "+7% Attack and Cast Speed",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 7,
+                      "minValue": 7,
+                      "maxValue": 10,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ]
+                },
+                {
+                  "modId": "Gains the following buffs by turns. Each buff lasts for 8 s:\n+(35–50)% additional Erosion Damage\n+(35–50)% additional El",
+                  "description": "Gains the following buffs by turns. Each buff lasts for 8 s:\n+60% additional Erosion Damage\n+60% additional Elemental Damage\n+60% additional Physical Damage",
+                  "variant": "corroded",
+                  "rolledValues": [
+                    {
+                      "value": 8,
+                      "minValue": 8,
+                      "maxValue": 8
+                    },
+                    {
+                      "value": 60,
+                      "minValue": 55,
+                      "maxValue": 65,
+                      "sign": "+",
+                      "unit": "%"
+                    },
+                    {
+                      "value": 60,
+                      "minValue": 55,
+                      "maxValue": 65,
+                      "sign": "+",
+                      "unit": "%"
+                    },
+                    {
+                      "value": 60,
+                      "minValue": 55,
+                      "maxValue": 65,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ]
+                }
+              ],
+              "corrosionImplicit": null,
+              "beltBlend": null,
+              "displayName": "Kaleidoscope",
+              "displayIcon": "/images/legendaries/trinket/ring/Icon_Equip_Ring_Epic_211_112.webp"
+            },
+            {
+              "id": "gear-1784586742630-c8g8nrosi",
+              "rarity": "Legendary",
+              "gearCategory": "boots",
+              "gearSubType": "str_boots",
+              "legendaryItem": {
+                "legendaryId": "Boots of Devastation",
+                "name": "Boots of Devastation",
+                "icon": "/images/legendaries/boots/str_boots/Icon_Equip_Shoes_Epic_427_112.webp",
+                "requiredLevel": 1
+              },
+              "legendaryMods": [
+                {
+                  "modId": "+(1000–1500) Gear Armor",
+                  "description": "+1404 Gear Armor",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 1404,
+                      "minValue": 1000,
+                      "maxValue": 1500,
+                      "sign": "+"
+                    }
+                  ]
+                },
+                {
+                  "modId": "+(15–20)% Movement Speed",
+                  "description": "+16% Movement Speed",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 16,
+                      "minValue": 15,
+                      "maxValue": 20,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ]
+                },
+                {
+                  "modId": "+(24–30)% Warcry Effect",
+                  "description": "+27% Warcry Effect",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 27,
+                      "minValue": 24,
+                      "maxValue": 30,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ]
+                },
+                {
+                  "modId": "+(30–40)% additional skill damage when Demolisher Charge is consumed",
+                  "description": "+40% additional skill damage when Demolisher Charge is consumed",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 40,
+                      "minValue": 30,
+                      "maxValue": 40,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ]
+                }
+              ],
+              "corrosionImplicit": null,
+              "beltBlend": null,
+              "displayName": "Boots of Devastation",
+              "displayIcon": "/images/legendaries/boots/str_boots/Icon_Equip_Shoes_Epic_427_112.webp"
+            },
+            {
+              "id": "gear-1784587731245-rsuf4ke79",
+              "rarity": "Legendary",
+              "gearCategory": "boots",
+              "gearSubType": "dex_boots",
+              "legendaryItem": {
+                "legendaryId": "Blade-dancer's Steps",
+                "name": "Blade-dancer's Steps",
+                "icon": "/images/legendaries/boots/dex_boots/Icon_Equip_Shoes_Epic_207_112.webp",
+                "requiredLevel": 1
+              },
+              "legendaryMods": [
+                {
+                  "modId": "+(1–2) Mobility Skill Level",
+                  "description": "+1 Mobility Skill Level",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 1,
+                      "minValue": 1,
+                      "maxValue": 2,
+                      "sign": "+"
+                    }
+                  ]
+                },
+                {
+                  "modId": "+(30–40)% Movement Speed if you have used a Mobility Skill recently",
+                  "description": "+35% Movement Speed if you have used a Mobility Skill recently",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 35,
+                      "minValue": 30,
+                      "maxValue": 40,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ]
+                },
+                {
+                  "modId": "+(35–45)% additional damage for 5 s after using Mobility Skills",
+                  "description": "+45% additional damage for 5 s after using Mobility Skills",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 45,
+                      "minValue": 35,
+                      "maxValue": 45,
+                      "sign": "+",
+                      "unit": "%"
+                    },
+                    {
+                      "value": 5,
+                      "minValue": 5,
+                      "maxValue": 5
+                    }
+                  ]
+                },
+                {
+                  "modId": "When using a Mobility Skill, you can use 1 stack(s) of Agility Blessing to reset the Mobility Skill's cooldown. Interval",
+                  "description": "When using a Mobility Skill, you can use 1 stack(s) of Agility Blessing to reset the Mobility Skill's cooldown. Interval: 0.6 s",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 1,
+                      "minValue": 1,
+                      "maxValue": 1
+                    },
+                    {
+                      "value": 0.6,
+                      "minValue": 0.6,
+                      "maxValue": 0.6
+                    }
+                  ]
+                }
+              ],
+              "corrosionImplicit": null,
+              "beltBlend": null,
+              "displayName": "Blade-dancer's Steps",
+              "displayIcon": "/images/legendaries/boots/dex_boots/Icon_Equip_Shoes_Epic_207_112.webp"
+            },
+            {
+              "id": "gear-1784587774167-ggyu692om",
+              "rarity": "Legendary",
+              "gearCategory": "trinket",
+              "gearSubType": "belt",
+              "legendaryItem": {
+                "legendaryId": "Formation Breaker",
+                "name": "Formation Breaker",
+                "icon": "/images/legendaries/trinket/belt/Icon_Equip_Belt_Epic_214_112.webp",
+                "requiredLevel": 1
+              },
+              "legendaryMods": [
+                {
+                  "modId": "(-10–10)% additional Attack and Cast Speed for Sentry Skills",
+                  "description": "-7% additional Attack and Cast Speed for Sentry Skills",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": -7,
+                      "minValue": -10,
+                      "maxValue": 10,
+                      "sign": "-",
+                      "unit": "%"
+                    }
+                  ]
+                },
+                {
+                  "modId": "+48% Skill Area",
+                  "description": "+48% Skill Area",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 48,
+                      "minValue": 48,
+                      "maxValue": 48,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ]
+                },
+                {
+                  "modId": "+30% additional damage taken by enemies in proximity to Sentries",
+                  "description": "+30% additional damage taken by enemies in proximity to Sentries",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 30,
+                      "minValue": 30,
+                      "maxValue": 30,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ]
+                },
+                {
+                  "modId": "Gains Demolisher Charge when using Sentry Skills. Interval: 0.25s",
+                  "description": "Gains Demolisher Charge when using Sentry Skills. Interval: 0.25s",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 0.25,
+                      "minValue": 0.25,
+                      "maxValue": 0.25
+                    }
+                  ]
+                }
+              ],
+              "corrosionImplicit": null,
+              "beltBlend": null,
+              "displayName": "Formation Breaker",
+              "displayIcon": "/images/legendaries/trinket/belt/Icon_Equip_Belt_Epic_214_112.webp"
+            }
+          ]
+        },
+        "vorax": {
+          "equipped": {
+            "chest": null,
+            "head": null,
+            "hands": null,
+            "legs": null,
+            "neck": null,
+            "digits": null,
+            "waist": null
+          },
+          "inventory": []
+        },
+        "skills": {
+          "activeSkills": [
+            {
+              "skillGuid": "Hammer of Ash",
+              "enabled": true,
+              "level": 20,
+              "supports": [
+                {
+                  "supportGuid": "Elemental Fusion",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_ElemetalFocus_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "Passivation",
+                  "type": "support",
+                  "icon": "/images/skill/UI_Skill_Passivation_Icon_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "Hammer of Ash: Upheaval (Magnificent)",
+                  "type": "magnificent_support",
+                  "icon": "/images/skill/UI_Skill_Emberslam_support01_Icon_128.webp",
+                  "tier": 2,
+                  "rollValues": [
+                    32
+                  ],
+                  "rank": 1
+                },
+                {
+                  "supportGuid": "Steamroll",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_Crush_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "Melee Knockback",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_MeleeKnockback_128.webp",
+                  "level": 20
+                }
+              ]
+            },
+            {
+              "skillGuid": "Blink",
+              "enabled": true,
+              "level": 20,
+              "supports": [
+                {
+                  "supportGuid": "Magic Dash",
+                  "type": "support",
+                  "icon": "/images/skill/UI_Skill_AccelerateAfterSpell_Icon_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "Quick Mobility",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_FasterTravel_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "Cooldown Reduction",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_CooldownReduce_128.webp",
+                  "level": 20
+                },
+                null,
+                null
+              ]
+            },
+            {
+              "skillGuid": "Timid",
+              "enabled": true,
+              "level": 20,
+              "supports": [
+                {
+                  "supportGuid": "Activation Medium: Demolisher",
+                  "type": "activation_medium",
+                  "icon": "/images/skill/UI_Skill_CMWreck_Icon_128.webp",
+                  "tier": 1,
+                  "rollValues": [
+                    18,
+                    12
+                  ]
+                },
+                {
+                  "supportGuid": "Extended Duration",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_IncreasedDuration_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "Cooldown Reduction",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_CooldownReduce_128.webp",
+                  "level": 20
+                },
+                null,
+                null
+              ]
+            },
+            {
+              "skillGuid": null,
+              "enabled": false,
+              "level": 20,
+              "supports": [
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            },
+            {
+              "skillGuid": "Flame Core",
+              "enabled": true,
+              "level": 16,
+              "supports": [
+                {
+                  "supportGuid": "Activation Medium: Motionless",
+                  "type": "activation_medium",
+                  "icon": "/images/skill/UI_Skill_CMStationaryUse_Icon_128.webp",
+                  "tier": 0,
+                  "rollValues": [
+                    15
+                  ]
+                },
+                {
+                  "supportGuid": "Quick Decision",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_FasterCasting_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "Glacial Freeze",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_Frozen_128.webp",
+                  "level": 16
+                },
+                {
+                  "supportGuid": "Added Cold Damage",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_AddedIceDamage_128.webp",
+                  "level": 16
+                },
+                null
+              ]
+            }
+          ],
+          "passiveSkills": [
+            {
+              "skillGuid": "Precise: Precise Projectiles",
+              "enabled": true,
+              "level": 20,
+              "supports": [
+                {
+                  "supportGuid": "Restrain",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_Enlightenment_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "Seal Conversion",
+                  "type": "support",
+                  "icon": "/images/skill/UI_SkillIcon_Support_BloodMagic_Icon_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "Increased Area",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_IncreasedArea_128.webp",
+                  "level": 20
+                },
+                null,
+                null
+              ]
+            },
+            {
+              "skillGuid": "Precise: Cruelty",
+              "enabled": true,
+              "level": 20,
+              "supports": [
+                {
+                  "supportGuid": "Restrain",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_Enlightenment_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "Aura Amplification",
+                  "type": "support",
+                  "icon": "/images/skill/UI_Skill_AuraEnhance_Icon_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "Increased Area",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_IncreasedArea_128.webp",
+                  "level": 20
+                },
+                null,
+                null
+              ]
+            },
+            {
+              "skillGuid": "Weapon Amplification",
+              "enabled": true,
+              "level": 20,
+              "supports": [
+                {
+                  "supportGuid": "Restrain",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_Enlightenment_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "Aura Amplification",
+                  "type": "support",
+                  "icon": "/images/skill/UI_Skill_AuraEnhance_Icon_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "Increased Area",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_IncreasedArea_128.webp",
+                  "level": 20
+                },
+                null,
+                null
+              ]
+            },
+            {
+              "skillGuid": "Precise: Erosion Amplification",
+              "enabled": true,
+              "level": 20,
+              "supports": [
+                {
+                  "supportGuid": "Restrain",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_Enlightenment_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "Aura Amplification",
+                  "type": "support",
+                  "icon": "/images/skill/UI_Skill_AuraEnhance_Icon_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "Increased Area",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_IncreasedArea_128.webp",
+                  "level": 20
+                },
+                null,
+                null
+              ]
+            }
+          ]
+        },
+        "skillTree": {
+          "slots": [
+            {
+              "treeId": "goddess_of_deception",
+              "nodePoints": {
+                "4d6fcca9-6e41-55d0-af3a-59f3a53d4495": 3,
+                "1fed99d4-2632-5207-8505-9a3739a6fa90": 3,
+                "cd305c57-4f52-50ee-ac0c-982184fa1a02": 3,
+                "da498580-47e0-5b63-8ef8-af9b926c9e32": 3,
+                "02f9107a-eefa-5c83-b835-c2812a1cafc1": 3,
+                "79dfebd0-4c6a-5cd6-a6be-f31db4f8edc8": 3,
+                "9105a76f-68d9-5ddf-8509-d78e363b4dc5": 1,
+                "2667feba-8822-5a13-ba44-3f5ad93c4e2f": 3,
+                "cbde0b51-47af-5b79-bac7-0e4175bc50cc": 3,
+                "_names": {
+                  "4d6fcca9-6e41-55d0-af3a-59f3a53d4495": "Micro Talent",
+                  "1fed99d4-2632-5207-8505-9a3739a6fa90": "Medium Talent",
+                  "cd305c57-4f52-50ee-ac0c-982184fa1a02": "Micro Talent",
+                  "da498580-47e0-5b63-8ef8-af9b926c9e32": "Medium Talent",
+                  "02f9107a-eefa-5c83-b835-c2812a1cafc1": "Micro Talent",
+                  "79dfebd0-4c6a-5cd6-a6be-f31db4f8edc8": "Micro Talent",
+                  "9105a76f-68d9-5ddf-8509-d78e363b4dc5": "Legendary Medium Talent",
+                  "2667feba-8822-5a13-ba44-3f5ad93c4e2f": "Micro Talent",
+                  "cbde0b51-47af-5b79-bac7-0e4175bc50cc": "Medium Talent"
+                }
+              },
+              "selectedNotable12": "Mixture",
+              "selectedNotable24": "Forbidden Power",
+              "prismId": null,
+              "equippedPrism": null,
+              "prismCoreTalentOverride": null,
+              "inverseImageState": null
+            },
+            {
+              "treeId": "shadowmaster",
+              "nodePoints": {
+                "8e6a6a59-342a-547c-9cce-021d1fbbc993": 3,
+                "f6c0c0d8-9113-5a14-a5a5-3e2dd220039a": 3,
+                "0b8369ac-18f5-516e-a376-26c51e5afb25": 3,
+                "c8581635-c300-57b9-9bd7-ffffe19ba76f": 3,
+                "fc5c7cb1-c5eb-5465-bab2-e0f81aa4725e": 3,
+                "d56be2ef-c16a-5ed7-a309-0530582501b1": 3,
+                "3ca78cc4-3a0c-5205-a571-d0338a30e6a6": 1,
+                "a4d8c758-cda5-565e-8adc-e7b6789200de": 3,
+                "401c54ef-43e2-5032-ae96-47d2727a5135": 2,
+                "_names": {
+                  "8e6a6a59-342a-547c-9cce-021d1fbbc993": "Micro Talent",
+                  "f6c0c0d8-9113-5a14-a5a5-3e2dd220039a": "Medium Talent",
+                  "0b8369ac-18f5-516e-a376-26c51e5afb25": "Micro Talent",
+                  "c8581635-c300-57b9-9bd7-ffffe19ba76f": "Medium Talent",
+                  "fc5c7cb1-c5eb-5465-bab2-e0f81aa4725e": "Micro Talent",
+                  "d56be2ef-c16a-5ed7-a309-0530582501b1": "Medium Talent",
+                  "3ca78cc4-3a0c-5205-a571-d0338a30e6a6": "Legendary Medium Talent",
+                  "a4d8c758-cda5-565e-8adc-e7b6789200de": "Micro Talent",
+                  "401c54ef-43e2-5032-ae96-47d2727a5135": "Medium Talent"
+                }
+              },
+              "selectedNotable12": null,
+              "selectedNotable24": "Dirt",
+              "prismId": "prism-1784588401817-qnu99zax4",
+              "equippedPrism": {
+                "prismId": "prism-1784588401817-qnu99zax4",
+                "nodeId": "Legendary Medium Talent",
+                "affectedNodeIds": [
+                  "Medium Talent",
+                  "Micro Talent",
+                  "Medium Talent",
+                  "Legendary Medium Talent",
+                  "Micro Talent",
+                  "Legendary Medium Talent",
+                  "Medium Talent",
+                  "Legendary Medium Talent",
+                  "Legendary Medium Talent",
+                  "Micro Talent",
+                  "Legendary Medium Talent"
+                ],
+                "replacesCoreTalent": false
+              },
+              "prismCoreTalentOverride": null,
+              "inverseImageState": null
+            },
+            {
+              "treeId": "onslaughter",
+              "nodePoints": {
+                "abb78ec5-32bd-5ca2-ae76-9f7905731a7f": 3,
+                "88eaf2a3-20c6-5a65-94bb-5e45b0e5a0ee": 3,
+                "402d8dc9-67c3-5fda-917e-5419b94f5d01": 3,
+                "8bb7c2a6-5fbc-5ccf-8453-02c235d905e0": 3,
+                "dd71174a-76f6-51c8-8c36-0c0183050704": 3,
+                "c49d13de-6124-5c0f-90ab-d6971e08c1eb": 3,
+                "a5d4f8f6-32de-5f20-9b8b-eb8a25d200ac": 1,
+                "5b039e64-6352-5541-b096-d7345c8e3e40": 3,
+                "6452dcce-6f9e-53e0-939b-0fd4cb10cade": 1,
+                "0a5c7d50-242f-50f6-a937-25fc8d8cde17": 3,
+                "48a75c83-0372-5707-a758-066f4814206f": 1,
+                "7677860b-84bc-529b-884d-d1385294ebbc": 3,
+                "ea092ed6-3a6b-5dde-a4d2-5b9d5f2448cc": 2,
+                "_names": {
+                  "abb78ec5-32bd-5ca2-ae76-9f7905731a7f": "Micro Talent",
+                  "88eaf2a3-20c6-5a65-94bb-5e45b0e5a0ee": "Medium Talent",
+                  "402d8dc9-67c3-5fda-917e-5419b94f5d01": "Micro Talent",
+                  "8bb7c2a6-5fbc-5ccf-8453-02c235d905e0": "Medium Talent",
+                  "dd71174a-76f6-51c8-8c36-0c0183050704": "Micro Talent",
+                  "c49d13de-6124-5c0f-90ab-d6971e08c1eb": "Medium Talent",
+                  "a5d4f8f6-32de-5f20-9b8b-eb8a25d200ac": "Legendary Medium Talent",
+                  "5b039e64-6352-5541-b096-d7345c8e3e40": "Medium Talent",
+                  "6452dcce-6f9e-53e0-939b-0fd4cb10cade": "Legendary Medium Talent",
+                  "0a5c7d50-242f-50f6-a937-25fc8d8cde17": "Micro Talent",
+                  "48a75c83-0372-5707-a758-066f4814206f": "Legendary Medium Talent",
+                  "7677860b-84bc-529b-884d-d1385294ebbc": "Micro Talent",
+                  "ea092ed6-3a6b-5dde-a4d2-5b9d5f2448cc": "Medium Talent"
+                }
+              },
+              "selectedNotable12": null,
+              "selectedNotable24": "Well Matched",
+              "prismId": null,
+              "equippedPrism": null,
+              "prismCoreTalentOverride": null,
+              "inverseImageState": null
+            },
+            {
+              "treeId": "lich",
+              "nodePoints": {
+                "fa2211da-becf-5879-8b15-6a5bdbce8dd6": 3,
+                "dd4b6429-e4fb-5a3e-b4d7-9b106962455d": 3,
+                "b4353dd9-4126-5b2c-a0a6-342bece5e8a6": 3,
+                "190ea9db-3328-5aea-9d56-4918d46275c0": 3,
+                "56ad33dc-b99e-5ce9-81a6-60d9debafafc": 3,
+                "b083728f-56c5-5dd8-86f6-e91c98ae7a89": 3,
+                "7cb4d988-4716-5ba0-9ad1-f7a1638636cd": 1,
+                "1516455d-9ecf-5566-8ff2-2f32b9598b0d": 3,
+                "5a3d2f4e-1b08-5d4d-b5cf-17c61e431974": 3,
+                "f7db9cd4-ebb6-5469-a8bc-1f806bb06e76": 1,
+                "_names": {
+                  "fa2211da-becf-5879-8b15-6a5bdbce8dd6": "Micro Talent",
+                  "dd4b6429-e4fb-5a3e-b4d7-9b106962455d": "Medium Talent",
+                  "b4353dd9-4126-5b2c-a0a6-342bece5e8a6": "Micro Talent",
+                  "190ea9db-3328-5aea-9d56-4918d46275c0": "Medium Talent",
+                  "56ad33dc-b99e-5ce9-81a6-60d9debafafc": "Micro Talent",
+                  "b083728f-56c5-5dd8-86f6-e91c98ae7a89": "Medium Talent",
+                  "7cb4d988-4716-5ba0-9ad1-f7a1638636cd": "Legendary Medium Talent",
+                  "1516455d-9ecf-5566-8ff2-2f32b9598b0d": "Micro Talent",
+                  "5a3d2f4e-1b08-5d4d-b5cf-17c61e431974": "Medium Talent",
+                  "f7db9cd4-ebb6-5469-a8bc-1f806bb06e76": "Legendary Medium Talent"
+                }
+              },
+              "selectedNotable12": null,
+              "selectedNotable24": "Off The Beaten Track",
+              "prismId": null,
+              "equippedPrism": null,
+              "prismCoreTalentOverride": null,
+              "inverseImageState": null
+            }
+          ],
+          "allocationOrder": [
+            {
+              "slot": 3,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 3,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 3,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 3,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 3,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 3,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 3,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 3,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 3,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 3,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 3,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 3,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 3,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 3,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 3,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 3,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 3,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 3,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 3,
+              "nodeId": "Legendary Medium Talent"
+            },
+            {
+              "slot": 3,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 3,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 3,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 3,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 3,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 3,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 3,
+              "nodeId": "Legendary Medium Talent"
+            },
+            {
+              "slot": 2,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 2,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 2,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 2,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 2,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 2,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 2,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 2,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 2,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 2,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 2,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 2,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 2,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 2,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 2,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 2,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 2,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 2,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 2,
+              "nodeId": "Legendary Medium Talent"
+            },
+            {
+              "slot": 2,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 2,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 2,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 2,
+              "nodeId": "Legendary Medium Talent"
+            },
+            {
+              "slot": 2,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 2,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 2,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 2,
+              "nodeId": "Legendary Medium Talent"
+            },
+            {
+              "slot": 1,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 1,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 1,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 1,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 1,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 1,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 1,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 1,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 1,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 1,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 1,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 1,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 1,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 1,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 1,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 1,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 1,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 1,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 1,
+              "nodeId": "Legendary Medium Talent"
+            },
+            {
+              "slot": 1,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 1,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 1,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 1,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 1,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 0,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 0,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 0,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 0,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 0,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 0,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 0,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 0,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 0,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 0,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 0,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 0,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 0,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 0,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 0,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 0,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 0,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 0,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 0,
+              "nodeId": "Legendary Medium Talent"
+            },
+            {
+              "slot": 0,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 0,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 0,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 0,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 0,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 0,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 2,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 2,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 2,
+              "nodeId": "Micro Talent"
+            },
+            {
+              "slot": 2,
+              "nodeId": "Medium Talent"
+            },
+            {
+              "slot": 2,
+              "nodeId": "Medium Talent"
+            }
+          ],
+          "recordOrder": true
+        },
+        "divinity": {
+          "inventory": [
+            {
+              "id": "slate-1784588606606-a4wf91",
+              "type": "legendary",
+              "shapeId": "O1",
+              "orientation": {
+                "rotation": 0,
+                "flipH": false,
+                "flipV": false
+              },
+              "affixes": [
+                {
+                  "modGuid": "Micro Talent",
+                  "nodeType": "Micro Talent",
+                  "slateType": "Warlord",
+                  "description": "1.25 % Life Regain\n1.25 % Energy Shield Regain",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/JL_Defence02_64.webp",
+                  "slotIndex": 0
+                },
+                {
+                  "modGuid": "Micro Talent",
+                  "nodeType": "Micro Talent",
+                  "slateType": "Elementalist",
+                  "description": "+9 % damage for Channeled Skills",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/ZS_DmgAll_64.webp",
+                  "slotIndex": 1
+                },
+                {
+                  "modGuid": "Legendary Medium Talent",
+                  "nodeType": "Legendary Medium Talent",
+                  "slateType": "Shadowmaster",
+                  "description": "+8 % additional Deterioration Damage\n+5 % additional Deterioration Duration",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/QZ_DmgChaos_64.webp",
+                  "slotIndex": 2
+                },
+                {
+                  "modGuid": "Mixture",
+                  "nodeType": "Mixture",
+                  "slateType": "Goddess of Deception",
+                  "description": "+50 % Deterioration Chance",
+                  "icon": "https://cdn.tlidb.com/UI/Textures/Common/Icon/Skill/CoreTalentIcon/128/UI_CoreTalentIcon_hunru_Icon_128.webp",
+                  "slotIndex": 3
+                }
+              ],
+              "legendaryTemplate": "Pedigree of Gods",
+              "legendaryTemplateId": "Pedigree of Gods",
+              "legendaryIcon": "/images/divinity-slate/UI_MI_TalantNG_Gold_ZZ1_0_Icon_112.webp"
+            },
+            {
+              "id": "slate-1784588631092-14sl2h",
+              "type": "legendary",
+              "shapeId": "O1",
+              "orientation": {
+                "rotation": 0,
+                "flipH": false,
+                "flipV": false
+              },
+              "affixes": [
+                {
+                  "modGuid": "Micro Talent",
+                  "nodeType": "Micro Talent",
+                  "slateType": "Goddess of Hunting",
+                  "description": "+7 % Evasion",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/SL_Evasion_64.webp",
+                  "slotIndex": 0
+                },
+                {
+                  "modGuid": "Micro Talent",
+                  "nodeType": "Micro Talent",
+                  "slateType": "Elementalist",
+                  "description": "+3 % chance to avoid Elemental Ailments",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/ZS_DmgAll_64.webp",
+                  "slotIndex": 1
+                },
+                {
+                  "modGuid": "Micro Talent",
+                  "nodeType": "Micro Talent",
+                  "slateType": "God of Might",
+                  "description": "+8 Strength",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/JL_DmgEle_64.webp",
+                  "slotIndex": 2
+                },
+                {
+                  "modGuid": "Legendary Medium Talent",
+                  "nodeType": "Legendary Medium Talent",
+                  "slateType": "Shadowmaster",
+                  "description": "+8 % additional Deterioration Damage\n+5 % additional Deterioration Duration",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/QZ_DmgChaos_64.webp",
+                  "slotIndex": 3
+                }
+              ],
+              "legendaryTemplate": "Fallen Starlight",
+              "legendaryTemplateId": "Fallen Starlight",
+              "legendaryIcon": "/images/divinity-slate/UI_MI_TalantNG_Gold_I1_0_Icon_112.webp"
+            },
+            {
+              "id": "slate-1784588648951-3ndxw7",
+              "type": "legendary",
+              "shapeId": "O1",
+              "orientation": {
+                "rotation": 0,
+                "flipH": true,
+                "flipV": false
+              },
+              "affixes": [
+                {
+                  "modGuid": "Legendary Medium Talent",
+                  "nodeType": "Legendary Medium Talent",
+                  "slateType": "Marksman",
+                  "description": "+60 % Projectile Damage against enemies in proximity",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/SL_DmgExtra_64.webp",
+                  "slotIndex": 0
+                },
+                {
+                  "modGuid": "Legendary Medium Talent",
+                  "nodeType": "Legendary Medium Talent",
+                  "slateType": "Ranger",
+                  "description": "+15 % additional damage taken by enemies in Proximity",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/ZZ_Flask01_64.webp",
+                  "slotIndex": 1
+                }
+              ],
+              "legendaryTemplate": "A Corner of Divinity",
+              "legendaryTemplateId": "A Corner of Divinity",
+              "legendaryIcon": "/images/divinity-slate/UI_MI_TalantNG_Gold_V1_0_Icon_112.webp"
+            },
+            {
+              "id": "slate-1784588673455-a2h80y",
+              "type": "legendary",
+              "shapeId": "O1",
+              "orientation": {
+                "rotation": 0,
+                "flipH": false,
+                "flipV": true
+              },
+              "affixes": [
+                {
+                  "modGuid": "Legendary Medium Talent",
+                  "nodeType": "Legendary Medium Talent",
+                  "slateType": "Machinist",
+                  "description": "+1 to Max Summonable Synthetic Troops",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/JX_DmgExtra_64.webp",
+                  "slotIndex": 0
+                },
+                {
+                  "modGuid": "Legendary Medium Talent",
+                  "nodeType": "Legendary Medium Talent",
+                  "slateType": "Shadowmaster",
+                  "description": "+8 % additional Deterioration Damage\n+5 % additional Deterioration Duration",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/QZ_DmgChaos_64.webp",
+                  "slotIndex": 1
+                }
+              ],
+              "legendaryTemplate": "A Corner of Divinity",
+              "legendaryTemplateId": "A Corner of Divinity",
+              "legendaryIcon": "/images/divinity-slate/UI_MI_TalantNG_Gold_V1_0_Icon_112.webp"
+            },
+            {
+              "id": "slate-1784588689454-3foly2",
+              "type": "legendary",
+              "shapeId": "O1",
+              "orientation": {
+                "rotation": 0,
+                "flipH": true,
+                "flipV": true
+              },
+              "affixes": [
+                {
+                  "modGuid": "Legendary Medium Talent",
+                  "nodeType": "Legendary Medium Talent",
+                  "slateType": "Marksman",
+                  "description": "+60 % Projectile Damage against enemies in proximity",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/SL_DmgExtra_64.webp",
+                  "slotIndex": 0
+                },
+                {
+                  "modGuid": "Legendary Medium Talent",
+                  "nodeType": "Legendary Medium Talent",
+                  "slateType": "Ranger",
+                  "description": "120 % of the increase/decrease on Knockback distance is also applied to damage bonus",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/ZZ_Dual01_64.webp",
+                  "slotIndex": 1
+                }
+              ],
+              "legendaryTemplate": "A Corner of Divinity",
+              "legendaryTemplateId": "A Corner of Divinity",
+              "legendaryIcon": "/images/divinity-slate/UI_MI_TalantNG_Gold_V1_0_Icon_112.webp"
+            },
+            {
+              "id": "slate-1784588725675-idearw",
+              "type": "legendary",
+              "shapeId": "O1",
+              "orientation": {
+                "rotation": 0,
+                "flipH": false,
+                "flipV": false
+              },
+              "affixes": [
+                {
+                  "modGuid": "Micro Talent",
+                  "nodeType": "Micro Talent",
+                  "slateType": "Goddess of Knowledge",
+                  "description": "+15 % Spell Critical Strike Rating",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/ZS_Crit04_64.webp",
+                  "slotIndex": 0
+                },
+                {
+                  "modGuid": "Micro Talent",
+                  "nodeType": "Micro Talent",
+                  "slateType": "God of Might",
+                  "description": "+9 % damage",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/JL_DmgAll_64.webp",
+                  "slotIndex": 1
+                },
+                {
+                  "modGuid": "Micro Talent",
+                  "nodeType": "Micro Talent",
+                  "slateType": "Goddess of Knowledge",
+                  "description": "+4 % Max Mana",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/ZS_Defence03_64.webp",
+                  "slotIndex": 2
+                },
+                {
+                  "modGuid": "Legendary Medium Talent",
+                  "nodeType": "Legendary Medium Talent",
+                  "slateType": "Shadowmaster",
+                  "description": "+8 % additional Deterioration Damage\n+5 % additional Deterioration Duration",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/QZ_DmgChaos_64.webp",
+                  "slotIndex": 3
+                }
+              ],
+              "legendaryTemplate": "Fallen Starlight",
+              "legendaryTemplateId": "Fallen Starlight",
+              "legendaryIcon": "/images/divinity-slate/UI_MI_TalantNG_Gold_I1_0_Icon_112.webp"
+            },
+            {
+              "id": "slate-1784588821510-z3ej1f",
+              "type": "legendary",
+              "shapeId": "O1",
+              "orientation": {
+                "rotation": 90,
+                "flipH": false,
+                "flipV": false
+              },
+              "affixes": [
+                {
+                  "modGuid": "Micro Talent",
+                  "nodeType": "Micro Talent",
+                  "slateType": "Goddess of Knowledge",
+                  "description": "+8 Intelligence",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/ZS_Blind_64.webp",
+                  "slotIndex": 0
+                },
+                {
+                  "modGuid": "Micro Talent",
+                  "nodeType": "Micro Talent",
+                  "slateType": "God of Might",
+                  "description": "+10 % Tenacity Blessing Duration\n+10 % Attack Damage while Tenacity Blessing is active",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/JL_Dagger01_64.webp",
+                  "slotIndex": 1
+                },
+                {
+                  "modGuid": "Micro Talent",
+                  "nodeType": "Micro Talent",
+                  "slateType": "Goddess of Hunting",
+                  "description": "+3 % Attack and Cast Speed",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/SL_Atk_64.webp",
+                  "slotIndex": 2
+                },
+                {
+                  "modGuid": "Legendary Medium Talent",
+                  "nodeType": "Legendary Medium Talent",
+                  "slateType": "Shadowmaster",
+                  "description": "+8 % additional Deterioration Damage\n+5 % additional Deterioration Duration",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/QZ_DmgChaos_64.webp",
+                  "slotIndex": 3
+                }
+              ],
+              "legendaryTemplate": "Fallen Starlight",
+              "legendaryTemplateId": "Fallen Starlight",
+              "legendaryIcon": "/images/divinity-slate/UI_MI_TalantNG_Gold_I1_0_Icon_112.webp"
+            }
+          ],
+          "placements": [
+            {
+              "slateId": "slate-1784588821510-z3ej1f",
+              "row": 0,
+              "col": 2
+            },
+            {
+              "slateId": "slate-1784588673455-a2h80y",
+              "row": 1,
+              "col": 1
+            },
+            {
+              "slateId": "slate-1784588648951-3ndxw7",
+              "row": 1,
+              "col": 2
+            },
+            {
+              "slateId": "slate-1784588725675-idearw",
+              "row": 2,
+              "col": 0
+            },
+            {
+              "slateId": "slate-1784588631092-14sl2h",
+              "row": 2,
+              "col": 5
+            },
+            {
+              "slateId": "slate-1784588606606-a4wf91",
+              "row": 3,
+              "col": 1
+            },
+            {
+              "slateId": "slate-1784588689454-3foly2",
+              "row": 3,
+              "col": 3
+            }
+          ]
+        },
+        "pactspirits": [
+          {
+            "guid": "Iron Lion",
+            "level": 1,
+            "allocatedNodes": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11"
+            ],
+            "expansions": {}
+          },
+          {
+            "guid": "Portrait of a Fallen Saintess",
+            "level": 4,
+            "allocatedNodes": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11"
+            ],
+            "expansions": {}
+          },
+          {
+            "guid": "Kitty Express",
+            "level": 6,
+            "allocatedNodes": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11"
+            ],
+            "expansions": {}
+          }
+        ],
+        "kismets": [
+          {
+            "pactspritIndex": 2,
+            "nodeId": "slot_2_3",
+            "kismetGuid": "Dual Kismet: Mighty Arrow"
+          },
+          {
+            "pactspritIndex": 2,
+            "nodeId": "slot_2_7",
+            "kismetGuid": "Micro Fate: Deterioration Duration",
+            "rollValues": [
+              3
+            ]
+          },
+          {
+            "pactspritIndex": 0,
+            "nodeId": "slot_0_4",
+            "kismetGuid": "Micro Fate: Strength",
+            "rollValues": [
+              13
+            ]
+          },
+          {
+            "pactspritIndex": 0,
+            "nodeId": "slot_0_5",
+            "kismetGuid": "Micro Fate: Strength",
+            "rollValues": [
+              14
+            ]
+          },
+          {
+            "pactspritIndex": 0,
+            "nodeId": "slot_0_6",
+            "kismetGuid": "Dual Kismet: Mighty Arrow"
+          }
+        ],
+        "scentBottle": {
+          "activeScent": "basic",
+          "basic": {
+            "skillGuid": null,
+            "damageIngredient": null,
+            "defenseIngredient": null,
+            "functionalIngredient": null,
+            "specialIngredients": [
+              null,
+              null
+            ]
+          },
+          "special": {
+            "skillGuid": null,
+            "damageIngredient": null,
+            "defenseIngredient": null,
+            "functionalIngredient": null,
+            "specialIngredients": [
+              null,
+              null
+            ]
+          }
+        }
+      }
+    ],
+    "currentLoadoutId": "loadout_1784552407269_t13n83rka"
+  }
+}

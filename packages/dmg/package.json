@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "type": "module",
   "exports": {
-    "./damageModel": "./src/damageModel.ts"
+    "./damageModel": "./src/damageModel.ts",
+    "./supports": "./src/supports.ts"
   },
   "scripts": {
     "snapshot": "tsx src/cli.ts snapshot",

@@ -1,0 +1,137 @@
+{
+ "base": {
+  "weapon_phys_min": 444,
+  "weapon_phys_max": 503,
+  "gear_phys_pct": 62,
+  "weapon_flat_cold_min": 0,
+  "weapon_flat_cold_max": 0,
+  "weapon_attack_speed": 1.5,
+  "skill_weapon_pct": 369,
+  "flat_added_min": 30,
+  "flat_added_max": 30,
+  "flat_added_cold_min": 0,
+  "flat_added_cold_max": 0,
+  "flat_added_erosion_min": 22.1,
+  "flat_added_erosion_max": 22.1,
+  "added_damage_effectiveness_pct": 369
+ },
+ "increased": {
+  "global": 244,
+  "attack": 240,
+  "melee": 174,
+  "physical": 176,
+  "fire": 52,
+  "erosion": 247,
+  "projectile": 160,
+  "ranger_knockback": 57.6
+ },
+ "additional": {
+  "strength": 169.5,
+  "base_2h_gloves": 85,
+  "base_2h_tree_a": 12,
+  "base_2h_tree_b": 10,
+  "base_2h_prism": 12,
+  "seq_mh": 16,
+  "standing_still": 99,
+  "steamroll": 43,
+  "upheaval": 20,
+  "blade_dancer": 45,
+  "kaleido_1": 48,
+  "kaleido_2": 60,
+  "frenzy_hound": 40,
+  "well_matched": 40,
+  "kitty_stimulant": 44.73,
+  "cruelty": 23.2,
+  "precise_projectiles": 40,
+  "slow_projectile": 31.5,
+  "forbidden_power_ero": 0,
+  "dirt_to_life": 10,
+  "deception_to_life": 8,
+  "sun_area_empower": 28,
+  "upheaval_explosion": 17.8
+ },
+ "additional_typed": {
+  "physical": {
+   "weapon_amp": 36.8
+  },
+  "elemental": {
+   "fusion": 36
+  },
+  "erosion": {
+   "passivation": 64,
+   "erosion_amp": 42.1,
+   "forbidden_power": 35,
+   "dirt": 15,
+   "repentance": 26.531901849600036
+  }
+ },
+ "conversion": [
+  {
+   "from": "physical",
+   "to": "fire",
+   "pct": 100
+  },
+  {
+   "from": "physical",
+   "to": "erosion",
+   "pct": 100
+  },
+  {
+   "from": "fire",
+   "to": "erosion",
+   "pct": 100
+  },
+  {
+   "from": "cold",
+   "to": "erosion",
+   "pct": 100
+  }
+ ],
+ "enemy_taken": {
+  "timid": 39,
+  "solar_ring": 40,
+  "fb_sentry": 30,
+  "ranger": 15,
+  "mighty_arrow": 25
+ },
+ "crit": {
+  "chance_pct": 65.05,
+  "damage_pct": 362
+ },
+ "penetration": {
+  "cold_pct": 0,
+  "armor_pct": 0,
+  "erosion_pct": 10
+ },
+ "enemy": {
+  "cold_res_pct": 30,
+  "armor_reduction_pct": 0,
+  "erosion_res_pct": 30
+ },
+ "rotation": {
+  "bombs_per_throw": 2.5,
+  "throw_rate_base": 1,
+  "attack_speed_inc_pct": 37.9,
+  "hits_per_bomb": 1.6528676812873455,
+  "proj_base": 5,
+  "proj_added": 1,
+  "demolisher_empower_mult": 3.65,
+  "demolisher_every_n": 1
+ },
+ "deterioration": {
+  "chance_pct": 98,
+  "hit_damage_pct": 60,
+  "duration_s": 1,
+  "duration_inc_pct": 63,
+  "tick_interval_s": 0.325,
+  "ramp_pct": 40,
+  "ramp_max_ticks": 6,
+  "damage_inc_pct": 16,
+  "additional_damage_pct": 48,
+  "obliterate_interval_s": 0.5
+ },
+ "paralysis": {
+  "chance_pct": 0,
+  "effect_inc_pct": 80
+ }
+}

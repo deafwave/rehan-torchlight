@@ -9,9 +9,10 @@ parses the planner export and computes every % figure on the web page — nothin
 |---|---|
 | `packages/dmg/src` | `buildParser.ts` (export → snapshot, coverage-enforced), `damageModel.ts` (hit/crit/mitigation/cycle math), `catalog.ts` (slate/memory mod scoring), `progression.ts` (gear ladder + per-stat tier-step breakdowns), `pagedata.ts` (loadouts → talent-tree stages + skill bars for the page; needs the manually-fetched `SS12.5-talent-tree-master.json` in the tli-build cache — it errors with the curl command if absent), `cli.ts` |
 | `packages/page` | Vite page: Bundles & Linear Upgrades / Slate Mods / Memory Mods tabs. `src/data/*.json` is **generated** by `pnpm page` — never hand-edit |
-| `data/` | `Rehan.json` (planner export), `snapshot.json` (parsed build, hand-editable knobs like boss res), `manual_overrides.json` (cited constants), `craft_pools.json` (ember pools, regen via `.claude/skills/tlidb-lookup/extract_craft_pools.py`), `gear-en.json` (tlicompendium affix tiers) |
+| `data/` | `Rehan.json` (planner export), `snapshot.json` (parsed build, hand-editable knobs like boss res), `manual_overrides.json` (cited constants), `craft_pools.json` (ember pools, regen via `.claude/skills/tlidb-lookup/extract_craft_pools.py`), `gear-en.json` (tlicompendium affix tiers), `bing1/` (Bing calibration exports + `real_buld_3_snapshot.json`, the hand-encoded real-build snapshot — see mechanics.md#real-build) |
 | `docs/mechanics.md` | **The mechanics truth.** Every modifier classified with bucket, citation, confidence — plus the "Assumptions & open interpretations" section. Code comments anchor to it (`mechanics.md#...`) |
 | `.claude/skills/` | `tli-build/cache` (tlicompendium data bundles), `tlidb-lookup` (tlidb.com fetcher), `mod-catalog` (catalog scoring rules + regen loop) |
+| `scripts/` | `update_skills.ts` (`pnpm skills [support\|active\|passive\|medium\|magnificent\|noble\|module]`) — regenerates `packages/page/src/data/<category>.json` from tlidb's newest season blocks (`--tags`/`--all`/`--check`; keeps `extra_gems`, dedupes by name) |
 
 ## Commands
 

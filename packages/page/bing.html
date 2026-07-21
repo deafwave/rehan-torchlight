@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<!-- pre-CSS paint guard: style.css arrives via the JS module, so without this the
+     first frame after refresh is browser-default white. Keep in sync with --night. -->
+<style>html{background:#0c141d;color-scheme:dark}</style>
+<title>Bing — HoA (Hammer of Ash)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+<nav class="topnav" id="tabbar">
+  <div class="topnav-inner">
+    <span class="topnav-title">Bing — Hammer of Ash</span>
+    <div class="topnav-tabs">
+      <button data-tab="calc" class="active">DPS Calc</button>
+    </div>
+    <div class="topnav-links">
+      <a class="topnav-cta" href="/">Rehan — Spectral Slash ↗</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+<section class="bundles" id="calc-tab">
+  <h2>DPS Calc — live, runs the site's real damage model</h2>
+  <p>Hammer of Ash (Fire · Attack · Melee · Area · Projectile · Demolisher). Every field is
+  editable and recomputes on each keystroke via the shared <code>@rehan/dmg</code> model — the
+  same <code>cycleDps</code> the Rehan page uses. The seed values are copied from the Rehan
+  snapshot as a starting point; <b>retune them for the HoA build before trusting the output.</b></p>
+  <div id="calc"></div>
+</section>
+</div>
+
+<script type="module" src="/src/main-bing.ts"></script>
+</body>
+</html>
