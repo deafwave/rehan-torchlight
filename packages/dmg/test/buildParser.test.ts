@@ -185,6 +185,23 @@ describe("classify", () => {
     expect(classify("utterly unknown modifier text")).toEqual([null, null]);
   });
 
+  test("elemental/erosion damage increases and double-damage route correctly", () => {
+    expect(classify("+9% Erosion Damage")).toEqual(["increased.erosion", 9.0]);
+    expect(classify("+9% Fire Damage")).toEqual(["increased.fire", 9.0]);
+    expect(classify("+9% Lightning Damage")).toEqual(["increased.lightning", 9.0]);
+    expect(classify("+15% chance to deal Double Damage")).toEqual(["crit.double_damage_chance_pct", 15.0]);
+    // must not be swallowed by the generic "+#% damage" (increased.global) rule
+    expect(classify("+9% Cold Damage")).toEqual(["increased.cold", 9.0]);
+  });
+
+  test("weapon-base element adds route to their own slots (mechanics.md#weapon-base-elements)", () => {
+    expect(classify("Adds 10 - 20 Fire Damage to the gear")).toEqual(["base.weapon_flat_fire", 10.0]);
+    expect(classify("Adds 5 - 15 Lightning Damage to the gear")).toEqual(["base.weapon_flat_lightning", 5.0]);
+    expect(classify("Adds 8 - 12 Erosion Damage to the gear")).toEqual(["base.weapon_flat_erosion", 8.0]);
+    // must not be swallowed by the phys/cold "to the gear" rows or a generic damage rule
+    expect(classify("Adds 30 - 40 Cold Damage to the gear")).toEqual(["base.weapon_flat_cold", 30.0]);
+  });
+
   test("slate and memory cases", () => {
     expect(classify("+30% additional Attack Damage")).toEqual(["additional.misc", 30.0]);
     expect(classify("+30% additional Ailment Damage dealt by attacks")).toEqual(["ignore", null]);

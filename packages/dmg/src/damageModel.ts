@@ -25,8 +25,10 @@ export interface Snapshot {
   // mechanics.md Paralysis row — taken multiplier DERIVED from the build's inflict
   // chance (binary uptime): dead "+% inflicted Effect" lines stay no-ops at chance 0
   paralysis?: { chance_pct: number; effect_inc_pct: number };
+  // mechanics.md#double-damage — double_damage_chance_pct is a crit-independent whole-hit
+  // multiplier (1 + min(chance,100)/100), not part of the crit-hit math
   crit: { chance_pct: number; damage_pct: number; additional_on_crit_pct?: number;
-          crit_dmg_taken_pct?: number };
+          crit_dmg_taken_pct?: number; double_damage_chance_pct?: number };
   // erosion_* present only on builds with Erosion damage (bing) — a separate damage
   // type with its own resistance, unaffected by elemental res or armor
   penetration: { cold_pct: number; armor_pct: number; erosion_pct?: number };
@@ -54,7 +56,7 @@ export const DEFAULT_SNAPSHOT: Snapshot = {
     added_damage_effectiveness_pct: 100,
   },
   increased: { physical: 0, attack: 0, melee: 0, area: 0,
-               cold: 0, elemental: 0, global: 0 },
+               cold: 0, fire: 0, lightning: 0, elemental: 0, global: 0 },
   additional: { strength: 0, warcry_buffs: 0, ice_bond: 0, fervor: 0,
                 sealed_life_mana: 0, blessings: 0, precise_auras: 0, misc: 0 },
   enemy_taken: { frostbite: 0, paralysis: 0,
@@ -80,7 +82,13 @@ function weaponPhysAvg(b: Record<string, number>): number {
 }
 
 function weaponAvg(b: Record<string, number>): number {
-  return weaponPhysAvg(b) + (b.weapon_flat_cold_min + b.weapon_flat_cold_max) / 2;
+  // mechanics.md#weapon-base-elements — weapon-base cold/fire/lightning share the lumped
+  // elemental hit and are NOT scaled by Gear Physical Damage (phys-only). Erosion is a
+  // separate type (erosionBase), not summed here.
+  return weaponPhysAvg(b)
+       + (b.weapon_flat_cold_min + b.weapon_flat_cold_max) / 2
+       + ((b.weapon_flat_fire_min ?? 0) + (b.weapon_flat_fire_max ?? 0)) / 2
+       + ((b.weapon_flat_lightning_min ?? 0) + (b.weapon_flat_lightning_max ?? 0)) / 2;
 }
 
 /** Average pre-crit, pre-mitigation hit. skillPct overrides base.skill_weapon_pct
@@ -117,14 +125,19 @@ function paralysisTaken(s: Snapshot): number {
   return p && p.chance_pct > 0 ? 1 + 15 * (1 + p.effect_inc_pct / 100) / 100 : 1;
 }
 
-/** mechanics.md#erosion — flat Erosion added by supports (e.g. Added Erosion Damage),
-    scaled by the skill's added-damage effectiveness and the shared damage envelope.
-    Its own type: mitigated by erosion res, not elemental res or armor. */
-export function erosionAvg(s: Snapshot): number {
+/** mechanics.md#erosion — pre-envelope, pre-mitigation Erosion: support-added flat
+    (× added-damage effectiveness) plus weapon-base erosion (× skill WAD, like weapon
+    damage — mechanics.md#weapon-base-elements). Its own type: mitigated by erosion res. */
+export function erosionBase(s: Snapshot, pct: number): number {
   const b = s.base;
-  const flatEro = ((b.flat_added_erosion_min ?? 0) + (b.flat_added_erosion_max ?? 0)) / 2
-                * b.added_damage_effectiveness_pct / 100;
-  return flatEro * damageEnvelope(s) * (1 + (s.increased.erosion ?? 0) / 100);
+  return ((b.flat_added_erosion_min ?? 0) + (b.flat_added_erosion_max ?? 0)) / 2
+           * b.added_damage_effectiveness_pct / 100
+       + ((b.weapon_flat_erosion_min ?? 0) + (b.weapon_flat_erosion_max ?? 0)) / 2 * pct;
+}
+
+export function erosionAvg(s: Snapshot, skillPct?: number): number {
+  const pct = (skillPct ?? s.base.skill_weapon_pct) / 100;
+  return erosionBase(s, pct) * damageEnvelope(s) * (1 + (s.increased.erosion ?? 0) / 100);
 }
 
 export function erosionMitigation(s: Snapshot): number {
@@ -144,6 +157,12 @@ export function additionalMultiplier(s: Snapshot): number {
 /** The in-game "Additional Damage Bonus" character-sheet stat, for vetting. */
 export function additionalBonusPct(s: Snapshot): number {
   return (additionalMultiplier(s) - 1) * 100;
+}
+
+/** mechanics.md#double-damage — expected whole-hit multiplier from "chance to deal Double
+    Damage": 1 + min(chance,100)/100. Crit-independent; multiplies the full hit. */
+export function doubleDamageMult(s: Snapshot): number {
+  return 1 + Math.min(s.crit.double_damage_chance_pct ?? 0, 100) / 100;
 }
 
 export function critMultiplier(s: Snapshot): number {
@@ -179,8 +198,12 @@ function basePortions(s: Snapshot, pct: number): Portion[] {
   const coldPart = (b.weapon_flat_cold_min + b.weapon_flat_cold_max) / 2 * pct
                  + ((b.flat_added_cold_min ?? 0) + (b.flat_added_cold_max ?? 0)) / 2 * eff
                  + physPart * (b.gain_phys_as_cold_pct ?? 0) / 100;
-  const eroPart = ((b.flat_added_erosion_min ?? 0) + (b.flat_added_erosion_max ?? 0)) / 2 * eff;
-  return ([[physPart, "physical"], [coldPart, "cold"], [eroPart, "erosion"]] as const)
+  // weapon-base fire/lightning enter as their own conversion-history portions (mechanics.md#weapon-base-elements)
+  const firePart = ((b.weapon_flat_fire_min ?? 0) + (b.weapon_flat_fire_max ?? 0)) / 2 * pct;
+  const lightPart = ((b.weapon_flat_lightning_min ?? 0) + (b.weapon_flat_lightning_max ?? 0)) / 2 * pct;
+  const eroPart = erosionBase(s, pct);
+  return ([[physPart, "physical"], [coldPart, "cold"], [firePart, "fire"],
+           [lightPart, "lightning"], [eroPart, "erosion"]] as const)
     .filter(([amt]) => amt !== 0)
     .map(([amt, t]) => ({ amt, types: new Set<DamageType>([t]), cur: t }));
 }
@@ -230,13 +253,13 @@ export function expectedHit(s: Snapshot, skillPct?: number): number {
     for (const p of convert(basePortions(s, pct), s.conversion))
       sum += p.amt * pathEnvelope(s, p.types)
            * (p.cur === "erosion" ? erosionMitigation(s) : mitigationMultiplier(s));
-    return sum * critMultiplier(s);
+    return sum * critMultiplier(s) * doubleDamageMult(s);
   }
   // elemental/phys and erosion portions mitigate by different resistances, then the
   // combined hit crits as one — crit is type-agnostic
   const ele = averageHit(s, skillPct) * mitigationMultiplier(s);
-  const ero = erosionAvg(s) * erosionMitigation(s);
-  return (ele + ero) * critMultiplier(s);
+  const ero = erosionAvg(s, skillPct) * erosionMitigation(s);
+  return (ele + ero) * critMultiplier(s) * doubleDamageMult(s);
 }
 
 /** mechanics.md#deterioration — total tick multiplier of ONE Deterioration stack:
@@ -293,7 +316,7 @@ function mitSumNode(s: Snapshot, pct: number): TNode {
   if (rawEle) children.push({ label: "elemental hit", value: 0, op: "product",
     chips: [{ kind: "base", label: "base (weapon + adds)", op: "base", factor: rawEle },
             { kind: "mitigation", label: "res + armor mit", op: "×", factor: mitigationMultiplier(s) }] });
-  const eroBase = ((b.flat_added_erosion_min ?? 0) + (b.flat_added_erosion_max ?? 0)) / 2 * eff;
+  const eroBase = erosionBase(s, pct);
   if (eroBase) {
     const chips: Chip[] = [{ kind: "base", label: "erosion base", op: "base", factor: eroBase }];
     const eroInc = 1 + (s.increased.erosion ?? 0) / 100;
@@ -324,93 +347,112 @@ function perHitNode(s: Snapshot, child: TNode): TNode {
     ? [{ kind: "crit" as const, label: `crit ${s.crit.chance_pct}% ×${s.crit.damage_pct}%`,
          op: "×" as const, factor: critMultiplier(s) }]
     : [...increasedChips(s), ...envelopeMultChips(s)];
+  const dd = doubleDamageMult(s);
+  if (dd !== 1) chips.push({ kind: "crit", label: `double dmg ${Math.min(s.crit.double_damage_chance_pct ?? 0, 100)}%`,
+                             op: "×", factor: dd });
   return { label: "per-hit", value: 0, op: "product", chips, children: [child] };
 }
 
-/** Boss rotation: N starters build points, one finisher spends them.
-    Assumes 100% buff uptime (warcry loop); uptime factors live in bucket values. */
-export function cycleDps(s: Snapshot) {
+/* ── Rotation strategies (mechanics.md#skill-type) ────────────────────────────
+   A rotation is a pure (Snapshot) → RotationResult: it wraps the shared HoA hit
+   (expectedHit) in a throughput model and emits its own trace subtree. cycleDps
+   picks one by rotation shape, then layers Deterioration identically on top. Add a
+   new playstyle by adding a strategy — the hit, envelope, and DoT stay reusable. */
+export interface RotationResult {
+  hitDps: number; cycleTime: number; uses: number;
+  perHit: TNode; rotationNode: TNode;
+  starter_damage: number; finisher_damage: number;
+}
+
+/** mechanics.md#bing-bombs — Hammer of Ash as a bomb (Bing / Blast Nova): each throw
+    lobs bombs that detonate into HoA projectiles. Base throw rate (throw_rate_base,
+    1/s) scales only by +% attack speed; hits_per_bomb folds the NORMAL-throw radial
+    spread + shotgun falloff on a single target. Demolisher Charge is structural: one
+    throw in demolisher_every_n consumes a charge and is empowered ×demolisher_empower_mult
+    (+215% additional hit + explosion overlap), the charge consumed AT the throw so
+    n = interval ceil'd to the throw grid. */
+export function bombRotation(s: Snapshot): RotationResult {
   const r = s.rotation;
-  let hitDps: number, cycleTime: number, uses: number;
-  let starter_damage = 0, finisher_damage = 0;
-  let perHit: TNode, rotationNode: TNode;
-  const skillType = s.skill_type ?? (r.bombs_per_throw !== undefined ? "bomb" : "combo");
+  const skillType = s.skill_type ?? "bomb";
+  const throwRate = (r.throw_rate_base ?? 1) * (1 + (r.attack_speed_inc_pct ?? 0) / 100);
+  const bombsPerSec = throwRate * r.bombs_per_throw;
+  // mechanics.md#multi-proj — single-target hits scale linearly with projectile quantity
+  const projScale = r.proj_base ? (r.proj_base + (r.proj_added ?? 0)) / r.proj_base : 1;
+  const perBomb = expectedHit(s) * (r.hits_per_bomb ?? 1) * projScale;
+  const demoM = r.demolisher_empower_mult ?? 1;
+  const demoN = r.demolisher_resto_pct !== undefined
+    ? Math.ceil((3 / (1 + r.demolisher_resto_pct / 100)) * throwRate)
+    : (r.demolisher_every_n ?? 3);
+  const hitDps = bombsPerSec * perBomb * ((demoN - 1 + demoM) / demoN);
+  const hitChild = s.conversion ? convPortionsNode(s, s.base.skill_weapon_pct / 100)
+                                 : mitSumNode(s, s.base.skill_weapon_pct / 100);
+  const perHit = perHitNode(s, hitChild);
+  const rotationNode: TNode = { label: `rotation (${skillType})`, value: 0, op: "product", children: [perHit],
+    chips: [
+      { kind: "rotation", label: "throw rate", op: "×", factor: throwRate },
+      { kind: "rotation", label: "bombs / throw", op: "×", factor: r.bombs_per_throw },
+      { kind: "rotation", label: "hits / bomb", op: "×", factor: r.hits_per_bomb ?? 1 },
+      { kind: "rotation", label: "projectile scale", op: "×", factor: projScale },
+      { kind: "rotation", label: `demolisher share (n=${demoN}, ×${demoM})`, op: "×", factor: (demoN - 1 + demoM) / demoN },
+    ] };
+  // Obliterate enhances the THROW (one Main-Skill use) — every bomb of an enhanced
+  // throw inflicts, so the enhanced-share is per throw, not per bomb → uses = 1.
+  return { hitDps, cycleTime: 1 / throwRate, uses: 1, perHit, rotationNode,
+           starter_damage: 0, finisher_damage: 0 };
+}
 
-  if (r.bombs_per_throw !== undefined) {
-    // mechanics.md#bing-bombs — Blast Nova throws bombs that detonate into Hammer of
-    // Ash projectiles. Base throw rate (throw_rate_base, 1/s) scales only by +% attack-
-    // speed bonuses; hits_per_bomb is the effective NORMAL-throw hits landing on a
-    // single target after radial spread + shotgun falloff. Demolisher Charge is
-    // structural: one throw in demolisher_every_n consumes a charge and is empowered
-    // ×demolisher_empower_mult (+215% additional hit + explosion overlap).
-    const throwRate = (r.throw_rate_base ?? 1) * (1 + (r.attack_speed_inc_pct ?? 0) / 100);
-    const bombsPerSec = throwRate * r.bombs_per_throw;
-    // mechanics.md#multi-proj — single-target hits scale linearly with projectile quantity
-    const projScale = r.proj_base ? (r.proj_base + (r.proj_added ?? 0)) / r.proj_base : 1;
-    const perBomb = expectedHit(s) * (r.hits_per_bomb ?? 1) * projScale;
-    const demoM = r.demolisher_empower_mult ?? 1;
-    // mechanics.md#bing-bombs — charge consumed at the throw (not detonation): the next
-    // throw with a ready charge is empowered, so n = interval ceil'd to the throw grid
-    const demoN = r.demolisher_resto_pct !== undefined
-      ? Math.ceil((3 / (1 + r.demolisher_resto_pct / 100)) * throwRate)
-      : (r.demolisher_every_n ?? 3);
-    hitDps = bombsPerSec * perBomb * ((demoN - 1 + demoM) / demoN);
-    cycleTime = 1 / throwRate;
-    // Obliterate enhances the THROW (one Main-Skill use) — every bomb of an enhanced
-    // throw inflicts, so the enhanced-share is per throw, not per bomb (mechanics.md#deterioration)
-    uses = 1;
+/** mechanics.md#mark — Hammer of Ash / Spectral Slash as a combo (Rehan): N starters
+    build points, one finisher spends them; assumes 100% buff uptime (warcry loop),
+    uptime factors live in bucket values. The first starter applies Mark, so every
+    later hit benefits; the finisher consumes it. */
+export function comboRotation(s: Snapshot): RotationResult {
+  const r = s.rotation;
+  const skillType = s.skill_type ?? "combo";
+  const aps = s.base.weapon_attack_speed * (1 + r.attack_speed_inc_pct / 100);
+  // Bodhi special pool (and skill inherent −40%) are additional AS gated to one half
+  // of the sequence — they do not speed the other half (mechanics.md#bodhi-girdle)
+  const starterAps = aps * (1 + (r.starter_additional_as_pct ?? 0) / 100);
+  const finisherAps = aps * (1 + r.finisher_additional_as_pct / 100);
+  const mark = 1 + (r.mark_taken_pct ?? 0) / 100;
+  const starter = expectedHit(s, r.starter_weapon_pct) * (1 + (r.starters_per_cycle - 1) * mark);
+  const amp = 1 + r.combo_points * r.finisher_amp_pct / 100;
+  // one clone per combo point consumed + Legion extras; shotgun falloff applies
+  // to every hit after the finisher's own, AFTER all other calculations
+  const clones = r.combo_points + (r.extra_clones ?? 0);
+  const oneFinisher = expectedHit(s) * amp * (1 + clones * r.clone_falloff);
+  // extra finisher charges recast at the SAME consumed points (mechanics.md#combo-economy);
+  // the first finisher consumes Mark, so the extras hit unmarked
+  const nFin = r.finishers_per_cycle ?? 1;
+  const finisher = oneFinisher * mark + (nFin - 1) * oneFinisher;
+  const cycleTime = r.starters_per_cycle / starterAps + nFin / finisherAps;
+  const hitDps = (starter + finisher) / cycleTime;
 
-    const hitChild = s.conversion ? convPortionsNode(s, s.base.skill_weapon_pct / 100)
-                                   : mitSumNode(s, s.base.skill_weapon_pct / 100);
-    perHit = perHitNode(s, hitChild);
-    rotationNode = { label: `rotation (${skillType})`, value: 0, op: "product", children: [perHit],
-      chips: [
-        { kind: "rotation", label: "throw rate", op: "×", factor: throwRate },
-        { kind: "rotation", label: "bombs / throw", op: "×", factor: r.bombs_per_throw },
-        { kind: "rotation", label: "hits / bomb", op: "×", factor: r.hits_per_bomb ?? 1 },
-        { kind: "rotation", label: "projectile scale", op: "×", factor: projScale },
-        { kind: "rotation", label: `demolisher share (n=${demoN}, ×${demoM})`, op: "×", factor: (demoN - 1 + demoM) / demoN },
-      ] };
-  } else {
-    const aps = s.base.weapon_attack_speed * (1 + r.attack_speed_inc_pct / 100);
-    // Bodhi special pool (and skill inherent −40%) are additional AS gated to one half
-    // of the sequence — they do not speed the other half (mechanics.md#bodhi-girdle)
-    const starterAps = aps * (1 + (r.starter_additional_as_pct ?? 0) / 100);
-    const finisherAps = aps * (1 + r.finisher_additional_as_pct / 100);
-    // Mark: the first starter applies it, so every later hit in the cycle benefits
-    const mark = 1 + (r.mark_taken_pct ?? 0) / 100;
-    const starter = expectedHit(s, r.starter_weapon_pct) * (1 + (r.starters_per_cycle - 1) * mark);
-    const amp = 1 + r.combo_points * r.finisher_amp_pct / 100;
-    // one clone per combo point consumed + Legion extras; shotgun falloff applies
-    // to every hit after the finisher's own, AFTER all other calculations
-    const clones = r.combo_points + (r.extra_clones ?? 0);
-    const oneFinisher = expectedHit(s) * amp * (1 + clones * r.clone_falloff);
-    // extra finisher charges recast at the SAME consumed points (mechanics.md#combo-economy);
-    // the first finisher consumes Mark, so the extras hit unmarked
-    const nFin = r.finishers_per_cycle ?? 1;
-    const finisher = oneFinisher * mark + (nFin - 1) * oneFinisher;
-    cycleTime = r.starters_per_cycle / starterAps + nFin / finisherAps;
-    hitDps = (starter + finisher) / cycleTime;
-    uses = r.starters_per_cycle + nFin;
-    starter_damage = starter; finisher_damage = finisher;
+  // starter/finisher share the per-hit envelope (hoisted to perHit); their paths hold
+  // only the rotational multipliers over the type-split hit at their own weapon %.
+  const starterPath: TNode = { label: "starter path", value: 0, op: "product",
+    children: [mitSumNode(s, r.starter_weapon_pct / 100)],
+    chips: [{ kind: "rotation", label: `starters ×${r.starters_per_cycle} (Mark)`, op: "×", factor: 1 + (r.starters_per_cycle - 1) * mark }] };
+  const finisherPath: TNode = { label: "finisher path", value: 0, op: "product",
+    children: [mitSumNode(s, s.base.skill_weapon_pct / 100)],
+    chips: [
+      { kind: "rotation", label: `finisher amp ×${amp.toFixed(2)}`, op: "×", factor: amp },
+      { kind: "rotation", label: `clone spread (${clones} clones)`, op: "×", factor: 1 + clones * r.clone_falloff },
+      { kind: "rotation", label: `finisher count`, op: "×", factor: mark + (nFin - 1) },
+    ] };
+  const contrib: TNode = { label: "starter + finisher", value: 0, op: "sum", chips: [], children: [starterPath, finisherPath] };
+  const perHit = perHitNode(s, contrib);
+  const rotationNode: TNode = { label: `rotation (${skillType})`, value: 0, op: "product", children: [perHit],
+    chips: [{ kind: "rotation", label: `cadence (${cycleTime.toFixed(2)}s)`, op: "×", factor: 1 / cycleTime }] };
+  return { hitDps, cycleTime, uses: r.starters_per_cycle + nFin, perHit, rotationNode,
+           starter_damage: starter, finisher_damage: finisher };
+}
 
-    // starter/finisher share the per-hit envelope (hoisted to perHit); their paths hold
-    // only the rotational multipliers over the type-split hit at their own weapon %.
-    const starterPath: TNode = { label: "starter path", value: 0, op: "product",
-      children: [mitSumNode(s, r.starter_weapon_pct / 100)],
-      chips: [{ kind: "rotation", label: `starters ×${r.starters_per_cycle} (Mark)`, op: "×", factor: 1 + (r.starters_per_cycle - 1) * mark }] };
-    const finisherPath: TNode = { label: "finisher path", value: 0, op: "product",
-      children: [mitSumNode(s, s.base.skill_weapon_pct / 100)],
-      chips: [
-        { kind: "rotation", label: `finisher amp ×${amp.toFixed(2)}`, op: "×", factor: amp },
-        { kind: "rotation", label: `clone spread (${clones} clones)`, op: "×", factor: 1 + clones * r.clone_falloff },
-        { kind: "rotation", label: `finisher count`, op: "×", factor: mark + (nFin - 1) },
-      ] };
-    const contrib: TNode = { label: "starter + finisher", value: 0, op: "sum", chips: [], children: [starterPath, finisherPath] };
-    perHit = perHitNode(s, contrib);
-    rotationNode = { label: `rotation (${skillType})`, value: 0, op: "product", children: [perHit],
-      chips: [{ kind: "rotation", label: `cadence (${cycleTime.toFixed(2)}s)`, op: "×", factor: 1 / cycleTime }] };
-  }
+/** Boss single-target DPS: pick the rotation strategy by shape (bomb iff
+    rotation.bombs_per_throw is set, else the combo cycle), then layer the shared
+    Deterioration DoT identically on top of whichever rotation ran. */
+export function cycleDps(s: Snapshot) {
+  const rot = s.rotation.bombs_per_throw !== undefined ? bombRotation(s) : comboRotation(s);
+  const { hitDps, cycleTime, uses, perHit, rotationNode, starter_damage, finisher_damage } = rot;
 
   // mechanics.md#deterioration — one skill use per obliterate_interval_s is
   // Obliterate-enhanced (100% phys+ele → Erosion) and can inflict Deterioration;

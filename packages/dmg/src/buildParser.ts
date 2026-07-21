@@ -303,6 +303,9 @@ export const PATTERNS: [string, string][] = [
   [`\\+?${NUM}% Elemental and Erosion Resistance Penetration`, "penetration.cold_pct"],
   [`\\+${NUM}% Gear Physical Damage`, "base.gear_phys_pct"],
   [`Adds ${NUM} - ${NUM} Cold Damage to the gear`, "base.weapon_flat_cold"],
+  [`Adds ${NUM} - ${NUM} Fire Damage to the gear`, "base.weapon_flat_fire"],
+  [`Adds ${NUM} - ${NUM} Lightning Damage to the gear`, "base.weapon_flat_lightning"],
+  [`Adds ${NUM} - ${NUM} Erosion Damage to the gear`, "base.weapon_flat_erosion"],
   [`Adds ${NUM} - ${NUM} Physical Damage to the gear`, "base.weapon_flat_phys_added"],
   [`^${NUM} - ${NUM} Physical Damage$`, "base.weapon_phys"],
   [`^${NUM} Critical Strike Rating$`, "crit.rating_flat"],
@@ -388,6 +391,10 @@ export const PATTERNS: [string, string][] = [
   [`\\+${NUM}% (?:increased )?Melee Damage`, "increased.melee"],
   [`\\+${NUM}% (?:increased )?Area Damage`, "increased.area"],
   [`\\+${NUM}% (?:increased )?Cold Damage`, "increased.cold"],
+  [`\\+${NUM}% (?:increased )?Fire Damage`, "increased.fire"],
+  [`\\+${NUM}% (?:increased )?Lightning Damage`, "increased.lightning"],
+  [`\\+${NUM}% (?:increased )?Erosion Damage`, "increased.erosion"],
+  [`\\+${NUM}% chance to deal Double Damage`, "crit.double_damage_chance_pct"],
   [`\\+${NUM}% damage`, "increased.global"],
   [`\\+${NUM}% Physical Skill Critical Strike Damage`, "crit.damage_pct"],
   [`${NUM}% Critical Strike Damage`, "crit.damage_pct"],
@@ -473,6 +480,17 @@ function apply(snap: Snapshot, extras: Record<string, number>, path: string, val
       snap.base.weapon_phys_min += lo;
       snap.base.weapon_phys_max += hi;
     }
+    return;
+  }
+  // mechanics.md#weapon-base-elements — weapon-local fire/lightning/erosion base; mainhand
+  // only (off-hand fire/light/erosion is not carried by Joined Force, which is phys+cold)
+  if (path === "base.weapon_flat_fire" || path === "base.weapon_flat_lightning"
+      || path === "base.weapon_flat_erosion") {
+    if (line.slot !== "mainHand") return;
+    const [lo, hi] = nums(line.text);
+    const key = path.split(".")[1];
+    snap.base[`${key}_min`] = (snap.base[`${key}_min`] ?? 0) + lo;
+    snap.base[`${key}_max`] = (snap.base[`${key}_max`] ?? 0) + hi;
     return;
   }
   if (path === "special.joined_force") {

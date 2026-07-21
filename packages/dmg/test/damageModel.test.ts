@@ -32,6 +32,15 @@ describe("averageHit", () => {
     expect(averageHit(s)).toBe(170.0);
   });
 
+  test("weapon flat fire and lightning fold into the elemental hit, unscaled by gear phys", () => {
+    const s = baseOnly();
+    s.base.gear_phys_pct = 50;                       // scales phys only
+    s.base.weapon_flat_fire_min = 20; s.base.weapon_flat_fire_max = 40;         // avg 30
+    s.base.weapon_flat_lightning_min = 5; s.base.weapon_flat_lightning_max = 15; // avg 10
+    // (100*1.5 + 30 + 10) * 100% = 190
+    expect(averageHit(s)).toBeCloseTo(190.0, 6);
+  });
+
   test("flat added scaled by effectiveness and skill pct", () => {
     const s = baseOnly();
     Object.assign(s.base, { flat_added_min: 20, flat_added_max: 20,
@@ -47,6 +56,13 @@ describe("averageHit", () => {
     expect(averageHit(s)).toBe(200.0);   // x2.0, NOT 1.5*1.5=225
   });
 
+  test("increased fire and lightning join the same additive sum (mirror cold)", () => {
+    const s = baseOnly();
+    s.increased.fire = 30;
+    s.increased.lightning = 20;
+    expect(averageHit(s)).toBeCloseTo(150.0, 6);   // (1 + 0.30 + 0.20) × 100
+  });
+
   test("additional layers each multiply (mechanics.md#additional)", () => {
     const s = baseOnly();
     s.additional.strength = 20;
@@ -59,6 +75,22 @@ describe("averageHit", () => {
     s.enemy_taken.frostbite = 10;
     s.enemy_taken.paralysis = 10;
     expect(averageHit(s)).toBeCloseTo(121.0, 2);
+  });
+});
+
+describe("double damage", () => {
+  test("chance is a whole-hit multiplier, independent of crit", () => {
+    const s = baseOnly();
+    s.enemy.cold_res_pct = 0;
+    s.crit = { chance_pct: 0, damage_pct: 150, double_damage_chance_pct: 25 };
+    expect(expectedHit(s)).toBeCloseTo(125.0, 6);    // 100 × (1 + 0.25)
+  });
+
+  test("stacks multiplicatively with crit", () => {
+    const s = baseOnly();
+    s.enemy.cold_res_pct = 0;
+    s.crit = { chance_pct: 100, damage_pct: 200, double_damage_chance_pct: 50 };
+    expect(expectedHit(s)).toBeCloseTo(300.0, 6);    // 100 × crit 2.0 × 1.5
   });
 });
 
@@ -192,6 +224,18 @@ describe("erosion damage (separate mitigation)", () => {
     s.base.flat_added_erosion_max = 100;
     s.increased.erosion = 50;                        // +50% Erosion Damage only
     expect(expectedHit(s)).toBeCloseTo(250.0, 6);    // weapon 100 + erosion 100×1.5
+  });
+
+  test("weapon base erosion feeds the erosion portion, scaled by skill pct not effectiveness", () => {
+    const s = eroSnap();
+    s.enemy.cold_res_pct = 0;
+    s.enemy.erosion_res_pct = 0;
+    s.base.skill_weapon_pct = 200;                   // WAD scales weapon erosion, not eff
+    s.base.added_damage_effectiveness_pct = 50;      // would apply to flat adds, NOT weapon base
+    s.base.weapon_flat_erosion_min = 50;
+    s.base.weapon_flat_erosion_max = 50;
+    // ele weapon 100×200% = 200 ; erosion 50×200% (skill pct) = 100
+    expect(expectedHit(s)).toBeCloseTo(300.0, 6);
   });
 });
 
