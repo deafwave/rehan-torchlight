@@ -521,6 +521,12 @@ describe("legendary belt & necklace lines", () => {
     ]) expect(classify(t)[0], t).toBe("ignore");
     // minion damage is now TAGGED (inert) rather than ignored — visible in the snapshot
     expect(classify("+77% Minion Damage")).toEqual(["increased.minion", 77.0]);
+    // no-op lines for an attack build: cast speed, knockback, minion crit → ignore
+    for (const t of ["+36% Cast Speed", "+12% Knockback distance",
+                     "+15% Minion Critical Strike Rating", "+5% Minion Critical Strike Damage"])
+      expect(classify(t)[0], t).toBe("ignore");
+    // but Attack and Cast Speed still routes (attacks benefit)
+    expect(classify("+10% Attack and Cast Speed")).toEqual(["rotation.attack_speed_inc_pct", 10.0]);
   });
 });
 

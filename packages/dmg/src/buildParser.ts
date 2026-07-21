@@ -458,6 +458,7 @@ export const PATTERNS: [string, string][] = [
    + "|Energy Shield Regain|Barrier|Consumes|Loses Fervor|chance to gain|chance to Mark"
    + "|Charging Energy Shield|Energy Shield [Cc]harge|回复"
    + "|Non-Critical Strikes to grant|Minions?['’]|\\+\\d+% Minion (?:Damage|Attack and Cast Speed)"
+   + "|Minion Critical|\\+\\d+% Cast Speed|\\+\\d+% Knockback distance"
    + "|[Ii]mmune to|Fortitude|Injury Buffer|Missing Energy Shield"
    + "|Converts 100% of(?: Minion)? Physical Damage to Cold"
    + "|Inflicts Frostbite|Copies the last Talent"
