@@ -202,6 +202,11 @@ describe("classify", () => {
     expect(classify("+33% Demolisher Charge Restoration Speed")).toEqual(["rotation.demolisher_resto_pct", 33.0]);
     expect(classify("+26% additional Bomb Damage")).toEqual(["additional.bomb", 26.0]);
     expect(classify("Projectile Quantity +2")).toEqual(["rotation.proj_added", 2.0]);
+    expect(classify("+10% Projectile Damage")).toEqual(["increased.projectile", 10.0]);
+    // proximity-conditional variant is NOT the unconditional projectile-damage line
+    expect(classify("+60% Projectile Damage against enemies in proximity")).toEqual([null, null]);
+    expect(classify("Adds 95 - 125 Physical Damage to the Main-Hand Weapon")).toEqual(["base.weapon_phys_mainhand", 95.0]);
+    expect(classify("+14% Main-Hand Weapon Attack Speed")).toEqual(["extras.gear_attack_speed_pct", 14.0]);
     // "additional Bomb Damage" must outrank the generic "additional .* damage" → misc rule
     expect(classify("+10% additional Attack Damage")).toEqual(["additional.misc", 10.0]);
   });

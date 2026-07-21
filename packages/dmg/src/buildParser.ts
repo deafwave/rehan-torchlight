@@ -307,6 +307,9 @@ export const PATTERNS: [string, string][] = [
   [`Adds ${NUM} - ${NUM} Lightning Damage to the gear`, "base.weapon_flat_lightning"],
   [`Adds ${NUM} - ${NUM} Erosion Damage to the gear`, "base.weapon_flat_erosion"],
   [`Adds ${NUM} - ${NUM} Physical Damage to the gear`, "base.weapon_flat_phys_added"],
+  // "to the Main-Hand Weapon" modifies the weapon from any slot (Fool's Crown helmet)
+  [`Adds ${NUM} - ${NUM} Physical Damage to the Main-Hand Weapon`, "base.weapon_phys_mainhand"],
+  [`\\+${NUM}% Main-Hand Weapon Attack Speed`, "extras.gear_attack_speed_pct"],
   [`^${NUM} - ${NUM} Physical Damage$`, "base.weapon_phys"],
   [`^${NUM} Critical Strike Rating$`, "crit.rating_flat"],
   [`^${NUM} Attack Speed$`, "base.weapon_attack_speed_set"],
@@ -402,6 +405,8 @@ export const PATTERNS: [string, string][] = [
   [`\\+${NUM}% (?:increased )?Fire Damage`, "increased.fire"],
   [`\\+${NUM}% (?:increased )?Lightning Damage`, "increased.lightning"],
   [`\\+${NUM}% (?:increased )?Erosion Damage`, "increased.erosion"],
+  // unconditional only — "… against enemies in proximity" is proximity-gated (#real-build)
+  [`\\+${NUM}% Projectile Damage(?! against)`, "increased.projectile"],
   [`\\+${NUM}% chance to deal Double Damage`, "crit.double_damage_chance_pct"],
   [`\\+${NUM}% damage`, "increased.global"],
   [`\\+${NUM}% Physical Skill Critical Strike Damage`, "crit.damage_pct"],
@@ -506,6 +511,13 @@ function apply(snap: Snapshot, extras: Record<string, number>, path: string, val
     const key = path.split(".")[1];
     snap.base[`${key}_min`] = (snap.base[`${key}_min`] ?? 0) + lo;
     snap.base[`${key}_max`] = (snap.base[`${key}_max`] ?? 0) + hi;
+    return;
+  }
+  if (path === "base.weapon_phys_mainhand") {
+    // "Adds N-M Physical Damage to the Main-Hand Weapon" — weapon-local phys from any slot
+    const [lo, hi] = nums(line.text);
+    snap.base.weapon_phys_min += lo;
+    snap.base.weapon_phys_max += hi;
     return;
   }
   if (path === "special.joined_force") {

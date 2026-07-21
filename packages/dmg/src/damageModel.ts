@@ -56,7 +56,7 @@ export const DEFAULT_SNAPSHOT: Snapshot = {
     added_damage_effectiveness_pct: 100,
   },
   increased: { physical: 0, attack: 0, melee: 0, area: 0,
-               cold: 0, fire: 0, lightning: 0, elemental: 0, global: 0 },
+               cold: 0, fire: 0, lightning: 0, elemental: 0, projectile: 0, global: 0 },
   additional: { strength: 0, warcry_buffs: 0, ice_bond: 0, fervor: 0,
                 sealed_life_mana: 0, blessings: 0, precise_auras: 0, misc: 0 },
   enemy_taken: { frostbite: 0, paralysis: 0,
@@ -109,9 +109,22 @@ export function averageHit(s: Snapshot, skillPct?: number): number {
 // The multiplicative envelope every damage type shares: increased pool (one additive
 // sum) × additional buckets (each ×(1+v)) × enemy-taken debuffs. `increased.erosion` is
 // excluded here — it is erosion-typed, applied in erosionAvg, not to the weapon hit.
+// mechanics.md#bing-bombs — bombs are projectiles; Spectral Slash is melee. bombs_per_throw
+// is the projectile-skill proxy that gates `increased.projectile`.
+function isProjectileSkill(s: Snapshot): boolean {
+  return s.rotation.bombs_per_throw !== undefined;
+}
+// Whether an `increased` key feeds the shared sum. Scoped keys are handled elsewhere:
+// "erosion" only touches the erosion portion; "projectile" needs a projectile skill.
+function increasedApplies(s: Snapshot, k: string): boolean {
+  if (k === "erosion") return false;
+  if (k === "projectile") return isProjectileSkill(s);
+  return true;
+}
+
 function damageEnvelope(s: Snapshot): number {
   let inc = 0;
-  for (const [k, v] of Object.entries(s.increased)) if (k !== "erosion") inc += v;
+  for (const [k, v] of Object.entries(s.increased)) if (increasedApplies(s, k)) inc += v;
   let m = 1 + inc / 100;
   m *= additionalMultiplier(s);
   for (const v of Object.values(s.enemy_taken)) m *= 1 + v / 100;
@@ -237,7 +250,7 @@ function tagApplies(tag: string, types: Set<DamageType>): boolean {
 function pathEnvelope(s: Snapshot, types: Set<DamageType>): number {
   let inc = 0;
   for (const [k, v] of Object.entries(s.increased))
-    if (!TYPE_TAGS.has(k) || tagApplies(k, types)) inc += v;
+    if ((!TYPE_TAGS.has(k) || tagApplies(k, types)) && (k !== "projectile" || isProjectileSkill(s))) inc += v;
   let m = (1 + inc / 100) * additionalMultiplier(s);
   for (const [tag, bucket] of Object.entries(s.additional_typed ?? {}))
     if (tagApplies(tag, types))
@@ -286,7 +299,7 @@ export function deteriorationTickSum(d: Record<string, number>): number {
 function increasedChips(s: Snapshot): Chip[] {
   const out: Chip[] = [];
   for (const [k, v] of Object.entries(s.increased))
-    if (k !== "erosion" && v) out.push({ kind: "increased", label: `increased · ${k}`, op: "+", factor: v / 100 });
+    if (increasedApplies(s, k) && v) out.push({ kind: "increased", label: `increased · ${k}`, op: "+", factor: v / 100 });
   return out;
 }
 

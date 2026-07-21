@@ -63,6 +63,17 @@ describe("averageHit", () => {
     expect(averageHit(s)).toBeCloseTo(150.0, 6);   // (1 + 0.30 + 0.20) × 100
   });
 
+  test("increased.projectile applies only to bomb (projectile) skills, inert on melee", () => {
+    const melee = baseOnly();
+    melee.increased.projectile = 50;
+    expect(averageHit(melee)).toBe(100.0);         // Spectral Slash is melee → projectile inert
+    const bomb = baseOnly();
+    bomb.increased.projectile = 50;
+    bomb.rotation = { ...bomb.rotation, bombs_per_throw: 2, throw_rate_base: 1,
+                      hits_per_bomb: 1, proj_base: 1 };
+    expect(averageHit(bomb)).toBeCloseTo(150.0, 6);   // bombs are projectiles → +50% applies
+  });
+
   test("additional layers each multiply (mechanics.md#additional)", () => {
     const s = baseOnly();
     s.additional.strength = 20;

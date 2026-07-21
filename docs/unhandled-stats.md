@@ -68,7 +68,7 @@ are all handled; they only surfaced in raw scans because slate text uses `"N %"`
 ### Projectile / geometry (bomb single-target)
 | stat line | sources | note |
 |---|---|---|
-| `+X% Projectile Damage` / `+X% additional Projectile Damage` | gear, slate, pact, unique | bombs are projectiles → real single-target; no `increased.projectile` tag |
+| `+X% Projectile Damage` | gear, slate, pact, unique | **✅ DONE** — `increased.projectile`, gated on `bombs_per_throw` (bomb=projectile; inert on melee Spectral Slash). `… against enemies in proximity` left unmatched (proximity-conditional). `+X% additional Projectile Damage` still open (additional bucket) |
 | `+X% Projectile Speed` | gear, slate, pact, unique, memory | **UPTIME** — folded into `hits_per_bomb` (mechanics.md#bing-skill-area) |
 | `X% of Projectile Speed bonus also applied to Projectile Damage` (Gale) | gear, slate, unique | conditional cross-scaling; unmodeled |
 | `+X% Projectile Critical Strike Damage / Rating` | slate | projectile-scoped crit sub-type; no bucket |
