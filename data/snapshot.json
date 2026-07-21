@@ -85,6 +85,11 @@
   "finisher_amp_pct": 110,
   "finishers_per_cycle": 2
  },
+ "tags": [
+  "melee",
+  "attack",
+  "area"
+ ],
  "_derived": {
   "rating_flat": 500,
   "rating_inc_pct": 546,

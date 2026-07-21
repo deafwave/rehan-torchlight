@@ -65,6 +65,7 @@ describe("averageHit", () => {
 
   function bombify(s: Snapshot): Snapshot {
     s.rotation = { ...s.rotation, bombs_per_throw: 2, throw_rate_base: 1, hits_per_bomb: 1, proj_base: 1 };
+    s.tags = ["melee", "attack", "area", "projectile", "ranged", "horizontal_projectile", "parabolic_projectile"];
     return s;
   }
 
@@ -75,6 +76,23 @@ describe("averageHit", () => {
       const bomb = bombify(baseOnly()); bomb.increased[k] = 50;
       expect(averageHit(bomb)).toBeCloseTo(150.0, 6);           // bomb is projectile/ranged → +50%
     }
+  });
+
+  test("skill tags are data-driven: a skill-scoped increase applies iff s.tags declares the tag", () => {
+    const s = baseOnly();
+    s.increased.channeled = 50;
+    expect(averageHit(s)).toBe(100.0);                     // default (combo) tags lack channeled → inert
+    s.tags = ["melee", "attack", "channeled"];
+    expect(averageHit(s)).toBeCloseTo(150.0, 6);           // declares channeled → +50% applies
+  });
+
+  test("a skill gets only the tags it declares", () => {
+    const s = baseOnly();
+    s.tags = ["attack"];                                   // pure attack: no melee/area/projectile
+    s.increased.melee = 50; s.increased.area = 50; s.increased.projectile = 50;
+    expect(averageHit(s)).toBe(100.0);
+    s.tags = ["attack", "melee", "area", "projectile"];
+    expect(averageHit(s)).toBeCloseTo(250.0, 6);           // now all three: 1 + .5 + .5 + .5
   });
 
   test("increased.minion / channeled / triggered / focus never feed main-skill DPS", () => {

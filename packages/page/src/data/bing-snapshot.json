@@ -133,5 +133,14 @@
  "paralysis": {
   "chance_pct": 0,
   "effect_inc_pct": 80
- }
+ },
+ "tags": [
+  "melee",
+  "attack",
+  "area",
+  "projectile",
+  "ranged",
+  "horizontal_projectile",
+  "parabolic_projectile"
+ ]
 }

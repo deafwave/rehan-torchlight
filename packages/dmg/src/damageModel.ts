@@ -37,6 +37,10 @@ export interface Snapshot {
   // mechanics.md#skill-type — names the rotation for the breakdown chips; auto-derived
   // from `rotation.bombs_per_throw` when absent. Descriptive only: never selects the branch.
   skill_type?: "bomb" | "combo";
+  // mechanics.md#skill-tags — the main skill's tags (melee/attack/area/projectile/…). A
+  // skill-scoped `increased` key applies iff the tag is present. This is the seam for adding
+  // new skills: declare the skill's tags here. Absent ⇒ derived from the rotation shape.
+  tags?: string[];
   // mechanics.md#deterioration — present only on builds with an Obliterate source
   deterioration?: Record<string, number>;
   _extras?: Record<string, number>;
@@ -74,6 +78,8 @@ export const DEFAULT_SNAPSHOT: Snapshot = {
               finisher_additional_as_pct: -40,
               extra_clones: 0, clone_falloff: 0.7, mark_taken_pct: 30,
               combo_points: 4, finisher_amp_pct: 30, finishers_per_cycle: 1 },
+  // Spectral Slash: melee combo attack (mechanics.md#skill-tags)
+  tags: ["melee", "attack", "area"],
 };
 
 function weaponPhysAvg(b: Record<string, number>): number {
@@ -113,20 +119,26 @@ export function averageHit(s: Snapshot, skillPct?: number): number {
 // excluded here — it is erosion-typed, applied in erosionAvg, not to the weapon hit.
 // mechanics.md#skill-tags — projectile/ranged/horizontal/parabolic increases apply only to
 // projectile skills (bombs are projectiles; Spectral Slash is melee). bombs_per_throw is the proxy.
-const PROJECTILE_TAGS: ReadonlySet<string> =
-  new Set(["projectile", "ranged", "horizontal_projectile", "parabolic_projectile"]);
-// Skill types neither modeled main skill ever is (Spectral Slash = melee combo, Hammer of
-// Ash = melee+projectile bomb): always inert, tagged only so the line is visible not lost.
-const INACTIVE_SKILL_TAGS: ReadonlySet<string> = new Set(["minion", "channeled", "triggered", "focus"]);
+// mechanics.md#skill-tags — `increased` keys that name a SKILL property: each applies only
+// if the main skill carries that tag (s.tags). Everything else — damage types (physical/cold/
+// fire/lightning/erosion/elemental), `global`, `hit`, and any custom increased-type key — is
+// universal and always applies. Add a tag here to make it skill-scoped for every skill.
+const SKILL_TAGS: ReadonlySet<string> = new Set([
+  "melee", "attack", "area", "spell", "minion", "channeled", "triggered", "focus",
+  "projectile", "ranged", "horizontal_projectile", "parabolic_projectile"]);
+// Back-compat defaults when a snapshot predates s.tags: derived from the rotation shape.
+// Hammer of Ash is melee-tagged even as a bomb (calibrated — the Bing snapshot carries melee).
+const COMBO_SKILL_TAGS = ["melee", "attack", "area"];
+const BOMB_SKILL_TAGS = ["melee", "attack", "area",
+  "projectile", "ranged", "horizontal_projectile", "parabolic_projectile"];
 function isProjectileSkill(s: Snapshot): boolean {
   return s.rotation.bombs_per_throw !== undefined;
 }
-// Skill-tag gate for an `increased` key. `melee` stays always-on — HoA is melee-tagged even as
-// a bomb (calibrated: the Bing snapshot carries increased.melee), so it is NOT gated off bombs.
+function skillTagsOf(s: Snapshot): readonly string[] {
+  return s.tags ?? (isProjectileSkill(s) ? BOMB_SKILL_TAGS : COMBO_SKILL_TAGS);
+}
 function skillTagApplies(s: Snapshot, k: string): boolean {
-  if (INACTIVE_SKILL_TAGS.has(k)) return false;
-  if (PROJECTILE_TAGS.has(k)) return isProjectileSkill(s);
-  return true;
+  return SKILL_TAGS.has(k) ? skillTagsOf(s).includes(k) : true;
 }
 // Whether an `increased` key feeds the shared (non-conversion) sum: erosion is scoped to the
 // erosion portion (handled in erosionAvg), the rest by their skill tag.

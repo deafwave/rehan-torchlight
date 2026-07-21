@@ -72,7 +72,8 @@ are all handled; they only surfaced in raw scans because slate text uses `"N %"`
 | `+X% Minion Damage` / `Minion {Element} Damage` | slate, tree, unique | **✅ DONE** — routed to `increased.minion`, a **tagged-but-inert** bucket (never feeds main-skill DPS), so it is visible in the snapshot instead of silently ignored |
 | `+X% Hit Damage` | slate, unique | **✅ DONE** — `increased.hit`, applies to hits, **excluded from the deterioration DoT** (a hit is not a DoT). `… for every type of Ailment` conditional left unmatched (ailment-count) |
 | `+X% {Channeled\|Focus} Skill Damage` · `+X% damage for {Channeled\|Triggered} Skills` | slate, tree, unique | **✅ DONE** — `increased.{channeled,triggered,focus}`, tagged-but-inert (neither skill channels/triggers/is a Focus skill) |
-| `+X% Melee Damage` | slate, gear, tree | **✅ always-on (not gated)** — Hammer of Ash is **melee-tagged even as a bomb** (calibrated: Bing snapshot `increased.melee: 174`), so melee is NOT gated off the bomb build |
+| `+X% Melee Damage` | slate, gear, tree | **✅ data-driven** — applies iff `s.tags` contains `melee`. Hammer of Ash *is* melee-tagged even as a bomb (calibrated: Bing snapshot `increased.melee: 174`), so it applies to both builds |
+| **skill-tag system** | — | **✅ data-driven** — every skill declares `Snapshot.tags`; a skill-scoped `increased` key applies iff the tag is present (mechanics.md#skill-tags). This is the seam for adding any future skill: give it the right tags and every existing modifier gates correctly |
 | `+X% Projectile Speed` | gear, slate, pact, unique, memory | **UPTIME** — folded into `hits_per_bomb` (mechanics.md#bing-skill-area) |
 | `X% of Projectile Speed bonus also applied to Projectile Damage` (Gale) | gear, slate, unique | conditional cross-scaling; unmodeled |
 | `+X% Projectile Critical Strike Damage / Rating` | slate | projectile-scoped crit sub-type; no bucket |
