@@ -191,6 +191,11 @@ describe("classify", () => {
     expect(classify("+9% Lightning Damage")).toEqual(["increased.lightning", 9.0]);
     expect(classify("+15% chance to deal Double Damage")).toEqual(["crit.double_damage_chance_pct", 15.0]);
     expect(classify("+12% Attack Critical Strike Damage")).toEqual(["crit.damage_pct", 12.0]);
+    expect(classify("+53% Fire Skill Critical Strike Damage")).toEqual(["crit.damage_typed.fire", 53.0]);
+    expect(classify("+12% Cold Skill Critical Strike Damage")).toEqual(["crit.damage_typed.cold", 12.0]);
+    expect(classify("+15% Lightning Skill Critical Strike Damage")).toEqual(["crit.damage_typed.lightning", 15.0]);
+    expect(classify("+8% Erosion Skill Critical Strike Damage")).toEqual(["crit.damage_typed.erosion", 8.0]);
+    expect(classify("+15% Projectile Critical Strike Damage")).toEqual(["crit.damage_tagged.projectile", 15.0]);
     // must not be swallowed by the generic "+#% damage" (increased.global) rule
     expect(classify("+9% Cold Damage")).toEqual(["increased.cold", 9.0]);
   });

@@ -27,8 +27,12 @@ export interface Snapshot {
   paralysis?: { chance_pct: number; effect_inc_pct: number };
   // mechanics.md#double-damage — double_damage_chance_pct is a crit-independent whole-hit
   // multiplier (1 + min(chance,100)/100), not part of the crit-hit math
+  // mechanics.md#crit-buckets — damage_pct is the universal crit-damage %. damage_typed
+  // (fire/cold/…/elemental) gates by a portion's conversion history; damage_tagged
+  // (melee/projectile/…) gates by s.tags — both add to the crit % for portions they apply to.
   crit: { chance_pct: number; damage_pct: number; additional_on_crit_pct?: number;
-          crit_dmg_taken_pct?: number; double_damage_chance_pct?: number };
+          crit_dmg_taken_pct?: number; double_damage_chance_pct?: number;
+          damage_typed?: Record<string, number>; damage_tagged?: Record<string, number> };
   // erosion_* present only on builds with Erosion damage (bing) — a separate damage
   // type with its own resistance, unaffected by elemental res or armor
   penetration: { cold_pct: number; armor_pct: number; erosion_pct?: number };
@@ -202,11 +206,10 @@ export function doubleDamageMult(s: Snapshot): number {
   return 1 + Math.min(s.crit.double_damage_chance_pct ?? 0, 100) / 100;
 }
 
+/** Whole-hit crit for the non-conversion path: a mono-type build, so every typed bucket
+    applies (ALL_DAMAGE_TYPES) plus every tag-applicable one. */
 export function critMultiplier(s: Snapshot): number {
-  const chance = Math.min(s.crit.chance_pct, 100) / 100;
-  const critHit = (s.crit.damage_pct / 100) * (1 + (s.crit.additional_on_crit_pct ?? 0) / 100)
-                * (1 + (s.crit.crit_dmg_taken_pct ?? 0) / 100);
-  return 1 + chance * (critHit - 1);
+  return critMultiplierFor(s, ALL_DAMAGE_TYPES);
 }
 
 export function mitigationMultiplier(s: Snapshot): number {
@@ -271,6 +274,22 @@ function tagApplies(tag: string, types: Set<DamageType>): boolean {
   return types.has(tag as DamageType);
 }
 
+// mechanics.md#crit-buckets — the crit-damage % for a portion: base + typed buckets whose
+// type appears in the portion's conversion history + tagged buckets the skill carries.
+const ALL_DAMAGE_TYPES: Set<DamageType> = new Set(TYPE_ORDER);
+function critDamagePct(s: Snapshot, types: Set<DamageType>): number {
+  let pct = s.crit.damage_pct;
+  for (const [t, v] of Object.entries(s.crit.damage_typed ?? {})) if (tagApplies(t, types)) pct += v;
+  for (const [tag, v] of Object.entries(s.crit.damage_tagged ?? {})) if (skillTagApplies(s, tag)) pct += v;
+  return pct;
+}
+function critMultiplierFor(s: Snapshot, types: Set<DamageType>): number {
+  const chance = Math.min(s.crit.chance_pct, 100) / 100;
+  const critHit = (critDamagePct(s, types) / 100) * (1 + (s.crit.additional_on_crit_pct ?? 0) / 100)
+                * (1 + (s.crit.crit_dmg_taken_pct ?? 0) / 100);
+  return 1 + chance * (critHit - 1);
+}
+
 function pathEnvelope(s: Snapshot, types: Set<DamageType>): number {
   let inc = 0;
   for (const [k, v] of Object.entries(s.increased))
@@ -287,13 +306,16 @@ export function expectedHit(s: Snapshot, skillPct?: number): number {
   if (s.conversion) {
     const pct = (skillPct ?? s.base.skill_weapon_pct) / 100;
     let sum = 0;
+    // crit is applied PER-PORTION: a portion's crit damage depends on its type history
+    // (typed buckets) — one crit roll, but different crit-damage % per portion
     for (const p of convert(basePortions(s, pct), s.conversion))
       sum += p.amt * pathEnvelope(s, p.types)
-           * (p.cur === "erosion" ? erosionMitigation(s) : mitigationMultiplier(s));
-    return sum * critMultiplier(s) * doubleDamageMult(s);
+           * (p.cur === "erosion" ? erosionMitigation(s) : mitigationMultiplier(s))
+           * critMultiplierFor(s, p.types);
+    return sum * doubleDamageMult(s);
   }
   // elemental/phys and erosion portions mitigate by different resistances, then the
-  // combined hit crits as one — crit is type-agnostic
+  // combined hit crits as one (mono-type build: whole-hit crit via critMultiplier)
   const ele = averageHit(s, skillPct) * mitigationMultiplier(s);
   const ero = erosionAvg(s, skillPct) * erosionMitigation(s);
   return (ele + ero) * critMultiplier(s) * doubleDamageMult(s);
@@ -364,25 +386,26 @@ function mitSumNode(s: Snapshot, pct: number): TNode {
   return { label: "hit by type", value: 0, op: "sum", chips: [], children };
 }
 
-// Conversion builds keep each portion's type history + its own path envelope and
-// final-type mitigation; crit is shared. Sums (× crit) to expectedHit under conversion.
+// Conversion builds keep each portion's type history + its own path envelope, final-type
+// mitigation AND its own crit (typed crit damage gates by history). Sums to expectedHit.
 function convPortionsNode(s: Snapshot, pct: number): TNode {
   const children: TNode[] = convert(basePortions(s, pct), s.conversion!).map(p => ({
     label: [...p.types].join("→"), value: 0, op: "product" as const,
     chips: [{ kind: "base" as const, label: "portion", op: "base" as const, factor: p.amt },
             { kind: "increased" as const, label: "path envelope", op: "×" as const, factor: pathEnvelope(s, p.types) },
             { kind: "mitigation" as const, label: `${p.cur} mit`, op: "×" as const,
-              factor: p.cur === "erosion" ? erosionMitigation(s) : mitigationMultiplier(s) }],
+              factor: p.cur === "erosion" ? erosionMitigation(s) : mitigationMultiplier(s) },
+            { kind: "crit" as const, label: `crit ${s.crit.chance_pct}% ×${critDamagePct(s, p.types)}%`,
+              op: "×" as const, factor: critMultiplierFor(s, p.types) }],
   }));
   return { label: "portions", value: 0, op: "sum", chips: [], children };
 }
 
-// per-hit = shared envelope (increased pool, additional/taken, crit) over the type-split
-// hit. Under conversion the envelope is per-portion, so only crit sits at this level.
+// per-hit = shared envelope over the type-split hit. Under conversion the envelope AND crit
+// are per-portion, so only whole-hit double-damage sits at this level.
 function perHitNode(s: Snapshot, child: TNode): TNode {
   const chips = s.conversion
-    ? [{ kind: "crit" as const, label: `crit ${s.crit.chance_pct}% ×${s.crit.damage_pct}%`,
-         op: "×" as const, factor: critMultiplier(s) }]
+    ? []
     : [...increasedChips(s), ...envelopeMultChips(s)];
   const dd = doubleDamageMult(s);
   if (dd !== 1) chips.push({ kind: "crit", label: `double dmg ${Math.min(s.crit.double_damage_chance_pct ?? 0, 100)}%`,

@@ -150,6 +150,15 @@ describe("double damage", () => {
   });
 });
 
+describe("crit damage buckets", () => {
+  test("non-conversion mono-type build applies typed + tagged crit damage whole-hit", () => {
+    const s = baseOnly();
+    s.enemy.cold_res_pct = 0;
+    s.crit = { chance_pct: 100, damage_pct: 150, damage_typed: { cold: 100 }, damage_tagged: { melee: 50 } };
+    expect(expectedHit(s)).toBeCloseTo(300.0, 6);    // 100 × (150+100+50)/100
+  });
+});
+
 describe("multipliers", () => {
   test("crit multiplier", () => {
     const s = snap();
@@ -549,6 +558,25 @@ describe("conversion system", () => {
     s.increased.cold = 0;
     s.increased.fire = 100;
     expect(expectedHit(s)).toBeCloseTo(150 + 50, 9);     // was-cold untouched by fire
+  });
+
+  test("typed crit damage follows conversion history (fire crit on the fire-path only)", () => {
+    const s = conv();
+    s.crit = { chance_pct: 100, damage_pct: 150, damage_typed: { fire: 100 } };
+    s.enemy.erosion_res_pct = 0;
+    s.conversion = [...RS];
+    // phys splits 50/50: {phys,fire,erosion} has fire → crit ×2.5; {phys,erosion} no fire → ×1.5
+    expect(expectedHit(s)).toBeCloseTo(50 * 2.5 + 50 * 1.5, 6);
+  });
+
+  test("tagged crit damage gates by skill tags", () => {
+    const s = conv();
+    s.crit = { chance_pct: 100, damage_pct: 150, damage_tagged: { projectile: 100 } };
+    s.conversion = [{ from: "physical", to: "fire", pct: 100 }];
+    s.tags = ["melee", "attack"];
+    expect(expectedHit(s)).toBeCloseTo(150, 6);   // no projectile tag → crit ×1.5
+    s.tags = ["melee", "attack", "projectile"];
+    expect(expectedHit(s)).toBeCloseTo(250, 6);   // projectile tag → crit ×2.5
   });
 
   test("elemental tag matches any of fire/cold/lightning in the history", () => {

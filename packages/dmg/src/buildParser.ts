@@ -428,6 +428,13 @@ export const PATTERNS: [string, string][] = [
   [`\\+${NUM}% chance to deal Double Damage`, "crit.double_damage_chance_pct"],
   [`\\+${NUM}% damage`, "increased.global"],
   [`\\+${NUM}% Physical Skill Critical Strike Damage`, "crit.damage_pct"],
+  // typed crit damage gates by conversion history; tagged by skill tags (mechanics.md#crit-buckets)
+  [`\\+${NUM}% Fire Skill Critical Strike Damage`, "crit.damage_typed.fire"],
+  [`\\+${NUM}% Cold Skill Critical Strike Damage`, "crit.damage_typed.cold"],
+  [`\\+${NUM}% Lightning Skill Critical Strike Damage`, "crit.damage_typed.lightning"],
+  [`\\+${NUM}% Erosion Skill Critical Strike Damage`, "crit.damage_typed.erosion"],
+  [`\\+${NUM}% Projectile Critical Strike Damage`, "crit.damage_tagged.projectile"],
+  [`\\+${NUM}% Melee Critical Strike Damage`, "crit.damage_tagged.melee"],
   [`${NUM}% (?:Attack )?Critical Strike Damage`, "crit.damage_pct"],
   [`Inflicts Cold Infiltration`, "special.cold_infiltration"],
   [`(?:^|\\s)${NUM}% Attack Critical Strike Rating`, "crit.rating_inc_pct"],
@@ -482,6 +489,13 @@ const nums = (text: string): number[] => (text.match(/\d+(?:\.\d+)?/g) ?? []).ma
 /** Route a classified value into the snapshot. Special paths handled here. */
 function apply(snap: Snapshot, extras: Record<string, number>, path: string, value: number, line: Line): void {
   const mult = line.slot === "tree" ? (line.points ?? 1) : 1;
+  if (path.startsWith("crit.damage_typed.") || path.startsWith("crit.damage_tagged.")) {
+    // mechanics.md#crit-buckets — typed/tagged crit-damage accumulate into their sub-bucket
+    const [, sub, key] = path.split(".");
+    const bucket = ((snap.crit as any)[sub] ??= {});
+    bucket[key] = (bucket[key] ?? 0) + value * mult;
+    return;
+  }
   if (path.startsWith("deterioration.")) {
     // mechanics.md#deterioration — accumulate modifier mods additively into a lazily
     // created section; stays inert until an Obliterate base supplies hit_damage_pct
