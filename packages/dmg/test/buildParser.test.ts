@@ -203,6 +203,11 @@ describe("classify", () => {
     expect(classify("+26% additional Bomb Damage")).toEqual(["additional.bomb", 26.0]);
     expect(classify("Projectile Quantity +2")).toEqual(["rotation.proj_added", 2.0]);
     expect(classify("+10% Projectile Damage")).toEqual(["increased.projectile", 10.0]);
+    expect(classify("+20% Ranged Damage")).toEqual(["increased.ranged", 20.0]);
+    expect(classify("+15% Horizontal Projectile Damage")).toEqual(["increased.horizontal_projectile", 15.0]);
+    expect(classify("+15% Parabolic Projectile Damage")).toEqual(["increased.parabolic_projectile", 15.0]);
+    expect(classify("+9% Minion Damage")).toEqual(["increased.minion", 9.0]);
+    expect(classify("+18% Minion Erosion Damage")).toEqual(["increased.minion", 18.0]);
     // proximity-conditional variant is NOT the unconditional projectile-damage line
     expect(classify("+60% Projectile Damage against enemies in proximity")).toEqual([null, null]);
     expect(classify("Adds 95 - 125 Physical Damage to the Main-Hand Weapon")).toEqual(["base.weapon_phys_mainhand", 95.0]);
@@ -497,10 +502,11 @@ describe("legendary belt & necklace lines", () => {
     for (const t of [
       "Energy Shield charge cannot be interrupted",
       "-6% additional Energy Shield Charge Speed for every 5% Energy Shield currently owned",
-      "+77% Minion Damage",
       "Minions' Area Skills deal up to 32% additional damage to enemies at the center",
       "+20% chance for Non-Critical Strikes to grant 1 stack of Focus Blessing",
     ]) expect(classify(t)[0], t).toBe("ignore");
+    // minion damage is now TAGGED (inert) rather than ignored — visible in the snapshot
+    expect(classify("+77% Minion Damage")).toEqual(["increased.minion", 77.0]);
   });
 });
 

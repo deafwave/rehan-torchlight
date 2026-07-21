@@ -63,15 +63,25 @@ describe("averageHit", () => {
     expect(averageHit(s)).toBeCloseTo(150.0, 6);   // (1 + 0.30 + 0.20) × 100
   });
 
-  test("increased.projectile applies only to bomb (projectile) skills, inert on melee", () => {
-    const melee = baseOnly();
-    melee.increased.projectile = 50;
-    expect(averageHit(melee)).toBe(100.0);         // Spectral Slash is melee → projectile inert
-    const bomb = baseOnly();
-    bomb.increased.projectile = 50;
-    bomb.rotation = { ...bomb.rotation, bombs_per_throw: 2, throw_rate_base: 1,
-                      hits_per_bomb: 1, proj_base: 1 };
-    expect(averageHit(bomb)).toBeCloseTo(150.0, 6);   // bombs are projectiles → +50% applies
+  function bombify(s: Snapshot): Snapshot {
+    s.rotation = { ...s.rotation, bombs_per_throw: 2, throw_rate_base: 1, hits_per_bomb: 1, proj_base: 1 };
+    return s;
+  }
+
+  test("projectile-family increases (projectile/ranged/horizontal/parabolic) apply only to bomb skills", () => {
+    for (const k of ["projectile", "ranged", "horizontal_projectile", "parabolic_projectile"]) {
+      const melee = baseOnly(); melee.increased[k] = 50;
+      expect(averageHit(melee)).toBe(100.0);                    // melee Spectral Slash → inert
+      const bomb = bombify(baseOnly()); bomb.increased[k] = 50;
+      expect(averageHit(bomb)).toBeCloseTo(150.0, 6);           // bomb is projectile/ranged → +50%
+    }
+  });
+
+  test("increased.minion never feeds main-skill DPS (even on the bomb build)", () => {
+    const bomb = bombify(baseOnly()); bomb.increased.minion = 80;
+    expect(averageHit(bomb)).toBe(100.0);
+    const melee = baseOnly(); melee.increased.minion = 80;
+    expect(averageHit(melee)).toBe(100.0);
   });
 
   test("additional layers each multiply (mechanics.md#additional)", () => {

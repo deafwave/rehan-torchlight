@@ -68,7 +68,8 @@ are all handled; they only surfaced in raw scans because slate text uses `"N %"`
 ### Projectile / geometry (bomb single-target)
 | stat line | sources | note |
 |---|---|---|
-| `+X% Projectile Damage` | gear, slate, pact, unique | **✅ DONE** — `increased.projectile`, gated on `bombs_per_throw` (bomb=projectile; inert on melee Spectral Slash). `… against enemies in proximity` left unmatched (proximity-conditional). `+X% additional Projectile Damage` still open (additional bucket) |
+| `+X% {Projectile\|Ranged\|Horizontal Projectile\|Parabolic Projectile} Damage` | gear, slate, pact, unique, trait | **✅ DONE** — skill-tag-gated increases (`increased.{projectile,ranged,horizontal_projectile,parabolic_projectile}`), applied only to projectile skills via `bombs_per_throw` (inert on melee Spectral Slash — mechanics.md#skill-tags). `… against enemies in proximity` left unmatched (proximity-conditional). `+X% additional Projectile Damage` still open (additional bucket) |
+| `+X% Minion Damage` / `Minion {Element} Damage` | slate, tree, unique | **✅ DONE** — routed to `increased.minion`, a **tagged-but-inert** bucket (never feeds main-skill DPS), so it is visible in the snapshot instead of silently ignored |
 | `+X% Projectile Speed` | gear, slate, pact, unique, memory | **UPTIME** — folded into `hits_per_bomb` (mechanics.md#bing-skill-area) |
 | `X% of Projectile Speed bonus also applied to Projectile Damage` (Gale) | gear, slate, unique | conditional cross-scaling; unmodeled |
 | `+X% Projectile Critical Strike Damage / Rating` | slate | projectile-scoped crit sub-type; no bucket |

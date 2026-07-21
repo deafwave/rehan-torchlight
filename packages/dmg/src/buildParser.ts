@@ -405,8 +405,14 @@ export const PATTERNS: [string, string][] = [
   [`\\+${NUM}% (?:increased )?Fire Damage`, "increased.fire"],
   [`\\+${NUM}% (?:increased )?Lightning Damage`, "increased.lightning"],
   [`\\+${NUM}% (?:increased )?Erosion Damage`, "increased.erosion"],
+  // skill-tag increases (mechanics.md#skill-tags) — gated in the model by skill type.
+  // Horizontal/Parabolic must precede the generic Projectile rule; Minion before the ignore rule.
+  [`\\+${NUM}% (?:increased )?(?:Ranged Attack )?Horizontal Projectile Damage`, "increased.horizontal_projectile"],
+  [`\\+${NUM}% (?:increased )?Parabolic Projectile Damage`, "increased.parabolic_projectile"],
   // unconditional only — "… against enemies in proximity" is proximity-gated (#real-build)
   [`\\+${NUM}% Projectile Damage(?! against)`, "increased.projectile"],
+  [`\\+${NUM}% (?:increased )?Ranged Damage`, "increased.ranged"],
+  [`\\+${NUM}% (?:increased )?Minion(?: \\w+)? Damage`, "increased.minion"],
   [`\\+${NUM}% chance to deal Double Damage`, "crit.double_damage_chance_pct"],
   [`\\+${NUM}% damage`, "increased.global"],
   [`\\+${NUM}% Physical Skill Critical Strike Damage`, "crit.damage_pct"],

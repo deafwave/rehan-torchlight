@@ -20,7 +20,14 @@
   "melee": 81,
   "area": 0,
   "cold": 0,
+  "fire": 0,
+  "lightning": 0,
   "elemental": 0,
+  "projectile": 0,
+  "ranged": 0,
+  "horizontal_projectile": 0,
+  "parabolic_projectile": 0,
+  "minion": 0,
   "global": 257
  },
  "additional": {

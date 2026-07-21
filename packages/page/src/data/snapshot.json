@@ -1,28 +1,35 @@
 {
  "base": {
-  "weapon_phys_min": 215,
-  "weapon_phys_max": 223,
-  "weapon_flat_cold_min": 201.6,
-  "weapon_flat_cold_max": 265.6,
-  "gear_phys_pct": 74,
+  "weapon_phys_min": 291,
+  "weapon_phys_max": 307,
+  "weapon_flat_cold_min": 0,
+  "weapon_flat_cold_max": 0,
+  "gear_phys_pct": 62,
   "gain_phys_as_cold_pct": 0,
-  "weapon_attack_speed": 1.98,
+  "weapon_attack_speed": 1.7100000000000002,
   "skill_weapon_pct": 127,
   "flat_added_min": 0,
   "flat_added_max": 0,
   "flat_added_cold_min": 0,
   "flat_added_cold_max": 0,
-  "added_damage_effectiveness_pct": 100,
-  "joined_weapon_phys": 226.00799999999998
+  "added_damage_effectiveness_pct": 100
  },
  "increased": {
-  "physical": 93,
-  "attack": 177,
-  "melee": 0,
+  "physical": 176,
+  "attack": 273,
+  "melee": 174,
   "area": 0,
-  "cold": 123,
-  "elemental": 193,
-  "global": 495
+  "cold": 0,
+  "fire": 52,
+  "lightning": 0,
+  "elemental": 0,
+  "projectile": 40,
+  "ranged": 0,
+  "horizontal_projectile": 0,
+  "parabolic_projectile": 0,
+  "minion": 189,
+  "global": 253,
+  "erosion": 247
  },
  "additional": {
   "strength": 108,
@@ -30,31 +37,25 @@
   "ice_bond": 28,
   "fervor": 0,
   "sealed_life_mana": 0,
-  "blessings": 19.999999999999996,
+  "blessings": 0,
   "precise_auras": 201.04,
-  "misc": 789.2916483213626,
-  "pure_heart": 27.628156250000035,
-  "steamroll": 42.99999999999999,
-  "willpower": 41.851911225600034,
-  "legion_prism": 15.199999999999992,
-  "combo_enhancement": 16.7,
+  "misc": 36001.336349547084,
   "skill_levels": 21
  },
  "enemy_taken": {
-  "frostbite": 339.48,
-  "paralysis": 15,
-  "cold_infiltration": 13,
+  "frostbite": 120,
+  "paralysis": 0,
+  "cold_infiltration": 0,
   "timid_curse": 0,
   "fixate": 1.0999999999999899
  },
  "crit": {
-  "chance_pct": 57.9,
-  "damage_pct": 547,
-  "additional_on_crit_pct": 32,
+  "chance_pct": 70.05,
+  "damage_pct": 468,
   "crit_dmg_taken_pct": 10
  },
  "penetration": {
-  "cold_pct": 22.5,
+  "cold_pct": 0,
   "armor_pct": 0
  },
  "enemy": {
@@ -64,19 +65,25 @@
  "rotation": {
   "starters_per_cycle": 2,
   "starter_weapon_pct": 406,
-  "attack_speed_inc_pct": 294,
+  "attack_speed_inc_pct": 101,
   "starter_additional_as_pct": 0,
-  "finisher_additional_as_pct": -16,
-  "extra_clones": 1,
+  "finisher_additional_as_pct": -40,
+  "extra_clones": 0,
   "clone_falloff": 0.7,
   "mark_taken_pct": 30,
-  "combo_points": 8,
-  "finisher_amp_pct": 85,
-  "finishers_per_cycle": 2
+  "combo_points": 2,
+  "finisher_amp_pct": 30,
+  "finishers_per_cycle": 1,
+  "proj_added": 2
+ },
+ "deterioration": {
+  "duration_inc_pct": 60,
+  "chance_pct": 148,
+  "damage_inc_pct": 16
  },
  "_derived": {
   "rating_flat": 500,
-  "rating_inc_pct": 958,
+  "rating_inc_pct": 1201,
   "fervor_effect_pct": 0,
   "fervor_rating": 100,
   "has_fervor": 0,
@@ -86,7 +93,7 @@
   "warcry_additional_effect_pct": 0,
   "fervor_dmg_per_rating": 0,
   "fervor_dmg_per_rating_plain": 0,
-  "frostbite_max": 207,
-  "frostbite_effect_pct": 64
+  "frostbite_max": 120,
+  "frostbite_effect_pct": 0
  }
 }
