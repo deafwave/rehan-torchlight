@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import { describe, expect, test } from "vitest";
-import { extractLines, substitute, fillTemplate, classify, parseBuild, skillLevelAdditionalPct, warcryLayer, PARSE_TARGET } from "../src/buildParser.js";
+import { extractLines, substitute, fillTemplate, classify, parseBuild, skillLevelAdditionalPct, warcryLayer, critRatingBonus, PARSE_TARGET } from "../src/buildParser.js";
 import { cycleDps } from "../src/damageModel.js";
 import { fromRoot } from "../src/py.js";
 
@@ -199,6 +199,10 @@ describe("classify", () => {
     expect(classify("+20% Fire Penetration")).toEqual(["penetration.typed.fire", 20.0]);
     expect(classify("+15% Lightning Penetration")).toEqual(["penetration.typed.lightning", 15.0]);
     expect(classify("+10% Cold Penetration")).toEqual(["penetration.cold_pct", 10.0]);   // stays universal
+    expect(classify("+30% Cold Skill Critical Strike Rating")).toEqual(["extras.rating_typed_cold", 30.0]);
+    expect(classify("+40% Fire Skill Critical Strike Rating")).toEqual(["extras.rating_typed_fire", 40.0]);
+    expect(classify("+15% Projectile Critical Strike Rating")).toEqual(["extras.rating_tagged_projectile", 15.0]);
+    expect(classify("+20% Melee Critical Strike Rating")).toEqual(["extras.rating_tagged_melee", 20.0]);
     // must not be swallowed by the generic "+#% damage" (increased.global) rule
     expect(classify("+9% Cold Damage")).toEqual(["increased.cold", 9.0]);
   });
@@ -530,6 +534,16 @@ describe("legendary belt & necklace lines", () => {
       expect(classify(t)[0], t).toBe("ignore");
     // but Attack and Cast Speed still routes (attacks benefit)
     expect(classify("+10% Attack and Cast Speed")).toEqual(["rotation.attack_speed_inc_pct", 10.0]);
+  });
+});
+
+describe("crit rating buckets (mechanics.md#crit-buckets)", () => {
+  test("typed crit rating gates by dealt types, tagged by skill tags — whole-hit chance", () => {
+    const snap: any = { base: { gain_phys_as_cold_pct: 100 }, tags: ["melee", "attack"] };  // deals cold, melee
+    const extras: Record<string, number> = { rating_typed_cold: 30, rating_typed_fire: 40,
+                                              rating_tagged_melee: 20, rating_tagged_projectile: 15 };
+    // cold (dealt) + melee (tagged) apply; fire (not dealt) + projectile (no tag) do not
+    expect(critRatingBonus(extras, snap)).toBe(50);
   });
 });
 

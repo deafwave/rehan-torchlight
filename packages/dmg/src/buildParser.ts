@@ -440,6 +440,13 @@ export const PATTERNS: [string, string][] = [
   [`\\+${NUM}% Melee Critical Strike Damage`, "crit.damage_tagged.melee"],
   [`${NUM}% (?:Attack )?Critical Strike Damage`, "crit.damage_pct"],
   [`Inflicts Cold Infiltration`, "special.cold_infiltration"],
+  // typed/tagged crit RATING feed the whole-hit crit chance, gated in resolveExtras by the
+  // build's dealt types / skill tags (mechanics.md#crit-buckets) — must precede the generic rule
+  [`\\+${NUM}% Fire Skill Critical Strike Rating`, "extras.rating_typed_fire"],
+  [`\\+${NUM}% Cold Skill Critical Strike Rating`, "extras.rating_typed_cold"],
+  [`\\+${NUM}% Lightning Skill Critical Strike Rating`, "extras.rating_typed_lightning"],
+  [`\\+${NUM}% Projectile Critical Strike Rating`, "extras.rating_tagged_projectile"],
+  [`\\+${NUM}% Melee Critical Strike Rating`, "extras.rating_tagged_melee"],
   [`(?:^|\\s)${NUM}% Attack Critical Strike Rating`, "crit.rating_inc_pct"],
   [`\\+${NUM}% Critical Strike Rating`, "crit.rating_inc_pct"],
   [`(?:^|\\s)${NUM}% Attack Speed`, "rotation.attack_speed_inc_pct"],
@@ -817,6 +824,32 @@ export function applyOverrides(snap: Snapshot, report: Report, overridesPath = O
   return snap;
 }
 
+/** The damage types the build actually deals (weapon phys + conversion destinations +
+    flat/gain element sources) — gates typed crit-rating / could gate other typed lines. */
+export function dealtTypes(snap: any): Set<string> {
+  const t = new Set<string>(["physical"]);        // weapon implicit is physical
+  const b = snap.base ?? {};
+  for (const c of snap.conversion ?? []) t.add(c.to);
+  if (b.weapon_flat_cold_max || b.flat_added_cold_max || b.gain_phys_as_cold_pct) t.add("cold");
+  if (b.weapon_flat_fire_max || b.flat_added_fire_max) t.add("fire");
+  if (b.weapon_flat_lightning_max) t.add("lightning");
+  if (b.weapon_flat_erosion_max || b.flat_added_erosion_max) t.add("erosion");
+  return t;
+}
+
+/** mechanics.md#crit-buckets — crit rating is one whole-hit chance, so typed/tagged crit
+    rating gate at the SKILL level: a typed bucket counts iff the build deals that type, a
+    tagged bucket iff the skill carries that tag. Returns the % to fold into the rating pool. */
+export function critRatingBonus(extras: Record<string, number>, snap: any): number {
+  const types = dealtTypes(snap), tags: string[] = snap.tags ?? [];
+  let bonus = 0;
+  for (const [k, v] of Object.entries(extras)) {
+    if (k.startsWith("rating_typed_") && types.has(k.slice(13))) bonus += v;
+    else if (k.startsWith("rating_tagged_") && tags.includes(k.slice(14))) bonus += v;
+  }
+  return bonus;
+}
+
 /** mechanics.md#crit: base rating x (1 + parsed% + Fervor's native base effect + Fearless aura).
     Fervor's contribution needs a "Have Fervor" source (Dawn Break boots) — without one it is 0. */
 export function critChance(d: Record<string, number>): number {
@@ -1049,6 +1082,10 @@ export function resolveExtras(snap: Snapshot, report: Report): Snapshot {
     warcry_effect_pct: pop("warcry_effect_pct"),
     warcry_additional_effect_pct: pop("warcry_additional_effect_pct"),
   };
+  // mechanics.md#crit-buckets — fold applicable typed/tagged crit rating into the pool
+  d.rating_inc_pct += critRatingBonus(extras, snap);
+  for (const k of Object.keys(extras))
+    if (k.startsWith("rating_typed_") || k.startsWith("rating_tagged_")) delete extras[k];
   if (d.rating_flat) {
     snap.crit.chance_pct = critChance(d);
     report.manual.push({ path: "crit.chance_pct", mode: "derived",
