@@ -388,7 +388,11 @@ export const PATTERNS: [string, string][] = [
   [`additional Ailment Damage`, "ignore"],
   // a ring suffix's paired roll can be negative ("-5% additional damage") below i86
   // mechanics.md#deterioration + #bing-bombs — route to model fields; must outrank the
-  // generic "additional .* damage" → misc rule below (Bomb Damage, Deterioration Duration)
+  // generic "additional .* damage" → misc and "% damage" → global rules below.
+  // "Damage Over Time" is DoT-scoped (the only DoT here is Deterioration) — it must NOT
+  // fall into increased.global, which would boost every hit.
+  [`\\+${NUM}% additional Damage Over Time`, "deterioration.additional_damage_pct"],
+  [`\\+${NUM}% Damage Over Time`, "deterioration.damage_inc_pct"],
   [`\\+${NUM}% Deterioration Damage`, "deterioration.damage_inc_pct"],
   [`\\+${NUM}% Deterioration Chance`, "deterioration.chance_pct"],
   [`\\+${NUM}% additional Deterioration Duration`, "deterioration.duration_inc_pct"],
