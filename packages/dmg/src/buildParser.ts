@@ -397,7 +397,7 @@ export const PATTERNS: [string, string][] = [
   [`\\+${NUM}% chance to deal Double Damage`, "crit.double_damage_chance_pct"],
   [`\\+${NUM}% damage`, "increased.global"],
   [`\\+${NUM}% Physical Skill Critical Strike Damage`, "crit.damage_pct"],
-  [`${NUM}% Critical Strike Damage`, "crit.damage_pct"],
+  [`${NUM}% (?:Attack )?Critical Strike Damage`, "crit.damage_pct"],
   [`Inflicts Cold Infiltration`, "special.cold_infiltration"],
   [`(?:^|\\s)${NUM}% Attack Critical Strike Rating`, "crit.rating_inc_pct"],
   [`\\+${NUM}% Critical Strike Rating`, "crit.rating_inc_pct"],

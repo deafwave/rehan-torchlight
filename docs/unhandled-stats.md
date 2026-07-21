@@ -39,7 +39,7 @@ each (+ a `classify` test). Ordered by how many sources carry them.
 | `+X% Erosion Damage` | gear, slate, pact, unique, memory | `increased.erosion` | **✅ DONE** |
 | `+X% Fire Damage` / `+X% Lightning Damage` | gear, slate, pact, unique, memory | `increased.fire` / `increased.lightning` | **✅ DONE** |
 | `+X% chance to deal Double Damage` | gear, kismet, unique, trait | `crit.double_damage_chance_pct` | **✅ DONE** (see §2 — was a MODEL gap) |
-| `+X% attack Critical Strike Damage` | unique, memory | `crit.damage_pct` (the `Attack ` prefix dodges the current regex) | open — one regex |
+| `+X% Attack Critical Strike Damage` | unique, memory | `crit.damage_pct` (made `Attack ` optional in the regex) | **✅ DONE** |
 | `+X% Deterioration Damage / Chance` · `+X% additional Deterioration Duration` | gear, slate, unique, kismet | `deterioration.*` | **deferred** — no parser consumer (Bing is hand-encoded; parsed builds have no `deterioration` section). Would need `apply()` to lazily create it. |
 | `+X% Demolisher Charge Restoration Speed` | gear, slate, unique, kismet | `rotation.demolisher_resto_pct` | **deferred** — same reason (Bing-only, hand-encoded) |
 
