@@ -196,6 +196,9 @@ describe("classify", () => {
     expect(classify("+15% Lightning Skill Critical Strike Damage")).toEqual(["crit.damage_typed.lightning", 15.0]);
     expect(classify("+8% Erosion Skill Critical Strike Damage")).toEqual(["crit.damage_typed.erosion", 8.0]);
     expect(classify("+15% Projectile Critical Strike Damage")).toEqual(["crit.damage_tagged.projectile", 15.0]);
+    expect(classify("+20% Fire Penetration")).toEqual(["penetration.typed.fire", 20.0]);
+    expect(classify("+15% Lightning Penetration")).toEqual(["penetration.typed.lightning", 15.0]);
+    expect(classify("+10% Cold Penetration")).toEqual(["penetration.cold_pct", 10.0]);   // stays universal
     // must not be swallowed by the generic "+#% damage" (increased.global) rule
     expect(classify("+9% Cold Damage")).toEqual(["increased.cold", 9.0]);
   });

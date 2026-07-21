@@ -569,6 +569,16 @@ describe("conversion system", () => {
     expect(expectedHit(s)).toBeCloseTo(50 * 2.5 + 50 * 1.5, 6);
   });
 
+  test("typed penetration reduces the resistance of the portion's final type only", () => {
+    const s = conv();
+    s.enemy.cold_res_pct = 50;
+    s.penetration = { cold_pct: 0, armor_pct: 0, typed: { fire: 20 } };
+    s.base.flat_added_cold_min = 100; s.base.flat_added_cold_max = 100;   // a cold portion too
+    s.conversion = [{ from: "physical", to: "fire", pct: 100 }];          // weapon→fire; cold stays cold
+    // fire portion: res 50−20 → mit 0.7 → 70 ; cold portion: res 50 (fire pen n/a) → 0.5 → 50
+    expect(expectedHit(s)).toBeCloseTo(70 + 50, 6);
+  });
+
   test("tagged crit damage gates by skill tags", () => {
     const s = conv();
     s.crit = { chance_pct: 100, damage_pct: 150, damage_tagged: { projectile: 100 } };

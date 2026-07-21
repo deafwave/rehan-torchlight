@@ -35,7 +35,11 @@ export interface Snapshot {
           damage_typed?: Record<string, number>; damage_tagged?: Record<string, number> };
   // erosion_* present only on builds with Erosion damage (bing) — a separate damage
   // type with its own resistance, unaffected by elemental res or armor
-  penetration: { cold_pct: number; armor_pct: number; erosion_pct?: number };
+  // mechanics.md#typed-pen — cold_pct is the universal elemental penetration; `typed`
+  // (fire/cold/lightning/elemental) reduces the shared elemental res only for a portion
+  // whose FINAL type matches. erosion_pct is the separate erosion penetration.
+  penetration: { cold_pct: number; armor_pct: number; erosion_pct?: number;
+                 typed?: Record<string, number> };
   enemy: { cold_res_pct: number; armor_reduction_pct: number; erosion_res_pct?: number };
   rotation: Record<string, number>;
   // mechanics.md#skill-type — names the rotation for the breakdown chips; auto-derived
@@ -212,10 +216,17 @@ export function critMultiplier(s: Snapshot): number {
   return critMultiplierFor(s, ALL_DAMAGE_TYPES);
 }
 
-export function mitigationMultiplier(s: Snapshot): number {
-  // penetration can push resistance negative (dev FAQ via mechanics.md)
-  return (1 - (s.enemy.cold_res_pct - s.penetration.cold_pct) / 100)
+// mechanics.md#typed-pen — elemental mitigation for a portion of the given final type(s):
+// universal cold_pct + any typed penetration whose type matches. Penetration can push
+// resistance negative (dev FAQ). ALL_DAMAGE_TYPES for the whole-hit / mono-type case.
+export function mitigationMultiplierFor(s: Snapshot, types: Set<DamageType>): number {
+  let pen = s.penetration.cold_pct;
+  for (const [t, v] of Object.entries(s.penetration.typed ?? {})) if (tagApplies(t, types)) pen += v;
+  return (1 - (s.enemy.cold_res_pct - pen) / 100)
        * (1 - (s.enemy.armor_reduction_pct - s.penetration.armor_pct) / 100);
+}
+export function mitigationMultiplier(s: Snapshot): number {
+  return mitigationMultiplierFor(s, ALL_DAMAGE_TYPES);
 }
 
 /* mechanics.md#support-additional-sum — conversion-overflow redistribution (confirmed
@@ -310,7 +321,7 @@ export function expectedHit(s: Snapshot, skillPct?: number): number {
     // (typed buckets) — one crit roll, but different crit-damage % per portion
     for (const p of convert(basePortions(s, pct), s.conversion))
       sum += p.amt * pathEnvelope(s, p.types)
-           * (p.cur === "erosion" ? erosionMitigation(s) : mitigationMultiplier(s))
+           * (p.cur === "erosion" ? erosionMitigation(s) : mitigationMultiplierFor(s, new Set([p.cur])))
            * critMultiplierFor(s, p.types);
     return sum * doubleDamageMult(s);
   }
@@ -394,7 +405,7 @@ function convPortionsNode(s: Snapshot, pct: number): TNode {
     chips: [{ kind: "base" as const, label: "portion", op: "base" as const, factor: p.amt },
             { kind: "increased" as const, label: "path envelope", op: "×" as const, factor: pathEnvelope(s, p.types) },
             { kind: "mitigation" as const, label: `${p.cur} mit`, op: "×" as const,
-              factor: p.cur === "erosion" ? erosionMitigation(s) : mitigationMultiplier(s) },
+              factor: p.cur === "erosion" ? erosionMitigation(s) : mitigationMultiplierFor(s, new Set([p.cur])) },
             { kind: "crit" as const, label: `crit ${s.crit.chance_pct}% ×${critDamagePct(s, p.types)}%`,
               op: "×" as const, factor: critMultiplierFor(s, p.types) }],
   }));

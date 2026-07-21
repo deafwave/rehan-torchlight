@@ -299,6 +299,9 @@ export const FOCUS_ADDL_PER_STACK = 5;
 export const PATTERNS: [string, string][] = [
   [`\\+?${NUM}% Armor (?:Damage|DMG) Mitigation Penetration`, "penetration.armor_pct"],
   [`\\+?${NUM}% Cold Penetration(?! for Minions)`, "penetration.cold_pct"],
+  // typed pen (mechanics.md#typed-pen) — gates by portion final type; Cold/Elemental stay universal
+  [`\\+?${NUM}% Fire Penetration`, "penetration.typed.fire"],
+  [`\\+?${NUM}% Lightning Penetration`, "penetration.typed.lightning"],
   // only the elemental half matters (build deals cold); erosion pen is a no-op
   [`\\+?${NUM}% Elemental and Erosion Resistance Penetration`, "penetration.cold_pct"],
   [`\\+${NUM}% Gear Physical Damage`, "base.gear_phys_pct"],
@@ -490,10 +493,11 @@ const nums = (text: string): number[] => (text.match(/\d+(?:\.\d+)?/g) ?? []).ma
 /** Route a classified value into the snapshot. Special paths handled here. */
 function apply(snap: Snapshot, extras: Record<string, number>, path: string, value: number, line: Line): void {
   const mult = line.slot === "tree" ? (line.points ?? 1) : 1;
-  if (path.startsWith("crit.damage_typed.") || path.startsWith("crit.damage_tagged.")) {
-    // mechanics.md#crit-buckets — typed/tagged crit-damage accumulate into their sub-bucket
-    const [, sub, key] = path.split(".");
-    const bucket = ((snap.crit as any)[sub] ??= {});
+  if (path.startsWith("crit.damage_typed.") || path.startsWith("crit.damage_tagged.")
+      || path.startsWith("penetration.typed.")) {
+    // mechanics.md#crit-buckets / #typed-pen — accumulate into a nested type/tag sub-bucket
+    const [root, sub, key] = path.split(".");
+    const bucket = (((snap as any)[root])[sub] ??= {});
     bucket[key] = (bucket[key] ?? 0) + value * mult;
     return;
   }
