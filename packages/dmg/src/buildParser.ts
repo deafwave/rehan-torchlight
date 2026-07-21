@@ -417,6 +417,14 @@ export const PATTERNS: [string, string][] = [
   [`\\+${NUM}% Projectile Damage(?! against)`, "increased.projectile"],
   [`\\+${NUM}% (?:increased )?Ranged Damage`, "increased.ranged"],
   [`\\+${NUM}% (?:increased )?Minion(?: \\w+)? Damage`, "increased.minion"],
+  // hit-only (excluded from the DoT in the model); the "for every … Ailment" conditional
+  // needs ailment-count modeling, so it is left unmatched
+  [`\\+${NUM}% (?:increased )?Hit Damage(?! for)`, "increased.hit"],
+  // skill-type tags — inert here (neither skill channels/triggers/is a Focus skill), tagged for visibility
+  [`\\+${NUM}% (?:increased )?Channeled Skill Damage`, "increased.channeled"],
+  [`\\+${NUM}% damage for Channeled Skills`, "increased.channeled"],
+  [`\\+${NUM}% damage for Triggered Skills`, "increased.triggered"],
+  [`\\+${NUM}% (?:increased )?Focus Skill Damage`, "increased.focus"],
   [`\\+${NUM}% chance to deal Double Damage`, "crit.double_damage_chance_pct"],
   [`\\+${NUM}% damage`, "increased.global"],
   [`\\+${NUM}% Physical Skill Critical Strike Damage`, "crit.damage_pct"],

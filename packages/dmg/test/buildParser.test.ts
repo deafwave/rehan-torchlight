@@ -211,6 +211,12 @@ describe("classify", () => {
     // "Damage Over Time" is DoT-scoped — must NOT fall into increased.global (boosting hits)
     expect(classify("+9% Damage Over Time")).toEqual(["deterioration.damage_inc_pct", 9.0]);
     expect(classify("+6% additional Damage Over Time")).toEqual(["deterioration.additional_damage_pct", 6.0]);
+    expect(classify("+40% Hit Damage")).toEqual(["increased.hit", 40.0]);
+    expect(classify("+7% Channeled Skill Damage")).toEqual(["increased.channeled", 7.0]);
+    expect(classify("+9% damage for Triggered Skills")).toEqual(["increased.triggered", 9.0]);
+    expect(classify("+100% Focus Skill Damage")).toEqual(["increased.focus", 100.0]);
+    // conditional Hit Damage ("for every type of Ailment") needs ailment-count modeling → not routed
+    expect(classify("+15% Hit Damage for every type of Ailment the enemy has")).toEqual([null, null]);
     // proximity-conditional variant is NOT the unconditional projectile-damage line
     expect(classify("+60% Projectile Damage against enemies in proximity")).toEqual([null, null]);
     expect(classify("Adds 95 - 125 Physical Damage to the Main-Hand Weapon")).toEqual(["base.weapon_phys_mainhand", 95.0]);

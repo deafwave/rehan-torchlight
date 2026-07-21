@@ -55,10 +55,10 @@ export const DEFAULT_SNAPSHOT: Snapshot = {
     flat_added_cold_min: 0, flat_added_cold_max: 0,
     added_damage_effectiveness_pct: 100,
   },
-  increased: { physical: 0, attack: 0, melee: 0, area: 0,
+  increased: { physical: 0, attack: 0, melee: 0, area: 0, hit: 0,
                cold: 0, fire: 0, lightning: 0, elemental: 0,
                projectile: 0, ranged: 0, horizontal_projectile: 0, parabolic_projectile: 0,
-               minion: 0, global: 0 },
+               minion: 0, channeled: 0, triggered: 0, focus: 0, global: 0 },
   additional: { strength: 0, warcry_buffs: 0, ice_bond: 0, fervor: 0,
                 sealed_life_mana: 0, blessings: 0, precise_auras: 0, misc: 0 },
   enemy_taken: { frostbite: 0, paralysis: 0,
@@ -115,13 +115,16 @@ export function averageHit(s: Snapshot, skillPct?: number): number {
 // projectile skills (bombs are projectiles; Spectral Slash is melee). bombs_per_throw is the proxy.
 const PROJECTILE_TAGS: ReadonlySet<string> =
   new Set(["projectile", "ranged", "horizontal_projectile", "parabolic_projectile"]);
+// Skill types neither modeled main skill ever is (Spectral Slash = melee combo, Hammer of
+// Ash = melee+projectile bomb): always inert, tagged only so the line is visible not lost.
+const INACTIVE_SKILL_TAGS: ReadonlySet<string> = new Set(["minion", "channeled", "triggered", "focus"]);
 function isProjectileSkill(s: Snapshot): boolean {
   return s.rotation.bombs_per_throw !== undefined;
 }
-// Skill-tag gate for an `increased` key: minion damage never feeds main-skill DPS;
-// projectile-family tags need a projectile skill; everything else always applies.
+// Skill-tag gate for an `increased` key. `melee` stays always-on — HoA is melee-tagged even as
+// a bomb (calibrated: the Bing snapshot carries increased.melee), so it is NOT gated off bombs.
 function skillTagApplies(s: Snapshot, k: string): boolean {
-  if (k === "minion") return false;
+  if (INACTIVE_SKILL_TAGS.has(k)) return false;
   if (PROJECTILE_TAGS.has(k)) return isProjectileSkill(s);
   return true;
 }
@@ -490,9 +493,12 @@ export function cycleDps(s: Snapshot) {
     // "+X% Deterioration Damage" is a non-additional (increased) line: it joins the
     // increased SUM for the deterioration envelope — ticks ×(incSum+X)/incSum, since
     // the feeding hit already carries ×incSum (mechanics.md#deterioration)
+    // the feeding hit already carries ×incSum (its applicable increases); the DoT inherits
+    // those EXCEPT hit-only "Hit Damage" (a hit is not a DoT), and adds DoT-only damage_inc
     let incSum = 1;
-    for (const [k, v] of Object.entries(s.increased)) if (k !== "erosion") incSum += v / 100;
-    const ratio = (incSum + (d.damage_inc_pct ?? 0) / 100) / incSum;
+    for (const [k, v] of Object.entries(s.increased)) if (increasedApplies(s, k)) incSum += v / 100;
+    const dotInc = incSum - (s.increased.hit ?? 0) / 100 + (d.damage_inc_pct ?? 0) / 100;
+    const ratio = dotInc / incSum;
     detDps = hitDps * enhancedShare * (Math.min(d.chance_pct, 100) / 100)
            * (d.hit_damage_pct / 100)
            * deteriorationTickSum(d)

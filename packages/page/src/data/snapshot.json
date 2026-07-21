@@ -20,6 +20,7 @@
   "attack": 177,
   "melee": 0,
   "area": 0,
+  "hit": 0,
   "cold": 123,
   "fire": 0,
   "lightning": 0,
@@ -29,6 +30,9 @@
   "horizontal_projectile": 0,
   "parabolic_projectile": 0,
   "minion": 135,
+  "channeled": 0,
+  "triggered": 0,
+  "focus": 0,
   "global": 495
  },
  "additional": {

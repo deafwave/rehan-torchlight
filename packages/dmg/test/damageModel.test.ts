@@ -77,11 +77,28 @@ describe("averageHit", () => {
     }
   });
 
-  test("increased.minion never feeds main-skill DPS (even on the bomb build)", () => {
-    const bomb = bombify(baseOnly()); bomb.increased.minion = 80;
-    expect(averageHit(bomb)).toBe(100.0);
-    const melee = baseOnly(); melee.increased.minion = 80;
-    expect(averageHit(melee)).toBe(100.0);
+  test("increased.minion / channeled / triggered / focus never feed main-skill DPS", () => {
+    for (const k of ["minion", "channeled", "triggered", "focus"]) {
+      const bomb = bombify(baseOnly()); bomb.increased[k] = 80;
+      expect(averageHit(bomb)).toBe(100.0);
+      const melee = baseOnly(); melee.increased[k] = 80;
+      expect(averageHit(melee)).toBe(100.0);
+    }
+  });
+
+  test("increased.hit boosts the hit but NOT the deterioration DoT (hit-only)", () => {
+    function detBomb(): Snapshot {
+      const s = bombify(baseOnly());
+      s.crit = { chance_pct: 0, damage_pct: 150 };
+      s.deterioration = { chance_pct: 100, hit_damage_pct: 60, duration_s: 1, tick_interval_s: 0.3,
+                          ramp_pct: 0, ramp_max_ticks: 0, obliterate_interval_s: 0.5 };
+      return s;
+    }
+    const b = cycleDps(detBomb());
+    const withHit = detBomb(); withHit.increased.hit = 100;
+    const h = cycleDps(withHit);
+    expect(h.deterioration_dps).toBeCloseTo(b.deterioration_dps, 4);              // DoT excludes hit-only
+    expect(h.dps - h.deterioration_dps).toBeCloseTo(2 * (b.dps - b.deterioration_dps), 4);  // hit doubles
   });
 
   test("additional layers each multiply (mechanics.md#additional)", () => {
