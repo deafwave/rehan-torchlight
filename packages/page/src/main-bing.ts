@@ -1,4 +1,4 @@
-import "./style.css";
+import "./guide-style.css";
 import { renderCalc } from "./calc";
 import type { Snapshot } from "@rehan/dmg/damageModel";
 import type { SupportGem } from "@rehan/dmg/supports";

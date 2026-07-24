@@ -6,7 +6,23 @@
   "outputDirectory": "dist",
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/rehan",
+      "destination": "/rehan.html"
+    },
+    {
+      "source": "/rehan/",
+      "destination": "/rehan.html"
+    },
+    {
+      "source": "/bing",
+      "destination": "/bing.html"
+    },
+    {
+      "source": "/bing/",
+      "destination": "/bing.html"
+    },
+    {
+      "source": "/((?!assets/).*)",
       "destination": "/index.html"
     }
   ]
