@@ -798,7 +798,7 @@ describe("canonical snapshot adapter", () => {
     expect(changedRowsBySystem(imported.loadouts[0], imported.loadouts[1]).skills)
       .toBe(1);
     const insight = compareStructure(imported.loadouts[0], imported.loadouts[1]).insights[0];
-    expect(insight.id).toBe("main-support-swap");
+    expect(insight.id).toMatch(/^minion-support-swap:/);
     expect(insight.title).toContain("configuration changed");
     expect(insight.evidence.join(" ")).toContain("rolls [18] → [19]");
   });

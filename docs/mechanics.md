@@ -20,15 +20,84 @@ contacts), and each World of Thorns contact starts at 6,894. World of Thorns'
 same-target thorn overlap remains unknown, so it has no fabricated full-contact
 total.
 
-All main-summon socket terms and the selected Iris traits are preserved next to
-these foundations. Candidate values remain arrays when the build omits the
-trait-enhancement selector. Full minion DPS remains blocked by AI action
-selection, Growth/Breeze and merge state, summon quantity, inherited and
-actor-scoped modifier pools, target state, uptime, and overlap.
+The next guarded layer applies only confirmed, unconditional additional-damage
+lines from the installed main-summon supports and exact selected Iris traits:
+
+`known damage per contact = raw damage per contact × ∏(1 + additional line / 100)`
+
+Each additional line remains its own multiplier. In the supplied `15T` →
+`15T SS20` comparison, Malady's rolled line changes from +22% to +26%, so its
+isolated contribution is `1.26 / 1.22 = 1.032786…`, or +3.2787%, not +4%.
+The other confirmed Erosion factors on both sides are Elemental Duo +25%,
+Frequent Quake +20%, Malady's fixed +20%, and Whirlwind Tango -60%. This moves
+the known Scattered Mud component from 263.52 to 272.16 per contact.
+
+This remains an unmitigated partial component, not a total hit or DPS. Candidate
+trait values remain arrays when the build omits the trait-enhancement selector;
+conditional damage, cast speed, AI action selection, Growth/Breeze and merge
+state, summon quantity, inherited and actor-scoped modifier pools, target
+state, uptime, and overlap remain excluded.
+
+Malformed or unsupported factor sockets, including duplicate copies of a
+factor whose stacking behavior is not proven, are omitted from the product and
+preserved as typed exclusions with their socket evidence. Before/after numeric
+action comparisons require matching known-damage status and an
+order-independent match of the complete exclusion fingerprint. Changing
+evidence coverage therefore blocks the ratio instead of manufacturing an
+upgrade or loss.
 
 Pinned sources: the SS13 skill master/text bundles, the repository's
 `active-skills.json` snapshot, and the level 1–40 Spirit Magus actor table at
 `https://tlidb.com/en/Summon_Erosion_Magus`.
+
+### Bing component factor ledger <a id="guarded-bing-factor-ledger"></a>
+
+`compileBingFactorLedger` extends the guarded Bing intrinsic evidence with four
+source-complete hit inputs while keeping source-visible emissions separate:
+
+- the average weapon-sourced Hammer of Ash hit foundation;
+- Sierra Reverberation Maul's conditional additional Attack Damage after
+  standing still for 0.1s;
+- Slow Projectile's generic additional-damage line; and
+- Upheaval's projectile-explosion-only additional Hit Damage line.
+
+Every `additional` line is its own `(1 + value / 100)` factor, following
+[#additional](#additional). The compiler retains companion effects such as
+Sierra's -20% additional Attack Speed, Slow Projectile's -30% Projectile Speed,
+and Upheaval's radius line as non-composed evidence. Cadence and geometry are
+not hit multipliers.
+
+For supplied Bing loadouts 5 → 6, the exact factor changes are:
+
+| Factor | Before | After | Isolated ratio |
+|---|---:|---:|---:|
+| Weapon foundation | 4,832.4978 | 4,761.207 | 0.9852476291 (-1.4752%) |
+| Sierra stationary Attack layer | ×1.96 | ×2.18 | 1.1122448980 (+11.2245%) |
+| Slow Projectile generic layer | ×1.29 | ×1.27 | 0.9844961240 (-1.5504%) |
+| Upheaval explosion-only layer | ×1.37 | ×1.46 | 1.0656934307 (+6.5693%) |
+| Source-visible emissions / throw | 18.9 | 13.5 | 0.7142857143 (-28.5714%) |
+
+The first four inputs produce selected-changing-factor ratios of 0.9699724720
+for an ordinary non-stationary hit, 1.0336932914 for a non-stationary
+projectile-explosion hit, 1.0788469332 for a stationary ordinary hit, and
+1.1497200894 for a stationary projectile-explosion hit. These are partial
+component scenarios, not predicted total hits. Unchanged and uncompiled factors
+are omitted.
+
+The 18.9 → 13.5 emission change is never multiplied into those scenarios.
+Emitted projectiles do not prove landed target hits, overlap, or Shotgun
+application. Actual throw cadence, Demolisher share, full modifier pools,
+critical strikes, enemy mitigation/state, and Deterioration remain unresolved,
+so the ledger is explicitly not DPS, total hit damage, or target hits.
+
+Sierra's suffix is pinned to
+`SS13-gear-en.json` SHA-256
+`2a800a28c00efce144bc2da24f1efcfc944a58bc2896767c500b158f363f0b66`,
+at
+`gear/two_handed/two-handed_hammer/i18n/en.craftSuffix.eb8e123a-88be-51ca-bba7-4f2d23a523a7`.
+Iron Lion provenance records node ID `10` at its actual imported
+`allocatedNodes[9]` array position instead of treating the node ID as an array
+index.
 
 ### Player-defense evidence
 
@@ -161,7 +230,7 @@ Bucket = snapshot path (values in %, per plan schema). "Stacks with" says which 
 | "in Proximity" mods | not this build (`NOT_THIS_BUILD`) | Spectral Slash fights at clone range, not melee-stacked on the boss — proximity conditions don't hold | "+15% additional damage taken by enemies in Proximity" ⇒ — | user 2026-07-16 | reported |
 | Deterioration mods | not this build (`NOT_THIS_BUILD`) | Spectral Slash never applies Deterioration — "additional Deterioration Damage" still matches the generic additional-damage classifier, so the tag must be filtered or it scores as free hit DPS | "+8% additional Deterioration Damage" ⇒ — | user 2026-07-16 | reported |
 | Copy-talent legendary slates | dropped from the catalog | "Copies the … Talent on the adjacent slate" mods are slate-layout tools, not stat rows — their value is whatever the human copies; placing them is a manual decision | Sparks of Moth Fire, Space Rift, Residence of Stars, When Sparks Set the Prairie Ablaze | user 2026-07-16 | curation, not a mechanic |
-| Slate roll pools (page "rolls on" filter) | catalog `tier` (`Lv.N Core Talent` from master `coreTalentLevel`) → `SLATE_ITEMS` in `page/src/main.ts` | What each purchasable slate can roll: **A Corner of Divinity** (max 3) 2× Legendary Medium; **Fallen Starlight** (max 3) 3× Micro (3rd up to Legendary Medium) + 1× Medium/Legendary Medium; **Pedigree of Gods** (max 1) 2× Micro–Legendary Medium + 1× Medium/Lv.1 Core/Legendary Medium + 1× Core Talent; **god slates** fixed Core Talent + 3 random slots capped Micro/Medium/Legendary Medium. Cache slot data lists base tiers only (Pedigree slot 4 shows `Lv.2 Core Talent`); the user-reported upgraded tiers are used | Lv.1 cores = 131 god-slate cores; Lv.2 = the 6 New God cores | cache:SS12.5-divinity-slate-en.json (`legendaryDivinitySlates[].mods[].slotTypes`, master `coreTalentLevel`); user 2026-07-16 (upgraded tier caps, buy strategy) | confirmed (base slots); reported (upgraded caps) |
+| Slate roll pools (page "rolls on" filter) | catalog `tier` (`Lv.N Core Talent` from master `coreTalentLevel`) → `SLATE_ITEMS` in `packages/page/src/main.ts` | What each purchasable slate can roll: **A Corner of Divinity** (max 3) 2× Legendary Medium; **Fallen Starlight** (max 3) 3× Micro (3rd up to Legendary Medium) + 1× Medium/Legendary Medium; **Pedigree of Gods** (max 1) 2× Micro–Legendary Medium + 1× Medium/Lv.1 Core/Legendary Medium + 1× Core Talent; **god slates** fixed Core Talent + 3 random slots capped Micro/Medium/Legendary Medium. Cache slot data lists base tiers only (Pedigree slot 4 shows `Lv.2 Core Talent`); the user-reported upgraded tiers are used | Lv.1 cores = 131 god-slate cores; Lv.2 = the 6 New God cores | cache:SS12.5-divinity-slate-en.json (`legendaryDivinitySlates[].mods[].slotTypes`, master `coreTalentLevel`); user 2026-07-16 (upgraded tier caps, buy strategy) | confirmed (base slots); reported (upgraded caps) |
 | "±N% additional … Damage for every L level(s)" (Brutality slate) <a id="per-level"></a> | `additional.misc` × floor(level/L) | Character level assumed 100 at endgame. Brutality: −1%/3 levels Elemental = −33%, and it hits **all** damage (full phys→cold conversion) while the +30% phys bonus still applies pre-conversion ⇒ net 1.30 × 0.67 = 0.871, a loss | −33 (Brutality malus) | cache:SS12.5-divinity-slate-en.json (Shadowdancer); user 2026-07-16 (conversion reading) | inferred (level 100) |
 | "+X% … for every/each Y. Stacks up to N time(s)" (Third time's a charm, Regained slates) <a id="per-stack"></a> | classified path × N, ◑ | Per-stack lines pay full stacks as the catalog's full-uptime ceiling (standard ◑ CONDITIONAL semantics). Third time's a charm: move→stand→attack keeps "movement made recently" live (same reading as Rushed), so Hasten's +7%/3m reaches 3 stacks = +21% attack speed. Cast-only lines never classify; "Attack (Speed) and Cast Speed" hybrids score their attack half | 21 (Third time's a charm) | cache:SS12.5-divinity-slate-en.json (Goddess of Hunting) | inferred (ceiling) |
 | Injury Buffer — incl. "Enemies +X% Injury Buffer" (Blunt slate) | `ignore` | Delay, not mitigation: "part of the damage will not be deducted from Life or Energy Shield directly. Instead, it will be gradually deducted over the next 4s… does not change hit events or the damage of hits". Enemy version only smears when the boss's bar drains ⇒ DPS-neutral; Blunt scores on its +30% phys line alone | — | tlidb.com/Injury_Buffer | confirmed |
@@ -216,7 +285,7 @@ their actual roll in `rollValues`. Boss single-target, full uptime (the build st
 
 | Gem (build state) | Value modeled | Notes |
 |---|---|---|
-| Activation Medium: Still Attack (roll 30) | `additional.willpower` = (1.06⁶−1) = +41.85% | Grants Lv(20–30) Willpower: 6 stacks × +6%/stack, "(multiplies)"; per-stack value is level-flat | 
+| Activation Medium: Still Attack (roll 30) | `additional.willpower` = (1.06⁶−1) = +41.85% | Grants Lv(20–30) Willpower: 6 stacks × +6%/stack, "(multiplies)"; per-stack value is level-flat |
 | Recuperation L30 | +18.2 into the finisher amp sum | 5.5 (Lv1) → 15.5 (Lv21) → 21.5 (Lv41); its +1 Combo Point is in `rotation.combo_points` |
 | Spectral Slash: Detonation (Magnificent, rank 1, roll 30) | `additional.detonation_prism` = 1.20×1.30−1 = +56% | Base +20% and rolled +(26–30)% are separate lines that net together; clone-kill explosion never fires on a boss |
 | Critical Strike Damage Increase L30 | `crit.additional_on_crit_pct` = 40.5 | 26 (Lv1) + 0.5/level; multiplies **crit hits only**: crit layer = 1 + chance×(CD×1.405−1) |

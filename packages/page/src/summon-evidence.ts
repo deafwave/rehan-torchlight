@@ -1,5 +1,6 @@
 import { compileWuxiaSummonEvidence } from "@rehan/dmg/minionEvidence";
 import type { AnalyzedLoadout, SummonSourceEvidence } from "./analysis-types";
+import { rawSupportMetadata } from "./raw-support-metadata";
 
 export interface SummonEvidenceDisplayBlocker {
   code: string;
@@ -93,17 +94,60 @@ export function summonEvidenceResultForCompendium(
         ...term,
         display: evidenceDisplay(term.value, term.unit),
       })),
+      knownDamage: {
+        ...action.knownDamage,
+        factors: action.knownDamage.factors.map((factor) => ({
+          ...factor,
+          applicability: factor.applicability.kind === "all-tags"
+            ? {
+                ...factor.applicability,
+                tags: [...factor.applicability.tags],
+              }
+            : { ...factor.applicability },
+          provenance: factor.provenance.map((source) => ({ ...source })),
+        })),
+        excluded: action.knownDamage.excluded.map((blocker) => ({
+          ...blocker,
+        })),
+        provenance: action.knownDamage.provenance.map((source) => ({
+          ...source,
+        })),
+      },
     })),
-    supports: summon.supports.map((support) => ({
+    supports: summon.supports.map((support) => {
+      const raw = rawSupportMetadata(
+        build,
+        loadoutIndex,
+        support.skillId,
+        support.socketIndex,
+      );
+      return {
       status: support.status,
       isDps: false,
+      actorId: support.actorId,
+      actorName: support.actorName,
+      skillId: support.skillId,
+      skillName: support.skillName,
+      socketIndex: support.socketIndex,
+      socketId: support.socketId,
       supportId: support.supportId,
-      supportName: support.supportName,
-      supportType: support.status === "source-terms" ? support.supportType : undefined,
-      level: support.status === "source-terms" ? support.level : undefined,
-      tier: support.status === "source-terms" ? support.tier : undefined,
-      rank: support.status === "source-terms" ? support.rank : undefined,
-      rollValues: support.status === "source-terms" ? support.rollValues : undefined,
+      supportName: support.supportName ?? raw?.supportName ?? null,
+      supportType: support.status === "source-terms"
+        ? support.supportType
+        : raw?.supportType ?? undefined,
+      level: support.status === "source-terms"
+        ? support.level
+        : raw?.level,
+      tier: support.status === "source-terms"
+        ? support.tier
+        : raw?.tier,
+      rank: support.status === "source-terms"
+        ? support.rank
+        : raw?.rank,
+      rollValues: support.status === "source-terms"
+        ? support.rollValues
+        : raw?.rollValues,
+      rawFingerprint: raw?.fingerprint,
       effects: support.status === "source-terms"
         ? support.effects.map((effect) => ({
             ...effect,
@@ -116,7 +160,8 @@ export function summonEvidenceResultForCompendium(
       blockerEvidence: support.status === "unsupported"
         ? support.blockers.map((blocker) => ({ ...blocker }))
         : support.netDps.blockers.map((blocker) => ({ ...blocker })),
-    })),
+    };
+    }),
     heroTraits: result.heroTraits.map((trait) => ({
       traitId: trait.traitId,
       traitName: trait.traitName,

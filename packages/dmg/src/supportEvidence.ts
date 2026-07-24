@@ -37,6 +37,9 @@ const SLOW_PROJECTILE = "56c49853-7d67-5a43-bfe7-0cfe5c7e3d84";
 const PASSIVATION = "6ad66630-a244-575e-9b4e-a7d15ad8b1d1";
 const UPHEAVAL_MAGNIFICENT = "4ba9d077-d4f6-5a60-bd8e-423319a27f97";
 
+export const BING_BLAST_NOVA_NAME = "Bing: Blast Nova";
+export const HAMMER_OF_ASH_NAME = "Hammer of Ash";
+
 export type SupportTermApplication =
   | "additional-layer-input"
   | "attack-speed-input"
@@ -55,7 +58,16 @@ export interface SupportEffectTerm {
   isNetDps: false;
 }
 
-export interface SupportSourceTerms {
+export interface SupportSocketIdentity {
+  actorId: string;
+  actorName: string;
+  skillId: string;
+  skillName: string;
+  socketIndex: number;
+  socketId: string;
+}
+
+export interface SupportSourceTerms extends SupportSocketIdentity {
   status: "source-terms";
   isDps: false;
   supportId: string;
@@ -73,7 +85,7 @@ export interface SupportSourceTerms {
   };
 }
 
-export interface UnsupportedSupportTerms {
+export interface UnsupportedSupportTerms extends SupportSocketIdentity {
   status: "unsupported";
   isDps: false;
   supportId: string;
@@ -88,7 +100,10 @@ export interface MainSkillSupportEvidence {
   isDps: false;
   patch: "SS13";
   heroId: typeof BING_BLAST_NOVA_ID;
+  actorId: typeof BING_BLAST_NOVA_ID;
+  actorName: typeof BING_BLAST_NOVA_NAME;
   skillId: typeof HAMMER_OF_ASH_ID;
+  skillName: typeof HAMMER_OF_ASH_NAME;
   loadoutIndex: number;
   loadoutName: string;
   supports: SupportEvidence[];
@@ -108,6 +123,12 @@ export type MainSkillSupportEvidenceResult =
 
 export interface SupportEvidenceChange {
   kind: "added" | "removed" | "changed";
+  actorId: string;
+  actorName: string;
+  skillId: string;
+  skillName: string;
+  socketIndex: number;
+  socketId: string;
   supportId: string;
   supportName: string | null;
   before: SupportEvidence | null;
@@ -137,6 +158,7 @@ export type SupportEvidenceComparisonResult =
 interface SupportDefinition {
   name: string;
   expectedType: "support" | "activation_medium" | "magnificent_support";
+  allowedSlotIndex?: number;
   compile: (support: any) => SupportEffectTerm[] | CalculationBlocker;
 }
 
@@ -193,6 +215,7 @@ const SUPPORTS: Record<string, SupportDefinition> = {
   [ACTIVATION_MOTIONLESS]: {
     name: "Activation Medium: Motionless",
     expectedType: "activation_medium",
+    allowedSlotIndex: 0,
     compile: (support) => {
       const tier = support?.tier;
       const rolls = rollValues(support);
@@ -283,6 +306,7 @@ const SUPPORTS: Record<string, SupportDefinition> = {
   [UPHEAVAL_MAGNIFICENT]: {
     name: "Hammer of Ash: Upheaval (Magnificent)",
     expectedType: "magnificent_support",
+    allowedSlotIndex: 2,
     compile: (support) => {
       const tier = support?.tier;
       const rank = support?.rank;
@@ -324,11 +348,13 @@ function unavailable(...blockers: CalculationBlocker[]): UnavailableMainSkillSup
 }
 
 function unsupportedSupport(
+  identity: SupportSocketIdentity,
   supportId: string,
   supportName: string | null,
   blocker: CalculationBlocker,
 ): UnsupportedSupportTerms {
   return {
+    ...identity,
     status: "unsupported",
     isDps: false,
     supportId,
@@ -337,9 +363,13 @@ function unsupportedSupport(
   };
 }
 
-function supportEvidence(support: any, sourceLocator: string): SupportEvidence {
+function supportEvidence(
+  support: any,
+  sourceLocator: string,
+  identity: SupportSocketIdentity,
+): SupportEvidence {
   if (!support || typeof support !== "object" || Array.isArray(support)) {
-    return unsupportedSupport("", null, {
+    return unsupportedSupport(identity, "", null, {
       code: "malformed-support-record",
       message: "A non-empty Hammer support socket must contain one Compendium support object.",
       evidence: sourceLocator,
@@ -347,7 +377,7 @@ function supportEvidence(support: any, sourceLocator: string): SupportEvidence {
   }
   const supportId = String(support?.supportGuid ?? "");
   if (!supportId) {
-    return unsupportedSupport("", null, {
+    return unsupportedSupport(identity, "", null, {
       code: "malformed-support-record",
       message: "A non-empty Hammer support socket has no supportGuid.",
       evidence: sourceLocator,
@@ -355,14 +385,14 @@ function supportEvidence(support: any, sourceLocator: string): SupportEvidence {
   }
   const definition = SUPPORTS[supportId];
   if (!definition) {
-    return unsupportedSupport(supportId, null, {
+    return unsupportedSupport(identity, supportId, null, {
       code: "unsupported-support-formula",
       message: "This support has no source-term compiler in the guarded SS13 Bing subset.",
       evidence: sourceLocator,
     });
   }
   if (support.type !== definition.expectedType) {
-    return unsupportedSupport(supportId, definition.name, {
+    return unsupportedSupport(identity, supportId, definition.name, {
       code: "invalid-support-installation",
       message: `${definition.name} requires support type ${definition.expectedType}; received ${String(support.type ?? "missing")}.`,
       evidence: sourceLocator,
@@ -372,7 +402,7 @@ function supportEvidence(support: any, sourceLocator: string): SupportEvidence {
       && (!Array.isArray(support.rollValues)
         || support.rollValues.some((roll: unknown) =>
           typeof roll !== "number" || !Number.isFinite(roll)))) {
-    return unsupportedSupport(supportId, definition.name, {
+    return unsupportedSupport(identity, supportId, definition.name, {
       code: "malformed-support-rolls",
       message: `${definition.name} has a malformed rollValues projection.`,
       evidence: sourceLocator,
@@ -382,27 +412,37 @@ function supportEvidence(support: any, sourceLocator: string): SupportEvidence {
       && (support.tier !== undefined
         || support.rank !== undefined
         || support.rollValues !== undefined)) {
-    return unsupportedSupport(supportId, definition.name, {
+    return unsupportedSupport(identity, supportId, definition.name, {
       code: "invalid-support-encoding",
       message: `${definition.name} is an ordinary level support and must not carry tier, rank, or rolled-value metadata.`,
       evidence: sourceLocator,
     });
   }
   if (definition.expectedType !== "support" && support.level !== undefined) {
-    return unsupportedSupport(supportId, definition.name, {
+    return unsupportedSupport(identity, supportId, definition.name, {
       code: "invalid-support-encoding",
       message: `${definition.name} is a rolled special support and must not carry an ordinary support level.`,
       evidence: sourceLocator,
     });
   }
+  if (definition.allowedSlotIndex !== undefined
+      && identity.socketIndex !== definition.allowedSlotIndex) {
+    return unsupportedSupport(identity, supportId, definition.name, {
+      code: "invalid-bing-support-socket",
+      message:
+        `${definition.name} requires support socket ${definition.allowedSlotIndex + 1}; received socket ${identity.socketIndex + 1}.`,
+      evidence: sourceLocator,
+    });
+  }
   const effects = definition.compile(support);
   if (!Array.isArray(effects)) {
-    return unsupportedSupport(supportId, definition.name, {
+    return unsupportedSupport(identity, supportId, definition.name, {
       ...effects,
       evidence: effects.evidence ?? sourceLocator,
     });
   }
   return {
+    ...identity,
     status: "source-terms",
     isDps: false,
     supportId,
@@ -506,49 +546,55 @@ export function compileSs13BingSupportEvidence(
     .map((support: any, supportIndex: number) => ({
       support,
       supportIndex,
-      supportId: typeof support?.supportGuid === "string"
-        ? support.supportGuid
-        : null,
     }))
     .filter(({ support }) => support != null);
-  const supportCounts = new Map<string, number>();
-  for (const { supportId } of supportClaims) {
-    if (supportId) {
-      supportCounts.set(supportId, (supportCounts.get(supportId) ?? 0) + 1);
-    }
-  }
-  const duplicateSupport = [...supportCounts.entries()]
-    .find(([, count]) => count > 1);
-  if (duplicateSupport) {
-    return unavailable({
-      code: "duplicate-main-skill-support",
-      message: `Support ${duplicateSupport[0]} appears in more than one Hammer socket; every duplicate installation is rejected.`,
-    });
-  }
   return {
     status: "source-terms",
     isDps: false,
     patch: "SS13",
     heroId: BING_BLAST_NOVA_ID,
+    actorId: BING_BLAST_NOVA_ID,
+    actorName: BING_BLAST_NOVA_NAME,
     skillId: HAMMER_OF_ASH_ID,
+    skillName: HAMMER_OF_ASH_NAME,
     loadoutIndex,
     loadoutName: String(loadout.name ?? `Loadout ${loadoutIndex + 1}`),
     supports: supportClaims.map(({ support, supportIndex }) =>
       supportEvidence(
         support,
         `loadouts.loadouts[${loadoutIndex}].skills.activeSkills[${hammerIndex}].supports[${supportIndex}]`,
+        {
+          actorId: BING_BLAST_NOVA_ID,
+          actorName: BING_BLAST_NOVA_NAME,
+          skillId: HAMMER_OF_ASH_ID,
+          skillName: HAMMER_OF_ASH_NAME,
+          socketIndex: supportIndex,
+          socketId: `support:${supportIndex}`,
+        },
       )),
     provenance: [SS13_SUPPORT_FORMULA_SOURCE, SS13_SKILL_TEXT_SOURCE],
     warning: "These are exact socket text terms, not net support multipliers or DPS.",
   };
 }
 
+function supportIdentityKey(evidence: SupportEvidence): string {
+  return `${evidence.actorId}\u0000${evidence.skillId}\u0000${evidence.socketId}`;
+}
+
 function evidenceFingerprint(evidence: SupportEvidence): string {
   if (evidence.status === "unsupported") {
-    return JSON.stringify({ status: evidence.status, blockers: evidence.blockers });
+    return JSON.stringify({
+      status: evidence.status,
+      supportId: evidence.supportId,
+      supportName: evidence.supportName,
+      blockers: evidence.blockers,
+    });
   }
   return JSON.stringify({
     status: evidence.status,
+    supportId: evidence.supportId,
+    supportName: evidence.supportName,
+    supportType: evidence.supportType,
     level: evidence.level,
     tier: evidence.tier,
     rank: evidence.rank,
@@ -579,16 +625,24 @@ export function compareSs13BingSupportEvidence(
     };
   }
 
-  const beforeById = new Map(before.supports.map((support) => [support.supportId, support]));
-  const afterById = new Map(after.supports.map((support) => [support.supportId, support]));
+  const beforeBySocket = new Map(before.supports.map((support) => [supportIdentityKey(support), support]));
+  const afterBySocket = new Map(after.supports.map((support) => [supportIdentityKey(support), support]));
   const changes: SupportEvidenceChange[] = [];
-  for (const id of new Set([...beforeById.keys(), ...afterById.keys()])) {
-    const left = beforeById.get(id) ?? null;
-    const right = afterById.get(id) ?? null;
+  for (const identity of new Set([...beforeBySocket.keys(), ...afterBySocket.keys()])) {
+    const left = beforeBySocket.get(identity) ?? null;
+    const right = afterBySocket.get(identity) ?? null;
+    const socket = right ?? left;
+    if (!socket) continue;
     if (!left) {
       changes.push({
         kind: "added",
-        supportId: id,
+        actorId: socket.actorId,
+        actorName: socket.actorName,
+        skillId: socket.skillId,
+        skillName: socket.skillName,
+        socketIndex: socket.socketIndex,
+        socketId: socket.socketId,
+        supportId: right?.supportId ?? "",
         supportName: right?.supportName ?? null,
         before: null,
         after: right,
@@ -596,7 +650,13 @@ export function compareSs13BingSupportEvidence(
     } else if (!right) {
       changes.push({
         kind: "removed",
-        supportId: id,
+        actorId: socket.actorId,
+        actorName: socket.actorName,
+        skillId: socket.skillId,
+        skillName: socket.skillName,
+        socketIndex: socket.socketIndex,
+        socketId: socket.socketId,
+        supportId: left.supportId,
         supportName: left.supportName,
         before: left,
         after: null,
@@ -604,7 +664,13 @@ export function compareSs13BingSupportEvidence(
     } else if (evidenceFingerprint(left) !== evidenceFingerprint(right)) {
       changes.push({
         kind: "changed",
-        supportId: id,
+        actorId: socket.actorId,
+        actorName: socket.actorName,
+        skillId: socket.skillId,
+        skillName: socket.skillName,
+        socketIndex: socket.socketIndex,
+        socketId: socket.socketId,
+        supportId: right.supportId,
         supportName: right.supportName,
         before: left,
         after: right,

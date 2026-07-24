@@ -3,6 +3,7 @@ import type {
   PactRow,
   SkillRow,
 } from "./analysis-types";
+import { supportInstanceEvidenceRef } from "./support-instance-comparison";
 
 export type BuildSystem = "gear" | "skills" | "trees" | "memories" | "slates" | "pacts";
 export type InsightTone = "risk" | "candidate" | "neutral";
@@ -15,6 +16,7 @@ export interface StructuralInsight {
   title: string;
   explanation: string;
   evidence: string[];
+  changeRefs?: Array<{ key: string; evidence: string }>;
   section: BuildSystem;
 }
 
@@ -36,16 +38,77 @@ function displayList(values: string[], limit = 3) {
 }
 
 function primarySkill(loadout: AnalyzedLoadout) {
-  return loadout.skills.find((skill) => skill.kind === "active" && skill.enabled)
-    ?? loadout.skills.find((skill) => skill.kind === "active");
+  const candidates = loadout.skills.filter((skill) =>
+    skill.kind === "active" && !isMinionSkill(skill));
+  if (!isMinionLoadout(loadout)) {
+    return candidates.find((skill) => skill.enabled) ?? candidates[0];
+  }
+  const modeledSkillId = normalized(loadout.model?.skillId);
+  const explicit = candidates.find((skill) => {
+    const identities = [skill.guid, skill.name].map(normalized);
+    return modeledSkillId.length > 0 && identities.includes(modeledSkillId);
+  });
+  if (explicit) return explicit;
+  if (loadout.bingIntrinsicEvidence) {
+    return candidates.find((skill) => /hammer of ash/i.test(skill.name));
+  }
+  return undefined;
+}
+
+function isMinionSkill(skill: SkillRow) {
+  return /summon|spirit mag(?:us|i)|minion|synthetic troop/i.test(
+    skill.name,
+  );
+}
+
+function isMinionActorSkill(loadout: AnalyzedLoadout, skill: SkillRow) {
+  const identity = skill.guid || skill.name;
+  return (loadout.summonEvidence ?? []).some((summon) =>
+    summon.skillId === identity)
+    || isMinionSkill(skill);
+}
+
+function minionSkills(loadout: AnalyzedLoadout) {
+  return loadout.skills.filter((skill) =>
+    skill.enabled && isMinionActorSkill(loadout, skill));
+}
+
+function isMinionLoadout(loadout: AnalyzedLoadout) {
+  return minionSkills(loadout).length > 0
+    || Boolean(loadout.summonEvidence?.length)
+    || /minion|spirit mag(?:us|i)|summon|synthetic troop/i.test(
+      loadout.sourceNote ?? "",
+    );
 }
 
 function skillKey(skill: SkillRow) {
   return skill.slot || skill.guid || `${skill.kind}:${normalized(skill.name)}`;
 }
 
+function actorSkillKey(skill: SkillRow) {
+  return skill.guid || `${skill.kind}:${normalized(skill.name)}`;
+}
+
 function supportKey(support: SkillRow["supports"][number]) {
   return support.guid || `${support.type}:${normalized(support.name)}`;
+}
+
+function supportSocketKey(
+  support: SkillRow["supports"][number],
+  index: number,
+) {
+  return support.slot?.trim() || String(index);
+}
+
+function supportSocketId(socket: string) {
+  return socket.startsWith("support:") ? socket : `support:${socket}`;
+}
+
+function supportSocketLabel(socket: string) {
+  const numeric = Number(socket);
+  return Number.isSafeInteger(numeric) && numeric >= 0
+    ? `socket ${numeric + 1}`
+    : socket.replace(/^support:/u, "socket ");
 }
 
 function signature(value: unknown) {
@@ -98,15 +161,40 @@ export function changedRowsBySystem(
   };
 }
 
-function supportSwapInsight(before: SkillRow, after: SkillRow): StructuralInsight | null {
-  const left = new Map(before.supports.map((support) => [supportKey(support), support]));
-  const right = new Map(after.supports.map((support) => [supportKey(support), support]));
-  const removed = [...left.entries()].filter(([key]) => !right.has(key)).map(([, row]) => row.name);
-  const added = [...right.entries()].filter(([key]) => !left.has(key)).map(([, row]) => row.name);
+function supportSwapInsight(
+  before: SkillRow,
+  after: SkillRow,
+  id = "main-support-swap",
+  actorKind: "player" | "minion" =
+    isMinionSkill(after) ? "minion" : "player",
+  explicitActorId?: string,
+): StructuralInsight | null {
+  const left = new Map(before.supports.map((support, index) => [
+    supportSocketKey(support, index),
+    support,
+  ]));
+  const right = new Map(after.supports.map((support, index) => [
+    supportSocketKey(support, index),
+    support,
+  ]));
+  const removedRows = [...left.entries()]
+    .filter(([key]) => !right.has(key));
+  const addedRows = [...right.entries()]
+    .filter(([key]) => !left.has(key));
+  const replacements = [...left.entries()].flatMap(([socket, row]) => {
+    const next = right.get(socket);
+    return next && supportKey(row) !== supportKey(next)
+      ? [{ socket, before: row, after: next }]
+      : [];
+  });
+  const removed = removedRows.map(([, row]) => row.name);
+  const added = addedRows.map(([, row]) => row.name);
   const configurationChanges = [...left.entries()]
-    .filter(([key, row]) => {
-      const next = right.get(key);
-      return Boolean(next) && (
+    .filter(([socket, row]) => {
+      const next = right.get(socket);
+      return Boolean(next)
+        && supportKey(row) === supportKey(next!)
+        && (
         row.level !== next!.level
         || row.tier !== next!.tier
         || row.rank !== next!.rank
@@ -124,43 +212,158 @@ function supportSwapInsight(before: SkillRow, after: SkillRow): StructuralInsigh
           ? `rolls [${(row.rollValues ?? []).join(", ") || "none"}] → [${(next.rollValues ?? []).join(", ") || "none"}]`
           : "",
       ].filter(Boolean);
-      return `${row.name}: ${changes.join("; ") || "source configuration changed"}`;
+      return {
+        socket: key,
+        evidence:
+          `${supportSocketLabel(key)} · ${row.name}: ${changes.join("; ") || "source configuration changed"}`,
+      };
     });
-  if (!removed.length && !added.length && !configurationChanges.length) return null;
+  if (!removed.length
+      && !added.length
+      && !replacements.length
+      && !configurationChanges.length) return null;
 
   const evidence = [
-    removed.length ? `Removed: ${displayList(removed)}` : "",
-    added.length ? `Added: ${displayList(added)}` : "",
-    ...configurationChanges,
+    ...replacements.map((change) =>
+      `${supportSocketLabel(change.socket)}: ${change.before.name} → ${change.after.name}`),
+    ...removedRows.map(([socket, row]) =>
+      `Removed from ${supportSocketLabel(socket)}: ${row.name}`),
+    ...addedRows.map(([socket, row]) =>
+      `Added to ${supportSocketLabel(socket)}: ${row.name}`),
+    ...configurationChanges.map((change) => change.evidence),
   ].filter(Boolean);
-  const minion = /summon|spirit magus|module:/i.test(after.name);
-  const replacement = removed.length || added.length;
+  const minion = actorKind === "minion";
+  const actorId = explicitActorId
+    ?? (minion ? actorSkillKey(after) : "player");
+  const skillId = after.guid || before.guid || actorSkillKey(after);
+  const ref = (
+    side: "before" | "after",
+    socket: string,
+    supportId: string,
+  ) => supportInstanceEvidenceRef(side, {
+    actorId,
+    skillId,
+    socketId: supportSocketId(socket),
+    supportId,
+  });
+  const changeRefs = [
+    ...replacements.flatMap((change) => [{
+      key: ref("before", change.socket, supportKey(change.before)),
+      evidence:
+        `Removed from ${supportSocketLabel(change.socket)}: ${change.before.name}`,
+    }, {
+      key: ref("after", change.socket, supportKey(change.after)),
+      evidence:
+        `Added to ${supportSocketLabel(change.socket)}: ${change.after.name}`,
+    }]),
+    ...removedRows.map(([socket, row]) => ({
+      key: ref("before", socket, supportKey(row)),
+      evidence: `Removed from ${supportSocketLabel(socket)}: ${row.name}`,
+    })),
+    ...addedRows.map(([socket, row]) => ({
+      key: ref("after", socket, supportKey(row)),
+      evidence: `Added to ${supportSocketLabel(socket)}: ${row.name}`,
+    })),
+    ...configurationChanges.map((change) => ({
+      key: ref(
+        "before",
+        change.socket,
+        supportKey(left.get(change.socket)!),
+      ),
+      evidence: change.evidence,
+    })),
+  ];
+  const replacement =
+    replacements.length > 0
+    || (removed.length > 0 && added.length > 0);
+  const removedOnly = removed.length > 0 && added.length === 0;
+  const replacementCount =
+    replacements.length + Math.min(removed.length, added.length);
   return {
-    id: "main-support-swap",
-    priority: removed.length ? 100 : 82,
-    tone: removed.length ? "risk" : "candidate",
+    id,
+    priority: replacement || removed.length ? 100 : 82,
+    tone: replacement || removed.length ? "risk" : "candidate",
     label: "Main skill supports",
-    title: replacement && removed.length
-      ? `${removed.length === 1 ? "A support was" : `${removed.length} supports were`} replaced on ${after.name}`
-      : replacement
-        ? `${added.length} support${added.length === 1 ? " was" : "s were"} added to ${after.name}`
+    title: replacement
+      ? `${replacementCount === 1 ? "A support was" : `${replacementCount} supports were`} replaced on ${after.name}`
+      : removedOnly
+        ? `${removed.length} support${removed.length === 1 ? " was" : "s were"} removed from ${after.name}`
+        : added.length
+          ? `${added.length} support${added.length === 1 ? " was" : "s were"} added to ${after.name}`
         : `A support configuration changed on ${after.name}`,
     explanation: minion
       ? "Minion supports can alter the summoned actor, its action, or its uptime. Verify the replacement on the minion’s own damage formula before judging the larger tooltip text."
       : "Supports commonly supply separate multipliers or enable mechanics. This is one of the first places to check when a changed build loses damage.",
     evidence,
+    changeRefs,
     section: "skills",
   };
 }
 
 function primarySkillInsights(before: AnalyzedLoadout, after: AnalyzedLoadout) {
   const insights: StructuralInsight[] = [];
+  const beforeMinions = minionSkills(before);
+  const afterMinions = minionSkills(after);
+  if (beforeMinions.length || afterMinions.length) {
+    const left = new Map(beforeMinions.map((skill) => [actorSkillKey(skill), skill]));
+    const right = new Map(afterMinions.map((skill) => [actorSkillKey(skill), skill]));
+    const removed = [...left.entries()]
+      .filter(([key]) => !right.has(key))
+      .map(([, skill]) => skill.name);
+    const added = [...right.entries()]
+      .filter(([key]) => !left.has(key))
+      .map(([, skill]) => skill.name);
+    if (removed.length || added.length) {
+      insights.push({
+        id: "minion-skill-roster",
+        priority: 120,
+        tone: "risk",
+        label: "Summoned damage actors",
+        title: "The enabled summon roster changed",
+        explanation:
+          "Each summon has its own actor base, actions, supports, and rotation. Compare every enabled summon independently instead of treating the first active skill as the whole build.",
+        evidence: [
+          removed.length ? `Removed: ${displayList(removed)}` : "",
+          added.length ? `Added: ${displayList(added)}` : "",
+        ].filter(Boolean),
+        section: "skills",
+      });
+    }
+    for (const [key, earlier] of left) {
+      const current = right.get(key);
+      if (!current) continue;
+      if (earlier.level !== current.level) {
+        const down = (current.level ?? 0) < (earlier.level ?? 0);
+        insights.push({
+          id: `minion-skill-level:${key}`,
+          priority: down ? 112 : 78,
+          tone: down ? "risk" : "candidate",
+          label: "Summon skill level",
+          title:
+            `${current.name} changed from level ${earlier.level ?? "?"} to ${current.level ?? "?"}`,
+          explanation:
+            "A summon-skill level changes the summoned actor baseline and its action foundations. It must be evaluated on that actor, not through the player's weapon-hit formula.",
+          evidence: [`L${earlier.level ?? "?"} → L${current.level ?? "?"}`],
+          section: "skills",
+        });
+      }
+      const swap = supportSwapInsight(
+        earlier,
+        current,
+        `minion-support-swap:${key}`,
+        "minion",
+        key,
+      );
+      if (swap) insights.push(swap);
+    }
+  }
   const left = primarySkill(before);
   const right = primarySkill(after);
   if (!left || !right) return insights;
+  const hybrid = beforeMinions.length > 0 || afterMinions.length > 0;
   if (skillKey(left) !== skillKey(right)) {
     insights.push({
-      id: "main-skill-changed",
+      id: hybrid ? "player-main-skill-changed" : "main-skill-changed",
       priority: 120,
       tone: "risk",
       label: "Main damage skill",
@@ -174,7 +377,7 @@ function primarySkillInsights(before: AnalyzedLoadout, after: AnalyzedLoadout) {
   if (left.level !== right.level) {
     const down = (right.level ?? 0) < (left.level ?? 0);
     insights.push({
-      id: "main-skill-level",
+      id: hybrid ? "player-main-skill-level" : "main-skill-level",
       priority: down ? 112 : 78,
       tone: down ? "risk" : "candidate",
       label: "Main skill level",
@@ -184,9 +387,78 @@ function primarySkillInsights(before: AnalyzedLoadout, after: AnalyzedLoadout) {
       section: "skills",
     });
   }
-  const swap = supportSwapInsight(left, right);
+  const swap = supportSwapInsight(
+    left,
+    right,
+    hybrid ? "player-main-support-swap" : "main-support-swap",
+    "player",
+    after.comparisonContext?.actorId
+      ?? before.comparisonContext?.actorId
+      ?? "player",
+  );
   if (swap) insights.push(swap);
   return insights;
+}
+
+function otherSkillInsights(
+  before: AnalyzedLoadout,
+  after: AnalyzedLoadout,
+): StructuralInsight[] {
+  const left = new Map(before.skills.map((skill) => [skillKey(skill), skill]));
+  const right = new Map(after.skills.map((skill) => [skillKey(skill), skill]));
+  const represented = new Set([
+    ...minionSkills(before).map(skillKey),
+    ...minionSkills(after).map(skillKey),
+    ...(primarySkill(before) ? [skillKey(primarySkill(before)!)] : []),
+    ...(primarySkill(after) ? [skillKey(primarySkill(after)!)] : []),
+  ]);
+  const changed = [...new Set([...left.keys(), ...right.keys()])]
+    .filter((key) =>
+      !represented.has(key)
+      && signature(left.get(key) ?? null) !== signature(right.get(key) ?? null));
+  if (!changed.length) return [];
+  const moduleChanges = changed.filter((key) => {
+    const earlier = left.get(key);
+    const current = right.get(key);
+    return /(^|\b)module:/i.test(earlier?.name ?? "")
+      || /(^|\b)module:/i.test(current?.name ?? "")
+      || /module/i.test(earlier?.slot ?? current?.slot ?? "");
+  });
+  const otherChanges = changed.filter((key) => !moduleChanges.includes(key));
+  const evidenceFor = (keys: string[]) => keys.slice(0, 6).map((key) => {
+    const earlier = left.get(key);
+    const current = right.get(key);
+    const slot = current?.slot ?? earlier?.slot ?? key;
+    return `${slot}: ${earlier?.name ?? "Empty"} → ${current?.name ?? "Empty"}`;
+  });
+  return [
+    ...(moduleChanges.length
+      ? [{
+          id: "actor-module-change",
+          priority: 86,
+          tone: "neutral" as const,
+          label: "Actor modules",
+          title: `${moduleChanges.length} actor module${moduleChanges.length === 1 ? "" : "s"} changed`,
+          explanation:
+            "A module can change which actor mechanic or action package is active, but the module name alone is not proof of a summoned damage actor. Isolate the module swap before assigning direction.",
+          evidence: evidenceFor(moduleChanges),
+          section: "skills" as const,
+        }]
+      : []),
+    ...(otherChanges.length
+      ? [{
+          id: "other-skill-change",
+          priority: 44,
+          tone: "neutral" as const,
+          label: "Other skills",
+          title: `${otherChanges.length} utility or unassigned skill socket${otherChanges.length === 1 ? "" : "s"} changed`,
+          explanation:
+            "These sockets changed outside the proven main player and summoned-actor tracks. Inspect their support, aura, trigger, or utility role without treating slot order as proof that they deal the build’s main damage.",
+          evidence: evidenceFor(otherChanges),
+          section: "skills" as const,
+        }]
+      : []),
+  ];
 }
 
 function weaponInsight(before: AnalyzedLoadout, after: AnalyzedLoadout) {
@@ -200,6 +472,19 @@ function weaponInsight(before: AnalyzedLoadout, after: AnalyzedLoadout) {
   if (!changed.length) return null;
   const evidence = changed.map(({ slot, before: a, after: b }) =>
     `${slot.replace("hand", " hand")}: ${a?.name ?? "Empty"} → ${b?.name ?? "Empty"}`);
+  if (isMinionLoadout(before) || isMinionLoadout(after)) {
+    return {
+      id: "player-weapon-change",
+      priority: 36,
+      tone: "neutral" as const,
+      label: "Player weapon",
+      title: `${changed.length === 1 ? "A player weapon slot changed" : "Player weapon slots changed"}`,
+      explanation:
+        "Spirit Magi use their own actor baselines; the player's weapon base does not automatically feed their actions. Review only explicit Minion, Spirit Magus, aura, or mechanic-enabling text on this item before assigning an impact.",
+      evidence,
+      section: "gear" as const,
+    };
+  }
   return {
     id: "weapon-change",
     priority: 96,
@@ -348,6 +633,7 @@ export function compareStructure(
   const changedRows = changedRowsBySystem(before, after);
   const insights = [
     ...primarySkillInsights(before, after),
+    ...otherSkillInsights(before, after),
     weaponInsight(before, after),
     ...treeInsights(before, after),
     pactInsight(before, after),

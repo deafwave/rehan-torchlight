@@ -1,5 +1,6 @@
 import "./style.css";
 import { cycleDps } from "@rehan/dmg/damageModel";
+import { knownMinionDamageCoverageMatches } from "@rehan/dmg/minionDamageEnvelope";
 import { renderBreakdown } from "./breakdown";
 import {
   buildWaterfall,
@@ -36,6 +37,28 @@ import {
   type GuardedEvidenceReadiness,
 } from "./evidence-state";
 import { presentedChangeKind, skillDisplay } from "./change-presentation";
+import {
+  actionPlanReport,
+  buildComparisonActionPlan,
+  type ActionFinding,
+  type ActionProof,
+  type ComparisonActionPlan,
+} from "./action-plan";
+import { compareBingFactorLedgerLoadoutDisplays } from "./bing-factor-evidence";
+import {
+  compareObservedDamageMeasurements,
+  parseObservedDamageMeasurement,
+  type ObservedDamageMetric,
+  type ObservedMeasurementConfidence,
+  type ObservedMeasurementScope,
+} from "./observed-measurement";
+import {
+  observedFormScope,
+  observedMetadataConflicts,
+  sharedObservedFormConditions,
+  sharedObservedFormDuration,
+  sharedObservedFormText,
+} from "./observed-form-state";
 
 let demo: DemoData;
 const builds: AnalyzedBuild[] = [];
@@ -48,7 +71,7 @@ function loadImportCatalog(): Promise<ImportCatalog> {
     importCatalogPromise = fetch(importCatalogUrl)
       .then((response) => {
         if (!response.ok) {
-          throw new Error(`The SS13 import catalog could not be loaded (${response.status}).`);
+          throw new Error(`The import catalogs could not be loaded (${response.status}).`);
         }
         return response.json() as Promise<ImportCatalog>;
       })
@@ -61,7 +84,13 @@ function loadImportCatalog(): Promise<ImportCatalog> {
 }
 
 type Side = "before" | "after";
-type View = "diagnosis" | "changes" | "formula" | "survival" | "coverage";
+type View =
+  | "diagnosis"
+  | "actions"
+  | "changes"
+  | "formula"
+  | "survival"
+  | "coverage";
 type ChangeSection = "gear" | "skills" | "trees" | "memories" | "slates" | "pacts";
 
 interface Selection {
@@ -75,6 +104,7 @@ let activeView: View = "diagnosis";
 let changeSection: ChangeSection = "gear";
 let formulaSide: Side = "after";
 let importTarget: Side = "after";
+let reportCopyState: "idle" | "copied" | "failed" = "idle";
 
 const app = document.getElementById("app")!;
 app.innerHTML = `<main class="app-loading" aria-live="polite">
@@ -224,11 +254,48 @@ function summaryMetric(label: string, value: string, note: string, className = "
   </div>`;
 }
 
-function renderSummary(before: AnalyzedLoadout, after: AnalyzedLoadout) {
-  const beforeDps = before.model?.dps;
-  const afterDps = after.model?.dps;
-  const bothModeled = beforeDps != null && afterDps != null;
-  const delta = bothModeled ? percentChange(beforeDps, afterDps) : null;
+function renderSummary(
+  before: AnalyzedLoadout,
+  after: AnalyzedLoadout,
+  plan: ComparisonActionPlan,
+) {
+  const beforeModeledDps = before.model?.dps;
+  const afterModeledDps = after.model?.dps;
+  const bothModeled =
+    beforeModeledDps != null
+    && afterModeledDps != null
+    && plan.summary.netDpsAvailable;
+  const observedComparison = before.observedDamage && after.observedDamage
+    ? compareObservedDamageMeasurements(
+      before.observedDamage,
+      after.observedDamage,
+    )
+    : null;
+  const observedComparable =
+    observedComparison?.status === "comparable"
+    && before !== after
+    && plan.summary.comparisonKind !== "incompatible"
+    && plan.findings.some((finding) =>
+      finding.id === `observed:${observedComparison.metric}`)
+      ? observedComparison
+      : null;
+  const delta = observedComparable
+    ? observedComparable.percentChange
+    : bothModeled
+      ? percentChange(beforeModeledDps, afterModeledDps)
+      : null;
+  const observedScopeLabel = observedComparable?.scope === "whole-loadout"
+    ? "whole-loadout"
+    : "actor/skill";
+  const resultMetricLabel = observedComparable?.metric === "damage-per-hit"
+    ? `${observedScopeLabel} damage / hit`
+    : observedComparable
+      ? `${observedScopeLabel} DPS`
+      : "DPS";
+  const beforeResultValue = observedComparable?.beforeObservedValue
+    ?? beforeModeledDps;
+  const afterResultValue = observedComparable?.afterObservedValue
+    ?? afterModeledDps;
   const structure = compareStructure(before, after);
   const defense = compareDefense(before, after);
   const beforeDefenseEvidence = exactDefense(before);
@@ -247,18 +314,40 @@ function renderSummary(before: AnalyzedLoadout, after: AnalyzedLoadout) {
   const guardedBlocked = guardedStates.some((state) =>
     state === "blocked" || state === "partial");
   const deltaClass = delta == null ? "neutral" : delta < 0 ? "negative" : "positive";
-  const headline = delta == null
-    ? structure.changedSystems.length
-      ? `${structure.changedSystems.length} build system${structure.changedSystems.length === 1 ? "" : "s"} changed`
-      : "No imported changes found"
-    : `${signedPercent(delta)} supported DPS`;
-  const note = delta == null
-    ? structure.insights[0]
-      ? `First review: ${structure.insights[0].title}`
-      : "Calculation is waiting for a compatible model"
-    : delta < 0
-      ? "The changed build is weaker under the same boss scenario"
-      : "The changed build is stronger under the same boss scenario";
+  const incompatible = plan.summary.comparisonKind === "incompatible";
+  const reference = plan.summary.comparisonKind === "reference";
+  const headline = incompatible
+    ? "Pair not comparable for progression"
+    : observedComparable
+      ? reference
+        ? `${signedPercent(delta!)} observed ${resultMetricLabel} contrast`
+        : `${signedPercent(delta!)} observed ${resultMetricLabel}`
+    : delta == null
+      ? reference
+        ? structure.changedSystems.length
+          ? `${structure.changedSystems.length} build system${structure.changedSystems.length === 1 ? "" : "s"} differ · reference only`
+          : "Reference pair has no imported differences"
+        : structure.changedSystems.length
+          ? `${structure.changedSystems.length} build system${structure.changedSystems.length === 1 ? "" : "s"} changed`
+          : "No imported changes found"
+      : reference
+        ? `${signedPercent(delta)} modeled reference contrast`
+        : `${signedPercent(delta)} supported DPS`;
+  const note = incompatible
+    ? plan.summary.comparisonReason
+    : observedComparable
+      ? reference
+        ? `${plan.summary.comparisonReason} The declared observation is aligned, but it does not prove which edit caused the result.`
+        : `The ${observedComparable.confidence} in-game result is aligned in explicit ${observedScopeLabel} scope to the same declared actor, skill, target, and test setup; attribution below remains evidence-ranked.`
+    : reference
+      ? plan.summary.comparisonReason
+    : delta == null
+      ? structure.insights[0]
+        ? `First review: ${structure.insights[0].title}`
+        : "Calculation is waiting for a compatible model"
+      : delta < 0
+        ? "The changed build is weaker under the same boss scenario"
+        : "The changed build is stronger under the same boss scenario";
   const lowestCoverage = Math.min(
     before.model?.coverage ?? 0,
     after.model?.coverage ?? 0,
@@ -275,8 +364,22 @@ function renderSummary(before: AnalyzedLoadout, after: AnalyzedLoadout) {
       </div>
     </div>
     <div class="summary-metrics">
-      ${summaryMetric("Before DPS", beforeDps == null ? "Not calculated" : compactNumber(beforeDps), before.name, "before")}
-      ${summaryMetric("After DPS", afterDps == null ? "Not calculated" : compactNumber(afterDps), after.name, "after")}
+      ${summaryMetric(
+        `Before ${resultMetricLabel}`,
+        beforeResultValue == null ? "Not calculated" : compactNumber(beforeResultValue),
+        observedComparable
+          ? `${before.name} · user-observed`
+          : before.name,
+        "before",
+      )}
+      ${summaryMetric(
+        `After ${resultMetricLabel}`,
+        afterResultValue == null ? "Not calculated" : compactNumber(afterResultValue),
+        observedComparable
+          ? `${after.name} · user-observed`
+          : after.name,
+        "after",
+      )}
       ${summaryMetric(
         "EHP",
         "Not calculated",
@@ -288,30 +391,50 @@ function renderSummary(before: AnalyzedLoadout, after: AnalyzedLoadout) {
         "disabled",
       )}
       ${summaryMetric(
-        bothModeled ? "Formula coverage" : "Classification coverage",
-        bothModeled
+        observedComparable
+          ? "Observed result"
+          : bothModeled ? "Formula coverage" : "Classification coverage",
+        observedComparable
+          ? observedComparable.confidence
+          : bothModeled
           ? `${Math.round(lowestCoverage * 100)}%+`
           : classificationFloor == null ? "Pending" : `${Math.round(classificationFloor * 100)}%+`,
-        bothModeled
+        observedComparable
+          ? "Outcome known; cause still evidence-ranked"
+          : bothModeled
           ? "Classified modifier lines"
           : classificationFloor == null ? "Imported structure only" : "Recognized lines; no DPS claim",
-        (bothModeled ? lowestCoverage : classificationFloor ?? 0) < 0.6 ? "warning" : "",
+        !observedComparable
+          && (bothModeled ? lowestCoverage : classificationFloor ?? 0) < 0.6
+          ? "warning"
+          : "",
       )}
     </div>
-    ${bothModeled
+    ${observedComparable
+      ? `<div class="scenario-strip observed-scope">
+          <span class="scenario-label">Observed scenario</span>
+          <span>${esc(observedScopeLabel)} scope</span>
+          <span>${esc(observedComparable.before.targetLabel)}</span>
+          <span>${esc(observedComparable.before.scenarioLabel)}</span>
+          <span>${observedComparable.before.conditions.length
+            ? `${observedComparable.before.conditions.length} declared condition${observedComparable.before.conditions.length === 1 ? "" : "s"}`
+            : "No extra conditions declared"}</span>
+          <button type="button" class="text-button" data-view="actions">Review outcome and attribution</button>
+        </div>`
+      : bothModeled
       ? `<div class="scenario-strip">
           <span class="scenario-label">Shared scenario</span>
           <span>Boss target</span>
           <span>30% elemental / erosion resistance</span>
           <span>Full configured uptime</span>
-          <button type="button" class="text-button" data-view="coverage">Review assumptions</button>
+          <button type="button" class="text-button" data-view="${plan.findings.length ? "actions" : "coverage"}">${plan.findings.length ? `Open ${plan.findings.length} next actions` : "Review compatibility"}</button>
         </div>`
       : `<div class="scenario-strip evidence-scope">
           <span class="scenario-label">Evidence scope</span>
           <span>${guardedReady ? "Imported entities and guarded source terms" : "Imported structure only"}</span>
           <span>${guardedBlocked ? "Blocked guarded layers remain explicit" : "No target scenario applied"}</span>
           <span>DPS / EHP not guessed</span>
-          <button type="button" class="text-button" data-view="coverage">Review coverage</button>
+          <button type="button" class="text-button" data-view="${plan.findings.length ? "actions" : "coverage"}">${plan.findings.length ? `Open ${plan.findings.length} next actions` : "Review compatibility"}</button>
         </div>`}
   </section>`;
 }
@@ -513,12 +636,22 @@ const SYSTEM_LABELS: Record<BuildSystem, string> = {
   pacts: "Pactspirits",
 };
 
-function renderStructuralDiagnosis(before: AnalyzedLoadout, after: AnalyzedLoadout) {
+function renderStructuralDiagnosis(
+  before: AnalyzedLoadout,
+  after: AnalyzedLoadout,
+  plan: ComparisonActionPlan,
+) {
   const comparison = compareStructure(before, after);
-  if (!comparison.insights.length) {
+  const normalized = plan.findings.filter((finding) =>
+    finding.target.view === "changes" && finding.target.section);
+  if (!normalized.length) {
     return `<div class="structural-empty">
-      <strong>No imported loadout differences were found.</strong>
-      <p>Choose two different loadouts or import a changed build to begin the comparison.</p>
+      <strong>${comparison.changedSystems.length
+        ? "No progression priority is safe for this pair."
+        : "No imported loadout differences were found."}</strong>
+      <p>${comparison.changedSystems.length
+        ? "The raw entities differ, but the current comparison context cannot turn them into one-character advice."
+        : "Choose two different loadouts or import a changed build to begin the comparison."}</p>
     </div>`;
   }
   return `<div class="structural-diagnosis">
@@ -531,17 +664,29 @@ function renderStructuralDiagnosis(before: AnalyzedLoadout, after: AnalyzedLoado
     </div>
     <p class="structural-note">These are investigation priorities from the imported entities—not DPS estimates. Each card explains why the change matters and links to its source details.</p>
     <div class="insight-list">
-      ${comparison.insights.slice(0, 5).map((insight, index) => `<button type="button"
-        class="insight-card ${insight.tone}" data-open-section="${insight.section}">
+      ${normalized.slice(0, 5).map((finding, index) => {
+        const section = finding.target.section!;
+        const tone =
+          finding.direction === "loss"
+          || finding.direction === "weaker-input"
+          || finding.direction === "risk"
+            ? "risk"
+            : finding.direction === "gain"
+                || finding.direction === "stronger-input"
+              ? "candidate"
+              : "neutral";
+        return `<button type="button"
+        class="insight-card ${tone}" data-open-section="${section}">
         <span class="insight-rank">${index + 1}</span>
         <span class="insight-copy">
-          <span class="insight-label">${esc(insight.label)} · ${esc(SYSTEM_LABELS[insight.section])}</span>
-          <strong>${esc(insight.title)}</strong>
-          <span>${esc(insight.explanation)}</span>
-          <small>${insight.evidence.map((line) => esc(line)).join(" · ")}</small>
+          <span class="insight-label">${esc(finding.label)} · ${esc(SYSTEM_LABELS[section])}</span>
+          <strong>${esc(finding.title)}</strong>
+          <span>${esc(finding.explanation)}</span>
+          <small>${finding.evidence.map((line) => esc(line)).join(" · ")}</small>
         </span>
         <span class="insight-open" aria-hidden="true">Review →</span>
-      </button>`).join("")}
+      </button>`;
+      }).join("")}
     </div>
   </div>`;
 }
@@ -567,7 +712,9 @@ function renderPartialComparison(before: AnalyzedLoadout, after: AnalyzedLoadout
     </section>`;
   }
   const delta = right.value - left.value;
-  const deltaPct = left.value === 0 ? null : delta / left.value;
+  const deltaPct = left.value === 0
+    ? null
+    : percentChange(left.value, right.value);
   const direction = delta < -1e-9 ? "loss" : delta > 1e-9 ? "gain" : "neutral";
   const confidence = left.confidence === "confirmed-partial" && right.confidence === "confirmed-partial"
     ? "Confirmed partial"
@@ -708,18 +855,80 @@ function renderBingIntrinsicComparison(before: AnalyzedLoadout, after: AnalyzedL
   </section>`;
 }
 
+function renderBingFactorLedgerComparison(
+  before: AnalyzedLoadout,
+  after: AnalyzedLoadout,
+) {
+  if (!before.bingFactorLedger || !after.bingFactorLedger) return "";
+  const comparison = compareBingFactorLedgerLoadoutDisplays(
+    before.bingFactorLedger,
+    after.bingFactorLedger,
+  );
+  if (comparison.status !== "calculated-partial") {
+    return `<section class="bing-factor-panel blocked">
+      <div class="partial-proof-head">
+        <div><span class="eyebrow">Component factor ledger</span><h3>Factor comparison withheld</h3></div>
+        <span class="not-dps-badge">Not calculated</span>
+      </div>
+      <ul class="guarded-unavailable-list">${comparison.blockers.map((blocker) =>
+        `<li><strong>${esc(blocker.message)}</strong>${blocker.evidence ? `<small>${esc(blocker.evidence)}</small>` : ""}</li>`).join("")}</ul>
+    </section>`;
+  }
+  const factors = comparison.factorRows.filter((row) =>
+    row.status === "calculated-partial");
+  const scenarios = comparison.hitScenarioRows.filter((row) =>
+    row.status === "calculated-partial");
+  return `<section class="bing-factor-panel">
+    <div class="partial-proof-head">
+      <div><span class="eyebrow">Component-scoped factor ledger</span><h3>See which multiplier moved each Hammer component</h3></div>
+      <div class="partial-badges"><span>Exact imported inputs</span><b>Not total hit</b><b>Not DPS</b></div>
+    </div>
+    <p>Ordinary and projectile-explosion components have different applicable factors. Stationary and moving states are shown separately; emitted projectile quantity stays outside every hit ratio.</p>
+    <div class="bing-factor-grid">
+      <div class="bing-factor-row head"><span>Known factor</span><span>Before</span><span>After</span><span>Movement</span></div>
+      ${factors.map((row) => `<div class="bing-factor-row ${row.direction}">
+        <span><strong>${esc(row.label)}</strong><small>${esc(row.scope)}${row.condition ? ` · ${esc(row.condition)}` : ""}</small></span>
+        <b>${esc(row.before.formatted)}</b>
+        <b>${esc(row.after.formatted)}</b>
+        <b>${esc(row.deltaLabel)}</b>
+      </div>`).join("")}
+    </div>
+    <div class="bing-scenario-grid">
+      ${scenarios.map((row) => `<article class="${row.direction}">
+        <span>${esc(row.condition)}</span>
+        <strong>${esc(row.label)}</strong>
+        <b>${esc(row.deltaLabel)}</b>
+        <small>×${esc(compactNumber(row.ratio))} · ${row.factorLabels.map((label) => esc(label)).join(" × ")}</small>
+      </article>`).join("")}
+    </div>
+    <div class="bing-emission-separation">
+      <strong>Emission lane stays separate.</strong>
+      <span>${esc(comparison.warning)}</span>
+    </div>
+  </section>`;
+}
+
 function supportTermSide(
   evidence: SupportTermChange["before"],
   label: string,
 ) {
   if (!evidence) return `<div class="support-term-side empty"><span>${esc(label)}</span><strong>Not socketed</strong></div>`;
+  const configuration = [
+    evidence.level == null ? "" : `L${evidence.level}`,
+    evidence.supportType ? `type ${evidence.supportType}` : "",
+    evidence.tier == null ? "" : `T${evidence.tier}`,
+    evidence.rank == null ? "" : `R${evidence.rank}`,
+    evidence.rollValues?.length
+      ? `rolls [${evidence.rollValues.join(", ")}]`
+      : "",
+  ].filter(Boolean).join(" · ");
   if (evidence.status === "unsupported") {
-    return `<div class="support-term-side unsupported"><span>${esc(label)}</span>
+    return `<div class="support-term-side unsupported"><span>${esc(label)}${configuration ? ` · ${esc(configuration)}` : ""}</span>
       <strong>${esc(evidence.supportName ?? "Unknown support")}</strong>
       <p>${evidence.blockers.map((blocker) => esc(blocker)).join(" ")}</p></div>`;
   }
   return `<div class="support-term-side">
-    <span>${esc(label)}${evidence.level ? ` · L${evidence.level}` : ""}</span>
+    <span>${esc(label)}${configuration ? ` · ${esc(configuration)}` : ""}</span>
     <strong>${esc(evidence.supportName ?? "Unknown support")}</strong>
     <ul>${evidence.effects.map((effect) => `<li>
       <b>${esc(effect.display)}</b>
@@ -742,13 +951,32 @@ function renderSupportTermChanges(before: AnalyzedLoadout, after: AnalyzedLoadou
     </div>
     <p>These values come from the season support tables. They are not added together: damage-type share, critical chance, projectile geometry, enemy Life, and uptime still decide their net value.</p>
     <div class="support-change-list">
-      ${changes.map((change) => `<article class="support-change ${change.kind}">
-        <div class="support-change-head"><span>${esc(change.kind)}</span><strong>${esc(change.supportName)}</strong></div>
+      ${changes.map((change) => {
+        const beforeName = change.before?.supportName ?? null;
+        const afterName = change.after?.supportName ?? null;
+        const title = change.kind === "replaced"
+          && beforeName
+          && afterName
+          && beforeName !== afterName
+          ? `${beforeName} → ${afterName}`
+          : change.supportName;
+        const socketLabel = change.before
+          && change.after
+          && change.before.socketIndex !== change.after.socketIndex
+          ? `sockets ${change.before.socketIndex + 1} → ${change.after.socketIndex + 1}`
+          : `socket ${change.socketIndex + 1}`;
+        const kindLabel = change.kind.replaceAll("-", " ");
+        return `<article class="support-change ${change.kind}">
+        <div class="support-change-head">
+          <span>${esc(kindLabel)} · ${esc(change.skillName)} · ${esc(socketLabel)}</span>
+          <strong>${esc(title)}</strong>
+        </div>
         <div class="support-term-sides">
           ${supportTermSide(change.before, "Before")}
           ${supportTermSide(change.after, "After")}
         </div>
-      </article>`).join("")}
+      </article>`;
+      }).join("")}
     </div>
     ${provenanceLinks(provenance)}
   </section>`;
@@ -786,25 +1014,40 @@ function summonTermSide(
     <div class="minion-action-grid">
       ${evidence.actions.map((action) => {
         const foundation = action.foundation;
-        const perContact = foundation.rawDamagePerContact == null
+        const known = action.knownDamage;
+        const useKnown = known.status === "calculated-partial"
+          && known.knownPerContact != null;
+        const perContactValue = useKnown
+          ? known.knownPerContact
+          : foundation.rawDamagePerContact;
+        const fullContactValue = useKnown
+          ? known.knownDeterministicFullContact
+          : foundation.rawDamageAtDeterministicFullContact;
+        const perContact = perContactValue == null
           ? "No direct hit"
-          : compactNumber(foundation.rawDamagePerContact);
-        const fullContact = foundation.rawDamageAtDeterministicFullContact == null
+          : compactNumber(perContactValue);
+        const fullContact = fullContactValue == null
           ? null
-          : compactNumber(foundation.rawDamageAtDeterministicFullContact);
+          : compactNumber(fullContactValue);
         return `<article class="minion-action-card">
           <div class="minion-action-head">
             <span>${esc(action.role)}</span>
             <strong>${esc(action.actionName)}</strong>
           </div>
           <div class="minion-action-math">
-            <div><span>Raw / contact</span><b>${esc(perContact)}</b></div>
+            <div><span>${useKnown ? "Known / contact" : "Raw / contact"}</span><b>${esc(perContact)}</b></div>
             ${fullContact != null && fullContact !== perContact
               ? `<div><span>${esc(String(foundation.deterministicContacts))} contacts</span><b>${esc(fullContact)}</b></div>`
               : ""}
             <div><span>Cast / cooldown</span><b>${esc(`${action.castTimeSeconds}s${action.cooldownSeconds == null ? "" : ` / ${action.cooldownSeconds}s`}`)}</b></div>
           </div>
-          ${foundation.baseDamagePctPerContact == null ? "" : `<small>${esc(compactNumber(foundation.baseDamagePctPerContact))}% of the actor's base damage per contact. Modifiers, AI, target state, Growth/Breeze, and overlap are excluded.</small>`}
+          ${known.factors.length ? `<div class="minion-factor-chips">${known.factors.map((factor) =>
+            `<span>${esc(factor.sourceName)} · ×${esc(compactNumber(factor.multiplier))}</span>`).join("")}</div>` : ""}
+          ${known.excluded.length ? `<details class="minion-exclusions">
+            <summary>${known.excluded.length} input${known.excluded.length === 1 ? "" : "s"} excluded from this known component</summary>
+            <ul>${known.excluded.map((blocker) => `<li><strong>${esc(blocker.message)}</strong>${blocker.evidence ? `<small>${esc(blocker.evidence)}</small>` : ""}</li>`).join("")}</ul>
+          </details>` : ""}
+          ${foundation.baseDamagePctPerContact == null ? "" : `<small>${esc(compactNumber(foundation.baseDamagePctPerContact))}% of the actor's base damage per contact.${useKnown ? " Confirmed unconditional factors shown above are included." : ""} Unresolved modifiers, AI, target state, Growth/Breeze, and overlap are excluded.</small>`}
           ${action.terms.length ? `<ul>${action.terms.map((term) => `<li><b>${esc(term.display)}</b><span>${esc(term.label)}${term.condition ? ` · ${esc(term.condition)}` : ""}</span></li>`).join("")}</ul>` : ""}
         </article>`;
       }).join("")}
@@ -851,15 +1094,22 @@ function minionFoundationRows(changes: SummonTermChange[]) {
     return change.after.actions.flatMap((action) => {
       const earlier = beforeActions.get(action.actionId);
       if (!earlier) return [];
-      const beforeFull = earlier.foundation.rawDamageAtDeterministicFullContact;
-      const afterFull = action.foundation.rawDamageAtDeterministicFullContact;
+      const compatibleKnown =
+        earlier.knownDamage.status === "calculated-partial"
+        && knownMinionDamageCoverageMatches(
+          earlier.knownDamage,
+          action.knownDamage,
+        );
+      if (!compatibleKnown) return [];
+      const beforeFull = earlier.knownDamage.knownDeterministicFullContact;
+      const afterFull = action.knownDamage.knownDeterministicFullContact;
       const useFull = beforeFull != null && afterFull != null;
       const beforeValue = useFull
         ? beforeFull
-        : earlier.foundation.rawDamagePerContact;
+        : earlier.knownDamage.knownPerContact;
       const afterValue = useFull
         ? afterFull
-        : action.foundation.rawDamagePerContact;
+        : action.knownDamage.knownPerContact;
       if (beforeValue == null || afterValue == null || beforeValue === afterValue) return [];
       return [{
         skillName: change.skillName,
@@ -867,6 +1117,7 @@ function minionFoundationRows(changes: SummonTermChange[]) {
         scope: useFull && action.foundation.deterministicContacts !== 1
           ? `${action.foundation.deterministicContacts} deterministic contacts`
           : "per contact",
+        basis: "known unmitigated component",
         beforeValue,
         afterValue,
         ratio: beforeValue === 0 ? null : afterValue / beforeValue,
@@ -963,14 +1214,14 @@ function renderSummonTermChanges(before: AnalyzedLoadout, after: AnalyzedLoadout
       <div><strong>Total EHP blocked</strong><span>${playerEhpBlockers.map((blocker) => esc(blocker)).join(" ")}</span></div>
     </div>
     ${foundationRows.length ? `<div class="minion-foundation-deltas">
-      <div class="minion-foundation-head"><span>Action foundation</span><span>Before</span><span>After</span><span>Raw ratio</span></div>
+      <div class="minion-foundation-head"><span>Known action component</span><span>Before</span><span>After</span><span>Ratio</span></div>
       ${foundationRows.map((row) => `<div>
-        <span><strong>${esc(row.actionName)}</strong><small>${esc(row.skillName)} · ${esc(row.scope)}</small></span>
+        <span><strong>${esc(row.actionName)}</strong><small>${esc(row.skillName)} · ${esc(row.basis)} · ${esc(row.scope)}</small></span>
         <b>${esc(compactNumber(row.beforeValue))}</b>
         <b>${esc(compactNumber(row.afterValue))}</b>
         <b>${row.ratio == null ? "—" : `×${esc(compactNumber(row.ratio))}`}</b>
       </div>`).join("")}
-      <p>Ratios describe only the source-pinned actor base × action coefficient. They do not include supports, player/minion modifiers, AI frequency, or target contact.</p>
+      <p>Known ratios include only confirmed unconditional factors with unchanged exclusion coverage. They do not include unresolved player/minion modifiers, AI frequency, enemy mitigation, or target overlap.</p>
     </div>` : ""}
     <div class="support-change-list">${evidenceBody}</div>
     ${beforeReference || afterReference ? `<details class="iris-trait-evidence">
@@ -1009,7 +1260,11 @@ function renderLocalCaptureHandoff(...loadouts: AnalyzedLoadout[]) {
   </section>`;
 }
 
-function renderDiagnosis(before: AnalyzedLoadout, after: AnalyzedLoadout) {
+function renderDiagnosis(
+  before: AnalyzedLoadout,
+  after: AnalyzedLoadout,
+  plan: ComparisonActionPlan,
+) {
   if (!before.snapshot || !after.snapshot || !before.model || !after.model) {
     return `<div class="content-grid">
       <section class="analysis-panel empty-analysis">
@@ -1019,9 +1274,10 @@ function renderDiagnosis(before: AnalyzedLoadout, after: AnalyzedLoadout) {
         ${renderLocalCaptureHandoff(after, before)}
         ${renderPartialComparison(before, after)}
         ${renderBingIntrinsicComparison(before, after)}
+        ${renderBingFactorLedgerComparison(before, after)}
         ${renderSupportTermChanges(before, after)}
         ${renderSummonTermChanges(before, after)}
-        ${renderStructuralDiagnosis(before, after)}
+        ${renderStructuralDiagnosis(before, after, plan)}
         <div class="honesty-grid">
           <div><span>Imported</span><strong>Loadout structure</strong><p>Items, skills, trees, memories, slates, and pacts.</p></div>
           <div><span>Prioritized</span><strong>Changes to investigate</strong><p>Support, weapon, tree, and secondary-system differences.</p></div>
@@ -1293,12 +1549,38 @@ function renderMinionFormulaView(active: AnalyzedLoadout) {
         ? support.blockerEvidence.map((blocker) =>
             `${blocker.message}${blocker.evidence ? ` Source: ${blocker.evidence}.` : ""}`)
         : support.blockers));
-  const blockers = [...new Set(
-    [
-      ...summons.flatMap((summon) => summon.minionDps.blockers),
-      ...supportBlockers,
-    ],
-  )];
+  const actionExclusions = summons.flatMap((summon) =>
+    summon.actions.flatMap((action) =>
+      action.knownDamage.excluded.map((blocker) => ({
+        ...blocker,
+        context: `${summon.skillName} · ${action.actionName}`,
+      }))));
+  const generalBlockers = [...new Set([
+    ...summons.flatMap((summon) => summon.minionDps.blockers),
+    ...supportBlockers,
+  ])];
+  const actionExclusionGroups = [
+    ...actionExclusions.reduce((groups, blocker) => {
+      const key = `${blocker.code}\u0000${blocker.message}`;
+      const existing = groups.get(key) ?? {
+        code: blocker.code,
+        message: blocker.message,
+        contexts: new Set<string>(),
+        evidence: new Set<string>(),
+      };
+      existing.contexts.add(blocker.context);
+      if (blocker.evidence) existing.evidence.add(blocker.evidence);
+      groups.set(key, existing);
+      return groups;
+    }, new Map<string, {
+      code: string;
+      message: string;
+      contexts: Set<string>;
+      evidence: Set<string>;
+    }>()).values(),
+  ].sort((left, right) =>
+    left.message.localeCompare(right.message)
+    || left.code.localeCompare(right.code));
   const provenance = summons.flatMap((summon) => summon.provenance);
   return `<section class="formula-panel minion-formula-panel">
     <div class="analysis-heading">
@@ -1306,9 +1588,9 @@ function renderMinionFormulaView(active: AnalyzedLoadout) {
       ${formulaSideControls()}
     </div>
     <div class="minion-formula-primer">
-      <span>actor base damage</span><i>×</i><span>action coefficient</span><i>×</i><span>deterministic contacts, if known</span><i>=</i><strong>raw action foundation</strong>
+      <span>actor base</span><i>×</i><span>action coefficient</span><i>×</i><span>confirmed unconditional factors</span><i>=</i><strong>known damage / contact</strong>
     </div>
-    <p class="section-intro">This is the first source-complete arithmetic layer for the summoned actor. It deliberately stops before minion/player modifiers, AI action frequency, target overlap, and enemy mitigation.</p>
+    <p class="section-intro">This source-backed envelope includes only factors whose actor, action applicability, and unconditional state are confirmed. It deliberately stops before unresolved modifier pools, AI action frequency, target overlap, and enemy mitigation.</p>
     <div class="minion-formula-actors">
       ${summons.map((summon) => `<article>
         <div class="minion-formula-actor-head">
@@ -1318,15 +1600,24 @@ function renderMinionFormulaView(active: AnalyzedLoadout) {
           <em>${summon.baseline.confidence === "confirmed-partial" ? "confirmed actor row" : "shared actor row · inferred"}</em>
         </div>
         <div class="minion-formula-table">
-          <div class="minion-formula-row head"><span>Action</span><span>Coefficient</span><span>Contacts</span><span>Raw / contact</span><span>Known full contact</span></div>
+          <div class="minion-formula-row head"><span>Action</span><span>Raw / contact</span><span>Applied factors</span><span>Known / contact</span><span>Known full contact</span></div>
           ${summon.actions.map((action) => {
             const foundation = action.foundation;
+            const known = action.knownDamage;
+            const factors = known.factors.map((factor) =>
+              `${factor.sourceName} ×${compactNumber(factor.multiplier)}`);
             return `<div class="minion-formula-row">
-              <span><strong>${esc(action.actionName)}</strong><small>${esc(action.role)} · cast ${action.castTimeSeconds}s${action.cooldownSeconds == null ? "" : ` · CD ${action.cooldownSeconds}s`}</small></span>
-              <b>${foundation.baseDamagePctPerContact == null ? "—" : `${esc(compactNumber(foundation.baseDamagePctPerContact))}%`}</b>
-              <b>${foundation.deterministicContacts == null ? "runtime" : esc(String(foundation.deterministicContacts))}</b>
+              <span><strong>${esc(action.actionName)}</strong><small>${esc(action.role)} · ${foundation.baseDamagePctPerContact == null ? "no damage coefficient" : `${esc(compactNumber(foundation.baseDamagePctPerContact))}% coefficient`} · ${foundation.deterministicContacts == null ? "runtime contacts" : `${foundation.deterministicContacts} known contacts`}</small></span>
               <b>${foundation.rawDamagePerContact == null ? "—" : esc(compactNumber(foundation.rawDamagePerContact))}</b>
-              <b>${foundation.rawDamageAtDeterministicFullContact == null ? "not proven" : esc(compactNumber(foundation.rawDamageAtDeterministicFullContact))}</b>
+              <b class="factor-cell">${factors.length ? factors.map((factor) => esc(factor)).join(" · ") : "none compiled"}${known.excluded.length
+                ? `<details class="minion-row-exclusions">
+                    <summary>${known.excluded.length} excluded input${known.excluded.length === 1 ? "" : "s"}</summary>
+                    <ul>${known.excluded.map((blocker) =>
+                      `<li><strong>${esc(blocker.message)}</strong>${blocker.evidence ? `<small>${esc(blocker.evidence)}</small>` : ""}</li>`).join("")}</ul>
+                  </details>`
+                : ""}</b>
+              <b>${known.knownPerContact == null ? "—" : esc(compactNumber(known.knownPerContact))}</b>
+              <b>${known.knownDeterministicFullContact == null ? "not proven" : esc(compactNumber(known.knownDeterministicFullContact))}</b>
             </div>`;
           }).join("")}
         </div>
@@ -1334,8 +1625,24 @@ function renderMinionFormulaView(active: AnalyzedLoadout) {
     </div>
     <div class="model-boundary">
       <div class="boundary-icon">!</div>
-      <div><strong>Raw action foundations are not hit totals or minion DPS.</strong>
-      <p>${blockers.map((blocker) => esc(blocker)).join(" ")}</p></div>
+      <div><strong>Known unmitigated components are not total hits or minion DPS.</strong>
+      ${generalBlockers.length
+        ? `<ul>${generalBlockers.map((blocker) => `<li>${esc(blocker)}</li>`).join("")}</ul>`
+        : "<p>No additional exclusion blocker was emitted for this guarded slice.</p>"}
+      ${actionExclusionGroups.length
+        ? `<details class="minion-boundary-details">
+            <summary>${actionExclusionGroups.length} grouped action-input exclusion${actionExclusionGroups.length === 1 ? "" : "s"} · exact rows above</summary>
+            <ul>${actionExclusionGroups.map((group) => {
+              const contexts = [...group.contexts].sort();
+              const evidence = [...group.evidence].sort();
+              return `<li><strong>${esc(group.message)}</strong>
+                <small>${contexts.length} action row${contexts.length === 1 ? "" : "s"}: ${contexts.slice(0, 3).map(esc).join(" · ")}${contexts.length > 3 ? ` · +${contexts.length - 3} more` : ""}</small>
+                ${evidence.length ? `<small>Evidence: ${evidence.slice(0, 2).map(esc).join(" · ")}${evidence.length > 2 ? ` · +${evidence.length - 2} more` : ""}</small>` : ""}
+              </li>`;
+            }).join("")}</ul>
+          </details>`
+        : ""}
+      </div>
     </div>
     ${provenanceLinks(provenance)}
   </section>`;
@@ -1462,6 +1769,11 @@ function guardedCoverageItems(loadout: AnalyzedLoadout) {
         state: "blocked",
       });
     }
+  } else if (loadout.supportEvidenceBlockers?.length) {
+    items.push({
+      label: `Main-skill support evidence blocked · ${loadout.supportEvidenceBlockers.length}`,
+      state: "blocked",
+    });
   }
   if (loadout.summonEvidence?.length) {
     items.push({
@@ -1876,9 +2188,483 @@ function renderSurvival(before: AnalyzedLoadout, after: AnalyzedLoadout) {
   </section>`;
 }
 
-function navigation() {
+function observedIdentityFallback(
+  before: AnalyzedLoadout,
+  after: AnalyzedLoadout,
+  field: "actorId" | "archetypeId",
+) {
+  const left = before.comparisonContext?.[field] ?? null;
+  const right = after.comparisonContext?.[field] ?? null;
+  if (left && right && left === right) return left;
+  if (field === "actorId" && before.hero === after.hero) return before.hero;
+  if (field === "archetypeId") {
+    const beforeSkill = before.skills.find((skill) =>
+      skill.kind === "active" && skill.enabled)?.name;
+    const afterSkill = after.skills.find((skill) =>
+      skill.kind === "active" && skill.enabled)?.name;
+    if (beforeSkill && beforeSkill === afterSkill) return beforeSkill;
+  }
+  return "";
+}
+
+function renderObservedComparisonForm(
+  before: AnalyzedLoadout,
+  after: AnalyzedLoadout,
+  plan: ComparisonActionPlan,
+) {
+  const left = before.observedDamage;
+  const right = after.observedDamage;
+  const existing = left && right
+    ? compareObservedDamageMeasurements(left, right)
+    : null;
+  const metric: ObservedDamageMetric | "" =
+    left?.metric === right?.metric
+      ? left?.metric ?? "dps"
+      : left && right
+        ? ""
+        : left?.metric ?? right?.metric ?? "dps";
+  const leftScope = left ? observedFormScope(left.scope) : null;
+  const rightScope = right ? observedFormScope(right.scope) : null;
+  const scope: ObservedMeasurementScope | "" =
+    leftScope === rightScope
+      ? leftScope ?? "actor-skill"
+      : leftScope && rightScope
+        ? ""
+        : leftScope ?? rightScope ?? "actor-skill";
+  const beforeConfidence: ObservedMeasurementConfidence =
+    left?.confidence ?? "approximate";
+  const afterConfidence: ObservedMeasurementConfidence =
+    right?.confidence ?? "approximate";
+  const actorId = sharedObservedFormText(
+    left?.actorId,
+    right?.actorId,
+    observedIdentityFallback(before, after, "actorId"),
+  );
+  const skillId = sharedObservedFormText(
+    left?.skillId,
+    right?.skillId,
+    observedIdentityFallback(before, after, "archetypeId"),
+  );
+  const targetLabel = sharedObservedFormText(
+    left?.targetLabel,
+    right?.targetLabel,
+    "",
+  );
+  const scenarioLabel = sharedObservedFormText(
+    left?.scenarioLabel,
+    right?.scenarioLabel,
+    "",
+  );
+  const beforeSource = left?.source ?? "";
+  const afterSource = right?.source ?? "";
+  const duration = sharedObservedFormDuration(left, right);
+  const conditions = sharedObservedFormConditions(left, right);
+  const identityBlocker = plan.blockers.find((blocker) =>
+    blocker.code === "observed-loadout-identity-mismatch"
+    || blocker.code === "observed-same-loadout");
+  const existingStatus = before === after
+    ? "Select two distinct loadout snapshots before recording or comparing an in-game result."
+    : identityBlocker
+      ? identityBlocker.detail
+    : existing
+    && plan.summary.comparisonKind === "incompatible"
+    ? "Both results are saved, but this imported build pair is incompatible; no observed delta is attached to its action queue."
+    : existing?.status === "comparable"
+    ? `Saved ${existing.confidence} ${existing.scope === "whole-loadout" ? "whole-loadout" : "actor/skill"} ${existing.metric === "dps" ? "DPS" : "damage-per-hit"} result: ${signedPercent(existing.percentChange)}. The outcome is observed in that scope; the cause is still ranked separately.`
+    : existing?.status === "reference-only"
+      ? `Both results are saved but remain reference-only: ${existing.reasons.join(", ").replaceAll("-", " ")}.`
+      : existing?.status === "invalid"
+        ? "The saved observation failed revalidation. Re-enter both values."
+        : "No aligned in-game result has been added for this pair.";
+  const existingStatusClass = before === after || identityBlocker
+    ? "reference-only"
+    : existing
+    && plan.summary.comparisonKind === "incompatible"
+    ? "reference-only"
+    : existing?.status ?? "empty";
+  const identityMissing = !actorId || !skillId;
+  const metadataConflicts = observedMetadataConflicts(left, right);
+
+  return `<section class="observed-capture" aria-labelledby="observed-capture-title">
+    <div class="observed-capture-head">
+      <div>
+        <span class="eyebrow">In-game outcome</span>
+        <h3 id="observed-capture-title">Record what actually happened.</h3>
+      </div>
+      <span class="observed-basis">Observed ≠ modeled</span>
+    </div>
+    <p>Enter the before and after number from one repeatable test. This establishes the result; imported formula evidence below still has to explain the cause.</p>
+    ${metadataConflicts.length ? `<aside class="observed-conflicts">
+      <strong>Saved results disagree. Re-enter the shared test fields before comparing them.</strong>
+      <ul>${metadataConflicts.map((conflict) =>
+        `<li><span>${esc(conflict.label)}</span><small>Before: ${esc(conflict.before)}</small><small>After: ${esc(conflict.after)}</small></li>`).join("")}</ul>
+    </aside>` : ""}
+    <form data-observed-comparison-form${metadataConflicts.length ? " data-metadata-conflicts" : ""}>
+      ${metadataConflicts.length ? `<label class="observed-conflict-confirm">
+        <input type="checkbox" name="confirmMetadataOverwrite" value="yes" required
+          aria-describedby="observed-form-status">
+        <span>I understand that saving will replace both entries' shared test fields with the values below, including any blanks.</span>
+      </label>` : ""}
+      <div class="observed-value-grid">
+        <label>
+          <span>Before observed</span>
+          <input name="beforeValue" value="${escAttr(left?.value ?? "")}" inputmode="decimal"
+            placeholder="e.g. 1T" required autocomplete="off" aria-describedby="observed-form-status">
+          <small>${esc(before.name)}</small>
+        </label>
+        <label>
+          <span>After observed</span>
+          <input name="afterValue" value="${escAttr(right?.value ?? "")}" inputmode="decimal"
+            placeholder="e.g. 760B" required autocomplete="off" aria-describedby="observed-form-status">
+          <small>${esc(after.name)}</small>
+        </label>
+        <label>
+          <span>Metric</span>
+          <select name="metric" required aria-describedby="observed-form-status">
+            ${metric === "" ? '<option value="" selected>Choose metric</option>' : ""}
+            <option value="dps"${metric === "dps" ? " selected" : ""}>DPS</option>
+            <option value="damage-per-hit"${metric === "damage-per-hit" ? " selected" : ""}>Damage per hit</option>
+          </select>
+          <small>Per-hit is never converted into DPS.</small>
+        </label>
+        <label>
+          <span>Observation scope</span>
+          <select name="scope" required aria-describedby="observed-form-status">
+            ${scope === "" ? '<option value="" selected>Choose scope</option>' : ""}
+            <option value="actor-skill"${scope === "actor-skill" ? " selected" : ""}>Actor / skill</option>
+            <option value="whole-loadout"${scope === "whole-loadout" ? " selected" : ""}>Whole loadout</option>
+          </select>
+          <small>Whole loadout only when this is the complete build result.</small>
+        </label>
+        <label>
+          <span>Before reading</span>
+          <select name="beforeConfidence" required aria-describedby="observed-form-status">
+            <option value="approximate"${beforeConfidence === "approximate" ? " selected" : ""}>Approximate</option>
+            <option value="exact"${beforeConfidence === "exact" ? " selected" : ""}>Exact</option>
+          </select>
+          <small>${esc(before.name)}</small>
+        </label>
+        <label>
+          <span>After reading</span>
+          <select name="afterConfidence" required aria-describedby="observed-form-status">
+            <option value="approximate"${afterConfidence === "approximate" ? " selected" : ""}>Approximate</option>
+            <option value="exact"${afterConfidence === "exact" ? " selected" : ""}>Exact</option>
+          </select>
+          <small>${esc(after.name)} · use approximate for rounded or ~ values.</small>
+        </label>
+      </div>
+      <div class="observed-scenario-grid">
+        <label>
+          <span>Target</span>
+          <input name="targetLabel" value="${escAttr(targetLabel)}" required maxlength="160"
+            placeholder="Name the same in-game target" aria-describedby="observed-form-status">
+        </label>
+        <label>
+          <span>Test setup</span>
+          <input name="scenarioLabel" value="${escAttr(scenarioLabel)}" required maxlength="160"
+            placeholder="Name the repeatable test setup" aria-describedby="observed-form-status">
+        </label>
+        <label>
+          <span>Sample seconds <em>optional, DPS only</em></span>
+          <input name="sampleDurationSeconds" value="${escAttr(duration)}" inputmode="decimal"
+            placeholder="e.g. 10" autocomplete="off" aria-describedby="observed-form-status"
+            ${metric === "damage-per-hit" ? "disabled" : ""}>
+        </label>
+      </div>
+      <details class="observed-identity"${identityMissing || !beforeSource || !afterSource || Boolean(identityBlocker) ? " open" : ""}>
+        <summary>Actor, skill, conditions, and required provenance</summary>
+        <p>These fields stop unlike tests from producing a convincing but invalid percentage.</p>
+        <div>
+          <label>
+            <span>Actor identifier</span>
+            <input name="actorId" value="${escAttr(actorId)}" maxlength="128"
+              placeholder="Character or summoned actor" required aria-describedby="observed-form-status">
+          </label>
+          <label>
+            <span>Skill identifier</span>
+            <input name="skillId" value="${escAttr(skillId)}" maxlength="128"
+              placeholder="Measured skill or action" required aria-describedby="observed-form-status">
+          </label>
+          <label class="observed-wide">
+            <span>Conditions <em>separate with semicolons</em></span>
+            <input name="conditions" value="${escAttr(conditions)}" maxlength="5200"
+              placeholder="stationary; target slowed; all buffs active"
+              aria-describedby="observed-form-status">
+          </label>
+          <label>
+            <span>Before source</span>
+            <input name="beforeSource" value="${escAttr(beforeSource)}" required maxlength="160"
+              placeholder="e.g. dummy log or video A" aria-describedby="observed-form-status">
+          </label>
+          <label>
+            <span>After source</span>
+            <input name="afterSource" value="${escAttr(afterSource)}" required maxlength="160"
+              placeholder="e.g. dummy log or video B" aria-describedby="observed-form-status">
+          </label>
+        </div>
+      </details>
+      <div class="observed-form-actions">
+        <button type="submit">Use observed result</button>
+        <button type="button" class="quiet-button" data-clear-observed
+          ${left || right ? "" : "disabled"}>Clear result</button>
+        <p id="observed-form-status" class="observed-form-status ${existingStatusClass}" role="status" aria-live="polite">${esc(existingStatus)}</p>
+      </div>
+      <small class="observed-storage-note">Session-local: each loadout keeps one observation, including its own confidence and source. Saving replaces both selected entries; Clear removes both.</small>
+    </form>
+  </section>`;
+}
+
+const ACTION_PROOF_COPY: Record<ActionProof, {
+  label: string;
+  boundary: string;
+}> = {
+  "observed-result": {
+    label: "Observed result",
+    boundary: "A user-recorded outcome under one declared matching test. It proves direction and magnitude for that metric, not which edit caused it.",
+  },
+  "modeled-scenario": {
+    label: "Modeled rollback",
+    boundary: "An after-state, one-layer counterfactual inside one fixed shared scenario; grouped fields may still be coupled or unavailable in game.",
+  },
+  "guarded-partial": {
+    label: "Guarded formula slice",
+    boundary: "Source-backed arithmetic for one component, never silently promoted to total hit damage or DPS.",
+  },
+  "source-term": {
+    label: "Compiled source term",
+    boundary: "The input and actor scope are known; the complete runtime formula is not.",
+  },
+  structural: {
+    label: "Structural lead",
+    boundary: "A changed entity worth isolating; no numeric direction is claimed.",
+  },
+};
+
+const ACTION_DIRECTION_COPY: Record<ActionFinding["direction"], string> = {
+  loss: "loss signal",
+  gain: "gain signal",
+  tradeoff: "tradeoff",
+  risk: "needs isolation",
+  neutral: "neutral check",
+  "weaker-input": "weaker input",
+  "stronger-input": "stronger input",
+};
+
+function actionMetric(finding: ActionFinding) {
+  const metric = finding.metric;
+  if (!metric) return "";
+  const relative = metric.relativeDelta == null
+    ? ""
+    : `<b>${esc(signedPercent(metric.relativeDelta * 100))}</b>`;
+  return `<div class="action-metric" aria-label="${escAttr(metric.label)}">
+    <span><small>Before</small><strong>${esc(compactNumber(metric.before))}</strong></span>
+    <i aria-hidden="true">→</i>
+    <span><small>After</small><strong>${esc(compactNumber(metric.after))}</strong></span>
+    <span class="action-metric-delta"><small>${esc(metric.unit)}</small>${relative || `<b>${esc(signedCompact(metric.delta))}</b>`}</span>
+  </div>`;
+}
+
+function actionFindingCard(finding: ActionFinding, rank: number) {
+  const proof = ACTION_PROOF_COPY[finding.proof];
+  const section = finding.target.section;
+  const domain = {
+    damage: "Damage",
+    survival: "Survival",
+    build: "Build change",
+    capture: "Capture",
+  }[finding.domain];
+  return `<article class="action-card ${finding.direction}">
+    <div class="action-rank" aria-label="Priority ${rank}">${rank}</div>
+    <div class="action-card-body">
+      <div class="action-card-meta">
+        <span class="proof-badge ${finding.proof}">${esc(proof.label)}</span>
+        <span class="direction-badge">${esc(ACTION_DIRECTION_COPY[finding.direction])}</span>
+        <span>${esc(domain)}</span>
+      </div>
+      <h3>${esc(finding.title)}</h3>
+      <p>${esc(finding.explanation)}</p>
+      ${actionMetric(finding)}
+      <details class="action-evidence">
+        <summary>Why this is ranked here</summary>
+        <ul>${finding.evidence.map((line) => `<li>${esc(line)}</li>`).join("")}</ul>
+        <p><strong>Boundary:</strong> ${esc(proof.boundary)}</p>
+      </details>
+      <div class="action-experiment">
+        <span>Next controlled experiment</span>
+        <p>${esc(finding.nextExperiment)}</p>
+        <button type="button" class="quiet-button" data-action-view="${finding.target.view}"
+          ${section ? `data-action-section="${section}"` : ""}>
+          Open ${section ? esc(SYSTEM_LABELS[section]) : esc(finding.target.view)}
+        </button>
+      </div>
+    </div>
+  </article>`;
+}
+
+function renderActions(
+  before: AnalyzedLoadout,
+  after: AnalyzedLoadout,
+  plan: ComparisonActionPlan,
+) {
+  const proofCounts = [
+    ["observed-result", "Observed results", plan.summary.observed],
+    ["modeled-scenario", "Modeled rollbacks", plan.summary.modeled],
+    ["guarded-partial", "Guarded slices", plan.summary.guardedPartial],
+    ["source-term", "Source terms", plan.summary.sourceTerms],
+    ["structural", "Structural leads", plan.summary.structural],
+  ] as const;
+  const topBlockers = plan.blockers.slice(0, 8);
+  const actionGroups = [
+    {
+      id: "damage",
+      label: "Damage changes and drivers",
+      note: "Known hit, factor, support, and scaling changes",
+      findings: plan.findings.filter((finding) => finding.domain === "damage"),
+    },
+    {
+      id: "survival",
+      label: "Survival tradeoffs",
+      note: "Typed defensive source inputs; never implied EHP",
+      findings: plan.findings.filter((finding) => finding.domain === "survival"),
+    },
+    {
+      id: "build",
+      label: "Build changes to isolate",
+      note: "Structural leads whose numeric direction is still unknown",
+      findings: plan.findings.filter((finding) => finding.domain === "build"),
+    },
+  ].filter((group) => group.findings.length > 0);
+  const groupedActions = actionGroups.map((group) => {
+    const visible = group.findings.slice(0, 3);
+    const hidden = group.findings.slice(3);
+    return `<section class="action-domain-group ${group.id}">
+      <div class="action-domain-head">
+        <div><span>${esc(group.note)}</span><h3>${esc(group.label)}</h3></div>
+        <strong>${group.findings.length}</strong>
+      </div>
+      ${visible.map((finding, index) =>
+        actionFindingCard(finding, index + 1)).join("")}
+      ${hidden.length ? `<details class="action-more">
+        <summary>Show ${hidden.length} more ${esc(group.label.toLocaleLowerCase())} ${hidden.length === 1 ? "check" : "checks"}</summary>
+        <div>${hidden.map((finding, index) =>
+          actionFindingCard(finding, visible.length + index + 1)).join("")}</div>
+      </details>` : ""}
+    </section>`;
+  }).join("");
+  const progression = plan.summary.comparisonKind === "progression";
+  const incompatible = plan.summary.comparisonKind === "incompatible";
+  const teaching =
+    before.comparisonContext?.sourceKind === "teaching"
+    && after.comparisonContext?.sourceKind === "teaching";
+  const userConfirmed =
+    before.comparisonContext?.lineageEvidence === "user-confirmed-pair"
+    && after.comparisonContext?.lineageEvidence === "user-confirmed-pair";
+  const canConfirm =
+    plan.summary.comparisonKind === "reference"
+    && /lineage/i.test(plan.summary.comparisonReason);
+  const progressionLoop =
+    `<div class="experiment-loop" aria-label="Recommended comparison workflow">
+        <div><b>1</b><span><strong>Duplicate</strong> the current loadout</span></div>
+        <i aria-hidden="true">→</i>
+        <div><b>2</b><span><strong>Change one</strong> ranked input</span></div>
+        <i aria-hidden="true">→</i>
+        <div><b>3</b><span><strong>Import both</strong> snapshots</span></div>
+        <i aria-hidden="true">→</i>
+        <div><b>4</b><span><strong>Keep or revert</strong> from evidence</span></div>
+      </div>`;
+  const loop = progression
+    ? `${userConfirmed ? `<div class="comparison-mode-banner confirmed">
+          <span>User-confirmed pair</span>
+          <strong>Progression language is enabled for this browser session.</strong>
+          <p>The site verified matching patch, actor, archetype, and source family; you supplied the missing same-character history.</p>
+          <button type="button" class="quiet-button" data-clear-progression>Undo confirmation</button>
+        </div>` : ""}${progressionLoop}`
+    : `<div class="comparison-mode-banner ${incompatible ? "incompatible" : teaching ? "demonstration" : "reference"}">
+        <span>${incompatible ? "Incompatible pair" : teaching ? "Teaching demonstration" : "Reference-only pair"}</span>
+        <strong>${esc(plan.summary.comparisonReason)}</strong>
+        <p>${teaching
+          ? "Use the ranked checks as formula exercises. They explain the fixed scenario, but are not attributed to an imported character’s history."
+          : incompatible
+          ? "No ranked change advice is emitted. Select snapshots from the same patch and actor."
+          : "Raw contrasts remain visible, but causal and rollback language is withheld until both loadouts share a proven source-document lineage."}</p>
+        ${canConfirm ? `<button type="button" class="quiet-button" data-confirm-progression>Confirm these are the same character</button>` : ""}
+      </div>`;
+  return `<section class="actions-view">
+    <div class="actions-hero">
+      <div>
+        <span class="eyebrow">Proof-ranked experiment queue</span>
+        <h2>${progression ? "Change one thing, then prove what moved." : teaching ? "Learn the scaling layers in a controlled replay." : incompatible ? "Choose a compatible pair first." : "Learn from the contrast without pretending it is causal."}</h2>
+        <p>The queue ranks what the imported evidence can support today. It does not invent optimizer scores for missing mechanics.</p>
+      </div>
+      <button type="button" class="copy-report-button" data-copy-action-report>
+        ${reportCopyState === "copied" ? "Copied comparison report" : reportCopyState === "failed" ? "Copy failed — retry" : "Copy report"}
+      </button>
+    </div>
+    ${renderObservedComparisonForm(before, after, plan)}
+    <div class="action-proof-strip" aria-label="Evidence levels in this comparison">
+      ${proofCounts.map(([proof, label, count]) => `<div class="${proof}">
+        <span>${esc(label)}</span><strong>${count}</strong>
+      </div>`).join("")}
+      <div class="action-proof-status">
+        <span>${plan.summary.observedDpsScope === "actor-skill"
+          ? "Scoped DPS"
+          : "Net DPS"}</span><strong>${plan.summary.observedDpsAvailable
+          ? "Whole-loadout observed"
+          : plan.summary.observedDpsScope === "actor-skill"
+            ? "Actor / skill observed"
+            : plan.summary.netDpsAvailable
+              ? "Shared model only"
+              : "Not calculated"}</strong>
+      </div>
+      <div class="action-proof-status">
+        <span>EHP</span><strong>Not calculated</strong>
+      </div>
+    </div>
+    ${loop}
+    <div class="actions-layout">
+      <div class="action-queue">
+        <div class="analysis-heading">
+          <div><span class="panel-kicker">Ranked for this pair</span><h2>${plan.findings.length} next ${plan.findings.length === 1 ? "experiment" : "experiments"}</h2></div>
+          <span class="exact-badge">${esc(before.name)} → ${esc(after.name)}</span>
+        </div>
+        ${plan.findings.length
+          ? groupedActions
+          : `<div class="action-empty">
+              <strong>No causal experiment is safe for this pair yet.</strong>
+              <p>Choose two snapshots of the same actor and archetype, or resolve the evidence blockers shown beside the queue.</p>
+            </div>`}
+      </div>
+      <aside class="action-blockers">
+        <span class="panel-kicker">Honest stopping points</span>
+        <h2>What blocks a complete score</h2>
+        <p>These are missing bridges, not values assumed to be zero.</p>
+        ${topBlockers.length
+          ? `<ol>${topBlockers.map((blocker) => `<li>
+              <span>${esc(blocker.side)}</span>
+              <strong>${esc(blocker.title)}</strong>
+              <p>${esc(blocker.detail)}</p>
+              ${blocker.evidence ? `<small>${esc(blocker.evidence)}</small>` : ""}
+              ${(blocker.contexts?.length ?? 0) > 1 ? `<details class="blocker-contexts">
+                <summary>Show ${blocker.contexts!.length} contexts</summary>
+                <div>${blocker.contexts!.map((context) => `<small>${esc(context)}</small>`).join("")}</div>
+              </details>` : ""}
+            </li>`).join("")}</ol>`
+          : `<div class="action-empty compact"><strong>No explicit blocker was emitted.</strong><p>Coverage may still be structural only; review the coverage view before treating any result as complete.</p></div>`}
+        <button type="button" class="quiet-button action-coverage-link" data-action-view="coverage">Review all coverage</button>
+        <div class="optimizer-note">
+          <span class="beta-label">Optimizer later</span>
+          <strong>Constraint-based upgrade search</strong>
+          <p>MiniZinc can rank legal item and tree changes after the remaining DPS and EHP boundaries are source-complete.</p>
+        </div>
+      </aside>
+    </div>
+  </section>`;
+}
+
+function navigation(plan: ComparisonActionPlan) {
   const items: { id: View; label: string; count?: string }[] = [
     { id: "diagnosis", label: "Diagnosis" },
+    { id: "actions", label: "Next actions", count: String(plan.findings.length) },
     { id: "changes", label: "Build changes" },
     { id: "formula", label: "Damage formula" },
     { id: "survival", label: "Survival" },
@@ -1889,15 +2675,20 @@ function navigation() {
       ${activeView === item.id ? `aria-current="page"` : ""}>
       ${esc(item.label)}${item.count ? `<span>${esc(item.count)}</span>` : ""}
     </button>`).join("")}
-    <button type="button" class="disabled-tab" disabled title="Optimizer is not implemented yet">Suggestions <span>later</span></button>
   </nav>`;
 }
 
 function render() {
   const before = selected("before");
   const after = selected("after");
+  const plan = buildComparisonActionPlan(before.loadout, after.loadout);
   let content = "";
-  if (activeView === "diagnosis") content = renderDiagnosis(before.loadout, after.loadout);
+  if (activeView === "diagnosis") {
+    content = renderDiagnosis(before.loadout, after.loadout, plan);
+  }
+  else if (activeView === "actions") {
+    content = renderActions(before.loadout, after.loadout, plan);
+  }
   else if (activeView === "changes") content = renderChanges(before.loadout, after.loadout);
   else if (activeView === "formula") content = renderFormula(before.loadout, after.loadout);
   else if (activeView === "survival") content = renderSurvival(before.loadout, after.loadout);
@@ -1915,7 +2706,7 @@ function render() {
         <a href="#formula-guide" data-view-link="formula">Learn scaling</a>
       </nav>
       <div class="header-meta">
-        <span class="season-dot"></span>SS13 data
+        <span class="season-dot"></span><span title="Guarded mechanics use SS13 evidence. Some display labels come from cached SS12.5 bundles with SS13 skill and pact overlays.">SS13 mechanics · legacy labels</span>
         <a href="https://github.com/ChandlerFerry/etor-translations/releases/" target="_blank" rel="noopener">Game tools ↗</a>
       </div>
     </div>
@@ -1939,8 +2730,8 @@ function render() {
       <button type="button" class="swap-button" data-swap aria-label="Swap before and after builds">⇄<span>swap</span></button>
       ${buildPicker("after", after.build, after.loadout)}
     </section>
-    ${renderSummary(before.loadout, after.loadout)}
-    ${navigation()}
+    ${renderSummary(before.loadout, after.loadout, plan)}
+    ${navigation(plan)}
     <div class="view-content">${content}</div>
   </main>
   <footer class="site-footer">
@@ -1970,6 +2761,7 @@ function activateImported(build: AnalyzedBuild) {
   const selection = { buildId: build.id, loadoutId: loadout.id };
   if (importTarget === "before") beforeSelection = selection;
   else afterSelection = selection;
+  reportCopyState = "idle";
   setImportStatus(
     build.needsResolution
       ? "Build code recognized. Capture the opened build with tli_dump to resolve its loadout."
@@ -1983,6 +2775,33 @@ function activateImported(build: AnalyzedBuild) {
   }, 450);
 }
 
+async function copyCurrentActionReport() {
+  const before = selected("before").loadout;
+  const after = selected("after").loadout;
+  const report = actionPlanReport(before, after);
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(report);
+    } else {
+      const textarea = document.createElement("textarea");
+      textarea.value = report;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.append(textarea);
+      textarea.select();
+      const copied = document.execCommand("copy");
+      textarea.remove();
+      if (!copied) throw new Error("The browser declined the copy command.");
+    }
+    reportCopyState = "copied";
+  } catch {
+    reportCopyState = "failed";
+  }
+  render();
+  restoreWorkspaceFocus("[data-copy-action-report]");
+}
+
 async function readFile(file: File) {
   if (file.size > MAX_IMPORT_BYTES) {
     setImportStatus(importSizeMessage(file.size), "error");
@@ -1992,7 +2811,7 @@ async function readFile(file: File) {
   try {
     setImportStatus(`Reading ${file.name}…`);
     const value = JSON.parse(await file.text());
-    setImportStatus("Loading the pinned SS13 import catalog…");
+    setImportStatus("Loading the pinned import catalogs…");
     const catalog = await loadImportCatalog();
     activateImported(importBuild(value, catalog, demo.builds, file.name));
   } catch (error) {
@@ -2002,14 +2821,133 @@ async function readFile(file: File) {
   }
 }
 
+app.addEventListener("submit", (event) => {
+  const form = event.target;
+  if (!(form instanceof HTMLFormElement)
+      || !form.matches("[data-observed-comparison-form]")) {
+    return;
+  }
+  event.preventDefault();
+  const before = selected("before");
+  const after = selected("after");
+  const status = form.querySelector<HTMLElement>(".observed-form-status");
+  const fields = form.querySelectorAll<HTMLElement>("[aria-invalid]");
+  fields.forEach((field) => field.removeAttribute("aria-invalid"));
+
+  if (before.loadout === after.loadout) {
+    if (status) {
+      status.className = "observed-form-status invalid";
+      status.textContent =
+        "Choose two distinct loadout snapshots before recording two results.";
+    }
+    return;
+  }
+
+  const values = new FormData(form);
+  if (form.hasAttribute("data-metadata-conflicts")
+      && values.get("confirmMetadataOverwrite") !== "yes") {
+    const confirmation = form.elements.namedItem(
+      "confirmMetadataOverwrite",
+    ) as HTMLInputElement | null;
+    confirmation?.setAttribute("aria-invalid", "true");
+    if (status) {
+      status.className = "observed-form-status invalid";
+      status.textContent =
+        "Confirm that the shared test fields should replace both saved entries, or clear the pair first.";
+    }
+    confirmation?.focus();
+    return;
+  }
+  const shared = {
+    metric: values.get("metric"),
+    scope: values.get("scope"),
+    actorId: values.get("actorId"),
+    skillId: values.get("skillId"),
+    targetLabel: values.get("targetLabel"),
+    scenarioLabel: values.get("scenarioLabel"),
+    sampleDurationSeconds: values.get("sampleDurationSeconds"),
+    conditions: values.get("conditions"),
+  };
+  const beforeResult = parseObservedDamageMeasurement({
+    ...shared,
+    value: values.get("beforeValue"),
+    confidence: values.get("beforeConfidence"),
+    source: values.get("beforeSource"),
+  });
+  const afterResult = parseObservedDamageMeasurement({
+    ...shared,
+    value: values.get("afterValue"),
+    confidence: values.get("afterConfidence"),
+    source: values.get("afterSource"),
+  });
+  if (beforeResult.status === "invalid" || afterResult.status === "invalid") {
+    const issues = [
+      ...(beforeResult.status === "invalid"
+        ? beforeResult.issues.map((issue) => ({ side: "Before", ...issue }))
+        : []),
+      ...(afterResult.status === "invalid"
+        ? afterResult.issues.map((issue) => ({ side: "After", ...issue }))
+        : []),
+    ];
+    let firstInvalid: HTMLElement | null = null;
+    for (const issue of issues) {
+      const sidePrefix = issue.side === "Before" ? "before" : "after";
+      const name = issue.field === "value"
+        ? `${sidePrefix}Value`
+        : issue.field === "confidence"
+          ? `${sidePrefix}Confidence`
+          : issue.field === "source"
+            ? `${sidePrefix}Source`
+            : issue.field;
+      const field = form.querySelector<HTMLElement>(
+        `[name="${CSS.escape(name)}"]`,
+      );
+      field?.setAttribute("aria-invalid", "true");
+      firstInvalid ??= field;
+    }
+    if (status) {
+      status.className = "observed-form-status invalid";
+      status.textContent = issues
+        .map((issue) => `${issue.side}: ${issue.message}`)
+        .filter((message, index, all) => all.indexOf(message) === index)
+        .join(" ");
+    }
+    const disclosure = firstInvalid?.closest<HTMLDetailsElement>("details");
+    if (disclosure) disclosure.open = true;
+    firstInvalid?.focus();
+    return;
+  }
+
+  before.loadout.observedDamage = beforeResult.measurement;
+  after.loadout.observedDamage = afterResult.measurement;
+  reportCopyState = "idle";
+  render();
+  restoreWorkspaceFocus("[data-clear-observed]");
+});
+
 app.addEventListener("change", (event) => {
   const target = event.target as HTMLSelectElement;
+  if (target.matches('[data-observed-comparison-form] [name="metric"]')) {
+    const form = target.closest<HTMLFormElement>(
+      "[data-observed-comparison-form]",
+    );
+    const duration = form?.elements.namedItem(
+      "sampleDurationSeconds",
+    ) as HTMLInputElement | null;
+    if (duration) {
+      const perHit = target.value === "damage-per-hit";
+      if (perHit) duration.value = "";
+      duration.disabled = perHit;
+    }
+    return;
+  }
   if (!target.matches("[data-selection]")) return;
   const selection = readSelectionKey(target.value);
   if (!selection) return;
   const side = target.dataset.selection as Side;
   if (side === "before") beforeSelection = selection;
   else afterSelection = selection;
+  reportCopyState = "idle";
   render();
   restoreWorkspaceFocus(`#${side}-loadout`);
 });
@@ -2027,6 +2965,60 @@ app.addEventListener("click", (event) => {
     document.querySelector(".view-tabs")?.scrollIntoView({ behavior: "smooth", block: "start" });
     return;
   }
+  if (target.hasAttribute("data-copy-action-report")) {
+    void copyCurrentActionReport();
+    return;
+  }
+  if (target.hasAttribute("data-clear-observed")) {
+    delete selected("before").loadout.observedDamage;
+    delete selected("after").loadout.observedDamage;
+    reportCopyState = "idle";
+    render();
+    restoreWorkspaceFocus("[data-observed-comparison-form] input");
+    return;
+  }
+  if (target.hasAttribute("data-confirm-progression")) {
+    const before = selected("before");
+    const after = selected("after");
+    const left = before.loadout.comparisonContext;
+    const right = after.loadout.comparisonContext;
+    if (left && right) {
+      const lineageId = `user-confirmed:${[
+        selectionKey(before.build, before.loadout),
+        selectionKey(after.build, after.loadout),
+      ].sort().join("|")}`;
+      left.lineageId = lineageId;
+      right.lineageId = lineageId;
+      left.lineageEvidence = "user-confirmed-pair";
+      right.lineageEvidence = "user-confirmed-pair";
+      reportCopyState = "idle";
+      render();
+      restoreWorkspaceFocus("[data-clear-progression]");
+    }
+    return;
+  }
+  if (target.hasAttribute("data-clear-progression")) {
+    for (const side of ["before", "after"] as const) {
+      const context = selected(side).loadout.comparisonContext;
+      if (context?.lineageEvidence !== "user-confirmed-pair") continue;
+      context.lineageId = null;
+      delete context.lineageEvidence;
+    }
+    reportCopyState = "idle";
+    render();
+    restoreWorkspaceFocus("[data-confirm-progression]");
+    return;
+  }
+  const actionView = target.dataset.actionView as View | undefined;
+  if (actionView) {
+    activeView = actionView;
+    const actionSection = target.dataset.actionSection as ChangeSection | undefined;
+    if (actionSection) changeSection = actionSection;
+    reportCopyState = "idle";
+    render();
+    restoreWorkspaceFocus(`[data-view="${actionView}"]`);
+    return;
+  }
   const side = target.dataset.import as Side | undefined;
   if (side) {
     importTarget = side;
@@ -2039,6 +3031,7 @@ app.addEventListener("click", (event) => {
   }
   if (target.hasAttribute("data-swap")) {
     [beforeSelection, afterSelection] = [afterSelection, beforeSelection];
+    reportCopyState = "idle";
     render();
     restoreWorkspaceFocus("[data-swap]");
     return;
@@ -2083,6 +3076,7 @@ app.addEventListener("click", (event) => {
     beforeSelection = { buildId: build.id, loadoutId: build.loadouts[0].id };
     afterSelection = { buildId: build.id, loadoutId: build.loadouts[1].id };
     activeView = "diagnosis";
+    reportCopyState = "idle";
     render();
     restoreWorkspaceFocus('[data-preset="lesson"]');
   } else if (preset === "bing") {
@@ -2090,6 +3084,7 @@ app.addEventListener("click", (event) => {
     beforeSelection = { buildId: build.id, loadoutId: build.loadouts[2].id };
     afterSelection = { buildId: build.id, loadoutId: build.loadouts[3].id };
     activeView = "diagnosis";
+    reportCopyState = "idle";
     render();
     restoreWorkspaceFocus('[data-preset="bing"]');
   } else if (preset === "wuxia") {
@@ -2097,6 +3092,7 @@ app.addEventListener("click", (event) => {
     beforeSelection = { buildId: build.id, loadoutId: build.loadouts[5].id };
     afterSelection = { buildId: build.id, loadoutId: build.loadouts[8].id };
     activeView = "diagnosis";
+    reportCopyState = "idle";
     render();
     restoreWorkspaceFocus('[data-preset="wuxia"]');
   }
@@ -2174,7 +3170,7 @@ document.getElementById("analyze-paste")!.addEventListener("click", async () => 
   try {
     if (raw.startsWith("{")) {
       const value = JSON.parse(raw);
-      setImportStatus("Loading the pinned SS13 import catalog…");
+      setImportStatus("Loading the pinned import catalogs…");
       const catalog = await loadImportCatalog();
       activateImported(importBuild(value, catalog, demo.builds, "Pasted JSON"));
     } else {

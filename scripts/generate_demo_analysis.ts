@@ -4,6 +4,10 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseBuild } from "../packages/dmg/src/buildParser.js";
 import { cycleDps, type Snapshot } from "../packages/dmg/src/damageModel.js";
+import {
+  BING_BLAST_NOVA_ID,
+  HAMMER_OF_ASH_ID,
+} from "../packages/dmg/src/guardedCompiler.js";
 import { importBuild } from "../packages/page/src/importer.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -173,16 +177,27 @@ function analyzeBuild(file: string, id: string) {
       name: imported.name,
       hero: imported.hero,
       isCurrent: imported.isCurrent,
+      comparisonContext: imported.comparisonContext
+        ? {
+            ...imported.comparisonContext,
+            lineageId: imported.comparisonContext.lineageId
+              ? `fixture-document:${id}`
+              : null,
+          }
+        : undefined,
       // The current parser starts from Rehan/Spectral Slash defaults and applies Rehan
       // manual overrides. Keep the structural import and coverage evidence, but do not
       // publish its synthetic DPS as if it described these arbitrary SS13 loadouts.
       model: null,
       partialMetrics: imported.partialMetrics,
+      supportEvidenceStatus: imported.supportEvidenceStatus,
       supportEvidence: imported.supportEvidence,
+      supportEvidenceBlockers: imported.supportEvidenceBlockers,
       summonEvidence: imported.summonEvidence,
       summonEvidenceBlockers: imported.summonEvidenceBlockers,
       bingIntrinsicEvidence: imported.bingIntrinsicEvidence,
       bingIntrinsicBlockers: imported.bingIntrinsicBlockers,
+      bingFactorLedger: imported.bingFactorLedger,
       playerDefenseEvidence: imported.playerDefenseEvidence,
       coverage: {
         observed: report.matched.length + report.ignored.length + report.unmatched.length,
@@ -228,7 +243,19 @@ function teachingLoadout(
     name,
     hero: "Bing: Blast Nova",
     isCurrent: index === 1,
+    comparisonContext: {
+      patch: "SS13",
+      actorId: BING_BLAST_NOVA_ID,
+      archetypeId: HAMMER_OF_ASH_ID,
+      lineageId: null,
+      sourceKind: "teaching",
+    },
     model: {
+      modelId: "rehan-bing-cycle-dps",
+      modelVersion: "1",
+      scenarioFingerprint: "boss-30res-full-configured-uptime-v1",
+      actorId: "bing-blast-nova",
+      skillId: "hammer-of-ash",
       dps: result.dps,
       deteriorationDps: result.deterioration_dps,
       cycleTime: result.cycle_time,
@@ -259,7 +286,12 @@ function teachingLoadout(
       name: "Hammer of Ash",
       level: 20,
       enabled: true,
-      supports: [{ name: supportName, type: "support", level: 20 }],
+      supports: [{
+        slot: "0",
+        name: supportName,
+        type: "support",
+        level: 20,
+      }],
     }],
     trees: [],
     memories: [],

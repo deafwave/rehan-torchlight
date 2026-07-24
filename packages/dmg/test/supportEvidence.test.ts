@@ -91,7 +91,7 @@ describe("guarded SS13 support source terms", () => {
     }));
   });
 
-  it("compares added, removed, and level-changed terms without aggregating them", () => {
+  it("compares support swaps and level changes by stable socket without aggregating them", () => {
     const comparison = compareSs13BingSupportEvidence(bing(), 2, 3);
     expect(comparison.status).toBe("source-terms");
     if (comparison.status !== "source-terms") throw new Error("expected source terms");
@@ -99,11 +99,12 @@ describe("guarded SS13 support source terms", () => {
     expect(comparison.isDps).toBe(false);
     expect(comparison.changes.map((change) => [
       change.kind,
+      change.socketIndex,
+      change.before?.supportName ?? null,
       change.supportName,
     ])).toEqual(expect.arrayContaining([
-      ["removed", "Slow Projectile"],
-      ["added", "Hammer of Ash: Upheaval (Magnificent)"],
-      ["changed", "Passivation"],
+      ["changed", 2, "Slow Projectile", "Hammer of Ash: Upheaval (Magnificent)"],
+      ["changed", 1, "Passivation", "Passivation"],
     ]));
     expect(comparison.warning).toContain("without assigning net DPS");
     expect("dps" in comparison).toBe(false);
@@ -164,9 +165,102 @@ describe("guarded SS13 support source terms", () => {
     const duplicateSupport = bing();
     const supports = duplicateSupport.loadouts.loadouts[0].skills.activeSkills[0].supports;
     supports[1] = structuredClone(supports[0]);
-    expect(compileSs13BingSupportEvidence(duplicateSupport, 0)).toMatchObject({
-      status: "not-calculated",
-      blockers: [{ code: "duplicate-main-skill-support" }],
+    const duplicateEvidence = compileSs13BingSupportEvidence(duplicateSupport, 0);
+    expect(duplicateEvidence.status).toBe("source-terms");
+    if (duplicateEvidence.status !== "source-terms") throw new Error("expected socket evidence");
+    expect(duplicateEvidence.supports.slice(0, 2)).toMatchObject([
+      {
+        actorId: "c89dce15-cbeb-562d-83ec-993059bbf0ec",
+        actorName: "Bing: Blast Nova",
+        skillId: "6f020b6a-022b-50eb-8299-e5fc7492ea8f",
+        skillName: "Hammer of Ash",
+        socketIndex: 0,
+        socketId: "support:0",
+        supportId: "2a5b5be6-f54e-58fc-9acb-47facff516e0",
+      },
+      {
+        actorId: "c89dce15-cbeb-562d-83ec-993059bbf0ec",
+        actorName: "Bing: Blast Nova",
+        skillId: "6f020b6a-022b-50eb-8299-e5fc7492ea8f",
+        skillName: "Hammer of Ash",
+        socketIndex: 1,
+        socketId: "support:1",
+        supportId: "2a5b5be6-f54e-58fc-9acb-47facff516e0",
+      },
+    ]);
+  });
+
+  it("compares duplicate support IDs by actor, skill, and socket identity", () => {
+    const build = bing();
+    build.loadouts.loadouts[1] = structuredClone(build.loadouts.loadouts[0]);
+    const beforeSupports = build.loadouts.loadouts[0].skills.activeSkills[0].supports;
+    const afterSupports = build.loadouts.loadouts[1].skills.activeSkills[0].supports;
+    beforeSupports[2] = structuredClone(beforeSupports[1]);
+    afterSupports[2] = structuredClone(afterSupports[1]);
+    afterSupports[2].level = beforeSupports[2].level + 1;
+
+    const comparison = compareSs13BingSupportEvidence(build, 0, 1);
+    expect(comparison.status).toBe("source-terms");
+    if (comparison.status !== "source-terms") throw new Error("expected source terms");
+    expect(comparison.changes).toMatchObject([{
+      kind: "changed",
+      actorName: "Bing: Blast Nova",
+      skillName: "Hammer of Ash",
+      socketIndex: 2,
+      socketId: "support:2",
+      supportId: "2d9474fd-8923-56ef-9f5c-f6444898c5f9",
+    }]);
+  });
+
+  it("fails closed when Motionless or Upheaval is moved out of its typed socket", () => {
+    const movedMotionless = bing();
+    const motionlessSockets =
+      movedMotionless.loadouts.loadouts[0].skills.activeSkills[0].supports;
+    [motionlessSockets[0], motionlessSockets[1]] = [
+      motionlessSockets[1],
+      motionlessSockets[0],
+    ];
+    const motionlessEvidence =
+      compileSs13BingSupportEvidence(movedMotionless, 0);
+    expect(motionlessEvidence.status).toBe("source-terms");
+    if (motionlessEvidence.status !== "source-terms") {
+      throw new Error("expected socket evidence");
+    }
+    expect(motionlessEvidence.supports[1]).toMatchObject({
+      status: "unsupported",
+      supportName: "Activation Medium: Motionless",
+      socketIndex: 1,
+      socketId: "support:1",
+      blockers: [{
+        code: "invalid-bing-support-socket",
+        evidence:
+          "loadouts.loadouts[0].skills.activeSkills[0].supports[1]",
+      }],
+    });
+
+    const movedUpheaval = bing();
+    const upheavalSockets =
+      movedUpheaval.loadouts.loadouts[3].skills.activeSkills[0].supports;
+    [upheavalSockets[2], upheavalSockets[4]] = [
+      upheavalSockets[4],
+      upheavalSockets[2],
+    ];
+    const upheavalEvidence =
+      compileSs13BingSupportEvidence(movedUpheaval, 3);
+    expect(upheavalEvidence.status).toBe("source-terms");
+    if (upheavalEvidence.status !== "source-terms") {
+      throw new Error("expected socket evidence");
+    }
+    expect(upheavalEvidence.supports[4]).toMatchObject({
+      status: "unsupported",
+      supportName: "Hammer of Ash: Upheaval (Magnificent)",
+      socketIndex: 4,
+      socketId: "support:4",
+      blockers: [{
+        code: "invalid-bing-support-socket",
+        evidence:
+          "loadouts.loadouts[3].skills.activeSkills[0].supports[4]",
+      }],
     });
   });
 

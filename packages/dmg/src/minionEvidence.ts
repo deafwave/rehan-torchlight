@@ -23,10 +23,15 @@ import {
   compileIrisTraitEvidence,
   compileSpiritMagusActionSet,
   type IrisTraitEvidence,
-  type MinionActionEvidence,
   type MinionSupportEvidence,
   type SpiritMagusBaseline,
 } from "./minionActionEvidence.js";
+import {
+  compareKnownMinionDamageActions,
+  compileKnownMinionDamageActions,
+  type MinionActionKnownDamageChange,
+  type MinionActionWithKnownDamageEvidence,
+} from "./minionDamageEnvelope.js";
 
 export interface SummonFormulaTerm {
   id: string;
@@ -49,7 +54,7 @@ export interface SummonSkillEvidence {
   actor: "minion";
   damageTags: string[];
   baseline: SpiritMagusBaseline;
-  actions: MinionActionEvidence[];
+  actions: MinionActionWithKnownDamageEvidence[];
   supports: MinionSupportEvidence[];
   terms: SummonFormulaTerm[];
   provenance: FormulaProvenance[];
@@ -103,6 +108,7 @@ export interface WuxiaSummonEvidenceComparison {
   beforeIndex: number;
   afterIndex: number;
   changes: SummonEvidenceChange[];
+  actionDamageChanges: MinionActionKnownDamageChange[];
   heroTraitsChanged: boolean;
   beforeHeroTraits: IrisTraitEvidence[];
   afterHeroTraits: IrisTraitEvidence[];
@@ -172,6 +178,7 @@ function compileSummon(
   loadoutIndex: number,
   collection: "activeSkills" | "passiveSkills",
   skillIndex: number,
+  heroTraits: readonly IrisTraitEvidence[],
 ): SummonSkillEvidence | null {
   const level = supportedLevel(skill);
   if (level === null) return null;
@@ -182,6 +189,12 @@ function compileSummon(
     sourceLocator: skillLocator,
   });
   if ("code" in actionSet) return null;
+  const actions = compileKnownMinionDamageActions(
+    actionSet.actions,
+    actionSet.supports,
+    heroTraits,
+    actionSet.blockers,
+  );
   const skillInputSource = importedEvidence(skillLocator);
   const commonEhpBlockers: CalculationBlocker[] = [
     {
@@ -205,7 +218,7 @@ function compileSummon(
       actor: "minion",
       damageTags: ["spell", "summon", "physical", "spirit-magus"],
       baseline: actionSet.baseline,
-      actions: actionSet.actions,
+      actions,
       supports: actionSet.supports,
       terms: [
         term("summoned-count", "Rock Magi summoned", 1, "count", "summoned-actor"),
@@ -224,6 +237,7 @@ function compileSummon(
         SUMMON_FORMULA_SOURCE,
         SUMMON_TEXT_SOURCE,
         ...actionSet.provenance,
+        ...actions.flatMap((action) => action.knownDamage.provenance),
       ],
       minionDps: { status: "not-calculated", blockers: actionSet.blockers },
       playerEhp: { status: "not-calculated", blockers: commonEhpBlockers },
@@ -240,7 +254,7 @@ function compileSummon(
       actor: "minion",
       damageTags: ["spell", "summon", "erosion", "spirit-magus"],
       baseline: actionSet.baseline,
-      actions: actionSet.actions,
+      actions,
       supports: actionSet.supports,
       terms: [
         term("summoned-count", "Erosion Magi summoned", 1, "count", "summoned-actor"),
@@ -266,6 +280,7 @@ function compileSummon(
         SUMMON_FORMULA_SOURCE,
         SUMMON_TEXT_SOURCE,
         ...actionSet.provenance,
+        ...actions.flatMap((action) => action.knownDamage.provenance),
       ],
       minionDps: { status: "not-calculated", blockers: actionSet.blockers },
       playerEhp: { status: "not-calculated", blockers: commonEhpBlockers },
@@ -360,9 +375,16 @@ export function compileWuxiaSummonEvidence(
       message: `The enabled summon ${duplicateIdentity[0]} appears in more than one skill slot; every duplicate parent is rejected.`,
     });
   }
+  const heroTraits = compileIrisTraitEvidence(loadout);
   const summons = relevant
     .map(({ skill, collection, skillIndex }) =>
-      compileSummon(skill, loadoutIndex, collection, skillIndex))
+      compileSummon(
+        skill,
+        loadoutIndex,
+        collection,
+        skillIndex,
+        heroTraits,
+      ))
     .filter((skill: SummonSkillEvidence | null): skill is SummonSkillEvidence => skill !== null);
   if (summons.length !== relevant.length || !summons.length) {
     return unavailable({
@@ -372,7 +394,6 @@ export function compileWuxiaSummonEvidence(
         : "The loadout has no enabled supported Spirit Magus summon skill.",
     });
   }
-  const heroTraits = compileIrisTraitEvidence(loadout);
   const provenance = uniqueProvenance([
     SUMMON_FORMULA_SOURCE,
     SUMMON_TEXT_SOURCE,
@@ -400,7 +421,16 @@ function fingerprint(evidence: SummonSkillEvidence): string {
     level: evidence.level,
     tags: evidence.damageTags,
     baseline: evidence.baseline,
-    actions: evidence.actions,
+    actions: evidence.actions.map((action) => ({
+      ...action,
+      knownDamage: {
+        ...action.knownDamage,
+        excluded: action.knownDamage.excluded.map(({ code, message }) => ({
+          code,
+          message,
+        })),
+      },
+    })),
     supports: evidence.supports.map((support) =>
       support.status === "unsupported"
         ? {
@@ -435,6 +465,7 @@ export function compareWuxiaSummonEvidence(
   const left = new Map(before.summons.map((summon) => [summon.skillId, summon]));
   const right = new Map(after.summons.map((summon) => [summon.skillId, summon]));
   const changes: SummonEvidenceChange[] = [];
+  const actionDamageChanges: MinionActionKnownDamageChange[] = [];
   for (const id of new Set([...left.keys(), ...right.keys()])) {
     const a = left.get(id) ?? null;
     const b = right.get(id) ?? null;
@@ -445,6 +476,14 @@ export function compareWuxiaSummonEvidence(
     } else if (a && b && fingerprint(a) !== fingerprint(b)) {
       changes.push({ kind: "changed", skillId: id, skillName: b.skillName, before: a, after: b });
     }
+    if (a && b) {
+      actionDamageChanges.push(...compareKnownMinionDamageActions(
+        id,
+        b.skillName,
+        a.actions,
+        b.actions,
+      ));
+    }
   }
   return {
     status: "source-terms",
@@ -453,6 +492,7 @@ export function compareWuxiaSummonEvidence(
     beforeIndex,
     afterIndex,
     changes,
+    actionDamageChanges,
     heroTraitsChanged: JSON.stringify(before.heroTraits) !== JSON.stringify(after.heroTraits),
     beforeHeroTraits: before.heroTraits,
     afterHeroTraits: after.heroTraits,

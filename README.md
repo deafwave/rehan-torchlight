@@ -7,6 +7,13 @@ The product goal is simple: when a player says “every upgrade lowered my
 damage,” the site should show what changed, where it enters the formula, why the
 new number is weaker, and which parts of the answer are still unsupported.
 
+TLI Lens is a DPS improver, not a build planner. It does not try to reproduce
+every planner control or let the user assemble an arbitrary character from
+scratch. It starts from real before/after builds, teaches how their scaling
+changed, and turns the strongest available evidence into controlled upgrade
+experiments. Constraint-based optimization can come later, after the damage,
+survival, legality, and cost contracts are trustworthy.
+
 The first web slice includes:
 
 - Before/after loadout selection across multi-loadout build files.
@@ -30,14 +37,80 @@ The first web slice includes:
   prisms, kismets, hero traits, and supported skill effects. Only compatible
   unconditional source buckets are summed; they are not character totals or
   EHP.
+- A three-way comparison-context gate: proven progression, reference-only
+  contrast, or incompatible pair. A user can explicitly confirm a same-character
+  pair when patch, actor, archetype, and source family already agree but
+  source-document lineage is unavailable.
+- A proof-ranked experiment queue grouped into damage, survival, and unresolved
+  build changes. Every card declares whether it is an observed result, modeled
+  rollback, guarded formula slice, compiled source term, or structural lead,
+  and carries its calculation boundary beside the proposed next test.
+- A guarded in-game result form for aligned before/after DPS or damage-per-hit
+  readings with an explicit whole-loadout or actor/skill scope. It compares only
+  matching metrics, scopes, identities, targets, conditions, and sample setups
+  that belong to both selected loadouts. Per-side confidence and source
+  provenance remain separate, and conflicting shared metadata requires an
+  explicit overwrite confirmation. The exact same loadout cannot be used as
+  both sides, and observed outcomes are never relabeled as modeled attribution
+  or converted from per-hit damage into DPS.
+- Actor/skill/socket-scoped support comparison for player and minion actors,
+  keeping duplicate support IDs distinct. A deterministic global assignment
+  separates unchanged moves, moved-and-changed supports, same-socket
+  replacements, and true additions or removals while consuming each instance
+  once. Unsupported raw support type, level, tier, rank, and rolls remain
+  visible instead of being silently treated as unchanged.
 - Classification coverage, unsupported modifier text, assumptions, and honest
   “Not calculated” states.
 - The supplied Bing and Wuxia progression files as structural fixtures.
+
+The generated English display-name catalog has mixed provenance: cached
+SS12.5 labels provide the baseline, then the compact SS13 catalog overlays
+available skill and pactspirit labels. Display names are convenience text, not
+identity or formula evidence. Guarded mechanics and catalog-backed defensive
+terms remain separately pinned to their declared SS13 sources.
 
 The checked-in teaching comparison uses a calibrated Bing snapshot to explain
 why replacing a separately multiplying `additional` layer with a larger
 `increased` roll can lower DPS. It is labeled as a teaching scenario and is not
 presented as an imported character.
+
+## How comparison advice is gated
+
+The site separates resemblance from evidence that two snapshots are stages of
+one character:
+
+- **Progression** requires matching patch, actor, archetype, non-teaching source
+  family, and lineage. Multiple loadouts from one imported document carry
+  one collision-free session document token. Separate upload operations are
+  not inferred to share lineage from matching names, IDs, bytes, or compact
+  fingerprints. If lineage alone is missing, the user may explicitly confirm
+  that the otherwise compatible pair is the same character for the current
+  browser session.
+- **Reference** comparisons can still expose raw differences, but do not call
+  them upgrades, regressions, or rollbacks. Teaching scenarios, different
+  archetypes, unresolved identities, different source families, and unrelated
+  documents stay in this mode.
+- **Incompatible** pairs have a known patch or actor mismatch. The action queue
+  emits no ranked change advice until a compatible pair is selected.
+
+For the calibrated teaching model, the diagnosis waterfall replays changed
+formula groups in a fixed order from the before-state. Its rows reconcile to
+the final delta, but an individual row's attribution can change when the order
+changes. Suggested modeled checks use a different calculation: start from the
+after-state and restore one complete formula layer from before, one layer at a
+time. Those rollback evaluations are independent of display order, but they can
+overlap, need not sum to the net change, and do not prove that the grouped edit
+is legal or independently reversible in game.
+
+Imported Bing and Wuxia results remain partial. The Bing factor ledger composes
+only factors proven to apply to a selected Hammer hit component and condition;
+source-visible projectile emissions stay in a separate lane and are never
+multiplied into hit ratios. The Wuxia envelope multiplies the source-pinned
+Spirit Magus actor/action foundation by confirmed unconditional factors and
+reports known unmitigated damage per contact (or deterministic contacts where
+the source proves them). Neither result is total hit damage or DPS. Player
+defense comparisons likewise report typed source inputs, not character totals
+or EHP.
 
 ## Accuracy boundary
 
@@ -79,7 +152,7 @@ Character view open until `tli_dump` reports a ready capture, then use
 instead capture the same evidence contract with:
 
 ```powershell
-cargo run -p tli_dump --bin tli_dump -- --portable-json
+cargo run --manifest-path ..\poorchlight\tli_dump\Cargo.toml --bin tli_dump -- --portable-json
 ```
 
 TLI Lens accepts the direct portable-v3 document, the Tauri GUI snapshot's
@@ -89,18 +162,26 @@ attaches to the game and only reads a file or text that the user explicitly
 imports. Portable-v3, `.portable`, and complete converter-result inputs remain
 structural/report-only until catalog attestation is implemented.
 
-## Commands
+## Developer commands
 
 ```bash
 pnpm install
+pnpm demo                                      # regenerate fixture analysis
+pnpm test                                      # damage/import/comparison tests
+pnpm --filter @rehan/dmg typecheck
+pnpm --filter @rehan/page exec tsc --noEmit
+pnpm build                                     # page typecheck + production bundle
 pnpm dev
-pnpm build
-pnpm test
-pnpm demo     # regenerate local fixture analysis from ../bing_china.json and ../WuxiaSS13.json
 ```
 
+`pnpm demo` reads `../bing_china.json` and `../WuxiaSS13.json` and rewrites the
+checked-in comparison fixture used by the site. Regenerate it whenever an
+import or evidence contract changes.
+
 The existing calculation packages remain under `packages/dmg/`; the comparison
-website is under `packages/page/`.
+website is under `packages/page/`. See
+[docs/architecture.md](docs/architecture.md) for the current data flow,
+comparison semantics, and the contracts needed by the eventual optimizer.
 
 ## Next engineering slices
 
@@ -115,5 +196,8 @@ website is under `packages/page/`.
 4. Turn the guarded player-defense inputs into physical, elemental, erosion,
    hit, and damage-over-time survival scenarios using live/base character
    pools.
-5. Add constraint-based DPS/EHP recommendations after the comparison models are
-   trustworthy.
+5. Attest portable actor, skill, socket, and catalog identities against a
+   pinned patch before portable imports can enter formula compilers.
+6. Add MiniZinc-backed DPS/EHP recommendations only after legal mutations,
+   costs, complete objective scenarios, and uncertainty boundaries have stable
+   contracts.

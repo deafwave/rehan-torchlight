@@ -18,6 +18,16 @@ export interface WaterfallStep {
   fields: FieldChange[];
 }
 
+export interface RollbackEvaluation {
+  id: string;
+  label: string;
+  description: string;
+  afterDps: number;
+  rollbackDps: number;
+  delta: number;
+  fields: FieldChange[];
+}
+
 const GROUPS = [
   {
     id: "base",
@@ -182,8 +192,43 @@ export function buildWaterfall(before: Snapshot, after: Snapshot): WaterfallStep
   return steps;
 }
 
-export function percentChange(before: number, after: number) {
-  return before === 0 ? 0 : (after / before - 1) * 100;
+/**
+ * Starts from the after-state and restores one complete modeled layer from
+ * the before-state. Unlike waterfall attribution, each result is independent
+ * of display order. It is still a fixed-scenario counterfactual, not a claim
+ * that the grouped edit is legal or isolated in game.
+ */
+export function buildRollbackEvaluations(
+  before: Snapshot,
+  after: Snapshot,
+): RollbackEvaluation[] {
+  const afterDps = safeDps(after);
+  return GROUPS.flatMap((group) => {
+    const fields = changedFields(before, after, group.keys, safeDps(before));
+    if (!fields.length) return [];
+    const candidate = clone(after);
+    for (const key of group.keys) {
+      const previousValue = (before as any)[key];
+      if (previousValue === undefined) delete (candidate as any)[key];
+      else (candidate as any)[key] = clone(previousValue);
+    }
+    const rollbackDps = safeDps(candidate);
+    if (!Number.isFinite(rollbackDps) || !Number.isFinite(afterDps)) return [];
+    return [{
+      id: group.id,
+      label: group.label,
+      description: group.description,
+      afterDps,
+      rollbackDps,
+      delta: rollbackDps - afterDps,
+      fields,
+    }];
+  });
+}
+
+export function percentChange(before: number, after: number): number | null {
+  if (before === 0) return after === 0 ? 0 : null;
+  return (after / before - 1) * 100;
 }
 
 export function compactNumber(value: number, digits = 2) {

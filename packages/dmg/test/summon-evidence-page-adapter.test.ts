@@ -32,6 +32,18 @@ describe("page summon evidence adapter", () => {
       value: 3,
       display: "3",
     }));
+    expect(rockBlast?.knownDamage).toMatchObject({
+      status: "calculated-partial",
+      metric: "known-unmitigated-damage-per-contact",
+      isDps: false,
+      isTotalDamage: false,
+    });
+    expect(rockBlast?.knownDamage.provenance).toContainEqual(
+      expect.objectContaining({
+        source: "rehan_guide/docs/mechanics.md",
+        confidence: "confirmed-mechanic",
+      }),
+    );
 
     expect(rock?.heroTraits).toHaveLength(compiled.heroTraits.length);
     expect(rock?.heroTraits[0].provenance).toEqual(
@@ -41,6 +53,58 @@ describe("page summon evidence adapter", () => {
       trait.provenance.length > 0
       && trait.provenance.every((source) =>
         source.source.length > 0 && source.locator.length > 0))).toBe(true);
+  });
+
+  it("preserves the exact Malady factor and known per-contact arithmetic", () => {
+    const before = summonEvidenceForCompendium(wuxia(), 7).find((summon) =>
+      summon.skillName === "Summon Erosion Magus");
+    const after = summonEvidenceForCompendium(wuxia(), 8).find((summon) =>
+      summon.skillName === "Summon Erosion Magus");
+    const beforeScattered = before?.actions.find((action) =>
+      action.actionName === "Scattered Mud")?.knownDamage;
+    const afterScattered = after?.actions.find((action) =>
+      action.actionName === "Scattered Mud")?.knownDamage;
+
+    expect(beforeScattered).toMatchObject({
+      rawPerContact: 300,
+      multiplier: 0.8784,
+      knownPerContact: 263.52,
+      isDps: false,
+      isTotalDamage: false,
+    });
+    expect(afterScattered).toMatchObject({
+      multiplier: 0.9072,
+      knownPerContact: 272.16,
+    });
+    expect(beforeScattered?.factors.find((factor) =>
+      factor.termId === "additional-minion-damage-roll")).toMatchObject({
+        sourceName: "Summon Erosion Magus: Malady (Noble)",
+        valuePct: 22,
+        multiplier: 1.22,
+        condition: null,
+        provenance: [
+          expect.objectContaining({
+            locator: "loadouts.loadouts[7].skills.activeSkills[2].supports[4]",
+          }),
+          expect.anything(),
+          expect.anything(),
+        ],
+      });
+    expect(afterScattered?.factors.find((factor) =>
+      factor.termId === "additional-minion-damage-roll")).toMatchObject({
+        valuePct: 26,
+        multiplier: 1.26,
+        provenance: [
+          expect.objectContaining({
+            locator: "loadouts.loadouts[8].skills.activeSkills[2].supports[4]",
+          }),
+          expect.anything(),
+          expect.anything(),
+        ],
+      });
+    expect(afterScattered?.excluded).toContainEqual(
+      expect.objectContaining({ code: "missing-minion-ai-rotation" }),
+    );
   });
 
   it("preserves compiler refusal reasons instead of converting them to an empty list", () => {

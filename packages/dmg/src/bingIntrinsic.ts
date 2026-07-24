@@ -721,7 +721,7 @@ function validateHammerSupportSockets(
       hammer?.supports !== undefined,
     )];
   }
-  const supportCounts = new Map<string, number>();
+  const multipleProjectilePaths: string[] = [];
   for (const [index, support] of hammer.supports.entries()) {
     if (support == null) continue;
     const path = `skills.activeSkills[Hammer of Ash].supports[${index}]`;
@@ -735,10 +735,6 @@ function validateHammerSupportSockets(
       });
       continue;
     }
-    supportCounts.set(
-      support.supportGuid,
-      (supportCounts.get(support.supportGuid) ?? 0) + 1,
-    );
     const supportType = support.type;
     const rolls = support.rollValues;
     const rollsValid = rolls === undefined
@@ -807,15 +803,17 @@ function validateHammerSupportSockets(
         evidence: path,
       });
     }
-  }
-  for (const [supportId, count] of supportCounts) {
-    if (count > 1) {
-      blockers.push({
-        code: "duplicate-hammer-support",
-        message: "The same support identity appears in more than one Hammer socket; every duplicate installation is rejected.",
-        evidence: supportId,
-      });
+    if (support.supportGuid === MULTIPLE_PROJECTILES_SUPPORT_ID) {
+      multipleProjectilePaths.push(path);
     }
+  }
+  if (multipleProjectilePaths.length > 1) {
+    blockers.push({
+      code: "duplicate-projectile-quantity-support",
+      message:
+        "Multiple Projectiles appears in more than one Hammer socket; its quantity stacking and installation legality are not assumed.",
+      evidence: multipleProjectilePaths.join(" · "),
+    });
   }
   return blockers;
 }
@@ -917,7 +915,8 @@ function resolveProjectileQuantitySources(
   for (const [pactIndex, pact] of pactspirits.entries()) {
     if (pact?.guid !== IRON_LION_ID) continue;
     const nodes = arrayValue(pact?.allocatedNodes).map(String);
-    if (!nodes.includes(IRON_LION_PROJECTILE_NODE_ID)) continue;
+    const projectileNodeIndex = nodes.indexOf(IRON_LION_PROJECTILE_NODE_ID);
+    if (projectileNodeIndex < 0) continue;
     const level = finiteInteger(pact?.level);
     if (level === null || level < 1 || level > 6) {
       return {
@@ -954,7 +953,7 @@ function resolveProjectileQuantitySources(
     sources.push({
       id: "iron-lion",
       quantity: 2,
-      sourcePath: `pactspirits[${pactIndex}].allocatedNodes[10]`,
+      sourcePath: `pactspirits[${pactIndex}].allocatedNodes[${projectileNodeIndex}] (node ID ${IRON_LION_PROJECTILE_NODE_ID})`,
     });
   }
 

@@ -62,22 +62,22 @@ const BLEAK_GRASS_ID = "459089b5-f150-5868-91cd-0e745d679ea0";
 const WORLD_OF_THORNS_ID = "84850fc5-2929-5196-886d-55e94e706516";
 
 const QUICK_DECISION_ID = "33b9e2f7-ca2b-51ef-949b-885add3142e3";
-const SPELL_CONCENTRATION_ID = "9ddf3bd1-b3c3-5196-a4ae-928b1b2a3111";
-const SERVANT_DAMAGE_ID = "60e6153c-a92b-56cc-98ac-49303ad10a47";
+export const SPELL_CONCENTRATION_ID = "9ddf3bd1-b3c3-5196-a4ae-928b1b2a3111";
+export const SERVANT_DAMAGE_ID = "60e6153c-a92b-56cc-98ac-49303ad10a47";
 const GRUDGE_ID = "5242ef4d-9d65-5541-9956-596b75793b5c";
 const RECKLESSNESS_ID = "f65ec180-9360-52d3-8ac0-51ea20eacc09";
-const PRECISION_STRIKE_ID = "43710e91-3c50-5b97-9be4-0ebe710c6fbb";
+export const PRECISION_STRIKE_ID = "43710e91-3c50-5b97-9be4-0ebe710c6fbb";
 const PRECISE_SUPERPOWER_ID = "1db0c549-1a92-5dcc-aec7-76b42435d83b";
 const FRIEND_OF_SPIRIT_MAGI_ID = "20299635-ce77-51d0-a367-bdad02dda095";
 const PROTECTION_FIELD_ID = "38b31949-b85f-5262-b765-40a0c9b7416c";
 const PRECISE_PROTECTION_FIELD_ID = "1ec6ca61-c0b9-5772-aa9c-27128ab7df61";
-const ELEMENTAL_DUO_ID = "b145772f-3b89-5115-9a64-28a2edd34548";
+export const ELEMENTAL_DUO_ID = "b145772f-3b89-5115-9a64-28a2edd34548";
 const AILMENT_TERMINATION_ID = "57c89092-e623-5cbb-af11-84fde77234c3";
-const FREQUENT_QUAKE_ID = "45d4c348-9b95-5c5b-9556-97c4bc34699e";
-const MALADY_ID = "4906f4c4-7b90-5d3e-9a29-42696dbb8ae6";
+export const FREQUENT_QUAKE_ID = "45d4c348-9b95-5c5b-9556-97c4bc34699e";
+export const MALADY_ID = "4906f4c4-7b90-5d3e-9a29-42696dbb8ae6";
 
 const VIGILANT_BREEZE_TRAIT_ID = "27e5f4c4-57f3-5567-8bda-539372175f1e";
-const WHIRLWIND_TANGO_TRAIT_ID = "dad07d14-fd2f-5374-a51b-c64f049db12a";
+export const WHIRLWIND_TANGO_TRAIT_ID = "dad07d14-fd2f-5374-a51b-c64f049db12a";
 const HAPPIEST_REUNION_TRAIT_ID = "b69e86a7-4e90-5774-8086-bf6abb073f02";
 const NURTURING_BREEZE_TRAIT_ID = "8ed19a33-d86f-542b-8d54-c601aace483f";
 
@@ -233,7 +233,18 @@ export interface MinionSupportTerm {
   isNetDps: false;
 }
 
-export interface MinionSupportSourceTerms {
+export interface MinionSupportSocketIdentity {
+  /** The summoned damage actor is keyed by its summon skill in this source. */
+  actorId: string;
+  actorName: string;
+  skillId: string;
+  skillName: string;
+  socketIndex: number;
+  socketId: string;
+}
+
+export interface MinionSupportSourceTerms
+  extends MinionSupportSocketIdentity {
   status: "source-terms";
   isDps: false;
   supportId: string;
@@ -251,7 +262,8 @@ export interface MinionSupportSourceTerms {
   };
 }
 
-export interface UnsupportedMinionSupportTerms {
+export interface UnsupportedMinionSupportTerms
+  extends MinionSupportSocketIdentity {
   status: "unsupported";
   isDps: false;
   supportId: string;
@@ -761,6 +773,7 @@ function erosionActions(baseline: SpiritMagusBaseline): MinionActionEvidence[] {
 interface SupportDefinition {
   name: string;
   expectedType: "support" | "magnificent_support" | "noble_support";
+  allowedSlotIndex?: number;
   compile: (
     support: any,
     summonSkillId: string,
@@ -1109,6 +1122,7 @@ const MINION_SUPPORTS: Record<string, SupportDefinition> = {
   [FREQUENT_QUAKE_ID]: {
     name: "Summon Erosion Magus: Frequent Quake (Magnificent)",
     expectedType: "magnificent_support",
+    allowedSlotIndex: 2,
     compile: (support, summonSkillId) => {
       if (summonSkillId !== SUMMON_EROSION_MAGUS_ID) {
         return {
@@ -1155,6 +1169,7 @@ const MINION_SUPPORTS: Record<string, SupportDefinition> = {
   [MALADY_ID]: {
     name: "Summon Erosion Magus: Malady (Noble)",
     expectedType: "noble_support",
+    allowedSlotIndex: 4,
     compile: (support, summonSkillId) => {
       if (summonSkillId !== SUMMON_EROSION_MAGUS_ID) {
         return {
@@ -1208,13 +1223,32 @@ const MINION_SUPPORTS: Record<string, SupportDefinition> = {
   },
 };
 
+function summonDisplayName(summonSkillId: string) {
+  return summonSkillId === SUMMON_ROCK_MAGUS_ID
+    ? "Summon Rock Magus"
+    : summonSkillId === SUMMON_EROSION_MAGUS_ID
+      ? "Summon Erosion Magus"
+      : "Unsupported Spirit Magus summon";
+}
+
 function compileSupport(
   support: any,
   summonSkillId: string,
+  supportIndex: number,
   sourceLocator: string,
 ): MinionSupportEvidence {
+  const summonName = summonDisplayName(summonSkillId);
+  const identity: MinionSupportSocketIdentity = {
+    actorId: summonSkillId,
+    actorName: summonName,
+    skillId: summonSkillId,
+    skillName: summonName,
+    socketIndex: supportIndex,
+    socketId: `support:${supportIndex}`,
+  };
   if (!support || typeof support !== "object" || Array.isArray(support)) {
     return {
+      ...identity,
       status: "unsupported",
       isDps: false,
       supportId: "",
@@ -1230,6 +1264,7 @@ function compileSupport(
   const definition = MINION_SUPPORTS[supportId];
   if (!definition) {
     return {
+      ...identity,
       status: "unsupported",
       isDps: false,
       supportId,
@@ -1243,6 +1278,7 @@ function compileSupport(
   }
   if (support.type !== definition.expectedType) {
     return {
+      ...identity,
       status: "unsupported",
       isDps: false,
       supportId,
@@ -1259,6 +1295,7 @@ function compileSupport(
         || support.rollValues.some((roll: unknown) =>
           typeof roll !== "number" || !Number.isFinite(roll)))) {
     return {
+      ...identity,
       status: "unsupported",
       isDps: false,
       supportId,
@@ -1276,6 +1313,7 @@ function compileSupport(
         || support.rank !== undefined
         || support.rollValues !== undefined)) {
     return {
+      ...identity,
       status: "unsupported",
       isDps: false,
       supportId,
@@ -1289,6 +1327,7 @@ function compileSupport(
   }
   if (!isOrdinaryLevelSupport && support.level !== undefined) {
     return {
+      ...identity,
       status: "unsupported",
       isDps: false,
       supportId,
@@ -1303,6 +1342,7 @@ function compileSupport(
   const effects = definition.compile(support, summonSkillId);
   if (!Array.isArray(effects)) {
     return {
+      ...identity,
       status: "unsupported",
       isDps: false,
       supportId,
@@ -1313,7 +1353,23 @@ function compileSupport(
       }],
     };
   }
+  if (definition.allowedSlotIndex !== undefined
+      && supportIndex !== definition.allowedSlotIndex) {
+    return {
+      ...identity,
+      status: "unsupported",
+      isDps: false,
+      supportId,
+      supportName: definition.name,
+      blockers: [{
+        code: "invalid-minion-support-socket",
+        message: `${definition.name} requires support socket ${definition.allowedSlotIndex + 1}; received socket ${supportIndex + 1}.`,
+        evidence: sourceLocator,
+      }],
+    };
+  }
   return {
+    ...identity,
     status: "source-terms",
     isDps: false,
     supportId,
@@ -1403,6 +1459,12 @@ export function compileSpiritMagusActionSet(
   const supports: MinionSupportEvidence[] = !Array.isArray(supportSlots)
     || supportSlots.length !== 5
     ? [{
+        actorId: summonSkillId,
+        actorName: summonDisplayName(summonSkillId),
+        skillId: summonSkillId,
+        skillName: summonDisplayName(summonSkillId),
+        socketIndex: -1,
+        socketId: "support-set",
         status: "unsupported",
         isDps: false,
         supportId: "",
@@ -1421,6 +1483,7 @@ export function compileSpiritMagusActionSet(
           : [compileSupport(
               support,
               summonSkillId,
+              supportIndex,
               `${context.sourceLocator}.supports[${supportIndex}]`,
             )]);
   const provenance = [

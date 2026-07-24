@@ -13,11 +13,17 @@ import type {
   SupportSocketEvidence,
   SummonSourceEvidence,
   GuardedEvidenceBlocker,
+  LoadoutComparisonContext,
 } from "./analysis-types";
 import type { PlayerDefenseDisplayEvidenceResult } from "./player-defense-evidence";
 import type { BingIntrinsicEnvelope } from "@rehan/dmg/bingIntrinsic";
+import {
+  IRIS_VIGILANT_BREEZE_ID,
+  SUMMON_EROSION_MAGUS_ID,
+  SUMMON_ROCK_MAGUS_ID,
+} from "@rehan/dmg/guardedCompiler";
 import { partialMetricsForCompendium } from "./partial-metrics";
-import { supportEvidenceForCompendium } from "./support-evidence";
+import { supportEvidenceResultForCompendium } from "./support-evidence";
 import {
   createLocalCaptureHandoff,
   extractInGameBuildCode,
@@ -25,6 +31,10 @@ import {
 import { summonEvidenceResultForCompendium } from "./summon-evidence";
 import { playerDefenseEvidenceForCompendium } from "./player-defense-evidence";
 import { bingIntrinsicEvidenceResultForCompendium } from "./bing-intrinsic-evidence";
+import {
+  bingFactorLedgerLoadoutDisplayResultForCompendium,
+  type BingFactorLedgerLoadoutDisplayResult,
+} from "./bing-factor-evidence";
 import {
   resolveCompilerSource,
   type PortableCompilerConversion,
@@ -38,8 +48,100 @@ import {
   type NormalizedIdentity,
   type NormalizedLoadout,
 } from "./snapshot-adapter";
+import { IRIS_SPIRIT_MAGUS_ARCHETYPE_ID } from "./comparison-context";
 
 let importSequence = 0;
+
+const KNOWN_SPIRIT_MAGUS_SKILL_IDS = new Set([
+  SUMMON_ROCK_MAGUS_ID,
+  SUMMON_EROSION_MAGUS_ID,
+]);
+
+function stableIdentityId(
+  identity: NormalizedIdentity | null,
+): string | null {
+  const value = identity?.catalogId ?? identity?.nativeId;
+  return typeof value === "string" && value.trim()
+    ? value.trim()
+    : null;
+}
+
+function knownPatch(patch: string): string | null {
+  const value = patch.trim();
+  const normalized = value.toLowerCase();
+  if (!value
+      || normalized === "unknown"
+      || normalized === "unknown patch"
+      || normalized === "live game"
+      || normalized === "n/a") {
+    return null;
+  }
+  return value;
+}
+
+function comparisonArchetypeId(
+  loadout: NormalizedLoadout,
+  actorId: string | null,
+  bingIntrinsicEvidence?: BingIntrinsicEnvelope,
+): string | null {
+  if (bingIntrinsicEvidence?.skillId) {
+    return bingIntrinsicEvidence.skillId;
+  }
+
+  if (actorId === IRIS_VIGILANT_BREEZE_ID) {
+    return IRIS_SPIRIT_MAGUS_ARCHETYPE_ID;
+  }
+
+  const primary = loadout.skills.find((skill) => {
+    if (skill.kind !== "active" || !skill.enabled) return false;
+    const skillId = stableIdentityId(skill.identity);
+    return skillId === null || !KNOWN_SPIRIT_MAGUS_SKILL_IDS.has(skillId);
+  });
+  return primary ? stableIdentityId(primary.identity) : null;
+}
+
+function comparisonContext(
+  loadout: NormalizedLoadout,
+  build: NormalizedBuild,
+  lineageId: string | null,
+  bingIntrinsicEvidence?: BingIntrinsicEnvelope,
+): LoadoutComparisonContext {
+  const actorId = stableIdentityId(loadout.hero.identity);
+  return {
+    patch: knownPatch(build.patch),
+    actorId,
+    archetypeId: comparisonArchetypeId(
+      loadout,
+      actorId,
+      bingIntrinsicEvidence,
+    ),
+    lineageId,
+    ...(lineageId ? { lineageEvidence: "source-document" as const } : {}),
+    sourceKind: build.sourceKind,
+  };
+}
+
+function sourceDocumentLineageId(
+  value: unknown,
+  build: NormalizedBuild,
+  documentSequence: number,
+): string | null {
+  if (build.sourceKind !== "compendium"
+      || value === null
+      || typeof value !== "object"
+      || Array.isArray(value)) {
+    return null;
+  }
+  const documentId = (value as Record<string, unknown>).id;
+  if (typeof documentId !== "string" || !documentId.trim()) {
+    return null;
+  }
+  // Lineage means “these loadouts came from this one import operation,” not
+  // “two uploads had matching labels or compact hashes.” A monotonically
+  // increasing token is collision-free for the browser session and fails
+  // closed when the same bytes are imported again as a separate document.
+  return `runtime-compendium-session:${documentSequence}`;
+}
 
 function catalogName(identity: NormalizedIdentity, catalog: ImportCatalog) {
   const id = identity.catalogId;
@@ -82,6 +184,7 @@ function skillRows(loadout: NormalizedLoadout, catalog: ImportCatalog): SkillRow
     enabled: skill.enabled,
     supports: [
       ...skill.supports.map((support) => ({
+        slot: support.slot,
         guid: support.identity.catalogId ?? support.identity.nativeId ?? undefined,
         name: catalogName(support.identity, catalog),
         type: support.type,
@@ -187,11 +290,15 @@ function analyzedLoadout(
   build: NormalizedBuild,
   catalog: ImportCatalog,
   partialMetrics: PartialMetric[],
+  supportEvidenceStatus: AnalyzedLoadout["supportEvidenceStatus"],
   supportEvidence: SupportSocketEvidence[],
+  supportEvidenceBlockers: GuardedEvidenceBlocker[],
   summonEvidence: SummonSourceEvidence[],
   summonEvidenceBlockers: GuardedEvidenceBlocker[],
+  lineageId: string | null,
   bingIntrinsicEvidence?: BingIntrinsicEnvelope,
   bingIntrinsicBlockers: GuardedEvidenceBlocker[] = [],
+  bingFactorLedger?: BingFactorLedgerLoadoutDisplayResult,
   playerDefenseEvidence?: PlayerDefenseDisplayEvidenceResult,
   portableConversion?: PortableCompilerConversion | null,
 ): AnalyzedLoadout {
@@ -232,11 +339,14 @@ function analyzedLoadout(
     : [];
   const guardedReadiness = guardedEvidenceReadiness({
     partialMetrics,
+    supportEvidenceStatus,
     supportEvidence,
+    supportEvidenceBlockers,
     summonEvidence,
     summonEvidenceBlockers,
     bingIntrinsicEvidence,
     bingIntrinsicBlockers,
+    bingFactorLedger,
     playerDefenseEvidence,
   });
   const guardedEvidenceAvailable =
@@ -251,13 +361,22 @@ function analyzedLoadout(
       ? loadout.hero.identity.label ?? catalogName(loadout.hero.identity, catalog)
       : loadout.hero.name,
     isCurrent: loadout.isCurrent,
+    comparisonContext: comparisonContext(
+      loadout,
+      build,
+      lineageId,
+      bingIntrinsicEvidence,
+    ),
     model: null,
     partialMetrics,
+    supportEvidenceStatus,
     supportEvidence,
+    supportEvidenceBlockers,
     summonEvidence,
     summonEvidenceBlockers,
     bingIntrinsicEvidence,
     bingIntrinsicBlockers,
+    bingFactorLedger,
     playerDefenseEvidence,
     snapshot: null,
     gear: gearRows(loadout),
@@ -302,8 +421,15 @@ export function importBuild(
   const compilerResolution = resolveCompilerSource(value, normalized);
   const compilerSource = compilerResolution.source;
   importSequence += 1;
+  const importedBuildId =
+    `imported-${normalized.sourceKind}-${normalized.fingerprint}-${Date.now().toString(36)}-${importSequence}`;
+  const lineageId = sourceDocumentLineageId(
+    value,
+    normalized,
+    importSequence,
+  );
   return {
-    id: `imported-${normalized.sourceKind}-${normalized.fingerprint}-${Date.now().toString(36)}-${importSequence}`,
+    id: importedBuildId,
     name: normalized.name,
     patch: normalized.patch,
     source: sourceName,
@@ -311,6 +437,9 @@ export function importBuild(
     loadouts: normalized.loadouts.map((loadout) => {
       const summonResult = compilerSource
         ? summonEvidenceResultForCompendium(compilerSource, loadout.index)
+        : null;
+      const supportResult = compilerSource
+        ? supportEvidenceResultForCompendium(compilerSource, loadout.index)
         : null;
       const bingResult = compilerSource
         ? bingIntrinsicEvidenceResultForCompendium(compilerSource, loadout.index)
@@ -326,11 +455,20 @@ export function importBuild(
         normalized,
         catalog,
         compilerSource ? partialMetricsForCompendium(compilerSource, loadout.index) : [],
-        compilerSource ? supportEvidenceForCompendium(compilerSource, loadout.index) : [],
+        supportResult?.status ?? "not-calculated",
+        supportResult?.supports ?? [],
+        supportResult?.blockers ?? [],
         summonResult?.status === "source-terms" ? summonResult.summons : [],
         summonBlockers,
+        lineageId,
         bingResult?.status === "calculated-partial" ? bingResult : undefined,
         bingBlockers,
+        compilerSource && bingResult?.status === "calculated-partial"
+          ? bingFactorLedgerLoadoutDisplayResultForCompendium(
+              compilerSource,
+              loadout.index,
+            )
+          : undefined,
         compilerSource
           ? playerDefenseEvidenceForCompendium(compilerSource, loadout.index, {
               catalog: catalog.defenseCatalog,
@@ -359,6 +497,13 @@ export function importBuildCode(raw: string): AnalyzedBuild {
       name: `${code.slice(0, 8)}…${code.slice(-6)}`,
       hero: "Open this build in-game, then capture it with tli_dump",
       isCurrent: true,
+      comparisonContext: {
+        patch: null,
+        actorId: null,
+        archetypeId: null,
+        lineageId: null,
+        sourceKind: "build-code",
+      },
       model: null,
       snapshot: null,
       gear: [],

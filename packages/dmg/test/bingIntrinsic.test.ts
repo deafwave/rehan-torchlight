@@ -450,8 +450,29 @@ describe("guarded SS13 Bing intrinsic envelope", () => {
     };
     duplicateHammer.supports[1] = structuredClone(duplicateHammer.supports[0]);
     expect(topologyBlockers(duplicateSupport, 3)).toContainEqual(
-      expect.objectContaining({ code: "duplicate-hammer-support" }),
+      expect.objectContaining({
+        code: "duplicate-projectile-quantity-support",
+      }),
     );
+
+    const duplicateUnrelatedSupport = bing();
+    const unrelatedHammer =
+      duplicateUnrelatedSupport.loadouts.loadouts[3].skills.activeSkills.find(
+        (skill: any) =>
+          skill.skillGuid === "6f020b6a-022b-50eb-8299-e5fc7492ea8f",
+      );
+    unrelatedHammer.supports[4] = structuredClone(
+      unrelatedHammer.supports[1],
+    );
+    const unrelatedResult = compileBingIntrinsicEnvelope(
+      duplicateUnrelatedSupport,
+      3,
+    );
+    expect(unrelatedResult.status).toBe("calculated-partial");
+    if (unrelatedResult.status !== "calculated-partial") {
+      throw new Error("weapon slice should remain available");
+    }
+    expect(unrelatedResult.topology.status).toBe("calculated-partial");
 
     const duplicateIronLion = bing();
     const duplicatePacts = duplicateIronLion.loadouts.loadouts[3].pactspirits;

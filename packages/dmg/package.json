@@ -4,10 +4,12 @@
   "version": "1.0.0",
   "type": "module",
   "exports": {
+    "./bingFactorLedger": "./src/bingFactorLedger.ts",
     "./bingIntrinsic": "./src/bingIntrinsic.ts",
     "./damageModel": "./src/damageModel.ts",
     "./guardedCompiler": "./src/guardedCompiler.ts",
     "./minionActionEvidence": "./src/minionActionEvidence.ts",
+    "./minionDamageEnvelope": "./src/minionDamageEnvelope.ts",
     "./minionEvidence": "./src/minionEvidence.ts",
     "./playerDefenseEvidence": "./src/playerDefenseEvidence.ts",
     "./supportEvidence": "./src/supportEvidence.ts",

@@ -216,6 +216,41 @@ describe("guarded SS13 Spirit Magus action evidence", () => {
     );
   });
 
+  it("keeps duplicate support instances distinct by actor, skill, and socket", () => {
+    const skill = structuredClone(
+      summon(wuxia().loadouts.loadouts[8], SUMMON_ROCK_MAGUS_ID),
+    );
+    skill.supports[1] = structuredClone(skill.supports[0]);
+
+    const result = compiled(skill);
+    const duplicateId = skill.supports[0].supportGuid;
+    const instances = result.supports.filter((support) =>
+      support.supportId === duplicateId);
+
+    expect(instances).toHaveLength(2);
+    expect(instances).toMatchObject([
+      {
+        status: "source-terms",
+        actorId: SUMMON_ROCK_MAGUS_ID,
+        actorName: "Summon Rock Magus",
+        skillId: SUMMON_ROCK_MAGUS_ID,
+        skillName: "Summon Rock Magus",
+        socketIndex: 0,
+        socketId: "support:0",
+      },
+      {
+        status: "source-terms",
+        actorId: SUMMON_ROCK_MAGUS_ID,
+        actorName: "Summon Rock Magus",
+        skillId: SUMMON_ROCK_MAGUS_ID,
+        skillName: "Summon Rock Magus",
+        socketIndex: 1,
+        socketId: "support:1",
+      },
+    ]);
+    expect(new Set(instances.map((support) => support.socketId)).size).toBe(2);
+  });
+
   it("shows Iris trait constants and candidate values while preserving the missing selector", () => {
     const loadout = wuxia().loadouts.loadouts[8];
     const traits = compileIrisTraitEvidence(loadout);
@@ -484,6 +519,48 @@ describe("guarded SS13 Spirit Magus action evidence", () => {
     expect(compiled(skill).supports[0]).toMatchObject({
       status: "source-terms",
       supportName: "Precise: Superpower",
+    });
+  });
+
+  it("requires Frequent Quake in socket 3 and Malady in socket 5", () => {
+    const build = wuxia();
+    const erosion = summon(
+      build.loadouts.loadouts[8],
+      SUMMON_EROSION_MAGUS_ID,
+    );
+
+    const misplacedQuake = structuredClone(erosion);
+    [
+      misplacedQuake.supports[0],
+      misplacedQuake.supports[2],
+    ] = [
+      misplacedQuake.supports[2],
+      misplacedQuake.supports[0],
+    ];
+    expect(compiled(misplacedQuake).supports[0]).toMatchObject({
+      status: "unsupported",
+      supportName: "Summon Erosion Magus: Frequent Quake (Magnificent)",
+      blockers: [{
+        code: "invalid-minion-support-socket",
+        evidence: "loadouts.loadouts[0].skills.activeSkills[0].supports[0]",
+      }],
+    });
+
+    const misplacedMalady = structuredClone(erosion);
+    [
+      misplacedMalady.supports[1],
+      misplacedMalady.supports[4],
+    ] = [
+      misplacedMalady.supports[4],
+      misplacedMalady.supports[1],
+    ];
+    expect(compiled(misplacedMalady).supports[1]).toMatchObject({
+      status: "unsupported",
+      supportName: "Summon Erosion Magus: Malady (Noble)",
+      blockers: [{
+        code: "invalid-minion-support-socket",
+        evidence: "loadouts.loadouts[0].skills.activeSkills[0].supports[1]",
+      }],
     });
   });
 
