@@ -1,5 +1,5 @@
 {
-  "name": "rehan-ss13-progression",
+  "name": "tli-lens",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -11,6 +11,7 @@
     "snapshot": "pnpm --filter @rehan/dmg snapshot",
     "rank": "pnpm --filter @rehan/dmg rank sensitivity",
     "page": "pnpm --filter @rehan/dmg snapshot && pnpm --filter @rehan/dmg catalog && pnpm --filter @rehan/dmg progression && pnpm --filter @rehan/dmg pagedata",
-    "skills": "tsx scripts/update_skills.ts"
+    "skills": "tsx scripts/update_skills.ts",
+    "demo": "tsx scripts/generate_demo_analysis.ts"
   }
 }

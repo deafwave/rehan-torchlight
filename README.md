@@ -1,37 +1,62 @@
-# Rehan SS13 — Spectral Slash Damage Model & Upgrade Ranker
+# TLI Lens
 
-Ranks damage upgrades for the Torchlight: Infinite Rehan (Seething Silhouette) Spectral Slash build by parsing the planner export against a researched damage formula.
+TLI Lens is an import-first build comparison and damage-explanation tool for
+Torchlight: Infinite.
 
-## The bundle
+The product goal is simple: when a player says “every upgrade lowered my
+damage,” the site should show what changed, where it enters the formula, why the
+new number is weaker, and which parts of the answer are still unsupported.
 
-| File | What it is |
-|---|---|
-| `CLAUDE.md` | **Start here** — repo map, commands, and the maintenance invariants |
-| `docs/mechanics.md` | The damage formula: every modifier classified (bucket, stacking, citation, confidence) + assumptions |
-| `data/snapshot.json` | Your parsed build as model input (hand-editable) |
-| `data/manual_overrides.json` | Researched values the parser can't read from affix text, each cited |
-| `packages/dmg/` | The damage model, build parser, mod catalog, and gear ladder (TypeScript) |
-| `packages/page/` | The progression page (Vite + TypeScript); `packages/page/src/data/*.json` is written by `pnpm page` |
-| `docs/superpowers/` | Design spec and implementation plan |
+The first web slice includes:
 
-Rankings are not a doc: run `pnpm rank` for the current sensitivity table.
+- Before/after loadout selection across multi-loadout build files.
+- Local import for TLI Compendium JSON and `tli_dump` portable-v3 snapshots.
+- Explicit handling for in-game build codes that still require a local
+  `tli_dump` resolver.
+- Exact formula replay and a reconciled damage-layer waterfall for guarded
+  snapshots.
+- Changed-only views for gear, skills, trees, memories, slates, and
+  pactspirits.
+- Classification coverage, unsupported modifier text, assumptions, and honest
+  “Not calculated” states.
+- The supplied Bing and Wuxia progression files as structural fixtures.
 
-## Usage
+The checked-in teaching comparison uses a calibrated Bing snapshot to explain
+why replacing a separately multiplying `additional` layer with a larger
+`increased` roll can lower DPS. It is labeled as a teaching scenario and is not
+presented as an imported character.
+
+## Accuracy boundary
+
+The existing damage engine began as a Rehan/Spectral Slash model. Its parser
+currently starts from Rehan defaults and applies Rehan manual overrides, so
+arbitrary imported loadouts must not be sent through it as a fallback. The
+website keeps real Bing and Wuxia loadouts fully inspectable while leaving DPS
+unavailable until a hero/skill-specific compiler is ready.
+
+Wuxia is also a minion build. Minion base actions, quantity, actor-scoped
+modifiers, AI/uptime, and several trait mechanics need their own model rather
+than the player-hit formula.
+
+## Commands
 
 ```bash
 pnpm install
-pnpm snapshot   # parse the build export -> data/snapshot.json + coverage report
-pnpm rank       # sensitivity table: "+X stat -> +Y% boss DPS"
-pnpm test       # 62 tests incl. end-to-end (>=90% affix coverage enforced)
-pnpm page       # regenerate packages/page/src/data/{catalog,ladder}.json for the web page
-
-# the web page:
-pnpm dev        # local dev server
-pnpm build      # type-check + bundle to dist/
-
-# candidates:
-pnpm --filter @rehan/dmg rank apply data/snapshot.json penetration.cold_pct 40
-pnpm --filter @rehan/dmg rank compare data/snapshot.json other-snapshot.json
+pnpm dev
+pnpm build
+pnpm test
+pnpm demo     # regenerate local fixture analysis from ../bing_china.json and ../WuxiaSS13.json
 ```
 
-Scenario: boss single-target, full combo rotation. The parser targets the planner's current loadout (`-l N` to override). Unparsed affix lines are always printed — never silently dropped.
+The existing calculation packages remain under `packages/dmg/`; the comparison
+website is under `packages/page/`.
+
+## Next engineering slices
+
+1. Introduce a canonical, season-versioned build schema with source provenance.
+2. Split the parser into pure catalog-driven classification plus guarded
+   hero/skill compilers.
+3. Add stable source IDs to formula trace factors and compare traces directly.
+4. Build physical, elemental, erosion, and DoT survival scenarios.
+5. Add constraint-based DPS/EHP recommendations after the comparison models are
+   trustworthy.

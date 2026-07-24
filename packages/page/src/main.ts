@@ -1,323 +1,861 @@
 import "./style.css";
-import ladderData from "./data/ladder.json";
-import catalogData from "./data/catalog.json";
-import prismData from "./data/prisms.json";
-import { esc, escAttr, gainChip, dChip, SRC, srcChip, modRows, godOf,
-  type LadderRow, type CatalogRow, type Rung } from "./ui";
-import { renderLinear, resetLinearProgress } from "./linear";
-import { renderCalc } from "./calc";
-import { renderPools } from "./pools";
+import demoJson from "./data/demo-builds.json";
+import importCatalogJson from "./data/import-catalog.json";
+import { cycleDps } from "@rehan/dmg/damageModel";
+import { renderBreakdown } from "./breakdown";
+import {
+  buildWaterfall,
+  compactNumber,
+  percentChange,
+  signedCompact,
+  signedPercent,
+  type WaterfallStep,
+} from "./analysis";
+import type {
+  AnalyzedBuild,
+  AnalyzedLoadout,
+  DemoData,
+  ImportCatalog,
+  SkillRow,
+} from "./analysis-types";
+import { importBuild, importBuildCode } from "./importer";
 
-/* ---------- data written by dmg progression + catalog CLIs ---------- */
-const LADDER = ladderData as LadderRow[];
-const CATALOG = catalogData as CatalogRow[];
+const demo = demoJson as unknown as DemoData;
+const catalog = importCatalogJson as ImportCatalog;
+const builds: AnalyzedBuild[] = structuredClone(demo.builds);
 
-/* ---------- render: the progression tree ---------- */
-{
-  const STAGES = ["start", "i86", "priceless", "mirror-worthy"];
-  const slotName = (s: string) => s.replace(/([a-z])([A-Z0-9])/g, "$1 $2").toLowerCase();
-  const shortLabel = (r: Rung) => {
-    const m = r.label.match(/^(i\d+|priceless|mirror[- ]?worthy)/i);
-    return m ? m[1].toLowerCase() : r.label;
-  };
-  // craft order is only useful on priceless gear. Mirror-worthy is a buy, not a craft path.
-  const isPriceless = (r: Rung) => /^priceless/i.test(r.label);
-  const wrap = document.getElementById("tree")!;
-  wrap.innerHTML =
-    `<div class="tree-row tree-head"><span></span>${STAGES.map(s => `<span>${s}</span>`).join("")}</div>`
-    + LADDER.map(row => {
-      const cells = ["", "", "", ""];
-      const crafts: string[] = [];
-      row.rungs.forEach((r, i) => {
-        const col = Math.min(i, 3);
-        const rw = r.rework;
-        const lbl = shortLabel(r);
-        let name = r.name.replace(/^\(Priceless\):\s*/, "");
-        if (name === r.label || name === lbl) name = "";
-        cells[col] = `<div class="tnode c${col}${rw ? " rework" : ""}${i ? "" : " first"}">`
-          + `<span class="t-lbl">${rw ? `<span class="rework-mark">⚠</span> ` : ""}${esc(lbl)}</span>${gainChip(r, "t-gain")}`
-          + (name ? `<span class="t-name">${esc(name)}</span>` : "")
-          + (rw ? rw.label.split(" · ").map(l => `<span class="t-branch">${esc(l)}</span>`).join("") : "")
-          + (r.rangeLabel ? `<span class="t-branch">${esc(r.rangeLabel)}</span>` : "")
-          + (r.note ? `<span class="t-note">${esc(r.note)}</span>` : "")
-          + `</div>`;
-        if (r.mods?.length && isPriceless(r)) crafts.push(modRows(r.mods, `craft order — ${lbl}`));
-      });
-      return `<div class="tree-row"><span class="t-slot">${esc(slotName(row.slot))}</span>`
-        + cells.map(c => `<div class="tcell">${c}</div>`).join("") + crafts.join("") + `</div>`;
-    }).join("");
+type Side = "before" | "after";
+type View = "diagnosis" | "changes" | "formula" | "coverage";
+type ChangeSection = "gear" | "skills" | "trees" | "memories" | "slates" | "pacts";
+
+interface Selection {
+  buildId: string;
+  loadoutId: string;
 }
 
-/* ---------- slate + prism progression: the gear tree's visual language ---------- */
-interface TNode { lbl: string; chip?: string; name?: string; note?: string; src?: keyof typeof SRC }
-const miniTree = (headers: string[], rows: { label: string; nodes: (TNode | null)[] }[]) =>
-  `<div class="tree static cols-3">`
-  + `<div class="tree-row tree-head"><span></span>${headers.map(h => `<span>${h}</span>`).join("")}</div>`
-  + rows.map(row => {
-      let first = true;
-      return `<div class="tree-row"><span class="t-slot">${row.label}</span>`
-        + row.nodes.map((n, i) => {
-            if (!n) return `<div class="tcell"></div>`;
-            const cls = `tnode c${i}${first ? " first" : ""}`; first = false;
-            return `<div class="tcell"><div class="${cls}">`
-              + `<span class="t-lbl">${n.src ? srcChip(n.src) : ""}${n.lbl}</span>${n.chip ?? ""}`
-              + (n.name ? `<span class="t-name">${n.name}</span>` : "")
-              + (n.note ? `<span class="t-note">${n.note}</span>` : "")
-              + `</div></div>`;
-          }).join("")
-        + `</div>`;
+const initialBing = builds.find((build) => build.id === "scaling-lesson")!;
+let beforeSelection: Selection = {
+  buildId: initialBing.id,
+  loadoutId: initialBing.loadouts[0].id,
+};
+let afterSelection: Selection = {
+  buildId: initialBing.id,
+  loadoutId: initialBing.loadouts[1].id,
+};
+let activeView: View = "diagnosis";
+let changeSection: ChangeSection = "gear";
+let formulaSide: Side = "after";
+let importTarget: Side = "after";
+
+const app = document.getElementById("app")!;
+const importDialog = document.getElementById("import-dialog") as HTMLDialogElement;
+const importStatus = document.getElementById("import-status")!;
+const fileInput = document.getElementById("build-file") as HTMLInputElement;
+const pasteInput = document.getElementById("build-paste") as HTMLTextAreaElement;
+const dropZone = document.getElementById("drop-zone")!;
+
+const esc = (value: unknown) => String(value ?? "")
+  .replaceAll("&", "&amp;")
+  .replaceAll("<", "&lt;")
+  .replaceAll(">", "&gt;");
+const escAttr = (value: unknown) => esc(value).replaceAll('"', "&quot;");
+const sideLabel = (side: Side) => side === "before" ? "Before" : "After";
+
+function selected(side: Side) {
+  const selection = side === "before" ? beforeSelection : afterSelection;
+  const build = builds.find((item) => item.id === selection.buildId) ?? builds[0];
+  const loadout = build.loadouts.find((item) => item.id === selection.loadoutId)
+    ?? build.loadouts.find((item) => item.isCurrent)
+    ?? build.loadouts[0];
+  return { build, loadout };
+}
+
+function selectionKey(build: AnalyzedBuild, loadout: AnalyzedLoadout) {
+  return `${encodeURIComponent(build.id)}::${encodeURIComponent(loadout.id)}`;
+}
+
+function readSelectionKey(value: string): Selection | null {
+  const [buildId, loadoutId] = value.split("::").map(decodeURIComponent);
+  return buildId && loadoutId ? { buildId, loadoutId } : null;
+}
+
+function allOptions(active: Selection) {
+  return builds.map((build) =>
+    `<optgroup label="${escAttr(`${build.name} · ${build.patch}`)}">`
+    + build.loadouts.map((loadout) => {
+      const key = selectionKey(build, loadout);
+      const currentKey = `${encodeURIComponent(active.buildId)}::${encodeURIComponent(active.loadoutId)}`;
+      return `<option value="${escAttr(key)}"${key === currentKey ? " selected" : ""}>`
+        + `${esc(loadout.name)}${loadout.isCurrent ? " · current" : ""}</option>`;
     }).join("")
-  + `</div>`;
-
-{
-  /* catalog text prefixes -> ΔDPS chips; also excluded from the filler list */
-  const FIND = {
-    frostbite: "Inflicts Frostbite when dealing Hit Cold Damage",
-    blessing:  "+100% chance to gain a stack of Focus Blessing",
-    warcry:    "+4 to the minimum number of enemies affected by Warcry",
-    convert:   "Converts 100% of Physical Damage to Cold",
-  };
-  const slateChip = (find: string) => {
-    const r = CATALOG.find(c => c.cat === "slate" && c.text.startsWith(find));
-    return dChip(r?.delta ?? null, r?.cond);
-  };
-  const rows: { label: string; nodes: (TNode | null)[] }[] = [
-    {label:"frostbite", nodes:[
-      {src:"talent", lbl:"4 Prophet points", name:"the tree line paying for it today"},
-      {lbl:"Frostbite on Cold hit", chip:slateChip(FIND.frostbite), name:"Goddess of Knowledge"},
-      {src:"talent", lbl:"Frostbite legendaries",
-       name:"respec the freed points into Effect · Cold Infiltration · more-vs-Frozen"}]},
-    {label:"focus blessing", nodes:[
-      {src:"gear", lbl:"Grace Boots", name:"carry it today"},
-      {lbl:"Focus Blessing on Frostbitten hit", chip:slateChip(FIND.blessing), name:"Goddess of Knowledge"},
-      {src:"gear", lbl:"boots ladder opens", name:"Grace Boots freed → i86 → Dawn Break"}]},
-    {label:"warcry floor", nodes:[
-      {src:"talent", lbl:"The Brave nodes", name:"+4 min enemies from the tree talent"},
-      {lbl:"+4 min Warcry enemies", chip:slateChip(FIND.warcry),
-       name:"God of Might · 1 copy · floor 8 of the 16-stack cap (Formless doubles it) — the inverse copy adds 4–6 more"},
-      {src:"skill", lbl:"Shockwave Warcry", name:"onto the freed bar slot"}]},
-    {label:"conversion", nodes:[
-      {src:"talent", lbl:"Prophet tree conversion", name:"covers it until endgame"},
-      {lbl:"Phys→Cold conversion", chip:slateChip(FIND.convert), name:"Goddess of Knowledge · the last buy"},
-      {src:"talent", lbl:"Prophet → Ronin respec",
-       name:"re-cover conversion · Cold Infiltration on Frozen · Frostbite Effect/Rating first"}]},
-  ];
-
-  /* cores + fillers computed live from the catalog (pre-sorted by ΔDPS), never hand-picked.
-     God source (`r.on`) is omitted — Pedigree rolls any god's talents, so the chip is noise. */
-  const modRow = (r: CatalogRow) =>
-    `<div class="mod-row"><span class="mod-text"><b>${esc(r.name)}</b> · ${esc(r.text).replace(/\n/g, " · ")}</span>${dChip(r.delta, r.cond)}</div>`;
-  const cores = CATALOG.filter(r =>
-    r.cat === "slate" && /Core Talent/.test(r.tier) && r.delta !== null && r.delta > 0).slice(0, 12);
-  const planned = Object.values(FIND);
-  const rollable = CATALOG.filter(r =>
-    r.cat === "slate" && r.delta !== null && r.delta > 0
-    && !planned.some(f => r.text.startsWith(f)));
-  /* per-tier sections so Mediums/Micros aren't drowned out by Legendary Medium deltas;
-     capped to the standouts — the full list lives in the Slate Mods tab */
-  const fillerTier = (tier: string, n: number) =>
-    rollable.filter(r => r.tier === tier).slice(0, n);
-  const fillerSection = (title: string, rows2: CatalogRow[], tail = "") =>
-    `<details class="fillers"><summary>${title}</summary>`
-    + rows2.map(modRow).join("") + tail + `</details>`;
-  /* Deep Space (the endgame Netherrealm plane) is gated on ailment immunity —
-     defensive buys, so no ΔDPS; the god is what you shop for */
-  const immunities = CATALOG.filter(r => r.cat === "slate" && /^Immune to (Trauma|Wilt|Ignite)/.test(r.text));
-  const defRow = (r: CatalogRow) =>
-    `<div class="mod-row"><span class="mod-text"><b>${esc(godOf(r.on))}</b> · ${esc(r.text).replace(/\n/g, " · ")}</span>`
-    + `<span class="delta-chip d-none">defense</span></div>`;
-  document.getElementById("slate-plan")!.innerHTML =
-    miniTree(["today", "buy on slate", "what it frees"], rows)
-    + `<details class="fillers" open><summary>pedigree cores — best Core Talents its slots can roll (3rd slot: Lv.1 only)</summary>`
-    + cores.map(modRow).join("") + `</details>`
-    + `<details class="fillers" open><summary>deep space — the immunity lines (Legendary Mediums) to hold before farming it</summary>`
-    + immunities.map(defRow).join("") + `</details>`
-    + fillerSection("fillers · legendary mediums — best rollable lines beyond the plan",
-        fillerTier("Legendary Medium Talent", 8),
-        `<p class="cost-note">skill-level lines stack across slates — the build runs four +1 Attack Skill Level</p>`)
-    + fillerSection("fillers · mediums — standouts for the Medium slots",
-        fillerTier("Medium Talent", 5))
-    + fillerSection("fillers · micros — standouts for the Micro slots",
-        fillerTier("Micro Talent", 5));
+    + `</optgroup>`,
+  ).join("");
 }
 
-{
-  interface PrismRung { label: string; delta: number | null; note: string | null }
-  const split = (s: string): [string, string] => {
-    const i = s.indexOf(" — ");
-    return i < 0 ? [s, ""] : [s.slice(0, i), s.slice(i + 3)];
-  };
-  const rows = (prismData as { name: string; rungs: PrismRung[] }[]).map(l => ({
-    label: esc(split(l.name)[0]),
-    nodes: l.rungs.map((r, j): TNode => {
-      const [lbl, name] = split(r.label);
-      return {lbl: esc(lbl), name: name ? esc(name) : undefined,
-        chip: !j && r.delta === null ? `<span class="delta-chip d-none">start</span>` : dChip(r.delta),
-        note: r.note ? esc(r.note) : undefined};
-    }),
-  }));
-  document.getElementById("prism-plan")!.innerHTML = miniTree(["start", "upgrade", "endgame"], rows);
+function confidenceLabel(loadout: AnalyzedLoadout) {
+  if (!loadout.model) return "Structure imported";
+  if (loadout.sourceNote?.startsWith("Calibrated teaching")) return "Calibrated formula scenario";
+  if (loadout.model.confidence === "experimental") return "Experimental minion coverage";
+  return "Directional damage model";
 }
 
-/* ---------- tabs ---------- */
-/* slate mods are browsed by the slate item they roll on, not by tier —
-   each entry lists which mod tiers that purchase can produce (user-verified slot structures) */
-const SLATE_ITEMS: Record<string, {label: string; tiers: string[]; note: string}> = {
-  corner:    {label: "A Corner of Divinity (max 3)",
-              tiers: ["Legendary Medium Talent"],
-              note: "legendary slate · rolls 2× Legendary Medium Talent, any god"},
-  starlight: {label: "Fallen Starlight (max 3)",
-              tiers: ["Micro Talent", "Medium Talent", "Legendary Medium Talent"],
-              note: "legendary slate · 3× Micro (3rd can reach Medium / Legendary Medium) + 1× Medium / Legendary Medium, any god — typically lands 1 Legendary Medium + 1 Medium"},
-  pedigree:  {label: "Pedigree of Gods (max 1)",
-              tiers: ["Micro Talent", "Medium Talent", "Legendary Medium Talent", "Lv.1 Core Talent", "Lv.2 Core Talent"],
-              note: "legendary slate · 2× Micro/Medium/Legendary Medium + 1× Medium / Lv.1 Core / Legendary Medium + 1× any Core Talent — typically 2 Micro, 1 Medium-or-better, 1 Core"},
-  god:       {label: "God slates (2 fixed + 3 random)",
-              tiers: ["Micro Talent", "Medium Talent", "Legendary Medium Talent"],
-              note: "Deception / Hunting / Knowledge / Machines / Might / War · no Core Talents here — those are Pedigree-only; the 3 random slots pay per slot type and cap at Micro / Medium / Legendary Medium — aim for 1× Medium + 2× Legendary Medium, or 3× Legendary Medium"},
-};
-let CAT_SOURCE = "slate";
-const SECTIONS: Record<string, string> = {
-  progression:"progression", linear:"linear", slate:"catalog-tab", memory:"catalog-tab",
-  pools:"pools-tab", calc:"calc-tab",
-};
-const tabButtons = [...document.querySelectorAll<HTMLButtonElement>("#tabbar button")];
-function show(tab: string){
-  for (const id of new Set(Object.values(SECTIONS)))
-    document.getElementById(id)!.hidden = id !== SECTIONS[tab];
-  for (const b of tabButtons) b.classList.toggle("active", b.dataset.tab === tab);
-  if (tab === "slate" || tab === "memory") {
-    CAT_SOURCE = tab;
-    document.getElementById("cat-title")!.textContent =
-      (tab === "slate" ? "Divinity Slate Mods" : "Hero Memory Mods") + " — impact for this build";
-    const tierOpts = [...new Set(CATALOG.filter(r => r.cat === tab).map(r => r.tier))].sort()
-      .map(t => `<option>${t}</option>`).join("");
-    document.getElementById("cat-tier")!.innerHTML = tab === "slate"
-      ? `<option value="">all slates</option>`
-        + `<optgroup label="by slate item">` + Object.entries(SLATE_ITEMS)
-            .map(([k, s]) => `<option value="${k}">${s.label}</option>`).join("") + `</optgroup>`
-        + `<optgroup label="by tier">${tierOpts}</optgroup>`
-      : `<option value="">all tiers</option>` + tierOpts;
-    renderCatalog();
+function isMinionLoadout(loadout: AnalyzedLoadout) {
+  const main = loadout.skills.find((skill) => skill.kind === "active" && skill.enabled)?.name ?? "";
+  return /minion|spirit magus|summon|module:/i.test(`${main} ${loadout.sourceNote ?? ""}`);
+}
+
+function buildPicker(side: Side, build: AnalyzedBuild, loadout: AnalyzedLoadout) {
+  const selection = side === "before" ? beforeSelection : afterSelection;
+  const modeled = Boolean(loadout.model);
+  return `<article class="build-picker build-picker--${side}">
+    <div class="picker-topline">
+      <span class="side-marker">${side === "before" ? "A" : "B"}</span>
+      <span class="picker-label">${sideLabel(side)}</span>
+      <span class="source-pill">${esc(build.patch)}</span>
+    </div>
+    <label class="sr-only" for="${side}-loadout">Choose ${sideLabel(side).toLowerCase()} loadout</label>
+    <select id="${side}-loadout" class="loadout-select" data-selection="${side}">
+      ${allOptions(selection)}
+    </select>
+    <div class="picker-meta">
+      <span>${esc(loadout.hero)}</span>
+      <span aria-hidden="true">•</span>
+      <span>${esc(build.source)}</span>
+    </div>
+    <div class="picker-bottom">
+      <span class="model-state ${modeled ? "modeled" : "waiting"}">
+        <span class="state-dot"></span>${esc(confidenceLabel(loadout))}
+      </span>
+      <button class="quiet-button" type="button" data-import="${side}">Import</button>
+    </div>
+  </article>`;
+}
+
+function summaryMetric(label: string, value: string, note: string, className = "") {
+  return `<div class="summary-metric ${className}">
+    <span class="metric-label">${esc(label)}</span>
+    <strong>${esc(value)}</strong>
+    <span class="metric-note">${esc(note)}</span>
+  </div>`;
+}
+
+function renderSummary(before: AnalyzedLoadout, after: AnalyzedLoadout) {
+  const beforeDps = before.model?.dps;
+  const afterDps = after.model?.dps;
+  const bothModeled = beforeDps != null && afterDps != null;
+  const delta = bothModeled ? percentChange(beforeDps, afterDps) : null;
+  const deltaClass = delta == null ? "neutral" : delta < 0 ? "negative" : "positive";
+  const headline = delta == null
+    ? "Ready to inspect"
+    : `${signedPercent(delta)} supported DPS`;
+  const note = delta == null
+    ? "Calculation is waiting for a compatible model"
+    : delta < 0
+      ? "The changed build is weaker under the same boss scenario"
+      : "The changed build is stronger under the same boss scenario";
+  const lowestCoverage = Math.min(
+    before.model?.coverage ?? 0,
+    after.model?.coverage ?? 0,
+  );
+  return `<section class="result-summary" aria-labelledby="result-title">
+    <div class="result-head">
+      <div>
+        <span class="eyebrow">Comparison result</span>
+        <h1 id="result-title">${esc(headline)}</h1>
+        <p>${esc(note)}</p>
+      </div>
+      <div class="delta-orb ${deltaClass}">
+        <span>${delta == null ? "—" : delta < 0 ? "↓" : "↑"}</span>
+      </div>
+    </div>
+    <div class="summary-metrics">
+      ${summaryMetric("Before DPS", beforeDps == null ? "Not calculated" : compactNumber(beforeDps), before.name, "before")}
+      ${summaryMetric("After DPS", afterDps == null ? "Not calculated" : compactNumber(afterDps), after.name, "after")}
+      ${summaryMetric("EHP", "Not calculated", "Defense model comes next", "disabled")}
+      ${summaryMetric(
+        "Formula coverage",
+        bothModeled ? `${Math.round(lowestCoverage * 100)}%+` : "Pending",
+        bothModeled ? "Classified modifier lines" : "Imported structure only",
+        lowestCoverage < 0.6 ? "warning" : "",
+      )}
+    </div>
+    <div class="scenario-strip">
+      <span class="scenario-label">Shared scenario</span>
+      <span>Boss target</span>
+      <span>30% elemental / erosion resistance</span>
+      <span>Full configured uptime</span>
+      <button type="button" class="text-button" data-view="coverage">Review assumptions</button>
+    </div>
+  </section>`;
+}
+
+function shortAnswer(steps: WaterfallStep[], totalDelta: number) {
+  const losses = steps.filter((step) => step.delta < -0.5)
+    .sort((a, b) => a.delta - b.delta);
+  const gains = steps.filter((step) => step.delta > 0.5)
+    .sort((a, b) => b.delta - a.delta);
+  if (totalDelta < 0 && losses.length) {
+    const [first, second] = losses;
+    return `<strong>${esc(first.label)} is the largest modeled loss</strong>, costing
+      ${esc(compactNumber(Math.abs(first.delta)))} DPS in the fixed replay.
+      ${second ? `${esc(second.label)} is next at ${esc(compactNumber(Math.abs(second.delta)))}.` : ""}
+      Any green rows below are improvements that were not large enough to offset it.`;
   }
-}
-for (const b of tabButtons) b.addEventListener("click", () => show(b.dataset.tab!));
-
-/* ---------- skills + pactspirits: the non-gear buys the engines need ---------- */
-{
-  const rows: { label: string; nodes: (TNode | null)[] }[] = [
-    {label:"spectral slash", nodes:[
-      {src:"support", lbl:"Legion · Detonation · Critical Strike Damage Increase",
-       name:"plus the Quick Decision / Added Phys placeholders — crit runs 77.3% chance / 711.5% crit damage"},
-      {src:"support", lbl:"Legion (Noble)", name:"replaces whichever of Quick Decision / Added Phys the Motionless buy leaves"},
-      null]},
-    {label:"mediums", nodes:[
-      {src:"skill", lbl:"3 Activation Mediums", name:"one each for Spectral Slash · the warcries · Ice Bond (the Frostbite self-applicator)"},
-      {src:"support", lbl:"Motionless on the Slash medium", name:"replaces Quick Decision or Added Phys"},
-      {src:"support", lbl:"CDR on the rest", name:"Elite or Preparation on the warcry medium · Root on the Ice Bond medium"}]},
-    {label:"precise auras", nodes:[
-      {src:"skill", lbl:"all 4 Precise Auras",
-       name:"Cruelty +15% additional Attack · Fearless +8% Melee Attack Speed · Domain Expansion +4% additional Area · "
-           +"Frigid Domain +5% additional Cold — all scaled by Aura Effect and skill levels"},
-      {src:"support", lbl:"Precise: Disciplined", name:"on Cruelty"},
-      {src:"support", lbl:"Precise: Energy Shield", name:"post-Eternity, once the flat-ES belt is gone"}]},
-    {label:"skill bar", nodes:[
-      null,
-      {src:"skill", lbl:"Shockwave Warcry", name:"onto the slot the Timid curse-on-hit ring frees (the ring carries its own ×1.39 Timid layer)"},
-      {src:"skill", lbl:"Resurrection Warcry", name:"second warcry slot — −60% additional damage taken + 1,160 Life over 4s (L20) pays the Fervor drain"}]},
-    {label:"pactspirit", nodes:[
-      {src:"pact", lbl:"Red Umbrella · Azure Gunslinger", name:"+48% Attack Damage +16% Attack Speed each · nodes 4–6 pure Attack Crit Rating (+89% / +88%) · Frenzy inflicts Paralysis (×1.15 on a boss) · Seven Steps ×1.28 at 5 stacks, fed by Thunder Spike dashes"},
-      {src:"pact", lbl:"Captain Kitty of the Furious Sea", name:"+12% Warcry Effect · “Beast” Roar: +20% additional Warcry Effect, self-casts"},
-      {src:"pact", lbl:"level Captain Kitty", name:"the one pactspirit worth levelling — L2 +11% Warcry Cooldown Recovery, L3 a Warcry charge"}]},
-  ];
-  document.getElementById("skillpact-plan")!.innerHTML = miniTree(["today", "buy", "endgame"], rows);
+  if (totalDelta > 0 && gains.length) {
+    const [first, second] = gains;
+    return `<strong>${esc(first.label)} is the largest modeled gain</strong>, adding
+      ${esc(compactNumber(first.delta))} DPS in the fixed replay.
+      ${second ? `${esc(second.label)} follows at ${esc(compactNumber(second.delta))}.` : ""}`;
+  }
+  return `<strong>No supported DPS movement can be isolated yet.</strong>
+    The loadouts may be structurally different, but one or both still need a compatible formula model.`;
 }
 
-/* ---------- kismets: pactspirit node replacements (planner more_1 → more_2 sets) ---------- */
-{
-  const def = `<span class="delta-chip d-none">defense</span>`;
-  const rows: { label: string; nodes: (TNode | null)[] }[] = [
-    {label:"offense", nodes:[
-      {src:"pact", lbl:"2× Peerless · Tiger's Chain",
-       name:"the Dual pair is +1 Combo Finisher charge and a fixed 0.3s Combo Sequence reset · Tiger's Chain adds +(4–6)% additional Combo Skill Damage — these three sockets never move"},
-      {src:"pact", lbl:"Ascetic",
-       name:"+(1.7–1.9)% Double Damage Chance for Finishers per Combo Point consumed"},
-      {src:"pact", lbl:"2× Unending Fate + 2× Mammoth",
-       name:"2× Unending Fate for the dual sockets · Mammoth pair self-casts Lv.20 Resurrection Warcry on hit every 3s (the −60% additional-damage-taken layer, hands-free) — frees the bar slot for Defensive Buffer"}]},
-    {label:"crit fates", nodes:[
-      {src:"pact", lbl:"1× Medium + 9× Micro Crit Rating", name:"+(48–60)% / +(24–30)% Crit Strike Rating each — cheap filler for every remaining node"},
-      {lbl:"free 3 sockets", name:"the Medium and 2 Micros give way to the buys on this ladder — 7 Micro Crit stay for good"},
-      {src:"pact", lbl:"Micro Strength", name:"+(12–15) Strength in the last spare node"}]},
-    {label:"defense", nodes:[
-      null,
-      {lbl:"Medium ES Restored on Defeat", chip:def, name:"restores (0.2–0.4)% of Energy Shield per kill — the mapping sustain layer"},
-      {lbl:"Micro Energy Shield", chip:def, name:"+(5–6)% Max Energy Shield"}]},
-    {label:"deep space", nodes:[
-      null, null,
-      {lbl:"2× Micro Numbed Mitigation", chip:def, name:"−(45–55)% Numbed Effect received each — near-immunity, same role as the slate immunity lines above"}]},
-  ];
-  document.getElementById("kismet-plan")!.innerHTML = miniTree(["today", "buy", "endgame"], rows);
+function waterfallRow(step: WaterfallStep, max: number) {
+  const changed = Math.abs(step.delta) >= 0.5;
+  const direction = step.delta < 0 ? "negative" : step.delta > 0 ? "positive" : "neutral";
+  const width = changed ? Math.max(3, Math.abs(step.delta) / max * 100) : 0;
+  const fieldText = step.fields.length
+    ? step.fields.map((field) => `${field.label} ${field.before.toFixed(1)} → ${field.after.toFixed(1)}`).join(" · ")
+    : "No numeric fields changed in this layer";
+  return `<button class="waterfall-row ${direction}" type="button" data-jump-section="${escAttr(step.id)}">
+    <span class="waterfall-name">${esc(step.label)}</span>
+    <span class="waterfall-track" aria-hidden="true">
+      <span class="waterfall-zero"></span>
+      <span class="waterfall-bar" style="--bar-width:${width}%"></span>
+    </span>
+    <span class="waterfall-value">${changed ? esc(signedCompact(step.delta)) : "—"}</span>
+    <span class="waterfall-detail">${esc(fieldText)}</span>
+  </button>`;
 }
 
-/* ---------- mod catalog ---------- */
-const CAT_LIMIT = 400;
-function renderCatalog(){
-  const q = (document.getElementById("cat-search") as HTMLInputElement).value.trim().toLowerCase();
-  const sel = (document.getElementById("cat-tier") as HTMLSelectElement).value;
-  const slate = CAT_SOURCE === "slate" ? SLATE_ITEMS[sel] : undefined;
-  document.getElementById("cat-note")!.textContent = slate?.note ?? "";
-  const showAll = (document.getElementById("cat-show") as HTMLSelectElement).value === "all";
-  const rows = CATALOG.filter(r =>
-    r.cat === CAT_SOURCE &&
-    (!sel || (slate ? slate.tiers.includes(r.tier) : r.tier === sel)) &&
-    (showAll || (r.delta !== null && r.delta > 0)) &&
-    (!q || (r.text + " " + r.name + " " + r.tier + " " + r.on).toLowerCase().includes(q)));
-  const chip = (d: number | null) => d === null ? `<span class="delta-chip d-none">—</span>`
-    : `<span class="delta-chip ${d>=8?"d-hot":d>=3?"d-mid":"d-low"}">${d>0?"+":""}${d.toFixed(2)}%</span>`;
-  const tierChip = (t: string) => {
-    const col = /Legendary/.test(t) ? "#c9a86a" : /Medium/.test(t) ? "#7fd8e8"
-      : /Micro|Fixed|Random|Special|Revived/.test(t) ? "#7c8ea0" : "#9d85dd";
-    return `<span class="src-chip" style="background:${col}22;color:${col}">${esc(t)}</span>`;
-  };
-  const onCell = (s: string) => {
-    const gods = godOf(s);
-    const parts = gods.split(", ");
-    return esc(parts.length > 3 ? parts.slice(0,3).join(", ") + ` +${parts.length-3} more` : gods);
-  };
-  document.getElementById("cat-body")!.innerHTML = rows.slice(0, CAT_LIMIT).map(r =>
-    `<tr><td>${chip(r.delta)}${r.cond?` <span class="cond-mark" title="conditional — value is a full-uptime ceiling">◑</span>`:""}</td>`
-    + `<td>${tierChip(r.tier)}</td>`
-    + `<td><b>${esc(r.name)}</b><br><span style="color:var(--muted)">${esc(r.text)}</span></td>`
-    + `<td style="color:var(--muted)" title="${escAttr(r.on)}">${onCell(r.on)}</td>`
-    + `<td class="mult">${esc(r.bucket)}</td></tr>`).join("");
-  document.getElementById("cat-count")!.textContent =
-    `${rows.length} mods` + (rows.length > CAT_LIMIT ? ` — showing top ${CAT_LIMIT}, refine the search` : "")
-    + ` · sorted by ΔDPS at best roll`;
+const CHECK_COPY: Record<string, { title: string; body: string }> = {
+  base: {
+    title: "Re-check the weapon and flat base",
+    body: "A higher-looking modifier cannot compensate for a lower base hit if the skill multiplies that base several times.",
+  },
+  increased: {
+    title: "Restore applicable increased damage",
+    body: "Confirm the new lines match the main skill’s tags and final damage type. Inert increases are not upgrades.",
+  },
+  additional: {
+    title: "Restore the lost separate multiplier",
+    body: "Additional bonuses with different names compound. Replacing one with a larger increased roll is often a net loss.",
+  },
+  conversion: {
+    title: "Trace the conversion chain",
+    body: "A conversion change can strand typed damage, penetration, or critical bonuses that used to apply.",
+  },
+  crit: {
+    title: "Recover critical reliability",
+    body: "Check both chance and critical damage. A large crit-damage roll is weak if the build no longer crits consistently.",
+  },
+  enemy: {
+    title: "Restore penetration or a target debuff",
+    body: "Resistance and damage-taken layers are late multipliers; losing one is usually more expensive than it looks.",
+  },
+  rotation: {
+    title: "Verify cadence and overlap",
+    body: "Attack speed, projectile quantity, bomb overlap, combo timing, and uptime determine how many scaled hits land.",
+  },
+  dot: {
+    title: "Check damage-over-time application",
+    body: "Chance, duration, tick rate, and the feeding hit all need to remain valid for the modeled DoT contribution.",
+  },
+};
+
+function nextChecks(steps: WaterfallStep[] | null, after: AnalyzedLoadout) {
+  if (!steps || !after.model) {
+    return `<aside class="next-checks">
+      <div class="panel-kicker">Analysis queue</div>
+      <h2>What is needed next</h2>
+      <div class="check-card warning">
+        <span class="check-rank">1</span>
+        <div><strong>Connect this build to a season model</strong>
+        <p>The full loadout is visible, but the site will not invent a DPS number for unsupported input.</p></div>
+      </div>
+      <div class="check-card">
+        <span class="check-rank">2</span>
+        <div><strong>Review imported changes now</strong>
+        <p>Gear, skills, trees, memories, slates, and pactspirits can still be compared safely.</p></div>
+      </div>
+      ${isMinionLoadout(after) ? `<div class="minion-warning"><strong>Minion compiler required</strong>
+        Keep player, Spirit Magus, and Synthetic Troop modifiers actor-scoped; the player-hit formula is not a fallback.</div>` : ""}
+    </aside>`;
+  }
+  const isMinion = after.model.confidence === "experimental";
+  const losses = steps.filter((step) => step.delta < -0.5)
+    .sort((a, b) => a.delta - b.delta)
+    .slice(0, 3);
+  const gains = steps.filter((step) => step.delta > 0.5)
+    .sort((a, b) => b.delta - a.delta)
+    .slice(0, 3);
+  const chosen = losses.length ? losses : gains;
+  return `<aside class="next-checks">
+    <div class="panel-kicker">${losses.length ? "Evidence-based checks" : "What improved"}</div>
+    <h2>${losses.length ? "Check these first" : "Protect these gains"}</h2>
+    <p class="checks-note">These are comparison checks, not optimizer recommendations.</p>
+    ${isMinion ? `<div class="minion-warning"><strong>Minion warning</strong>
+      The player-hit model cannot settle minion base actions, quantity, or AI uptime. Treat the numbers as directional only.</div>` : ""}
+    ${chosen.map((step, index) => {
+      const copy = CHECK_COPY[step.id] ?? { title: step.label, body: step.description };
+      return `<button class="check-card ${step.delta < 0 ? "loss" : "gain"}" type="button" data-jump-section="${escAttr(step.id)}">
+        <span class="check-rank">${index + 1}</span>
+        <div><strong>${esc(copy.title)}</strong>
+        <p>${esc(copy.body)}</p>
+        <span class="check-impact">${esc(signedCompact(step.delta))} in replay</span></div>
+      </button>`;
+    }).join("")}
+    <div class="optimizer-note">
+      <span class="beta-label">Later</span>
+      <strong>Constraint-based upgrade search</strong>
+      <p>Budget, item availability, DPS, and EHP tradeoffs will live here once the MiniZinc model is ready.</p>
+    </div>
+  </aside>`;
 }
-for (const id of ["cat-search","cat-tier","cat-show"])
-  document.getElementById(id)!.addEventListener("input", renderCatalog);
 
-renderLinear(
-  document.getElementById("linear-plan")!,
-  document.getElementById("linear-watchlist")!,
-  document.getElementById("linear-nav"),
-);
+function renderDiagnosis(before: AnalyzedLoadout, after: AnalyzedLoadout) {
+  if (!before.snapshot || !after.snapshot || !before.model || !after.model) {
+    return `<div class="content-grid">
+      <section class="analysis-panel empty-analysis">
+        <span class="eyebrow">Diagnosis</span>
+        <h2>The builds imported; the formula has not.</h2>
+        <p>${esc(after.sourceNote ?? before.sourceNote ?? "This build format is not connected to the damage model yet.")}</p>
+        <div class="honesty-grid">
+          <div><span>Imported</span><strong>Loadout structure</strong><p>Items, skills, trees, memories, slates, and pacts.</p></div>
+          <div><span>Waiting</span><strong>Damage classification</strong><p>Season data and build-specific mechanics must be resolved.</p></div>
+          <div><span>Not guessed</span><strong>DPS and EHP</strong><p>Unavailable values stay unavailable instead of becoming false zeroes.</p></div>
+        </div>
+        <button type="button" class="secondary-button" data-view="changes">Compare imported loadout details</button>
+      </section>
+      ${nextChecks(null, after)}
+    </div>`;
+  }
+  const steps = buildWaterfall(before.snapshot, after.snapshot);
+  const totalDelta = after.model.dps - before.model.dps;
+  const max = Math.max(1, ...steps.map((step) => Math.abs(step.delta)));
+  return `<div class="content-grid">
+    <section class="analysis-panel">
+      <div class="analysis-heading">
+        <div>
+          <span class="eyebrow">Why damage changed</span>
+          <h2>The short answer</h2>
+        </div>
+        <span class="exact-badge">Reconciles to ${esc(compactNumber(after.model.dps))}</span>
+      </div>
+      <p class="short-answer">${shortAnswer(steps, totalDelta)}</p>
+      <div class="waterfall-head">
+        <span>Formula layer</span><span>Replay contribution</span><span>Δ DPS</span>
+      </div>
+      <div class="waterfall">${steps.map((step) => waterfallRow(step, max)).join("")}</div>
+      <div class="method-note">
+        <strong>How to read this:</strong> layers are replayed in fixed formula order so the rows add up exactly.
+        Field details show isolated swaps against Build A; multiplicative interactions mean those details can overlap.
+      </div>
+    </section>
+    ${nextChecks(steps, after)}
+  </div>`;
+}
 
-renderCalc(document.getElementById("calc")!);
+function rowChange(before: string, after: string) {
+  if (before === after) return `<span class="change-tag same">same</span>`;
+  if (!before || before === "Empty") return `<span class="change-tag added">added</span>`;
+  if (!after || after === "Empty") return `<span class="change-tag removed">removed</span>`;
+  return `<span class="change-tag changed">changed</span>`;
+}
 
-renderPools(document.getElementById("pools")!);
-
-/* ---------- reset Linear progress (footer + confirm dialog) ---------- */
-{
-  const btn = document.getElementById("reset-progress") as HTMLButtonElement;
-  const dlg = document.getElementById("reset-dlg") as HTMLDialogElement;
-  btn.addEventListener("click", () => dlg.showModal());
-  dlg.addEventListener("click", e => {
-    const t = e.target as HTMLElement;
-    if (t === dlg || t.dataset.reset === "cancel") { dlg.close(); return; }
-    if (t.dataset.reset === "confirm") {
-      resetLinearProgress();
-      dlg.close();
-    }
+function gearChangeRows(before: AnalyzedLoadout, after: AnalyzedLoadout) {
+  const a = new Map(before.gear.map((row) => [row.slot, row]));
+  const b = new Map(after.gear.map((row) => [row.slot, row]));
+  const slots = [...new Set([...a.keys(), ...b.keys()])];
+  return slots.map((slot) => {
+    const left = a.get(slot) ?? { slot, name: "Empty", rarity: null, category: null, lines: [] };
+    const right = b.get(slot) ?? { slot, name: "Empty", rarity: null, category: null, lines: [] };
+    return {
+      key: slot,
+      label: slot.replace(/([a-z])([A-Z])/g, "$1 $2"),
+      before: left.name,
+      after: right.name,
+      beforeDetail: left.lines.slice(0, 3),
+      afterDetail: right.lines.slice(0, 3),
+      changed: left.name !== right.name || JSON.stringify(left.lines) !== JSON.stringify(right.lines),
+    };
   });
 }
+
+function skillName(skill: SkillRow | undefined) {
+  return skill ? `${skill.name}${skill.level ? ` · L${skill.level}` : ""}` : "Empty";
+}
+
+function skillChangeRows(before: AnalyzedLoadout, after: AnalyzedLoadout) {
+  const group = (loadout: AnalyzedLoadout, kind: "active" | "passive") =>
+    loadout.skills.filter((skill) => skill.kind === kind);
+  return (["active", "passive"] as const).flatMap((kind) => {
+    const a = group(before, kind);
+    const b = group(after, kind);
+    return Array.from({ length: Math.max(a.length, b.length) }, (_, index) => {
+      const left = a[index];
+      const right = b[index];
+      return {
+        key: `${kind}-${index}`,
+        label: `${kind} ${index + 1}`,
+        before: skillName(left),
+        after: skillName(right),
+        beforeDetail: left?.supports.map((support) => support.name) ?? [],
+        afterDetail: right?.supports.map((support) => support.name) ?? [],
+        changed: JSON.stringify(left) !== JSON.stringify(right),
+      };
+    });
+  });
+}
+
+function simpleChangeRows(before: AnalyzedLoadout, after: AnalyzedLoadout, section: ChangeSection) {
+  const config = {
+    trees: {
+      a: before.trees,
+      b: after.trees,
+      label: (_item: any, index: number) => `tree ${index + 1}`,
+      value: (item: any) => item ? `${item.name} · ${item.points} pts${item.hasPrism ? " · prism" : ""}` : "Empty",
+    },
+    memories: {
+      a: before.memories,
+      b: after.memories,
+      label: (item: any, index: number) => item?.slot ?? `memory ${index + 1}`,
+      value: (item: any) => item ? `${item.name} · ${item.affixes} affixes` : "Empty",
+    },
+    slates: {
+      a: before.slates,
+      b: after.slates,
+      label: (_item: any, index: number) => `slate ${index + 1}`,
+      value: (item: any) => item ? `${item.name} · ${item.affixes} affixes` : "Empty",
+    },
+    pacts: {
+      a: before.pactspirits,
+      b: after.pactspirits,
+      label: (_item: any, index: number) => `pact ${index + 1}`,
+      value: (item: any) => item ? `${item.name}${item.level ? ` · L${item.level}` : ""} · ${item.nodes} nodes · ${item.kismets} kismets` : "Empty",
+    },
+  }[section as Exclude<ChangeSection, "gear" | "skills">];
+  if (!config) return [];
+  return Array.from({ length: Math.max(config.a.length, config.b.length) }, (_, index) => {
+    const left = config.a[index];
+    const right = config.b[index];
+    const aValue = config.value(left);
+    const bValue = config.value(right);
+    return {
+      key: `${section}-${index}`,
+      label: config.label(right ?? left, index),
+      before: aValue,
+      after: bValue,
+      beforeDetail: [] as string[],
+      afterDetail: [] as string[],
+      changed: JSON.stringify(left) !== JSON.stringify(right),
+    };
+  });
+}
+
+function changeCount(before: AnalyzedLoadout, after: AnalyzedLoadout, section: ChangeSection) {
+  const rows = section === "gear" ? gearChangeRows(before, after)
+    : section === "skills" ? skillChangeRows(before, after)
+      : simpleChangeRows(before, after, section);
+  return rows.filter((row) => row.changed).length;
+}
+
+function renderChangeRow(row: ReturnType<typeof gearChangeRows>[number]) {
+  return `<article class="diff-row ${row.changed ? "is-changed" : "is-same"}">
+    <div class="diff-slot"><span>${esc(row.label)}</span>${rowChange(row.before, row.after)}</div>
+    <div class="diff-side before">
+      <span class="diff-side-label">Before</span><strong>${esc(row.before)}</strong>
+      ${row.beforeDetail.length ? `<ul>${row.beforeDetail.map((line) => `<li>${esc(line)}</li>`).join("")}</ul>` : ""}
+    </div>
+    <div class="diff-arrow" aria-hidden="true">→</div>
+    <div class="diff-side after">
+      <span class="diff-side-label">After</span><strong>${esc(row.after)}</strong>
+      ${row.afterDetail.length ? `<ul>${row.afterDetail.map((line) => `<li>${esc(line)}</li>`).join("")}</ul>` : ""}
+    </div>
+  </article>`;
+}
+
+function renderChanges(before: AnalyzedLoadout, after: AnalyzedLoadout) {
+  const sections: { id: ChangeSection; label: string }[] = [
+    { id: "gear", label: "Gear" },
+    { id: "skills", label: "Skills" },
+    { id: "trees", label: "Talent trees" },
+    { id: "memories", label: "Memories" },
+    { id: "slates", label: "Slates" },
+    { id: "pacts", label: "Pactspirits" },
+  ];
+  const rows = changeSection === "gear" ? gearChangeRows(before, after)
+    : changeSection === "skills" ? skillChangeRows(before, after)
+      : simpleChangeRows(before, after, changeSection);
+  const changed = rows.filter((row) => row.changed);
+  const visible = changed.length ? changed : rows;
+  return `<section class="changes-layout">
+    <aside class="changes-nav">
+      <span class="panel-kicker">Build systems</span>
+      ${sections.map((section) => `<button type="button" class="${changeSection === section.id ? "active" : ""}"
+        data-change-section="${section.id}">
+        <span>${esc(section.label)}</span><b>${changeCount(before, after, section.id)}</b>
+      </button>`).join("")}
+    </aside>
+    <div class="changes-panel">
+      <div class="analysis-heading">
+        <div><span class="eyebrow">Changed only</span><h2>${esc(sections.find((section) => section.id === changeSection)?.label)}</h2></div>
+        <span class="exact-badge">${changed.length} changed</span>
+      </div>
+      <p class="section-intro">Compare the source entities first; modeled formula impact is kept separate so unsupported data stays visible.</p>
+      <div class="diff-list">
+        ${visible.length ? visible.map(renderChangeRow).join("") : `<div class="empty-list">Nothing was imported in this section.</div>`}
+      </div>
+    </div>
+  </section>`;
+}
+
+function renderFormula(before: AnalyzedLoadout, after: AnalyzedLoadout) {
+  const active = formulaSide === "before" ? before : after;
+  if (!active.snapshot || !active.model) {
+    return `<section class="single-panel empty-analysis">
+      <span class="eyebrow">Exact formula</span>
+      <h2>Not calculated for this import</h2>
+      <p>${esc(active.sourceNote ?? "This build is not connected to a compatible damage model.")}</p>
+    </section>`;
+  }
+  const result = cycleDps(active.snapshot);
+  return `<section class="formula-panel">
+    <div class="analysis-heading">
+      <div><span class="eyebrow">Exact arithmetic</span><h2>${esc(active.name)}</h2></div>
+      <div class="segmented">
+        <button type="button" class="${formulaSide === "before" ? "active" : ""}" data-formula-side="before">Before</button>
+        <button type="button" class="${formulaSide === "after" ? "active" : ""}" data-formula-side="after">After</button>
+      </div>
+    </div>
+    <p class="section-intro">Every chip below is used by the real damage model. Its impact badge shows what happens if that factor is neutralized.</p>
+    <div class="formula-primer" aria-label="Damage formula overview">
+      <span>base hit</span><i>×</i><span>increased pool</span><i>×</i><span>additional layers</span>
+      <i>×</i><span>crit expectation</span><i>×</i><span>mitigation</span><i>×</i><span>cadence</span><i>+</i><span>DoT</span>
+    </div>
+    ${renderBreakdown(result.trace)}
+    <div class="method-note"><strong>Important:</strong> this is supported boss DPS under the displayed scenario, not a promise of target-dummy or map damage.</div>
+  </section>`;
+}
+
+function coverageCard(label: string, loadout: AnalyzedLoadout) {
+  if (!loadout.model && !loadout.coverage) {
+    return `<article class="coverage-card">
+      <div class="coverage-title"><span>${esc(label)}</span><strong>Pending</strong></div>
+      <div class="coverage-meter"><span style="width:0%"></span></div>
+      <p>Loadout structure imported; modifier classification and formula coverage have not run.</p>
+      <div class="coverage-stats"><span><b>${loadout.gear.length}</b> gear rows</span><span><b>${loadout.skills.length}</b> skills</span></div>
+    </article>`;
+  }
+  if (!loadout.model && loadout.coverage) {
+    return `<article class="coverage-card">
+      <div class="coverage-title"><span>${esc(label)} · classification</span><strong>${Math.round(loadout.coverage.classificationRate * 100)}%</strong></div>
+      <div class="coverage-meter"><span style="width:${Math.round(loadout.coverage.classificationRate * 100)}%"></span></div>
+      <p>Modifier text was classified by the current parser, but no guarded hero/skill compiler has produced DPS.</p>
+      <div class="coverage-stats">
+        <span><b>${loadout.coverage.classified}</b> classified</span>
+        <span><b>${loadout.coverage.unsupported}</b> unsupported</span>
+        <span><b>${loadout.coverage.ignored}</b> irrelevant</span>
+      </div>
+    </article>`;
+  }
+  const model = loadout.model!;
+  return `<article class="coverage-card">
+    <div class="coverage-title"><span>${esc(label)}</span><strong>${Math.round(model.coverage * 100)}%</strong></div>
+    <div class="coverage-meter"><span style="width:${Math.round(model.coverage * 100)}%"></span></div>
+    <p>${esc(confidenceLabel(loadout))}. Coverage is classified versus unmatched modifier text, not a claim of total game accuracy.</p>
+    <div class="coverage-stats">
+      <span><b>${model.modeled}</b> classified</span>
+      <span><b>${model.unmodeled}</b> unsupported</span>
+      <span><b>${model.ignored}</b> irrelevant</span>
+    </div>
+  </article>`;
+}
+
+function unsupportedList(label: string, loadout: AnalyzedLoadout) {
+  return `<div class="unsupported-column">
+    <div class="unsupported-head"><strong>${esc(label)}</strong><span>${loadout.unmatched.length} patterns shown</span></div>
+    ${loadout.unmatched.length
+      ? `<ul>${loadout.unmatched.slice(0, 12).map((row) => `<li>
+          <span>${esc(row.text)}</span>${row.count > 1 ? `<b>×${row.count}</b>` : ""}
+        </li>`).join("")}</ul>`
+      : `<p class="empty-list">No unsupported text was included in this import report.</p>`}
+  </div>`;
+}
+
+function renderCoverage(before: AnalyzedLoadout, after: AnalyzedLoadout) {
+  const minion = isMinionLoadout(before) || isMinionLoadout(after);
+  return `<section class="coverage-panel">
+    <div class="analysis-heading">
+      <div><span class="eyebrow">Trust the boundaries</span><h2>Coverage & assumptions</h2></div>
+      <span class="exact-badge">${minion ? "Experimental build type" : "Partial model"}</span>
+    </div>
+    <p class="section-intro">A calculated number is only useful when you can see what was imported, classified, assumed, and left unsupported.</p>
+    <div class="coverage-grid">
+      ${coverageCard("Before", before)}
+      ${coverageCard("After", after)}
+    </div>
+    ${minion ? `<div class="model-boundary">
+      <div class="boundary-icon">!</div>
+      <div><strong>Minion DPS is not settled by the player-hit formula.</strong>
+      <p>Base minion actions, quantity, AI/uptime, trait mechanics, and minion-only scaling are incomplete. Imported minion stats stay visible, while the output remains directional.</p></div>
+    </div>` : ""}
+    <div class="assumption-grid">
+      <div><span>Target</span><strong>Boss, 30% elemental and erosion resistance</strong></div>
+      <div><span>Uptime</span><strong>Configured buffs and debuffs at full modeled uptime</strong></div>
+      <div><span>Defense</span><strong>Not calculated yet; unavailable is not zero</strong></div>
+      <div><span>Attribution</span><strong>Fixed replay order with overlapping isolated checks</strong></div>
+    </div>
+    <div class="unsupported-grid">
+      ${unsupportedList("Before · unsupported", before)}
+      ${unsupportedList("After · unsupported", after)}
+    </div>
+  </section>`;
+}
+
+function navigation() {
+  const items: { id: View; label: string; count?: string }[] = [
+    { id: "diagnosis", label: "Diagnosis" },
+    { id: "changes", label: "Build changes" },
+    { id: "formula", label: "Damage formula" },
+    { id: "coverage", label: "Coverage" },
+  ];
+  return `<nav class="view-tabs" aria-label="Analysis views">
+    ${items.map((item) => `<button type="button" data-view="${item.id}" class="${activeView === item.id ? "active" : ""}">
+      ${esc(item.label)}${item.count ? `<span>${esc(item.count)}</span>` : ""}
+    </button>`).join("")}
+    <button type="button" class="disabled-tab" disabled title="EHP model is not implemented yet">Survival <span>soon</span></button>
+    <button type="button" class="disabled-tab" disabled title="Optimizer is not implemented yet">Suggestions <span>later</span></button>
+  </nav>`;
+}
+
+function render() {
+  const before = selected("before");
+  const after = selected("after");
+  let content = "";
+  if (activeView === "diagnosis") content = renderDiagnosis(before.loadout, after.loadout);
+  else if (activeView === "changes") content = renderChanges(before.loadout, after.loadout);
+  else if (activeView === "formula") content = renderFormula(before.loadout, after.loadout);
+  else content = renderCoverage(before.loadout, after.loadout);
+
+  app.innerHTML = `<header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="TLI Lens home">
+        <span class="brand-mark"><i></i></span>
+        <span><b>TLI</b> Lens</span>
+        <em>alpha</em>
+      </a>
+      <nav class="primary-nav" aria-label="Primary">
+        <a href="#workspace" class="active">Compare</a>
+        <a href="#formula-guide" data-view-link="formula">Learn scaling</a>
+      </nav>
+      <div class="header-meta">
+        <span class="season-dot"></span>SS13 data
+        <a href="https://github.com/ChandlerFerry/etor-translations/releases/" target="_blank" rel="noopener">Game tools ↗</a>
+      </div>
+    </div>
+  </header>
+  <main class="workspace" id="workspace">
+    <section class="workspace-intro">
+      <div>
+        <span class="eyebrow">Import → compare → understand</span>
+        <h2>See exactly where your damage went.</h2>
+        <p>Compare real loadouts, replay the formula, and separate proven changes from unsupported mechanics.</p>
+      </div>
+      <div class="fixture-switcher" aria-label="Demo comparisons">
+        <span>Examples</span>
+        <button type="button" data-preset="lesson">Scaling lesson</button>
+        <button type="button" data-preset="bing">Bing loadouts</button>
+        <button type="button" data-preset="wuxia">Wuxia progression</button>
+      </div>
+    </section>
+    <section class="comparison-bar" aria-label="Build comparison">
+      ${buildPicker("before", before.build, before.loadout)}
+      <button type="button" class="swap-button" data-swap aria-label="Swap before and after builds">⇄<span>swap</span></button>
+      ${buildPicker("after", after.build, after.loadout)}
+    </section>
+    ${renderSummary(before.loadout, after.loadout)}
+    ${navigation()}
+    <div class="view-content">${content}</div>
+  </main>
+  <footer class="site-footer">
+    <span>TLI Lens is an independent community tool.</span>
+    <span>Built around explicit assumptions, source data, and formulas you can inspect.</span>
+  </footer>`;
+}
+
+function setImportStatus(message: string, type: "success" | "error" | "info" = "info") {
+  importStatus.className = `import-status ${type}`;
+  importStatus.textContent = message;
+}
+
+function activateImported(build: AnalyzedBuild) {
+  builds.push(build);
+  const loadout = build.loadouts.find((item) => item.isCurrent) ?? build.loadouts[0];
+  const selection = { buildId: build.id, loadoutId: loadout.id };
+  if (importTarget === "before") beforeSelection = selection;
+  else afterSelection = selection;
+  setImportStatus(
+    build.needsResolution
+      ? "Build code recognized. Capture the opened build with tli_dump to resolve its loadout."
+      : `${build.name} imported with ${build.loadouts.length} loadout${build.loadouts.length === 1 ? "" : "s"}.`,
+    build.needsResolution ? "info" : "success",
+  );
+  window.setTimeout(() => {
+    importDialog.close();
+    render();
+  }, 450);
+}
+
+async function readFile(file: File) {
+  try {
+    setImportStatus(`Reading ${file.name}…`);
+    const value = JSON.parse(await file.text());
+    activateImported(importBuild(value, catalog, demo.builds, file.name));
+  } catch (error) {
+    setImportStatus(error instanceof Error ? error.message : "The file could not be imported.", "error");
+  } finally {
+    fileInput.value = "";
+  }
+}
+
+app.addEventListener("change", (event) => {
+  const target = event.target as HTMLSelectElement;
+  if (!target.matches("[data-selection]")) return;
+  const selection = readSelectionKey(target.value);
+  if (!selection) return;
+  if (target.dataset.selection === "before") beforeSelection = selection;
+  else afterSelection = selection;
+  render();
+});
+
+app.addEventListener("click", (event) => {
+  const target = (event.target as HTMLElement).closest<HTMLElement>("button, a");
+  if (!target) return;
+  const view = target.dataset.view as View | undefined;
+  const viewLink = target.dataset.viewLink as View | undefined;
+  if (view || viewLink) {
+    event.preventDefault();
+    activeView = view ?? viewLink!;
+    render();
+    document.querySelector(".view-tabs")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    return;
+  }
+  const side = target.dataset.import as Side | undefined;
+  if (side) {
+    importTarget = side;
+    setImportStatus(`Importing into ${sideLabel(side)}.`);
+    importDialog.showModal();
+    return;
+  }
+  if (target.hasAttribute("data-swap")) {
+    [beforeSelection, afterSelection] = [afterSelection, beforeSelection];
+    render();
+    return;
+  }
+  const section = target.dataset.changeSection as ChangeSection | undefined;
+  if (section) {
+    changeSection = section;
+    render();
+    return;
+  }
+  const requestedFormulaSide = target.dataset.formulaSide as Side | undefined;
+  if (requestedFormulaSide) {
+    formulaSide = requestedFormulaSide;
+    render();
+    return;
+  }
+  const jump = target.dataset.jumpSection;
+  if (jump) {
+    if (jump === "base" || jump === "increased" || jump === "additional"
+      || jump === "conversion" || jump === "crit" || jump === "enemy"
+      || jump === "rotation" || jump === "dot") {
+      activeView = "formula";
+      formulaSide = "after";
+      render();
+    }
+    return;
+  }
+  const preset = target.dataset.preset;
+  if (preset === "lesson") {
+    const build = builds.find((item) => item.id === "scaling-lesson")!;
+    beforeSelection = { buildId: build.id, loadoutId: build.loadouts[0].id };
+    afterSelection = { buildId: build.id, loadoutId: build.loadouts[1].id };
+    activeView = "diagnosis";
+    render();
+  } else if (preset === "bing") {
+    const build = builds.find((item) => item.id === "bing")!;
+    beforeSelection = { buildId: build.id, loadoutId: build.loadouts[2].id };
+    afterSelection = { buildId: build.id, loadoutId: build.loadouts[3].id };
+    activeView = "changes";
+    render();
+  } else if (preset === "wuxia") {
+    const build = builds.find((item) => item.id === "wuxia")!;
+    beforeSelection = { buildId: build.id, loadoutId: build.loadouts[5].id };
+    afterSelection = { buildId: build.id, loadoutId: build.loadouts[8].id };
+    activeView = "coverage";
+    render();
+  }
+});
+
+document.querySelectorAll<HTMLButtonElement>("[data-import-tab]").forEach((button) => {
+  button.addEventListener("click", () => {
+    const tab = button.dataset.importTab;
+    document.querySelectorAll<HTMLElement>("[data-import-panel]").forEach((panel) => {
+      panel.hidden = panel.dataset.importPanel !== tab;
+    });
+    document.querySelectorAll<HTMLButtonElement>("[data-import-tab]").forEach((candidate) => {
+      const active = candidate === button;
+      candidate.classList.toggle("active", active);
+      candidate.setAttribute("aria-selected", String(active));
+    });
+    setImportStatus("");
+  });
+});
+
+fileInput.addEventListener("change", () => {
+  const file = fileInput.files?.[0];
+  if (file) void readFile(file);
+});
+
+for (const type of ["dragenter", "dragover"]) {
+  dropZone.addEventListener(type, (event) => {
+    event.preventDefault();
+    dropZone.classList.add("dragging");
+  });
+}
+for (const type of ["dragleave", "drop"]) {
+  dropZone.addEventListener(type, (event) => {
+    event.preventDefault();
+    dropZone.classList.remove("dragging");
+  });
+}
+dropZone.addEventListener("drop", (event) => {
+  const file = (event as DragEvent).dataTransfer?.files[0];
+  if (file) void readFile(file);
+});
+
+document.getElementById("analyze-paste")!.addEventListener("click", () => {
+  const raw = pasteInput.value.trim();
+  if (!raw) {
+    setImportStatus("Paste a build code, share URL, or JSON first.", "error");
+    return;
+  }
+  try {
+    if (raw.startsWith("{")) {
+      activateImported(importBuild(JSON.parse(raw), catalog, demo.builds, "Pasted JSON"));
+    } else {
+      activateImported(importBuildCode(raw));
+    }
+  } catch (error) {
+    setImportStatus(error instanceof Error ? error.message : "The pasted data could not be imported.", "error");
+  }
+});
+
+importDialog.addEventListener("close", () => {
+  pasteInput.value = "";
+  setImportStatus("");
+});
+
+render();
