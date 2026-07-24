@@ -4124,39 +4124,85 @@ input:focus-visible,
   font-size: var(--text-label);
 }
 
-/* Import dialog */
-.import-dialog {
-  width: min(600px, calc(100% - 28px));
-  max-height: calc(100vh - 40px);
+/* Inline load-build panel (was the import dialog) */
+.load-build-panel {
+  width: 100%;
   padding: 0;
-  overflow: auto;
-  border: 1px solid var(--line-bright);
-  border-radius: 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
   color: var(--ink);
-  background: var(--panel);
-  box-shadow: 0 40px 120px rgba(0, 0, 0, .65);
+  background:
+    linear-gradient(135deg, rgba(212, 242, 92, .04), transparent 42%),
+    var(--panel);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, .12);
 }
 
-.import-dialog::backdrop {
-  background: rgba(0, 0, 0, .74);
-  backdrop-filter: blur(7px);
+.load-build-shell {
+  padding: 24px 26px 20px;
 }
 
-.dialog-shell {
-  padding: 24px;
-}
-
-.dialog-head {
+.load-build-head {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 20px;
+  flex-wrap: wrap;
 }
 
-.dialog-head h2 {
+.load-build-head h2 {
   margin: 5px 0 0;
-  font-size: 24px;
+  font-size: clamp(22px, 2.4vw, 28px);
   letter-spacing: -.035em;
+}
+
+.load-build-active {
+  min-width: min(100%, 280px);
+  max-width: 360px;
+}
+
+.load-build-active-card {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--well);
+}
+
+.load-build-active-label {
+  color: var(--lime);
+  font-family: "DM Mono", monospace;
+  font-size: var(--text-micro);
+  font-weight: 500;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.load-build-active-card strong {
+  color: var(--ink);
+  font-size: 15px;
+  letter-spacing: -.02em;
+  line-height: 1.25;
+}
+
+.load-build-active-meta {
+  color: var(--muted);
+  font-size: var(--text-label);
+  line-height: 1.4;
+}
+
+.load-build-group {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.load-build-group:last-child {
+  margin-bottom: 0;
+}
+
+.load-build-group > .panel-kicker {
+  margin-bottom: 2px;
 }
 
 .icon-button {
@@ -4220,12 +4266,12 @@ input:focus-visible,
 
 .supported-build-list {
   display: grid;
-  gap: 10px;
+  gap: 12px;
 }
 
 .supported-build-card {
   display: grid;
-  gap: 4px;
+  gap: 8px;
   width: 100%;
   padding: 14px 16px;
   border: 1px solid var(--line);
@@ -4233,12 +4279,19 @@ input:focus-visible,
   background: var(--well);
   color: inherit;
   text-align: left;
-  cursor: pointer;
 }
 
-.supported-build-card:hover {
-  border-color: var(--lime);
+.supported-build-card.is-active {
+  border-color: rgba(212, 242, 92, .45);
   background: rgba(212, 242, 92, .05);
+  box-shadow: inset 0 0 0 1px rgba(212, 242, 92, .12);
+}
+
+.supported-build-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .supported-build-card strong {
@@ -4246,10 +4299,64 @@ input:focus-visible,
   font-size: 15px;
 }
 
-.supported-build-card span {
+.supported-build-card-blurb {
   color: var(--muted);
   font-size: var(--text-label);
   line-height: 1.45;
+}
+
+.loadout-picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.loadout-pick {
+  display: grid;
+  gap: 2px;
+  min-width: min(100%, 140px);
+  max-width: 100%;
+  padding: 9px 11px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.loadout-pick:hover {
+  border-color: var(--lime);
+  background: rgba(212, 242, 92, .06);
+}
+
+.loadout-pick.active {
+  border-color: var(--lime);
+  background: rgba(212, 242, 92, .12);
+  color: var(--ink);
+}
+
+.loadout-pick b {
+  display: block;
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -.015em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.loadout-pick small {
+  color: var(--muted);
+  font-family: "DM Mono", monospace;
+  font-size: 10.5px;
+  letter-spacing: .02em;
+}
+
+.loadout-pick.active small {
+  color: var(--dim);
 }
 
 .drop-zone {
@@ -6042,16 +6149,7 @@ input:focus-visible,
 
 /* —— Single-loadout explain home —— */
 .loadout-bar {
-  margin-bottom: 24px;
-}
-
-.loadout-picker-single {
-  width: 100%;
-  max-width: 720px;
-}
-
-.loadout-picker-single .picker-topline {
-  margin-bottom: 12px;
+  margin-bottom: 28px;
 }
 
 .damage-hero {

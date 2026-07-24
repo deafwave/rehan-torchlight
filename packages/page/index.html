@@ -39,19 +39,26 @@
   <body>
     <div id="app"></div>
 
-    <dialog id="import-dialog" class="import-dialog" aria-labelledby="import-title">
-      <form method="dialog" class="dialog-shell">
-        <div class="dialog-head">
+    <!-- Stable outside #app so re-render does not wipe paste/file state.
+         main.ts reparents this into the loadout bar on every render. -->
+    <section
+      id="load-build-panel"
+      class="load-build-panel"
+      aria-labelledby="load-build-title"
+      hidden
+    >
+      <div class="load-build-shell">
+        <div class="load-build-head">
           <div>
             <span class="eyebrow">Load a build</span>
-            <h2 id="import-title">Choose how to load this loadout</h2>
+            <h2 id="load-build-title">Choose what to explain</h2>
           </div>
-          <button class="icon-button" value="cancel" aria-label="Close import dialog">×</button>
+          <div id="load-build-active" class="load-build-active" aria-live="polite"></div>
         </div>
         <p class="import-lead" id="import-lead">
-          Pick a supported build, paste a Compendium build code, or bring a local tli_dump export to explain its damage.
+          Pick a demo loadout, paste a Compendium build code, or import a local tli_dump / Compendium JSON export.
         </p>
-        <div class="import-tabs" role="tablist" aria-label="Import method">
+        <div class="import-tabs" role="tablist" aria-label="Load method">
           <button
             type="button"
             class="import-tab active"
@@ -62,7 +69,7 @@
             aria-selected="true"
             tabindex="0"
           >
-            Supported
+            Demos
           </button>
           <button
             type="button"
@@ -98,10 +105,10 @@
           aria-labelledby="import-tab-supported"
         >
           <p class="import-panel-note">
-            Compendium exports from <code>data/builds</code>. Select one, then refine Before / After loadouts in the dropdowns.
+            Each card is a build; each chip is a loadout stage. The active loadout drives Your DPS below.
           </p>
           <div class="supported-build-list" id="supported-build-list">
-            <p class="import-panel-note">Loading supported builds…</p>
+            <p class="import-panel-note">Loading demos…</p>
           </div>
         </section>
 
@@ -167,8 +174,8 @@
         <p class="privacy-note">
           Local only. Build codes never send character state to a server.
         </p>
-      </form>
-    </dialog>
+      </div>
+    </section>
 
     <script type="module" src="/src/main.ts"></script>
   </body>

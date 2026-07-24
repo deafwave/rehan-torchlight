@@ -143,9 +143,10 @@ app.innerHTML = `<main class="app-loading" aria-live="polite">
   <strong>Loading your damage workspace…</strong>
   <small>Preparing build fixtures and the damage model.</small></div>
 </main>`;
-const importDialog = document.getElementById("import-dialog") as HTMLDialogElement;
+const loadBuildPanel = document.getElementById("load-build-panel") as HTMLElement;
 const importStatus = document.getElementById("import-status")!;
 const importLead = document.getElementById("import-lead");
+const loadBuildActive = document.getElementById("load-build-active");
 const fileInput = document.getElementById("build-file") as HTMLInputElement;
 const pasteInput = document.getElementById("build-paste") as HTMLTextAreaElement;
 const codeInput = document.getElementById("build-code") as HTMLTextAreaElement;
@@ -196,24 +197,93 @@ function defaultLoadoutPair(build: AnalyzedBuild) {
   };
 }
 
+function loadoutPickButtons(build: AnalyzedBuild) {
+  return build.loadouts.map((loadout, index) => {
+    const active = selection
+      && selection.buildId === build.id
+      && selection.loadoutId === loadout.id;
+    const stage = loadout.isCurrent ? "current" : `stage ${index + 1}`;
+    return `<button type="button" class="loadout-pick${active ? " active" : ""}"
+      data-select-build="${escAttr(build.id)}" data-select-loadout="${escAttr(loadout.id)}"
+      aria-pressed="${active ? "true" : "false"}"
+      title="${escAttr(`${loadout.name} · ${loadout.hero}`)}">
+      <b>${esc(loadout.name)}</b>
+      <small>${esc(stage)}${loadout.model ? " · modeled" : ""}</small>
+    </button>`;
+  }).join("");
+}
+
+function renderBuildLoadCards(list: AnalyzedBuild[], emptyNote: string) {
+  if (!list.length) {
+    return `<p class="import-panel-note">${esc(emptyNote)}</p>`;
+  }
+  return list.map((build) => {
+    const meta = SUPPORTED_BUILD_META[build.id];
+    const title = meta?.title ?? build.name;
+    const blurb = meta?.blurb
+      ?? (build.imported
+        ? `Imported · ${build.source}`
+        : `${build.loadouts.length} loadout${build.loadouts.length === 1 ? "" : "s"} · ${build.patch}`);
+    const selectedHere = selection?.buildId === build.id;
+    return `<article class="supported-build-card${selectedHere ? " is-active" : ""}">
+      <div class="supported-build-card-head">
+        <strong>${esc(title)}</strong>
+        <span class="source-pill">${esc(build.patch)}</span>
+      </div>
+      <span class="supported-build-card-blurb">${esc(blurb)} · ${build.loadouts.length} loadout${build.loadouts.length === 1 ? "" : "s"}</span>
+      <div class="loadout-picks" role="group" aria-label="${escAttr(`${title} loadouts`)}">
+        ${loadoutPickButtons(build)}
+      </div>
+    </article>`;
+  }).join("");
+}
+
 function renderSupportedBuildList() {
   const host = document.getElementById("supported-build-list");
   if (!host) return;
   const catalog = builds.filter(isSupportedCatalogBuild);
-  if (!catalog.length) {
-    host.innerHTML = `<p class="import-panel-note">No supported builds are loaded yet.</p>`;
-    return;
+  const demos = builds.filter((build) =>
+    !isSupportedCatalogBuild(build) && !build.imported && build.id === "scaling-lesson");
+  const imported = builds.filter((build) => build.imported);
+  const sections: string[] = [];
+  if (demos.length) {
+    sections.push(`<div class="load-build-group">
+      <span class="panel-kicker">Teaching fixture</span>
+      ${renderBuildLoadCards(demos, "")}
+    </div>`);
   }
-  host.innerHTML = catalog.map((build) => {
-    const meta = SUPPORTED_BUILD_META[build.id];
-    const title = meta?.title ?? build.name;
-    const blurb = meta?.blurb
-      ?? `${build.loadouts.length} loadout${build.loadouts.length === 1 ? "" : "s"} · ${build.patch}`;
-    return `<button type="button" class="supported-build-card" data-supported-build="${escAttr(build.id)}">
-      <strong>${esc(title)}</strong>
-      <span>${esc(blurb)} · ${build.loadouts.length} loadouts</span>
-    </button>`;
-  }).join("");
+  sections.push(`<div class="load-build-group">
+    <span class="panel-kicker">Supported demos</span>
+    ${renderBuildLoadCards(catalog, "No supported builds are loaded yet.")}
+  </div>`);
+  if (imported.length) {
+    sections.push(`<div class="load-build-group">
+      <span class="panel-kicker">Imported this session</span>
+      ${renderBuildLoadCards(imported, "")}
+    </div>`);
+  }
+  host.innerHTML = sections.join("");
+}
+
+function updateLoadBuildActiveSummary() {
+  if (!loadBuildActive || !selection) return;
+  const { build, loadout } = activeLoadout();
+  const readiness = guardedEvidenceReadiness(loadout);
+  const state = loadout.resolutionHandoff
+    ? "capture"
+    : loadout.model
+      ? "modeled"
+      : readiness === "blocked"
+        ? "blocked"
+        : readiness === "ready" || readiness === "partial"
+          ? "evidence"
+          : "waiting";
+  loadBuildActive.innerHTML = `<div class="load-build-active-card">
+    <span class="load-build-active-label">Explaining</span>
+    <strong>${esc(loadout.name)}</strong>
+    <span class="load-build-active-meta">${esc(build.name)} · ${esc(loadout.hero)} · ${esc(build.patch)}</span>
+    <span class="model-state ${state}"><span class="state-dot"></span>${esc(confidenceLabel(loadout))}</span>
+  </div>`;
 }
 
 const esc = (value: unknown) => String(value ?? "")
@@ -328,41 +398,18 @@ function buildPicker(side: Side, build: AnalyzedBuild, loadout: AnalyzedLoadout)
   </article>`;
 }
 
-/** Primary home control: one loadout to explain. */
-function singleLoadoutPicker(build: AnalyzedBuild, loadout: AnalyzedLoadout) {
-  const readiness = guardedEvidenceReadiness(loadout);
-  const state = loadout.resolutionHandoff
-    ? "capture"
-    : loadout.model
-      ? "modeled"
-      : readiness === "blocked"
-        ? "blocked"
-        : readiness === "ready" || readiness === "partial"
-          ? "evidence"
-          : "waiting";
-  return `<article class="build-picker build-picker--after loadout-picker-single">
-    <div class="picker-topline">
-      <span class="picker-label">Loadout</span>
-      <span class="source-pill">${esc(build.patch)}</span>
-    </div>
-    <label class="sr-only" for="active-loadout">Choose loadout to explain</label>
-    <select id="active-loadout" class="loadout-select" data-selection="active">
-      ${allOptions(selection)}
-    </select>
-    <div class="picker-meta">
-      <span>${esc(loadout.hero)}</span>
-      <span aria-hidden="true">•</span>
-      <span>${esc(build.name)}</span>
-      <span aria-hidden="true">•</span>
-      <span>${esc(build.source)}</span>
-    </div>
-    <div class="picker-bottom">
-      <span class="model-state ${state}">
-        <span class="state-dot"></span>${esc(confidenceLabel(loadout))}
-      </span>
-      <button class="quiet-button" type="button" data-import="after">Load build</button>
-    </div>
-  </article>`;
+/** Mount point for the stable load-build panel (lives outside #app). */
+function loadBuildMountHtml() {
+  return `<div id="load-build-mount" class="loadout-bar" aria-label="Load a build"></div>`;
+}
+
+function mountLoadBuildPanel() {
+  const mount = document.getElementById("load-build-mount");
+  if (!mount || !loadBuildPanel) return;
+  loadBuildPanel.hidden = false;
+  if (loadBuildPanel.parentElement !== mount) mount.appendChild(loadBuildPanel);
+  renderSupportedBuildList();
+  updateLoadBuildActiveSummary();
 }
 
 function impactPctLabel(impact: number): string {
@@ -2875,12 +2922,10 @@ function render() {
       <div>
         <span class="eyebrow">Load → read the number → see why</span>
         <h2>Understand your current DPS.</h2>
-        <p>Load a supported build, Compendium code, or tli_dump export. See what the damage model claims and which factors build that number.</p>
+        <p>Pick a demo loadout below, or bring a Compendium code / tli_dump export. The active loadout drives every number under Your DPS.</p>
       </div>
     </section>
-    <section class="loadout-bar" aria-label="Active loadout">
-      ${singleLoadoutPicker(active.build, active.loadout)}
-    </section>
+    ${loadBuildMountHtml()}
     ${navigation()}
     <div class="view-content">${content}</div>
   </main>
@@ -2888,6 +2933,7 @@ function render() {
     <span>TLI Lens is an independent community tool.</span>
     <span>Built around explicit assumptions, source data, and formulas you can inspect.</span>
   </footer>`;
+  mountLoadBuildPanel();
 }
 
 function restoreWorkspaceFocus(selector: string) {
@@ -2905,19 +2951,44 @@ function importSizeMessage(size: number) {
   return `This input is ${mib.toFixed(1)} MiB. Imports are limited to 25 MiB; export one build snapshot or remove unrelated data and try again.`;
 }
 
+function focusLoadBuildPanel(tab: "supported" | "code" | "dump" = "supported") {
+  const tabButton = document.getElementById(`import-tab-${tab}`) as HTMLButtonElement | null;
+  if (tabButton) activateImportTab(tabButton);
+  loadBuildPanel?.scrollIntoView({ behavior: "smooth", block: "start" });
+  window.requestAnimationFrame(() => {
+    loadBuildPanel?.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]')?.focus();
+  });
+}
+
+/** Legacy compare-shell entry: scroll the inline loader into view instead of a modal. */
 function openImportDialog(side: Side) {
   importTarget = side;
   if (importLead) {
     importLead.textContent =
-      "Pick a supported build, paste a Compendium build code, or import a tli_dump / Compendium JSON export to explain its damage.";
+      "Pick a demo loadout, paste a Compendium build code, or import a tli_dump / Compendium JSON export.";
   }
-  setImportStatus(`Adding a build to ${sideLabel(side)}.`);
-  const supportedTab = document.getElementById("import-tab-supported") as HTMLButtonElement | null;
-  if (supportedTab) activateImportTab(supportedTab);
-  importDialog.showModal();
-  window.requestAnimationFrame(() => {
-    importDialog.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]')?.focus();
-  });
+  setImportStatus(`Load a build to explain (${sideLabel(side)} path).`);
+  focusLoadBuildPanel("supported");
+}
+
+function selectLoadout(buildId: string, loadoutId: string) {
+  const build = builds.find((item) => item.id === buildId);
+  const loadout = build?.loadouts.find((item) => item.id === loadoutId);
+  if (!build || !loadout) {
+    setImportStatus("That loadout is not available in this session.", "error");
+    return;
+  }
+  setSelection({ buildId: build.id, loadoutId: loadout.id });
+  activeView = "explain";
+  reportCopyState = "idle";
+  setImportStatus(
+    `Explaining “${loadout.name}” from ${build.name}.`,
+    "success",
+  );
+  render();
+  restoreWorkspaceFocus(
+    `[data-select-build="${CSS.escape(build.id)}"][data-select-loadout="${CSS.escape(loadout.id)}"]`,
+  );
 }
 
 function applySupportedBuild(buildId: string) {
@@ -2927,23 +2998,11 @@ function applySupportedBuild(buildId: string) {
     return;
   }
   const defaults = defaultLoadoutPair(build);
-  // Prefer the later progression stage as the loadout to explain.
   const loadout = build.loadouts[defaults.afterIndex]
     ?? build.loadouts.find((item) => item.isCurrent)
     ?? build.loadouts[build.loadouts.length - 1]
     ?? build.loadouts[0];
-  setSelection({ buildId: build.id, loadoutId: loadout.id });
-  activeView = "explain";
-  reportCopyState = "idle";
-  setImportStatus(
-    `${build.name} loaded · explaining “${loadout.name}” (${build.loadouts.length} loadouts available).`,
-    "success",
-  );
-  window.setTimeout(() => {
-    importDialog.close();
-    render();
-    restoreWorkspaceFocus("#active-loadout");
-  }, 350);
+  selectLoadout(build.id, loadout.id);
 }
 
 function activateImported(build: AnalyzedBuild) {
@@ -2957,14 +3016,17 @@ function activateImported(build: AnalyzedBuild) {
       : `${build.name} imported · explaining “${loadout.name}”.`,
     build.needsResolution ? "info" : "success",
   );
-  window.setTimeout(() => {
-    importDialog.close();
-    activeView = "explain";
-    render();
-    restoreWorkspaceFocus(
-      build.needsResolution ? ".capture-handoff" : "#active-loadout",
-    );
-  }, 450);
+  if (build.needsResolution) {
+    const dumpTab = document.getElementById("import-tab-dump") as HTMLButtonElement | null;
+    if (dumpTab) activateImportTab(dumpTab);
+  }
+  activeView = "explain";
+  render();
+  restoreWorkspaceFocus(
+    build.needsResolution
+      ? ".capture-handoff"
+      : `[data-select-build="${CSS.escape(build.id)}"][data-select-loadout="${CSS.escape(loadout.id)}"]`,
+  );
 }
 
 async function copyCurrentActionReport() {
@@ -3142,7 +3204,7 @@ app.addEventListener("change", (event) => {
   }
   reportCopyState = "idle";
   render();
-  restoreWorkspaceFocus(side === "active" ? "#active-loadout" : `#${side}-loadout`);
+  restoreWorkspaceFocus(`#${side}-loadout`);
 });
 
 app.addEventListener("click", (event) => {
@@ -3292,11 +3354,19 @@ importTabs.forEach((button, index) => {
   });
 });
 
-importDialog.addEventListener("click", (event) => {
-  const target = (event.target as HTMLElement).closest<HTMLElement>("[data-supported-build]");
-  if (!target) return;
-  event.preventDefault();
-  applySupportedBuild(target.dataset.supportedBuild!);
+loadBuildPanel.addEventListener("click", (event) => {
+  const pick = (event.target as HTMLElement).closest<HTMLElement>("[data-select-loadout]");
+  if (pick?.dataset.selectBuild && pick.dataset.selectLoadout) {
+    event.preventDefault();
+    selectLoadout(pick.dataset.selectBuild, pick.dataset.selectLoadout);
+    return;
+  }
+  // Whole-card fallback for any remaining data-supported-build controls.
+  const card = (event.target as HTMLElement).closest<HTMLElement>("[data-supported-build]");
+  if (card?.dataset.supportedBuild) {
+    event.preventDefault();
+    applySupportedBuild(card.dataset.supportedBuild);
+  }
 });
 
 fileInput.addEventListener("change", () => {
@@ -3373,12 +3443,6 @@ document.getElementById("analyze-paste")!.addEventListener("click", async () => 
   }
 });
 
-importDialog.addEventListener("close", () => {
-  pasteInput.value = "";
-  codeInput.value = "";
-  setImportStatus("");
-});
-
 async function initializeWorkspace() {
   try {
     const response = await fetch(demoDataUrl);
@@ -3387,7 +3451,6 @@ async function initializeWorkspace() {
     }
     demo = await response.json() as DemoData;
     builds.push(...structuredClone(demo.builds));
-    renderSupportedBuildList();
     // Prefer a loadout that can show a full modeled explanation (scaling lesson),
     // then supported catalog builds.
     const modeled = builds.find((build) =>

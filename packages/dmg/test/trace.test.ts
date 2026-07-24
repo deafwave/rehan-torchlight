@@ -73,6 +73,45 @@ describe("trace layers & chips", () => {
     const matches = r.trace.layers.perHit.chips.filter(c => /misc/.test(c.label));
     expect(matches.length).toBe(1);
   });
+
+  // Conversion paths used to collapse increased/additional/taken into one opaque
+  // "path envelope" chip (×480k, −58%). Expand so each factor is its own chip,
+  // gated by portion history the way pathEnvelope is.
+  test("conversion path envelope expands into per-factor chips (no lumped chip)", () => {
+    const s = bombSnap();
+    s.conversion = [
+      { from: "physical", to: "fire", pct: 100 },
+      { from: "physical", to: "erosion", pct: 100 },
+      { from: "fire", to: "erosion", pct: 100 },
+    ];
+    s.increased.attack = 50;
+    s.increased.fire = 100;
+    s.additional.misc = 20;
+    s.additional_typed = { elemental: { fusion: 35 } };
+    s.enemy_taken.frostbite = 10;
+    const r = cycleDps(s);
+    const labels = JSON.stringify(r.trace.layers.perHit);
+    expect(labels).not.toMatch(/path envelope/i);
+    // untyped increased/additional/taken appear as separate chips
+    expect(labels).toMatch(/increased · attack/);
+    expect(labels).toMatch(/increased · fire/);
+    expect(labels).toMatch(/additional · misc/);
+    expect(labels).toMatch(/additional · elemental · fusion/);
+    expect(labels).toMatch(/taken · frostbite/);
+    // fire-typed only lands on the fire-history path, not pure phys→erosion
+    const portions = r.trace.layers.perHit.children![0].children!;
+    const firePath = portions.find(p => p.label.includes("fire"))!;
+    const eroOnly = portions.find(p => p.label === "physical→erosion" ||
+      (p.label.includes("physical") && p.label.includes("erosion") && !p.label.includes("fire")))!;
+    expect(firePath.chips.some(c => c.label === "increased · fire")).toBe(true);
+    expect(firePath.chips.some(c => c.label === "additional · elemental · fusion")).toBe(true);
+    expect(eroOnly.chips.some(c => c.label === "increased · fire")).toBe(false);
+    expect(eroOnly.chips.some(c => c.label === "additional · elemental · fusion")).toBe(false);
+    // both paths share untyped attack
+    expect(firePath.chips.some(c => c.label === "increased · attack")).toBe(true);
+    expect(eroOnly.chips.some(c => c.label === "increased · attack")).toBe(true);
+    expect(resolve(r.trace.root)).toBeCloseTo(r.dps, 4);
+  });
 });
 
 describe("impact (marginal DPS if a chip is removed)", () => {

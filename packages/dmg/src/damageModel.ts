@@ -313,6 +313,28 @@ function pathEnvelope(s: Snapshot, types: Set<DamageType>): number {
   return m * paralysisTaken(s);
 }
 
+// Explain-layer twin of pathEnvelope: one chip per factor, same gating as the math.
+// + chips (increased) pool inside the portion; × chips (additional/taken) multiply.
+// Replaces the opaque "path envelope ×480k" lump so the page can show which line moves DPS.
+function pathEnvelopeChips(s: Snapshot, types: Set<DamageType>): Chip[] {
+  const out: Chip[] = [];
+  for (const [k, v] of Object.entries(s.increased))
+    if (v && (!TYPE_TAGS.has(k) || tagApplies(k, types)) && skillTagApplies(s, k))
+      out.push({ kind: "increased", label: `increased · ${k}`, op: "+", factor: v / 100 });
+  for (const [k, v] of Object.entries(s.additional))
+    if (v) out.push({ kind: "additional", label: `additional · ${k}`, op: "×", factor: 1 + v / 100 });
+  for (const [tag, bucket] of Object.entries(s.additional_typed ?? {}))
+    if (tagApplies(tag, types))
+      for (const [k, v] of Object.entries(bucket))
+        if (v) out.push({ kind: "additional", label: `additional · ${tag} · ${k}`, op: "×",
+                          factor: 1 + v / 100 });
+  for (const [k, v] of Object.entries(s.enemy_taken))
+    if (v) out.push({ kind: "taken", label: `taken · ${k}`, op: "×", factor: 1 + v / 100 });
+  const para = paralysisTaken(s);
+  if (para !== 1) out.push({ kind: "taken", label: "paralysis", op: "×", factor: para });
+  return out;
+}
+
 export function expectedHit(s: Snapshot, skillPct?: number): number {
   if (s.conversion) {
     const pct = (skillPct ?? s.base.skill_weapon_pct) / 100;
@@ -397,13 +419,15 @@ function mitSumNode(s: Snapshot, pct: number): TNode {
   return { label: "hit by type", value: 0, op: "sum", chips: [], children };
 }
 
-// Conversion builds keep each portion's type history + its own path envelope, final-type
-// mitigation AND its own crit (typed crit damage gates by history). Sums to expectedHit.
+// Conversion builds keep each portion's type history + its own path envelope factors,
+// final-type mitigation AND its own crit (typed crit damage gates by history). Sums to
+// expectedHit. Envelope is expanded into per-factor chips (not one lumped ×) so the
+// page impact badges show which increased/additional/taken line is moving DPS.
 function convPortionsNode(s: Snapshot, pct: number): TNode {
   const children: TNode[] = convert(basePortions(s, pct), s.conversion!).map(p => ({
     label: [...p.types].join("→"), value: 0, op: "product" as const,
     chips: [{ kind: "base" as const, label: "portion", op: "base" as const, factor: p.amt },
-            { kind: "increased" as const, label: "path envelope", op: "×" as const, factor: pathEnvelope(s, p.types) },
+            ...pathEnvelopeChips(s, p.types),
             { kind: "mitigation" as const, label: `${p.cur} mit`, op: "×" as const,
               factor: p.cur === "erosion" ? erosionMitigation(s) : mitigationMultiplierFor(s, new Set([p.cur])) },
             { kind: "crit" as const, label: `crit ${s.crit.chance_pct}% ×${critDamagePct(s, p.types)}%`,
