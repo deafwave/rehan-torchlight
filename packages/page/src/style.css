@@ -6343,11 +6343,14 @@ input:focus-visible,
 }
 
 .gear-slot-icon {
+  position: absolute;
+  inset: 11%;
   width: 78%;
   height: 78%;
   object-fit: contain;
   image-rendering: auto;
   pointer-events: none;
+  z-index: 1;
 }
 
 .gear-slot-icon.is-broken {
@@ -6361,6 +6364,12 @@ input:focus-visible,
   letter-spacing: .04em;
   text-transform: uppercase;
   opacity: .7;
+  z-index: 0;
+}
+
+/* Hide monogram once the real icon paints */
+.gear-slot-face:has(.gear-slot-icon:not(.is-broken)) .gear-slot-placeholder {
+  opacity: 0;
 }
 
 .gear-slot-label {

@@ -657,11 +657,13 @@ function renderGearCell(cell: GearBoardCell): string {
   const monogram = empty
     ? cell.label.slice(0, 2)
     : (row?.name ?? cell.label).replace(/[^A-Za-z0-9]/g, "").slice(0, 2) || cell.label.slice(0, 2);
+  // Always keep a monogram under the icon so a failed CDN fetch still reads.
+  const placeholder = `<span class="gear-slot-placeholder" aria-hidden="true">${esc(monogram)}</span>`;
   const img = primary
-    ? `<img class="gear-slot-icon" src="${escAttr(primary)}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer"${
+    ? `<img class="gear-slot-icon" src="${escAttr(primary)}" alt="" loading="lazy" decoding="async"${
       fallback && fallback !== primary ? ` data-icon-fallback="${escAttr(fallback)}"` : ""
-    }>`
-    : `<span class="gear-slot-placeholder" aria-hidden="true">${esc(monogram)}</span>`;
+    }>${placeholder}`
+    : placeholder;
   return `<div class="gear-slot rarity-${tone}${empty ? " is-empty" : ""}" data-gear-slot="${escAttr(cell.slot)}"${area} tabindex="0" aria-label="${escAttr(name)}">
     <div class="gear-slot-face">${img}</div>
     <span class="gear-slot-label">${esc(cell.label)}</span>

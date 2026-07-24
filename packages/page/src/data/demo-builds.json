@@ -3372,6 +3372,7 @@
               "name": "Blind Vision",
               "rarity": "Legendary",
               "category": "helmet",
+              "icon": "/images/legendaries/helmet/dex_helmet/Icon_Equip_Helmet_Epic_409_112.webp",
               "lines": [
                 "+241 Max Life · +241 [187–242]",
                 "The Main Skill is supported by Lv. 10 Wind Projectiles.",
@@ -3385,6 +3386,7 @@
               "name": "Furious Man's Body",
               "rarity": "Legendary",
               "category": "chest_armor",
+              "icon": "/images/legendaries/chest_armor/str_chest_armor/Icon_Equip_Armor_Epic_316_112.webp",
               "lines": [
                 "-20% additional Movement Speed",
                 "+73 Max Life · +73 [70–90]",
@@ -3398,6 +3400,7 @@
               "name": "Tyrant's Smoldering Hold",
               "rarity": "Legendary",
               "category": "gloves",
+              "icon": "/images/legendaries/gloves/dex_gloves/Icon_Equip_Gloves_Epic_426_112.webp",
               "lines": [
                 "Adds 100 - 120 Fire Damage to Attacks",
                 "+12% Fire Resistance · +12% [10–15]",
@@ -3411,6 +3414,7 @@
               "name": "Boots of Devastation",
               "rarity": "Legendary",
               "category": "boots",
+              "icon": "/images/legendaries/boots/str_boots/Icon_Equip_Shoes_Epic_427_112.webp",
               "lines": [
                 "+1426 Gear Armor · +1426 [1000–1500]",
                 "+18% Movement Speed · +18% [15–20]",
@@ -3424,6 +3428,7 @@
               "name": "Formation Breaker",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/belt/Icon_Equip_Belt_Epic_214_112.webp",
               "lines": [
                 "-4% additional Attack and Cast Speed for Sentry Skills · --4% [-10–10]",
                 "+48% Skill Area",
@@ -3437,6 +3442,7 @@
               "name": "Kaleidoscope",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/ring/Icon_Equip_Ring_Epic_211_112.webp",
               "lines": [
                 "+66 Max Life",
                 "+7% Attack and Cast Speed · +7% [7–10]",
@@ -3449,6 +3455,7 @@
               "name": "Kaleidoscope",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/ring/Icon_Equip_Ring_Epic_211_112.webp",
               "lines": [
                 "+66 Max Life",
                 "+7% Attack and Cast Speed · +7% [7–10]",
@@ -3461,6 +3468,7 @@
               "name": "Howling Wind",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/necklace/Icon_Equip_Amulet_Epic_317_112.webp",
               "lines": [
                 "Eliminate enemies under 10% Life on hit",
                 "[Gale] 60% of the Projectile Speed bonus is also applied to the additional bonus for Projectile Damage",
@@ -3473,6 +3481,7 @@
               "name": "Forger's Maul",
               "rarity": "Rare",
               "category": "two_handed",
+              "icon": "/images/rare-gear/two_handed/two-handed_hammer/Icon_Equip_Weapon_2HMace_Norm_001_112.webp",
               "lines": [
                 "190 - 190 Physical Damage",
                 "500 Critical Strike Rating",
@@ -3491,6 +3500,7 @@
               "name": "Empty",
               "rarity": null,
               "category": "gear",
+              "icon": null,
               "lines": [],
               "fingerprint": "tsu6io"
             }
@@ -7258,6 +7268,7 @@
               "name": "Fool's Crown",
               "rarity": "Legendary",
               "category": "helmet",
+              "icon": "/images/legendaries/helmet/str_helmet/Icon_Equip_Helmet_Epic_311_112.webp",
               "lines": [
                 "+4218 Gear Armor · +4218 [4176–4464]",
                 "-99% additional Intelligence",
@@ -7272,6 +7283,7 @@
               "name": "Ruinous Star",
               "rarity": "Legendary",
               "category": "chest_armor",
+              "icon": "/images/legendaries/chest_armor/int_chest_armor/Icon_Equip_Armor_Epic_325_112.webp",
               "lines": [
                 "+30% Erosion Resistance · +30% [20–30]",
                 "+22% additional Deterioration Duration · +22% [15–30]",
@@ -7285,6 +7297,7 @@
               "name": "Tyrant's Smoldering Hold",
               "rarity": "Legendary",
               "category": "gloves",
+              "icon": "/images/legendaries/gloves/dex_gloves/Icon_Equip_Gloves_Epic_426_112.webp",
               "lines": [
                 "Adds 100 - 120 Fire Damage to Attacks",
                 "+11% Fire Resistance · +11% [10–15]",
@@ -7299,6 +7312,7 @@
               "name": "Boots of Devastation",
               "rarity": "Legendary",
               "category": "boots",
+              "icon": "/images/legendaries/boots/str_boots/Icon_Equip_Shoes_Epic_427_112.webp",
               "lines": [
                 "+1426 Gear Armor · +1426 [1000–1500]",
                 "+18% Movement Speed · +18% [15–20]",
@@ -7312,6 +7326,7 @@
               "name": "Formation Breaker",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/belt/Icon_Equip_Belt_Epic_214_112.webp",
               "lines": [
                 "-4% additional Attack and Cast Speed for Sentry Skills · --4% [-10–10]",
                 "+48% Skill Area",
@@ -7326,6 +7341,7 @@
               "name": "Kaleidoscope",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/ring/Icon_Equip_Ring_Epic_211_112.webp",
               "lines": [
                 "+66 Max Life",
                 "+8% Attack and Cast Speed · +8% [7–10]",
@@ -7338,6 +7354,7 @@
               "name": "Kaleidoscope",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/ring/Icon_Equip_Ring_Epic_211_112.webp",
               "lines": [
                 "+66 Max Life",
                 "+7% Attack and Cast Speed · +7% [7–10]",
@@ -7350,6 +7367,7 @@
               "name": "Broken Sun Ring",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/necklace/Icon_Equip_Amulet_Epic_303_112.webp",
               "lines": [
                 "+264 Max Life · +264 [220–264]",
                 "+11% Elemental Resistance · +11% [9–12]",
@@ -7363,6 +7381,7 @@
               "name": "Sierra Reverberation Maul",
               "rarity": "Rare",
               "category": "two_handed",
+              "icon": "/images/rare-gear/two_handed/two-handed_hammer/Icon_Equip_Weapon_2HMace_Norm_001_112.webp",
               "lines": [
                 "220 - 220 Physical Damage",
                 "500 Critical Strike Rating",
@@ -7382,6 +7401,7 @@
               "name": "Empty",
               "rarity": null,
               "category": "gear",
+              "icon": null,
               "lines": [],
               "fingerprint": "tsu6io"
             }
@@ -11524,6 +11544,7 @@
               "name": "Fool's Crown",
               "rarity": "Legendary",
               "category": "helmet",
+              "icon": "/images/legendaries/helmet/str_helmet/Icon_Equip_Helmet_Epic_311_112.webp",
               "lines": [
                 "+4218 Gear Armor · +4218 [4176–4464]",
                 "-99% additional Intelligence",
@@ -11538,6 +11559,7 @@
               "name": "Ruinous Star",
               "rarity": "Legendary",
               "category": "chest_armor",
+              "icon": "/images/legendaries/chest_armor/int_chest_armor/Icon_Equip_Armor_Epic_325_112.webp",
               "lines": [
                 "+20% Erosion Resistance · +20% [20–30]",
                 "+28% additional Deterioration Duration · +28% [15–30]",
@@ -11551,6 +11573,7 @@
               "name": "Tyrant's Smoldering Hold",
               "rarity": "Legendary",
               "category": "gloves",
+              "icon": "/images/legendaries/gloves/dex_gloves/Icon_Equip_Gloves_Epic_426_112.webp",
               "lines": [
                 "Adds 100 - 120 Fire Damage to Attacks",
                 "+11% Fire Resistance · +11% [10–15]",
@@ -11565,6 +11588,7 @@
               "name": "Boots of Devastation",
               "rarity": "Legendary",
               "category": "boots",
+              "icon": "/images/legendaries/boots/str_boots/Icon_Equip_Shoes_Epic_427_112.webp",
               "lines": [
                 "+1107 Gear Armor · +1107 [1000–1500]",
                 "+17% Movement Speed · +17% [15–20]",
@@ -11578,6 +11602,7 @@
               "name": "Formation Breaker",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/belt/Icon_Equip_Belt_Epic_214_112.webp",
               "lines": [
                 "-4% additional Attack and Cast Speed for Sentry Skills · --4% [-10–10]",
                 "+48% Skill Area",
@@ -11592,6 +11617,7 @@
               "name": "Kaleidoscope",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/ring/Icon_Equip_Ring_Epic_211_112.webp",
               "lines": [
                 "+66 Max Life",
                 "+8% Attack and Cast Speed · +8% [7–10]",
@@ -11604,6 +11630,7 @@
               "name": "Kaleidoscope",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/ring/Icon_Equip_Ring_Epic_211_112.webp",
               "lines": [
                 "+66 Max Life",
                 "+7% Attack and Cast Speed · +7% [7–10]",
@@ -11616,6 +11643,7 @@
               "name": "Broken Sun Ring",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/necklace/Icon_Equip_Amulet_Epic_303_112.webp",
               "lines": [
                 "+264 Max Life · +264 [220–264]",
                 "+11% Elemental Resistance · +11% [9–12]",
@@ -11629,6 +11657,7 @@
               "name": "Sierra Reverberation Maul",
               "rarity": "Rare",
               "category": "two_handed",
+              "icon": "/images/rare-gear/two_handed/two-handed_hammer/Icon_Equip_Weapon_2HMace_Norm_001_112.webp",
               "lines": [
                 "220 - 220 Physical Damage",
                 "500 Critical Strike Rating",
@@ -11648,6 +11677,7 @@
               "name": "Empty",
               "rarity": null,
               "category": "gear",
+              "icon": null,
               "lines": [],
               "fingerprint": "tsu6io"
             }
@@ -16202,6 +16232,7 @@
               "name": "Fool's Crown",
               "rarity": "Legendary",
               "category": "helmet",
+              "icon": "/images/legendaries/helmet/str_helmet/Icon_Equip_Helmet_Epic_311_112.webp",
               "lines": [
                 "+4218 Gear Armor · +4218 [4176–4464]",
                 "-99% additional Intelligence",
@@ -16216,6 +16247,7 @@
               "name": "Ruinous Star",
               "rarity": "Legendary",
               "category": "chest_armor",
+              "icon": "/images/legendaries/chest_armor/int_chest_armor/Icon_Equip_Armor_Epic_325_112.webp",
               "lines": [
                 "+25% Erosion Resistance · +25% [20–30]",
                 "+36% additional Deterioration Duration · +36% [30–45]",
@@ -16229,6 +16261,7 @@
               "name": "Death's Touch",
               "rarity": "Legendary",
               "category": "gloves",
+              "icon": "/images/legendaries/gloves/str_gloves/Icon_Equip_Gloves_Epic_429_112.webp",
               "lines": [
                 "+283 Max Life · +283 [231–330]",
                 "+117% additional Base Damage for Two-Handed Weapons · +117% [100–120]",
@@ -16242,6 +16275,7 @@
               "name": "Wriggling Tango",
               "rarity": "Legendary",
               "category": "boots",
+              "icon": "/images/legendaries/boots/dex_boots/Icon_Equip_Shoes_Epic_424_112.webp",
               "lines": [
                 "+2 Projectile Skill Level · +2 [1–2]",
                 "Every 10 s, gains the following effects in turn: The Main Skill is supported by Lv. 25 Blind and Wind Projectiles. Main Skill is supported by Lv. 21 Increased Area and Slow Projectile. · 10 [10–10], 25 [15–25], 21 [15–25]",
@@ -16254,6 +16288,7 @@
               "name": "Dawn Break",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/belt/Icon_Equip_Belt_Epic_221_112.webp",
               "lines": [
                 "+653 Armor and Evasion · +653 [500–1000]",
                 "Have Fervor",
@@ -16268,6 +16303,7 @@
               "name": "Formation Breaker",
               "rarity": null,
               "category": "vorax",
+              "icon": "/images/rare-gear/vorax/UI_S13_Equipment_06.webp",
               "lines": [
                 "+30% additional damage taken by enemies in proximity to Sentries",
                 "+26% Deterioration Damage · +26% [26–35]",
@@ -16284,6 +16320,7 @@
               "name": "Kaleidoscope",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/ring/Icon_Equip_Ring_Epic_211_112.webp",
               "lines": [
                 "+66 Max Life",
                 "+7% Attack and Cast Speed · +7% [7–10]",
@@ -16296,6 +16333,7 @@
               "name": "Broken Sun Ring",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/necklace/Icon_Equip_Amulet_Epic_303_112.webp",
               "lines": [
                 "+255 Max Life · +255 [220–264]",
                 "+11% Elemental Resistance · +11% [9–12]",
@@ -16309,6 +16347,7 @@
               "name": "Sierra Reverberation Maul",
               "rarity": "Rare",
               "category": "two_handed",
+              "icon": "/images/rare-gear/two_handed/two-handed_hammer/Icon_Equip_Weapon_2HMace_Norm_001_112.webp",
               "lines": [
                 "220 - 220 Physical Damage",
                 "500 Critical Strike Rating",
@@ -16329,6 +16368,7 @@
               "name": "Empty",
               "rarity": null,
               "category": "gear",
+              "icon": null,
               "lines": [],
               "fingerprint": "tsu6io"
             }
@@ -20788,6 +20828,7 @@
               "name": "Fool's Crown",
               "rarity": "Legendary",
               "category": "helmet",
+              "icon": "/images/legendaries/helmet/str_helmet/Icon_Equip_Helmet_Epic_311_112.webp",
               "lines": [
                 "+4218 Gear Armor · +4218 [4176–4464]",
                 "-99% additional Intelligence",
@@ -20802,6 +20843,7 @@
               "name": "Ruinous Star",
               "rarity": "Legendary",
               "category": "chest_armor",
+              "icon": "/images/legendaries/chest_armor/int_chest_armor/Icon_Equip_Armor_Epic_325_112.webp",
               "lines": [
                 "+25% Erosion Resistance · +25% [20–30]",
                 "+36% additional Deterioration Duration · +36% [30–45]",
@@ -20815,6 +20857,7 @@
               "name": "Death's Touch",
               "rarity": "Legendary",
               "category": "gloves",
+              "icon": "/images/legendaries/gloves/str_gloves/Icon_Equip_Gloves_Epic_429_112.webp",
               "lines": [
                 "+283 Max Life · +283 [231–330]",
                 "+117% additional Base Damage for Two-Handed Weapons · +117% [100–120]",
@@ -20828,6 +20871,7 @@
               "name": "Wriggling Tango",
               "rarity": "Legendary",
               "category": "boots",
+              "icon": "/images/legendaries/boots/dex_boots/Icon_Equip_Shoes_Epic_424_112.webp",
               "lines": [
                 "+2 Projectile Skill Level · +2 [1–2]",
                 "Every 10 s, gains the following effects in turn: The Main Skill is supported by Lv. 25 Blind and Wind Projectiles. Main Skill is supported by Lv. 21 Increased Area and Slow Projectile. · 10 [10–10], 25 [15–25], 21 [15–25]",
@@ -20840,6 +20884,7 @@
               "name": "Dawn Break",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/belt/Icon_Equip_Belt_Epic_221_112.webp",
               "lines": [
                 "+653 Armor and Evasion · +653 [500–1000]",
                 "Have Fervor",
@@ -20854,6 +20899,7 @@
               "name": "Formation Breaker",
               "rarity": null,
               "category": "vorax",
+              "icon": "/images/rare-gear/vorax/UI_S13_Equipment_06.webp",
               "lines": [
                 "+30% additional damage taken by enemies in proximity to Sentries",
                 "+26% Deterioration Damage · +26% [26–35]",
@@ -20870,6 +20916,7 @@
               "name": "Kaleidoscope",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/ring/Icon_Equip_Ring_Epic_211_112.webp",
               "lines": [
                 "+66 Max Life",
                 "+7% Attack and Cast Speed · +7% [7–10]",
@@ -20882,6 +20929,7 @@
               "name": "Broken Sun Ring",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/necklace/Icon_Equip_Amulet_Epic_303_112.webp",
               "lines": [
                 "+255 Max Life · +255 [220–264]",
                 "+11% Elemental Resistance · +11% [9–12]",
@@ -20895,6 +20943,7 @@
               "name": "Sierra Reverberation Maul",
               "rarity": "Rare",
               "category": "two_handed",
+              "icon": "/images/rare-gear/two_handed/two-handed_hammer/Icon_Equip_Weapon_2HMace_Norm_001_112.webp",
               "lines": [
                 "220 - 220 Physical Damage",
                 "500 Critical Strike Rating",
@@ -20915,6 +20964,7 @@
               "name": "Empty",
               "rarity": null,
               "category": "gear",
+              "icon": null,
               "lines": [],
               "fingerprint": "tsu6io"
             }
@@ -25224,6 +25274,7 @@
               "name": "Fool's Crown",
               "rarity": "Legendary",
               "category": "helmet",
+              "icon": "/images/legendaries/helmet/str_helmet/Icon_Equip_Helmet_Epic_311_112.webp",
               "lines": [
                 "+4218 Gear Armor · +4218 [4176–4464]",
                 "-99% additional Intelligence",
@@ -25238,6 +25289,7 @@
               "name": "Ruinous Star",
               "rarity": "Legendary",
               "category": "chest_armor",
+              "icon": "/images/legendaries/chest_armor/int_chest_armor/Icon_Equip_Armor_Epic_325_112.webp",
               "lines": [
                 "+25% Erosion Resistance · +25% [20–30]",
                 "+36% additional Deterioration Duration · +36% [30–45]",
@@ -25251,6 +25303,7 @@
               "name": "Death's Touch",
               "rarity": "Legendary",
               "category": "gloves",
+              "icon": "/images/legendaries/gloves/str_gloves/Icon_Equip_Gloves_Epic_429_112.webp",
               "lines": [
                 "+283 Max Life · +283 [231–330]",
                 "+117% additional Base Damage for Two-Handed Weapons · +117% [100–120]",
@@ -25264,6 +25317,7 @@
               "name": "Blade-dancer's Steps",
               "rarity": "Legendary",
               "category": "boots",
+              "icon": "/images/legendaries/boots/dex_boots/Icon_Equip_Shoes_Epic_207_112.webp",
               "lines": [
                 "+1 Mobility Skill Level · +1 [1–2]",
                 "+30% Movement Speed if you have used a Mobility Skill recently · +30% [30–40]",
@@ -25277,6 +25331,7 @@
               "name": "Magic Girdle",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/belt/Icon_Equip_Belt_Norm_002_02_112.webp",
               "lines": [
                 "+80 Max Energy Shield",
                 "+13% damage · roll range +12–14%",
@@ -25292,6 +25347,7 @@
               "name": "Formation Breaker",
               "rarity": null,
               "category": "vorax",
+              "icon": "/images/rare-gear/vorax/UI_S13_Equipment_06.webp",
               "lines": [
                 "+30% additional damage taken by enemies in proximity to Sentries",
                 "+31% Deterioration Damage · +31% [26–35]",
@@ -25308,6 +25364,7 @@
               "name": "Kaleidoscope",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/ring/Icon_Equip_Ring_Epic_211_112.webp",
               "lines": [
                 "+66 Max Life",
                 "+7% Attack and Cast Speed · +7% [7–10]",
@@ -25320,6 +25377,7 @@
               "name": "Broken Sun Ring",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/necklace/Icon_Equip_Amulet_Epic_303_112.webp",
               "lines": [
                 "+255 Max Life · +255 [220–264]",
                 "+11% Elemental Resistance · +11% [9–12]",
@@ -25333,6 +25391,7 @@
               "name": "Sierra Reverberation Maul",
               "rarity": "Rare",
               "category": "two_handed",
+              "icon": "/images/rare-gear/two_handed/two-handed_hammer/Icon_Equip_Weapon_2HMace_Norm_001_112.webp",
               "lines": [
                 "220 - 220 Physical Damage",
                 "500 Critical Strike Rating",
@@ -25353,6 +25412,7 @@
               "name": "Empty",
               "rarity": null,
               "category": "gear",
+              "icon": null,
               "lines": [],
               "fingerprint": "tsu6io"
             }
@@ -30047,6 +30107,7 @@
               "name": "Fool's Crown",
               "rarity": "Legendary",
               "category": "helmet",
+              "icon": "/images/legendaries/helmet/str_helmet/Icon_Equip_Helmet_Epic_311_112.webp",
               "lines": [
                 "+4419 Gear Armor · +4419 [4176–4464]",
                 "-99% additional Intelligence",
@@ -30061,6 +30122,7 @@
               "name": "Ruinous Star",
               "rarity": "Legendary",
               "category": "chest_armor",
+              "icon": "/images/legendaries/chest_armor/int_chest_armor/Icon_Equip_Armor_Epic_325_112.webp",
               "lines": [
                 "+25% Erosion Resistance · +25% [20–30]",
                 "+36% additional Deterioration Duration · +36% [30–45]",
@@ -30074,6 +30136,7 @@
               "name": "Death's Touch",
               "rarity": "Legendary",
               "category": "gloves",
+              "icon": "/images/legendaries/gloves/str_gloves/Icon_Equip_Gloves_Epic_429_112.webp",
               "lines": [
                 "+283 Max Life · +283 [231–330]",
                 "+117% additional Base Damage for Two-Handed Weapons · +117% [100–120]",
@@ -30087,6 +30150,7 @@
               "name": "Boots of Devastation",
               "rarity": "Legendary",
               "category": "boots",
+              "icon": "/images/legendaries/boots/str_boots/Icon_Equip_Shoes_Epic_427_112.webp",
               "lines": [
                 "+1130 Gear Armor · +1130 [1000–1500]",
                 "+16% Movement Speed · +16% [15–20]",
@@ -30100,6 +30164,7 @@
               "name": "Dawn Break",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/belt/Icon_Equip_Belt_Epic_221_112.webp",
               "lines": [
                 "+653 Armor and Evasion · +653 [500–1000]",
                 "Have Fervor",
@@ -30114,6 +30179,7 @@
               "name": "Formation Breaker",
               "rarity": null,
               "category": "vorax",
+              "icon": "/images/rare-gear/vorax/UI_S13_Equipment_06.webp",
               "lines": [
                 "+30% additional damage taken by enemies in proximity to Sentries",
                 "+31% Deterioration Damage · +31% [26–35]",
@@ -30130,6 +30196,7 @@
               "name": "Kaleidoscope",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/ring/Icon_Equip_Ring_Epic_211_112.webp",
               "lines": [
                 "+66 Max Life",
                 "+7% Attack and Cast Speed · +7% [7–10]",
@@ -30142,6 +30209,7 @@
               "name": "Broken Sun Ring",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/necklace/Icon_Equip_Amulet_Epic_303_112.webp",
               "lines": [
                 "+237 Max Life · +237 [220–264]",
                 "+9% Elemental Resistance · +9% [9–12]",
@@ -30154,6 +30222,7 @@
               "name": "Sierra Reverberation Maul",
               "rarity": "Rare",
               "category": "two_handed",
+              "icon": "/images/rare-gear/two_handed/two-handed_hammer/Icon_Equip_Weapon_2HMace_Norm_001_112.webp",
               "lines": [
                 "220 - 220 Physical Damage",
                 "500 Critical Strike Rating",
@@ -30174,6 +30243,7 @@
               "name": "Empty",
               "rarity": null,
               "category": "gear",
+              "icon": null,
               "lines": [],
               "fingerprint": "tsu6io"
             }
@@ -33032,6 +33102,7 @@
               "name": "Blind Vision",
               "rarity": "Legendary",
               "category": "helmet",
+              "icon": "/images/legendaries/helmet/dex_helmet/Icon_Equip_Helmet_Epic_409_112.webp",
               "lines": [
                 "+238 Max Life · +238 [187–242]",
                 "The Main Skill is supported by Lv. 10 Wind Projectiles.",
@@ -33045,6 +33116,7 @@
               "name": "Long Night Sorcerer's Robe",
               "rarity": "Rare",
               "category": "chest_armor",
+              "icon": "/images/rare-gear/chest_armor/int_chest_armor/Icon_Equip_Armor_Int_Norm_004_02_112.webp",
               "lines": [
                 "+170 gear Energy Shield",
                 "+43% gear Energy Shield · roll range +39–46%",
@@ -33061,6 +33133,7 @@
               "name": "All Magic Grip",
               "rarity": "Rare",
               "category": "gloves",
+              "icon": "/images/rare-gear/gloves/int_gloves/Icon_Equip_Gloves_Int_Norm_003_02_112.webp",
               "lines": [
                 "+120 gear Energy Shield",
                 "+29% gear Energy Shield · roll range +28–33%",
@@ -33077,6 +33150,7 @@
               "name": "Long Night Sorcerer's Boots",
               "rarity": "Rare",
               "category": "boots",
+              "icon": "/images/rare-gear/boots/int_boots/Icon_Equip_Shoes_Int_Norm_004_02_112.webp",
               "lines": [
                 "+146 gear Energy Shield",
                 "+44% Projectile Speed · roll range +33–45%",
@@ -33093,6 +33167,7 @@
               "name": "Arcanist Girdle",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/belt/Icon_Equip_Belt_Norm_003_02_112.webp",
               "lines": [
                 "+110 Max Energy Shield",
                 "+40 Dexterity · roll range +31–42",
@@ -33110,6 +33185,7 @@
               "name": "Perishing Inferno Flame Ring",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/ring/Icon_Equip_Ring_Norm_002_02_112.webp",
               "lines": [
                 "+12% Fire Resistance",
                 "+231 Max Energy Shield · roll range +206–245",
@@ -33126,6 +33202,7 @@
               "name": "Eternal Sleep Ice Ring",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/ring/Icon_Equip_Ring_Norm_002_02_112.webp",
               "lines": [
                 "+12% Cold Resistance",
                 "+67% damage · roll range +51–72%",
@@ -33142,6 +33219,7 @@
               "name": "False God's Skin",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/necklace/Icon_Equip_Amulet_Epic_309_112.webp",
               "lines": [
                 "+10% All Stats · +10% [6–10]"
               ],
@@ -33152,6 +33230,7 @@
               "name": "War Ranger's Crossbow",
               "rarity": "Rare",
               "category": "two_handed",
+              "icon": "/images/rare-gear/two_handed/crossbow/Icon_Equip_Weapon_Crossbow_Norm_001_112.webp",
               "lines": [
                 "220 - 220 Physical Damage",
                 "500 Critical Strike Rating",
@@ -33170,6 +33249,7 @@
               "name": "Empty",
               "rarity": null,
               "category": "gear",
+              "icon": null,
               "lines": [],
               "fingerprint": "tsu6io"
             }
@@ -35975,6 +36055,7 @@
               "name": "Blind Vision",
               "rarity": "Legendary",
               "category": "helmet",
+              "icon": "/images/legendaries/helmet/dex_helmet/Icon_Equip_Helmet_Epic_409_112.webp",
               "lines": [
                 "+238 Max Life · +238 [187–242]",
                 "The Main Skill is supported by Lv. 10 Wind Projectiles.",
@@ -35988,6 +36069,7 @@
               "name": "Long Night Sorcerer's Robe",
               "rarity": "Rare",
               "category": "chest_armor",
+              "icon": "/images/rare-gear/chest_armor/int_chest_armor/Icon_Equip_Armor_Int_Norm_004_02_112.webp",
               "lines": [
                 "+170 gear Energy Shield",
                 "+275 gear Energy Shield · roll range +201–280",
@@ -36004,6 +36086,7 @@
               "name": "Long Night Sorcerer's Wristband",
               "rarity": "Rare",
               "category": "gloves",
+              "icon": "/images/rare-gear/gloves/int_gloves/Icon_Equip_Gloves_Int_Norm_004_02_112.webp",
               "lines": [
                 "+146 gear Energy Shield",
                 "Adds 44 - 56 Physical Damage to Attacks and Spells · roll ranges 44–46, 54–56",
@@ -36020,6 +36103,7 @@
               "name": "Long Night Sorcerer's Boots",
               "rarity": "Rare",
               "category": "boots",
+              "icon": "/images/rare-gear/boots/int_boots/Icon_Equip_Shoes_Int_Norm_004_02_112.webp",
               "lines": [
                 "+146 gear Energy Shield",
                 "+44% Projectile Speed · roll range +33–45%",
@@ -36036,6 +36120,7 @@
               "name": "Arcanist Girdle",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/belt/Icon_Equip_Belt_Norm_003_02_112.webp",
               "lines": [
                 "+110 Max Energy Shield",
                 "+37 Dexterity · roll range +31–42",
@@ -36053,6 +36138,7 @@
               "name": "Perishing Inferno Flame Ring",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/ring/Icon_Equip_Ring_Norm_002_02_112.webp",
               "lines": [
                 "+12% Fire Resistance",
                 "+231 Max Energy Shield · roll range +206–245",
@@ -36069,6 +36155,7 @@
               "name": "Eternal Sleep Ice Ring",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/ring/Icon_Equip_Ring_Norm_002_02_112.webp",
               "lines": [
                 "+12% Cold Resistance",
                 "+67% damage · roll range +51–72%",
@@ -36085,6 +36172,7 @@
               "name": "Onslaughter's Pendant",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/necklace/Icon_Equip_Amulet_Norm_005_03_112.webp",
               "lines": [
                 "+24 Dexterity",
                 "+62% damage · roll range +51–72%",
@@ -36101,6 +36189,7 @@
               "name": "War Ranger's Crossbow",
               "rarity": "Rare",
               "category": "two_handed",
+              "icon": "/images/rare-gear/two_handed/crossbow/Icon_Equip_Weapon_Crossbow_Norm_001_112.webp",
               "lines": [
                 "220 - 220 Physical Damage",
                 "500 Critical Strike Rating",
@@ -36119,6 +36208,7 @@
               "name": "Empty",
               "rarity": null,
               "category": "gear",
+              "icon": null,
               "lines": [],
               "fingerprint": "tsu6io"
             }
@@ -38298,6 +38388,7 @@
               "name": "Machine Lord",
               "rarity": "Legendary",
               "category": "helmet",
+              "icon": "/images/legendaries/helmet/dex_helmet/Icon_Equip_Helmet_Epic_303_112.webp",
               "lines": [
                 "+19% Elemental Resistance · +19% [10–20]",
                 "The number of Max Synthetic Troops In Map is fixed at 1",
@@ -38312,6 +38403,7 @@
               "name": "Void Embankment",
               "rarity": "Legendary",
               "category": "chest_armor",
+              "icon": "/images/legendaries/chest_armor/str_chest_armor/Icon_Equip_Armor_Epic_419_112.webp",
               "lines": [
                 "+1 Max Life",
                 "+1 Max Energy Shield",
@@ -38326,6 +38418,7 @@
               "name": "Death's Touch",
               "rarity": "Legendary",
               "category": "gloves",
+              "icon": "/images/legendaries/gloves/str_gloves/Icon_Equip_Gloves_Epic_429_112.webp",
               "lines": [
                 "+317 Max Life · +317 [231–330]",
                 "+85% additional Base Damage for Two-Handed Weapons · +85% [80–90]",
@@ -38339,6 +38432,7 @@
               "name": "Mind Infusion",
               "rarity": "Legendary",
               "category": "boots",
+              "icon": "/images/legendaries/boots/str_boots/Icon_Equip_Shoes_Epic_205_112.webp",
               "lines": [
                 "+1376 Gear Armor · +1376 [1340–1540]",
                 "1 Minion Skill Level · -1 [-1–1]",
@@ -38353,6 +38447,7 @@
               "name": "Winter of Origin",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/belt/Icon_Equip_Belt_Epic_203_112.webp",
               "lines": [
                 "+19% Minion Attack and Cast Speed · +19% [15–20]",
                 "+13% Cold Resistance · +13% [12–18]",
@@ -38368,6 +38463,7 @@
               "name": "Essence Spirit Ring",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/spirit_ring/Icon_Equip_Ring_Norm_002_02_112.webp",
               "lines": [
                 "+24% Minion Damage",
                 "+49 Strength · roll range +43–60",
@@ -38384,6 +38480,7 @@
               "name": "Essence Spirit Ring",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/spirit_ring/Icon_Equip_Ring_Norm_002_02_112.webp",
               "lines": [
                 "+24% Minion Damage",
                 "+339 Max Energy Shield · roll range +245–350",
@@ -38400,6 +38497,7 @@
               "name": "Iron Nest",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/necklace/Icon_Equip_Amulet_Epic_315_112.webp",
               "lines": [
                 "+40% Armor",
                 "Immune to Trauma",
@@ -38414,6 +38512,7 @@
               "name": "War Ranger's Crossbow",
               "rarity": "Rare",
               "category": "two_handed",
+              "icon": "/images/rare-gear/two_handed/crossbow/Icon_Equip_Weapon_Crossbow_Norm_001_112.webp",
               "lines": [
                 "220 - 220 Physical Damage",
                 "500 Critical Strike Rating",
@@ -38432,6 +38531,7 @@
               "name": "Empty",
               "rarity": null,
               "category": "gear",
+              "icon": null,
               "lines": [],
               "fingerprint": "tsu6io"
             }
@@ -40618,6 +40718,7 @@
               "name": "Machine Lord",
               "rarity": "Legendary",
               "category": "helmet",
+              "icon": "/images/legendaries/helmet/dex_helmet/Icon_Equip_Helmet_Epic_303_112.webp",
               "lines": [
                 "+15% Elemental Resistance · +15% [10–20]",
                 "The number of Max Synthetic Troops In Map is fixed at 1",
@@ -40632,6 +40733,7 @@
               "name": "Void Embankment",
               "rarity": "Legendary",
               "category": "chest_armor",
+              "icon": "/images/legendaries/chest_armor/str_chest_armor/Icon_Equip_Armor_Epic_419_112.webp",
               "lines": [
                 "+1 Max Life",
                 "+1 Max Energy Shield",
@@ -40646,6 +40748,7 @@
               "name": "Death's Touch",
               "rarity": "Legendary",
               "category": "gloves",
+              "icon": "/images/legendaries/gloves/str_gloves/Icon_Equip_Gloves_Epic_429_112.webp",
               "lines": [
                 "+317 Max Life · +317 [231–330]",
                 "+85% additional Base Damage for Two-Handed Weapons · +85% [80–90]",
@@ -40659,6 +40762,7 @@
               "name": "Mind Infusion",
               "rarity": "Legendary",
               "category": "boots",
+              "icon": "/images/legendaries/boots/str_boots/Icon_Equip_Shoes_Epic_205_112.webp",
               "lines": [
                 "+1376 Gear Armor · +1376 [1340–1540]",
                 "1 Minion Skill Level · -1 [-1–1]",
@@ -40673,6 +40777,7 @@
               "name": "Winter of Origin",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/belt/Icon_Equip_Belt_Epic_203_112.webp",
               "lines": [
                 "+19% Minion Attack and Cast Speed · +19% [15–20]",
                 "+13% Cold Resistance · +13% [12–18]",
@@ -40688,6 +40793,7 @@
               "name": "Essence Spirit Ring",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/spirit_ring/Icon_Equip_Ring_Norm_002_02_112.webp",
               "lines": [
                 "+24% Minion Damage",
                 "+49 Strength · roll range +43–60",
@@ -40704,6 +40810,7 @@
               "name": "Essence Spirit Ring",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/spirit_ring/Icon_Equip_Ring_Norm_002_02_112.webp",
               "lines": [
                 "+24% Minion Damage",
                 "+59 Strength · roll range +43–60",
@@ -40721,6 +40828,7 @@
               "name": "Iron Nest",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/necklace/Icon_Equip_Amulet_Epic_315_112.webp",
               "lines": [
                 "+40% Armor",
                 "Immune to Trauma",
@@ -40735,6 +40843,7 @@
               "name": "Lonely Hunter's Bow",
               "rarity": "Rare",
               "category": "two_handed",
+              "icon": "/images/rare-gear/two_handed/bow/Icon_Equip_Weapon_Bow_Norm_001_112.webp",
               "lines": [
                 "220 - 220 Physical Damage",
                 "500 Critical Strike Rating",
@@ -40754,6 +40863,7 @@
               "name": "Empty",
               "rarity": null,
               "category": "gear",
+              "icon": null,
               "lines": [],
               "fingerprint": "tsu6io"
             }
@@ -42755,6 +42865,7 @@
               "name": "Machine Lord",
               "rarity": "Legendary",
               "category": "helmet",
+              "icon": "/images/legendaries/helmet/dex_helmet/Icon_Equip_Helmet_Epic_303_112.webp",
               "lines": [
                 "+15% Elemental Resistance · +15% [10–20]",
                 "The number of Max Synthetic Troops In Map is fixed at 1",
@@ -42769,6 +42880,7 @@
               "name": "Void Embankment",
               "rarity": "Legendary",
               "category": "chest_armor",
+              "icon": "/images/legendaries/chest_armor/str_chest_armor/Icon_Equip_Armor_Epic_419_112.webp",
               "lines": [
                 "+1 Max Life",
                 "+1 Max Energy Shield",
@@ -42783,6 +42895,7 @@
               "name": "Death's Touch",
               "rarity": "Legendary",
               "category": "gloves",
+              "icon": "/images/legendaries/gloves/str_gloves/Icon_Equip_Gloves_Epic_429_112.webp",
               "lines": [
                 "+317 Max Life · +317 [231–330]",
                 "+85% additional Base Damage for Two-Handed Weapons · +85% [80–90]",
@@ -42796,6 +42909,7 @@
               "name": "Mind Infusion",
               "rarity": "Legendary",
               "category": "boots",
+              "icon": "/images/legendaries/boots/str_boots/Icon_Equip_Shoes_Epic_205_112.webp",
               "lines": [
                 "+1376 Gear Armor · +1376 [1340–1540]",
                 "1 Minion Skill Level · -1 [-1–1]",
@@ -42810,6 +42924,7 @@
               "name": "Winter of Origin",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/belt/Icon_Equip_Belt_Epic_203_112.webp",
               "lines": [
                 "+19% Minion Attack and Cast Speed · +19% [15–20]",
                 "+13% Cold Resistance · +13% [12–18]",
@@ -42825,6 +42940,7 @@
               "name": "Essence Spirit Ring",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/spirit_ring/Icon_Equip_Ring_Norm_002_02_112.webp",
               "lines": [
                 "+24% Minion Damage",
                 "+57 Strength · roll range +43–60",
@@ -42842,6 +42958,7 @@
               "name": "Essence Spirit Ring",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/spirit_ring/Icon_Equip_Ring_Norm_002_02_112.webp",
               "lines": [
                 "+24% Minion Damage",
                 "+59 Strength · roll range +43–60",
@@ -42859,6 +42976,7 @@
               "name": "Iron Nest",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/necklace/Icon_Equip_Amulet_Epic_315_112.webp",
               "lines": [
                 "+40% Armor",
                 "Immune to Trauma",
@@ -42873,6 +42991,7 @@
               "name": "Sierra Reverberation Maul",
               "rarity": "Rare",
               "category": "two_handed",
+              "icon": "/images/rare-gear/two_handed/two-handed_hammer/Icon_Equip_Weapon_2HMace_Norm_001_112.webp",
               "lines": [
                 "220 - 220 Physical Damage",
                 "500 Critical Strike Rating",
@@ -42892,6 +43011,7 @@
               "name": "Empty",
               "rarity": null,
               "category": "gear",
+              "icon": null,
               "lines": [],
               "fingerprint": "tsu6io"
             }
@@ -44717,6 +44837,7 @@
               "name": "Machine Lord",
               "rarity": "Legendary",
               "category": "helmet",
+              "icon": "/images/legendaries/helmet/dex_helmet/Icon_Equip_Helmet_Epic_303_112.webp",
               "lines": [
                 "+15% Elemental Resistance · +15% [10–20]",
                 "The number of Max Synthetic Troops In Map is fixed at 1",
@@ -44731,6 +44852,7 @@
               "name": "Futile Tradeoff",
               "rarity": "Legendary",
               "category": "chest_armor",
+              "icon": "/images/legendaries/chest_armor/str_chest_armor/Icon_Equip_Armor_Epic_449_112.webp",
               "lines": [
                 "+5% Max Life",
                 "+1% Max Energy Shield",
@@ -44744,6 +44866,7 @@
               "name": "Death's Touch",
               "rarity": "Legendary",
               "category": "gloves",
+              "icon": "/images/legendaries/gloves/str_gloves/Icon_Equip_Gloves_Epic_429_112.webp",
               "lines": [
                 "+315 Max Life · +315 [231–330]",
                 "+90% additional Base Damage for Two-Handed Weapons · +90% [80–90]",
@@ -44757,6 +44880,7 @@
               "name": "Blade-dancer's Steps",
               "rarity": "Legendary",
               "category": "boots",
+              "icon": "/images/legendaries/boots/dex_boots/Icon_Equip_Shoes_Epic_207_112.webp",
               "lines": [
                 "+1 Mobility Skill Level · +1 [1–2]",
                 "+38% Movement Speed if you have used a Mobility Skill recently · +38% [30–40]",
@@ -44770,6 +44894,7 @@
               "name": "Winter of Origin",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/belt/Icon_Equip_Belt_Epic_203_112.webp",
               "lines": [
                 "+19% Minion Attack and Cast Speed · +19% [15–20]",
                 "+13% Cold Resistance · +13% [12–18]",
@@ -44785,6 +44910,7 @@
               "name": "Essence Spirit Ring",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/spirit_ring/Icon_Equip_Ring_Norm_002_02_112.webp",
               "lines": [
                 "+24% Minion Damage",
                 "+57 Strength · roll range +43–60",
@@ -44802,6 +44928,7 @@
               "name": "Essence Spirit Ring",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/spirit_ring/Icon_Equip_Ring_Norm_002_02_112.webp",
               "lines": [
                 "+24% Minion Damage",
                 "+59 Strength · roll range +43–60",
@@ -44819,6 +44946,7 @@
               "name": "Iron Nest",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/necklace/Icon_Equip_Amulet_Epic_315_112.webp",
               "lines": [
                 "+40% Armor",
                 "Immune to Trauma",
@@ -44833,6 +44961,7 @@
               "name": "Sierra Reverberation Maul",
               "rarity": "Rare",
               "category": "two_handed",
+              "icon": "/images/rare-gear/two_handed/two-handed_hammer/Icon_Equip_Weapon_2HMace_Norm_001_112.webp",
               "lines": [
                 "220 - 220 Physical Damage",
                 "500 Critical Strike Rating",
@@ -44852,6 +44981,7 @@
               "name": "Empty",
               "rarity": null,
               "category": "gear",
+              "icon": null,
               "lines": [],
               "fingerprint": "tsu6io"
             }
@@ -46675,6 +46805,7 @@
               "name": "Machine Lord",
               "rarity": "Legendary",
               "category": "helmet",
+              "icon": "/images/legendaries/helmet/dex_helmet/Icon_Equip_Helmet_Epic_303_112.webp",
               "lines": [
                 "+15% Elemental Resistance · +15% [10–20]",
                 "The number of Max Synthetic Troops In Map is fixed at 1",
@@ -46689,6 +46820,7 @@
               "name": "Void Embankment",
               "rarity": "Legendary",
               "category": "chest_armor",
+              "icon": "/images/legendaries/chest_armor/str_chest_armor/Icon_Equip_Armor_Epic_419_112.webp",
               "lines": [
                 "+1 Max Life",
                 "+1 Max Energy Shield",
@@ -46703,6 +46835,7 @@
               "name": "Death's Touch",
               "rarity": "Legendary",
               "category": "gloves",
+              "icon": "/images/legendaries/gloves/str_gloves/Icon_Equip_Gloves_Epic_429_112.webp",
               "lines": [
                 "+315 Max Life · +315 [231–330]",
                 "+90% additional Base Damage for Two-Handed Weapons · +90% [80–90]",
@@ -46716,6 +46849,7 @@
               "name": "Blade-dancer's Steps",
               "rarity": "Legendary",
               "category": "boots",
+              "icon": "/images/legendaries/boots/dex_boots/Icon_Equip_Shoes_Epic_207_112.webp",
               "lines": [
                 "+1 Mobility Skill Level · +1 [1–2]",
                 "+38% Movement Speed if you have used a Mobility Skill recently · +38% [30–40]",
@@ -46729,6 +46863,7 @@
               "name": "Winter of Origin",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/belt/Icon_Equip_Belt_Epic_203_112.webp",
               "lines": [
                 "+19% Minion Attack and Cast Speed · +19% [15–20]",
                 "+13% Cold Resistance · +13% [12–18]",
@@ -46744,6 +46879,7 @@
               "name": "Essence Spirit Ring",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/spirit_ring/Icon_Equip_Ring_Norm_002_02_112.webp",
               "lines": [
                 "+24% Minion Damage",
                 "+57 Strength · roll range +43–60",
@@ -46761,6 +46897,7 @@
               "name": "Essence Spirit Ring",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/spirit_ring/Icon_Equip_Ring_Norm_002_02_112.webp",
               "lines": [
                 "+24% Minion Damage",
                 "+59 Strength · roll range +43–60",
@@ -46778,6 +46915,7 @@
               "name": "Iron Nest",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/necklace/Icon_Equip_Amulet_Epic_315_112.webp",
               "lines": [
                 "+40% Armor",
                 "Immune to Trauma",
@@ -46792,6 +46930,7 @@
               "name": "Sierra Reverberation Maul",
               "rarity": "Rare",
               "category": "two_handed",
+              "icon": "/images/rare-gear/two_handed/two-handed_hammer/Icon_Equip_Weapon_2HMace_Norm_001_112.webp",
               "lines": [
                 "220 - 220 Physical Damage",
                 "500 Critical Strike Rating",
@@ -46812,6 +46951,7 @@
               "name": "Empty",
               "rarity": null,
               "category": "gear",
+              "icon": null,
               "lines": [],
               "fingerprint": "tsu6io"
             }
@@ -53700,6 +53840,7 @@
               "name": "All Magic Crown",
               "rarity": "Rare",
               "category": "helmet",
+              "icon": "/images/rare-gear/helmet/int_helmet/Icon_Equip_Helmet_Int_Norm_003_02_112.webp",
               "lines": [
                 "+120 gear Energy Shield",
                 "+36 Intelligence · roll range +31–42",
@@ -53716,6 +53857,7 @@
               "name": "All Magic Secret Robe",
               "rarity": "Rare",
               "category": "chest_armor",
+              "icon": "/images/rare-gear/chest_armor/int_chest_armor/Icon_Equip_Armor_Int_Norm_003_02_112.webp",
               "lines": [
                 "+140 gear Energy Shield",
                 "+21 Intelligence · roll range +20–24",
@@ -53732,6 +53874,7 @@
               "name": "Alloy Covenant",
               "rarity": "Legendary",
               "category": "gloves",
+              "icon": "/images/legendaries/gloves/str_gloves/Icon_Equip_Gloves_Epic_427_112.webp",
               "lines": [
                 "+6% Elemental Resistance · +6% [6–8]",
                 "+17% additional Minion Damage at Max Bond stacks · +17% [15–20]",
@@ -53745,6 +53888,7 @@
               "name": "All Magic Shoes",
               "rarity": "Rare",
               "category": "boots",
+              "icon": "/images/rare-gear/boots/int_boots/Icon_Equip_Shoes_Int_Norm_003_02_112.webp",
               "lines": [
                 "+120 gear Energy Shield",
                 "+179 gear Energy Shield · roll range +171–238",
@@ -53761,6 +53905,7 @@
               "name": "Spring Source Girdle",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/belt/Icon_Equip_Belt_Norm_004_01_112.webp",
               "lines": [
                 "+12 Max Energy Shield",
                 "+86 Max Life · roll range +71–88",
@@ -53778,6 +53923,7 @@
               "name": "Horn Ring",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/spirit_ring/Icon_Equip_Ring_Epic_407_112.webp",
               "lines": [
                 "Regenerates 60 Life per second · 60 [50–60]",
                 "+99% Minion Damage · +99% [90–120]",
@@ -53791,6 +53937,7 @@
               "name": "Born in Fire",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/ring/Icon_Equip_Ring_Epic_401_112.webp",
               "lines": [
                 "+5 Max Life per 1 levels",
                 "+1% Fire Damage for every 1 level(s)",
@@ -53803,6 +53950,7 @@
               "name": "Lady's Tears",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/necklace/Icon_Equip_Amulet_Epic_321_112.webp",
               "lines": [
                 "+1 Passive Skill Level",
                 "+16% additional Spirit Magus Ultimate Damage and Ailment Damage dealt by Ultimate. · +16% [8–16]",
@@ -53816,6 +53964,7 @@
               "name": "Obsidian Cane",
               "rarity": "Rare",
               "category": "one_handed",
+              "icon": "/images/rare-gear/one_handed/cane/Icon_Equip_Weapon_Wand_Norm_005_112.webp",
               "lines": [
                 "130 - 130 Physical Damage",
                 "500 Critical Strike Rating",
@@ -53834,6 +53983,7 @@
               "name": "Bard Rod",
               "rarity": "Rare",
               "category": "one_handed",
+              "icon": "/images/rare-gear/one_handed/rod/Icon_Equip_Weapon_Wand_Norm_001_112.webp",
               "lines": [
                 "500 Critical Strike Rating",
                 "1.2 Attack Speed",
@@ -61286,6 +61436,7 @@
               "name": "Fiend Crown",
               "rarity": "Legendary",
               "category": "helmet",
+              "icon": "/images/legendaries/helmet/int_helmet/Icon_Equip_Helmet_Epic_201_112.webp",
               "lines": [
                 "+20% Minion Elemental Resistance",
                 "+27% Aura Effect · +27% [25–30]",
@@ -61299,6 +61450,7 @@
               "name": "Futile Tradeoff",
               "rarity": "Legendary",
               "category": "chest_armor",
+              "icon": "/images/legendaries/chest_armor/str_chest_armor/Icon_Equip_Armor_Epic_449_112.webp",
               "lines": [
                 "+1% Max Life",
                 "+1% Max Energy Shield",
@@ -61312,6 +61464,7 @@
               "name": "Alloy Covenant",
               "rarity": "Legendary",
               "category": "gloves",
+              "icon": "/images/legendaries/gloves/str_gloves/Icon_Equip_Gloves_Epic_427_112.webp",
               "lines": [
                 "+7% Elemental Resistance · +7% [6–8]",
                 "+17% additional Minion Damage at Max Bond stacks · +17% [15–20]",
@@ -61325,6 +61478,7 @@
               "name": "All Magic Shoes",
               "rarity": "Rare",
               "category": "boots",
+              "icon": "/images/rare-gear/boots/int_boots/Icon_Equip_Shoes_Int_Norm_003_02_112.webp",
               "lines": [
                 "+120 gear Energy Shield",
                 "+179 gear Energy Shield · roll range +171–238",
@@ -61341,6 +61495,7 @@
               "name": "Spring Source Girdle",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/belt/Icon_Equip_Belt_Norm_004_01_112.webp",
               "lines": [
                 "+12 Max Energy Shield",
                 "+153 Max Life · roll range +111–154",
@@ -61358,6 +61513,7 @@
               "name": "Horn Ring",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/spirit_ring/Icon_Equip_Ring_Epic_407_112.webp",
               "lines": [
                 "Regenerates 60 Life per second · 60 [50–60]",
                 "+99% Minion Damage · +99% [90–120]",
@@ -61371,6 +61527,7 @@
               "name": "Championed Spirit Ring",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/spirit_ring/Icon_Equip_Ring_Norm_001_02_112.webp",
               "lines": [
                 "+18% Minion Damage",
                 "Adds 31 - 36 Physical Damage to Minions · roll ranges 29–31, 35–37",
@@ -61387,6 +61544,7 @@
               "name": "Lady's Tears",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/necklace/Icon_Equip_Amulet_Epic_321_112.webp",
               "lines": [
                 "+1 Passive Skill Level",
                 "+16% additional Spirit Magus Ultimate Damage and Ailment Damage dealt by Ultimate. · +16% [8–16]",
@@ -61400,6 +61558,7 @@
               "name": "Sleeping Sage's Cane",
               "rarity": "Rare",
               "category": "one_handed",
+              "icon": "/images/rare-gear/one_handed/cane/Icon_Equip_Weapon_Wand_Norm_001_112.webp",
               "lines": [
                 "178 - 178 Physical Damage",
                 "500 Critical Strike Rating",
@@ -61418,6 +61577,7 @@
               "name": "Heart of All Rod",
               "rarity": "Rare",
               "category": "one_handed",
+              "icon": "/images/rare-gear/one_handed/rod/Icon_Equip_Weapon_Wand_Norm_001_112.webp",
               "lines": [
                 "500 Critical Strike Rating",
                 "1.2 Attack Speed",
@@ -69242,6 +69402,7 @@
               "name": "Fiend Crown",
               "rarity": "Legendary",
               "category": "helmet",
+              "icon": "/images/legendaries/helmet/int_helmet/Icon_Equip_Helmet_Epic_201_112.webp",
               "lines": [
                 "+20% Minion Elemental Resistance",
                 "+27% Aura Effect · +27% [25–30]",
@@ -69255,6 +69416,7 @@
               "name": "Futile Tradeoff",
               "rarity": "Legendary",
               "category": "chest_armor",
+              "icon": "/images/legendaries/chest_armor/str_chest_armor/Icon_Equip_Armor_Epic_449_112.webp",
               "lines": [
                 "+1% Max Life",
                 "+1% Max Energy Shield",
@@ -69268,6 +69430,7 @@
               "name": "Alloy Covenant",
               "rarity": "Legendary",
               "category": "gloves",
+              "icon": "/images/legendaries/gloves/str_gloves/Icon_Equip_Gloves_Epic_427_112.webp",
               "lines": [
                 "+7% Elemental Resistance · +7% [6–8]",
                 "+17% additional Minion Damage at Max Bond stacks · +17% [15–20]",
@@ -69281,6 +69444,7 @@
               "name": "Ranger's Dirty Boots",
               "rarity": "Rare",
               "category": "boots",
+              "icon": "/images/rare-gear/boots/str_boots/Icon_Equip_Shoes_Str_Norm_004_02_112.webp",
               "lines": [
                 "+1920 Gear Armor",
                 "+175 Max Life · roll range +154–220",
@@ -69297,6 +69461,7 @@
               "name": "Fearless Waistguard",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/belt/Icon_Equip_Belt_Norm_002_02_112.webp",
               "lines": [
                 "+65 Max Life",
                 "+114 Max Life · roll range +111–154",
@@ -69314,6 +69479,7 @@
               "name": "Horn Ring",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/spirit_ring/Icon_Equip_Ring_Epic_407_112.webp",
               "lines": [
                 "Regenerates 60 Life per second · 60 [50–60]",
                 "+99% Minion Damage · +99% [90–120]",
@@ -69327,6 +69493,7 @@
               "name": "Championed Spirit Ring",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/spirit_ring/Icon_Equip_Ring_Norm_001_02_112.webp",
               "lines": [
                 "+18% Minion Damage",
                 "Adds 31 - 36 Physical Damage to Minions · roll ranges 29–31, 35–37",
@@ -69343,6 +69510,7 @@
               "name": "Sage's Necklace",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/necklace/Icon_Equip_Amulet_Norm_004_03_112.webp",
               "lines": [
                 "+18 Intelligence",
                 "+44 Intelligence · roll range +43–60",
@@ -69359,6 +69527,7 @@
               "name": "Sleeping Sage's Cane",
               "rarity": "Rare",
               "category": "one_handed",
+              "icon": "/images/rare-gear/one_handed/cane/Icon_Equip_Weapon_Wand_Norm_001_112.webp",
               "lines": [
                 "178 - 178 Physical Damage",
                 "500 Critical Strike Rating",
@@ -69377,6 +69546,7 @@
               "name": "Heart of All Rod",
               "rarity": "Rare",
               "category": "one_handed",
+              "icon": "/images/rare-gear/one_handed/rod/Icon_Equip_Weapon_Wand_Norm_001_112.webp",
               "lines": [
                 "500 Critical Strike Rating",
                 "1.2 Attack Speed",
@@ -77093,6 +77263,7 @@
               "name": "Fiend Crown",
               "rarity": "Legendary",
               "category": "helmet",
+              "icon": "/images/legendaries/helmet/int_helmet/Icon_Equip_Helmet_Epic_201_112.webp",
               "lines": [
                 "+20% Minion Elemental Resistance",
                 "+27% Aura Effect · +27% [25–30]",
@@ -77106,6 +77277,7 @@
               "name": "Friend Nemesis",
               "rarity": "Legendary",
               "category": "chest_armor",
+              "icon": "/images/legendaries/chest_armor/str_chest_armor/Icon_Equip_Armor_Epic_312_112.webp",
               "lines": [
                 "+3556 Gear Armor · +3556 [3160–3560]",
                 "+36% additional Spirit Magus Skill Damage · +36% [26–40]",
@@ -77120,6 +77292,7 @@
               "name": "Miniature Void Sea",
               "rarity": "Legendary",
               "category": "gloves",
+              "icon": "/images/legendaries/gloves/int_gloves/Icon_Equip_Gloves_Epic_215_112.webp",
               "lines": [
                 "+239 gear Energy Shield · +239 [238–272]",
                 "+15% All Stats · +15% [15–20]",
@@ -77134,6 +77307,7 @@
               "name": "Ranger's Dirty Boots",
               "rarity": "Rare",
               "category": "boots",
+              "icon": "/images/rare-gear/boots/str_boots/Icon_Equip_Shoes_Str_Norm_004_02_112.webp",
               "lines": [
                 "+1920 Gear Armor",
                 "+175 Max Life · roll range +154–220",
@@ -77150,6 +77324,7 @@
               "name": "Fearless Waistguard",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/belt/Icon_Equip_Belt_Norm_002_02_112.webp",
               "lines": [
                 "+65 Max Life",
                 "+141 Max Life · roll range +111–154",
@@ -77167,6 +77342,7 @@
               "name": "Horn Ring",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/spirit_ring/Icon_Equip_Ring_Epic_407_112.webp",
               "lines": [
                 "Regenerates 60 Life per second · 60 [50–60]",
                 "+99% Minion Damage · +99% [90–120]",
@@ -77180,6 +77356,7 @@
               "name": "Essence Spirit Ring",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/spirit_ring/Icon_Equip_Ring_Norm_002_02_112.webp",
               "lines": [
                 "+24% Minion Damage",
                 "Adds 46 - 55 Erosion Damage to Minions · roll ranges 44–46, 54–56",
@@ -77196,6 +77373,7 @@
               "name": "Sage's Necklace",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/necklace/Icon_Equip_Amulet_Norm_004_03_112.webp",
               "lines": [
                 "+18 Intelligence",
                 "+44 Intelligence · roll range +43–60",
@@ -77212,6 +77390,7 @@
               "name": "Sleeping Sage's Cane",
               "rarity": "Rare",
               "category": "one_handed",
+              "icon": "/images/rare-gear/one_handed/cane/Icon_Equip_Weapon_Wand_Norm_001_112.webp",
               "lines": [
                 "178 - 178 Physical Damage",
                 "500 Critical Strike Rating",
@@ -77230,6 +77409,7 @@
               "name": "Heart of All Rod",
               "rarity": "Rare",
               "category": "one_handed",
+              "icon": "/images/rare-gear/one_handed/rod/Icon_Equip_Weapon_Wand_Norm_001_112.webp",
               "lines": [
                 "500 Critical Strike Rating",
                 "1.2 Attack Speed",
@@ -85042,6 +85222,7 @@
               "name": "Fiend Crown",
               "rarity": "Legendary",
               "category": "helmet",
+              "icon": "/images/legendaries/helmet/int_helmet/Icon_Equip_Helmet_Epic_201_112.webp",
               "lines": [
                 "+20% Minion Elemental Resistance",
                 "+27% Aura Effect · +27% [25–30]",
@@ -85055,6 +85236,7 @@
               "name": "Friend Nemesis",
               "rarity": "Legendary",
               "category": "chest_armor",
+              "icon": "/images/legendaries/chest_armor/str_chest_armor/Icon_Equip_Armor_Epic_312_112.webp",
               "lines": [
                 "+3556 Gear Armor · +3556 [3160–3560]",
                 "+36% additional Spirit Magus Skill Damage · +36% [26–40]",
@@ -85069,6 +85251,7 @@
               "name": "Miniature Void Sea",
               "rarity": "Legendary",
               "category": "gloves",
+              "icon": "/images/legendaries/gloves/int_gloves/Icon_Equip_Gloves_Epic_215_112.webp",
               "lines": [
                 "+239 gear Energy Shield · +239 [238–272]",
                 "+15% All Stats · +15% [15–20]",
@@ -85083,6 +85266,7 @@
               "name": "Mind Infusion",
               "rarity": "Legendary",
               "category": "boots",
+              "icon": "/images/legendaries/boots/str_boots/Icon_Equip_Shoes_Epic_205_112.webp",
               "lines": [
                 "+1455 Gear Armor · +1455 [1340–1540]",
                 "1 Minion Skill Level · -1 [-1–1]",
@@ -85096,6 +85280,7 @@
               "name": "Fearless Waistguard",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/belt/Icon_Equip_Belt_Norm_002_02_112.webp",
               "lines": [
                 "+65 Max Life",
                 "+141 Max Life · roll range +111–154",
@@ -85113,6 +85298,7 @@
               "name": "Essence Spirit Ring",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/spirit_ring/Icon_Equip_Ring_Norm_002_02_112.webp",
               "lines": [
                 "+24% Minion Damage",
                 "+13% Armor DMG Mitigation Penetration for Minions · roll range +13–17%",
@@ -85130,6 +85316,7 @@
               "name": "Essence Spirit Ring",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/spirit_ring/Icon_Equip_Ring_Norm_002_02_112.webp",
               "lines": [
                 "+24% Minion Damage",
                 "Adds 46 - 55 Erosion Damage to Minions · roll ranges 44–46, 54–56",
@@ -85146,6 +85333,7 @@
               "name": "Sage's Necklace",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/necklace/Icon_Equip_Amulet_Norm_004_03_112.webp",
               "lines": [
                 "+18 Intelligence",
                 "+44 Intelligence · roll range +43–60",
@@ -85162,6 +85350,7 @@
               "name": "Sleeping Sage's Cane",
               "rarity": "Rare",
               "category": "one_handed",
+              "icon": "/images/rare-gear/one_handed/cane/Icon_Equip_Weapon_Wand_Norm_001_112.webp",
               "lines": [
                 "178 - 178 Physical Damage",
                 "500 Critical Strike Rating",
@@ -85181,6 +85370,7 @@
               "name": "Heart of All Rod",
               "rarity": "Rare",
               "category": "one_handed",
+              "icon": "/images/rare-gear/one_handed/rod/Icon_Equip_Weapon_Wand_Norm_001_112.webp",
               "lines": [
                 "500 Critical Strike Rating",
                 "1.2 Attack Speed",
@@ -92824,6 +93014,7 @@
               "name": "Troublemaker",
               "rarity": "Legendary",
               "category": "helmet",
+              "icon": "/images/legendaries/helmet/int_helmet/Icon_Equip_Helmet_Epic_317_112.webp",
               "lines": [
                 "+163 Spirit Magi Critical Strike Rating · +163 [150–200]",
                 "Gains Mini Tough Guy",
@@ -92839,6 +93030,7 @@
               "name": "Uros's Bond",
               "rarity": "Legendary",
               "category": "chest_armor",
+              "icon": "/images/legendaries/chest_armor/str_chest_armor/Icon_Equip_Armor_Epic_452_112.webp",
               "lines": [
                 "+27% Max Life and Max Energy Shield · +27% [25–30]",
                 "+11% Elemental Resistance · +11% [10–12]",
@@ -92852,6 +93044,7 @@
               "name": "Miniature Void Sea",
               "rarity": "Legendary",
               "category": "gloves",
+              "icon": "/images/legendaries/gloves/int_gloves/Icon_Equip_Gloves_Epic_215_112.webp",
               "lines": [
                 "+239 gear Energy Shield · +239 [238–272]",
                 "+15% All Stats · +15% [15–20]",
@@ -92866,6 +93059,7 @@
               "name": "Mind Infusion",
               "rarity": "Legendary",
               "category": "boots",
+              "icon": "/images/legendaries/boots/str_boots/Icon_Equip_Shoes_Epic_205_112.webp",
               "lines": [
                 "+1455 Gear Armor · +1455 [1340–1540]",
                 "1 Minion Skill Level · -1 [-1–1]",
@@ -92879,6 +93073,7 @@
               "name": "Fearless Waistguard",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/belt/Icon_Equip_Belt_Norm_002_02_112.webp",
               "lines": [
                 "+65 Max Life",
                 "+141 Max Life · roll range +111–154",
@@ -92896,6 +93091,7 @@
               "name": "Essence Spirit Ring",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/spirit_ring/Icon_Equip_Ring_Norm_002_02_112.webp",
               "lines": [
                 "+24% Minion Damage",
                 "+13% Armor DMG Mitigation Penetration for Minions · roll range +13–17%",
@@ -92913,6 +93109,7 @@
               "name": "Essence Spirit Ring",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/spirit_ring/Icon_Equip_Ring_Norm_002_02_112.webp",
               "lines": [
                 "+24% Minion Damage",
                 "Adds 46 - 55 Erosion Damage to Minions · roll ranges 44–46, 54–56",
@@ -92929,6 +93126,7 @@
               "name": "Ocean of Rock",
               "rarity": "Legendary",
               "category": "trinket",
+              "icon": "/images/legendaries/trinket/necklace/Icon_Equip_Amulet_Epic_409_112.webp",
               "lines": [
                 "+146 Max Life · +146 [132–176]",
                 "+272 Max Energy Shield · +272 [210–280]",
@@ -92943,6 +93141,7 @@
               "name": "Sleeping Sage's Cane",
               "rarity": "Rare",
               "category": "one_handed",
+              "icon": "/images/rare-gear/one_handed/cane/Icon_Equip_Weapon_Wand_Norm_001_112.webp",
               "lines": [
                 "178 - 178 Physical Damage",
                 "500 Critical Strike Rating",
@@ -92962,6 +93161,7 @@
               "name": "Heart of All Rod",
               "rarity": "Rare",
               "category": "one_handed",
+              "icon": "/images/rare-gear/one_handed/rod/Icon_Equip_Weapon_Wand_Norm_001_112.webp",
               "lines": [
                 "500 Critical Strike Rating",
                 "1.2 Attack Speed",
@@ -100497,6 +100697,7 @@
               "name": "Troublemaker",
               "rarity": "Legendary",
               "category": "helmet",
+              "icon": "/images/legendaries/helmet/int_helmet/Icon_Equip_Helmet_Epic_317_112.webp",
               "lines": [
                 "+163 Spirit Magi Critical Strike Rating · +163 [150–200]",
                 "Gains Mini Tough Guy",
@@ -100512,6 +100713,7 @@
               "name": "Uros's Bond",
               "rarity": "Legendary",
               "category": "chest_armor",
+              "icon": "/images/legendaries/chest_armor/str_chest_armor/Icon_Equip_Armor_Epic_452_112.webp",
               "lines": [
                 "+27% Max Life and Max Energy Shield · +27% [25–30]",
                 "+11% Elemental Resistance · +11% [10–12]",
@@ -100525,6 +100727,7 @@
               "name": "Miniature Void Sea",
               "rarity": "Legendary",
               "category": "gloves",
+              "icon": "/images/legendaries/gloves/int_gloves/Icon_Equip_Gloves_Epic_215_112.webp",
               "lines": [
                 "+239 gear Energy Shield · +239 [238–272]",
                 "+15% All Stats · +15% [15–20]",
@@ -100539,6 +100742,7 @@
               "name": "Lone Walker's Boots",
               "rarity": "Legendary",
               "category": "boots",
+              "icon": "/images/legendaries/boots/dex_boots/Icon_Equip_Shoes_Epic_201_112.webp",
               "lines": [
                 "+50% Movement Speed",
                 "+25% Aura effect when affected by 4 or more Auras · +25% [15–30], 4 [4–5]",
@@ -100551,6 +100755,7 @@
               "name": "Fearless Waistguard",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/belt/Icon_Equip_Belt_Norm_002_02_112.webp",
               "lines": [
                 "+65 Max Life",
                 "+141 Max Life · roll range +111–154",
@@ -100568,6 +100773,7 @@
               "name": "Essence Spirit Ring",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/spirit_ring/Icon_Equip_Ring_Norm_002_02_112.webp",
               "lines": [
                 "+24% Minion Damage",
                 "+13% Armor DMG Mitigation Penetration for Minions · roll range +13–17%",
@@ -100585,6 +100791,7 @@
               "name": "Championed Spirit Ring",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/spirit_ring/Icon_Equip_Ring_Norm_001_02_112.webp",
               "lines": [
                 "+18% Minion Damage",
                 "+54 Intelligence · roll range +43–60",
@@ -100602,6 +100809,7 @@
               "name": "Sacrificer's Necklace",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/necklace/Icon_Equip_Amulet_Norm_005_03_112.webp",
               "lines": [
                 "+24 Intelligence",
                 "Has Profane. Minions have Profane\n+22% Erosion Damage\n+22% Minion Erosion Damage · roll ranges +20–30%, +20–30%",
@@ -100619,6 +100827,7 @@
               "name": "Sleeping Sage's Cane",
               "rarity": "Rare",
               "category": "one_handed",
+              "icon": "/images/rare-gear/one_handed/cane/Icon_Equip_Weapon_Wand_Norm_001_112.webp",
               "lines": [
                 "178 - 178 Physical Damage",
                 "500 Critical Strike Rating",
@@ -100638,6 +100847,7 @@
               "name": "Heart of All Rod",
               "rarity": "Rare",
               "category": "one_handed",
+              "icon": "/images/rare-gear/one_handed/rod/Icon_Equip_Weapon_Wand_Norm_001_112.webp",
               "lines": [
                 "500 Critical Strike Rating",
                 "1.2 Attack Speed",
@@ -107868,6 +108078,7 @@
               "name": "Troublemaker",
               "rarity": "Legendary",
               "category": "helmet",
+              "icon": "/images/legendaries/helmet/int_helmet/Icon_Equip_Helmet_Epic_317_112.webp",
               "lines": [
                 "+163 Spirit Magi Critical Strike Rating · +163 [150–200]",
                 "Gains Mini Tough Guy",
@@ -107882,6 +108093,7 @@
               "name": "Uros's Bond",
               "rarity": "Legendary",
               "category": "chest_armor",
+              "icon": "/images/legendaries/chest_armor/str_chest_armor/Icon_Equip_Armor_Epic_452_112.webp",
               "lines": [
                 "+27% Max Life and Max Energy Shield · +27% [25–30]",
                 "+11% Elemental Resistance · +11% [10–12]",
@@ -107895,6 +108107,7 @@
               "name": "Miniature Void Sea",
               "rarity": "Legendary",
               "category": "gloves",
+              "icon": "/images/legendaries/gloves/int_gloves/Icon_Equip_Gloves_Epic_215_112.webp",
               "lines": [
                 "+239 gear Energy Shield · +239 [238–272]",
                 "+15% All Stats · +15% [15–20]",
@@ -107909,6 +108122,7 @@
               "name": "Lone Walker's Boots",
               "rarity": "Legendary",
               "category": "boots",
+              "icon": "/images/legendaries/boots/dex_boots/Icon_Equip_Shoes_Epic_201_112.webp",
               "lines": [
                 "+50% Movement Speed",
                 "+25% Aura effect when affected by 4 or more Auras · +25% [15–30], 4 [4–5]",
@@ -107921,6 +108135,7 @@
               "name": "Wayfarer Waistguard",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/belt/Icon_Equip_Belt_Norm_004_02_112.webp",
               "lines": [
                 "+110 Max Life",
                 "Has Profane. Minions have Profane\n+26% Erosion Damage\n+26% Minion Erosion Damage · roll ranges +20–30%, +20–30%",
@@ -107939,6 +108154,7 @@
               "name": "Essence Spirit Ring",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/spirit_ring/Icon_Equip_Ring_Norm_002_02_112.webp",
               "lines": [
                 "+24% Minion Damage",
                 "+13% Armor DMG Mitigation Penetration for Minions · roll range +13–17%",
@@ -107956,6 +108172,7 @@
               "name": "Championed Spirit Ring",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/spirit_ring/Icon_Equip_Ring_Norm_001_02_112.webp",
               "lines": [
                 "+18% Minion Damage",
                 "+54 Intelligence · roll range +43–60",
@@ -107973,6 +108190,7 @@
               "name": "Sacrificer's Necklace",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/necklace/Icon_Equip_Amulet_Norm_005_03_112.webp",
               "lines": [
                 "+24 Intelligence",
                 "+43 initial Growth for Spirit Magi · roll range +35–48",
@@ -107990,6 +108208,7 @@
               "name": "Sleeping Sage's Cane",
               "rarity": "Rare",
               "category": "one_handed",
+              "icon": "/images/rare-gear/one_handed/cane/Icon_Equip_Weapon_Wand_Norm_001_112.webp",
               "lines": [
                 "178 - 178 Physical Damage",
                 "500 Critical Strike Rating",
@@ -108009,6 +108228,7 @@
               "name": "Heart of All Rod",
               "rarity": "Rare",
               "category": "one_handed",
+              "icon": "/images/rare-gear/one_handed/rod/Icon_Equip_Weapon_Wand_Norm_001_112.webp",
               "lines": [
                 "500 Critical Strike Rating",
                 "1.2 Attack Speed",
@@ -115838,6 +116058,7 @@
               "name": "Ranger's Broken Mask",
               "rarity": "Rare",
               "category": "helmet",
+              "icon": "/images/rare-gear/helmet/str_helmet/Icon_Equip_Helmet_Str_Norm_004_02_112.webp",
               "lines": [
                 "+1920 Gear Armor",
                 "+66% Critical Strike Damage Mitigation · roll range +61–78%",
@@ -115855,6 +116076,7 @@
               "name": "Mere Eternity",
               "rarity": null,
               "category": "vorax",
+              "icon": "/images/rare-gear/vorax/UI_S13_Equipment_01.webp",
               "lines": [
                 "When Armor is no lower than 50000 , +26% Injury Buffer · 50000 [50000–50000], +26% [20–30]",
                 "+38% Armor Effective Rate for Non-Physical Damage · +38% [30–40]",
@@ -115871,6 +116093,7 @@
               "name": "Miniature Void Sea",
               "rarity": "Legendary",
               "category": "gloves",
+              "icon": "/images/legendaries/gloves/int_gloves/Icon_Equip_Gloves_Epic_215_112.webp",
               "lines": [
                 "+254 gear Energy Shield · +254 [238–272]",
                 "+20% All Stats · +20% [15–20]",
@@ -115885,6 +116108,7 @@
               "name": "Lone Walker's Boots",
               "rarity": "Legendary",
               "category": "boots",
+              "icon": "/images/legendaries/boots/dex_boots/Icon_Equip_Shoes_Epic_201_112.webp",
               "lines": [
                 "+50% Movement Speed",
                 "+25% Aura effect when affected by 4 or more Auras · +25% [15–30], 4 [4–5]",
@@ -115897,6 +116121,7 @@
               "name": "Wayfarer Waistguard",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/belt/Icon_Equip_Belt_Norm_004_02_112.webp",
               "lines": [
                 "+110 Max Life",
                 "+19% Attack and Spell Block Chance · roll range +16–20%",
@@ -115915,6 +116140,7 @@
               "name": "Essence Spirit Ring",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/spirit_ring/Icon_Equip_Ring_Norm_002_02_112.webp",
               "lines": [
                 "+24% Minion Damage",
                 "+17% Armor DMG Mitigation Penetration for Minions · roll range +13–17%",
@@ -115932,6 +116158,7 @@
               "name": "Championed Spirit Ring",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/spirit_ring/Icon_Equip_Ring_Norm_001_02_112.webp",
               "lines": [
                 "+18% Minion Damage",
                 "+55 Intelligence · roll range +43–60",
@@ -115949,6 +116176,7 @@
               "name": "Sage's Necklace",
               "rarity": "Rare",
               "category": "trinket",
+              "icon": "/images/rare-gear/trinket/necklace/Icon_Equip_Amulet_Norm_004_03_112.webp",
               "lines": [
                 "+18 Intelligence",
                 "+43% Armor · roll range +37–47%",
@@ -115966,6 +116194,7 @@
               "name": "Sleeping Sage's Cane",
               "rarity": "Rare",
               "category": "one_handed",
+              "icon": "/images/rare-gear/one_handed/cane/Icon_Equip_Weapon_Wand_Norm_001_112.webp",
               "lines": [
                 "178 - 178 Physical Damage",
                 "500 Critical Strike Rating",
@@ -115986,6 +116215,7 @@
               "name": "Heart of All Rod",
               "rarity": "Rare",
               "category": "one_handed",
+              "icon": "/images/rare-gear/one_handed/rod/Icon_Equip_Weapon_Wand_Norm_001_112.webp",
               "lines": [
                 "500 Critical Strike Rating",
                 "1.2 Attack Speed",
