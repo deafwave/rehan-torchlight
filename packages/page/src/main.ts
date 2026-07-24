@@ -123,6 +123,103 @@ let formulaSide: Side = "after";
 /** Import dialog still tags a side; always applied to the single active loadout. */
 let importTarget: Side = "after";
 let reportCopyState: "idle" | "copied" | "failed" = "idle";
+/** Skip history writes while applying popstate / initial URL. */
+let suppressUrlWrite = false;
+/** Last written path+search so we do not push duplicate history entries. */
+let lastWrittenLocation = "";
+
+/** Loadout-page views that belong in the URL. */
+const URL_VIEWS = new Set<View>(["explain", "coverage", "survival"]);
+
+function normalizeView(view: string | null | undefined): View {
+  if (view === "coverage" || view === "survival" || view === "explain") return view;
+  if (view === "dps" || view === "gear") return "explain";
+  return "explain";
+}
+
+/** Serialize app navigation into query params (page, build, loadout, view). */
+function appSearchParams(overrides: {
+  page?: AppPage;
+  view?: View;
+  selection?: Selection | null;
+} = {}): URLSearchParams {
+  const page = overrides.page ?? appPage;
+  const view = normalizeView(overrides.view ?? activeView);
+  const sel = overrides.selection === undefined ? selection : overrides.selection;
+  const params = new URLSearchParams();
+  params.set("page", page);
+  if (sel) {
+    params.set("build", sel.buildId);
+    params.set("loadout", sel.loadoutId);
+  }
+  if (page === "loadout") {
+    // Always pin view on the loadout page so the tab survives refresh/share.
+    params.set("view", view);
+  }
+  return params;
+}
+
+function hrefFor(page: AppPage, overrides: {
+  view?: View;
+  selection?: Selection | null;
+} = {}): string {
+  const search = appSearchParams({ page, ...overrides }).toString();
+  return search ? `?${search}` : "?";
+}
+
+function currentLocationKey(search = window.location.search): string {
+  return `${window.location.pathname}${search}${window.location.hash}`;
+}
+
+function writeUrl(mode: "push" | "replace" = "replace") {
+  if (suppressUrlWrite) return;
+  const search = appSearchParams().toString();
+  const nextSearch = search ? `?${search}` : "";
+  const next = `${window.location.pathname}${nextSearch}${window.location.hash}`;
+  if (next === lastWrittenLocation
+    && `${window.location.pathname}${window.location.search}${window.location.hash}` === next) {
+    return;
+  }
+  lastWrittenLocation = next;
+  if (mode === "push"
+    && `${window.location.pathname}${window.location.search}` !== `${window.location.pathname}${nextSearch}`) {
+    history.pushState({ tliLens: true }, "", next);
+  } else {
+    history.replaceState({ tliLens: true }, "", next);
+  }
+}
+
+function resolveSelectionFromIds(
+  buildId: string | null | undefined,
+  loadoutId: string | null | undefined,
+): Selection | null {
+  if (!buildId || !loadoutId) return null;
+  const build = builds.find((item) => item.id === buildId);
+  const loadout = build?.loadouts.find((item) => item.id === loadoutId);
+  if (!build || !loadout) return null;
+  return { buildId: build.id, loadoutId: loadout.id };
+}
+
+/** Apply ?page=&build=&loadout=&view= onto in-memory navigation state. */
+function applyLocationToState() {
+  const params = new URLSearchParams(window.location.search);
+  const pageRaw = params.get("page");
+  const resolved = resolveSelectionFromIds(params.get("build"), params.get("loadout"));
+  if (resolved) setSelection(resolved);
+
+  const viewRaw = params.get("view");
+  if (viewRaw) activeView = normalizeView(viewRaw);
+
+  if (pageRaw === "loadout") {
+    appPage = selection ? "loadout" : "leaderboard";
+  } else {
+    appPage = "leaderboard";
+  }
+
+  if (appPage === "loadout" && !URL_VIEWS.has(activeView)) {
+    activeView = "explain";
+  }
+}
 
 // Compare-era helpers stay compiled (demoted, not deleted) for secondary tooling.
 // Referenced so strict noUnusedLocals does not force a bulk delete this pass.
@@ -3100,25 +3197,32 @@ function navigation() {
     { id: "coverage", label: "Unmodeled" },
   ];
   return `<nav class="view-tabs" aria-label="Loadout views">
-    ${items.map((item) => `<button type="button" data-view="${item.id}" class="${activeView === item.id ? "active" : ""}"
+    ${items.map((item) => `<a href="${escAttr(hrefFor("loadout", { view: item.id }))}"
+      data-view="${item.id}" class="${activeView === item.id ? "active" : ""}"
       ${activeView === item.id ? `aria-current="page"` : ""}>
       ${esc(item.label)}
-    </button>`).join("")}
+    </a>`).join("")}
   </nav>`;
 }
 
-function goToLeaderboard() {
+function goToLeaderboard(historyMode: "push" | "replace" = "push") {
   appPage = "leaderboard";
+  writeUrl(historyMode);
   render();
   restoreWorkspaceFocus('[data-import-tab][aria-selected="true"]');
 }
 
-function goToLoadoutPage(focusSelector = "#loadout-page-title") {
+function goToLoadoutPage(
+  focusSelector = "#loadout-page-title",
+  historyMode: "push" | "replace" = "push",
+) {
   appPage = "loadout";
   if (activeView === "build" || activeView === "changes" || activeView === "formula"
       || activeView === "diagnosis" || activeView === "actions") {
     activeView = "explain";
   }
+  if (!URL_VIEWS.has(activeView)) activeView = "explain";
+  writeUrl(historyMode);
   render();
   restoreWorkspaceFocus(focusSelector);
 }
@@ -3155,14 +3259,14 @@ function render() {
 
   app.innerHTML = `<header class="site-header">
     <div class="header-inner">
-      <a class="brand" href="/" aria-label="TLI Lens home" data-app-page="leaderboard">
+      <a class="brand" href="${escAttr(hrefFor("leaderboard"))}" aria-label="TLI Lens home" data-app-page="leaderboard">
         <span class="brand-mark"><i></i></span>
         <span><b>TLI</b> Lens</span>
         <em>alpha</em>
       </a>
       <nav class="primary-nav" aria-label="Primary">
-        <a href="#leaderboard" data-app-page="leaderboard" class="${onLeaderboard ? "active" : ""}">Leaderboard</a>
-        <a href="#loadout" data-app-page="loadout" class="${loadoutNavActive ? "active" : ""}"${active ? "" : " aria-disabled=\"true\""}>Loadout</a>
+        <a href="${escAttr(hrefFor("leaderboard"))}" data-app-page="leaderboard" class="${onLeaderboard ? "active" : ""}">Leaderboard</a>
+        <a href="${escAttr(active ? hrefFor("loadout") : hrefFor("leaderboard"))}" data-app-page="loadout" class="${loadoutNavActive ? "active" : ""}"${active ? "" : " aria-disabled=\"true\""}>Loadout</a>
         <a href="/rehan">Rehan guide</a>
         <a href="/bing">Bing guide</a>
       </nav>
@@ -3221,6 +3325,7 @@ function openImportDialog(side: Side) {
       "Pick a leaderboard loadout, paste a Compendium build code, or import a tli_dump / Compendium JSON export.";
   }
   setImportStatus(`Load a build to explain (${sideLabel(side)} path).`);
+  writeUrl("push");
   render();
   focusLoadBuildPanel("supported");
 }
@@ -3236,7 +3341,7 @@ function selectLoadout(buildId: string, loadoutId: string) {
   activeView = "explain";
   reportCopyState = "idle";
   setImportStatus("");
-  goToLoadoutPage();
+  goToLoadoutPage("#loadout-page-title", "push");
 }
 
 function applySupportedBuild(buildId: string) {
@@ -3265,6 +3370,7 @@ function activateImported(build: AnalyzedBuild) {
       "Build code saved. Open it in-game, capture with tli_dump, then import that JSON on the tli_dump tab.",
       "info",
     );
+    writeUrl("push");
     render();
     const dumpTab = document.getElementById("import-tab-dump") as HTMLButtonElement | null;
     if (dumpTab) activateImportTab(dumpTab);
@@ -3272,7 +3378,7 @@ function activateImported(build: AnalyzedBuild) {
     return;
   }
   setImportStatus("");
-  goToLoadoutPage();
+  goToLoadoutPage("#loadout-page-title", "push");
 }
 
 async function copyCurrentActionReport() {
@@ -3454,6 +3560,7 @@ app.addEventListener("change", (event) => {
     setSelection(next);
   }
   reportCopyState = "idle";
+  writeUrl("push");
   render();
   restoreWorkspaceFocus(`#${side}-loadout`);
 });
@@ -3464,24 +3571,25 @@ app.addEventListener("click", (event) => {
   const page = target.dataset.appPage as AppPage | undefined;
   if (page === "leaderboard") {
     event.preventDefault();
-    goToLeaderboard();
+    goToLeaderboard("push");
     return;
   }
   if (page === "loadout") {
     event.preventDefault();
     if (!selection) {
-      goToLeaderboard();
+      goToLeaderboard("push");
       return;
     }
-    goToLoadoutPage();
+    goToLoadoutPage("#loadout-page-title", "push");
     return;
   }
   const view = target.dataset.view as View | undefined;
   const viewLink = target.dataset.viewLink as View | undefined;
   if (view || viewLink) {
     event.preventDefault();
-    activeView = view ?? viewLink!;
+    activeView = normalizeView(view ?? viewLink);
     appPage = "loadout";
+    writeUrl("push");
     render();
     restoreWorkspaceFocus(`[data-view="${activeView}"]`);
     document.querySelector(".view-tabs")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -3533,12 +3641,14 @@ app.addEventListener("click", (event) => {
   }
   const actionView = target.dataset.actionView as View | undefined;
   if (actionView) {
-    activeView = actionView;
+    activeView = normalizeView(actionView);
+    appPage = "loadout";
     const actionSection = target.dataset.actionSection as ChangeSection | undefined;
     if (actionSection) changeSection = actionSection;
     reportCopyState = "idle";
+    writeUrl("push");
     render();
-    restoreWorkspaceFocus(`[data-view="${actionView}"]`);
+    restoreWorkspaceFocus(`[data-view="${activeView}"]`);
     return;
   }
   const side = target.dataset.import as Side | undefined;
@@ -3564,7 +3674,9 @@ app.addEventListener("click", (event) => {
   const openSection = target.dataset.openSection as ChangeSection | undefined;
   if (openSection) {
     changeSection = openSection;
-    activeView = "changes";
+    activeView = "explain";
+    appPage = "loadout";
+    writeUrl("push");
     render();
     restoreWorkspaceFocus(`[data-change-section="${openSection}"]`);
     return;
@@ -3581,13 +3693,23 @@ app.addEventListener("click", (event) => {
     if (jump === "base" || jump === "increased" || jump === "additional"
       || jump === "conversion" || jump === "crit" || jump === "enemy"
       || jump === "rotation" || jump === "dot") {
-      activeView = "formula";
+      activeView = "explain";
+      appPage = "loadout";
       formulaSide = "after";
+      writeUrl("push");
       render();
       restoreWorkspaceFocus(".bd-total");
     }
     return;
   }
+});
+
+window.addEventListener("popstate", () => {
+  suppressUrlWrite = true;
+  applyLocationToState();
+  suppressUrlWrite = false;
+  lastWrittenLocation = currentLocationKey();
+  render();
 });
 
 const importTabs = [...document.querySelectorAll<HTMLButtonElement>("[data-import-tab]")];
@@ -3734,9 +3856,13 @@ async function initializeWorkspace() {
       ?? initial.loadouts.find((loadout) => loadout.isCurrent)
       ?? initial.loadouts[0];
     setSelection({ buildId: initial.id, loadoutId: preferred.id });
-    // Land on the leaderboard; picking a loadout opens the loadout + DPS page.
+    // Defaults, then URL query params win (shareable loadout + tab memory).
     appPage = "leaderboard";
     activeView = "explain";
+    suppressUrlWrite = true;
+    applyLocationToState();
+    suppressUrlWrite = false;
+    writeUrl("replace");
     render();
   } catch (error) {
     const message = error instanceof Error

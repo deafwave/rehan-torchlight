@@ -762,7 +762,8 @@ input:focus-visible,
   backdrop-filter: blur(16px);
 }
 
-.view-tabs button {
+.view-tabs button,
+.view-tabs a {
   flex: 0 0 auto;
   padding: 12px 15px;
   border: 0;
@@ -772,19 +773,23 @@ input:focus-visible,
   cursor: pointer;
   font-size: var(--text-detail);
   font-weight: 700;
+  text-decoration: none;
 }
 
-.view-tabs button:hover:not(:disabled) {
+.view-tabs button:hover:not(:disabled),
+.view-tabs a:hover {
   color: var(--ink);
   background: var(--panel-2);
 }
 
-.view-tabs button.active {
+.view-tabs button.active,
+.view-tabs a.active {
   color: var(--night);
   background: var(--lime);
 }
 
-.view-tabs button span {
+.view-tabs button span,
+.view-tabs a span {
   margin-left: 5px;
   padding: 1px 5px;
   border-radius: 4px;
@@ -793,7 +798,8 @@ input:focus-visible,
   font-size: var(--text-micro);
 }
 
-.view-tabs button.active span {
+.view-tabs button.active span,
+.view-tabs a.active span {
   background: rgba(0, 0, 0, .13);
 }
 
