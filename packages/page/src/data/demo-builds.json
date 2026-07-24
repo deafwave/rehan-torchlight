@@ -1,5 +1,5 @@
 {
-  "modelNotice": "Guarded source evidence only. Partial hits, emissions, minion contacts, defense inputs, DPS, and EHP remain distinct.",
+  "modelNotice": "Every loadout uses the same cycleDps dummy scenario. Guarded partials (weapon foundation, emissions, minion contacts) are secondary evidence — not a second primary DPS.",
   "builds": [
     {
       "id": "scaling-lesson",
@@ -21,9 +21,9 @@
             "sourceKind": "teaching"
           },
           "model": {
-            "modelId": "rehan-bing-cycle-dps",
+            "modelId": "shared-cycle-dps",
             "modelVersion": "1",
-            "scenarioFingerprint": "boss-30res-full-configured-uptime-v1",
+            "scenarioFingerprint": "dummy-shared-cycle-dps-v1",
             "actorId": "bing-blast-nova",
             "skillId": "hammer-of-ash",
             "dps": 596211165603.2933,
@@ -221,7 +221,7 @@
           "slates": [],
           "pactspirits": [],
           "unmatched": [],
-          "sourceNote": "Calibrated teaching scenario. It demonstrates formula behavior; it is not an imported character."
+          "sourceNote": "Calibrated teaching scenario. Dummy DPS from the shared cycleDps formula; not an imported character."
         },
         {
           "id": "lesson-after",
@@ -237,9 +237,9 @@
             "sourceKind": "teaching"
           },
           "model": {
-            "modelId": "rehan-bing-cycle-dps",
+            "modelId": "shared-cycle-dps",
             "modelVersion": "1",
-            "scenarioFingerprint": "boss-30res-full-configured-uptime-v1",
+            "scenarioFingerprint": "dummy-shared-cycle-dps-v1",
             "actorId": "bing-blast-nova",
             "skillId": "hammer-of-ash",
             "dps": 472220162186.1295,
@@ -437,7 +437,7 @@
           "slates": [],
           "pactspirits": [],
           "unmatched": [],
-          "sourceNote": "Calibrated teaching scenario. It demonstrates formula behavior; it is not an imported character."
+          "sourceNote": "Calibrated teaching scenario. Dummy DPS from the shared cycleDps formula; not an imported character."
         }
       ]
     },
@@ -461,7 +461,21 @@
             "lineageEvidence": "source-document",
             "sourceKind": "compendium"
           },
-          "model": null,
+          "model": {
+            "modelId": "shared-cycle-dps",
+            "modelVersion": "1",
+            "scenarioFingerprint": "dummy-shared-cycle-dps-v1",
+            "actorId": "c89dce15-cbeb-562d-83ec-993059bbf0ec",
+            "skillId": "6f020b6a-022b-50eb-8299-e5fc7492ea8f",
+            "dps": 405215378.2848699,
+            "deteriorationDps": 0,
+            "cycleTime": 1.186623516720604,
+            "modeled": 105,
+            "ignored": 49,
+            "unmodeled": 34,
+            "coverage": 0.7553956834532374,
+            "confidence": "experimental"
+          },
           "partialMetrics": [
             {
               "id": "bing-weapon-hit-foundation",
@@ -3246,7 +3260,112 @@
             "unsupported": 34,
             "classificationRate": 0.7553956834532374
           },
-          "snapshot": null,
+          "snapshot": {
+            "base": {
+              "weapon_phys_min": 232,
+              "weapon_phys_max": 244,
+              "weapon_flat_cold_min": 0,
+              "weapon_flat_cold_max": 0,
+              "gear_phys_pct": 47,
+              "gain_phys_as_cold_pct": 0,
+              "weapon_attack_speed": 1.5,
+              "skill_weapon_pct": 127,
+              "flat_added_min": 0,
+              "flat_added_max": 0,
+              "flat_added_cold_min": 0,
+              "flat_added_cold_max": 0,
+              "added_damage_effectiveness_pct": 100,
+              "weapon_flat_fire_min": 59,
+              "weapon_flat_fire_max": 81
+            },
+            "increased": {
+              "physical": 133,
+              "attack": 363,
+              "melee": 27,
+              "area": 18,
+              "hit": 0,
+              "cold": 0,
+              "fire": 42,
+              "lightning": 9,
+              "elemental": 0,
+              "projectile": 107,
+              "ranged": 0,
+              "horizontal_projectile": 0,
+              "parabolic_projectile": 0,
+              "minion": 117,
+              "channeled": 0,
+              "triggered": 0,
+              "focus": 0,
+              "global": 256,
+              "erosion": 45
+            },
+            "additional": {
+              "strength": 108,
+              "warcry_buffs": 0,
+              "ice_bond": 28,
+              "fervor": 0,
+              "sealed_life_mana": 0,
+              "blessings": 8.000000000000007,
+              "precise_auras": 201.04,
+              "misc": 18922.052347656856,
+              "skill_levels": 21
+            },
+            "enemy_taken": {
+              "frostbite": 120,
+              "paralysis": 0,
+              "cold_infiltration": 0,
+              "timid_curse": 0,
+              "fixate": 1.0999999999999899
+            },
+            "crit": {
+              "chance_pct": 56.3,
+              "damage_pct": 483.5,
+              "crit_dmg_taken_pct": 10
+            },
+            "penetration": {
+              "cold_pct": 0,
+              "armor_pct": 0
+            },
+            "enemy": {
+              "cold_res_pct": 30,
+              "armor_reduction_pct": 30
+            },
+            "rotation": {
+              "starters_per_cycle": 2,
+              "starter_weapon_pct": 406,
+              "attack_speed_inc_pct": 106,
+              "starter_additional_as_pct": 0,
+              "finisher_additional_as_pct": -40,
+              "extra_clones": 0,
+              "clone_falloff": 0.7,
+              "mark_taken_pct": 36,
+              "combo_points": 2,
+              "finisher_amp_pct": 30,
+              "finishers_per_cycle": 1,
+              "demolisher_resto_pct": 66,
+              "proj_added": 2
+            },
+            "tags": [
+              "melee",
+              "attack",
+              "area"
+            ],
+            "_derived": {
+              "rating_flat": 500,
+              "rating_inc_pct": 926,
+              "fervor_effect_pct": 0,
+              "fervor_rating": 100,
+              "has_fervor": 0,
+              "warcry_min_enemies": 0,
+              "warcry_max_doubled": 0,
+              "warcry_effect_pct": 29,
+              "warcry_additional_effect_pct": 0,
+              "fervor_dmg_per_rating": 0,
+              "fervor_dmg_per_rating_plain": 0,
+              "frostbite_max": 120,
+              "frostbite_effect_pct": 0
+            }
+          },
           "gear": [
             {
               "slot": "helmet",
@@ -4203,7 +4322,7 @@
               ]
             }
           ],
-          "sourceNote": "Guarded Hammer hit, support, and player-defense evidence is available. Blast Nova emission topology remains blocked. Full DPS remains uncalculated until landed-hit geometry, cadence, complete modifiers, enemy state, and uptime are modeled."
+          "sourceNote": "Dummy DPS from the shared cycleDps formula (76% affix coverage). Absolute map DPS is not claimed."
         },
         {
           "id": "tli_dump_loadout_1yia1vq",
@@ -4219,7 +4338,21 @@
             "lineageEvidence": "source-document",
             "sourceKind": "compendium"
           },
-          "model": null,
+          "model": {
+            "modelId": "shared-cycle-dps",
+            "modelVersion": "1",
+            "scenarioFingerprint": "dummy-shared-cycle-dps-v1",
+            "actorId": "c89dce15-cbeb-562d-83ec-993059bbf0ec",
+            "skillId": "6f020b6a-022b-50eb-8299-e5fc7492ea8f",
+            "dps": 532021108.8938019,
+            "deteriorationDps": 0,
+            "cycleTime": 1.20415982484948,
+            "modeled": 128,
+            "ignored": 48,
+            "unmodeled": 29,
+            "coverage": 0.8152866242038217,
+            "confidence": "experimental"
+          },
           "partialMetrics": [
             {
               "id": "bing-weapon-hit-foundation",
@@ -7008,7 +7141,117 @@
             "unsupported": 29,
             "classificationRate": 0.8152866242038217
           },
-          "snapshot": null,
+          "snapshot": {
+            "base": {
+              "weapon_phys_min": 292,
+              "weapon_phys_max": 309,
+              "weapon_flat_cold_min": 0,
+              "weapon_flat_cold_max": 0,
+              "gear_phys_pct": 53,
+              "gain_phys_as_cold_pct": 0,
+              "weapon_attack_speed": 1.5,
+              "skill_weapon_pct": 127,
+              "flat_added_min": 0,
+              "flat_added_max": 0,
+              "flat_added_cold_min": 0,
+              "flat_added_cold_max": 0,
+              "added_damage_effectiveness_pct": 100
+            },
+            "increased": {
+              "physical": 169,
+              "attack": 228,
+              "melee": 158,
+              "area": 0,
+              "hit": 0,
+              "cold": 9,
+              "fire": 0,
+              "lightning": 0,
+              "elemental": 0,
+              "projectile": 40,
+              "ranged": 0,
+              "horizontal_projectile": 0,
+              "parabolic_projectile": 0,
+              "minion": 219,
+              "channeled": 0,
+              "triggered": 0,
+              "focus": 0,
+              "global": 242,
+              "erosion": 276
+            },
+            "additional": {
+              "strength": 108,
+              "warcry_buffs": 0,
+              "ice_bond": 28,
+              "fervor": 0,
+              "sealed_life_mana": 0,
+              "blessings": 0,
+              "precise_auras": 201.04,
+              "misc": 23026.987437627882,
+              "skill_levels": 21
+            },
+            "enemy_taken": {
+              "frostbite": 120,
+              "paralysis": 0,
+              "cold_infiltration": 0,
+              "timid_curse": 0,
+              "fixate": 1.0999999999999899
+            },
+            "crit": {
+              "chance_pct": 46.5,
+              "damage_pct": 597,
+              "damage_typed": {
+                "fire": 83
+              },
+              "crit_dmg_taken_pct": 10
+            },
+            "penetration": {
+              "cold_pct": 0,
+              "armor_pct": 0
+            },
+            "enemy": {
+              "cold_res_pct": 30,
+              "armor_reduction_pct": 30
+            },
+            "rotation": {
+              "starters_per_cycle": 2,
+              "starter_weapon_pct": 406,
+              "attack_speed_inc_pct": 103,
+              "starter_additional_as_pct": 0,
+              "finisher_additional_as_pct": -40,
+              "extra_clones": 0,
+              "clone_falloff": 0.7,
+              "mark_taken_pct": 30,
+              "combo_points": 2,
+              "finisher_amp_pct": 30,
+              "finishers_per_cycle": 1,
+              "proj_added": 2
+            },
+            "tags": [
+              "melee",
+              "attack",
+              "area"
+            ],
+            "deterioration": {
+              "duration_inc_pct": 57,
+              "damage_inc_pct": 33,
+              "chance_pct": 94
+            },
+            "_derived": {
+              "rating_flat": 500,
+              "rating_inc_pct": 730,
+              "fervor_effect_pct": 0,
+              "fervor_rating": 100,
+              "has_fervor": 0,
+              "warcry_min_enemies": 0,
+              "warcry_max_doubled": 0,
+              "warcry_effect_pct": 29,
+              "warcry_additional_effect_pct": 0,
+              "fervor_dmg_per_rating": 0,
+              "fervor_dmg_per_rating_plain": 0,
+              "frostbite_max": 120,
+              "frostbite_effect_pct": 0
+            }
+          },
           "gear": [
             {
               "slot": "helmet",
@@ -7993,7 +8236,7 @@
               ]
             }
           ],
-          "sourceNote": "Guarded Hammer hit, support, and player-defense evidence is available. Blast Nova emission topology remains blocked. Full DPS remains uncalculated until landed-hit geometry, cadence, complete modifiers, enemy state, and uptime are modeled."
+          "sourceNote": "Dummy DPS from the shared cycleDps formula (82% affix coverage). Absolute map DPS is not claimed."
         },
         {
           "id": "tli_dump_loadout_1ni6k2k",
@@ -8009,7 +8252,21 @@
             "lineageEvidence": "source-document",
             "sourceKind": "compendium"
           },
-          "model": null,
+          "model": {
+            "modelId": "shared-cycle-dps",
+            "modelVersion": "1",
+            "scenarioFingerprint": "dummy-shared-cycle-dps-v1",
+            "actorId": "c89dce15-cbeb-562d-83ec-993059bbf0ec",
+            "skillId": "6f020b6a-022b-50eb-8299-e5fc7492ea8f",
+            "dps": 571518092.9042466,
+            "deteriorationDps": 0,
+            "cycleTime": 1.1161846778285134,
+            "modeled": 128,
+            "ignored": 45,
+            "unmodeled": 41,
+            "coverage": 0.757396449704142,
+            "confidence": "experimental"
+          },
           "partialMetrics": [
             {
               "id": "bing-weapon-hit-foundation",
@@ -11150,7 +11407,117 @@
             "unsupported": 41,
             "classificationRate": 0.757396449704142
           },
-          "snapshot": null,
+          "snapshot": {
+            "base": {
+              "weapon_phys_min": 292,
+              "weapon_phys_max": 309,
+              "weapon_flat_cold_min": 0,
+              "weapon_flat_cold_max": 0,
+              "gear_phys_pct": 53,
+              "gain_phys_as_cold_pct": 0,
+              "weapon_attack_speed": 1.5,
+              "skill_weapon_pct": 127,
+              "flat_added_min": 0,
+              "flat_added_max": 0,
+              "flat_added_cold_min": 0,
+              "flat_added_cold_max": 0,
+              "added_damage_effectiveness_pct": 100
+            },
+            "increased": {
+              "physical": 169,
+              "attack": 258,
+              "melee": 158,
+              "area": 0,
+              "hit": 0,
+              "cold": 9,
+              "fire": 0,
+              "lightning": 0,
+              "elemental": 0,
+              "projectile": 40,
+              "ranged": 0,
+              "horizontal_projectile": 0,
+              "parabolic_projectile": 0,
+              "minion": 219,
+              "channeled": 0,
+              "triggered": 0,
+              "focus": 0,
+              "global": 202,
+              "erosion": 276
+            },
+            "additional": {
+              "strength": 108,
+              "warcry_buffs": 0,
+              "ice_bond": 28,
+              "fervor": 0,
+              "sealed_life_mana": 0,
+              "blessings": 0,
+              "precise_auras": 201.04,
+              "misc": 22263.984411555786,
+              "skill_levels": 21
+            },
+            "enemy_taken": {
+              "frostbite": 120,
+              "paralysis": 0,
+              "cold_infiltration": 0,
+              "timid_curse": 0,
+              "fixate": 1.0999999999999899
+            },
+            "crit": {
+              "chance_pct": 49.9,
+              "damage_pct": 587,
+              "damage_typed": {
+                "fire": 83
+              },
+              "crit_dmg_taken_pct": 10
+            },
+            "penetration": {
+              "cold_pct": 0,
+              "armor_pct": 0
+            },
+            "enemy": {
+              "cold_res_pct": 30,
+              "armor_reduction_pct": 30
+            },
+            "rotation": {
+              "starters_per_cycle": 2,
+              "starter_weapon_pct": 406,
+              "attack_speed_inc_pct": 119,
+              "starter_additional_as_pct": 0,
+              "finisher_additional_as_pct": -40,
+              "extra_clones": 0,
+              "clone_falloff": 0.7,
+              "mark_taken_pct": 30,
+              "combo_points": 2,
+              "finisher_amp_pct": 30,
+              "finishers_per_cycle": 1,
+              "proj_added": 2
+            },
+            "tags": [
+              "melee",
+              "attack",
+              "area"
+            ],
+            "deterioration": {
+              "duration_inc_pct": 53,
+              "damage_inc_pct": 33,
+              "chance_pct": 94
+            },
+            "_derived": {
+              "rating_flat": 500,
+              "rating_inc_pct": 798,
+              "fervor_effect_pct": 0,
+              "fervor_rating": 100,
+              "has_fervor": 0,
+              "warcry_min_enemies": 0,
+              "warcry_max_doubled": 0,
+              "warcry_effect_pct": 25,
+              "warcry_additional_effect_pct": 0,
+              "fervor_dmg_per_rating": 0,
+              "fervor_dmg_per_rating_plain": 0,
+              "frostbite_max": 120,
+              "frostbite_effect_pct": 0
+            }
+          },
           "gear": [
             {
               "slot": "helmet",
@@ -12147,7 +12514,7 @@
               ]
             }
           ],
-          "sourceNote": "Guarded Hammer hit, support, Blast Nova emission, and player-defense evidence is available. Full DPS remains uncalculated until landed-hit geometry, cadence, complete modifiers, enemy state, and uptime are modeled."
+          "sourceNote": "Dummy DPS from the shared cycleDps formula (76% affix coverage). Absolute map DPS is not claimed."
         },
         {
           "id": "tli_dump_loadout_1whn8ko",
@@ -12163,7 +12530,21 @@
             "lineageEvidence": "source-document",
             "sourceKind": "compendium"
           },
-          "model": null,
+          "model": {
+            "modelId": "shared-cycle-dps",
+            "modelVersion": "1",
+            "scenarioFingerprint": "dummy-shared-cycle-dps-v1",
+            "actorId": "c89dce15-cbeb-562d-83ec-993059bbf0ec",
+            "skillId": "6f020b6a-022b-50eb-8299-e5fc7492ea8f",
+            "dps": 177471376.8196971,
+            "deteriorationDps": 0,
+            "cycleTime": 1.2180807476801099,
+            "modeled": 78,
+            "ignored": 30,
+            "unmodeled": 37,
+            "coverage": 0.6782608695652174,
+            "confidence": "experimental"
+          },
           "partialMetrics": [
             {
               "id": "bing-weapon-hit-foundation",
@@ -15703,7 +16084,118 @@
             "unsupported": 37,
             "classificationRate": 0.6782608695652174
           },
-          "snapshot": null,
+          "snapshot": {
+            "base": {
+              "weapon_phys_min": 416,
+              "weapon_phys_max": 457,
+              "weapon_flat_cold_min": 0,
+              "weapon_flat_cold_max": 0,
+              "gear_phys_pct": 176,
+              "gain_phys_as_cold_pct": 0,
+              "weapon_attack_speed": 1.7399999999999998,
+              "skill_weapon_pct": 127,
+              "flat_added_min": 0,
+              "flat_added_max": 0,
+              "flat_added_cold_min": 0,
+              "flat_added_cold_max": 0,
+              "added_damage_effectiveness_pct": 100
+            },
+            "increased": {
+              "physical": 0,
+              "attack": 48,
+              "melee": 0,
+              "area": 0,
+              "hit": 0,
+              "cold": 18,
+              "fire": 0,
+              "lightning": 9,
+              "elemental": 0,
+              "projectile": 40,
+              "ranged": 0,
+              "horizontal_projectile": 0,
+              "parabolic_projectile": 0,
+              "minion": 9,
+              "channeled": 0,
+              "triggered": 0,
+              "focus": 0,
+              "global": 73,
+              "erosion": 159
+            },
+            "additional": {
+              "strength": 108,
+              "warcry_buffs": 0,
+              "ice_bond": 28,
+              "fervor": 44.666666666666664,
+              "sealed_life_mana": 0,
+              "blessings": 19.999999999999996,
+              "precise_auras": 201.04,
+              "misc": 6842.024064774107,
+              "skill_levels": 21
+            },
+            "enemy_taken": {
+              "frostbite": 124.80000000000001,
+              "paralysis": 0,
+              "cold_infiltration": 0,
+              "timid_curse": 0,
+              "fixate": 1.0999999999999899
+            },
+            "crit": {
+              "chance_pct": 32.8,
+              "damage_pct": 681,
+              "damage_typed": {
+                "fire": 83
+              },
+              "crit_dmg_taken_pct": 10
+            },
+            "penetration": {
+              "cold_pct": 0,
+              "armor_pct": 0
+            },
+            "enemy": {
+              "cold_res_pct": 30,
+              "armor_reduction_pct": 30
+            },
+            "rotation": {
+              "starters_per_cycle": 2,
+              "starter_weapon_pct": 406,
+              "attack_speed_inc_pct": 73,
+              "starter_additional_as_pct": 0,
+              "finisher_additional_as_pct": -40,
+              "extra_clones": 0,
+              "clone_falloff": 0.7,
+              "mark_taken_pct": 36,
+              "combo_points": 2,
+              "finisher_amp_pct": 30,
+              "finishers_per_cycle": 1,
+              "demolisher_resto_pct": 243,
+              "proj_added": 4
+            },
+            "tags": [
+              "melee",
+              "attack",
+              "area"
+            ],
+            "deterioration": {
+              "duration_inc_pct": 41,
+              "damage_inc_pct": 26,
+              "chance_pct": 8
+            },
+            "_derived": {
+              "rating_flat": 500,
+              "rating_inc_pct": 322,
+              "fervor_effect_pct": 0,
+              "fervor_rating": 67,
+              "has_fervor": 1,
+              "warcry_min_enemies": 0,
+              "warcry_max_doubled": 0,
+              "warcry_effect_pct": 0,
+              "warcry_additional_effect_pct": 0,
+              "fervor_dmg_per_rating": 0,
+              "fervor_dmg_per_rating_plain": 0.6666666666666666,
+              "frostbite_max": 120,
+              "frostbite_effect_pct": 4
+            }
+          },
           "gear": [
             {
               "slot": "helmet",
@@ -16658,7 +17150,7 @@
               ]
             }
           ],
-          "sourceNote": "Guarded Hammer hit, support, Blast Nova emission, and player-defense evidence is available. Full DPS remains uncalculated until landed-hit geometry, cadence, complete modifiers, enemy state, and uptime are modeled."
+          "sourceNote": "Dummy DPS from the shared cycleDps formula (68% affix coverage). Absolute map DPS is not claimed."
         },
         {
           "id": "tli_dump_loadout_1935ncr",
@@ -16674,7 +17166,21 @@
             "lineageEvidence": "source-document",
             "sourceKind": "compendium"
           },
-          "model": null,
+          "model": {
+            "modelId": "shared-cycle-dps",
+            "modelVersion": "1",
+            "scenarioFingerprint": "dummy-shared-cycle-dps-v1",
+            "actorId": "c89dce15-cbeb-562d-83ec-993059bbf0ec",
+            "skillId": "6f020b6a-022b-50eb-8299-e5fc7492ea8f",
+            "dps": 262195598.17215413,
+            "deteriorationDps": 0,
+            "cycleTime": 1.2180807476801099,
+            "modeled": 83,
+            "ignored": 30,
+            "unmodeled": 34,
+            "coverage": 0.7094017094017094,
+            "confidence": "experimental"
+          },
           "partialMetrics": [
             {
               "id": "bing-weapon-hit-foundation",
@@ -20165,7 +20671,117 @@
             "unsupported": 34,
             "classificationRate": 0.7094017094017094
           },
-          "snapshot": null,
+          "snapshot": {
+            "base": {
+              "weapon_phys_min": 343,
+              "weapon_phys_max": 368,
+              "weapon_flat_cold_min": 0,
+              "weapon_flat_cold_max": 0,
+              "gear_phys_pct": 176,
+              "gain_phys_as_cold_pct": 0,
+              "weapon_attack_speed": 1.7399999999999998,
+              "skill_weapon_pct": 127,
+              "flat_added_min": 0,
+              "flat_added_max": 0,
+              "flat_added_cold_min": 0,
+              "flat_added_cold_max": 0,
+              "added_damage_effectiveness_pct": 100
+            },
+            "increased": {
+              "physical": 0,
+              "attack": 48,
+              "melee": 0,
+              "area": 0,
+              "hit": 0,
+              "cold": 18,
+              "fire": 0,
+              "lightning": 9,
+              "elemental": 0,
+              "projectile": 0,
+              "ranged": 0,
+              "horizontal_projectile": 0,
+              "parabolic_projectile": 0,
+              "minion": 9,
+              "channeled": 0,
+              "triggered": 0,
+              "focus": 0,
+              "global": 73,
+              "erosion": 503
+            },
+            "additional": {
+              "strength": 108,
+              "warcry_buffs": 0,
+              "ice_bond": 28,
+              "fervor": 44.666666666666664,
+              "sealed_life_mana": 0,
+              "blessings": 19.999999999999996,
+              "precise_auras": 201.04,
+              "misc": 7625.084379280625,
+              "skill_levels": 21
+            },
+            "enemy_taken": {
+              "frostbite": 124.80000000000001,
+              "paralysis": 0,
+              "cold_infiltration": 0,
+              "timid_curse": 0,
+              "fixate": 1.0999999999999899
+            },
+            "crit": {
+              "chance_pct": 28.1,
+              "damage_pct": 681,
+              "damage_typed": {
+                "fire": 83
+              },
+              "crit_dmg_taken_pct": 10
+            },
+            "penetration": {
+              "cold_pct": 57,
+              "armor_pct": 0
+            },
+            "enemy": {
+              "cold_res_pct": 30,
+              "armor_reduction_pct": 30
+            },
+            "rotation": {
+              "starters_per_cycle": 2,
+              "starter_weapon_pct": 406,
+              "attack_speed_inc_pct": 73,
+              "starter_additional_as_pct": 0,
+              "finisher_additional_as_pct": -40,
+              "extra_clones": 0,
+              "clone_falloff": 0.7,
+              "mark_taken_pct": 36,
+              "combo_points": 2,
+              "finisher_amp_pct": 30,
+              "finishers_per_cycle": 1,
+              "proj_added": 2
+            },
+            "tags": [
+              "melee",
+              "attack",
+              "area"
+            ],
+            "deterioration": {
+              "duration_inc_pct": 58,
+              "damage_inc_pct": 26,
+              "chance_pct": 8
+            },
+            "_derived": {
+              "rating_flat": 500,
+              "rating_inc_pct": 228,
+              "fervor_effect_pct": 0,
+              "fervor_rating": 67,
+              "has_fervor": 1,
+              "warcry_min_enemies": 0,
+              "warcry_max_doubled": 0,
+              "warcry_effect_pct": 0,
+              "warcry_additional_effect_pct": 0,
+              "fervor_dmg_per_rating": 0,
+              "fervor_dmg_per_rating_plain": 0.6666666666666666,
+              "frostbite_max": 120,
+              "frostbite_effect_pct": 4
+            }
+          },
           "gear": [
             {
               "slot": "helmet",
@@ -21120,7 +21736,7 @@
               ]
             }
           ],
-          "sourceNote": "Guarded Hammer hit, support, Blast Nova emission, and player-defense evidence is available. Full DPS remains uncalculated until landed-hit geometry, cadence, complete modifiers, enemy state, and uptime are modeled."
+          "sourceNote": "Dummy DPS from the shared cycleDps formula (71% affix coverage). Absolute map DPS is not claimed."
         },
         {
           "id": "tli_dump_loadout_mkz21",
@@ -21136,7 +21752,21 @@
             "lineageEvidence": "source-document",
             "sourceKind": "compendium"
           },
-          "model": null,
+          "model": {
+            "modelId": "shared-cycle-dps",
+            "modelVersion": "1",
+            "scenarioFingerprint": "dummy-shared-cycle-dps-v1",
+            "actorId": "c89dce15-cbeb-562d-83ec-993059bbf0ec",
+            "skillId": "6f020b6a-022b-50eb-8299-e5fc7492ea8f",
+            "dps": 3094441905.3005967,
+            "deteriorationDps": 0,
+            "cycleTime": 0.813621503276676,
+            "modeled": 116,
+            "ignored": 46,
+            "unmodeled": 47,
+            "coverage": 0.7116564417177914,
+            "confidence": "experimental"
+          },
           "partialMetrics": [
             {
               "id": "bing-weapon-hit-foundation",
@@ -24477,7 +25107,117 @@
             "unsupported": 47,
             "classificationRate": 0.7116564417177914
           },
-          "snapshot": null,
+          "snapshot": {
+            "base": {
+              "weapon_phys_min": 343,
+              "weapon_phys_max": 368,
+              "weapon_flat_cold_min": 0,
+              "weapon_flat_cold_max": 0,
+              "gear_phys_pct": 176,
+              "gain_phys_as_cold_pct": 0,
+              "weapon_attack_speed": 1.7399999999999998,
+              "skill_weapon_pct": 127,
+              "flat_added_min": 0,
+              "flat_added_max": 0,
+              "flat_added_cold_min": 0,
+              "flat_added_cold_max": 0,
+              "added_damage_effectiveness_pct": 100
+            },
+            "increased": {
+              "physical": 46,
+              "attack": 111,
+              "melee": 0,
+              "area": 0,
+              "hit": 0,
+              "cold": 0,
+              "fire": 0,
+              "lightning": 0,
+              "elemental": 0,
+              "projectile": 40,
+              "ranged": 0,
+              "horizontal_projectile": 0,
+              "parabolic_projectile": 0,
+              "minion": 171,
+              "channeled": 0,
+              "triggered": 0,
+              "focus": 0,
+              "global": 247,
+              "erosion": 433
+            },
+            "additional": {
+              "strength": 108,
+              "warcry_buffs": 0,
+              "ice_bond": 28,
+              "fervor": 0,
+              "sealed_life_mana": 0,
+              "blessings": 29.600000000000005,
+              "precise_auras": 201.04,
+              "misc": 27465.758558045643,
+              "skill_levels": 21
+            },
+            "enemy_taken": {
+              "frostbite": 120,
+              "paralysis": 0,
+              "cold_infiltration": 0,
+              "timid_curse": 0,
+              "fixate": 1.0999999999999899
+            },
+            "crit": {
+              "chance_pct": 48.4,
+              "damage_pct": 693,
+              "damage_typed": {
+                "fire": 71
+              },
+              "crit_dmg_taken_pct": 10
+            },
+            "penetration": {
+              "cold_pct": 57,
+              "armor_pct": 0
+            },
+            "enemy": {
+              "cold_res_pct": 30,
+              "armor_reduction_pct": 30
+            },
+            "rotation": {
+              "starters_per_cycle": 2,
+              "starter_weapon_pct": 406,
+              "attack_speed_inc_pct": 159,
+              "starter_additional_as_pct": 0,
+              "finisher_additional_as_pct": -40,
+              "extra_clones": 0,
+              "clone_falloff": 0.7,
+              "mark_taken_pct": 36,
+              "combo_points": 2,
+              "finisher_amp_pct": 30,
+              "finishers_per_cycle": 1,
+              "proj_added": 2
+            },
+            "tags": [
+              "melee",
+              "attack",
+              "area"
+            ],
+            "deterioration": {
+              "duration_inc_pct": 63,
+              "damage_inc_pct": 55,
+              "chance_pct": 98
+            },
+            "_derived": {
+              "rating_flat": 500,
+              "rating_inc_pct": 768,
+              "fervor_effect_pct": 0,
+              "fervor_rating": 100,
+              "has_fervor": 0,
+              "warcry_min_enemies": 0,
+              "warcry_max_doubled": 0,
+              "warcry_effect_pct": 0,
+              "warcry_additional_effect_pct": 0,
+              "fervor_dmg_per_rating": 0,
+              "fervor_dmg_per_rating_plain": 0,
+              "frostbite_max": 120,
+              "frostbite_effect_pct": 0
+            }
+          },
           "gear": [
             {
               "slot": "helmet",
@@ -25470,7 +26210,7 @@
               ]
             }
           ],
-          "sourceNote": "Guarded Hammer hit, support, Blast Nova emission, and player-defense evidence is available. Full DPS remains uncalculated until landed-hit geometry, cadence, complete modifiers, enemy state, and uptime are modeled."
+          "sourceNote": "Dummy DPS from the shared cycleDps formula (71% affix coverage). Absolute map DPS is not claimed."
         },
         {
           "id": "tli_dump_loadout_euhmbl",
@@ -25486,7 +26226,21 @@
             "lineageEvidence": "source-document",
             "sourceKind": "compendium"
           },
-          "model": null,
+          "model": {
+            "modelId": "shared-cycle-dps",
+            "modelVersion": "1",
+            "scenarioFingerprint": "dummy-shared-cycle-dps-v1",
+            "actorId": "c89dce15-cbeb-562d-83ec-993059bbf0ec",
+            "skillId": "6f020b6a-022b-50eb-8299-e5fc7492ea8f",
+            "dps": 19863208746.271248,
+            "deteriorationDps": 0,
+            "cycleTime": 0.813621503276676,
+            "modeled": 123,
+            "ignored": 53,
+            "unmodeled": 41,
+            "coverage": 0.75,
+            "confidence": "experimental"
+          },
           "partialMetrics": [
             {
               "id": "bing-weapon-hit-foundation",
@@ -29177,7 +29931,116 @@
             "unsupported": 41,
             "classificationRate": 0.75
           },
-          "snapshot": null,
+          "snapshot": {
+            "base": {
+              "weapon_phys_min": 343,
+              "weapon_phys_max": 368,
+              "weapon_flat_cold_min": 0,
+              "weapon_flat_cold_max": 0,
+              "gear_phys_pct": 176,
+              "gain_phys_as_cold_pct": 0,
+              "weapon_attack_speed": 1.7399999999999998,
+              "skill_weapon_pct": 127,
+              "flat_added_min": 0,
+              "flat_added_max": 0,
+              "flat_added_cold_min": 2,
+              "flat_added_cold_max": 2,
+              "added_damage_effectiveness_pct": 100
+            },
+            "increased": {
+              "physical": 46,
+              "attack": 111,
+              "melee": 9,
+              "area": 0,
+              "hit": 0,
+              "cold": 0,
+              "fire": 0,
+              "lightning": 0,
+              "elemental": 0,
+              "projectile": 0,
+              "ranged": 0,
+              "horizontal_projectile": 0,
+              "parabolic_projectile": 0,
+              "minion": 171,
+              "channeled": 0,
+              "triggered": 0,
+              "focus": 0,
+              "global": 283,
+              "erosion": 433
+            },
+            "additional": {
+              "strength": 108,
+              "warcry_buffs": 0,
+              "ice_bond": 28,
+              "fervor": 44.666666666666664,
+              "sealed_life_mana": 0,
+              "blessings": 29.600000000000005,
+              "precise_auras": 201.04,
+              "misc": 101124.05805927597,
+              "skill_levels": 21
+            },
+            "enemy_taken": {
+              "frostbite": 120,
+              "paralysis": 0,
+              "cold_infiltration": 0,
+              "timid_curse": 0,
+              "fixate": 1.0999999999999899
+            },
+            "crit": {
+              "chance_pct": 55.1,
+              "damage_pct": 693,
+              "damage_typed": {
+                "fire": 71
+              },
+              "crit_dmg_taken_pct": 10
+            },
+            "penetration": {
+              "cold_pct": 57,
+              "armor_pct": 0
+            },
+            "enemy": {
+              "cold_res_pct": 30,
+              "armor_reduction_pct": 30
+            },
+            "rotation": {
+              "starters_per_cycle": 2,
+              "starter_weapon_pct": 406,
+              "attack_speed_inc_pct": 159,
+              "starter_additional_as_pct": 0,
+              "finisher_additional_as_pct": -40,
+              "extra_clones": 0,
+              "clone_falloff": 0.7,
+              "mark_taken_pct": 36,
+              "combo_points": 2,
+              "finisher_amp_pct": 30,
+              "finishers_per_cycle": 1
+            },
+            "tags": [
+              "melee",
+              "attack",
+              "area"
+            ],
+            "deterioration": {
+              "duration_inc_pct": 58,
+              "damage_inc_pct": 55,
+              "chance_pct": 98
+            },
+            "_derived": {
+              "rating_flat": 500,
+              "rating_inc_pct": 768,
+              "fervor_effect_pct": 0,
+              "fervor_rating": 67,
+              "has_fervor": 1,
+              "warcry_min_enemies": 0,
+              "warcry_max_doubled": 0,
+              "warcry_effect_pct": 28,
+              "warcry_additional_effect_pct": 0,
+              "fervor_dmg_per_rating": 0,
+              "fervor_dmg_per_rating_plain": 0.6666666666666666,
+              "frostbite_max": 120,
+              "frostbite_effect_pct": 0
+            }
+          },
           "gear": [
             {
               "slot": "helmet",
@@ -30175,7 +31038,7 @@
               ]
             }
           ],
-          "sourceNote": "Guarded Hammer hit, support, Blast Nova emission, and player-defense evidence is available. Full DPS remains uncalculated until landed-hit geometry, cadence, complete modifiers, enemy state, and uptime are modeled."
+          "sourceNote": "Dummy DPS from the shared cycleDps formula (75% affix coverage). Absolute map DPS is not claimed."
         }
       ]
     },
@@ -30199,7 +31062,21 @@
             "lineageEvidence": "source-document",
             "sourceKind": "compendium"
           },
-          "model": null,
+          "model": {
+            "modelId": "shared-cycle-dps",
+            "modelVersion": "1",
+            "scenarioFingerprint": "dummy-shared-cycle-dps-v1",
+            "actorId": "c89dce15-cbeb-562d-83ec-993059bbf0ec",
+            "skillId": "7f844a9e-9abc-59b6-9baf-18b43efc753e",
+            "dps": 186172025.6025677,
+            "deteriorationDps": 0,
+            "cycleTime": 0.6080707573244888,
+            "modeled": 107,
+            "ignored": 51,
+            "unmodeled": 48,
+            "coverage": 0.6903225806451613,
+            "confidence": "experimental"
+          },
           "partialMetrics": [],
           "supportEvidenceStatus": "not-calculated",
           "supportEvidence": [],
@@ -32048,7 +32925,107 @@
             "unsupported": 48,
             "classificationRate": 0.6903225806451613
           },
-          "snapshot": null,
+          "snapshot": {
+            "base": {
+              "weapon_phys_min": 293,
+              "weapon_phys_max": 308,
+              "weapon_flat_cold_min": 154,
+              "weapon_flat_cold_max": 206,
+              "gear_phys_pct": 52,
+              "gain_phys_as_cold_pct": 0,
+              "weapon_attack_speed": 1.5,
+              "skill_weapon_pct": 127,
+              "flat_added_min": 72,
+              "flat_added_max": 87,
+              "flat_added_cold_min": 0,
+              "flat_added_cold_max": 0,
+              "added_damage_effectiveness_pct": 100
+            },
+            "increased": {
+              "physical": 139,
+              "attack": 114,
+              "melee": 0,
+              "area": 0,
+              "hit": 0,
+              "cold": 81,
+              "fire": 0,
+              "lightning": 0,
+              "elemental": 138,
+              "projectile": 175,
+              "ranged": 0,
+              "horizontal_projectile": 0,
+              "parabolic_projectile": 0,
+              "minion": 0,
+              "channeled": 0,
+              "triggered": 0,
+              "focus": 0,
+              "global": 351
+            },
+            "additional": {
+              "strength": 108,
+              "warcry_buffs": 0,
+              "ice_bond": 28,
+              "fervor": 0,
+              "sealed_life_mana": 0,
+              "blessings": 29.600000000000005,
+              "precise_auras": 201.04,
+              "misc": 738.65447362928,
+              "skill_levels": 21
+            },
+            "enemy_taken": {
+              "frostbite": 343.2,
+              "paralysis": 15,
+              "cold_infiltration": 13,
+              "timid_curse": 0,
+              "fixate": 1.0999999999999899
+            },
+            "crit": {
+              "chance_pct": 52.3,
+              "damage_pct": 454.5,
+              "crit_dmg_taken_pct": 10
+            },
+            "penetration": {
+              "cold_pct": 14.5,
+              "armor_pct": 0
+            },
+            "enemy": {
+              "cold_res_pct": 30,
+              "armor_reduction_pct": 30
+            },
+            "rotation": {
+              "starters_per_cycle": 2,
+              "starter_weapon_pct": 406,
+              "attack_speed_inc_pct": 302,
+              "starter_additional_as_pct": 0,
+              "finisher_additional_as_pct": -40,
+              "extra_clones": 0,
+              "clone_falloff": 0.7,
+              "mark_taken_pct": 36,
+              "combo_points": 2,
+              "finisher_amp_pct": 30,
+              "finishers_per_cycle": 1
+            },
+            "tags": [
+              "melee",
+              "attack",
+              "area"
+            ],
+            "_derived": {
+              "rating_flat": 500,
+              "rating_inc_pct": 846,
+              "fervor_effect_pct": 0,
+              "fervor_rating": 100,
+              "has_fervor": 0,
+              "warcry_min_enemies": 0,
+              "warcry_max_doubled": 0,
+              "warcry_effect_pct": 0,
+              "warcry_additional_effect_pct": 0,
+              "fervor_dmg_per_rating": 0,
+              "fervor_dmg_per_rating_plain": 0,
+              "frostbite_max": 220,
+              "frostbite_effect_pct": 56
+            }
+          },
           "gear": [
             {
               "slot": "helmet",
@@ -32977,7 +33954,7 @@
               ]
             }
           ],
-          "sourceNote": "Compendium structure imported. Supported guarded source terms are shown below; blocked guarded layers remain explicit. Unresolved runtime state and modifier pools keep total DPS/EHP uncalculated."
+          "sourceNote": "Dummy DPS from the shared cycleDps formula (69% affix coverage). Absolute map DPS is not claimed."
         },
         {
           "id": "tli_dump_loadout_tv3bak",
@@ -32993,7 +33970,21 @@
             "lineageEvidence": "source-document",
             "sourceKind": "compendium"
           },
-          "model": null,
+          "model": {
+            "modelId": "shared-cycle-dps",
+            "modelVersion": "1",
+            "scenarioFingerprint": "dummy-shared-cycle-dps-v1",
+            "actorId": "c89dce15-cbeb-562d-83ec-993059bbf0ec",
+            "skillId": "7f844a9e-9abc-59b6-9baf-18b43efc753e",
+            "dps": 382124665.5098311,
+            "deteriorationDps": 0,
+            "cycleTime": 0.5904455179817498,
+            "modeled": 111,
+            "ignored": 53,
+            "unmodeled": 50,
+            "coverage": 0.6894409937888198,
+            "confidence": "experimental"
+          },
           "partialMetrics": [],
           "supportEvidenceStatus": "not-calculated",
           "supportEvidence": [],
@@ -34877,7 +35868,107 @@
             "unsupported": 50,
             "classificationRate": 0.6894409937888198
           },
-          "snapshot": null,
+          "snapshot": {
+            "base": {
+              "weapon_phys_min": 293,
+              "weapon_phys_max": 307,
+              "weapon_flat_cold_min": 156,
+              "weapon_flat_cold_max": 205,
+              "gear_phys_pct": 70,
+              "gain_phys_as_cold_pct": 0,
+              "weapon_attack_speed": 1.5,
+              "skill_weapon_pct": 127,
+              "flat_added_min": 89,
+              "flat_added_max": 111,
+              "flat_added_cold_min": 0,
+              "flat_added_cold_max": 0,
+              "added_damage_effectiveness_pct": 100
+            },
+            "increased": {
+              "physical": 236,
+              "attack": 114,
+              "melee": 0,
+              "area": 0,
+              "hit": 0,
+              "cold": 81,
+              "fire": 0,
+              "lightning": 0,
+              "elemental": 204,
+              "projectile": 175,
+              "ranged": 0,
+              "horizontal_projectile": 0,
+              "parabolic_projectile": 0,
+              "minion": 0,
+              "channeled": 0,
+              "triggered": 0,
+              "focus": 0,
+              "global": 467
+            },
+            "additional": {
+              "strength": 108,
+              "warcry_buffs": 0,
+              "ice_bond": 28,
+              "fervor": 0,
+              "sealed_life_mana": 0,
+              "blessings": 29.600000000000005,
+              "precise_auras": 201.04,
+              "misc": 822.5199209922083,
+              "skill_levels": 21
+            },
+            "enemy_taken": {
+              "frostbite": 335.40000000000003,
+              "paralysis": 15,
+              "cold_infiltration": 13,
+              "timid_curse": 0,
+              "fixate": 1.0999999999999899
+            },
+            "crit": {
+              "chance_pct": 53.25,
+              "damage_pct": 603.5,
+              "crit_dmg_taken_pct": 10
+            },
+            "penetration": {
+              "cold_pct": 14.5,
+              "armor_pct": 0
+            },
+            "enemy": {
+              "cold_res_pct": 30,
+              "armor_reduction_pct": 30
+            },
+            "rotation": {
+              "starters_per_cycle": 2,
+              "starter_weapon_pct": 406,
+              "attack_speed_inc_pct": 314,
+              "starter_additional_as_pct": 0,
+              "finisher_additional_as_pct": -40,
+              "extra_clones": 0,
+              "clone_falloff": 0.7,
+              "mark_taken_pct": 36,
+              "combo_points": 2,
+              "finisher_amp_pct": 30,
+              "finishers_per_cycle": 1
+            },
+            "tags": [
+              "melee",
+              "attack",
+              "area"
+            ],
+            "_derived": {
+              "rating_flat": 500,
+              "rating_inc_pct": 865,
+              "fervor_effect_pct": 0,
+              "fervor_rating": 100,
+              "has_fervor": 0,
+              "warcry_min_enemies": 0,
+              "warcry_max_doubled": 0,
+              "warcry_effect_pct": 0,
+              "warcry_additional_effect_pct": 0,
+              "fervor_dmg_per_rating": 0,
+              "fervor_dmg_per_rating_plain": 0,
+              "frostbite_max": 215,
+              "frostbite_effect_pct": 56
+            }
+          },
           "gear": [
             {
               "slot": "helmet",
@@ -35831,7 +36922,7 @@
               ]
             }
           ],
-          "sourceNote": "Compendium structure imported. Supported guarded source terms are shown below; blocked guarded layers remain explicit. Unresolved runtime state and modifier pools keep total DPS/EHP uncalculated."
+          "sourceNote": "Dummy DPS from the shared cycleDps formula (69% affix coverage). Absolute map DPS is not claimed."
         }
       ]
     },
@@ -35855,7 +36946,21 @@
             "lineageEvidence": "source-document",
             "sourceKind": "compendium"
           },
-          "model": null,
+          "model": {
+            "modelId": "shared-cycle-dps",
+            "modelVersion": "1",
+            "scenarioFingerprint": "dummy-shared-cycle-dps-v1",
+            "actorId": "a7fc5c40-39d0-5ad9-825d-382eca25d7ba",
+            "skillId": "297473e3-c5f1-5a8c-87f6-569027a25b92",
+            "dps": 3547616094.585437,
+            "deteriorationDps": 0,
+            "cycleTime": 1.1703746262781023,
+            "modeled": 82,
+            "ignored": 98,
+            "unmodeled": 50,
+            "coverage": 0.6212121212121212,
+            "confidence": "experimental"
+          },
           "partialMetrics": [],
           "supportEvidenceStatus": "not-applicable",
           "supportEvidence": [],
@@ -37083,7 +38188,110 @@
             "unsupported": 50,
             "classificationRate": 0.6212121212121212
           },
-          "snapshot": null,
+          "snapshot": {
+            "base": {
+              "weapon_phys_min": 293,
+              "weapon_phys_max": 307,
+              "weapon_flat_cold_min": 156,
+              "weapon_flat_cold_max": 205,
+              "gear_phys_pct": 70,
+              "gain_phys_as_cold_pct": 0,
+              "weapon_attack_speed": 1.77,
+              "skill_weapon_pct": 127,
+              "flat_added_min": 0,
+              "flat_added_max": 0,
+              "flat_added_cold_min": 0,
+              "flat_added_cold_max": 0,
+              "added_damage_effectiveness_pct": 100
+            },
+            "increased": {
+              "physical": 204,
+              "attack": 0,
+              "melee": 0,
+              "area": 0,
+              "hit": 0,
+              "cold": 108,
+              "fire": 0,
+              "lightning": 0,
+              "elemental": 204,
+              "projectile": 0,
+              "ranged": 0,
+              "horizontal_projectile": 0,
+              "parabolic_projectile": 0,
+              "minion": 616,
+              "channeled": 0,
+              "triggered": 0,
+              "focus": 0,
+              "global": 149
+            },
+            "additional": {
+              "strength": 108,
+              "warcry_buffs": 0,
+              "ice_bond": 28,
+              "fervor": 0,
+              "sealed_life_mana": 0,
+              "blessings": 25,
+              "precise_auras": 201.04,
+              "misc": 70136.63820513495,
+              "skill_levels": 21
+            },
+            "enemy_taken": {
+              "frostbite": 227.88000000000002,
+              "paralysis": 0,
+              "cold_infiltration": 13,
+              "timid_curse": 0,
+              "fixate": 1.0999999999999899
+            },
+            "crit": {
+              "chance_pct": 19.5,
+              "damage_pct": 492,
+              "crit_dmg_taken_pct": 10
+            },
+            "penetration": {
+              "cold_pct": 14.5,
+              "armor_pct": 30
+            },
+            "enemy": {
+              "cold_res_pct": 30,
+              "armor_reduction_pct": 30
+            },
+            "rotation": {
+              "starters_per_cycle": 2,
+              "starter_weapon_pct": 406,
+              "attack_speed_inc_pct": 77,
+              "starter_additional_as_pct": 0,
+              "finisher_additional_as_pct": -40,
+              "extra_clones": 0,
+              "clone_falloff": 0.7,
+              "mark_taken_pct": 30,
+              "combo_points": 2,
+              "finisher_amp_pct": 30,
+              "finishers_per_cycle": 1
+            },
+            "tags": [
+              "melee",
+              "attack",
+              "area"
+            ],
+            "deterioration": {
+              "damage_inc_pct": 18
+            },
+            "_derived": {
+              "rating_flat": 500,
+              "rating_inc_pct": 190,
+              "fervor_effect_pct": 0,
+              "fervor_rating": 100,
+              "has_fervor": 0,
+              "warcry_min_enemies": 0,
+              "warcry_max_doubled": 0,
+              "warcry_effect_pct": 0,
+              "warcry_additional_effect_pct": 0,
+              "fervor_dmg_per_rating": 0,
+              "fervor_dmg_per_rating_plain": 0,
+              "frostbite_max": 211,
+              "frostbite_effect_pct": 8
+            }
+          },
           "gear": [
             {
               "slot": "helmet",
@@ -38106,7 +39314,7 @@
               ]
             }
           ],
-          "sourceNote": "Compendium structure imported. Supported guarded source terms are shown below. Unresolved runtime state and modifier pools keep total DPS/EHP uncalculated."
+          "sourceNote": "Dummy DPS from the shared cycleDps formula (62% affix coverage). Absolute map DPS is not claimed."
         },
         {
           "id": "tli_dump_loadout_1jut38w",
@@ -38122,7 +39330,21 @@
             "lineageEvidence": "source-document",
             "sourceKind": "compendium"
           },
-          "model": null,
+          "model": {
+            "modelId": "shared-cycle-dps",
+            "modelVersion": "1",
+            "scenarioFingerprint": "dummy-shared-cycle-dps-v1",
+            "actorId": "a7fc5c40-39d0-5ad9-825d-382eca25d7ba",
+            "skillId": "297473e3-c5f1-5a8c-87f6-569027a25b92",
+            "dps": 6949585205.44877,
+            "deteriorationDps": 0,
+            "cycleTime": 1.1703746262781023,
+            "modeled": 85,
+            "ignored": 97,
+            "unmodeled": 51,
+            "coverage": 0.625,
+            "confidence": "experimental"
+          },
           "partialMetrics": [],
           "supportEvidenceStatus": "not-applicable",
           "supportEvidence": [],
@@ -39286,7 +40508,110 @@
             "unsupported": 51,
             "classificationRate": 0.625
           },
-          "snapshot": null,
+          "snapshot": {
+            "base": {
+              "weapon_phys_min": 347,
+              "weapon_phys_max": 374,
+              "weapon_flat_cold_min": 0,
+              "weapon_flat_cold_max": 0,
+              "gear_phys_pct": 244,
+              "gain_phys_as_cold_pct": 0,
+              "weapon_attack_speed": 1.77,
+              "skill_weapon_pct": 127,
+              "flat_added_min": 0,
+              "flat_added_max": 0,
+              "flat_added_cold_min": 0,
+              "flat_added_cold_max": 0,
+              "added_damage_effectiveness_pct": 100
+            },
+            "increased": {
+              "physical": 189,
+              "attack": 0,
+              "melee": 0,
+              "area": 0,
+              "hit": 0,
+              "cold": 108,
+              "fire": 0,
+              "lightning": 0,
+              "elemental": 213,
+              "projectile": 0,
+              "ranged": 0,
+              "horizontal_projectile": 0,
+              "parabolic_projectile": 0,
+              "minion": 617,
+              "channeled": 0,
+              "triggered": 0,
+              "focus": 0,
+              "global": 149
+            },
+            "additional": {
+              "strength": 108,
+              "warcry_buffs": 0,
+              "ice_bond": 28,
+              "fervor": 0,
+              "sealed_life_mana": 0,
+              "blessings": 25,
+              "precise_auras": 201.04,
+              "misc": 77045.91939227695,
+              "skill_levels": 21
+            },
+            "enemy_taken": {
+              "frostbite": 236.32000000000002,
+              "paralysis": 0,
+              "cold_infiltration": 13,
+              "timid_curse": 0,
+              "fixate": 1.0999999999999899
+            },
+            "crit": {
+              "chance_pct": 19.5,
+              "damage_pct": 471,
+              "crit_dmg_taken_pct": 10
+            },
+            "penetration": {
+              "cold_pct": 14.5,
+              "armor_pct": 30
+            },
+            "enemy": {
+              "cold_res_pct": 30,
+              "armor_reduction_pct": 30
+            },
+            "rotation": {
+              "starters_per_cycle": 2,
+              "starter_weapon_pct": 406,
+              "attack_speed_inc_pct": 77,
+              "starter_additional_as_pct": 0,
+              "finisher_additional_as_pct": -40,
+              "extra_clones": 0,
+              "clone_falloff": 0.7,
+              "mark_taken_pct": 30,
+              "combo_points": 2,
+              "finisher_amp_pct": 30,
+              "finishers_per_cycle": 1
+            },
+            "tags": [
+              "melee",
+              "attack",
+              "area"
+            ],
+            "deterioration": {
+              "damage_inc_pct": 18
+            },
+            "_derived": {
+              "rating_flat": 500,
+              "rating_inc_pct": 190,
+              "fervor_effect_pct": 0,
+              "fervor_rating": 100,
+              "has_fervor": 0,
+              "warcry_min_enemies": 0,
+              "warcry_max_doubled": 0,
+              "warcry_effect_pct": 0,
+              "warcry_additional_effect_pct": 0,
+              "fervor_dmg_per_rating": 0,
+              "fervor_dmg_per_rating_plain": 0,
+              "frostbite_max": 211,
+              "frostbite_effect_pct": 12
+            }
+          },
           "gear": [
             {
               "slot": "helmet",
@@ -40324,7 +41649,7 @@
               ]
             }
           ],
-          "sourceNote": "Compendium structure imported. Supported guarded source terms are shown below. Unresolved runtime state and modifier pools keep total DPS/EHP uncalculated."
+          "sourceNote": "Dummy DPS from the shared cycleDps formula (63% affix coverage). Absolute map DPS is not claimed."
         },
         {
           "id": "tli_dump_loadout_ey66ck",
@@ -40340,7 +41665,21 @@
             "lineageEvidence": "source-document",
             "sourceKind": "compendium"
           },
-          "model": null,
+          "model": {
+            "modelId": "shared-cycle-dps",
+            "modelVersion": "1",
+            "scenarioFingerprint": "dummy-shared-cycle-dps-v1",
+            "actorId": "a7fc5c40-39d0-5ad9-825d-382eca25d7ba",
+            "skillId": "297473e3-c5f1-5a8c-87f6-569027a25b92",
+            "dps": 631659658.2189345,
+            "deteriorationDps": 0,
+            "cycleTime": 1.3810420590081605,
+            "modeled": 61,
+            "ignored": 89,
+            "unmodeled": 40,
+            "coverage": 0.6039603960396039,
+            "confidence": "experimental"
+          },
           "partialMetrics": [],
           "supportEvidenceStatus": "not-applicable",
           "supportEvidence": [],
@@ -41306,7 +42645,110 @@
             "unsupported": 40,
             "classificationRate": 0.6039603960396039
           },
-          "snapshot": null,
+          "snapshot": {
+            "base": {
+              "weapon_phys_min": 346,
+              "weapon_phys_max": 375,
+              "weapon_flat_cold_min": 0,
+              "weapon_flat_cold_max": 0,
+              "gear_phys_pct": 238,
+              "gain_phys_as_cold_pct": 0,
+              "weapon_attack_speed": 1.77,
+              "skill_weapon_pct": 127,
+              "flat_added_min": 0,
+              "flat_added_max": 0,
+              "flat_added_cold_min": 0,
+              "flat_added_cold_max": 0,
+              "added_damage_effectiveness_pct": 100
+            },
+            "increased": {
+              "physical": 0,
+              "attack": 0,
+              "melee": 0,
+              "area": 0,
+              "hit": 0,
+              "cold": 0,
+              "fire": 55,
+              "lightning": 0,
+              "elemental": 155,
+              "projectile": 0,
+              "ranged": 0,
+              "horizontal_projectile": 0,
+              "parabolic_projectile": 0,
+              "minion": 556,
+              "channeled": 0,
+              "triggered": 0,
+              "focus": 0,
+              "global": 99
+            },
+            "additional": {
+              "strength": 108,
+              "warcry_buffs": 0,
+              "ice_bond": 28,
+              "fervor": 0,
+              "sealed_life_mana": 0,
+              "blessings": 0,
+              "precise_auras": 201.04,
+              "misc": 38967.87940602995,
+              "skill_levels": 21
+            },
+            "enemy_taken": {
+              "frostbite": 120,
+              "paralysis": 0,
+              "cold_infiltration": 0,
+              "timid_curse": 0,
+              "fixate": 1.0999999999999899
+            },
+            "crit": {
+              "chance_pct": 15.25,
+              "damage_pct": 534,
+              "crit_dmg_taken_pct": 10
+            },
+            "penetration": {
+              "cold_pct": 0,
+              "armor_pct": 30,
+              "typed": {
+                "fire": 6
+              }
+            },
+            "enemy": {
+              "cold_res_pct": 30,
+              "armor_reduction_pct": 30
+            },
+            "rotation": {
+              "starters_per_cycle": 2,
+              "starter_weapon_pct": 406,
+              "attack_speed_inc_pct": 50,
+              "starter_additional_as_pct": 0,
+              "finisher_additional_as_pct": -40,
+              "extra_clones": 0,
+              "clone_falloff": 0.7,
+              "mark_taken_pct": 30,
+              "combo_points": 2,
+              "finisher_amp_pct": 30,
+              "finishers_per_cycle": 1
+            },
+            "tags": [
+              "melee",
+              "attack",
+              "area"
+            ],
+            "_derived": {
+              "rating_flat": 500,
+              "rating_inc_pct": 105,
+              "fervor_effect_pct": 0,
+              "fervor_rating": 100,
+              "has_fervor": 0,
+              "warcry_min_enemies": 0,
+              "warcry_max_doubled": 0,
+              "warcry_effect_pct": 0,
+              "warcry_additional_effect_pct": 0,
+              "fervor_dmg_per_rating": 0,
+              "fervor_dmg_per_rating_plain": 0,
+              "frostbite_max": 120,
+              "frostbite_effect_pct": 0
+            }
+          },
           "gear": [
             {
               "slot": "helmet",
@@ -42238,7 +43680,7 @@
               ]
             }
           ],
-          "sourceNote": "Compendium structure imported. Supported guarded source terms are shown below. Unresolved runtime state and modifier pools keep total DPS/EHP uncalculated."
+          "sourceNote": "Dummy DPS from the shared cycleDps formula (60% affix coverage). Absolute map DPS is not claimed."
         },
         {
           "id": "tli_dump_loadout_1vc9x0c",
@@ -42254,7 +43696,21 @@
             "lineageEvidence": "source-document",
             "sourceKind": "compendium"
           },
-          "model": null,
+          "model": {
+            "modelId": "shared-cycle-dps",
+            "modelVersion": "1",
+            "scenarioFingerprint": "dummy-shared-cycle-dps-v1",
+            "actorId": "a7fc5c40-39d0-5ad9-825d-382eca25d7ba",
+            "skillId": "297473e3-c5f1-5a8c-87f6-569027a25b92",
+            "dps": 979815754.7272235,
+            "deteriorationDps": 0,
+            "cycleTime": 0.9363893677243612,
+            "modeled": 64,
+            "ignored": 89,
+            "unmodeled": 41,
+            "coverage": 0.6095238095238096,
+            "confidence": "experimental"
+          },
           "partialMetrics": [],
           "supportEvidenceStatus": "not-applicable",
           "supportEvidence": [],
@@ -43151,7 +44607,110 @@
             "unsupported": 41,
             "classificationRate": 0.6095238095238096
           },
-          "snapshot": null,
+          "snapshot": {
+            "base": {
+              "weapon_phys_min": 346,
+              "weapon_phys_max": 375,
+              "weapon_flat_cold_min": 0,
+              "weapon_flat_cold_max": 0,
+              "gear_phys_pct": 238,
+              "gain_phys_as_cold_pct": 0,
+              "weapon_attack_speed": 1.7249999999999999,
+              "skill_weapon_pct": 127,
+              "flat_added_min": 0,
+              "flat_added_max": 0,
+              "flat_added_cold_min": 0,
+              "flat_added_cold_max": 0,
+              "added_damage_effectiveness_pct": 100
+            },
+            "increased": {
+              "physical": 0,
+              "attack": 0,
+              "melee": 0,
+              "area": 0,
+              "hit": 0,
+              "cold": 0,
+              "fire": 64,
+              "lightning": 0,
+              "elemental": 248,
+              "projectile": 0,
+              "ranged": 0,
+              "horizontal_projectile": 0,
+              "parabolic_projectile": 0,
+              "minion": 565,
+              "channeled": 0,
+              "triggered": 0,
+              "focus": 0,
+              "global": 99
+            },
+            "additional": {
+              "strength": 108,
+              "warcry_buffs": 0,
+              "ice_bond": 28,
+              "fervor": 0,
+              "sealed_life_mana": 0,
+              "blessings": 0,
+              "precise_auras": 201.04,
+              "misc": 54869.56221291673,
+              "skill_levels": 21
+            },
+            "enemy_taken": {
+              "frostbite": 120,
+              "paralysis": 0,
+              "cold_infiltration": 0,
+              "timid_curse": 0,
+              "fixate": 1.0999999999999899
+            },
+            "crit": {
+              "chance_pct": 15.25,
+              "damage_pct": 383,
+              "crit_dmg_taken_pct": 10
+            },
+            "penetration": {
+              "cold_pct": 0,
+              "armor_pct": 0,
+              "typed": {
+                "fire": 6
+              }
+            },
+            "enemy": {
+              "cold_res_pct": 30,
+              "armor_reduction_pct": 30
+            },
+            "rotation": {
+              "starters_per_cycle": 2,
+              "starter_weapon_pct": 406,
+              "attack_speed_inc_pct": 127,
+              "starter_additional_as_pct": 0,
+              "finisher_additional_as_pct": -40,
+              "extra_clones": 0,
+              "clone_falloff": 0.7,
+              "mark_taken_pct": 30,
+              "combo_points": 2,
+              "finisher_amp_pct": 30,
+              "finishers_per_cycle": 1
+            },
+            "tags": [
+              "melee",
+              "attack",
+              "area"
+            ],
+            "_derived": {
+              "rating_flat": 500,
+              "rating_inc_pct": 105,
+              "fervor_effect_pct": 0,
+              "fervor_rating": 100,
+              "has_fervor": 0,
+              "warcry_min_enemies": 0,
+              "warcry_max_doubled": 0,
+              "warcry_effect_pct": 0,
+              "warcry_additional_effect_pct": 0,
+              "fervor_dmg_per_rating": 0,
+              "fervor_dmg_per_rating_plain": 0,
+              "frostbite_max": 120,
+              "frostbite_effect_pct": 0
+            }
+          },
           "gear": [
             {
               "slot": "helmet",
@@ -44079,7 +45638,7 @@
               ]
             }
           ],
-          "sourceNote": "Compendium structure imported. Supported guarded source terms are shown below. Unresolved runtime state and modifier pools keep total DPS/EHP uncalculated."
+          "sourceNote": "Dummy DPS from the shared cycleDps formula (61% affix coverage). Absolute map DPS is not claimed."
         },
         {
           "id": "tli_dump_loadout_1isvuaw",
@@ -44095,7 +45654,21 @@
             "lineageEvidence": "source-document",
             "sourceKind": "compendium"
           },
-          "model": null,
+          "model": {
+            "modelId": "shared-cycle-dps",
+            "modelVersion": "1",
+            "scenarioFingerprint": "dummy-shared-cycle-dps-v1",
+            "actorId": "a7fc5c40-39d0-5ad9-825d-382eca25d7ba",
+            "skillId": "297473e3-c5f1-5a8c-87f6-569027a25b92",
+            "dps": 1045046207.1917264,
+            "deteriorationDps": 0,
+            "cycleTime": 0.9363893677243612,
+            "modeled": 64,
+            "ignored": 90,
+            "unmodeled": 42,
+            "coverage": 0.6037735849056604,
+            "confidence": "experimental"
+          },
           "partialMetrics": [],
           "supportEvidenceStatus": "not-applicable",
           "supportEvidence": [],
@@ -44992,7 +46565,110 @@
             "unsupported": 42,
             "classificationRate": 0.6037735849056604
           },
-          "snapshot": null,
+          "snapshot": {
+            "base": {
+              "weapon_phys_min": 369,
+              "weapon_phys_max": 400,
+              "weapon_flat_cold_min": 0,
+              "weapon_flat_cold_max": 0,
+              "gear_phys_pct": 238,
+              "gain_phys_as_cold_pct": 0,
+              "weapon_attack_speed": 1.7249999999999999,
+              "skill_weapon_pct": 127,
+              "flat_added_min": 0,
+              "flat_added_max": 0,
+              "flat_added_cold_min": 0,
+              "flat_added_cold_max": 0,
+              "added_damage_effectiveness_pct": 100
+            },
+            "increased": {
+              "physical": 0,
+              "attack": 0,
+              "melee": 0,
+              "area": 0,
+              "hit": 0,
+              "cold": 0,
+              "fire": 64,
+              "lightning": 0,
+              "elemental": 248,
+              "projectile": 0,
+              "ranged": 0,
+              "horizontal_projectile": 0,
+              "parabolic_projectile": 0,
+              "minion": 565,
+              "channeled": 0,
+              "triggered": 0,
+              "focus": 0,
+              "global": 99
+            },
+            "additional": {
+              "strength": 108,
+              "warcry_buffs": 0,
+              "ice_bond": 28,
+              "fervor": 0,
+              "sealed_life_mana": 0,
+              "blessings": 0,
+              "precise_auras": 201.04,
+              "misc": 54869.56221291673,
+              "skill_levels": 21
+            },
+            "enemy_taken": {
+              "frostbite": 120,
+              "paralysis": 0,
+              "cold_infiltration": 0,
+              "timid_curse": 0,
+              "fixate": 1.0999999999999899
+            },
+            "crit": {
+              "chance_pct": 15.25,
+              "damage_pct": 383,
+              "crit_dmg_taken_pct": 10
+            },
+            "penetration": {
+              "cold_pct": 0,
+              "armor_pct": 0,
+              "typed": {
+                "fire": 6
+              }
+            },
+            "enemy": {
+              "cold_res_pct": 30,
+              "armor_reduction_pct": 30
+            },
+            "rotation": {
+              "starters_per_cycle": 2,
+              "starter_weapon_pct": 406,
+              "attack_speed_inc_pct": 127,
+              "starter_additional_as_pct": 0,
+              "finisher_additional_as_pct": -40,
+              "extra_clones": 0,
+              "clone_falloff": 0.7,
+              "mark_taken_pct": 30,
+              "combo_points": 2,
+              "finisher_amp_pct": 30,
+              "finishers_per_cycle": 1
+            },
+            "tags": [
+              "melee",
+              "attack",
+              "area"
+            ],
+            "_derived": {
+              "rating_flat": 500,
+              "rating_inc_pct": 105,
+              "fervor_effect_pct": 0,
+              "fervor_rating": 100,
+              "has_fervor": 0,
+              "warcry_min_enemies": 0,
+              "warcry_max_doubled": 0,
+              "warcry_effect_pct": 0,
+              "warcry_additional_effect_pct": 0,
+              "fervor_dmg_per_rating": 0,
+              "fervor_dmg_per_rating_plain": 0,
+              "frostbite_max": 120,
+              "frostbite_effect_pct": 0
+            }
+          },
           "gear": [
             {
               "slot": "helmet",
@@ -45922,7 +47598,7 @@
               ]
             }
           ],
-          "sourceNote": "Compendium structure imported. Supported guarded source terms are shown below. Unresolved runtime state and modifier pools keep total DPS/EHP uncalculated."
+          "sourceNote": "Dummy DPS from the shared cycleDps formula (60% affix coverage). Absolute map DPS is not claimed."
         }
       ]
     },
@@ -45946,7 +47622,21 @@
             "lineageEvidence": "source-document",
             "sourceKind": "compendium"
           },
-          "model": null,
+          "model": {
+            "modelId": "shared-cycle-dps",
+            "modelVersion": "1",
+            "scenarioFingerprint": "dummy-shared-cycle-dps-v1",
+            "actorId": "d397380a-d947-5f11-b25e-381cf6311f04",
+            "skillId": "iris-spirit-magus",
+            "dps": 4237238.72572519,
+            "deteriorationDps": 0,
+            "cycleTime": 1.0912698412698414,
+            "modeled": 73,
+            "ignored": 69,
+            "unmodeled": 55,
+            "coverage": 0.5703125,
+            "confidence": "experimental"
+          },
           "partialMetrics": [],
           "supportEvidenceStatus": "not-applicable",
           "supportEvidence": [],
@@ -51901,7 +53591,109 @@
             "unsupported": 55,
             "classificationRate": 0.5703125
           },
-          "snapshot": null,
+          "snapshot": {
+            "base": {
+              "weapon_phys_min": 145,
+              "weapon_phys_max": 149,
+              "weapon_flat_cold_min": 23,
+              "weapon_flat_cold_max": 33,
+              "gear_phys_pct": 0,
+              "gain_phys_as_cold_pct": 0,
+              "weapon_attack_speed": 1.5,
+              "skill_weapon_pct": 127,
+              "flat_added_min": 0,
+              "flat_added_max": 0,
+              "flat_added_cold_min": 0,
+              "flat_added_cold_max": 0,
+              "added_damage_effectiveness_pct": 100,
+              "weapon_flat_fire_min": 25,
+              "weapon_flat_fire_max": 33
+            },
+            "increased": {
+              "physical": 0,
+              "attack": 18,
+              "melee": 0,
+              "area": 0,
+              "hit": 0,
+              "cold": 0,
+              "fire": 1,
+              "lightning": 0,
+              "elemental": 0,
+              "projectile": 0,
+              "ranged": 0,
+              "horizontal_projectile": 0,
+              "parabolic_projectile": 0,
+              "minion": 761,
+              "channeled": 0,
+              "triggered": 0,
+              "focus": 0,
+              "global": 274
+            },
+            "additional": {
+              "strength": 108,
+              "warcry_buffs": 0,
+              "ice_bond": 28,
+              "fervor": 0,
+              "sealed_life_mana": 0,
+              "blessings": 0,
+              "precise_auras": 201.04,
+              "misc": 1912.060946682044,
+              "skill_levels": 21
+            },
+            "enemy_taken": {
+              "frostbite": 120,
+              "paralysis": 0,
+              "cold_infiltration": 0,
+              "timid_curse": 0,
+              "fixate": 1.0999999999999899
+            },
+            "crit": {
+              "chance_pct": 15.25,
+              "damage_pct": 526,
+              "crit_dmg_taken_pct": 10
+            },
+            "penetration": {
+              "cold_pct": 0,
+              "armor_pct": 0
+            },
+            "enemy": {
+              "cold_res_pct": 30,
+              "armor_reduction_pct": 30
+            },
+            "rotation": {
+              "starters_per_cycle": 2,
+              "starter_weapon_pct": 406,
+              "attack_speed_inc_pct": 124,
+              "starter_additional_as_pct": 0,
+              "finisher_additional_as_pct": -40,
+              "extra_clones": 0,
+              "clone_falloff": 0.7,
+              "mark_taken_pct": 30,
+              "combo_points": 2,
+              "finisher_amp_pct": 30,
+              "finishers_per_cycle": 1
+            },
+            "tags": [
+              "melee",
+              "attack",
+              "area"
+            ],
+            "_derived": {
+              "rating_flat": 500,
+              "rating_inc_pct": 105,
+              "fervor_effect_pct": 0,
+              "fervor_rating": 100,
+              "has_fervor": 0,
+              "warcry_min_enemies": 0,
+              "warcry_max_doubled": 0,
+              "warcry_effect_pct": 0,
+              "warcry_additional_effect_pct": 0,
+              "fervor_dmg_per_rating": 0,
+              "fervor_dmg_per_rating_plain": 0,
+              "frostbite_max": 120,
+              "frostbite_effect_pct": 0
+            }
+          },
           "gear": [
             {
               "slot": "helmet",
@@ -52799,7 +54591,7 @@
               ]
             }
           ],
-          "sourceNote": "The installed Spirit Magus actor/action records, socket terms, Iris traits, and player-defense inputs are available. AI rotation, complete minion modifiers, Growth/Breeze state, and total player EHP remain uncalculated."
+          "sourceNote": "Dummy DPS from the shared cycleDps formula (57% affix coverage). Absolute map DPS is not claimed."
         },
         {
           "id": "tli_dump_loadout_1ot9ooe",
@@ -52815,7 +54607,21 @@
             "lineageEvidence": "source-document",
             "sourceKind": "compendium"
           },
-          "model": null,
+          "model": {
+            "modelId": "shared-cycle-dps",
+            "modelVersion": "1",
+            "scenarioFingerprint": "dummy-shared-cycle-dps-v1",
+            "actorId": "d397380a-d947-5f11-b25e-381cf6311f04",
+            "skillId": "iris-spirit-magus",
+            "dps": 16192834.454051437,
+            "deteriorationDps": 0,
+            "cycleTime": 0.8175399479747305,
+            "modeled": 83,
+            "ignored": 92,
+            "unmodeled": 59,
+            "coverage": 0.5845070422535211,
+            "confidence": "experimental"
+          },
           "partialMetrics": [],
           "supportEvidenceStatus": "not-applicable",
           "supportEvidence": [],
@@ -59370,7 +61176,110 @@
             "unsupported": 59,
             "classificationRate": 0.5845070422535211
           },
-          "snapshot": null,
+          "snapshot": {
+            "base": {
+              "weapon_phys_min": 216,
+              "weapon_phys_max": 224,
+              "weapon_flat_cold_min": 0,
+              "weapon_flat_cold_max": 0,
+              "gear_phys_pct": 95,
+              "gain_phys_as_cold_pct": 0,
+              "weapon_attack_speed": 1.5,
+              "skill_weapon_pct": 127,
+              "flat_added_min": 0,
+              "flat_added_max": 0,
+              "flat_added_cold_min": 0,
+              "flat_added_cold_max": 0,
+              "added_damage_effectiveness_pct": 100,
+              "weapon_flat_fire_min": 124,
+              "weapon_flat_fire_max": 165
+            },
+            "increased": {
+              "physical": 0,
+              "attack": 0,
+              "melee": 0,
+              "area": 0,
+              "hit": 0,
+              "cold": 0,
+              "fire": 0,
+              "lightning": 0,
+              "elemental": 0,
+              "projectile": 0,
+              "ranged": 0,
+              "horizontal_projectile": 0,
+              "parabolic_projectile": 0,
+              "minion": 779,
+              "channeled": 0,
+              "triggered": 0,
+              "focus": 0,
+              "global": 292,
+              "erosion": 96
+            },
+            "additional": {
+              "strength": 108,
+              "warcry_buffs": 0,
+              "ice_bond": 28,
+              "fervor": 0,
+              "sealed_life_mana": 0,
+              "blessings": 0,
+              "precise_auras": 201.04,
+              "misc": 2094.756080640774,
+              "skill_levels": 21
+            },
+            "enemy_taken": {
+              "frostbite": 120,
+              "paralysis": 0,
+              "cold_infiltration": 0,
+              "timid_curse": 0,
+              "fixate": 1.0999999999999899
+            },
+            "crit": {
+              "chance_pct": 15.25,
+              "damage_pct": 460,
+              "crit_dmg_taken_pct": 10
+            },
+            "penetration": {
+              "cold_pct": 0,
+              "armor_pct": 0
+            },
+            "enemy": {
+              "cold_res_pct": 30,
+              "armor_reduction_pct": 30
+            },
+            "rotation": {
+              "starters_per_cycle": 2,
+              "starter_weapon_pct": 406,
+              "attack_speed_inc_pct": 199,
+              "starter_additional_as_pct": 0,
+              "finisher_additional_as_pct": -40,
+              "extra_clones": 0,
+              "clone_falloff": 0.7,
+              "mark_taken_pct": 30,
+              "combo_points": 2,
+              "finisher_amp_pct": 30,
+              "finishers_per_cycle": 1
+            },
+            "tags": [
+              "melee",
+              "attack",
+              "area"
+            ],
+            "_derived": {
+              "rating_flat": 500,
+              "rating_inc_pct": 105,
+              "fervor_effect_pct": 0,
+              "fervor_rating": 100,
+              "has_fervor": 0,
+              "warcry_min_enemies": 0,
+              "warcry_max_doubled": 0,
+              "warcry_effect_pct": 0,
+              "warcry_additional_effect_pct": 0,
+              "fervor_dmg_per_rating": 0,
+              "fervor_dmg_per_rating_plain": 0,
+              "frostbite_max": 120,
+              "frostbite_effect_pct": 0
+            }
+          },
           "gear": [
             {
               "slot": "helmet",
@@ -60382,7 +62291,7 @@
               ]
             }
           ],
-          "sourceNote": "The installed Spirit Magus actor/action records, socket terms, Iris traits, and player-defense inputs are available. AI rotation, complete minion modifiers, Growth/Breeze state, and total player EHP remain uncalculated."
+          "sourceNote": "Dummy DPS from the shared cycleDps formula (58% affix coverage). Absolute map DPS is not claimed."
         },
         {
           "id": "tli_dump_loadout_tktxea",
@@ -60398,7 +62307,21 @@
             "lineageEvidence": "source-document",
             "sourceKind": "compendium"
           },
-          "model": null,
+          "model": {
+            "modelId": "shared-cycle-dps",
+            "modelVersion": "1",
+            "scenarioFingerprint": "dummy-shared-cycle-dps-v1",
+            "actorId": "d397380a-d947-5f11-b25e-381cf6311f04",
+            "skillId": "iris-spirit-magus",
+            "dps": 12356864.786144989,
+            "deteriorationDps": 0,
+            "cycleTime": 0.8175399479747305,
+            "modeled": 78,
+            "ignored": 100,
+            "unmodeled": 65,
+            "coverage": 0.5454545454545454,
+            "confidence": "experimental"
+          },
           "partialMetrics": [],
           "supportEvidenceStatus": "not-applicable",
           "supportEvidence": [],
@@ -67209,7 +69132,110 @@
             "unsupported": 65,
             "classificationRate": 0.5454545454545454
           },
-          "snapshot": null,
+          "snapshot": {
+            "base": {
+              "weapon_phys_min": 216,
+              "weapon_phys_max": 224,
+              "weapon_flat_cold_min": 0,
+              "weapon_flat_cold_max": 0,
+              "gear_phys_pct": 95,
+              "gain_phys_as_cold_pct": 0,
+              "weapon_attack_speed": 1.5,
+              "skill_weapon_pct": 127,
+              "flat_added_min": 0,
+              "flat_added_max": 0,
+              "flat_added_cold_min": 0,
+              "flat_added_cold_max": 0,
+              "added_damage_effectiveness_pct": 100,
+              "weapon_flat_fire_min": 124,
+              "weapon_flat_fire_max": 165
+            },
+            "increased": {
+              "physical": 0,
+              "attack": 0,
+              "melee": 0,
+              "area": 0,
+              "hit": 0,
+              "cold": 0,
+              "fire": 0,
+              "lightning": 0,
+              "elemental": 0,
+              "projectile": 0,
+              "ranged": 0,
+              "horizontal_projectile": 0,
+              "parabolic_projectile": 0,
+              "minion": 736,
+              "channeled": 0,
+              "triggered": 0,
+              "focus": 0,
+              "global": 247,
+              "erosion": 96
+            },
+            "additional": {
+              "strength": 108,
+              "warcry_buffs": 0,
+              "ice_bond": 28,
+              "fervor": 0,
+              "sealed_life_mana": 0,
+              "blessings": 0,
+              "precise_auras": 201.04,
+              "misc": 1792.0311040006673,
+              "skill_levels": 21
+            },
+            "enemy_taken": {
+              "frostbite": 120,
+              "paralysis": 0,
+              "cold_infiltration": 0,
+              "timid_curse": 0,
+              "fixate": 1.0999999999999899
+            },
+            "crit": {
+              "chance_pct": 15.25,
+              "damage_pct": 460,
+              "crit_dmg_taken_pct": 10
+            },
+            "penetration": {
+              "cold_pct": 0,
+              "armor_pct": 0
+            },
+            "enemy": {
+              "cold_res_pct": 30,
+              "armor_reduction_pct": 30
+            },
+            "rotation": {
+              "starters_per_cycle": 2,
+              "starter_weapon_pct": 406,
+              "attack_speed_inc_pct": 199,
+              "starter_additional_as_pct": 0,
+              "finisher_additional_as_pct": -40,
+              "extra_clones": 0,
+              "clone_falloff": 0.7,
+              "mark_taken_pct": 30,
+              "combo_points": 2,
+              "finisher_amp_pct": 30,
+              "finishers_per_cycle": 1
+            },
+            "tags": [
+              "melee",
+              "attack",
+              "area"
+            ],
+            "_derived": {
+              "rating_flat": 500,
+              "rating_inc_pct": 105,
+              "fervor_effect_pct": 0,
+              "fervor_rating": 100,
+              "has_fervor": 0,
+              "warcry_min_enemies": 0,
+              "warcry_max_doubled": 0,
+              "warcry_effect_pct": 0,
+              "warcry_additional_effect_pct": 0,
+              "fervor_dmg_per_rating": 0,
+              "fervor_dmg_per_rating_plain": 0,
+              "frostbite_max": 120,
+              "frostbite_effect_pct": 0
+            }
+          },
           "gear": [
             {
               "slot": "helmet",
@@ -68231,7 +70257,7 @@
               ]
             }
           ],
-          "sourceNote": "The installed Spirit Magus actor/action records, socket terms, Iris traits, and player-defense inputs are available. AI rotation, complete minion modifiers, Growth/Breeze state, and total player EHP remain uncalculated."
+          "sourceNote": "Dummy DPS from the shared cycleDps formula (55% affix coverage). Absolute map DPS is not claimed."
         },
         {
           "id": "tli_dump_loadout_1uwz7u3",
@@ -68247,7 +70273,21 @@
             "lineageEvidence": "source-document",
             "sourceKind": "compendium"
           },
-          "model": null,
+          "model": {
+            "modelId": "shared-cycle-dps",
+            "modelVersion": "1",
+            "scenarioFingerprint": "dummy-shared-cycle-dps-v1",
+            "actorId": "d397380a-d947-5f11-b25e-381cf6311f04",
+            "skillId": "iris-spirit-magus",
+            "dps": 16730645.726449817,
+            "deteriorationDps": 0,
+            "cycleTime": 0.8175399479747305,
+            "modeled": 81,
+            "ignored": 94,
+            "unmodeled": 72,
+            "coverage": 0.5294117647058824,
+            "confidence": "experimental"
+          },
           "partialMetrics": [],
           "supportEvidenceStatus": "not-applicable",
           "supportEvidence": [],
@@ -74943,7 +76983,110 @@
             "unsupported": 72,
             "classificationRate": 0.5294117647058824
           },
-          "snapshot": null,
+          "snapshot": {
+            "base": {
+              "weapon_phys_min": 216,
+              "weapon_phys_max": 224,
+              "weapon_flat_cold_min": 0,
+              "weapon_flat_cold_max": 0,
+              "gear_phys_pct": 95,
+              "gain_phys_as_cold_pct": 0,
+              "weapon_attack_speed": 1.5,
+              "skill_weapon_pct": 127,
+              "flat_added_min": 0,
+              "flat_added_max": 0,
+              "flat_added_cold_min": 0,
+              "flat_added_cold_max": 0,
+              "added_damage_effectiveness_pct": 100,
+              "weapon_flat_fire_min": 124,
+              "weapon_flat_fire_max": 165
+            },
+            "increased": {
+              "physical": 0,
+              "attack": 0,
+              "melee": 0,
+              "area": 0,
+              "hit": 0,
+              "cold": 0,
+              "fire": 0,
+              "lightning": 0,
+              "elemental": 0,
+              "projectile": 0,
+              "ranged": 0,
+              "horizontal_projectile": 0,
+              "parabolic_projectile": 0,
+              "minion": 783,
+              "channeled": 0,
+              "triggered": 0,
+              "focus": 0,
+              "global": 247,
+              "erosion": 96
+            },
+            "additional": {
+              "strength": 108,
+              "warcry_buffs": 0,
+              "ice_bond": 28,
+              "fervor": 0,
+              "sealed_life_mana": 0,
+              "blessings": 0,
+              "precise_auras": 201.04,
+              "misc": 2461.7260245456146,
+              "skill_levels": 21
+            },
+            "enemy_taken": {
+              "frostbite": 120,
+              "paralysis": 0,
+              "cold_infiltration": 0,
+              "timid_curse": 0,
+              "fixate": 1.0999999999999899
+            },
+            "crit": {
+              "chance_pct": 15.25,
+              "damage_pct": 460,
+              "crit_dmg_taken_pct": 10
+            },
+            "penetration": {
+              "cold_pct": 0,
+              "armor_pct": 0
+            },
+            "enemy": {
+              "cold_res_pct": 30,
+              "armor_reduction_pct": 30
+            },
+            "rotation": {
+              "starters_per_cycle": 2,
+              "starter_weapon_pct": 406,
+              "attack_speed_inc_pct": 199,
+              "starter_additional_as_pct": 0,
+              "finisher_additional_as_pct": -40,
+              "extra_clones": 0,
+              "clone_falloff": 0.7,
+              "mark_taken_pct": 30,
+              "combo_points": 2,
+              "finisher_amp_pct": 30,
+              "finishers_per_cycle": 1
+            },
+            "tags": [
+              "melee",
+              "attack",
+              "area"
+            ],
+            "_derived": {
+              "rating_flat": 500,
+              "rating_inc_pct": 105,
+              "fervor_effect_pct": 0,
+              "fervor_rating": 100,
+              "has_fervor": 0,
+              "warcry_min_enemies": 0,
+              "warcry_max_doubled": 0,
+              "warcry_effect_pct": 0,
+              "warcry_additional_effect_pct": 0,
+              "fervor_dmg_per_rating": 0,
+              "fervor_dmg_per_rating_plain": 0,
+              "frostbite_max": 120,
+              "frostbite_effect_pct": 0
+            }
+          },
           "gear": [
             {
               "slot": "helmet",
@@ -75994,7 +78137,7 @@
               ]
             }
           ],
-          "sourceNote": "The installed Spirit Magus actor/action records, socket terms, Iris traits, and player-defense inputs are available. AI rotation, complete minion modifiers, Growth/Breeze state, and total player EHP remain uncalculated."
+          "sourceNote": "Dummy DPS from the shared cycleDps formula (53% affix coverage). Absolute map DPS is not claimed."
         },
         {
           "id": "tli_dump_loadout_pyjaoz",
@@ -76010,7 +78153,21 @@
             "lineageEvidence": "source-document",
             "sourceKind": "compendium"
           },
-          "model": null,
+          "model": {
+            "modelId": "shared-cycle-dps",
+            "modelVersion": "1",
+            "scenarioFingerprint": "dummy-shared-cycle-dps-v1",
+            "actorId": "d397380a-d947-5f11-b25e-381cf6311f04",
+            "skillId": "iris-spirit-magus",
+            "dps": 53614515.19460909,
+            "deteriorationDps": 0,
+            "cycleTime": 0.8517228029423152,
+            "modeled": 79,
+            "ignored": 98,
+            "unmodeled": 74,
+            "coverage": 0.5163398692810458,
+            "confidence": "experimental"
+          },
           "partialMetrics": [],
           "supportEvidenceStatus": "not-applicable",
           "supportEvidence": [],
@@ -82777,7 +84934,108 @@
             "unsupported": 74,
             "classificationRate": 0.5163398692810458
           },
-          "snapshot": null,
+          "snapshot": {
+            "base": {
+              "weapon_phys_min": 214,
+              "weapon_phys_max": 222,
+              "weapon_flat_cold_min": 0,
+              "weapon_flat_cold_max": 0,
+              "gear_phys_pct": 78,
+              "gain_phys_as_cold_pct": 0,
+              "weapon_attack_speed": 1.5,
+              "skill_weapon_pct": 127,
+              "flat_added_min": 0,
+              "flat_added_max": 0,
+              "flat_added_cold_min": 0,
+              "flat_added_cold_max": 0,
+              "added_damage_effectiveness_pct": 100
+            },
+            "increased": {
+              "physical": 105,
+              "attack": 0,
+              "melee": 0,
+              "area": 0,
+              "hit": 0,
+              "cold": 0,
+              "fire": 0,
+              "lightning": 0,
+              "elemental": 0,
+              "projectile": 0,
+              "ranged": 23,
+              "horizontal_projectile": 0,
+              "parabolic_projectile": 0,
+              "minion": 660,
+              "channeled": 0,
+              "triggered": 0,
+              "focus": 0,
+              "global": 211
+            },
+            "additional": {
+              "strength": 108,
+              "warcry_buffs": 0,
+              "ice_bond": 28,
+              "fervor": 0,
+              "sealed_life_mana": 0,
+              "blessings": 0,
+              "precise_auras": 201.04,
+              "misc": 3694.92376422767,
+              "skill_levels": 21
+            },
+            "enemy_taken": {
+              "frostbite": 120,
+              "paralysis": 0,
+              "cold_infiltration": 0,
+              "timid_curse": 0,
+              "fixate": 1.0999999999999899
+            },
+            "crit": {
+              "chance_pct": 15.25,
+              "damage_pct": 360,
+              "double_damage_chance_pct": 40,
+              "crit_dmg_taken_pct": 10
+            },
+            "penetration": {
+              "cold_pct": 26,
+              "armor_pct": 43
+            },
+            "enemy": {
+              "cold_res_pct": 30,
+              "armor_reduction_pct": 30
+            },
+            "rotation": {
+              "starters_per_cycle": 2,
+              "starter_weapon_pct": 406,
+              "attack_speed_inc_pct": 187,
+              "starter_additional_as_pct": 0,
+              "finisher_additional_as_pct": -40,
+              "extra_clones": 0,
+              "clone_falloff": 0.7,
+              "mark_taken_pct": 30,
+              "combo_points": 2,
+              "finisher_amp_pct": 30,
+              "finishers_per_cycle": 1
+            },
+            "tags": [
+              "melee",
+              "attack",
+              "area"
+            ],
+            "_derived": {
+              "rating_flat": 500,
+              "rating_inc_pct": 105,
+              "fervor_effect_pct": 0,
+              "fervor_rating": 100,
+              "has_fervor": 0,
+              "warcry_min_enemies": 0,
+              "warcry_max_doubled": 0,
+              "warcry_effect_pct": 0,
+              "warcry_additional_effect_pct": 0,
+              "fervor_dmg_per_rating": 0,
+              "fervor_dmg_per_rating_plain": 0,
+              "frostbite_max": 120,
+              "frostbite_effect_pct": 0
+            }
+          },
           "gear": [
             {
               "slot": "helmet",
@@ -83835,7 +86093,7 @@
               ]
             }
           ],
-          "sourceNote": "The installed Spirit Magus actor/action records, socket terms, Iris traits, and player-defense inputs are available. AI rotation, complete minion modifiers, Growth/Breeze state, and total player EHP remain uncalculated."
+          "sourceNote": "Dummy DPS from the shared cycleDps formula (52% affix coverage). Absolute map DPS is not claimed."
         },
         {
           "id": "tli_dump_loadout_luqu22",
@@ -83851,7 +86109,21 @@
             "lineageEvidence": "source-document",
             "sourceKind": "compendium"
           },
-          "model": null,
+          "model": {
+            "modelId": "shared-cycle-dps",
+            "modelVersion": "1",
+            "scenarioFingerprint": "dummy-shared-cycle-dps-v1",
+            "actorId": "d397380a-d947-5f11-b25e-381cf6311f04",
+            "skillId": "iris-spirit-magus",
+            "dps": 119529100.69136998,
+            "deteriorationDps": 0,
+            "cycleTime": 0.6964229186451409,
+            "modeled": 93,
+            "ignored": 97,
+            "unmodeled": 73,
+            "coverage": 0.5602409638554217,
+            "confidence": "experimental"
+          },
           "partialMetrics": [],
           "supportEvidenceStatus": "not-applicable",
           "supportEvidence": [],
@@ -90444,7 +92716,108 @@
             "unsupported": 73,
             "classificationRate": 0.5602409638554217
           },
-          "snapshot": null,
+          "snapshot": {
+            "base": {
+              "weapon_phys_min": 214,
+              "weapon_phys_max": 222,
+              "weapon_flat_cold_min": 0,
+              "weapon_flat_cold_max": 0,
+              "gear_phys_pct": 78,
+              "gain_phys_as_cold_pct": 0,
+              "weapon_attack_speed": 1.5,
+              "skill_weapon_pct": 127,
+              "flat_added_min": 0,
+              "flat_added_max": 0,
+              "flat_added_cold_min": 0,
+              "flat_added_cold_max": 0,
+              "added_damage_effectiveness_pct": 100
+            },
+            "increased": {
+              "physical": 105,
+              "attack": 0,
+              "melee": 0,
+              "area": 0,
+              "hit": 0,
+              "cold": 0,
+              "fire": 0,
+              "lightning": 0,
+              "elemental": 0,
+              "projectile": 0,
+              "ranged": 23,
+              "horizontal_projectile": 0,
+              "parabolic_projectile": 0,
+              "minion": 548,
+              "channeled": 0,
+              "triggered": 0,
+              "focus": 0,
+              "global": 238
+            },
+            "additional": {
+              "strength": 108,
+              "warcry_buffs": 0,
+              "ice_bond": 28,
+              "fervor": 0,
+              "sealed_life_mana": 0,
+              "blessings": 0,
+              "precise_auras": 201.04,
+              "misc": 5428.776364231607,
+              "skill_levels": 21
+            },
+            "enemy_taken": {
+              "frostbite": 120,
+              "paralysis": 0,
+              "cold_infiltration": 0,
+              "timid_curse": 0,
+              "fixate": 1.0999999999999899
+            },
+            "crit": {
+              "chance_pct": 16.5,
+              "damage_pct": 363,
+              "double_damage_chance_pct": 40,
+              "crit_dmg_taken_pct": 10
+            },
+            "penetration": {
+              "cold_pct": 26,
+              "armor_pct": 59
+            },
+            "enemy": {
+              "cold_res_pct": 30,
+              "armor_reduction_pct": 30
+            },
+            "rotation": {
+              "starters_per_cycle": 2,
+              "starter_weapon_pct": 406,
+              "attack_speed_inc_pct": 251,
+              "starter_additional_as_pct": 0,
+              "finisher_additional_as_pct": -40,
+              "extra_clones": 0,
+              "clone_falloff": 0.7,
+              "mark_taken_pct": 30,
+              "combo_points": 2,
+              "finisher_amp_pct": 30,
+              "finishers_per_cycle": 1
+            },
+            "tags": [
+              "melee",
+              "attack",
+              "area"
+            ],
+            "_derived": {
+              "rating_flat": 500,
+              "rating_inc_pct": 130,
+              "fervor_effect_pct": 0,
+              "fervor_rating": 100,
+              "has_fervor": 0,
+              "warcry_min_enemies": 0,
+              "warcry_max_doubled": 0,
+              "warcry_effect_pct": 0,
+              "warcry_additional_effect_pct": 0,
+              "fervor_dmg_per_rating": 0,
+              "fervor_dmg_per_rating_plain": 0,
+              "frostbite_max": 120,
+              "frostbite_effect_pct": 0
+            }
+          },
           "gear": [
             {
               "slot": "helmet",
@@ -91533,7 +93906,7 @@
               ]
             }
           ],
-          "sourceNote": "The installed Spirit Magus actor/action records, socket terms, Iris traits, and player-defense inputs are available. AI rotation, complete minion modifiers, Growth/Breeze state, and total player EHP remain uncalculated."
+          "sourceNote": "Dummy DPS from the shared cycleDps formula (56% affix coverage). Absolute map DPS is not claimed."
         },
         {
           "id": "tli_dump_loadout_hlzlr6",
@@ -91549,7 +93922,21 @@
             "lineageEvidence": "source-document",
             "sourceKind": "compendium"
           },
-          "model": null,
+          "model": {
+            "modelId": "shared-cycle-dps",
+            "modelVersion": "1",
+            "scenarioFingerprint": "dummy-shared-cycle-dps-v1",
+            "actorId": "d397380a-d947-5f11-b25e-381cf6311f04",
+            "skillId": "iris-spirit-magus",
+            "dps": 73447226.16375011,
+            "deteriorationDps": 0,
+            "cycleTime": 0.7189542483660132,
+            "modeled": 90,
+            "ignored": 100,
+            "unmodeled": 78,
+            "coverage": 0.5357142857142857,
+            "confidence": "experimental"
+          },
           "partialMetrics": [],
           "supportEvidenceStatus": "not-applicable",
           "supportEvidence": [],
@@ -98001,7 +100388,109 @@
             "unsupported": 78,
             "classificationRate": 0.5357142857142857
           },
-          "snapshot": null,
+          "snapshot": {
+            "base": {
+              "weapon_phys_min": 227,
+              "weapon_phys_max": 235,
+              "weapon_flat_cold_min": 0,
+              "weapon_flat_cold_max": 0,
+              "gear_phys_pct": 78,
+              "gain_phys_as_cold_pct": 0,
+              "weapon_attack_speed": 1.5,
+              "skill_weapon_pct": 127,
+              "flat_added_min": 0,
+              "flat_added_max": 0,
+              "flat_added_cold_min": 0,
+              "flat_added_cold_max": 0,
+              "added_damage_effectiveness_pct": 100
+            },
+            "increased": {
+              "physical": 105,
+              "attack": 0,
+              "melee": 0,
+              "area": 0,
+              "hit": 0,
+              "cold": 0,
+              "fire": 0,
+              "lightning": 0,
+              "elemental": 0,
+              "projectile": 0,
+              "ranged": 23,
+              "horizontal_projectile": 0,
+              "parabolic_projectile": 0,
+              "minion": 514,
+              "channeled": 0,
+              "triggered": 0,
+              "focus": 0,
+              "global": 184,
+              "erosion": 22
+            },
+            "additional": {
+              "strength": 108,
+              "warcry_buffs": 0,
+              "ice_bond": 28,
+              "fervor": 0,
+              "sealed_life_mana": 0,
+              "blessings": 0,
+              "precise_auras": 201.04,
+              "misc": 5665.048858429537,
+              "skill_levels": 21
+            },
+            "enemy_taken": {
+              "frostbite": 120,
+              "paralysis": 0,
+              "cold_infiltration": 0,
+              "timid_curse": 0,
+              "fixate": 1.0999999999999899
+            },
+            "crit": {
+              "chance_pct": 17.5,
+              "damage_pct": 360,
+              "double_damage_chance_pct": 40,
+              "crit_dmg_taken_pct": 10
+            },
+            "penetration": {
+              "cold_pct": 26,
+              "armor_pct": 13
+            },
+            "enemy": {
+              "cold_res_pct": 30,
+              "armor_reduction_pct": 30
+            },
+            "rotation": {
+              "starters_per_cycle": 2,
+              "starter_weapon_pct": 406,
+              "attack_speed_inc_pct": 240,
+              "starter_additional_as_pct": 0,
+              "finisher_additional_as_pct": -40,
+              "extra_clones": 0,
+              "clone_falloff": 0.7,
+              "mark_taken_pct": 30,
+              "combo_points": 2,
+              "finisher_amp_pct": 30,
+              "finishers_per_cycle": 1
+            },
+            "tags": [
+              "melee",
+              "attack",
+              "area"
+            ],
+            "_derived": {
+              "rating_flat": 500,
+              "rating_inc_pct": 150,
+              "fervor_effect_pct": 0,
+              "fervor_rating": 100,
+              "has_fervor": 0,
+              "warcry_min_enemies": 0,
+              "warcry_max_doubled": 0,
+              "warcry_effect_pct": 0,
+              "warcry_additional_effect_pct": 0,
+              "fervor_dmg_per_rating": 0,
+              "fervor_dmg_per_rating_plain": 0,
+              "frostbite_max": 120,
+              "frostbite_effect_pct": 0
+            }
+          },
           "gear": [
             {
               "slot": "helmet",
@@ -99094,7 +101583,7 @@
               ]
             }
           ],
-          "sourceNote": "The installed Spirit Magus actor/action records, socket terms, Iris traits, and player-defense inputs are available. AI rotation, complete minion modifiers, Growth/Breeze state, and total player EHP remain uncalculated."
+          "sourceNote": "Dummy DPS from the shared cycleDps formula (54% affix coverage). Absolute map DPS is not claimed."
         },
         {
           "id": "tli_dump_loadout_1wjgn0i",
@@ -99110,7 +101599,21 @@
             "lineageEvidence": "source-document",
             "sourceKind": "compendium"
           },
-          "model": null,
+          "model": {
+            "modelId": "shared-cycle-dps",
+            "modelVersion": "1",
+            "scenarioFingerprint": "dummy-shared-cycle-dps-v1",
+            "actorId": "d397380a-d947-5f11-b25e-381cf6311f04",
+            "skillId": "iris-spirit-magus",
+            "dps": 96535781.81135379,
+            "deteriorationDps": 0,
+            "cycleTime": 0.7189542483660132,
+            "modeled": 88,
+            "ignored": 110,
+            "unmodeled": 79,
+            "coverage": 0.5269461077844312,
+            "confidence": "experimental"
+          },
           "partialMetrics": [],
           "supportEvidenceStatus": "not-applicable",
           "supportEvidence": [],
@@ -105256,7 +107759,109 @@
             "unsupported": 79,
             "classificationRate": 0.5269461077844312
           },
-          "snapshot": null,
+          "snapshot": {
+            "base": {
+              "weapon_phys_min": 227,
+              "weapon_phys_max": 235,
+              "weapon_flat_cold_min": 0,
+              "weapon_flat_cold_max": 0,
+              "gear_phys_pct": 78,
+              "gain_phys_as_cold_pct": 0,
+              "weapon_attack_speed": 1.5,
+              "skill_weapon_pct": 127,
+              "flat_added_min": 0,
+              "flat_added_max": 0,
+              "flat_added_cold_min": 0,
+              "flat_added_cold_max": 0,
+              "added_damage_effectiveness_pct": 100
+            },
+            "increased": {
+              "physical": 105,
+              "attack": 0,
+              "melee": 0,
+              "area": 0,
+              "hit": 0,
+              "cold": 0,
+              "fire": 0,
+              "lightning": 0,
+              "elemental": 0,
+              "projectile": 0,
+              "ranged": 23,
+              "horizontal_projectile": 0,
+              "parabolic_projectile": 0,
+              "minion": 360,
+              "channeled": 0,
+              "triggered": 0,
+              "focus": 0,
+              "global": 166,
+              "erosion": 26
+            },
+            "additional": {
+              "strength": 108,
+              "warcry_buffs": 0,
+              "ice_bond": 28,
+              "fervor": 0,
+              "sealed_life_mana": 0,
+              "blessings": 0,
+              "precise_auras": 201.04,
+              "misc": 7251.129100360671,
+              "skill_levels": 21
+            },
+            "enemy_taken": {
+              "frostbite": 120,
+              "paralysis": 0,
+              "cold_infiltration": 0,
+              "timid_curse": 0,
+              "fixate": 1.0999999999999899
+            },
+            "crit": {
+              "chance_pct": 20.5,
+              "damage_pct": 375,
+              "double_damage_chance_pct": 40,
+              "crit_dmg_taken_pct": 10
+            },
+            "penetration": {
+              "cold_pct": 26,
+              "armor_pct": 13
+            },
+            "enemy": {
+              "cold_res_pct": 30,
+              "armor_reduction_pct": 30
+            },
+            "rotation": {
+              "starters_per_cycle": 2,
+              "starter_weapon_pct": 406,
+              "attack_speed_inc_pct": 240,
+              "starter_additional_as_pct": 0,
+              "finisher_additional_as_pct": -40,
+              "extra_clones": 0,
+              "clone_falloff": 0.7,
+              "mark_taken_pct": 30,
+              "combo_points": 2,
+              "finisher_amp_pct": 30,
+              "finishers_per_cycle": 1
+            },
+            "tags": [
+              "melee",
+              "attack",
+              "area"
+            ],
+            "_derived": {
+              "rating_flat": 500,
+              "rating_inc_pct": 210,
+              "fervor_effect_pct": 0,
+              "fervor_rating": 100,
+              "has_fervor": 0,
+              "warcry_min_enemies": 0,
+              "warcry_max_doubled": 0,
+              "warcry_effect_pct": 0,
+              "warcry_additional_effect_pct": 0,
+              "fervor_dmg_per_rating": 0,
+              "fervor_dmg_per_rating_plain": 0,
+              "frostbite_max": 120,
+              "frostbite_effect_pct": 0
+            }
+          },
           "gear": [
             {
               "slot": "helmet",
@@ -106361,7 +108966,7 @@
               ]
             }
           ],
-          "sourceNote": "The installed Spirit Magus actor/action records, socket terms, Iris traits, and player-defense inputs are available. AI rotation, complete minion modifiers, Growth/Breeze state, and total player EHP remain uncalculated."
+          "sourceNote": "Dummy DPS from the shared cycleDps formula (53% affix coverage). Absolute map DPS is not claimed."
         },
         {
           "id": "tli_dump_loadout_1h1w98a",
@@ -106377,7 +108982,21 @@
             "lineageEvidence": "source-document",
             "sourceKind": "compendium"
           },
-          "model": null,
+          "model": {
+            "modelId": "shared-cycle-dps",
+            "modelVersion": "1",
+            "scenarioFingerprint": "dummy-shared-cycle-dps-v1",
+            "actorId": "d397380a-d947-5f11-b25e-381cf6311f04",
+            "skillId": "iris-spirit-magus",
+            "dps": 135887469.32894123,
+            "deteriorationDps": 0,
+            "cycleTime": 0.7024265644955301,
+            "modeled": 85,
+            "ignored": 113,
+            "unmodeled": 84,
+            "coverage": 0.5029585798816568,
+            "confidence": "experimental"
+          },
           "partialMetrics": [],
           "supportEvidenceStatus": "not-applicable",
           "supportEvidence": [],
@@ -113111,7 +115730,108 @@
             "unsupported": 84,
             "classificationRate": 0.5029585798816568
           },
-          "snapshot": null,
+          "snapshot": {
+            "base": {
+              "weapon_phys_min": 226,
+              "weapon_phys_max": 236,
+              "weapon_flat_cold_min": 0,
+              "weapon_flat_cold_max": 0,
+              "gear_phys_pct": 124,
+              "gain_phys_as_cold_pct": 0,
+              "weapon_attack_speed": 1.5,
+              "skill_weapon_pct": 127,
+              "flat_added_min": 0,
+              "flat_added_max": 0,
+              "flat_added_cold_min": 0,
+              "flat_added_cold_max": 0,
+              "added_damage_effectiveness_pct": 100
+            },
+            "increased": {
+              "physical": 117,
+              "attack": 0,
+              "melee": 0,
+              "area": 0,
+              "hit": 0,
+              "cold": 0,
+              "fire": 0,
+              "lightning": 9,
+              "elemental": 0,
+              "projectile": 0,
+              "ranged": 0,
+              "horizontal_projectile": 0,
+              "parabolic_projectile": 0,
+              "minion": 326,
+              "channeled": 0,
+              "triggered": 0,
+              "focus": 0,
+              "global": 166
+            },
+            "additional": {
+              "strength": 108,
+              "warcry_buffs": 0,
+              "ice_bond": 28,
+              "fervor": 0,
+              "sealed_life_mana": 0,
+              "blessings": 0,
+              "precise_auras": 201.04,
+              "misc": 6935.537714732324,
+              "skill_levels": 21
+            },
+            "enemy_taken": {
+              "frostbite": 120,
+              "paralysis": 0,
+              "cold_infiltration": 0,
+              "timid_curse": 0,
+              "fixate": 1.0999999999999899
+            },
+            "crit": {
+              "chance_pct": 17.75,
+              "damage_pct": 431,
+              "double_damage_chance_pct": 38,
+              "crit_dmg_taken_pct": 10
+            },
+            "penetration": {
+              "cold_pct": 29,
+              "armor_pct": 17
+            },
+            "enemy": {
+              "cold_res_pct": 30,
+              "armor_reduction_pct": 30
+            },
+            "rotation": {
+              "starters_per_cycle": 2,
+              "starter_weapon_pct": 406,
+              "attack_speed_inc_pct": 248,
+              "starter_additional_as_pct": 0,
+              "finisher_additional_as_pct": -40,
+              "extra_clones": 0,
+              "clone_falloff": 0.7,
+              "mark_taken_pct": 30,
+              "combo_points": 2,
+              "finisher_amp_pct": 30,
+              "finishers_per_cycle": 1
+            },
+            "tags": [
+              "melee",
+              "attack",
+              "area"
+            ],
+            "_derived": {
+              "rating_flat": 500,
+              "rating_inc_pct": 155,
+              "fervor_effect_pct": 0,
+              "fervor_rating": 100,
+              "has_fervor": 0,
+              "warcry_min_enemies": 0,
+              "warcry_max_doubled": 0,
+              "warcry_effect_pct": 0,
+              "warcry_additional_effect_pct": 0,
+              "fervor_dmg_per_rating": 0,
+              "fervor_dmg_per_rating_plain": 0,
+              "frostbite_max": 120,
+              "frostbite_effect_pct": 0
+            }
+          },
           "gear": [
             {
               "slot": "helmet",
@@ -114210,7 +116930,7 @@
               ]
             }
           ],
-          "sourceNote": "The installed Spirit Magus actor/action records, socket terms, Iris traits, and player-defense inputs are available. AI rotation, complete minion modifiers, Growth/Breeze state, and total player EHP remain uncalculated."
+          "sourceNote": "Dummy DPS from the shared cycleDps formula (50% affix coverage). Absolute map DPS is not claimed."
         }
       ]
     }

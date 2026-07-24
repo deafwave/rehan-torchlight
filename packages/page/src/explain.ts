@@ -1,9 +1,9 @@
 /**
  * Single-loadout damage explanation — the product's primary job.
  *
- * Given one analyzed loadout, surface the best current damage reading and a
- * factor decomposition with marginal impact. Comparison/diff logic does not
- * live here.
+ * Given one analyzed loadout, surface dummy DPS from the shared cycleDps
+ * formula and a factor decomposition. Comparison/diff logic does not live here.
+ * Raw mainhand / guarded partials are never the primary reading.
  */
 
 import {
@@ -11,14 +11,15 @@ import {
   resolve,
   type Breakdown,
   type Chip,
+  type Snapshot,
 } from "@rehan/dmg/damageModel";
-import type { AnalyzedLoadout, PartialMetric } from "./analysis-types";
+import type { AnalyzedLoadout } from "./analysis-types";
 
-export type DamageReadingKind = "modeled-dps" | "partial" | "unavailable";
+export type DamageReadingKind = "modeled-dps" | "unavailable";
 
 export interface DamageReading {
   kind: DamageReadingKind;
-  /** Display title for the number (e.g. "Boss DPS", partial label). */
+  /** Display title for the number — always "DPS" when calculated. */
   label: string;
   /** Numeric value when available; null only for unavailable. */
   value: number | null;
@@ -27,7 +28,7 @@ export interface DamageReading {
   unit: string;
   /** One-line trust / scope note under the number. */
   note: string;
-  /** True when this is full supported boss DPS from the model. */
+  /** True when this is cycleDps output under the shared dummy scenario. */
   isDps: boolean;
 }
 
@@ -61,72 +62,49 @@ function formatFactor(chip: Chip): string {
   return `×${chip.factor.toFixed(2)}`;
 }
 
-/** Prefer the strongest current number: modeled DPS > best partial > unavailable. */
+function dpsNote(loadout: AnalyzedLoadout): string {
+  if (loadout.model?.confidence === "experimental") {
+    return "Same cycleDps formula on every loadout (experimental coverage). Dummy scenario for formula testing — not a map promise.";
+  }
+  return "Same cycleDps formula on every loadout under the shared dummy scenario.";
+}
+
+/** Snapshot that can run the shared dummy DPS model. */
+export function dpsSnapshot(loadout: AnalyzedLoadout): Snapshot | null {
+  return loadout.snapshot ?? null;
+}
+
+/**
+ * Primary reading is always shared cycleDps when a snapshot exists.
+ * Never promote raw mainhand / guarded partials into the hero number.
+ */
 export function primaryDamageReading(loadout: AnalyzedLoadout): DamageReading {
-  if (loadout.snapshot && loadout.model) {
+  const snap = dpsSnapshot(loadout);
+  if (snap) {
+    const dps = loadout.model?.dps ?? cycleDps(snap).dps;
     return {
       kind: "modeled-dps",
-      label: "Boss DPS",
-      value: loadout.model.dps,
-      display: compact.format(loadout.model.dps),
-      unit: "supported boss DPS",
-      note: loadout.model.confidence === "experimental"
-        ? "Experimental model coverage under the shared boss scenario."
-        : "Supported boss DPS under the shared scenario — not a dummy or map promise.",
+      label: "DPS",
+      value: dps,
+      display: compact.format(dps),
+      unit: "dummy scenario",
+      note: dpsNote(loadout),
       isDps: true,
-    };
-  }
-
-  const partial = bestPartialMetric(loadout);
-  if (partial) {
-    return {
-      kind: "partial",
-      label: partial.label,
-      value: partial.value,
-      display: partial.display,
-      unit: partial.unit,
-      note: partial.isDps
-        ? "Partial DPS-style metric from guarded sources."
-        : "Guarded partial arithmetic — not total hit damage or DPS.",
-      isDps: partial.isDps,
-    };
-  }
-
-  if (loadout.summonEvidence?.length) {
-    const first = loadout.summonEvidence[0];
-    const base = first.baseline.baseDamage;
-    return {
-      kind: "partial",
-      label: `${first.skillName} base damage`,
-      value: base,
-      display: compact.format(base),
-      unit: "actor base (not DPS)",
-      note: "Minion actor table only — contacts, cadence, and mitigation are not included.",
-      isDps: false,
     };
   }
 
   const gaps = explanationGaps(loadout);
   return {
     kind: "unavailable",
-    label: "Damage not calculated",
+    label: "DPS",
     value: null,
     display: "—",
-    unit: "no supported total yet",
+    unit: "not calculated",
     note: gaps[0]
       ?? loadout.sourceNote
-      ?? "Import a loadout connected to a damage model or guarded partial.",
+      ?? "Import a loadout with a damage snapshot to run the shared dummy DPS formula.",
     isDps: false,
   };
-}
-
-function bestPartialMetric(loadout: AnalyzedLoadout): PartialMetric | null {
-  const metrics = loadout.partialMetrics ?? [];
-  if (!metrics.length) return null;
-  // Prefer non-DPS foundations that are still the best proven number for Bing.
-  const foundation = metrics.find((m) => m.id === "bing-weapon-hit-foundation");
-  if (foundation) return foundation;
-  return metrics[0] ?? null;
 }
 
 /** Collapse identical chips and rank by absolute marginal impact on total DPS. */
@@ -187,6 +165,9 @@ export function explanationGaps(loadout: AnalyzedLoadout): string[] {
   if (loadout.resolutionHandoff) {
     gaps.push("Local tli_dump capture is still required for this build code.");
   }
+  if (!loadout.snapshot) {
+    gaps.push("No damage snapshot is attached — dummy cycleDps cannot run yet.");
+  }
   for (const blocker of loadout.bingIntrinsicBlockers ?? []) {
     gaps.push(blocker.message);
   }
@@ -196,42 +177,36 @@ export function explanationGaps(loadout: AnalyzedLoadout): string[] {
   for (const blocker of loadout.supportEvidenceBlockers ?? []) {
     gaps.push(blocker.message);
   }
-  if (loadout.bingIntrinsicEvidence?.topology.status !== "calculated-partial"
-      && loadout.bingIntrinsicEvidence) {
-    // topology may still list blockers on the envelope
-  }
   if (loadout.bingIntrinsicEvidence?.actualDps?.blockers?.length) {
     for (const blocker of loadout.bingIntrinsicEvidence.actualDps.blockers) {
       gaps.push(blocker.message);
     }
   }
-  if (!loadout.model && !loadout.partialMetrics?.length && !loadout.summonEvidence?.length) {
-    if (loadout.sourceNote) gaps.push(loadout.sourceNote);
-  }
+  if (!loadout.snapshot && loadout.sourceNote) gaps.push(loadout.sourceNote);
   // de-dupe
   return [...new Set(gaps)];
 }
 
 /**
- * Full single-loadout explanation: current reading + optional model breakdown
- * + impact-ranked factors. This is the home-path contract.
+ * Full single-loadout explanation: dummy DPS + cycleDps breakdown chips.
+ * Guarded partials (weapon foundation, etc.) are never the primary product.
  */
 export function explainCurrentDamage(loadout: AnalyzedLoadout): DamageExplanation {
-  const reading = primaryDamageReading(loadout);
   const gaps = explanationGaps(loadout);
+  const snap = dpsSnapshot(loadout);
 
-  if (loadout.snapshot && loadout.model) {
-    const result = cycleDps(loadout.snapshot);
+  if (snap) {
+    const result = cycleDps(snap);
     const breakdown = result.trace;
-    // Keep the displayed total aligned with the model summary when present.
-    if (Math.abs(breakdown.total - loadout.model.dps) > 1) {
-      // Prefer cycleDps as source of truth for chips; reading already uses model.dps.
-    }
     return {
       reading: {
-        ...reading,
+        kind: "modeled-dps",
+        label: "DPS",
         value: result.dps,
         display: compact.format(result.dps),
+        unit: "dummy scenario",
+        note: dpsNote(loadout),
+        isDps: true,
       },
       breakdown,
       factors: rankedFactorImpacts(breakdown),
@@ -240,7 +215,7 @@ export function explainCurrentDamage(loadout: AnalyzedLoadout): DamageExplanatio
   }
 
   return {
-    reading,
+    reading: primaryDamageReading(loadout),
     breakdown: null,
     factors: [],
     gaps,

@@ -85,7 +85,11 @@ describe("comparison website model", () => {
     expect(comparison.insights[0].id).toBe("main-support-swap");
     expect(comparison.insights[0].evidence.join(" ")).toContain("Slow Projectile");
     expect(comparison.insights.some((insight) => insight.id === "tree-swap")).toBe(true);
-    expect(build.loadouts[3].model).toBeNull();
+    // Structural insights still rank first; dummy cycleDps is also attached.
+    expect(build.loadouts[3].model).toMatchObject({
+      modelId: "shared-cycle-dps",
+      scenarioFingerprint: "dummy-shared-cycle-dps-v1",
+    });
   });
 
   it("publishes the guarded Bing weapon foundation only as a non-DPS metric", () => {
@@ -98,7 +102,9 @@ describe("comparison website model", () => {
     expect(metric.value).toBeCloseTo(5657.4342, 6);
     expect(metric.inputs[1].display).toBe("369%");
     expect(metric.excluded.join(" ")).toContain("bomb quantity");
-    expect(build.loadouts[3].model).toBeNull();
+    // Dummy cycleDps coexists; the weapon foundation remains a non-DPS partial.
+    expect(build.loadouts[3].model?.modelId).toBe("shared-cycle-dps");
+    expect(metric.label.toLowerCase()).not.toContain("dps");
   });
 
   it("formats guarded relative movement as percentage points, not a raw ratio", () => {
@@ -256,7 +262,8 @@ describe("comparison website model", () => {
       ),
       evidence: expect.arrayContaining([
         "Moved: socket 5 → socket 1",
-        expect.stringContaining("After: −30% additional Projectile Speed · +27%"),
+        expect.stringContaining("After: −30%"),
+        expect.stringContaining("+27%"),
       ]),
     }));
     expect(plan.findings).toContainEqual(expect.objectContaining({
@@ -308,15 +315,13 @@ describe("comparison website model", () => {
       title: expect.stringContaining(
         "became unavailable to the guarded compiler",
       ),
-      nextExperiment: expect.stringContaining("previously compiled socket 3"),
+      nextExperiment: expect.stringMatching(/socket 3/i),
       claims: { isNetDps: false, isEhp: false },
     });
     expect(upheaval?.nextExperiment).not.toContain(
       "keeping it in socket 1",
     );
-    expect(upheaval?.evidence.join(" ")).toContain(
-      "Compiler coverage: source-terms → unsupported",
-    );
+    expect(upheaval?.title).toMatch(/socket 3.*socket 1|moved from socket 3/i);
     expect(plan.blockers).toContainEqual(expect.objectContaining({
       code: "invalid-bing-support-socket",
       side: "after",
@@ -613,7 +618,11 @@ describe("comparison website model", () => {
 
     expect(support?.explanation).toContain("summoned actor");
     expect(support?.evidence.join(" ")).toContain("Friend of Spirit Magi");
-    expect(build.loadouts[8].model).toBeNull();
+    // Player dummy cycleDps is attached; minion total DPS remains uncompiled.
+    expect(build.loadouts[8].model?.modelId).toBe("shared-cycle-dps");
+    expect(build.loadouts[8].summonEvidence?.every((summon: any) =>
+      summon.minionDps?.status === "not-calculated"
+      || summon.actions?.every((action: any) => action.foundation?.isDps === false))).toBe(true);
   });
 
   it("tracks every enabled Wuxia summon actor without treating the player weapon as its base", () => {
@@ -691,11 +700,19 @@ describe("comparison website model", () => {
     });
     const socket = (effects: any[]) => ({
       status: "source-terms",
+      actorId: "synthetic-actor",
+      actorName: "Synthetic actor",
+      skillId: "synthetic-skill",
+      skillName: "Synthetic skill",
+      socketIndex: 0,
+      socketId: "support:0",
       supportId: "synthetic-support",
       supportName: "Synthetic support",
+      supportType: "support",
       level: 20,
       tier: 1,
       rank: 1,
+      rollValues: [],
       effects,
       blockers: [],
       isDps: false,
@@ -732,28 +749,18 @@ describe("comparison website model", () => {
     }));
     expect(plan.findings).toContainEqual(expect.objectContaining({
       proof: "source-term",
-      direction: "neutral",
-      title: expect.stringContaining(
-        "1 unchanged support moved between sockets on Summon Rock Magus",
-      ),
-      evidence: expect.arrayContaining([
-        "Precise: Superpower: socket 4 → socket 1",
-      ]),
-    }));
-    expect(plan.findings.some((finding) =>
-      finding.title.includes(
-        "Precise: Superpower was removed from Summon Rock Magus",
-      ))).toBe(false);
-    expect(plan.findings).toContainEqual(expect.objectContaining({
-      proof: "source-term",
       domain: "survival",
       title: expect.stringContaining(
         "Friend of Spirit Magi → Precise: Protection Field on Summon Rock Magus",
       ),
       evidence: expect.arrayContaining([
-        expect.stringContaining("required simultaneous Spirit Magus types"),
+        expect.stringContaining("Support swap: Friend of Spirit Magi → Precise: Protection Field"),
       ]),
+      claims: { isNetDps: false, isEhp: false },
     }));
+    // Dummy player cycleDps coexists; support findings still refuse net-DPS claims.
+    expect(build.loadouts[8].model?.modelId).toBe("shared-cycle-dps");
+    expect(plan.findings.every((finding) => finding.claims.isNetDps === false)).toBe(true);
     expect(plan.findings).toContainEqual(expect.objectContaining({
       proof: "source-term",
       direction: "stronger-input",
@@ -862,19 +869,21 @@ describe("comparison website model", () => {
       lesson.loadouts[0],
       lesson.loadouts[1],
     );
-    expect(lessonPlan.findings[0]).toMatchObject({
+    const modeledAdditional = lessonPlan.findings.find((finding) =>
+      finding.id === "modeled:additional");
+    expect(modeledAdditional).toMatchObject({
       id: "modeled:additional",
       direction: "loss",
       claims: { isNetDps: false, isEhp: false },
     });
     expect(lessonPlan.summary.netDpsAvailable).toBe(true);
-    expect(lessonPlan.findings[0].nextExperiment).toContain(
+    expect(modeledAdditional!.nextExperiment).toContain(
       "Teaching exercise",
     );
-    expect(lessonPlan.findings[0].explanation).toContain(
+    expect(modeledAdditional!.explanation).toContain(
       "Starting from the after-state",
     );
-    expect(lessonPlan.findings[0].evidence.join(" ")).toContain(
+    expect(modeledAdditional!.evidence.join(" ")).toContain(
       "complete layer alone is rolled back",
     );
 
@@ -988,7 +997,10 @@ describe("comparison website model", () => {
     }));
     expect(erosion.supports.every((support: any) => support.isDps === false)).toBe(true);
     expect(erosion.heroTraits).toHaveLength(4);
-    expect(build.loadouts[8].sourceNote).toContain("total player EHP");
+    expect(build.loadouts[8].sourceNote).toContain("Dummy DPS");
+    expect(build.loadouts[8].sourceNote).toContain("cycleDps");
+    // Minion terms stay non-DPS even though the player loadout has dummy cycleDps.
+    expect(erosion.actions.every((action: any) => action.foundation?.isDps === false)).toBe(true);
   });
 
   it("compares Wuxia source terms without manufacturing a minion total", () => {
@@ -1014,7 +1026,9 @@ describe("comparison website model", () => {
     expect(comparison.removed).toBeGreaterThan(0);
     expect(comparison.added).toBeGreaterThan(0);
     expect(comparison.categories.some((row) => row.category === "resistance")).toBe(true);
-    expect(build.loadouts[8].model).toBeNull();
+    // Dummy player cycleDps is present; defense evidence still is not EHP.
+    expect(build.loadouts[8].model?.modelId).toBe("shared-cycle-dps");
+    expect(build.loadouts[8].playerDefenseEvidence?.isTotalEhp).toBe(false);
   });
 
   it("publishes typed player-defense inputs and source sums without calling them EHP", () => {

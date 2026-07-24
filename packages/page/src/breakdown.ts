@@ -68,7 +68,7 @@ export function renderBreakdown(bd: Breakdown): string {
   const L = bd.layers;
   return `<details class="bd" open>`
     + `<summary class="bd-total"><span class="bd-total-num">${compact.format(bd.total)}</span>`
-    + `<span class="bd-total-cap">boss DPS</span></summary>`
+    + `<span class="bd-total-cap">DPS</span></summary>`
     + layer("per-hit", L.perHit.value, "perhit", rows.perhit, "")
     + layer("rotation", L.rotation.value, "rotation", rows.rotation, "×")
     + (L.dot ? layer("Deterioration", L.dot.value, "dot", rows.dot, "×") : "")

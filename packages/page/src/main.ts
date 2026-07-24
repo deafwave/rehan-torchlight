@@ -91,6 +91,8 @@ function loadImportCatalog(): Promise<ImportCatalog> {
 
 type Side = "before" | "after";
 /** Primary product views. Compare-era views remain for secondary deep-links only. */
+/** Top-level site pages: pick a build, then inspect its loadout + DPS. */
+type AppPage = "leaderboard" | "loadout";
 type View =
   | "explain"
   | "build"
@@ -112,6 +114,8 @@ let selection: Selection;
 /** Kept in sync for secondary compare helpers that still take two sides. */
 let beforeSelection: Selection;
 let afterSelection: Selection;
+/** Page 1 = leaderboard/import; page 2 = equipped loadout + DPS formula. */
+let appPage: AppPage = "leaderboard";
 let activeView: View = "explain";
 let changeSection: ChangeSection = "gear";
 let formulaSide: Side = "after";
@@ -253,8 +257,8 @@ function renderSupportedBuildList() {
     </div>`);
   }
   sections.push(`<div class="load-build-group">
-    <span class="panel-kicker">Supported demos</span>
-    ${renderBuildLoadCards(catalog, "No supported builds are loaded yet.")}
+    <span class="panel-kicker">Leaderboard</span>
+    ${renderBuildLoadCards(catalog, "No leaderboard builds are loaded yet.")}
   </div>`);
   if (imported.length) {
     sections.push(`<div class="load-build-group">
@@ -469,7 +473,7 @@ function renderExplain(loadout: AnalyzedLoadout) {
           <h2>Damage product</h2>
         </div>
       </div>
-      <p class="section-intro">Every chip below is used by the real damage model. Impact badges show what happens if that factor is neutralized.</p>
+      <p class="section-intro">Every chip below is used by the shared cycleDps dummy scenario — the same math on every loadout. Impact badges show what happens if that factor is neutralized.</p>
       <div class="formula-primer" aria-label="Damage formula overview">
         <span>base hit</span><i>×</i><span>increased pool</span><i>×</i><span>additional layers</span>
         <i>×</i><span>crit expectation</span><i>×</i><span>mitigation</span><i>×</i><span>cadence</span><i>+</i><span>DoT</span>
@@ -477,42 +481,12 @@ function renderExplain(loadout: AnalyzedLoadout) {
       ${renderBreakdown(breakdown)}
       ${renderFactorImpactList(factors)}
     </section>`;
-  } else if (loadout.summonEvidence?.length) {
-    body = renderMinionFormulaView(loadout);
-  } else if (weaponFoundation(loadout)) {
-    const partial = weaponFoundation(loadout)!;
-    body = `<section class="formula-panel partial-formula explain-panel">
-      <div class="analysis-heading">
-        <div><span class="eyebrow">Guarded partial arithmetic</span><h2>${esc(partial.label)}</h2></div>
-      </div>
-      <div class="partial-formula-total">
-        <div><span>${esc(partial.label)}</span><strong>${esc(partial.display)}</strong><small>${esc(partial.unit)}</small></div>
-        <b>NOT DPS</b>
-      </div>
-      <div class="partial-equation" aria-label="Partial formula">
-        ${partial.inputs.map((input, index) => `${index ? `<i>${index === 1 ? "×" : "+"}</i>` : ""}
-          <span><small>${esc(input.label)}</small><strong>${esc(input.display)}</strong></span>`).join("")}
-        <i>=</i><span class="result"><small>Raw foundation</small><strong>${esc(partial.display)}</strong></span>
-      </div>
-      <p class="section-intro">${esc(partial.scope)}. Its ${partial.confidence === "confirmed-partial" ? "formula and imported inputs are confirmed" : "formula is confirmed and one routing rule is inferred"}.</p>
-      ${loadout.bingIntrinsicEvidence ? `<section class="bing-formula-envelope">
-        <div><span class="panel-kicker">Next guarded layer</span><h3>Conversion, Demolisher, and emission topology</h3></div>
-        <p>The hit envelope and the emission envelope stay separate until target geometry and cadence are known.</p>
-        ${bingIntrinsicSide(loadout.bingIntrinsicEvidence, "Current")}
-      </section>` : ""}
-      ${partial.excluded.length ? `<div class="partial-detail-grid">
-        <div>
-          <span class="panel-kicker">Deliberately excluded</span>
-          <ul>${partial.excluded.map((item) => `<li><span>${esc(item)}</span></li>`).join("")}</ul>
-        </div>
-      </div>` : ""}
-    </section>`;
   } else {
     body = `<section class="single-panel empty-analysis explain-panel">
       <div class="analysis-heading">
-        <div><span class="eyebrow">Why this number</span><h2>Not calculated for this import</h2></div>
+        <div><span class="eyebrow">Why this number</span><h2>DPS not calculated</h2></div>
       </div>
-      <p>${esc(loadout.sourceNote ?? "This build is not connected to a compatible damage model yet.")}</p>
+      <p>${esc(loadout.sourceNote ?? "This loadout has no damage snapshot, so the shared dummy cycleDps formula cannot run.")}</p>
       ${renderLocalCaptureHandoff(loadout)}
     </section>`;
   }
@@ -531,20 +505,20 @@ function renderExplain(loadout: AnalyzedLoadout) {
 function renderBuildOverview(loadout: AnalyzedLoadout) {
   const skillLines = loadout.skills
     .filter((skill) => skill.enabled)
-    .slice(0, 12)
+    .slice(0, 16)
     .map((skill) => `${skillDisplay(skill)}${skill.supports.length ? ` · ${skill.supports.length} supports` : ""}`);
   const gearLines = loadout.gear
     .filter((row) => row.name && row.name !== "Empty")
-    .slice(0, 12)
+    .slice(0, 16)
     .map((row) => `${row.slot.replace(/([a-z])([A-Z])/g, "$1 $2")}: ${row.name}`);
-  return `<section class="single-panel explain-panel">
+  return `<section class="single-panel explain-panel loadout-gear-panel">
     <div class="analysis-heading">
       <div>
-        <span class="eyebrow">This loadout</span>
-        <h2>${esc(loadout.name)}</h2>
+        <span class="eyebrow">Equipped</span>
+        <h2>Loadout · gear & skills</h2>
       </div>
     </div>
-    <p class="section-intro">Inventory of the active loadout. Open Your DPS to see how these inputs feed the current damage number.</p>
+    <p class="section-intro">What this loadout is wearing and casting. The DPS formula below uses the shared dummy scenario on these inputs.</p>
     <div class="build-overview-grid">
       <div>
         <span class="panel-kicker">Skills</span>
@@ -560,6 +534,246 @@ function renderBuildOverview(loadout: AnalyzedLoadout) {
       </div>
     </div>
   </section>`;
+}
+
+const SYSTEM_SUGGEST_LABEL: Record<BuildSystem, string> = {
+  gear: "Gear",
+  skills: "Skills / supports",
+  trees: "Talents",
+  memories: "Hero memories",
+  slates: "Divinity slates",
+  pacts: "Pacts & kismets",
+};
+
+/** Later stages in the same build — the natural “what should I change next?” targets. */
+function laterLoadouts(build: AnalyzedBuild, loadout: AnalyzedLoadout): AnalyzedLoadout[] {
+  const index = build.loadouts.findIndex((item) => item.id === loadout.id);
+  if (index < 0) return build.loadouts.filter((item) => item.id !== loadout.id);
+  return build.loadouts.slice(index + 1);
+}
+
+function packageKindLabel(systems: BuildSystem[]): string {
+  if (systems.length >= 3) return "Multi-system package";
+  if (systems.length === 2) {
+    if (systems.includes("trees") && systems.includes("slates")) {
+      return "Talents + slate package";
+    }
+    if (systems.includes("trees") && systems.includes("gear")) {
+      return "Talents + gear package";
+    }
+    return "Two-system package";
+  }
+  if (systems[0] === "trees") return "Talent respec";
+  if (systems[0] === "slates") return "Slate swap package";
+  if (systems[0] === "skills") return "Skill / support package";
+  if (systems[0] === "gear") return "Gear package";
+  if (systems[0] === "memories") return "Memory package";
+  if (systems[0] === "pacts") return "Pact package";
+  return "Build package";
+}
+
+/** Shared dummy-scenario formula levers (not map advice). */
+const FORMULA_LEVERS: Array<{ label: string; path: string; delta: number }> = [
+  { label: "Fresh +10% additional damage line", path: "additional.misc", delta: 10 },
+  { label: "+10% attack damage (increased pool)", path: "increased.attack", delta: 10 },
+  { label: "+10% elemental / global increased", path: "increased.global", delta: 10 },
+  { label: "+5% crit chance", path: "crit.chance_pct", delta: 5 },
+  { label: "+30% crit damage", path: "crit.damage_pct", delta: 30 },
+  { label: "+10% attack speed", path: "rotation.attack_speed_inc_pct", delta: 10 },
+  { label: "+10% local weapon physical", path: "base.gear_phys_pct", delta: 10 },
+  { label: "+10 elemental penetration", path: "penetration.cold_pct", delta: 10 },
+];
+
+function formulaLeverSuggestions(loadout: AnalyzedLoadout) {
+  const snap = loadout.snapshot;
+  if (!snap) return [] as Array<{ label: string; deltaPct: number }>;
+  try {
+    const baseline = cycleDps(snap).dps;
+    if (!(baseline > 0)) return [];
+    return FORMULA_LEVERS.map((lever) => {
+      const next = structuredClone(snap) as typeof snap;
+      const keys = lever.path.split(".");
+      let cursor: any = next;
+      for (const key of keys.slice(0, -1)) cursor = cursor[key] ??= {};
+      const leaf = keys.at(-1)!;
+      cursor[leaf] = (Number(cursor[leaf]) || 0) + lever.delta;
+      const dps = cycleDps(next).dps;
+      return { label: lever.label, deltaPct: (dps / baseline - 1) * 100 };
+    })
+      .filter((row) => Number.isFinite(row.deltaPct) && Math.abs(row.deltaPct) >= 0.05)
+      .sort((a, b) => b.deltaPct - a.deltaPct)
+      .slice(0, 6);
+  } catch {
+    return [];
+  }
+}
+
+function renderSuggestionPackage(
+  current: AnalyzedLoadout,
+  target: AnalyzedLoadout,
+  rank: number,
+) {
+  const structure = compareStructure(current, target);
+  const plan = buildComparisonActionPlan(current, target);
+  const systems = structure.changedSystems;
+  if (!systems.length && !plan.findings.length) return "";
+
+  const kind = packageKindLabel(systems);
+  const dpsDelta = current.model?.dps && target.model?.dps
+    ? percentChange(current.model.dps, target.model.dps)
+    : null;
+  const systemChips = systems.length
+    ? `<div class="suggestion-systems" aria-label="Systems involved">${
+      systems.map((system) =>
+        `<span class="suggestion-system-chip">${esc(SYSTEM_SUGGEST_LABEL[system])}</span>`).join("")
+    }</div>`
+    : "";
+
+  // Coordinated steps: structural insights across systems (talents + slates + gear…).
+  const steps = structure.insights.slice(0, 8);
+  const stepList = steps.length
+    ? `<ol class="suggestion-steps">${steps.map((insight) => {
+        const detail = insight.evidence.slice(0, 3).join(" · ");
+        return `<li>
+          <strong>${esc(insight.title)}</strong>
+          <span class="suggestion-step-system">${esc(SYSTEM_SUGGEST_LABEL[insight.section])}</span>
+          ${detail ? `<small>${esc(detail)}</small>` : ""}
+        </li>`;
+      }).join("")}</ol>`
+    : "";
+
+  // Ranked experiments from the full action plan (supports, defense, modeled layers…).
+  const experiments = plan.findings
+    .filter((finding) => finding.direction !== "neutral" || finding.domain === "build")
+    .slice(0, 5);
+  const experimentList = experiments.length
+    ? `<div class="suggestion-experiments">
+        <span class="panel-kicker">Ranked checks inside this package</span>
+        <div class="action-card-list">${experiments.map((finding, index) =>
+          actionFindingCard(finding, index + 1)).join("")}</div>
+      </div>`
+    : "";
+
+  const multiNote = systems.length >= 2
+    ? `<p class="suggestion-bundle-note">Treat this as <strong>one coordinated edit</strong> — for example respeccing talents while swapping divinity slates and their mods — not isolated single-affix shopping.</p>`
+    : systems[0] === "trees"
+      ? `<p class="suggestion-bundle-note">Primarily a <strong>talent respec</strong>. Isolate the tree before stacking gear experiments.</p>`
+      : "";
+
+  return `<article class="suggestion-package" data-suggestion-rank="${rank}">
+    <div class="suggestion-package-head">
+      <div>
+        <span class="eyebrow">${esc(kind)}</span>
+        <h3>Move toward · ${esc(target.name)}</h3>
+        <p>From <strong>${esc(current.name)}</strong> → <strong>${esc(target.name)}</strong></p>
+      </div>
+      ${dpsDelta == null
+        ? `<span class="suggestion-dps-delta muted">DPS delta not modeled</span>`
+        : `<span class="suggestion-dps-delta ${dpsDelta >= 0 ? "up" : "down"}">${esc(signedPercent(dpsDelta))} dummy DPS</span>`}
+    </div>
+    ${systemChips}
+    ${multiNote}
+    ${stepList}
+    ${experimentList}
+  </article>`;
+}
+
+/**
+ * Suggested changes for the active loadout: multi-system packages toward later
+ * stages of the same build, plus pure formula levers from the shared dummy model.
+ */
+function renderSuggestedChanges(build: AnalyzedBuild, loadout: AnalyzedLoadout) {
+  const later = laterLoadouts(build, loadout);
+  // Prefer the next stage and one farther checkpoint (if any).
+  const targets = later.length <= 2
+    ? later
+    : [later[0], later[Math.min(later.length - 1, Math.ceil(later.length / 2))]];
+  const packages = targets
+    .map((target, index) => renderSuggestionPackage(loadout, target, index + 1))
+    .filter(Boolean);
+  const levers = formulaLeverSuggestions(loadout);
+  const leverBlock = levers.length
+    ? `<div class="suggestion-levers">
+        <div class="analysis-heading">
+          <div>
+            <span class="panel-kicker">Formula levers</span>
+            <h3>Single-stat dummy bumps</h3>
+          </div>
+        </div>
+        <p class="section-intro">How much the shared cycleDps number moves if you add one standard line. These are not gear-legal guarantees — they rank which bucket is thirsty.</p>
+        <ol class="suggestion-lever-list">
+          ${levers.map((row, index) => `<li>
+            <span class="suggestion-lever-rank">${index + 1}</span>
+            <span class="suggestion-lever-label">${esc(row.label)}</span>
+            <b class="suggestion-lever-delta">${esc(signedPercent(row.deltaPct))}</b>
+          </li>`).join("")}
+        </ol>
+      </div>`
+    : "";
+
+  if (!packages.length && !leverBlock) {
+    return `<section class="single-panel explain-panel suggestion-panel">
+      <div class="analysis-heading">
+        <div>
+          <span class="eyebrow">Suggested changes</span>
+          <h2>No package yet</h2>
+        </div>
+      </div>
+      <p class="section-intro">This build has no later stage to compare, and no dummy snapshot for formula levers. Import a stronger loadout of the same character, or open another leaderboard stage.</p>
+    </section>`;
+  }
+
+  return `<section class="single-panel explain-panel suggestion-panel" aria-labelledby="suggestion-title">
+    <div class="analysis-heading">
+      <div>
+        <span class="eyebrow">Suggested changes</span>
+        <h2 id="suggestion-title">What to change next</h2>
+      </div>
+    </div>
+    <p class="section-intro">Packages are full loadout-to-loadout diffs — talent respecs, slate swaps with different mods, support moves, and gear can land in the <strong>same package</strong> when a later stage does them together. Run one package (or one ranked check inside it) at a time.</p>
+    ${packages.length
+      ? `<div class="suggestion-package-list">${packages.join("")}</div>`
+      : `<p class="suggestion-empty-note">No later leaderboard stage after this loadout. Formula levers still apply below.</p>`}
+    ${leverBlock}
+  </section>`;
+}
+
+/** Page 2 body: equipped loadout inventory + suggested changes + DPS formula. */
+function renderLoadoutPage(build: AnalyzedBuild, loadout: AnalyzedLoadout) {
+  const readiness = guardedEvidenceReadiness(loadout);
+  const state = loadout.resolutionHandoff
+    ? "capture"
+    : loadout.model
+      ? "modeled"
+      : readiness === "blocked"
+        ? "blocked"
+        : readiness === "ready" || readiness === "partial"
+          ? "evidence"
+          : "waiting";
+  const head = `<section class="loadout-page-head" aria-labelledby="loadout-page-title">
+    <div class="loadout-page-head-copy">
+      <button type="button" class="quiet-button loadout-back" data-app-page="leaderboard">← Leaderboard</button>
+      <span class="eyebrow">${esc(build.name)}</span>
+      <h1 id="loadout-page-title">${esc(loadout.name)}</h1>
+      <p>${esc(loadout.hero)} · ${esc(build.patch)} · ${esc(build.source)}</p>
+    </div>
+    <span class="model-state ${state}"><span class="state-dot"></span>${esc(confidenceLabel(loadout))}</span>
+  </section>`;
+
+  if (activeView === "coverage") {
+    return `${head}${navigation()}${renderCoverage(loadout, loadout)}`;
+  }
+  if (activeView === "survival") {
+    return `${head}${navigation()}${renderSurvival(loadout, loadout)}`;
+  }
+  // Default page-2: gear → suggested packages → DPS formula.
+  return `${head}
+    ${navigation()}
+    <div class="loadout-page-stack">
+      ${renderBuildOverview(loadout)}
+      ${renderSuggestedChanges(build, loadout)}
+      ${renderExplain(loadout)}
+    </div>`;
 }
 
 function summaryMetric(label: string, value: string, note: string, className = "") {
@@ -1886,7 +2100,7 @@ function renderFormula(before: AnalyzedLoadout, after: AnalyzedLoadout) {
       <i>×</i><span>crit expectation</span><i>×</i><span>mitigation</span><i>×</i><span>cadence</span><i>+</i><span>DoT</span>
     </div>
     ${renderBreakdown(result.trace)}
-    <div class="method-note"><strong>Important:</strong> this is supported boss DPS under the displayed scenario, not a promise of target-dummy or map damage.</div>
+    <div class="method-note"><strong>Important:</strong> every loadout uses the same shared cycleDps dummy scenario — not a promise of map damage.</div>
   </section>`;
 }
 
@@ -2864,12 +3078,12 @@ function renderActions(
 }
 
 function navigation() {
+  // On the loadout page, default "DPS" tab is gear + formula; coverage is the deep dive.
   const items: { id: View; label: string }[] = [
-    { id: "explain", label: "Your DPS" },
-    { id: "build", label: "This loadout" },
+    { id: "explain", label: "DPS & gear" },
     { id: "coverage", label: "Unmodeled" },
   ];
-  return `<nav class="view-tabs" aria-label="Damage views">
+  return `<nav class="view-tabs" aria-label="Loadout views">
     ${items.map((item) => `<button type="button" data-view="${item.id}" class="${activeView === item.id ? "active" : ""}"
       ${activeView === item.id ? `aria-current="page"` : ""}>
       ${esc(item.label)}
@@ -2877,37 +3091,62 @@ function navigation() {
   </nav>`;
 }
 
-function render() {
-  const active = activeLoadout();
-  // Keep dual-side pointers aligned for any secondary helpers still invoked.
-  beforeSelection = selection;
-  afterSelection = selection;
+function goToLeaderboard() {
+  appPage = "leaderboard";
+  render();
+  restoreWorkspaceFocus('[data-import-tab][aria-selected="true"]');
+}
 
-  let content = "";
-  if (activeView === "explain" || activeView === "formula") {
-    content = renderExplain(active.loadout);
-  } else if (activeView === "build" || activeView === "changes") {
-    content = renderBuildOverview(active.loadout);
-  } else if (activeView === "coverage") {
-    content = renderCoverage(active.loadout, active.loadout);
-  } else if (activeView === "survival") {
-    content = renderSurvival(active.loadout, active.loadout);
-  } else if (activeView === "diagnosis" || activeView === "actions") {
-    // Compare-era views demoted: redirect to single-build explain.
-    content = renderExplain(active.loadout);
+function goToLoadoutPage(focusSelector = "#loadout-page-title") {
+  appPage = "loadout";
+  if (activeView === "build" || activeView === "changes" || activeView === "formula"
+      || activeView === "diagnosis" || activeView === "actions") {
+    activeView = "explain";
+  }
+  render();
+  restoreWorkspaceFocus(focusSelector);
+}
+
+function render() {
+  const active = selection ? activeLoadout() : null;
+  // Keep dual-side pointers aligned for any secondary helpers still invoked.
+  if (selection) {
+    beforeSelection = selection;
+    afterSelection = selection;
+  }
+
+  const onLeaderboard = appPage === "leaderboard";
+  const loadoutNavActive = !onLeaderboard && active;
+  let mainBody = "";
+  if (onLeaderboard) {
+    mainBody = `<section class="workspace-intro">
+      <div>
+        <span class="eyebrow">Step 1 · Pick a build</span>
+        <h2>Leaderboard & import</h2>
+        <p>Choose a leaderboard loadout, paste a Compendium code, or drop a tli_dump export. Then open the loadout page for equipped gear and the DPS formula.</p>
+      </div>
+    </section>
+    ${loadBuildMountHtml()}`;
+  } else if (active) {
+    mainBody = `<div class="view-content loadout-page">${renderLoadoutPage(active.build, active.loadout)}</div>`;
   } else {
-    content = renderExplain(active.loadout);
+    mainBody = `<section class="single-panel empty-analysis">
+      <div class="analysis-heading"><div><span class="eyebrow">No loadout</span><h2>Pick a build first</h2></div></div>
+      <p>Open the leaderboard to choose a loadout or import a build.</p>
+      <button type="button" class="primary-button" data-app-page="leaderboard">Go to leaderboard</button>
+    </section>`;
   }
 
   app.innerHTML = `<header class="site-header">
     <div class="header-inner">
-      <a class="brand" href="/" aria-label="TLI Lens home">
+      <a class="brand" href="/" aria-label="TLI Lens home" data-app-page="leaderboard">
         <span class="brand-mark"><i></i></span>
         <span><b>TLI</b> Lens</span>
         <em>alpha</em>
       </a>
       <nav class="primary-nav" aria-label="Primary">
-        <a href="#workspace" class="active">Your DPS</a>
+        <a href="#leaderboard" data-app-page="leaderboard" class="${onLeaderboard ? "active" : ""}">Leaderboard</a>
+        <a href="#loadout" data-app-page="loadout" class="${loadoutNavActive ? "active" : ""}"${active ? "" : " aria-disabled=\"true\""}>Loadout</a>
         <a href="/rehan">Rehan guide</a>
         <a href="/bing">Bing guide</a>
       </nav>
@@ -2918,22 +3157,19 @@ function render() {
     </div>
   </header>
   <main class="workspace" id="workspace">
-    <section class="workspace-intro">
-      <div>
-        <span class="eyebrow">Load → read the number → see why</span>
-        <h2>Understand your current DPS.</h2>
-        <p>Pick a demo loadout below, or bring a Compendium code / tli_dump export. The active loadout drives every number under Your DPS.</p>
-      </div>
-    </section>
-    ${loadBuildMountHtml()}
-    ${navigation()}
-    <div class="view-content">${content}</div>
+    ${mainBody}
   </main>
   <footer class="site-footer">
     <span>TLI Lens is an independent community tool.</span>
     <span>Built around explicit assumptions, source data, and formulas you can inspect.</span>
   </footer>`;
-  mountLoadBuildPanel();
+
+  if (onLeaderboard) {
+    mountLoadBuildPanel();
+  } else if (loadBuildPanel && loadBuildPanel.parentElement !== document.body) {
+    loadBuildPanel.hidden = true;
+    document.body.appendChild(loadBuildPanel);
+  }
 }
 
 function restoreWorkspaceFocus(selector: string) {
@@ -2960,14 +3196,16 @@ function focusLoadBuildPanel(tab: "supported" | "code" | "dump" = "supported") {
   });
 }
 
-/** Legacy compare-shell entry: scroll the inline loader into view instead of a modal. */
+/** Legacy compare-shell entry: return to the leaderboard import surface. */
 function openImportDialog(side: Side) {
   importTarget = side;
+  appPage = "leaderboard";
   if (importLead) {
     importLead.textContent =
-      "Pick a demo loadout, paste a Compendium build code, or import a tli_dump / Compendium JSON export.";
+      "Pick a leaderboard loadout, paste a Compendium build code, or import a tli_dump / Compendium JSON export.";
   }
   setImportStatus(`Load a build to explain (${sideLabel(side)} path).`);
+  render();
   focusLoadBuildPanel("supported");
 }
 
@@ -2981,14 +3219,8 @@ function selectLoadout(buildId: string, loadoutId: string) {
   setSelection({ buildId: build.id, loadoutId: loadout.id });
   activeView = "explain";
   reportCopyState = "idle";
-  setImportStatus(
-    `Explaining “${loadout.name}” from ${build.name}.`,
-    "success",
-  );
-  render();
-  restoreWorkspaceFocus(
-    `[data-select-build="${CSS.escape(build.id)}"][data-select-loadout="${CSS.escape(loadout.id)}"]`,
-  );
+  setImportStatus("");
+  goToLoadoutPage();
 }
 
 function applySupportedBuild(buildId: string) {
@@ -3010,23 +3242,21 @@ function activateImported(build: AnalyzedBuild) {
   const loadout = build.loadouts.find((item) => item.isCurrent) ?? build.loadouts[0];
   setSelection({ buildId: build.id, loadoutId: loadout.id });
   reportCopyState = "idle";
-  setImportStatus(
-    build.needsResolution
-      ? "Build code saved. Open it in-game, capture with tli_dump, then import that JSON on the tli_dump tab."
-      : `${build.name} imported · explaining “${loadout.name}”.`,
-    build.needsResolution ? "info" : "success",
-  );
+  activeView = "explain";
   if (build.needsResolution) {
+    appPage = "leaderboard";
+    setImportStatus(
+      "Build code saved. Open it in-game, capture with tli_dump, then import that JSON on the tli_dump tab.",
+      "info",
+    );
+    render();
     const dumpTab = document.getElementById("import-tab-dump") as HTMLButtonElement | null;
     if (dumpTab) activateImportTab(dumpTab);
+    restoreWorkspaceFocus("#build-code");
+    return;
   }
-  activeView = "explain";
-  render();
-  restoreWorkspaceFocus(
-    build.needsResolution
-      ? ".capture-handoff"
-      : `[data-select-build="${CSS.escape(build.id)}"][data-select-loadout="${CSS.escape(loadout.id)}"]`,
-  );
+  setImportStatus("");
+  goToLoadoutPage();
 }
 
 async function copyCurrentActionReport() {
@@ -3210,11 +3440,27 @@ app.addEventListener("change", (event) => {
 app.addEventListener("click", (event) => {
   const target = (event.target as HTMLElement).closest<HTMLElement>("button, a");
   if (!target) return;
+  const page = target.dataset.appPage as AppPage | undefined;
+  if (page === "leaderboard") {
+    event.preventDefault();
+    goToLeaderboard();
+    return;
+  }
+  if (page === "loadout") {
+    event.preventDefault();
+    if (!selection) {
+      goToLeaderboard();
+      return;
+    }
+    goToLoadoutPage();
+    return;
+  }
   const view = target.dataset.view as View | undefined;
   const viewLink = target.dataset.viewLink as View | undefined;
   if (view || viewLink) {
     event.preventDefault();
     activeView = view ?? viewLink!;
+    appPage = "loadout";
     render();
     restoreWorkspaceFocus(`[data-view="${activeView}"]`);
     document.querySelector(".view-tabs")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -3467,6 +3713,8 @@ async function initializeWorkspace() {
       ?? initial.loadouts.find((loadout) => loadout.isCurrent)
       ?? initial.loadouts[0];
     setSelection({ buildId: initial.id, loadoutId: preferred.id });
+    // Land on the leaderboard; picking a loadout opens the loadout + DPS page.
+    appPage = "leaderboard";
     activeView = "explain";
     render();
   } catch (error) {

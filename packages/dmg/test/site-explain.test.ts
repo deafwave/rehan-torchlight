@@ -1,6 +1,7 @@
 /**
- * Proves the home product path: one loadout → current damage reading + why factors.
+ * Proves the home product path: one loadout → dummy DPS + factor breakdown.
  * Drives the shipped explain module and real cycleDps (not a parallel reimplementation).
+ * Every loadout with a snapshot uses the same math; raw mainhand is never the primary.
  */
 import { describe, expect, it } from "vitest";
 import demoData from "../../page/src/data/demo-builds.json";
@@ -24,22 +25,26 @@ function scalingLessonAfter(): AnalyzedLoadout {
 function bingLateLoadout(): AnalyzedLoadout {
   const build = demo.builds.find((b) => b.id === "bing");
   if (!build?.loadouts.length) throw new Error("bing build missing from demo data");
-  // Prefer a loadout with partial metrics (model often null for Bing guarded path).
-  const withPartial = [...build.loadouts].reverse().find((l) => l.partialMetrics?.length);
-  if (!withPartial) throw new Error("no Bing loadout with partial metrics");
-  return withPartial;
+  // Prefer a late progression loadout that used to only expose weapon-foundation partials.
+  return build.loadouts[Math.min(3, build.loadouts.length - 1)]
+    ?? build.loadouts[build.loadouts.length - 1]!;
+}
+
+function loadoutsWithSnapshot(): AnalyzedLoadout[] {
+  return demo.builds.flatMap((b) => b.loadouts).filter((l) => l.snapshot);
 }
 
 describe("single-build damage explanation (home path)", () => {
-  it("surfaces modeled boss DPS and impact-ranked factors for a full snapshot", () => {
+  it("surfaces dummy DPS and impact-ranked factors for a full snapshot", () => {
     const loadout = scalingLessonAfter();
     expect(loadout.snapshot).toBeTruthy();
     expect(loadout.model?.dps).toBeGreaterThan(0);
 
     const explained = explainCurrentDamage(loadout);
     expect(explained.reading.kind).toBe("modeled-dps");
+    expect(explained.reading.label).toBe("DPS");
     expect(explained.reading.isDps).toBe(true);
-    expect(explained.reading.value).toBeCloseTo(loadout.model!.dps, 0);
+    expect(explained.reading.value).toBeCloseTo(cycleDps(loadout.snapshot!).dps, 0);
     expect(explained.breakdown).not.toBeNull();
 
     // Trace total must match real cycleDps — chips cannot drift from the model.
@@ -48,35 +53,51 @@ describe("single-build damage explanation (home path)", () => {
     expect(resolve(explained.breakdown!.root)).toBeCloseTo(live.dps, 3);
 
     expect(explained.factors.length).toBeGreaterThan(0);
-    // Sorted by |impact| descending
     for (let i = 1; i < explained.factors.length; i++) {
       expect(Math.abs(explained.factors[i - 1].impact))
         .toBeGreaterThanOrEqual(Math.abs(explained.factors[i].impact) - 1e-12);
     }
-    // Non-base factors have meaningful impact labels
     const top = explained.factors.find((f) => f.op !== "base");
     expect(top).toBeTruthy();
     expect(formatFactorValue(top!)).toMatch(/^[×+]/);
   });
 
-  it("primary reading prefers modeled DPS over partials when both exist", () => {
+  it("primary reading is always labeled DPS when a snapshot exists", () => {
     const loadout = scalingLessonAfter();
     const reading = primaryDamageReading(loadout);
     expect(reading.kind).toBe("modeled-dps");
-    expect(reading.label.toLowerCase()).toContain("dps");
+    expect(reading.label).toBe("DPS");
   });
 
-  it("falls back to guarded partial when full DPS is not modeled", () => {
+  it("Bing and other catalog loadouts use the same cycleDps path — not raw mainhand", () => {
     const loadout = bingLateLoadout();
-    expect(loadout.model).toBeNull();
-    expect(loadout.partialMetrics?.length).toBeGreaterThan(0);
+    expect(loadout.snapshot).toBeTruthy();
 
     const explained = explainCurrentDamage(loadout);
-    expect(explained.reading.kind).toBe("partial");
-    expect(explained.reading.value).not.toBeNull();
-    expect(explained.reading.isDps).toBe(false);
-    expect(explained.breakdown).toBeNull();
-    expect(explained.factors).toEqual([]);
+    expect(explained.reading.kind).toBe("modeled-dps");
+    expect(explained.reading.label).toBe("DPS");
+    expect(explained.reading.isDps).toBe(true);
+    expect(explained.breakdown).not.toBeNull();
+    expect(explained.reading.value).toBeCloseTo(cycleDps(loadout.snapshot!).dps, 0);
+
+    // Must not surface the old weapon-foundation partial as the hero reading.
+    const blob = JSON.stringify(explained.reading).toLowerCase();
+    expect(blob).not.toMatch(/weapon-hit foundation|raw pre-envelope|main-hand|mainhand/);
+  });
+
+  it("every demo loadout with a snapshot explains via cycleDps", () => {
+    const snaps = loadoutsWithSnapshot();
+    expect(snaps.length).toBeGreaterThan(5);
+    for (const loadout of snaps) {
+      const explained = explainCurrentDamage(loadout);
+      expect(explained.reading.label).toBe("DPS");
+      expect(explained.reading.kind).toBe("modeled-dps");
+      expect(explained.breakdown).not.toBeNull();
+      expect(resolve(explained.breakdown!.root)).toBeCloseTo(
+        cycleDps(loadout.snapshot!).dps,
+        2,
+      );
+    }
   });
 
   it("rankedFactorImpacts matches neutralizing chips via resolve", () => {
@@ -85,7 +106,6 @@ describe("single-build damage explanation (home path)", () => {
     const factors = rankedFactorImpacts(live.trace);
     const multiplicative = factors.find((f) => f.op === "×" && Math.abs(f.impact) > 0.01);
     expect(multiplicative).toBeTruthy();
-    // impact ≈ 1 - 1/factor for pure × chips on a product path when unique
     expect(Math.abs(multiplicative!.impact)).toBeGreaterThan(0.005);
   });
 
