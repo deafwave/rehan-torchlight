@@ -1,6 +1,7 @@
 import "./style.css";
-import { cycleDps } from "@rehan/dmg/damageModel";
+import { cycleDps, type Snapshot } from "@rehan/dmg/damageModel";
 import { knownMinionDamageCoverageMatches } from "@rehan/dmg/minionDamageEnvelope";
+import { STANDARD_PERTURBATIONS, bump } from "@rehan/dmg/rank";
 import { renderBreakdown } from "./breakdown";
 import {
   explainCurrentDamage,
@@ -536,206 +537,215 @@ function renderBuildOverview(loadout: AnalyzedLoadout) {
   </section>`;
 }
 
-const SYSTEM_SUGGEST_LABEL: Record<BuildSystem, string> = {
-  gear: "Gear",
-  skills: "Skills / supports",
-  trees: "Talents",
-  memories: "Hero memories",
-  slates: "Divinity slates",
-  pacts: "Pacts & kismets",
-};
-
-/** Later stages in the same build — the natural “what should I change next?” targets. */
-function laterLoadouts(build: AnalyzedBuild, loadout: AnalyzedLoadout): AnalyzedLoadout[] {
-  const index = build.loadouts.findIndex((item) => item.id === loadout.id);
-  if (index < 0) return build.loadouts.filter((item) => item.id !== loadout.id);
-  return build.loadouts.slice(index + 1);
+interface DpsLeverRow {
+  id: string;
+  label: string;
+  path: string;
+  delta: number;
+  soloDeltaPct: number;
 }
 
-function packageKindLabel(systems: BuildSystem[]): string {
-  if (systems.length >= 3) return "Multi-system package";
-  if (systems.length === 2) {
-    if (systems.includes("trees") && systems.includes("slates")) {
-      return "Talents + slate package";
+/** Sequential path bumps that skip unresolved keys instead of writing NaN. */
+function applyLeverBumps(
+  snap: Snapshot,
+  levers: Array<{ path: string; delta: number }>,
+): Snapshot {
+  let next = snap;
+  for (const lever of levers) {
+    try {
+      const trial = bump(next, lever.path, lever.delta);
+      const keys = lever.path.split(".");
+      let cursor: any = trial;
+      for (const key of keys) cursor = cursor?.[key];
+      if (!Number.isFinite(cursor)) continue;
+      next = trial;
+    } catch {
+      // Skip levers that do not resolve on this snapshot shape.
     }
-    if (systems.includes("trees") && systems.includes("gear")) {
-      return "Talents + gear package";
-    }
-    return "Two-system package";
   }
-  if (systems[0] === "trees") return "Talent respec";
-  if (systems[0] === "slates") return "Slate swap package";
-  if (systems[0] === "skills") return "Skill / support package";
-  if (systems[0] === "gear") return "Gear package";
-  if (systems[0] === "memories") return "Memory package";
-  if (systems[0] === "pacts") return "Pact package";
-  return "Build package";
+  return next;
 }
 
-/** Shared dummy-scenario formula levers (not map advice). */
-const FORMULA_LEVERS: Array<{ label: string; path: string; delta: number }> = [
-  { label: "Fresh +10% additional damage line", path: "additional.misc", delta: 10 },
-  { label: "+10% attack damage (increased pool)", path: "increased.attack", delta: 10 },
-  { label: "+10% elemental / global increased", path: "increased.global", delta: 10 },
-  { label: "+5% crit chance", path: "crit.chance_pct", delta: 5 },
-  { label: "+30% crit damage", path: "crit.damage_pct", delta: 30 },
-  { label: "+10% attack speed", path: "rotation.attack_speed_inc_pct", delta: 10 },
-  { label: "+10% local weapon physical", path: "base.gear_phys_pct", delta: 10 },
-  { label: "+10 elemental penetration", path: "penetration.cold_pct", delta: 10 },
-];
-
-function formulaLeverSuggestions(loadout: AnalyzedLoadout) {
-  const snap = loadout.snapshot;
-  if (!snap) return [] as Array<{ label: string; deltaPct: number }>;
+function dpsLeverRows(snap: Snapshot): DpsLeverRow[] {
   try {
     const baseline = cycleDps(snap).dps;
     if (!(baseline > 0)) return [];
-    return FORMULA_LEVERS.map((lever) => {
-      const next = structuredClone(snap) as typeof snap;
-      const keys = lever.path.split(".");
-      let cursor: any = next;
-      for (const key of keys.slice(0, -1)) cursor = cursor[key] ??= {};
-      const leaf = keys.at(-1)!;
-      cursor[leaf] = (Number(cursor[leaf]) || 0) + lever.delta;
-      const dps = cycleDps(next).dps;
-      return { label: lever.label, deltaPct: (dps / baseline - 1) * 100 };
-    })
-      .filter((row) => Number.isFinite(row.deltaPct) && Math.abs(row.deltaPct) >= 0.05)
-      .sort((a, b) => b.deltaPct - a.deltaPct)
-      .slice(0, 6);
+    return STANDARD_PERTURBATIONS
+      .map(([label, path, delta], index) => {
+        const id = `lever-${index}`;
+        try {
+          const dps = cycleDps(bump(snap, path, delta)).dps;
+          const soloDeltaPct = (dps / baseline - 1) * 100;
+          if (!Number.isFinite(soloDeltaPct)) return null;
+          return { id, label, path, delta, soloDeltaPct };
+        } catch {
+          return null;
+        }
+      })
+      .filter((row): row is DpsLeverRow => row != null && Math.abs(row.soloDeltaPct) >= 0.05)
+      .sort((a, b) => b.soloDeltaPct - a.soloDeltaPct);
   } catch {
     return [];
   }
 }
 
-function renderSuggestionPackage(
-  current: AnalyzedLoadout,
-  target: AnalyzedLoadout,
-  rank: number,
-) {
-  const structure = compareStructure(current, target);
-  const plan = buildComparisonActionPlan(current, target);
-  const systems = structure.changedSystems;
-  if (!systems.length && !plan.findings.length) return "";
-
-  const kind = packageKindLabel(systems);
-  const dpsDelta = current.model?.dps && target.model?.dps
-    ? percentChange(current.model.dps, target.model.dps)
-    : null;
-  const systemChips = systems.length
-    ? `<div class="suggestion-systems" aria-label="Systems involved">${
-      systems.map((system) =>
-        `<span class="suggestion-system-chip">${esc(SYSTEM_SUGGEST_LABEL[system])}</span>`).join("")
-    }</div>`
-    : "";
-
-  // Coordinated steps: structural insights across systems (talents + slates + gear…).
-  const steps = structure.insights.slice(0, 8);
-  const stepList = steps.length
-    ? `<ol class="suggestion-steps">${steps.map((insight) => {
-        const detail = insight.evidence.slice(0, 3).join(" · ");
-        return `<li>
-          <strong>${esc(insight.title)}</strong>
-          <span class="suggestion-step-system">${esc(SYSTEM_SUGGEST_LABEL[insight.section])}</span>
-          ${detail ? `<small>${esc(detail)}</small>` : ""}
-        </li>`;
-      }).join("")}</ol>`
-    : "";
-
-  // Ranked experiments from the full action plan (supports, defense, modeled layers…).
-  const experiments = plan.findings
-    .filter((finding) => finding.direction !== "neutral" || finding.domain === "build")
-    .slice(0, 5);
-  const experimentList = experiments.length
-    ? `<div class="suggestion-experiments">
-        <span class="panel-kicker">Ranked checks inside this package</span>
-        <div class="action-card-list">${experiments.map((finding, index) =>
-          actionFindingCard(finding, index + 1)).join("")}</div>
-      </div>`
-    : "";
-
-  const multiNote = systems.length >= 2
-    ? `<p class="suggestion-bundle-note">Treat this as <strong>one coordinated edit</strong> — for example respeccing talents while swapping divinity slates and their mods — not isolated single-affix shopping.</p>`
-    : systems[0] === "trees"
-      ? `<p class="suggestion-bundle-note">Primarily a <strong>talent respec</strong>. Isolate the tree before stacking gear experiments.</p>`
-      : "";
-
-  return `<article class="suggestion-package" data-suggestion-rank="${rank}">
-    <div class="suggestion-package-head">
-      <div>
-        <span class="eyebrow">${esc(kind)}</span>
-        <h3>Move toward · ${esc(target.name)}</h3>
-        <p>From <strong>${esc(current.name)}</strong> → <strong>${esc(target.name)}</strong></p>
-      </div>
-      ${dpsDelta == null
-        ? `<span class="suggestion-dps-delta muted">DPS delta not modeled</span>`
-        : `<span class="suggestion-dps-delta ${dpsDelta >= 0 ? "up" : "down"}">${esc(signedPercent(dpsDelta))} dummy DPS</span>`}
-    </div>
-    ${systemChips}
-    ${multiNote}
-    ${stepList}
-    ${experimentList}
-  </article>`;
-}
-
 /**
- * Suggested changes for the active loadout: multi-system packages toward later
- * stages of the same build, plus pure formula levers from the shared dummy model.
+ * Best next steps by dummy-cycle DPS only — no loadout comparison.
+ * Right-side toggles stack selected levers and recompute the combined delta.
  */
-function renderSuggestedChanges(build: AnalyzedBuild, loadout: AnalyzedLoadout) {
-  const later = laterLoadouts(build, loadout);
-  // Prefer the next stage and one farther checkpoint (if any).
-  const targets = later.length <= 2
-    ? later
-    : [later[0], later[Math.min(later.length - 1, Math.ceil(later.length / 2))]];
-  const packages = targets
-    .map((target, index) => renderSuggestionPackage(loadout, target, index + 1))
-    .filter(Boolean);
-  const levers = formulaLeverSuggestions(loadout);
-  const leverBlock = levers.length
-    ? `<div class="suggestion-levers">
-        <div class="analysis-heading">
-          <div>
-            <span class="panel-kicker">Formula levers</span>
-            <h3>Single-stat dummy bumps</h3>
-          </div>
-        </div>
-        <p class="section-intro">How much the shared cycleDps number moves if you add one standard line. These are not gear-legal guarantees — they rank which bucket is thirsty.</p>
-        <ol class="suggestion-lever-list">
-          ${levers.map((row, index) => `<li>
-            <span class="suggestion-lever-rank">${index + 1}</span>
-            <span class="suggestion-lever-label">${esc(row.label)}</span>
-            <b class="suggestion-lever-delta">${esc(signedPercent(row.deltaPct))}</b>
-          </li>`).join("")}
-        </ol>
-      </div>`
-    : "";
-
-  if (!packages.length && !leverBlock) {
+function renderSuggestedChanges(loadout: AnalyzedLoadout) {
+  const snap = loadout.snapshot;
+  if (!snap) {
     return `<section class="single-panel explain-panel suggestion-panel">
       <div class="analysis-heading">
         <div>
-          <span class="eyebrow">Suggested changes</span>
-          <h2>No package yet</h2>
+          <span class="eyebrow">Best progression</span>
+          <h2 id="suggestion-title">What to change next</h2>
         </div>
       </div>
-      <p class="section-intro">This build has no later stage to compare, and no dummy snapshot for formula levers. Import a stronger loadout of the same character, or open another leaderboard stage.</p>
+      <p class="section-intro">No damage snapshot on this loadout, so formula levers cannot be ranked. Import a build the model can score.</p>
     </section>`;
   }
 
-  return `<section class="single-panel explain-panel suggestion-panel" aria-labelledby="suggestion-title">
+  let baseline = 0;
+  try {
+    baseline = cycleDps(snap).dps;
+  } catch {
+    baseline = 0;
+  }
+  if (!(baseline > 0)) {
+    return `<section class="single-panel explain-panel suggestion-panel">
+      <div class="analysis-heading">
+        <div>
+          <span class="eyebrow">Best progression</span>
+          <h2 id="suggestion-title">What to change next</h2>
+        </div>
+      </div>
+      <p class="section-intro">The dummy cycleDps model could not produce a baseline for this loadout.</p>
+    </section>`;
+  }
+
+  const levers = dpsLeverRows(snap);
+  if (!levers.length) {
+    return `<section class="single-panel explain-panel suggestion-panel">
+      <div class="analysis-heading">
+        <div>
+          <span class="eyebrow">Best progression</span>
+          <h2 id="suggestion-title">What to change next</h2>
+        </div>
+      </div>
+      <p class="section-intro">No standard formula lever moved DPS on this snapshot.</p>
+    </section>`;
+  }
+
+  const rows = levers.map((row, index) => {
+    const soloClass = row.soloDeltaPct >= 0 ? "up" : "down";
+    return `<li class="suggestion-lever-row" data-lever-id="${escAttr(row.id)}">
+      <span class="suggestion-lever-rank">${index + 1}</span>
+      <span class="suggestion-lever-copy">
+        <strong class="suggestion-lever-label">${esc(row.label)}</strong>
+        <small class="suggestion-lever-solo ${soloClass}">solo ${esc(signedPercent(row.soloDeltaPct))}</small>
+      </span>
+      <label class="suggestion-toggle">
+        <input type="checkbox"
+          data-suggestion-lever
+          data-lever-path="${escAttr(row.path)}"
+          data-lever-delta="${escAttr(String(row.delta))}"
+          aria-label="Include ${escAttr(row.label)} in stacked DPS">
+        <span class="suggestion-toggle-ui" aria-hidden="true"></span>
+      </label>
+    </li>`;
+  }).join("");
+
+  return `<section class="single-panel explain-panel suggestion-panel"
+      data-suggestion-panel
+      data-baseline-dps="${escAttr(String(baseline))}"
+      aria-labelledby="suggestion-title">
     <div class="analysis-heading">
       <div>
-        <span class="eyebrow">Suggested changes</span>
+        <span class="eyebrow">Best progression</span>
         <h2 id="suggestion-title">What to change next</h2>
       </div>
     </div>
-    <p class="section-intro">Packages are full loadout-to-loadout diffs — talent respecs, slate swaps with different mods, support moves, and gear can land in the <strong>same package</strong> when a later stage does them together. Run one package (or one ranked check inside it) at a time.</p>
-    ${packages.length
-      ? `<div class="suggestion-package-list">${packages.join("")}</div>`
-      : `<p class="suggestion-empty-note">No later leaderboard stage after this loadout. Formula levers still apply below.</p>`}
-    ${leverBlock}
+    <p class="section-intro">Ranked by <strong>solo dummy DPS</strong> on this loadout — not by any later leaderboard stage. Toggle levers on the right to stack them; the header shows the combined result. These are formula probes, not gear-legal guarantees.</p>
+    <div class="suggestion-stack-summary" aria-live="polite">
+      <div class="suggestion-stack-metric">
+        <span class="metric-label">Baseline</span>
+        <strong data-suggestion-baseline>${esc(compactNumber(baseline))}</strong>
+      </div>
+      <div class="suggestion-stack-metric">
+        <span class="metric-label">With selected</span>
+        <strong data-suggestion-stacked>${esc(compactNumber(baseline))}</strong>
+      </div>
+      <div class="suggestion-stack-metric">
+        <span class="metric-label">Stack delta</span>
+        <b class="suggestion-stack-delta neutral" data-suggestion-stack-delta>No levers on</b>
+      </div>
+      <div class="suggestion-stack-metric">
+        <span class="metric-label">Selected</span>
+        <strong data-suggestion-count>0 / ${levers.length}</strong>
+      </div>
+    </div>
+    <ol class="suggestion-lever-list">${rows}</ol>
   </section>`;
+}
+
+/** Live stacked DPS for toggled formula levers (no full re-render). */
+function recomputeSuggestionStack(panel: HTMLElement) {
+  const baseline = Number(panel.dataset.baselineDps);
+  const stackedEl = panel.querySelector<HTMLElement>("[data-suggestion-stacked]");
+  const deltaEl = panel.querySelector<HTMLElement>("[data-suggestion-stack-delta]");
+  const countEl = panel.querySelector<HTMLElement>("[data-suggestion-count]");
+  if (!Number.isFinite(baseline) || baseline <= 0 || !stackedEl || !deltaEl || !countEl) return;
+
+  const snap = activeLoadout().loadout.snapshot;
+  if (!snap) return;
+
+  const checked = [...panel.querySelectorAll<HTMLInputElement>(
+    "input[data-suggestion-lever]:checked",
+  )];
+  const total = panel.querySelectorAll("input[data-suggestion-lever]").length;
+  countEl.textContent = `${checked.length} / ${total}`;
+
+  if (!checked.length) {
+    stackedEl.textContent = compactNumber(baseline);
+    deltaEl.textContent = "No levers on";
+    deltaEl.className = "suggestion-stack-delta neutral";
+    panel.querySelectorAll(".suggestion-lever-row").forEach((row) => {
+      row.classList.remove("is-on");
+    });
+    return;
+  }
+
+  const levers = checked.map((input) => ({
+    path: input.dataset.leverPath ?? "",
+    delta: Number(input.dataset.leverDelta),
+  })).filter((lever) => lever.path && Number.isFinite(lever.delta));
+
+  let stacked = baseline;
+  try {
+    stacked = cycleDps(applyLeverBumps(snap, levers)).dps;
+  } catch {
+    stacked = baseline;
+  }
+
+  const deltaPct = (stacked / baseline - 1) * 100;
+  stackedEl.textContent = compactNumber(stacked);
+  deltaEl.textContent = Number.isFinite(deltaPct)
+    ? `${signedPercent(deltaPct)} dummy DPS`
+    : "—";
+  deltaEl.className = `suggestion-stack-delta ${
+    !Number.isFinite(deltaPct) || Math.abs(deltaPct) < 0.05
+      ? "neutral"
+      : deltaPct >= 0
+        ? "up"
+        : "down"
+  }`;
+
+  panel.querySelectorAll(".suggestion-lever-row").forEach((row) => {
+    const on = row.querySelector<HTMLInputElement>("input[data-suggestion-lever]")?.checked;
+    row.classList.toggle("is-on", Boolean(on));
+  });
 }
 
 /** Page 2 body: equipped loadout inventory + suggested changes + DPS formula. */
@@ -771,7 +781,7 @@ function renderLoadoutPage(build: AnalyzedBuild, loadout: AnalyzedLoadout) {
     ${navigation()}
     <div class="loadout-page-stack">
       ${renderBuildOverview(loadout)}
-      ${renderSuggestedChanges(build, loadout)}
+      ${renderSuggestedChanges(loadout)}
       ${renderExplain(loadout)}
     </div>`;
 }
@@ -3410,7 +3420,12 @@ app.addEventListener("submit", (event) => {
 });
 
 app.addEventListener("change", (event) => {
-  const target = event.target as HTMLSelectElement;
+  const target = event.target as HTMLSelectElement | HTMLInputElement;
+  if (target.matches("input[data-suggestion-lever]")) {
+    const panel = target.closest<HTMLElement>("[data-suggestion-panel]");
+    if (panel) recomputeSuggestionStack(panel);
+    return;
+  }
   if (target.matches('[data-observed-comparison-form] [name="metric"]')) {
     const form = target.closest<HTMLFormElement>(
       "[data-observed-comparison-form]",

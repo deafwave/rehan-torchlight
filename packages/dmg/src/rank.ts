@@ -1,7 +1,11 @@
-/* Sensitivity ranking and candidate comparison for the build snapshot. */
-import { deepCopy } from "./py.js";
-import { skillLevelAdditionalPct } from "./buildParser.js";
+/* Sensitivity ranking and candidate comparison for the build snapshot.
+   Browser-safe: only depends on damageModel (no node:fs / py.ts). */
 import { cycleDps, type Snapshot } from "./damageModel.js";
+
+/** Same curve as buildParser.skillLevelAdditionalPct — inlined to keep rank browser-importable. */
+function skillLevelAdditionalPct(levels: number): number {
+  return (1.10 ** Math.min(levels, 10) * 1.08 ** Math.max(levels - 10, 0) - 1) * 100;
+}
 
 export const STANDARD_PERTURBATIONS: [string, string, number][] = [
   ["+10% increased physical damage", "increased.physical", 10],
@@ -43,7 +47,7 @@ export function validateSnapshot(s: Snapshot): void {
 }
 
 export function bump(s: Snapshot, path: string, delta: number): Snapshot {
-  const out = deepCopy(s);
+  const out = structuredClone(s);
   const keys = path.split(".");
   let d: any = out;
   for (const k of keys.slice(0, -1)) d = d[k];
