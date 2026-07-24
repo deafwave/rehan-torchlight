@@ -100,7 +100,7 @@ interface Selection {
 
 let beforeSelection: Selection;
 let afterSelection: Selection;
-let activeView: View = "diagnosis";
+let activeView: View = "actions";
 let changeSection: ChangeSection = "gear";
 let formulaSide: Side = "after";
 let importTarget: Side = "after";
@@ -125,37 +125,6 @@ const esc = (value: unknown) => String(value ?? "")
   .replaceAll(">", "&gt;");
 const escAttr = (value: unknown) => esc(value).replaceAll('"', "&quot;");
 const sideLabel = (side: Side) => side === "before" ? "Before" : "After";
-
-function provenanceLabel(source: string) {
-  return /^https:\/\//i.test(source)
-    ? `<a href="${escAttr(source)}" target="_blank" rel="noopener">${esc(source)} ↗</a>`
-    : `<strong>${esc(source)}</strong>`;
-}
-
-function provenanceLinks(entries: Array<{ source: string; locator?: string }>) {
-  const sources = [...new Set(entries.map((entry) => entry.source))]
-    .filter((source) => /^https:\/\//i.test(source));
-  const local = [...new Map(
-    entries
-      .filter((entry) => !/^https:\/\//i.test(entry.source) && entry.locator)
-      .map((entry) => [`${entry.source}\u0000${entry.locator}`, entry]),
-  ).values()];
-  if (!sources.length && !local.length) return "";
-  return `<div class="evidence-sources"><span>Sources</span>${sources.map((source) => {
-    let label = source;
-    try {
-      const url = new URL(source);
-      label = `${url.hostname} · ${url.pathname.split("/").filter(Boolean).at(-1) ?? "data"}`;
-    } catch {
-      // Keep the escaped source string when a future non-standard locator is used.
-    }
-    return `<a href="${escAttr(source)}" target="_blank" rel="noopener">${esc(label)} ↗</a>`;
-  }).join("")}${local.length ? `<details class="evidence-locators">
-    <summary>${local.length} imported source path${local.length === 1 ? "" : "s"}</summary>
-    <ul>${local.slice(0, 12).map((entry) => `<li><strong>${esc(entry.source)}</strong><code>${esc(entry.locator)}</code></li>`).join("")}</ul>
-    ${local.length > 12 ? `<small>+${local.length - 12} more paths retained in the evidence payload</small>` : ""}
-  </details>` : ""}</div>`;
-}
 
 function selected(side: Side) {
   const selection = side === "before" ? beforeSelection : afterSelection;
@@ -419,22 +388,20 @@ function renderSummary(
           <span>${observedComparable.before.conditions.length
             ? `${observedComparable.before.conditions.length} declared condition${observedComparable.before.conditions.length === 1 ? "" : "s"}`
             : "No extra conditions declared"}</span>
-          <button type="button" class="text-button" data-view="actions">Review outcome and attribution</button>
+          <button type="button" class="primary-button strip-cta" data-view="actions">Improve this result</button>
         </div>`
       : bothModeled
       ? `<div class="scenario-strip">
           <span class="scenario-label">Shared scenario</span>
           <span>Boss target</span>
-          <span>30% elemental / erosion resistance</span>
-          <span>Full configured uptime</span>
-          <button type="button" class="text-button" data-view="${plan.findings.length ? "actions" : "coverage"}">${plan.findings.length ? `Open ${plan.findings.length} next actions` : "Review compatibility"}</button>
+          <span>30% res · full uptime</span>
+          <button type="button" class="primary-button strip-cta" data-view="${plan.findings.length ? "actions" : "coverage"}">${plan.findings.length ? `Improve DPS · ${plan.findings.length} experiments` : "Review compatibility"}</button>
         </div>`
       : `<div class="scenario-strip evidence-scope">
           <span class="scenario-label">Evidence scope</span>
-          <span>${guardedReady ? "Imported entities and guarded source terms" : "Imported structure only"}</span>
-          <span>${guardedBlocked ? "Blocked guarded layers remain explicit" : "No target scenario applied"}</span>
-          <span>DPS / EHP not guessed</span>
-          <button type="button" class="text-button" data-view="${plan.findings.length ? "actions" : "coverage"}">${plan.findings.length ? `Open ${plan.findings.length} next actions` : "Review compatibility"}</button>
+          <span>${guardedReady ? "Guarded source terms ready" : "Structure only"}</span>
+          <span>${guardedBlocked ? "Some layers blocked" : "No guessed DPS"}</span>
+          <button type="button" class="primary-button strip-cta" data-view="${plan.findings.length ? "actions" : "coverage"}">${plan.findings.length ? `Improve DPS · ${plan.findings.length} experiments` : "Review compatibility"}</button>
         </div>`}
   </section>`;
 }
@@ -518,115 +485,6 @@ function renderTradeoff(steps: WaterfallStep[]) {
   </section>`;
 }
 
-const CHECK_COPY: Record<string, { title: string; body: string }> = {
-  base: {
-    title: "Re-check the weapon and flat base",
-    body: "A higher-looking modifier cannot compensate for a lower base hit if the skill multiplies that base several times.",
-  },
-  increased: {
-    title: "Restore applicable increased damage",
-    body: "Confirm the new lines match the main skill’s tags and final damage type. Inert increases are not upgrades.",
-  },
-  additional: {
-    title: "Restore the lost separate multiplier",
-    body: "Additional bonuses with different names compound. Replacing one with a larger increased roll is often a net loss.",
-  },
-  conversion: {
-    title: "Trace the conversion chain",
-    body: "A conversion change can strand typed damage, penetration, or critical bonuses that used to apply.",
-  },
-  crit: {
-    title: "Recover critical reliability",
-    body: "Check both chance and critical damage. A large crit-damage roll is weak if the build no longer crits consistently.",
-  },
-  enemy: {
-    title: "Restore penetration or a target debuff",
-    body: "Resistance and damage-taken layers are late multipliers; losing one is usually more expensive than it looks.",
-  },
-  rotation: {
-    title: "Verify cadence and overlap",
-    body: "Attack speed, projectile quantity, bomb overlap, combo timing, and uptime determine how many scaled hits land.",
-  },
-  dot: {
-    title: "Check damage-over-time application",
-    body: "Chance, duration, tick rate, and the feeding hit all need to remain valid for the modeled DoT contribution.",
-  },
-};
-
-function nextChecks(steps: WaterfallStep[] | null, after: AnalyzedLoadout) {
-  if (!steps || !after.model) {
-    const readiness = guardedEvidenceReadiness(after);
-    const firstTitle = readiness === "blocked"
-      ? "Resolve the guarded evidence blockers"
-      : readiness === "partial"
-        ? "Review blockers, then complete the DPS layers"
-        : readiness === "ready"
-          ? "Complete the remaining DPS layers"
-          : "Connect this build to a season model";
-    const firstBody = readiness === "blocked"
-      ? "The structure is visible, but the guarded checks rejected required inputs. Their blocker evidence is shown instead of a fabricated value."
-      : readiness === "partial"
-        ? "Some source slices compiled and others were withheld. Resolve the explicit blockers before extending the result toward total DPS."
-        : readiness === "ready"
-          ? "Guarded source arithmetic is connected. Rotation, complete modifiers, target state, and uptime still need compatible compilers before DPS."
-          : "The full loadout is visible, but the site will not invent a DPS number for unsupported input.";
-    const minionNotice = isMinionLoadout(after)
-      ? after.summonEvidence?.length
-        ? `<div class="minion-warning"><strong>Minion DPS layers remain</strong>
-            Actor, action, and supported socket evidence is connected. Quantity, full modifiers, AI rotation, overlap, target state, and uptime still block DPS.</div>`
-        : after.summonEvidenceBlockers?.length
-          ? `<div class="minion-warning"><strong>Spirit Magus evidence blocked</strong>
-              Resolve the displayed source-shape or installation blockers; the player-hit formula is not a fallback.</div>`
-          : `<div class="minion-warning"><strong>Minion DPS compiler required</strong>
-              Keep player, Spirit Magus, and Synthetic Troop modifiers actor-scoped; the player-hit formula is not a fallback.</div>`
-      : "";
-    return `<aside class="next-checks">
-      <div class="panel-kicker">Analysis queue</div>
-      <h2>What is needed next</h2>
-      <div class="check-card warning">
-        <span class="check-rank">1</span>
-        <div><strong>${esc(firstTitle)}</strong>
-        <p>${esc(firstBody)}</p></div>
-      </div>
-      <div class="check-card">
-        <span class="check-rank">2</span>
-        <div><strong>Review imported changes now</strong>
-        <p>Gear, skills, trees, memories, slates, and pactspirits can still be compared safely.</p></div>
-      </div>
-      ${minionNotice}
-    </aside>`;
-  }
-  const isMinion = after.model.confidence === "experimental";
-  const losses = steps.filter((step) => step.delta < -0.5)
-    .sort((a, b) => a.delta - b.delta)
-    .slice(0, 3);
-  const gains = steps.filter((step) => step.delta > 0.5)
-    .sort((a, b) => b.delta - a.delta)
-    .slice(0, 3);
-  const chosen = losses.length ? losses : gains;
-  return `<aside class="next-checks">
-    <div class="panel-kicker">${losses.length ? "Evidence-based checks" : "What improved"}</div>
-    <h2>${losses.length ? "Check these first" : "Protect these gains"}</h2>
-    <p class="checks-note">These are comparison checks, not optimizer recommendations.</p>
-    ${isMinion ? `<div class="minion-warning"><strong>Minion warning</strong>
-      The player-hit model cannot settle minion base actions, quantity, or AI uptime. Treat the numbers as directional only.</div>` : ""}
-    ${chosen.map((step, index) => {
-      const copy = CHECK_COPY[step.id] ?? { title: step.label, body: step.description };
-      return `<button class="check-card ${step.delta < 0 ? "loss" : "gain"}" type="button" data-jump-section="${escAttr(step.id)}">
-        <span class="check-rank">${index + 1}</span>
-        <div><strong>${esc(copy.title)}</strong>
-        <p>${esc(copy.body)}</p>
-        <span class="check-impact">${esc(signedCompact(step.delta))} in replay</span></div>
-      </button>`;
-    }).join("")}
-    <div class="optimizer-note">
-      <span class="beta-label">Later</span>
-      <strong>Constraint-based upgrade search</strong>
-      <p>Budget, item availability, DPS, and EHP tradeoffs will live here once the MiniZinc model is ready.</p>
-    </div>
-  </aside>`;
-}
-
 const SYSTEM_LABELS: Record<BuildSystem, string> = {
   gear: "Gear",
   skills: "Skills",
@@ -657,12 +515,11 @@ function renderStructuralDiagnosis(
   return `<div class="structural-diagnosis">
     <div class="structural-head">
       <div>
-        <span class="eyebrow">Evidence before arithmetic</span>
-        <h3>Start with the changes most likely to alter the formula</h3>
+        <span class="eyebrow">Where to look</span>
+        <h3>Top changes to isolate</h3>
       </div>
-      <span class="exact-badge">${comparison.changedSystems.length} systems changed</span>
+      <span class="exact-badge">${comparison.changedSystems.length} systems</span>
     </div>
-    <p class="structural-note">These are investigation priorities from the imported entities—not DPS estimates. Each card explains why the change matters and links to its source details.</p>
     <div class="insight-list">
       ${normalized.slice(0, 5).map((finding, index) => {
         const section = finding.target.section!;
@@ -675,16 +532,16 @@ function renderStructuralDiagnosis(
                 || finding.direction === "stronger-input"
               ? "candidate"
               : "neutral";
+        const changeLine = actionChangeLine(finding);
         return `<button type="button"
         class="insight-card ${tone}" data-open-section="${section}">
         <span class="insight-rank">${index + 1}</span>
         <span class="insight-copy">
           <span class="insight-label">${esc(finding.label)} · ${esc(SYSTEM_LABELS[section])}</span>
-          <strong>${esc(finding.title)}</strong>
-          <span>${esc(finding.explanation)}</span>
-          <small>${finding.evidence.map((line) => esc(line)).join(" · ")}</small>
+          <strong>${esc(actionHeadline(finding))}</strong>
+          ${changeLine ? `<span class="insight-change">${esc(changeLine)}</span>` : ""}
         </span>
-        <span class="insight-open" aria-hidden="true">Review →</span>
+        <span class="insight-open" aria-hidden="true">Open</span>
       </button>`;
       }).join("")}
     </div>
@@ -827,9 +684,6 @@ function renderBingIntrinsicComparison(before: AnalyzedLoadout, after: AnalyzedL
     ]
       .map((blocker) => [blocker.code, blocker]),
   ).values()];
-  const provenance = [left, right]
-    .filter((value): value is BingIntrinsicEvidence => Boolean(value))
-    .flatMap((value) => value.provenance);
   return `<section class="bing-intrinsic-panel">
     <div class="partial-proof-head">
       <div><span class="eyebrow">Guarded Hammer envelope</span><h3>Separate damage per hit from things merely emitted</h3></div>
@@ -851,7 +705,6 @@ function renderBingIntrinsicComparison(before: AnalyzedLoadout, after: AnalyzedL
       <summary>The remaining ladder from emissions to real DPS</summary>
       <ol>${blockers.map((blocker, index) => `<li><b>${index + 1}</b><span><strong>${esc(blocker.message)}</strong>${blocker.evidence ? `<small>${esc(blocker.evidence)}</small>` : ""}</span></li>`).join("")}</ol>
     </details>
-    ${provenanceLinks(provenance)}
   </section>`;
 }
 
@@ -908,48 +761,34 @@ function renderBingFactorLedgerComparison(
   </section>`;
 }
 
-function supportTermSide(
-  evidence: SupportTermChange["before"],
-  label: string,
-) {
-  if (!evidence) return `<div class="support-term-side empty"><span>${esc(label)}</span><strong>Not socketed</strong></div>`;
-  const configuration = [
-    evidence.level == null ? "" : `L${evidence.level}`,
-    evidence.supportType ? `type ${evidence.supportType}` : "",
-    evidence.tier == null ? "" : `T${evidence.tier}`,
-    evidence.rank == null ? "" : `R${evidence.rank}`,
-    evidence.rollValues?.length
-      ? `rolls [${evidence.rollValues.join(", ")}]`
-      : "",
-  ].filter(Boolean).join(" · ");
-  if (evidence.status === "unsupported") {
-    return `<div class="support-term-side unsupported"><span>${esc(label)}${configuration ? ` · ${esc(configuration)}` : ""}</span>
-      <strong>${esc(evidence.supportName ?? "Unknown support")}</strong>
-      <p>${evidence.blockers.map((blocker) => esc(blocker)).join(" ")}</p></div>`;
-  }
-  return `<div class="support-term-side">
-    <span>${esc(label)}${configuration ? ` · ${esc(configuration)}` : ""}</span>
-    <strong>${esc(evidence.supportName ?? "Unknown support")}</strong>
-    <ul>${evidence.effects.map((effect) => `<li>
-      <b>${esc(effect.display)}</b>
-      <span><strong>${esc(effect.label)}</strong><small>${esc(effect.scope)}${effect.condition ? ` · ${esc(effect.condition)}` : ""}</small></span>
-    </li>`).join("")}</ul>
-  </div>`;
+function shortSkillLabel(name: string) {
+  return name
+    .replace(/\s*\(Bing:[^)]*\)/g, "")
+    .replace(/\s*\(Magnificent\)/g, "")
+    .replace(/\s*\(Noble\)/g, "")
+    .replace(/Hammer of Ash:\s*/gi, "")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+}
+
+function supportTermPreview(side: SupportTermChange["before"] | SupportTermChange["after"]) {
+  if (!side) return "—";
+  if (side.status === "unsupported") return "unsupported";
+  if (!side.effects?.length) return "—";
+  return side.effects
+    .slice(0, 3)
+    .map((effect) => effect.display)
+    .join(" · ");
 }
 
 function renderSupportTermChanges(before: AnalyzedLoadout, after: AnalyzedLoadout) {
   const changes = compareSupportTerms(before, after);
   if (!changes.length) return "";
-  const provenance = changes.flatMap((change) => [
-    ...(change.before?.provenance ?? []),
-    ...(change.after?.provenance ?? []),
-  ]);
-  return `<section class="support-evidence-panel">
-    <div class="partial-proof-head">
-      <div><span class="eyebrow">Exact support text</span><h3>What the main-skill socket changes actually say</h3></div>
-      <div class="partial-badges"><span>SS13 source terms</span><b>Net DPS pending</b></div>
-    </div>
-    <p>These values come from the season support tables. They are not added together: damage-type share, critical chance, projectile geometry, enemy Life, and uptime still decide their net value.</p>
+  return `<details class="support-evidence-panel density-fold">
+    <summary>
+      Socket terms
+      <span>${changes.length} change${changes.length === 1 ? "" : "s"} · not net DPS</span>
+    </summary>
     <div class="support-change-list">
       ${changes.map((change) => {
         const beforeName = change.before?.supportName ?? null;
@@ -958,28 +797,26 @@ function renderSupportTermChanges(before: AnalyzedLoadout, after: AnalyzedLoadou
           && beforeName
           && afterName
           && beforeName !== afterName
-          ? `${beforeName} → ${afterName}`
-          : change.supportName;
+          ? `${shortSkillLabel(beforeName)} → ${shortSkillLabel(afterName)}`
+          : shortSkillLabel(change.supportName);
         const socketLabel = change.before
           && change.after
           && change.before.socketIndex !== change.after.socketIndex
-          ? `sockets ${change.before.socketIndex + 1} → ${change.after.socketIndex + 1}`
-          : `socket ${change.socketIndex + 1}`;
-        const kindLabel = change.kind.replaceAll("-", " ");
-        return `<article class="support-change ${change.kind}">
+          ? `S${change.before.socketIndex + 1}→${change.after.socketIndex + 1}`
+          : `S${change.socketIndex + 1}`;
+        return `<article class="support-change ${change.kind} support-change--compact">
         <div class="support-change-head">
-          <span>${esc(kindLabel)} · ${esc(change.skillName)} · ${esc(socketLabel)}</span>
+          <span>${esc(socketLabel)} · ${esc(shortSkillLabel(change.skillName))}</span>
           <strong>${esc(title)}</strong>
         </div>
-        <div class="support-term-sides">
-          ${supportTermSide(change.before, "Before")}
-          ${supportTermSide(change.after, "After")}
+        <div class="support-term-preview">
+          <span><small>Before</small>${esc(supportTermPreview(change.before))}</span>
+          <span><small>After</small>${esc(supportTermPreview(change.after))}</span>
         </div>
       </article>`;
       }).join("")}
     </div>
-    ${provenanceLinks(provenance)}
-  </section>`;
+  </details>`;
 }
 
 function summonTermSide(
@@ -1145,8 +982,6 @@ function renderSummonTermChanges(before: AnalyzedLoadout, after: AnalyzedLoadout
     ...compilerBlockers,
   ])];
   const playerEhpBlockers = [...new Set(reference?.playerEhp.blockers ?? [])];
-  const provenance = [...beforeEvidence, ...afterEvidence]
-    .flatMap((evidence) => evidence.provenance);
   const beforeReference = beforeEvidence[0] ?? null;
   const afterReference = afterEvidence[0] ?? null;
   const bothSidesGuarded = beforeEvidence.length > 0 && afterEvidence.length > 0;
@@ -1235,7 +1070,6 @@ function renderSummonTermChanges(before: AnalyzedLoadout, after: AnalyzedLoadout
             )}
       </div>
     </details>` : ""}
-    ${provenanceLinks(provenance)}
   </section>`;
 }
 
@@ -1266,52 +1100,41 @@ function renderDiagnosis(
   plan: ComparisonActionPlan,
 ) {
   if (!before.snapshot || !after.snapshot || !before.model || !after.model) {
-    return `<div class="content-grid">
-      <section class="analysis-panel empty-analysis">
-        <span class="eyebrow">Diagnosis</span>
-        <h2>The builds imported. The investigation can start now.</h2>
-        <p>${esc(after.sourceNote ?? before.sourceNote ?? "This build format is not connected to the damage model yet.")}</p>
-        ${renderLocalCaptureHandoff(after, before)}
-        ${renderPartialComparison(before, after)}
-        ${renderBingIntrinsicComparison(before, after)}
-        ${renderBingFactorLedgerComparison(before, after)}
-        ${renderSupportTermChanges(before, after)}
-        ${renderSummonTermChanges(before, after)}
-        ${renderStructuralDiagnosis(before, after, plan)}
-        <div class="honesty-grid">
-          <div><span>Imported</span><strong>Loadout structure</strong><p>Items, skills, trees, memories, slates, and pacts.</p></div>
-          <div><span>Prioritized</span><strong>Changes to investigate</strong><p>Support, weapon, tree, and secondary-system differences.</p></div>
-          <div><span>Not guessed</span><strong>DPS and EHP</strong><p>Unavailable values stay unavailable instead of becoming false zeroes.</p></div>
-        </div>
-      </section>
-      ${nextChecks(null, after)}
-    </div>`;
+    return `<section class="analysis-panel empty-analysis">
+      <span class="eyebrow">Diagnosis</span>
+      <h2>The builds imported. The investigation can start now.</h2>
+      <p>${esc(after.sourceNote ?? before.sourceNote ?? "This build format is not connected to the damage model yet.")}</p>
+      ${renderLocalCaptureHandoff(after, before)}
+      ${renderPartialComparison(before, after)}
+      ${renderBingIntrinsicComparison(before, after)}
+      ${renderBingFactorLedgerComparison(before, after)}
+      ${renderSupportTermChanges(before, after)}
+      ${renderSummonTermChanges(before, after)}
+      ${renderStructuralDiagnosis(before, after, plan)}
+    </section>`;
   }
   const steps = buildWaterfall(before.snapshot, after.snapshot);
   const totalDelta = after.model.dps - before.model.dps;
   const max = Math.max(1, ...steps.map((step) => Math.abs(step.delta)));
-  return `<div class="content-grid">
-    <section class="analysis-panel">
-      <div class="analysis-heading">
-        <div>
-          <span class="eyebrow">Why damage changed</span>
-          <h2>The short answer</h2>
-        </div>
-        <span class="exact-badge">Reconciles to ${esc(compactNumber(after.model.dps))}</span>
+  return `<section class="analysis-panel">
+    <div class="analysis-heading">
+      <div>
+        <span class="eyebrow">Why damage changed</span>
+        <h2>The short answer</h2>
       </div>
-      <p class="short-answer">${shortAnswer(steps, totalDelta)}</p>
-      ${renderTradeoff(steps)}
-      <div class="waterfall-head">
-        <span>Formula layer</span><span>Replay contribution</span><span>Δ DPS</span>
-      </div>
-      <div class="waterfall">${steps.map((step) => waterfallRow(step, max)).join("")}</div>
-      <div class="method-note">
-        <strong>How to read this:</strong> layers are replayed in fixed formula order so the rows add up exactly.
-        Field details show isolated swaps against Build A; multiplicative interactions mean those details can overlap.
-      </div>
-    </section>
-    ${nextChecks(steps, after)}
-  </div>`;
+      <span class="exact-badge">Reconciles to ${esc(compactNumber(after.model.dps))}</span>
+    </div>
+    <p class="short-answer">${shortAnswer(steps, totalDelta)}</p>
+    ${renderTradeoff(steps)}
+    <div class="waterfall-head">
+      <span>Formula layer</span><span>Replay contribution</span><span>Δ DPS</span>
+    </div>
+    <div class="waterfall">${steps.map((step) => waterfallRow(step, max)).join("")}</div>
+    <div class="method-note">
+      <strong>How to read this:</strong> layers are replayed in fixed formula order so the rows add up exactly.
+      Field details show isolated swaps against Build A; multiplicative interactions mean those details can overlap.
+    </div>
+  </section>`;
 }
 
 function rowChange(before: string, after: string, changed: boolean) {
@@ -1581,7 +1404,6 @@ function renderMinionFormulaView(active: AnalyzedLoadout) {
   ].sort((left, right) =>
     left.message.localeCompare(right.message)
     || left.code.localeCompare(right.code));
-  const provenance = summons.flatMap((summon) => summon.provenance);
   return `<section class="formula-panel minion-formula-panel">
     <div class="analysis-heading">
       <div><span class="eyebrow">Guarded minion arithmetic</span><h2>${esc(active.name)}</h2></div>
@@ -1644,7 +1466,6 @@ function renderMinionFormulaView(active: AnalyzedLoadout) {
         : ""}
       </div>
     </div>
-    ${provenanceLinks(provenance)}
   </section>`;
 }
 
@@ -1680,17 +1501,12 @@ function renderFormula(before: AnalyzedLoadout, after: AnalyzedLoadout) {
                 `<li><strong>${esc(blocker.message)}</strong>${blocker.evidence ? `<small>${esc(blocker.evidence)}</small>` : ""}</li>`).join("")}</ul>
             </section>`
           : ""}
-        <div class="partial-detail-grid">
-          <div>
-            <span class="panel-kicker">Source trail</span>
-            <ul>${partial.provenance.slice(0, 8).map((source) =>
-              `<li>${provenanceLabel(source.source)}<span>${esc(source.locator)}</span></li>`).join("")}</ul>
-          </div>
+        ${partial.excluded.length ? `<div class="partial-detail-grid">
           <div>
             <span class="panel-kicker">Deliberately excluded</span>
             <ul>${partial.excluded.map((item) => `<li><span>${esc(item)}</span></li>`).join("")}</ul>
           </div>
-        </div>
+        </div>` : ""}
         <div class="model-boundary">
           <div class="boundary-icon">!</div>
           <div><strong>This number must not be read as total hit damage or DPS.</strong>
@@ -2100,7 +1916,6 @@ function renderExactDefenseComparison(before: AnalyzedLoadout, after: AnalyzedLo
           ? exactDefenseTermList(right.terms, "after", "After evidence")
           : unavailableDefenseCard("After", rightResult)}
       </div>
-      ${available ? provenanceLinks(available.provenance) : ""}
     </section>`;
   }
   const sumChanges = exactSourceSumChanges(left, right);
@@ -2138,7 +1953,6 @@ function renderExactDefenseComparison(before: AnalyzedLoadout, after: AnalyzedLo
       <summary>Why the site still refuses to print one EHP number</summary>
       <ul>${blockers.map((blocker) => `<li><strong>${esc(blocker.message)}</strong>${blocker.evidence ? `<small>${esc(blocker.evidence)}</small>` : ""}</li>`).join("")}</ul>
     </details>
-    ${provenanceLinks([...left.provenance, ...right.provenance])}
   </section>`;
 }
 
@@ -2464,38 +2278,55 @@ function actionMetric(finding: ActionFinding) {
   </div>`;
 }
 
+function actionHeadline(finding: ActionFinding) {
+  // Prefer the concrete change over long actor/parenthetical titles.
+  return shortSkillLabel(
+    finding.title
+      .replace(/\s+on\s+/g, " · ")
+      .replace(/\s{2,}/g, " ")
+      .trim(),
+  );
+}
+
+function actionChangeLine(finding: ActionFinding) {
+  const skip = /not net|not a player|not DPS|exact support text|imported identity only|socket terms are known|defensive input is known/i;
+  // Prefer the socket/skill line over "Support swap:" restatement of the title.
+  const preferred = finding.evidence.find((entry) => /^Socket\s+\d+/i.test(entry))
+    ?? finding.evidence.find((entry) => !skip.test(entry) && !/^Support swap:/i.test(entry));
+  if (!preferred) return "";
+  const short = shortSkillLabel(preferred.split(" · ").slice(0, 2).join(" · "));
+  return short.length > 72 ? `${short.slice(0, 69)}…` : short;
+}
+
 function actionFindingCard(finding: ActionFinding, rank: number) {
   const proof = ACTION_PROOF_COPY[finding.proof];
   const section = finding.target.section;
-  const domain = {
-    damage: "Damage",
-    survival: "Survival",
-    build: "Build change",
-    capture: "Capture",
-  }[finding.domain];
+  const openLabel = section
+    ? SYSTEM_LABELS[section]
+    : finding.target.view;
+  const changeLine = actionChangeLine(finding);
   return `<article class="action-card ${finding.direction}">
     <div class="action-rank" aria-label="Priority ${rank}">${rank}</div>
     <div class="action-card-body">
       <div class="action-card-meta">
         <span class="proof-badge ${finding.proof}">${esc(proof.label)}</span>
         <span class="direction-badge">${esc(ACTION_DIRECTION_COPY[finding.direction])}</span>
-        <span>${esc(domain)}</span>
       </div>
-      <h3>${esc(finding.title)}</h3>
-      <p>${esc(finding.explanation)}</p>
+      <h3>${esc(actionHeadline(finding))}</h3>
+      ${changeLine ? `<p class="action-change-line">${esc(changeLine)}</p>` : ""}
       ${actionMetric(finding)}
-      <details class="action-evidence">
-        <summary>Why this is ranked here</summary>
-        <ul>${finding.evidence.map((line) => `<li>${esc(line)}</li>`).join("")}</ul>
-        <p><strong>Boundary:</strong> ${esc(proof.boundary)}</p>
-      </details>
-      <div class="action-experiment">
-        <span>Next controlled experiment</span>
-        <p>${esc(finding.nextExperiment)}</p>
-        <button type="button" class="quiet-button" data-action-view="${finding.target.view}"
+      <div class="action-card-footer">
+        <button type="button" class="primary-button" data-action-view="${finding.target.view}"
           ${section ? `data-action-section="${section}"` : ""}>
-          Open ${section ? esc(SYSTEM_LABELS[section]) : esc(finding.target.view)}
+          Open ${esc(openLabel)}
         </button>
+        <details class="action-evidence">
+          <summary>Details</summary>
+          <p class="action-detail-lead">${esc(finding.explanation)}</p>
+          <p class="action-detail-next"><strong>Test:</strong> ${esc(finding.nextExperiment)}</p>
+          <ul>${finding.evidence.map((line) => `<li>${esc(line)}</li>`).join("")}</ul>
+          <p class="action-detail-boundary">${esc(proof.boundary)}</p>
+        </details>
       </div>
     </div>
   </article>`;
@@ -2517,36 +2348,38 @@ function renderActions(
   const actionGroups = [
     {
       id: "damage",
-      label: "Damage changes and drivers",
-      note: "Known hit, factor, support, and scaling changes",
+      label: "Damage",
+      note: "Hits, supports, scaling",
       findings: plan.findings.filter((finding) => finding.domain === "damage"),
     },
     {
       id: "survival",
-      label: "Survival tradeoffs",
-      note: "Typed defensive source inputs; never implied EHP",
+      label: "Survival",
+      note: "Defense inputs only",
       findings: plan.findings.filter((finding) => finding.domain === "survival"),
     },
     {
       id: "build",
-      label: "Build changes to isolate",
-      note: "Structural leads whose numeric direction is still unknown",
+      label: "Build",
+      note: "Isolate these next",
       findings: plan.findings.filter((finding) => finding.domain === "build"),
     },
   ].filter((group) => group.findings.length > 0);
   const groupedActions = actionGroups.map((group) => {
-    const visible = group.findings.slice(0, 3);
-    const hidden = group.findings.slice(3);
+    const visible = group.findings.slice(0, 2);
+    const hidden = group.findings.slice(2);
     return `<section class="action-domain-group ${group.id}">
       <div class="action-domain-head">
         <div><span>${esc(group.note)}</span><h3>${esc(group.label)}</h3></div>
         <strong>${group.findings.length}</strong>
       </div>
-      ${visible.map((finding, index) =>
-        actionFindingCard(finding, index + 1)).join("")}
+      <div class="action-card-list">
+        ${visible.map((finding, index) =>
+          actionFindingCard(finding, index + 1)).join("")}
+      </div>
       ${hidden.length ? `<details class="action-more">
         <summary>Show ${hidden.length} more ${esc(group.label.toLocaleLowerCase())} ${hidden.length === 1 ? "check" : "checks"}</summary>
-        <div>${hidden.map((finding, index) =>
+        <div class="action-card-list">${hidden.map((finding, index) =>
           actionFindingCard(finding, visible.length + index + 1)).join("")}</div>
       </details>` : ""}
     </section>`;
@@ -2589,84 +2422,108 @@ function renderActions(
           : "Raw contrasts remain visible, but causal and rollback language is withheld until both loadouts share a proven source-document lineage."}</p>
         ${canConfirm ? `<button type="button" class="quiet-button" data-confirm-progression>Confirm these are the same character</button>` : ""}
       </div>`;
+  const activeProof = proofCounts.filter(([, , count]) => count > 0);
   return `<section class="actions-view">
     <div class="actions-hero">
       <div>
-        <span class="eyebrow">Proof-ranked experiment queue</span>
-        <h2>${progression ? "Change one thing, then prove what moved." : teaching ? "Learn the scaling layers in a controlled replay." : incompatible ? "Choose a compatible pair first." : "Learn from the contrast without pretending it is causal."}</h2>
-        <p>The queue ranks what the imported evidence can support today. It does not invent optimizer scores for missing mechanics.</p>
+        <span class="eyebrow">Improve DPS</span>
+        <h2>${progression ? "One change at a time." : teaching ? "Practice the scaling layers." : incompatible ? "Pick a compatible pair first." : "Study the contrast — don’t force a cause yet."}</h2>
+        <p>${progression
+          ? "Run the top experiment below. Keep the rest collapsed until you need them."
+          : "Evidence first. Ranked checks stay available without inventing missing mechanics."}</p>
       </div>
       <button type="button" class="copy-report-button" data-copy-action-report>
         ${reportCopyState === "copied" ? "Copied comparison report" : reportCopyState === "failed" ? "Copy failed — retry" : "Copy report"}
       </button>
     </div>
-    ${renderObservedComparisonForm(before, after, plan)}
-    <div class="action-proof-strip" aria-label="Evidence levels in this comparison">
-      ${proofCounts.map(([proof, label, count]) => `<div class="${proof}">
-        <span>${esc(label)}</span><strong>${count}</strong>
-      </div>`).join("")}
-      <div class="action-proof-status">
-        <span>${plan.summary.observedDpsScope === "actor-skill"
-          ? "Scoped DPS"
-          : "Net DPS"}</span><strong>${plan.summary.observedDpsAvailable
-          ? "Whole-loadout observed"
-          : plan.summary.observedDpsScope === "actor-skill"
-            ? "Actor / skill observed"
-            : plan.summary.netDpsAvailable
-              ? "Shared model only"
-              : "Not calculated"}</strong>
-      </div>
-      <div class="action-proof-status">
-        <span>EHP</span><strong>Not calculated</strong>
-      </div>
-    </div>
     ${loop}
-    <div class="actions-layout">
-      <div class="action-queue">
-        <div class="analysis-heading">
-          <div><span class="panel-kicker">Ranked for this pair</span><h2>${plan.findings.length} next ${plan.findings.length === 1 ? "experiment" : "experiments"}</h2></div>
-          <span class="exact-badge">${esc(before.name)} → ${esc(after.name)}</span>
+    <div class="action-queue">
+      <div class="analysis-heading">
+        <div>
+          <span class="panel-kicker">Do this next</span>
+          <h2>${plan.findings.length
+            ? plan.findings.length === 1
+              ? "1 ranked experiment"
+              : `${plan.findings.length} ranked experiments`
+            : "No safe experiment yet"}</h2>
         </div>
-        ${plan.findings.length
-          ? groupedActions
-          : `<div class="action-empty">
-              <strong>No causal experiment is safe for this pair yet.</strong>
-              <p>Choose two snapshots of the same actor and archetype, or resolve the evidence blockers shown beside the queue.</p>
-            </div>`}
+        <span class="exact-badge">${esc(before.name)} → ${esc(after.name)}</span>
       </div>
-      <aside class="action-blockers">
-        <span class="panel-kicker">Honest stopping points</span>
-        <h2>What blocks a complete score</h2>
-        <p>These are missing bridges, not values assumed to be zero.</p>
-        ${topBlockers.length
-          ? `<ol>${topBlockers.map((blocker) => `<li>
-              <span>${esc(blocker.side)}</span>
-              <strong>${esc(blocker.title)}</strong>
-              <p>${esc(blocker.detail)}</p>
-              ${blocker.evidence ? `<small>${esc(blocker.evidence)}</small>` : ""}
-              ${(blocker.contexts?.length ?? 0) > 1 ? `<details class="blocker-contexts">
-                <summary>Show ${blocker.contexts!.length} contexts</summary>
-                <div>${blocker.contexts!.map((context) => `<small>${esc(context)}</small>`).join("")}</div>
-              </details>` : ""}
-            </li>`).join("")}</ol>`
-          : `<div class="action-empty compact"><strong>No explicit blocker was emitted.</strong><p>Coverage may still be structural only; review the coverage view before treating any result as complete.</p></div>`}
-        <button type="button" class="quiet-button action-coverage-link" data-action-view="coverage">Review all coverage</button>
-        <div class="optimizer-note">
-          <span class="beta-label">Optimizer later</span>
-          <strong>Constraint-based upgrade search</strong>
-          <p>MiniZinc can rank legal item and tree changes after the remaining DPS and EHP boundaries are source-complete.</p>
+      ${plan.findings.length
+        ? groupedActions
+        : `<div class="action-empty">
+            <strong>No causal experiment is safe for this pair yet.</strong>
+            <p>Choose two snapshots of the same actor and archetype, or open the blockers below.</p>
+          </div>`}
+    </div>
+    <div class="actions-secondary">
+      <details class="density-fold">
+        <summary>
+          Evidence snapshot
+          <span>${activeProof.map(([, label, count]) => `${count} ${label}`).join(" · ")
+            || "No ranked evidence yet"}</span>
+        </summary>
+        <div class="action-proof-strip" aria-label="Evidence levels in this comparison">
+          ${proofCounts.map(([proof, label, count]) => `<div class="${proof}">
+            <span>${esc(label)}</span><strong>${count}</strong>
+          </div>`).join("")}
+          <div class="action-proof-status">
+            <span>${plan.summary.observedDpsScope === "actor-skill"
+              ? "Scoped DPS"
+              : "Net DPS"}</span><strong>${plan.summary.observedDpsAvailable
+              ? "Whole-loadout observed"
+              : plan.summary.observedDpsScope === "actor-skill"
+                ? "Actor / skill observed"
+                : plan.summary.netDpsAvailable
+                  ? "Shared model only"
+                  : "Not calculated"}</strong>
+          </div>
+          <div class="action-proof-status">
+            <span>EHP</span><strong>Not calculated</strong>
+          </div>
         </div>
-      </aside>
+      </details>
+      <details class="density-fold">
+        <summary>
+          Record in-game result
+          <span>Optional · compares matched DPS or hit readings</span>
+        </summary>
+        ${renderObservedComparisonForm(before, after, plan)}
+      </details>
+      <details class="density-fold" ${plan.findings.length ? "" : "open"}>
+        <summary>
+          What still blocks a complete score
+          <span>${topBlockers.length
+            ? `${topBlockers.length} open blocker${topBlockers.length === 1 ? "" : "s"}`
+            : "No explicit blocker"}</span>
+        </summary>
+        <aside class="action-blockers">
+          <p>Missing bridges stay explicit. Nothing is assumed to be zero.</p>
+          ${topBlockers.length
+            ? `<ol>${topBlockers.map((blocker) => `<li>
+                <span>${esc(blocker.side)}</span>
+                <strong>${esc(blocker.title)}</strong>
+                <p>${esc(blocker.detail)}</p>
+                ${blocker.evidence ? `<small>${esc(blocker.evidence)}</small>` : ""}
+                ${(blocker.contexts?.length ?? 0) > 1 ? `<details class="blocker-contexts">
+                  <summary>Show ${blocker.contexts!.length} contexts</summary>
+                  <div>${blocker.contexts!.map((context) => `<small>${esc(context)}</small>`).join("")}</div>
+                </details>` : ""}
+              </li>`).join("")}</ol>`
+            : `<div class="action-empty compact"><strong>No explicit blocker was emitted.</strong><p>Coverage may still be structural only; review the coverage view before treating any result as complete.</p></div>`}
+          <button type="button" class="quiet-button action-coverage-link" data-action-view="coverage">Review all coverage</button>
+        </aside>
+      </details>
     </div>
   </section>`;
 }
 
 function navigation(plan: ComparisonActionPlan) {
   const items: { id: View; label: string; count?: string }[] = [
-    { id: "diagnosis", label: "Diagnosis" },
-    { id: "actions", label: "Next actions", count: String(plan.findings.length) },
+    { id: "actions", label: "Improve DPS", count: String(plan.findings.length) },
+    { id: "diagnosis", label: "Why it changed" },
     { id: "changes", label: "Build changes" },
-    { id: "formula", label: "Damage formula" },
+    { id: "formula", label: "Formula" },
     { id: "survival", label: "Survival" },
     { id: "coverage", label: "Coverage" },
   ];
@@ -2706,7 +2563,7 @@ function render() {
         <a href="#formula-guide" data-view-link="formula">Learn scaling</a>
       </nav>
       <div class="header-meta">
-        <span class="season-dot"></span><span title="Guarded mechanics use SS13 evidence. Some display labels come from cached SS12.5 bundles with SS13 skill and pact overlays.">SS13 mechanics · legacy labels</span>
+        <span class="season-dot"></span><span title="Guarded mechanics use SS13 evidence. Some display labels come from cached SS12.5 bundles with SS13 skill and pact overlays.">SS13 mechanics</span>
         <a href="https://github.com/ChandlerFerry/etor-translations/releases/" target="_blank" rel="noopener">Game tools ↗</a>
       </div>
     </div>
@@ -2714,15 +2571,9 @@ function render() {
   <main class="workspace" id="workspace">
     <section class="workspace-intro">
       <div>
-        <span class="eyebrow">Import → compare → understand</span>
-        <h2>See exactly where your damage went.</h2>
-        <p>Compare real loadouts, replay the formula, and separate proven changes from unsupported mechanics.</p>
-      </div>
-      <div class="fixture-switcher" aria-label="Demo comparisons">
-        <span>Examples</span>
-        <button type="button" data-preset="lesson">Scaling lesson</button>
-        <button type="button" data-preset="bing">Bing loadouts</button>
-        <button type="button" data-preset="wuxia">Wuxia progression</button>
+        <span class="eyebrow">Import → compare → improve</span>
+        <h2>Find the next DPS win.</h2>
+        <p>Compare two loadouts, rank the changes that matter, and run one controlled experiment at a time.</p>
       </div>
     </section>
     <section class="comparison-bar" aria-label="Build comparison">
@@ -3069,32 +2920,6 @@ app.addEventListener("click", (event) => {
       restoreWorkspaceFocus(".bd-total");
     }
     return;
-  }
-  const preset = target.dataset.preset;
-  if (preset === "lesson") {
-    const build = builds.find((item) => item.id === "scaling-lesson")!;
-    beforeSelection = { buildId: build.id, loadoutId: build.loadouts[0].id };
-    afterSelection = { buildId: build.id, loadoutId: build.loadouts[1].id };
-    activeView = "diagnosis";
-    reportCopyState = "idle";
-    render();
-    restoreWorkspaceFocus('[data-preset="lesson"]');
-  } else if (preset === "bing") {
-    const build = builds.find((item) => item.id === "bing")!;
-    beforeSelection = { buildId: build.id, loadoutId: build.loadouts[2].id };
-    afterSelection = { buildId: build.id, loadoutId: build.loadouts[3].id };
-    activeView = "diagnosis";
-    reportCopyState = "idle";
-    render();
-    restoreWorkspaceFocus('[data-preset="bing"]');
-  } else if (preset === "wuxia") {
-    const build = builds.find((item) => item.id === "wuxia")!;
-    beforeSelection = { buildId: build.id, loadoutId: build.loadouts[5].id };
-    afterSelection = { buildId: build.id, loadoutId: build.loadouts[8].id };
-    activeView = "diagnosis";
-    reportCopyState = "idle";
-    render();
-    restoreWorkspaceFocus('[data-preset="wuxia"]');
   }
 });
 

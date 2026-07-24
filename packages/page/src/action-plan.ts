@@ -1528,9 +1528,9 @@ function unresolvedSupportMoveFindings(
 }
 
 function effectEvidence(label: string, effects: FlatEffect[]) {
-  if (!effects.length) return `${label}: no compiled source terms`;
-  return `${label}: ${effects.map((effect) =>
-    `${effect.display} ${effect.label}${effect.condition ? ` (${effect.condition})` : ""}`).join(" · ")}`;
+  if (!effects.length) return `${label}: none`;
+  // Display values only — labels/conditions stay in the Changes view.
+  return `${label}: ${effects.map((effect) => effect.display).join(" · ")}`;
 }
 
 function comparableSupportDirection(
@@ -1654,23 +1654,24 @@ function supportFindings(
             : direction === "weaker-input"
               ? `${reference.supportName} lost strength in a compiled source term on ${actorSkill}`
               : `${reference.supportName} changed on ${actorSkill}`;
+    const shortSkill = actorSkill.replace(/\s*\(Bing:[^)]*\)/g, "").trim();
     const nextExperiment = compilationTransition === "became-unsupported"
       ? movedAndChanged
-        ? `Return ${reference.supportName} to its previously compiled socket ${earlier!.socketIndex + 1} and re-import. The guarded compiler rejected socket ${current!.socketIndex + 1}, so do not test its configuration while holding that illegal destination.`
-        : `Restore ${reference.supportName}'s previously compiled source record in ${socketLabel} and re-import before assigning any damage or survival direction.`
+        ? `Return ${reference.supportName} to socket ${earlier!.socketIndex + 1} and re-import.`
+        : `Restore ${reference.supportName} in ${socketLabel} and re-import.`
       : compilationTransition === "became-supported"
         ? movedAndChanged
-          ? `Keep ${reference.supportName} in the newly compiled socket ${current!.socketIndex + 1}, then compare it against a duplicate with the prior layout. Treat the coverage change itself as unresolved until an in-game result is recorded.`
-          : `Duplicate the loadout and test only the source-record correction that brought ${reference.supportName} into guarded coverage.`
+          ? `Keep ${reference.supportName} in socket ${current!.socketIndex + 1}; A/B against the prior layout.`
+          : `A/B only the change that brought ${reference.supportName} into coverage.`
       : isSocketSwap
-      ? `A/B test only the ${supportTransition} swap in ${socketLabel} on ${actorSkill}; keep every other socket and actor condition fixed.`
+      ? `A/B only the ${supportTransition} swap in ${socketLabel}.`
       : movedAndChanged
-        ? `First restore ${reference.supportName}'s before configuration while keeping it in socket ${current!.socketIndex + 1}; then test its socket position separately with the configuration fixed.`
+        ? `Test config in socket ${current!.socketIndex + 1}, then test socket position separately.`
       : change.kind === "removed"
-        ? `A/B test restoring ${reference.supportName} on ${actorSkill} while holding the other sockets and actor state constant.`
+        ? `A/B restoring ${reference.supportName} on ${shortSkill}.`
         : change.kind === "added"
-          ? `A/B test ${reference.supportName} by itself on ${actorSkill} before keeping the rest of the loadout changes.`
-          : `Compare only the changed level, tier, rank, or roll on ${reference.supportName} in ${socketLabel}; do not change another socket in the same test.`;
+          ? `A/B ${reference.supportName} alone on ${shortSkill}.`
+          : `A/B only the level/tier/rank/roll change on ${reference.supportName}.`;
     const findingSupportId = isSocketSwap
       ? `${earlier!.supportId}->${current!.supportId}`
       : reference.supportId;
@@ -1705,14 +1706,14 @@ function supportFindings(
       domain,
       direction,
       label: domain === "damage"
-        ? "Compiled support source terms"
-        : "Compiled survival source terms",
+        ? "Support terms"
+        : "Survival terms",
       title,
       explanation: compilationTransition
-        ? "Guarded compiler coverage changed between the two sockets. Missing compiled terms are unavailable evidence, not zero-valued effects or proof of a configuration loss; follow the emitted blocker before interpreting this support."
+        ? "Compiler coverage changed. Missing terms are unavailable evidence, not zero."
         : domain === "damage"
-        ? "The season support table proves these socket terms and their actor scope. Net value still depends on action selection, target state, geometry, cadence, and uptime."
-        : "The season support table proves this defensive source input and its actor scope. It is not a player or minion EHP calculation.",
+        ? "Socket terms are known; net DPS is not."
+        : "Defensive input is known; EHP is not.",
       nextExperiment,
       evidence: [
         `Socket ${reference.socketIndex + 1} · ${actorSkill}`,
