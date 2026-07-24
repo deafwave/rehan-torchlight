@@ -1,0 +1,25 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    {
+      "source": "/rehan",
+      "destination": "/rehan.html"
+    },
+    {
+      "source": "/rehan/",
+      "destination": "/rehan.html"
+    },
+    {
+      "source": "/bing",
+      "destination": "/bing.html"
+    },
+    {
+      "source": "/bing/",
+      "destination": "/bing.html"
+    },
+    {
+      "source": "/((?!assets/).*)",
+      "destination": "/index.html"
+    }
+  ]
+}
