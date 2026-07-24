@@ -178,6 +178,11 @@ pnpm dev
 checked-in comparison fixture used by the site. Regenerate it whenever an
 import or evidence contract changes.
 
+Production hosting is configured at the repository root with `vercel.json`.
+Vercel should use the repository root, run `pnpm build`, and publish
+`packages/page/dist`. After the one-time `vercel login` and `vercel link`,
+publish with `vercel deploy --prod`.
+
 The existing calculation packages remain under `packages/dmg/`; the comparison
 website is under `packages/page/`. See
 [docs/architecture.md](docs/architecture.md) for the current data flow,

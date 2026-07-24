@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && node scripts/verify-sites-build.mjs",
+    "build": "tsc && vite build && node scripts/verify-static-build.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

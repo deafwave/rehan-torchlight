@@ -1,5 +1,6 @@
 node_modules/
 dist/
+.vercel/
 __pycache__/
 .pytest_cache/
 .claude
@@ -8,3 +9,4 @@ docs/superpowers
 # Include skills
 !.claude/skills/
 Torchlight Sanity Retention.xlsx
+.env*
