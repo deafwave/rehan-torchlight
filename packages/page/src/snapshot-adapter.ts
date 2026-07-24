@@ -57,6 +57,8 @@ export interface NormalizedGear {
   category: string | null;
   subtype: string | null;
   itemLevel: number | null;
+  /** Planner-relative icon path from displayIcon / catalog metadata.icon. */
+  icon: string | null;
   equipped: boolean;
   missingReference: boolean;
   modifiers: NormalizedModifier[];
@@ -1090,6 +1092,12 @@ function compendiumGear(
       ? identity(catalogId, null, label, entry?.kind ?? "gear", `compendium:${instanceId}`)
       : null;
     const modifiers = entry ? compendiumModifiers(item) : [];
+    const icon = nonEmptyString(
+      item.displayIcon
+        ?? legendary.icon
+        ?? base.icon
+        ?? voraxLegendary?.icon,
+    );
     const semantic = {
       itemKind: entry?.kind ?? "gear",
       identity: normalizedIdentity?.key ?? null,
@@ -1110,6 +1118,7 @@ function compendiumGear(
       category: nonEmptyString(item.gearCategory),
       subtype: nonEmptyString(item.gearSubType),
       itemLevel: finiteInteger(item.itemLevel),
+      icon,
       equipped: Boolean(instanceId),
       missingReference: Boolean(instanceId && !entry),
       modifiers,
@@ -1746,6 +1755,12 @@ function portableGear(value: JsonObject): NormalizedGear[] {
           ?? normalizedIdentity?.label,
       ) ?? `Imported ${itemKind}`;
       const modifiers = portableModifiers(item);
+      const icon = nonEmptyString(
+        overlay.displayIcon
+          ?? objectValue(overlay.legendaryItem).icon
+          ?? objectValue(overlay.baseItem).icon
+          ?? metadata.icon,
+      );
       const semantic = {
         itemKind,
         identity: normalizedIdentity?.key ?? null,
@@ -1766,6 +1781,7 @@ function portableGear(value: JsonObject): NormalizedGear[] {
         category: semantic.category,
         subtype: semantic.subtype,
         itemLevel: semantic.itemLevel,
+        icon,
         equipped: itemKind !== "unmapped"
           && (nativeSlot !== null || source.collection === "WearItems"),
         missingReference: false,

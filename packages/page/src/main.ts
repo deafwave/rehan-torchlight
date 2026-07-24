@@ -35,9 +35,17 @@ import type {
   AnalyzedBuild,
   AnalyzedLoadout,
   DemoData,
+  GearRow,
   ImportCatalog,
   SkillRow,
 } from "./analysis-types";
+import {
+  compendiumIconUrl,
+  gearBoardCells,
+  gearRarityTone,
+  tlidbIconUrl,
+  type GearBoardCell,
+} from "./gear-icons";
 import { importBuild, importBuildCode } from "./importer";
 import {
   guardedEvidenceReadiness,
@@ -600,15 +608,94 @@ function renderExplain(loadout: AnalyzedLoadout) {
   return `<div class="explain-view">${hero}${body}${gapsPanel}</div>`;
 }
 
+function emptyGearRow(slot: string): GearRow {
+  return {
+    slot,
+    name: "Empty",
+    rarity: null,
+    category: null,
+    icon: null,
+    lines: [],
+  };
+}
+
+function renderGearTooltip(cell: GearBoardCell): string {
+  const row = cell.row;
+  if (!row || cell.empty) {
+    return `<div class="gear-tooltip" role="tooltip">
+      <div class="gear-tip-head rarity-empty">
+        <strong>${esc(cell.label)}</strong>
+        <span>Empty slot</span>
+      </div>
+    </div>`;
+  }
+  const tone = gearRarityTone(row.rarity);
+  const meta = [row.rarity, row.category, cell.label]
+    .filter((value): value is string => Boolean(value && String(value).trim()))
+    .join(" · ");
+  const lines = row.lines.length
+    ? `<ul class="gear-tip-lines">${row.lines.map((line) =>
+      `<li>${esc(line)}</li>`).join("")}</ul>`
+    : `<p class="gear-tip-empty-lines">No affix lines imported for this item.</p>`;
+  return `<div class="gear-tooltip" role="tooltip">
+    <div class="gear-tip-head rarity-${tone}">
+      <strong>${esc(row.name)}</strong>
+      <span>${esc(meta)}</span>
+    </div>
+    ${lines}
+  </div>`;
+}
+
+function renderGearCell(cell: GearBoardCell): string {
+  const row = cell.row;
+  const empty = cell.empty;
+  const tone = empty ? "empty" : gearRarityTone(row?.rarity);
+  const name = empty ? cell.label : (row?.name ?? cell.label);
+  const primary = tlidbIconUrl(row?.icon ?? null);
+  const fallback = compendiumIconUrl(row?.icon ?? null);
+  const area = cell.onBoard ? ` style="grid-area: ${escAttr(cell.slot)}"` : "";
+  const monogram = empty
+    ? cell.label.slice(0, 2)
+    : (row?.name ?? cell.label).replace(/[^A-Za-z0-9]/g, "").slice(0, 2) || cell.label.slice(0, 2);
+  const img = primary
+    ? `<img class="gear-slot-icon" src="${escAttr(primary)}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer"${
+      fallback && fallback !== primary ? ` data-icon-fallback="${escAttr(fallback)}"` : ""
+    }>`
+    : `<span class="gear-slot-placeholder" aria-hidden="true">${esc(monogram)}</span>`;
+  return `<div class="gear-slot rarity-${tone}${empty ? " is-empty" : ""}" data-gear-slot="${escAttr(cell.slot)}"${area} tabindex="0" aria-label="${escAttr(name)}">
+    <div class="gear-slot-face">${img}</div>
+    <span class="gear-slot-label">${esc(cell.label)}</span>
+    ${renderGearTooltip(cell)}
+  </div>`;
+}
+
+function renderGearBoard(gear: GearRow[]): string {
+  const { board, overflow } = gearBoardCells(gear);
+  const filled = board.filter((cell) => !cell.empty).length + overflow.length;
+  const overflowBlock = overflow.length
+    ? `<div class="gear-overflow">
+        <span class="panel-kicker">Other items</span>
+        <div class="gear-overflow-grid">${overflow.map(renderGearCell).join("")}</div>
+      </div>`
+    : "";
+  return `<div class="gear-board-wrap">
+    <div class="gear-board-meta">
+      <span class="panel-kicker">Gear</span>
+      <span class="gear-board-count">${filled} equipped</span>
+    </div>
+    <div class="gear-board" role="list" aria-label="Equipped gear">
+      ${board.map(renderGearCell).join("")}
+    </div>
+    ${overflowBlock}
+    <p class="gear-board-hint">Hover or focus a slot for full affixes.</p>
+  </div>`;
+}
+
 function renderBuildOverview(loadout: AnalyzedLoadout) {
   const skillLines = loadout.skills
     .filter((skill) => skill.enabled)
     .slice(0, 16)
     .map((skill) => `${skillDisplay(skill)}${skill.supports.length ? ` · ${skill.supports.length} supports` : ""}`);
-  const gearLines = loadout.gear
-    .filter((row) => row.name && row.name !== "Empty")
-    .slice(0, 16)
-    .map((row) => `${row.slot.replace(/([a-z])([A-Z])/g, "$1 $2")}: ${row.name}`);
   return `<section class="single-panel explain-panel loadout-gear-panel">
     <div class="analysis-heading">
       <div>
@@ -616,19 +703,14 @@ function renderBuildOverview(loadout: AnalyzedLoadout) {
         <h2>Loadout · gear & skills</h2>
       </div>
     </div>
-    <p class="section-intro">What this loadout is wearing and casting. The DPS formula below uses the shared dummy scenario on these inputs.</p>
+    <p class="section-intro">Icons and rarity colors are the fast read — hover a slot for the full affix stack. Skills stay listed below the paper doll.</p>
     <div class="build-overview-grid">
+      ${renderGearBoard(loadout.gear)}
       <div>
         <span class="panel-kicker">Skills</span>
         <ul>${skillLines.length
           ? skillLines.map((line) => `<li>${esc(line)}</li>`).join("")
           : "<li>No enabled skills imported</li>"}</ul>
-      </div>
-      <div>
-        <span class="panel-kicker">Gear</span>
-        <ul>${gearLines.length
-          ? gearLines.map((line) => `<li>${esc(line)}</li>`).join("")
-          : "<li>No gear rows imported</li>"}</ul>
       </div>
     </div>
   </section>`;
@@ -1821,8 +1903,8 @@ function gearChangeRows(before: AnalyzedLoadout, after: AnalyzedLoadout) {
   const b = new Map(after.gear.map((row) => [row.slot, row]));
   const slots = [...new Set([...a.keys(), ...b.keys()])];
   return slots.map((slot) => {
-    const left = a.get(slot) ?? { slot, name: "Empty", rarity: null, category: null, lines: [] };
-    const right = b.get(slot) ?? { slot, name: "Empty", rarity: null, category: null, lines: [] };
+    const left = a.get(slot) ?? emptyGearRow(slot);
+    const right = b.get(slot) ?? emptyGearRow(slot);
     return {
       key: slot,
       label: slot.replace(/([a-z])([A-Z])/g, "$1 $2"),
@@ -3290,6 +3372,25 @@ function render() {
     loadBuildPanel.hidden = true;
     document.body.appendChild(loadBuildPanel);
   }
+  wireGearIconFallbacks(app);
+}
+
+/** If a TLIDB icon 404s, swap to the planner CDN once, then mark the slot broken. */
+function wireGearIconFallbacks(root: ParentNode) {
+  root.querySelectorAll<HTMLImageElement>("img.gear-slot-icon[data-icon-fallback]").forEach((img) => {
+    if (img.dataset.iconWired === "1") return;
+    img.dataset.iconWired = "1";
+    img.addEventListener("error", () => {
+      const next = img.dataset.iconFallback;
+      if (next && img.src !== next) {
+        delete img.dataset.iconFallback;
+        img.src = next;
+        return;
+      }
+      img.classList.add("is-broken");
+      img.removeAttribute("src");
+    });
+  });
 }
 
 function restoreWorkspaceFocus(selector: string) {

@@ -9,6 +9,8 @@ export interface GearRow {
   name: string;
   rarity: string | null;
   category: string | null;
+  /** Planner-relative icon path (e.g. `/images/legendaries/.../Icon_….webp`). */
+  icon: string | null;
   lines: string[];
   fingerprint?: string;
 }

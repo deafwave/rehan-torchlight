@@ -6279,6 +6279,304 @@ input:focus-visible,
   margin: 0;
 }
 
+/* ── Gear paper-doll (TLIDB icons + rarity chrome + hover affix overlay) ── */
+
+.gear-board-wrap {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+.gear-board-meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.gear-board-count {
+  color: var(--dim);
+  font-size: var(--text-micro);
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.gear-board {
+  --gear-slot: clamp(52px, 9vw, 68px);
+  display: grid;
+  grid-template-columns: repeat(3, var(--gear-slot));
+  grid-template-areas:
+    "mainHand helmet necklace"
+    "offHand chest ring1"
+    ". gloves ring2"
+    ". belt ."
+    ". boots .";
+  gap: 8px;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.gear-slot {
+  position: relative;
+  display: grid;
+  gap: 4px;
+  justify-items: center;
+  width: var(--gear-slot);
+  outline: none;
+}
+
+.gear-slot-face {
+  position: relative;
+  width: var(--gear-slot);
+  height: var(--gear-slot);
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, .04), transparent 55%),
+    var(--well);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .25);
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease;
+}
+
+.gear-slot-icon {
+  width: 78%;
+  height: 78%;
+  object-fit: contain;
+  image-rendering: auto;
+  pointer-events: none;
+}
+
+.gear-slot-icon.is-broken {
+  display: none;
+}
+
+.gear-slot-placeholder {
+  color: var(--dim);
+  font-size: var(--text-micro);
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  opacity: .7;
+}
+
+.gear-slot-label {
+  color: var(--dim);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 1.15;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gear-slot.is-empty .gear-slot-face {
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, .02),
+    rgba(255, 255, 255, .02) 4px,
+    transparent 4px,
+    transparent 8px
+  ), var(--well);
+  opacity: .72;
+}
+
+/* Rarity frame colors — instantly parseable like the build planner */
+.gear-slot.rarity-normal .gear-slot-face,
+.gear-tip-head.rarity-normal {
+  --rarity: #c8cfd4;
+}
+.gear-slot.rarity-magic .gear-slot-face,
+.gear-tip-head.rarity-magic {
+  --rarity: #6ea8ff;
+}
+.gear-slot.rarity-rare .gear-slot-face,
+.gear-tip-head.rarity-rare {
+  --rarity: #f0d35a;
+}
+.gear-slot.rarity-legendary .gear-slot-face,
+.gear-tip-head.rarity-legendary {
+  --rarity: #ff9a45;
+}
+.gear-slot.rarity-unique .gear-slot-face,
+.gear-tip-head.rarity-unique {
+  --rarity: #d4f25c;
+}
+.gear-slot.rarity-set .gear-slot-face,
+.gear-tip-head.rarity-set {
+  --rarity: #8eebb1;
+}
+.gear-slot.rarity-unknown .gear-slot-face,
+.gear-tip-head.rarity-unknown {
+  --rarity: #bfa6ff;
+}
+.gear-slot.rarity-empty .gear-slot-face,
+.gear-tip-head.rarity-empty {
+  --rarity: var(--line);
+}
+
+.gear-slot:not(.is-empty) .gear-slot-face {
+  border-color: color-mix(in srgb, var(--rarity) 70%, var(--line));
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--rarity) 25%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--rarity) 18%, transparent);
+  background:
+    linear-gradient(160deg, color-mix(in srgb, var(--rarity) 18%, transparent), transparent 60%),
+    var(--well);
+}
+
+.gear-slot:hover .gear-slot-face,
+.gear-slot:focus-visible .gear-slot-face {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--rarity, var(--lime)) 85%, white);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--rarity, var(--lime)) 40%, transparent),
+    0 8px 18px rgba(0, 0, 0, .35);
+}
+
+.gear-tooltip {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 10px);
+  transform: translateX(-50%) translateY(4px);
+  width: min(280px, 70vw);
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--line-bright);
+  background: rgba(12, 16, 20, .96);
+  box-shadow: var(--shadow);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity .12s ease, transform .12s ease, visibility .12s;
+  z-index: 20;
+  text-align: left;
+}
+
+/* Keep edge-column tooltips on-screen */
+.gear-slot[data-gear-slot="mainHand"] .gear-tooltip,
+.gear-slot[data-gear-slot="offHand"] .gear-tooltip {
+  left: 0;
+  transform: translateX(0) translateY(4px);
+}
+.gear-slot[data-gear-slot="necklace"] .gear-tooltip,
+.gear-slot[data-gear-slot="ring1"] .gear-tooltip,
+.gear-slot[data-gear-slot="ring2"] .gear-tooltip {
+  left: auto;
+  right: 0;
+  transform: translateX(0) translateY(4px);
+}
+
+.gear-slot:hover .gear-tooltip,
+.gear-slot:focus-visible .gear-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+
+.gear-slot[data-gear-slot="mainHand"]:hover .gear-tooltip,
+.gear-slot[data-gear-slot="mainHand"]:focus-visible .gear-tooltip,
+.gear-slot[data-gear-slot="offHand"]:hover .gear-tooltip,
+.gear-slot[data-gear-slot="offHand"]:focus-visible .gear-tooltip {
+  transform: translateX(0) translateY(0);
+}
+
+.gear-slot[data-gear-slot="necklace"]:hover .gear-tooltip,
+.gear-slot[data-gear-slot="necklace"]:focus-visible .gear-tooltip,
+.gear-slot[data-gear-slot="ring1"]:hover .gear-tooltip,
+.gear-slot[data-gear-slot="ring1"]:focus-visible .gear-tooltip,
+.gear-slot[data-gear-slot="ring2"]:hover .gear-tooltip,
+.gear-slot[data-gear-slot="ring2"]:focus-visible .gear-tooltip {
+  transform: translateX(0) translateY(0);
+}
+
+.gear-tip-head {
+  display: grid;
+  gap: 2px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid color-mix(in srgb, var(--rarity, var(--line)) 45%, var(--line));
+}
+
+.gear-tip-head strong {
+  color: var(--rarity, var(--ink));
+  font-size: var(--text-detail);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.gear-tip-head span {
+  color: var(--muted);
+  font-size: var(--text-micro);
+  font-weight: 600;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+}
+
+.gear-tip-lines {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-height: 220px;
+  overflow: auto;
+}
+
+.gear-tip-lines li {
+  color: var(--prose);
+  font-size: var(--text-label);
+  line-height: 1.35;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  border-radius: 0;
+}
+
+.gear-tip-empty-lines {
+  margin: 0;
+  color: var(--dim);
+  font-size: var(--text-label);
+}
+
+.gear-board-hint {
+  margin: 0;
+  color: var(--dim);
+  font-size: var(--text-micro);
+  text-align: center;
+}
+
+.gear-overflow {
+  display: grid;
+  gap: 8px;
+}
+
+.gear-overflow-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.gear-overflow-grid .gear-slot {
+  width: var(--gear-slot, 60px);
+}
+
+@media (max-width: 720px) {
+  .gear-board {
+    --gear-slot: 56px;
+    gap: 6px;
+  }
+}
+
 .suggestion-panel {
   margin: 0;
 }

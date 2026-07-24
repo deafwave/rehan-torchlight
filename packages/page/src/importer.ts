@@ -166,6 +166,7 @@ function gearRows(loadout: NormalizedLoadout): GearRow[] {
     name: item.name,
     rarity: item.rarity,
     category: item.category ?? item.subtype ?? item.itemKind,
+    icon: item.icon,
     lines: [
       ...item.modifiers.map(formatModifierEvidence),
       ...item.diagnostics.map((value) => `Capture note: ${value}`),
