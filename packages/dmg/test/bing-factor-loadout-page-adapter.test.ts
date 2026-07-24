@@ -14,8 +14,8 @@ import {
 } from "../../page/src/bing-factor-evidence.js";
 
 const readJson = (path: string) => JSON.parse(fs.readFileSync(path, "utf8"));
-const bing = () => readJson(fromRoot("../bing_china.json"));
-const wuxia = () => readJson(fromRoot("../WuxiaSS13.json"));
+const bing = () => readJson(fromRoot("data/builds/bing_china.json"));
+const wuxia = () => readJson(fromRoot("data/builds/WuxiaSS13.json"));
 
 function expectGuardFlags(value: unknown): void {
   if (!value || typeof value !== "object") return;

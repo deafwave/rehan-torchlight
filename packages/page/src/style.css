@@ -4177,10 +4177,17 @@ input:focus-visible,
   color: var(--ink);
 }
 
+.import-lead {
+  margin: 10px 0 0;
+  color: var(--prose);
+  font-size: var(--text-detail);
+  line-height: 1.55;
+}
+
 .import-tabs {
   display: flex;
   gap: 4px;
-  margin: 22px 0 14px;
+  margin: 18px 0 14px;
   padding: 4px;
   border: 1px solid var(--line);
   border-radius: 10px;
@@ -4189,13 +4196,13 @@ input:focus-visible,
 
 .import-tab {
   flex: 1;
-  padding: 9px;
+  padding: 9px 6px;
   border: 0;
   border-radius: 7px;
   background: transparent;
   color: var(--muted);
   cursor: pointer;
-  font-size: var(--text-detail);
+  font-size: var(--text-label);
   font-weight: 700;
 }
 
@@ -4204,9 +4211,50 @@ input:focus-visible,
   background: var(--lime);
 }
 
+.import-panel-note {
+  margin: 0 0 12px;
+  color: var(--prose);
+  font-size: var(--text-detail);
+  line-height: 1.55;
+}
+
+.supported-build-list {
+  display: grid;
+  gap: 10px;
+}
+
+.supported-build-card {
+  display: grid;
+  gap: 4px;
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--well);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.supported-build-card:hover {
+  border-color: var(--lime);
+  background: rgba(212, 242, 92, .05);
+}
+
+.supported-build-card strong {
+  color: var(--ink);
+  font-size: 15px;
+}
+
+.supported-build-card span {
+  color: var(--muted);
+  font-size: var(--text-label);
+  line-height: 1.45;
+}
+
 .drop-zone {
   display: flex;
-  min-height: 260px;
+  min-height: 180px;
   padding: 28px;
   align-items: center;
   justify-content: center;
@@ -4264,7 +4312,8 @@ input:focus-visible,
   font-size: var(--text-label);
 }
 
-#build-paste {
+#build-paste,
+#build-code {
   width: 100%;
   padding: 14px;
   resize: vertical;
@@ -4278,8 +4327,13 @@ input:focus-visible,
   line-height: 1.7;
 }
 
-#build-paste:focus {
+#build-paste:focus,
+#build-code:focus {
   border-color: var(--lime);
+}
+
+#import-panel-dump .paste-label {
+  margin-top: 16px;
 }
 
 .primary-button {

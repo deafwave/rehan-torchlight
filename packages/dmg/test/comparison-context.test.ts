@@ -31,8 +31,8 @@ const emptyCatalog: ImportCatalog = {
 
 const readJson = (path: string) =>
   JSON.parse(fs.readFileSync(path, "utf8"));
-const bingSource = () => readJson(fromRoot("../bing_china.json"));
-const wuxiaSource = () => readJson(fromRoot("../WuxiaSS13.json"));
+const bingSource = () => readJson(fromRoot("data/builds/bing_china.json"));
+const wuxiaSource = () => readJson(fromRoot("data/builds/WuxiaSS13.json"));
 
 function symmetric(
   before: AnalyzedLoadout,

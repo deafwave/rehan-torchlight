@@ -16,8 +16,8 @@ const options = {
   catalog,
   catalogSha256: AUDITED_SS13_COMPACT_CATALOG_SHA256,
 };
-const bing = () => readJson(fromRoot("../bing_china.json"));
-const wuxia = () => readJson(fromRoot("../WuxiaSS13.json"));
+const bing = () => readJson(fromRoot("data/builds/bing_china.json"));
+const wuxia = () => readJson(fromRoot("data/builds/WuxiaSS13.json"));
 
 describe("page player-defence evidence adapter", () => {
   it("maps exact terms, source sums, coverage, and blockers without weakening guards", () => {

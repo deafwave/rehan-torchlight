@@ -149,7 +149,7 @@ describe("comparison website model", () => {
 
   it("attaches and compares the component-scoped Bing factor ledger through the real importer", () => {
     const source = JSON.parse(
-      fs.readFileSync(fromRoot("../bing_china.json"), "utf8"),
+      fs.readFileSync(fromRoot("data/builds/bing_china.json"), "utf8"),
     );
     const imported = importBuild(source, emptyCatalog);
     expect(imported.loadouts[5].bingFactorLedger?.status)
@@ -277,7 +277,7 @@ describe("comparison website model", () => {
 
   it("does not recommend holding a slot-constrained support in an illegal socket", () => {
     const source = JSON.parse(
-      fs.readFileSync(fromRoot("../bing_china.json"), "utf8"),
+      fs.readFileSync(fromRoot("data/builds/bing_china.json"), "utf8"),
     );
     const before = structuredClone(source.loadouts.loadouts[3]);
     const after = structuredClone(source.loadouts.loadouts[3]);
@@ -325,7 +325,7 @@ describe("comparison website model", () => {
 
   it("keeps an unsupported support move distinct from a compiled removal", () => {
     const source = JSON.parse(
-      fs.readFileSync(fromRoot("../bing_china.json"), "utf8"),
+      fs.readFileSync(fromRoot("data/builds/bing_china.json"), "utf8"),
     );
     const before = structuredClone(source.loadouts.loadouts[3]);
     const after = structuredClone(source.loadouts.loadouts[3]);
@@ -371,7 +371,7 @@ describe("comparison website model", () => {
 
   it("retains an unsupported occupant removal when a compiled support moves in", () => {
     const source = JSON.parse(
-      fs.readFileSync(fromRoot("../bing_china.json"), "utf8"),
+      fs.readFileSync(fromRoot("data/builds/bing_china.json"), "utf8"),
     );
     const before = structuredClone(source.loadouts.loadouts[3]);
     const after = structuredClone(source.loadouts.loadouts[3]);
@@ -419,7 +419,7 @@ describe("comparison website model", () => {
 
   it("keeps a changed unsupported support move as one unresolved movement", () => {
     const source = JSON.parse(
-      fs.readFileSync(fromRoot("../bing_china.json"), "utf8"),
+      fs.readFileSync(fromRoot("data/builds/bing_china.json"), "utf8"),
     );
     const before = structuredClone(source.loadouts.loadouts[3]);
     const after = structuredClone(source.loadouts.loadouts[3]);
@@ -464,7 +464,7 @@ describe("comparison website model", () => {
 
   it("preserves raw configuration changes on an unsupported support move", () => {
     const source = JSON.parse(
-      fs.readFileSync(fromRoot("../bing_china.json"), "utf8"),
+      fs.readFileSync(fromRoot("data/builds/bing_china.json"), "utf8"),
     );
     const before = structuredClone(source.loadouts.loadouts[3]);
     const after = structuredClone(source.loadouts.loadouts[3]);
@@ -523,7 +523,7 @@ describe("comparison website model", () => {
 
   it("narrates supported and unsupported same-socket replacements as swaps", () => {
     const source = JSON.parse(
-      fs.readFileSync(fromRoot("../bing_china.json"), "utf8"),
+      fs.readFileSync(fromRoot("data/builds/bing_china.json"), "utf8"),
     );
     const original = source.loadouts.loadouts[3];
     const unknown = {
@@ -771,7 +771,7 @@ describe("comparison website model", () => {
 
   it("surfaces duplicate minion factor blockers without publishing a numeric action change", () => {
     const source = JSON.parse(
-      fs.readFileSync(fromRoot("../WuxiaSS13.json"), "utf8"),
+      fs.readFileSync(fromRoot("data/builds/WuxiaSS13.json"), "utf8"),
     );
     const before = structuredClone(source.loadouts.loadouts[8]);
     const after = structuredClone(source.loadouts.loadouts[8]);
@@ -808,7 +808,7 @@ describe("comparison website model", () => {
 
   it("preserves raw configuration on an unsupported minion support move", () => {
     const source = JSON.parse(
-      fs.readFileSync(fromRoot("../WuxiaSS13.json"), "utf8"),
+      fs.readFileSync(fromRoot("data/builds/WuxiaSS13.json"), "utf8"),
     );
     const before = structuredClone(source.loadouts.loadouts[8]);
     const after = structuredClone(source.loadouts.loadouts[8]);

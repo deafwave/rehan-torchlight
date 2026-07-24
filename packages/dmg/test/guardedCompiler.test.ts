@@ -14,8 +14,8 @@ import {
 } from "../src/guardedCompiler.js";
 
 const readJson = (path: string) => JSON.parse(fs.readFileSync(path, "utf8"));
-const bing = () => readJson(fromRoot("../bing_china.json"));
-const wuxia = () => readJson(fromRoot("../WuxiaSS13.json"));
+const bing = () => readJson(fromRoot("data/builds/bing_china.json"));
+const wuxia = () => readJson(fromRoot("data/builds/WuxiaSS13.json"));
 
 describe("SS13 formula evidence", () => {
   it("uses the exact Hammer of Ash level table without extrapolating past its range", () => {

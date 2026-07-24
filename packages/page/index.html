@@ -9,13 +9,12 @@
       content="Compare Torchlight: Infinite builds, see exactly what changed, and understand which damage and survival layers need attention."
     />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://tli-lens.vercel.app/" />
     <meta property="og:title" content="TLI Lens — See exactly where your damage went." />
     <meta
       property="og:description"
       content="Compare real TLI loadouts and separate proven formula evidence from unsupported mechanics."
     />
-    <meta property="og:image" content="https://tli-lens.vercel.app/og.png" />
+    <meta property="og:image" content="/og.png" />
     <meta property="og:image:alt" content="TLI Lens build comparison interface" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="TLI Lens — See exactly where your damage went." />
@@ -23,13 +22,12 @@
       name="twitter:description"
       content="Compare real TLI loadouts, inspect guarded formula evidence, and learn what still blocks an exact answer."
     />
-    <meta name="twitter:image" content="https://tli-lens.vercel.app/og.png" />
+    <meta name="twitter:image" content="/og.png" />
     <meta name="twitter:image:alt" content="TLI Lens build comparison interface" />
     <style>
       html { background: #0c1014; color-scheme: dark; }
     </style>
     <title>TLI Lens — Understand your build</title>
-    <link rel="canonical" href="https://tli-lens.vercel.app/" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -45,44 +43,101 @@
       <form method="dialog" class="dialog-shell">
         <div class="dialog-head">
           <div>
-            <span class="eyebrow">Local import</span>
-            <h2 id="import-title">Bring in a build</h2>
+            <span class="eyebrow">Add a build</span>
+            <h2 id="import-title">Choose how to load this side</h2>
           </div>
           <button class="icon-button" value="cancel" aria-label="Close import dialog">×</button>
         </div>
+        <p class="import-lead" id="import-lead">
+          Pick a supported progression, paste a Compendium build code, or bring a local tli_dump export.
+        </p>
         <div class="import-tabs" role="tablist" aria-label="Import method">
           <button
             type="button"
             class="import-tab active"
-            id="import-tab-file"
-            data-import-tab="file"
+            id="import-tab-supported"
+            data-import-tab="supported"
             role="tab"
-            aria-controls="import-panel-file"
+            aria-controls="import-panel-supported"
             aria-selected="true"
             tabindex="0"
           >
-            Build file
+            Supported
           </button>
           <button
             type="button"
             class="import-tab"
-            id="import-tab-paste"
-            data-import-tab="paste"
+            id="import-tab-code"
+            data-import-tab="code"
             role="tab"
-            aria-controls="import-panel-paste"
+            aria-controls="import-panel-code"
             aria-selected="false"
             tabindex="-1"
           >
-            Paste code or JSON
+            Build code
+          </button>
+          <button
+            type="button"
+            class="import-tab"
+            id="import-tab-dump"
+            data-import-tab="dump"
+            role="tab"
+            aria-controls="import-panel-dump"
+            aria-selected="false"
+            tabindex="-1"
+          >
+            tli_dump
           </button>
         </div>
+
         <section
           class="import-panel"
-          id="import-panel-file"
-          data-import-panel="file"
+          id="import-panel-supported"
+          data-import-panel="supported"
           role="tabpanel"
-          aria-labelledby="import-tab-file"
+          aria-labelledby="import-tab-supported"
         >
+          <p class="import-panel-note">
+            Compendium exports from <code>data/builds</code>. Select one, then refine Before / After loadouts in the dropdowns.
+          </p>
+          <div class="supported-build-list" id="supported-build-list">
+            <p class="import-panel-note">Loading supported builds…</p>
+          </div>
+        </section>
+
+        <section
+          class="import-panel"
+          id="import-panel-code"
+          data-import-panel="code"
+          role="tabpanel"
+          aria-labelledby="import-tab-code"
+          hidden
+        >
+          <p class="import-panel-note">
+            A Compendium / in-game build code is only a reference. After paste, TLI Lens walks you through resolving it with local tli_dump.
+          </p>
+          <label class="paste-label" for="build-code">Build code</label>
+          <textarea
+            id="build-code"
+            rows="4"
+            maxlength="4096"
+            spellcheck="false"
+            placeholder="2L8xV4YBEfGpdQAAAAAACw=="
+          ></textarea>
+          <button type="button" class="primary-button full" id="analyze-code">Use build code</button>
+        </section>
+
+        <section
+          class="import-panel"
+          id="import-panel-dump"
+          data-import-panel="dump"
+          role="tabpanel"
+          aria-labelledby="import-tab-dump"
+          hidden
+        >
+          <p class="import-panel-note">
+            Drop a tli_dump portable snapshot or TLI Compendium JSON export. Nothing leaves this browser.
+          </p>
           <label
             class="drop-zone"
             id="drop-zone"
@@ -92,33 +147,25 @@
             aria-describedby="drop-help"
           >
             <span class="drop-icon" aria-hidden="true">↓</span>
-            <strong>Drop a build JSON here</strong>
-            <span id="drop-help">TLI Compendium exports and tli_dump portable snapshots up to 25 MiB are accepted.</span>
+            <strong>Drop tli_dump or Compendium JSON</strong>
+            <span id="drop-help">portable-v3 snapshots and planner exports up to 25 MiB</span>
             <span class="file-button">Choose a file</span>
           </label>
           <input id="build-file" type="file" accept=".json,application/json" hidden />
-        </section>
-        <section
-          class="import-panel"
-          id="import-panel-paste"
-          data-import-panel="paste"
-          role="tabpanel"
-          aria-labelledby="import-tab-paste"
-          hidden
-        >
-          <label class="paste-label" for="build-paste">In-game build code or exported JSON · 25 MiB max</label>
+          <label class="paste-label" for="build-paste">Or paste exported JSON</label>
           <textarea
             id="build-paste"
-            rows="8"
+            rows="6"
             maxlength="26214400"
             spellcheck="false"
-            placeholder="2L8xV4YBEfGpdQAAAAAACw=="
+            placeholder='{ "version": 3, ... }'
           ></textarea>
-          <button type="button" class="primary-button full" id="analyze-paste">Inspect import</button>
+          <button type="button" class="primary-button full" id="analyze-paste">Import JSON</button>
         </section>
+
         <div id="import-status" class="import-status" role="status" aria-live="polite"></div>
         <p class="privacy-note">
-          Your file stays in this browser. Nothing is uploaded.
+          Local only. Build codes never send character state to a server.
         </p>
       </form>
     </dialog>

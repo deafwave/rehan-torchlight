@@ -322,8 +322,8 @@ describe("canonical snapshot adapter", () => {
 
   it("normalizes the two supplied builds and the real portable-v3 fixture", () => {
     const read = (file: string) => JSON.parse(fs.readFileSync(fromRoot(file), "utf8"));
-    const bingSource = read("../bing_china.json");
-    const wuxiaSource = read("../WuxiaSS13.json");
+    const bingSource = read("data/builds/bing_china.json");
+    const wuxiaSource = read("data/builds/WuxiaSS13.json");
     const portableSource = read("../poorchlight/tli_dump/ui/fixtures/rust-portable-snapshot.json");
     const bing = normalizeBuildSnapshot(bingSource);
     const wuxia = normalizeBuildSnapshot(wuxiaSource);

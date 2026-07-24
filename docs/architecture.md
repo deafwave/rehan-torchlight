@@ -231,6 +231,6 @@ pnpm build
 ```
 
 `pnpm demo` regenerates `packages/page/src/data/demo-builds.json` from
-`../bing_china.json` and `../WuxiaSS13.json`. Run it whenever import, evidence,
+`data/builds/*.json`. Run it whenever import, evidence,
 or comparison contracts change, then review the generated diff before
 committing it.

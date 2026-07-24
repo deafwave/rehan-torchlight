@@ -15,7 +15,7 @@ import {
 } from "../src/guardedCompiler.js";
 
 const readJson = (path: string) => JSON.parse(fs.readFileSync(path, "utf8"));
-const wuxia = () => readJson(fromRoot("../WuxiaSS13.json"));
+const wuxia = () => readJson(fromRoot("data/builds/WuxiaSS13.json"));
 
 function summon(loadout: any, id: string): any {
   return [

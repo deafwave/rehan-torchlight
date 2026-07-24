@@ -8,8 +8,8 @@ import {
 } from "../../page/src/bing-factor-evidence.js";
 
 const readJson = (path: string) => JSON.parse(fs.readFileSync(path, "utf8"));
-const bing = () => readJson(fromRoot("../bing_china.json"));
-const wuxia = () => readJson(fromRoot("../WuxiaSS13.json"));
+const bing = () => readJson(fromRoot("data/builds/bing_china.json"));
+const wuxia = () => readJson(fromRoot("data/builds/WuxiaSS13.json"));
 
 describe("page Bing component-factor adapter", () => {
   it("formats the guarded 5 -> 6 evidence while retaining the raw comparison", () => {

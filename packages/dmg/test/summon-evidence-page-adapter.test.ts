@@ -9,8 +9,8 @@ import {
 } from "../../page/src/summon-evidence.js";
 
 const readJson = (path: string) => JSON.parse(fs.readFileSync(path, "utf8"));
-const wuxia = () => readJson(fromRoot("../WuxiaSS13.json"));
-const bing = () => readJson(fromRoot("../bing_china.json"));
+const wuxia = () => readJson(fromRoot("data/builds/WuxiaSS13.json"));
+const bing = () => readJson(fromRoot("data/builds/bing_china.json"));
 
 describe("page summon evidence adapter", () => {
   it("preserves guarded Rock Blast contact semantics and hero-trait provenance", () => {

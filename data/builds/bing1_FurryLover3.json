@@ -1,0 +1,4690 @@
+{
+  "id": "tli_dump_build_2izghp",
+  "name": "FurryLover3#7512",
+  "notes": "<div class=\"notes-content\"><h3>Missing from import</h3><h4>Summary</h4><ul><li><p><strong>Divinity Slates:</strong> 2 records missing (4 of 6 imported).</p></li></ul><h4>Details</h4><ul><li><p><strong>Divinity:</strong> 2 missing. The native record does not yet expose the full planner relationship shape.</p></li></ul><h4>Incomplete source data (2)</h4><ul><li><p><strong>Divinity slates:</strong> A live source field could not be read completely; use --snapshot-json for low-level diagnostics.</p></li><li><p><strong>Divinity slates:</strong> Exact Divinity slates were not materialized: Divinity slate capture retained 4 of 6 observed installed rows; rejected 2: row [1] (index 1) item 261010_ed21c5cf-8201-11f1-b8b3-000000000f3e: synthesized Divinity cells for ShapeId 2090 Direction 3 SlotId 54 leave the board; row [5] (index 5) item 260505_c04e298b-81f7-11f1-9990-000000000584: synthesized Divinity board cell 1,2 is already occupied by an accepted slate.</p></li></ul></div>",
+  "patch": "SS13",
+  "createdAt": 1784914425637,
+  "updatedAt": 1784914425637,
+  "loadouts": {
+    "loadouts": [
+      {
+        "id": "tli_dump_loadout_kbt5gj",
+        "name": "Puddle T8 ice shot",
+        "order": 0,
+        "hiddenInGuide": false,
+        "hero": {
+          "heroGuid": "c89dce15-cbeb-562d-83ec-993059bbf0ec",
+          "heroId": "Bing: Blast Nova",
+          "traits": {
+            "level1": "7eb1ad5c-35ab-5ae8-a003-ba6cde830ade",
+            "level45": "4fbc0d8e-39e8-5033-bb23-c0352e019946",
+            "level60": "837b91e7-cf64-5e20-bb97-98d247d24906",
+            "level75": "e5c77ce6-703d-582a-a21a-327d918f5a85"
+          }
+        },
+        "heroMemories": {
+          "equipped": {
+            "slot45": "tli_dump_memory_1yoccf3",
+            "slot60": "tli_dump_memory_7sf9er",
+            "slot75": "tli_dump_memory_6eh35c",
+            "slotLevel1Special": null
+          },
+          "inventory": [
+            {
+              "baseStat": {
+                "guid": "3fb7dc45-1a17-5e82-826e-c816768ee6c3",
+                "sign": "+",
+                "tier": 11,
+                "unit": null,
+                "value": 70
+              },
+              "fixedAffixes": [
+                {
+                  "guid": "69e8250e-7c4d-5e44-ad27-2d88c588e5b3",
+                  "sign": "+",
+                  "tier": 2,
+                  "unit": "%",
+                  "value": 24
+                }
+              ],
+              "memoryType": "Origin",
+              "randomAffixes": [
+                {
+                  "guid": "68d0be8f-55cf-5336-986f-2165d59b64f1",
+                  "sign": "+",
+                  "tier": 3,
+                  "unit": "%",
+                  "value": 4
+                }
+              ],
+              "rarity": "Epic",
+              "waxAndWane": false,
+              "id": "tli_dump_memory_1yoccf3"
+            },
+            {
+              "baseStat": {
+                "guid": "50fa5494-a4cf-5195-89b4-89b9ec5dad6a",
+                "sign": "+",
+                "tier": 28,
+                "unit": null,
+                "value": 133
+              },
+              "fixedAffixes": [
+                {
+                  "guid": "8f934586-a103-50cf-98d5-bbb6627bc3ea",
+                  "sign": "+",
+                  "tier": 3,
+                  "unit": "%",
+                  "value": 16
+                }
+              ],
+              "memoryType": "Discipline",
+              "randomAffixes": [],
+              "rarity": "Epic",
+              "waxAndWane": false,
+              "id": "tli_dump_memory_7sf9er"
+            },
+            {
+              "baseStat": {
+                "guid": "f81bf405-63b6-5cc5-9b5f-812fd94fedd6",
+                "sign": "+",
+                "tier": 11,
+                "unit": "%",
+                "value": 28
+              },
+              "fixedAffixes": [
+                {
+                  "guid": "4e5c7ace-ad1e-5e2d-a497-33dc85d5eeed",
+                  "sign": "+",
+                  "tier": 2,
+                  "unit": "%",
+                  "value": 24
+                }
+              ],
+              "memoryType": "Progress",
+              "randomAffixes": [
+                {
+                  "guid": "ed1cdfea-dea3-57ad-bf3a-f0dc963d1ec2",
+                  "sign": "+",
+                  "tier": 3,
+                  "unit": "%",
+                  "value": 6
+                }
+              ],
+              "rarity": "Epic",
+              "waxAndWane": false,
+              "id": "tli_dump_memory_6eh35c"
+            }
+          ]
+        },
+        "etherealPrisms": {
+          "equipped": {
+            "slot1": null,
+            "slot2": null,
+            "slot3": null
+          },
+          "inventory": []
+        },
+        "gear": {
+          "equipped": {
+            "helmet": "tli_dump_gear_1wf0tr9",
+            "chest": "tli_dump_gear_15u10e8",
+            "gloves": "tli_dump_gear_111t2me",
+            "boots": "tli_dump_gear_1h9p6gh",
+            "belt": "tli_dump_gear_1qrm4t",
+            "ring1": "tli_dump_gear_1u9yqbe",
+            "ring2": "tli_dump_gear_o3su1s",
+            "necklace": "tli_dump_gear_csf2eb",
+            "mainHand": "tli_dump_gear_jittj9",
+            "offHand": null
+          },
+          "inventory": [
+            {
+              "id": "tli_dump_gear_1wf0tr9",
+              "gearCategory": "helmet",
+              "gearSubType": "dex_helmet",
+              "corrosionImplicit": null,
+              "beltBlend": null,
+              "displayName": "Blind Vision",
+              "displayIcon": "/images/legendaries/helmet/dex_helmet/Icon_Equip_Helmet_Epic_409_112.webp",
+              "rarity": "Legendary",
+              "legendaryItem": {
+                "legendaryId": "19dd76c6-42c5-5038-b183-c58c8291d59c",
+                "name": "Blind Vision",
+                "icon": "/images/legendaries/helmet/dex_helmet/Icon_Equip_Helmet_Epic_409_112.webp",
+                "requiredLevel": 1
+              },
+              "legendaryMods": [
+                {
+                  "modId": "7c58d0d7-3f89-5afd-9d3a-88b563898ee9",
+                  "description": "+238 Max Life",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 238,
+                      "minValue": 187,
+                      "maxValue": 242,
+                      "sign": "+"
+                    }
+                  ]
+                },
+                {
+                  "modId": "abcabd23-3f55-5a2b-948b-d8fae0fe7571",
+                  "description": "The Main Skill is supported by Lv. 10 Wind Projectiles.",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 10,
+                      "minValue": 10,
+                      "maxValue": 10
+                    }
+                  ]
+                },
+                {
+                  "modId": "dd438408-df17-5f61-ba0c-377c71681b05",
+                  "description": "67% of the Projectile Speed bonus is also applied to Projectile Damage",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 67,
+                      "minValue": 50,
+                      "maxValue": 70,
+                      "unit": "%"
+                    }
+                  ]
+                },
+                {
+                  "modId": "463fc7f3-1aa9-5316-9e44-3a21fc64ae1b",
+                  "description": "Immune to Blinding",
+                  "variant": "normal",
+                  "rolledValues": []
+                }
+              ],
+              "randomAffixSlots": []
+            },
+            {
+              "id": "tli_dump_gear_jittj9",
+              "gearCategory": "two_handed",
+              "gearSubType": "crossbow",
+              "corrosionImplicit": null,
+              "beltBlend": null,
+              "displayName": "War Ranger's Crossbow",
+              "displayIcon": "/images/rare-gear/two_handed/crossbow/Icon_Equip_Weapon_Crossbow_Norm_001_112.webp",
+              "rarity": "Rare",
+              "baseItem": {
+                "baseItemId": "7327dcfb-4b1a-56b2-99a5-bc61109d76f2",
+                "name": "War Ranger's Crossbow",
+                "icon": "/images/rare-gear/two_handed/crossbow/Icon_Equip_Weapon_Crossbow_Norm_001_112.webp",
+                "requiredLevel": 86,
+                "implicits": [
+                  {
+                    "description": "220 - 220 Physical Damage",
+                    "rawText": "220 - 220 Physical Damage",
+                    "values": [
+                      {
+                        "maxValue": 220,
+                        "minValue": 220,
+                        "value": 220
+                      },
+                      {
+                        "maxValue": 220,
+                        "minValue": 220,
+                        "value": 220
+                      }
+                    ]
+                  },
+                  {
+                    "description": "500 Critical Strike Rating",
+                    "rawText": "500 Critical Strike Rating",
+                    "values": [
+                      {
+                        "maxValue": 500,
+                        "minValue": 500,
+                        "value": 500
+                      }
+                    ]
+                  },
+                  {
+                    "description": "1.5 Attack Speed",
+                    "rawText": "1.5 Attack Speed",
+                    "values": [
+                      {
+                        "maxValue": 1.5,
+                        "minValue": 1.5,
+                        "value": 1.5
+                      }
+                    ]
+                  }
+                ]
+              },
+              "towerSequence": null,
+              "sweetDreamAffix": null,
+              "baseAffix": null,
+              "baseAffix2": null,
+              "prefixes": [
+                {
+                  "affixId": "b1ea0d44-7b94-5078-b79f-92b574752db1",
+                  "tierId": "24998900-6d5a-5471-91af-3bc8be1a6ab1",
+                  "modifierDescription": "Adds # - # Physical Damage to the gear",
+                  "rolledValues": [
+                    {
+                      "value": 73,
+                      "minValue": 71,
+                      "maxValue": 73
+                    },
+                    {
+                      "value": 88,
+                      "minValue": 87,
+                      "maxValue": 89
+                    }
+                  ],
+                  "tier": "1"
+                },
+                {
+                  "affixId": "bfa3d5c2-8a95-58c9-b05e-1b3cae0ef1ae",
+                  "tierId": "a8d1c863-c83f-51af-aea4-8d3436c83e89",
+                  "modifierDescription": "+#% Gear Physical Damage",
+                  "rolledValues": [
+                    {
+                      "value": 52,
+                      "minValue": 49,
+                      "maxValue": 80,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                },
+                {
+                  "affixId": "92562fd3-4558-5d7a-9e2c-a1657074465c",
+                  "tierId": "d69bd761-2203-5b89-af0d-dc0d4b88bb8b",
+                  "modifierDescription": "Adds # - # Cold Damage to the gear",
+                  "rolledValues": [
+                    {
+                      "value": 154,
+                      "minValue": 154,
+                      "maxValue": 156
+                    },
+                    {
+                      "value": 206,
+                      "minValue": 204,
+                      "maxValue": 206
+                    }
+                  ],
+                  "tier": "1"
+                }
+              ],
+              "suffixes": [
+                {
+                  "affixId": "03dadac8-d9a0-526f-81b6-234cd8376868",
+                  "tierId": "29df5080-7a1e-5170-a27c-2939ac301f63",
+                  "modifierDescription": "+#% Elemental Damage",
+                  "rolledValues": [
+                    {
+                      "value": 138,
+                      "minValue": 109,
+                      "maxValue": 151,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "2"
+                },
+                {
+                  "affixId": "0e2235a9-ae19-5c42-b52c-aa6dc8ecd941",
+                  "tierId": "51d2aad3-400a-507d-b96d-a39d68e7c599",
+                  "modifierDescription": "+#% Attack and Cast Speed\n+#% Minion Attack and Cast Speed",
+                  "rolledValues": [
+                    {
+                      "value": 49,
+                      "minValue": 43,
+                      "maxValue": 50,
+                      "sign": "+",
+                      "unit": "%"
+                    },
+                    {
+                      "value": 49,
+                      "minValue": 43,
+                      "maxValue": 50,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "2"
+                },
+                {
+                  "affixId": "c69cef00-f8d8-579b-9125-bfb37d6414b5",
+                  "tierId": "846cea59-4749-5d7c-9832-c84615185e1d",
+                  "modifierDescription": "+#% Physical Damage",
+                  "rolledValues": [
+                    {
+                      "value": 139,
+                      "minValue": 109,
+                      "maxValue": 151,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "2"
+                }
+              ],
+              "customName": null,
+              "itemLevel": 86
+            },
+            {
+              "id": "tli_dump_gear_15u10e8",
+              "gearCategory": "chest_armor",
+              "gearSubType": "int_chest_armor",
+              "corrosionImplicit": null,
+              "beltBlend": null,
+              "displayName": "Long Night Sorcerer's Robe",
+              "displayIcon": "/images/rare-gear/chest_armor/int_chest_armor/Icon_Equip_Armor_Int_Norm_004_02_112.webp",
+              "rarity": "Rare",
+              "baseItem": {
+                "baseItemId": "572a8bcb-d574-5365-bc9a-a65e40b7debd",
+                "name": "Long Night Sorcerer's Robe",
+                "icon": "/images/rare-gear/chest_armor/int_chest_armor/Icon_Equip_Armor_Int_Norm_004_02_112.webp",
+                "requiredLevel": 82,
+                "implicits": [
+                  {
+                    "description": "+170 gear Energy Shield",
+                    "rawText": "+170 gear Energy Shield",
+                    "values": [
+                      {
+                        "maxValue": 170,
+                        "minValue": 170,
+                        "sign": "+",
+                        "value": 170
+                      }
+                    ]
+                  }
+                ]
+              },
+              "towerSequence": null,
+              "sweetDreamAffix": null,
+              "baseAffix": null,
+              "baseAffix2": null,
+              "prefixes": [
+                {
+                  "affixId": "12c51350-c994-57be-a74a-8fbe5c4b701c",
+                  "tierId": "74933a66-39a0-51a8-a9ca-0248a02ebfb5",
+                  "modifierDescription": "+#% gear Energy Shield",
+                  "rolledValues": [
+                    {
+                      "value": 43,
+                      "minValue": 39,
+                      "maxValue": 46,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "2"
+                },
+                {
+                  "affixId": "6875aae5-6658-556d-a65c-39d3bbc2e009",
+                  "tierId": "21e4d8dc-0832-5853-91bb-68486031df52",
+                  "modifierDescription": "+# Dexterity",
+                  "rolledValues": [
+                    {
+                      "value": 34,
+                      "minValue": 31,
+                      "maxValue": 42,
+                      "sign": "+"
+                    }
+                  ],
+                  "tier": "2"
+                },
+                {
+                  "affixId": "2625b2ea-4931-5f9c-89d5-ac6a59f50918",
+                  "tierId": "b4819401-ec7e-5991-a7f2-3b79bd23e46d",
+                  "modifierDescription": "+# gear Energy Shield",
+                  "rolledValues": [
+                    {
+                      "value": 195,
+                      "minValue": 161,
+                      "maxValue": 200,
+                      "sign": "+"
+                    }
+                  ],
+                  "tier": "3"
+                }
+              ],
+              "suffixes": [
+                {
+                  "affixId": "523ab0a8-fcdf-503e-9b3c-d43bc47c9d05",
+                  "tierId": "ec49fc9d-badd-5853-9439-10042f9c50aa",
+                  "modifierDescription": "+#% Critical Strike Rating",
+                  "rolledValues": [
+                    {
+                      "value": 76,
+                      "minValue": 62,
+                      "maxValue": 86,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "2"
+                },
+                {
+                  "affixId": "fbf49ef2-88ff-5327-a562-2d2ffec00656",
+                  "tierId": "98bdb12b-3735-58e9-bdf6-5d8c97fbe260",
+                  "modifierDescription": "+#% Attack and Cast Speed\n+#% Minion Attack and Cast Speed",
+                  "rolledValues": [
+                    {
+                      "value": 11,
+                      "minValue": 10,
+                      "maxValue": 12,
+                      "sign": "+",
+                      "unit": "%"
+                    },
+                    {
+                      "value": 11,
+                      "minValue": 10,
+                      "maxValue": 12,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "3"
+                },
+                {
+                  "affixId": "a6d02839-e764-5167-8186-1ffeda04a77f",
+                  "tierId": "73eccbfb-5ffd-530f-9517-96bc393adaff",
+                  "modifierDescription": "+#% Erosion Resistance",
+                  "rolledValues": [
+                    {
+                      "value": 16,
+                      "minValue": 16,
+                      "maxValue": 19,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "2"
+                }
+              ],
+              "customName": null,
+              "itemLevel": 86
+            },
+            {
+              "id": "tli_dump_gear_csf2eb",
+              "gearCategory": "trinket",
+              "gearSubType": "necklace",
+              "corrosionImplicit": null,
+              "beltBlend": null,
+              "displayName": "False God's Skin",
+              "displayIcon": "/images/legendaries/trinket/necklace/Icon_Equip_Amulet_Epic_309_112.webp",
+              "rarity": "Legendary",
+              "legendaryItem": {
+                "legendaryId": "447bcad0-44ec-59b0-9292-4348338b5197",
+                "name": "False God's Skin",
+                "icon": "/images/legendaries/trinket/necklace/Icon_Equip_Amulet_Epic_309_112.webp",
+                "requiredLevel": 1
+              },
+              "legendaryMods": [
+                {
+                  "modId": "d4e028c7-626d-5467-9509-2eefc344eae7",
+                  "description": "+10% All Stats",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 10,
+                      "minValue": 6,
+                      "maxValue": 10,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ]
+                }
+              ],
+              "randomAffixSlots": []
+            },
+            {
+              "id": "tli_dump_gear_1u9yqbe",
+              "gearCategory": "trinket",
+              "gearSubType": "ring",
+              "corrosionImplicit": null,
+              "beltBlend": null,
+              "displayName": "Perishing Inferno Flame Ring",
+              "displayIcon": "/images/rare-gear/trinket/ring/Icon_Equip_Ring_Norm_002_02_112.webp",
+              "rarity": "Rare",
+              "baseItem": {
+                "baseItemId": "44654c87-8d9a-55b7-9015-5c59c5580dc8",
+                "name": "Perishing Inferno Flame Ring",
+                "icon": "/images/rare-gear/trinket/ring/Icon_Equip_Ring_Norm_002_02_112.webp",
+                "requiredLevel": 82,
+                "implicits": [
+                  {
+                    "description": "+12% Fire Resistance",
+                    "rawText": "+12% Fire Resistance",
+                    "values": [
+                      {
+                        "maxValue": 12,
+                        "minValue": 12,
+                        "sign": "+",
+                        "unit": "%",
+                        "value": 12
+                      }
+                    ]
+                  }
+                ]
+              },
+              "towerSequence": null,
+              "sweetDreamAffix": null,
+              "baseAffix": null,
+              "baseAffix2": null,
+              "prefixes": [
+                {
+                  "affixId": "f50891e6-2d53-5c6d-b6f5-45abd2dbcd24",
+                  "tierId": "6a023196-1498-5ea3-be69-ea3286d5bb15",
+                  "modifierDescription": "+# Max Energy Shield",
+                  "rolledValues": [
+                    {
+                      "value": 231,
+                      "minValue": 206,
+                      "maxValue": 245,
+                      "sign": "+"
+                    }
+                  ],
+                  "tier": "2"
+                },
+                {
+                  "affixId": "8b35a1eb-328a-5a8a-b0bf-226565c9f776",
+                  "tierId": "a64922f9-0b62-54d1-a3fd-db5a70ab3a83",
+                  "modifierDescription": "Adds # - # Physical Damage to Attacks and Spells",
+                  "rolledValues": [
+                    {
+                      "value": 45,
+                      "minValue": 44,
+                      "maxValue": 46
+                    },
+                    {
+                      "value": 55,
+                      "minValue": 54,
+                      "maxValue": 56
+                    }
+                  ],
+                  "tier": "1"
+                },
+                {
+                  "affixId": "8eab2769-311e-54a1-8116-7b86de5ba08d",
+                  "tierId": "538525ba-f7d8-5761-9d82-eaccda917c7c",
+                  "modifierDescription": "+#% damage",
+                  "rolledValues": [
+                    {
+                      "value": 31,
+                      "minValue": 30,
+                      "maxValue": 36,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "3"
+                }
+              ],
+              "suffixes": [
+                {
+                  "affixId": "37acc15f-0b30-580d-beaf-34504e2607ae",
+                  "tierId": "2b982e4d-2902-520a-8fff-16ebc9b2c5e1",
+                  "modifierDescription": "+# to Max Frostbite Rating",
+                  "rolledValues": [
+                    {
+                      "value": 14,
+                      "minValue": 11,
+                      "maxValue": 14,
+                      "sign": "+"
+                    }
+                  ],
+                  "tier": "2"
+                },
+                {
+                  "affixId": "f5196b5b-7fe4-5ec7-9356-c90278b83e86",
+                  "tierId": "e439a6d3-39c4-582f-8af1-5bdf056c6d38",
+                  "modifierDescription": "+#% Critical Strike Rating",
+                  "rolledValues": [
+                    {
+                      "value": 46,
+                      "minValue": 45,
+                      "maxValue": 61,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "3"
+                },
+                {
+                  "affixId": "026857de-6d48-5640-a84f-73542b1f5fc7",
+                  "tierId": "be81c713-6be7-5d19-aaed-91fdecb20f2d",
+                  "modifierDescription": "+#% Lightning Resistance",
+                  "rolledValues": [
+                    {
+                      "value": 25,
+                      "minValue": 19,
+                      "maxValue": 27,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                }
+              ],
+              "customName": null,
+              "itemLevel": 86
+            },
+            {
+              "id": "tli_dump_gear_o3su1s",
+              "gearCategory": "trinket",
+              "gearSubType": "ring",
+              "corrosionImplicit": null,
+              "beltBlend": null,
+              "displayName": "Eternal Sleep Ice Ring",
+              "displayIcon": "/images/rare-gear/trinket/ring/Icon_Equip_Ring_Norm_002_02_112.webp",
+              "rarity": "Rare",
+              "baseItem": {
+                "baseItemId": "d2fb27cd-b267-5846-8066-f0f11eb0ab26",
+                "name": "Eternal Sleep Ice Ring",
+                "icon": "/images/rare-gear/trinket/ring/Icon_Equip_Ring_Norm_002_02_112.webp",
+                "requiredLevel": 82,
+                "implicits": [
+                  {
+                    "description": "+12% Cold Resistance",
+                    "rawText": "+12% Cold Resistance",
+                    "values": [
+                      {
+                        "maxValue": 12,
+                        "minValue": 12,
+                        "sign": "+",
+                        "unit": "%",
+                        "value": 12
+                      }
+                    ]
+                  }
+                ]
+              },
+              "towerSequence": null,
+              "sweetDreamAffix": null,
+              "baseAffix": null,
+              "baseAffix2": null,
+              "prefixes": [
+                {
+                  "affixId": "8eab2769-311e-54a1-8116-7b86de5ba08d",
+                  "tierId": "076663c0-8821-549b-a379-259563b17b40",
+                  "modifierDescription": "+#% damage",
+                  "rolledValues": [
+                    {
+                      "value": 67,
+                      "minValue": 51,
+                      "maxValue": 72,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                },
+                {
+                  "affixId": "59aa5d05-7def-56f1-ba2e-0e4b39d57bb9",
+                  "tierId": "a7cad2cc-8ae5-59d0-9c1a-8fe961cdef0b",
+                  "modifierDescription": "+# Dexterity",
+                  "rolledValues": [
+                    {
+                      "value": 38,
+                      "minValue": 31,
+                      "maxValue": 42,
+                      "sign": "+"
+                    }
+                  ],
+                  "tier": "2"
+                },
+                {
+                  "affixId": "f50891e6-2d53-5c6d-b6f5-45abd2dbcd24",
+                  "tierId": "0e9afdf7-b4fb-5ade-9ec4-8cae8a69e845",
+                  "modifierDescription": "+# Max Energy Shield",
+                  "rolledValues": [
+                    {
+                      "value": 167,
+                      "minValue": 147,
+                      "maxValue": 175,
+                      "sign": "+"
+                    }
+                  ],
+                  "tier": "3"
+                }
+              ],
+              "suffixes": [
+                {
+                  "affixId": "f5196b5b-7fe4-5ec7-9356-c90278b83e86",
+                  "tierId": "6b30a81c-a1e1-5052-b43d-b8fe50190040",
+                  "modifierDescription": "+#% Critical Strike Rating",
+                  "rolledValues": [
+                    {
+                      "value": 93,
+                      "minValue": 87,
+                      "maxValue": 120,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                },
+                {
+                  "affixId": "b4427cc2-e8e8-572f-aafd-887950548564",
+                  "tierId": "fd3a653a-87fe-56b8-a31e-fe994a5d45b9",
+                  "modifierDescription": "+#% Fire Resistance",
+                  "rolledValues": [
+                    {
+                      "value": 12,
+                      "minValue": 11,
+                      "maxValue": 14,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "3"
+                },
+                {
+                  "affixId": "37acc15f-0b30-580d-beaf-34504e2607ae",
+                  "tierId": "8dec55f0-85af-5452-b3b0-702fb0369e82",
+                  "modifierDescription": "+# to Max Frostbite Rating",
+                  "rolledValues": [
+                    {
+                      "value": 10,
+                      "minValue": 8,
+                      "maxValue": 10,
+                      "sign": "+"
+                    }
+                  ],
+                  "tier": "3"
+                }
+              ],
+              "customName": null,
+              "itemLevel": 86
+            },
+            {
+              "id": "tli_dump_gear_1qrm4t",
+              "gearCategory": "trinket",
+              "gearSubType": "belt",
+              "corrosionImplicit": null,
+              "beltBlend": {
+                "blendId": "eed210ba-7f7a-5cca-81b5-9e0745098afb",
+                "description": "+10% additional damage against Frozen enemies",
+                "rolledValues": [],
+                "type": "Medium Talent Lv.0",
+                "modifierId": "3401012"
+              },
+              "displayName": "Arcanist Girdle",
+              "displayIcon": "/images/rare-gear/trinket/belt/Icon_Equip_Belt_Norm_003_02_112.webp",
+              "rarity": "Rare",
+              "baseItem": {
+                "baseItemId": "0765171a-8d4e-5045-914f-1c50fd073b66",
+                "name": "Arcanist Girdle",
+                "icon": "/images/rare-gear/trinket/belt/Icon_Equip_Belt_Norm_003_02_112.webp",
+                "requiredLevel": 76,
+                "implicits": [
+                  {
+                    "description": "+110 Max Energy Shield",
+                    "rawText": "+110 Max Energy Shield",
+                    "values": [
+                      {
+                        "maxValue": 110,
+                        "minValue": 110,
+                        "sign": "+",
+                        "value": 110
+                      }
+                    ]
+                  }
+                ]
+              },
+              "towerSequence": null,
+              "sweetDreamAffix": null,
+              "baseAffix": null,
+              "baseAffix2": null,
+              "prefixes": [
+                {
+                  "affixId": "1bf2424f-23f9-52ba-8911-e3afbb2a0a16",
+                  "tierId": "0bd48e1b-12cb-5884-b03b-4d6aa8bab17a",
+                  "modifierDescription": "+# Dexterity",
+                  "rolledValues": [
+                    {
+                      "value": 40,
+                      "minValue": 31,
+                      "maxValue": 42,
+                      "sign": "+"
+                    }
+                  ],
+                  "tier": "2"
+                },
+                {
+                  "affixId": "e6766477-2d27-56b7-99c2-7e995b5d38db",
+                  "tierId": "08c4d51c-b41c-5595-a5c6-616f691e508e",
+                  "modifierDescription": "+#% damage",
+                  "rolledValues": [
+                    {
+                      "value": 48,
+                      "minValue": 37,
+                      "maxValue": 50,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "2"
+                },
+                {
+                  "affixId": "c6d4d59a-f040-56ef-a53f-e9998f3112ff",
+                  "tierId": "6b235a4e-b637-5f4c-b238-6d37308078f8",
+                  "modifierDescription": "+# Max Life",
+                  "rolledValues": [
+                    {
+                      "value": 116,
+                      "minValue": 111,
+                      "maxValue": 154,
+                      "sign": "+"
+                    }
+                  ],
+                  "tier": "2"
+                }
+              ],
+              "suffixes": [
+                {
+                  "affixId": "f22c6507-651c-587f-9adb-7e83c8a95066",
+                  "tierId": "838f0614-b671-5dba-9dbe-1ac68974cba7",
+                  "modifierDescription": "+#% Lightning Resistance",
+                  "rolledValues": [
+                    {
+                      "value": 16,
+                      "minValue": 16,
+                      "maxValue": 19,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "2"
+                },
+                {
+                  "affixId": "68895c23-9604-5faf-8838-25c4dea60a86",
+                  "tierId": "6dc79f6b-6054-5444-9323-019de1ba4244",
+                  "modifierDescription": "+#% Fire Resistance",
+                  "rolledValues": [
+                    {
+                      "value": 18,
+                      "minValue": 16,
+                      "maxValue": 19,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "2"
+                },
+                {
+                  "affixId": "4ecc7cd5-53b2-514b-b6cc-ec790c1a9bc7",
+                  "tierId": "11388cb7-0115-5f06-b017-ca8a1bd20833",
+                  "modifierDescription": "+#% Cold Resistance",
+                  "rolledValues": [
+                    {
+                      "value": 18,
+                      "minValue": 16,
+                      "maxValue": 19,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "2"
+                }
+              ],
+              "customName": null,
+              "itemLevel": 82
+            },
+            {
+              "id": "tli_dump_gear_111t2me",
+              "gearCategory": "gloves",
+              "gearSubType": "int_gloves",
+              "corrosionImplicit": null,
+              "beltBlend": null,
+              "displayName": "All Magic Grip",
+              "displayIcon": "/images/rare-gear/gloves/int_gloves/Icon_Equip_Gloves_Int_Norm_003_02_112.webp",
+              "rarity": "Rare",
+              "baseItem": {
+                "baseItemId": "c94f4b61-97a1-5a08-9a2e-f4606c848fc6",
+                "name": "All Magic Grip",
+                "icon": "/images/rare-gear/gloves/int_gloves/Icon_Equip_Gloves_Int_Norm_003_02_112.webp",
+                "requiredLevel": 76,
+                "implicits": [
+                  {
+                    "description": "+120 gear Energy Shield",
+                    "rawText": "+120 gear Energy Shield",
+                    "values": [
+                      {
+                        "maxValue": 120,
+                        "minValue": 120,
+                        "sign": "+",
+                        "value": 120
+                      }
+                    ]
+                  }
+                ]
+              },
+              "towerSequence": null,
+              "sweetDreamAffix": null,
+              "baseAffix": null,
+              "baseAffix2": null,
+              "prefixes": [
+                {
+                  "affixId": "adb0c6ae-62ee-5b88-918d-1528cd336c94",
+                  "tierId": "2675eb65-66fd-59a0-9c2a-c588041158b6",
+                  "modifierDescription": "+#% gear Energy Shield",
+                  "rolledValues": [
+                    {
+                      "value": 29,
+                      "minValue": 28,
+                      "maxValue": 33,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "3"
+                },
+                {
+                  "affixId": "a0d311c9-72fc-5a4b-8fac-eb99dc0c0dbb",
+                  "tierId": "3bd83646-fbe3-5abb-a27e-2a1207d9365c",
+                  "modifierDescription": "Adds # - # Physical Damage to Attacks and Spells",
+                  "rolledValues": [
+                    {
+                      "value": 27,
+                      "minValue": 26,
+                      "maxValue": 28
+                    },
+                    {
+                      "value": 32,
+                      "minValue": 32,
+                      "maxValue": 34
+                    }
+                  ],
+                  "tier": "2"
+                },
+                {
+                  "affixId": "41b69b1d-41db-5f3b-a654-78cdd2f02dcc",
+                  "tierId": "a278729d-ef98-5a1e-8279-8df64bf0c317",
+                  "modifierDescription": "+# gear Energy Shield",
+                  "rolledValues": [
+                    {
+                      "value": 143,
+                      "minValue": 137,
+                      "maxValue": 170,
+                      "sign": "+"
+                    }
+                  ],
+                  "tier": "3"
+                }
+              ],
+              "suffixes": [
+                {
+                  "affixId": "60709c4d-2ac5-54c1-b2c6-9e4aec75ce3a",
+                  "tierId": "8d28eb23-e5a5-54a6-85e4-9d8632c638d0",
+                  "modifierDescription": "+#% Lightning Resistance",
+                  "rolledValues": [
+                    {
+                      "value": 19,
+                      "minValue": 16,
+                      "maxValue": 19,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "2"
+                },
+                {
+                  "affixId": "aead9e8c-6a83-5f16-8a87-77c86d1159ee",
+                  "tierId": "57ffe716-9196-54a9-9b52-b70babb94960",
+                  "modifierDescription": "+#% Critical Strike Damage",
+                  "rolledValues": [
+                    {
+                      "value": 32,
+                      "minValue": 32,
+                      "maxValue": 43,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "2"
+                },
+                {
+                  "affixId": "34b8ab05-b009-58d5-b6bb-c38633fa904b",
+                  "tierId": "06f865f3-6563-5272-b201-a6f9b7f793ca",
+                  "modifierDescription": "+#% Critical Strike Rating",
+                  "rolledValues": [
+                    {
+                      "value": 75,
+                      "minValue": 71,
+                      "maxValue": 84,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "2"
+                }
+              ],
+              "customName": null,
+              "itemLevel": 84
+            },
+            {
+              "id": "tli_dump_gear_1h9p6gh",
+              "gearCategory": "boots",
+              "gearSubType": "int_boots",
+              "corrosionImplicit": null,
+              "beltBlend": null,
+              "displayName": "Long Night Sorcerer's Boots",
+              "displayIcon": "/images/rare-gear/boots/int_boots/Icon_Equip_Shoes_Int_Norm_004_02_112.webp",
+              "rarity": "Rare",
+              "baseItem": {
+                "baseItemId": "1bdafe54-3851-5f86-af33-5914fc01edb0",
+                "name": "Long Night Sorcerer's Boots",
+                "icon": "/images/rare-gear/boots/int_boots/Icon_Equip_Shoes_Int_Norm_004_02_112.webp",
+                "requiredLevel": 82,
+                "implicits": [
+                  {
+                    "description": "+146 gear Energy Shield",
+                    "rawText": "+146 gear Energy Shield",
+                    "values": [
+                      {
+                        "maxValue": 146,
+                        "minValue": 146,
+                        "sign": "+",
+                        "value": 146
+                      }
+                    ]
+                  }
+                ]
+              },
+              "towerSequence": null,
+              "sweetDreamAffix": null,
+              "baseAffix": null,
+              "baseAffix2": null,
+              "prefixes": [
+                {
+                  "affixId": "94022b28-3511-593c-b406-e796fcb332aa",
+                  "tierId": "75a0df41-eb27-5c64-b2e7-78989a68a459",
+                  "modifierDescription": "+#% Projectile Speed",
+                  "rolledValues": [
+                    {
+                      "value": 44,
+                      "minValue": 33,
+                      "maxValue": 45,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                },
+                {
+                  "affixId": "8bc2b88b-33a0-5d1f-8ad9-11fa6e753e27",
+                  "tierId": "90954624-a3c3-5575-a10b-3ebf8544d461",
+                  "modifierDescription": "+# Max Life",
+                  "rolledValues": [
+                    {
+                      "value": 154,
+                      "minValue": 111,
+                      "maxValue": 154,
+                      "sign": "+"
+                    }
+                  ],
+                  "tier": "2"
+                },
+                {
+                  "affixId": "51082d86-fb73-579d-ba5d-59993d9e5aac",
+                  "tierId": "0bc6940b-7b2e-537b-bc78-a48bee4b0a74",
+                  "modifierDescription": "+# gear Energy Shield",
+                  "rolledValues": [
+                    {
+                      "value": 170,
+                      "minValue": 137,
+                      "maxValue": 170,
+                      "sign": "+"
+                    }
+                  ],
+                  "tier": "3"
+                }
+              ],
+              "suffixes": [
+                {
+                  "affixId": "caf195d6-b33f-5525-b341-8c4e436126c3",
+                  "tierId": "a419f1ef-b34a-554c-95ae-aae8d9bbca0e",
+                  "modifierDescription": "+#% Attack and Cast Speed\n+#% Minion Attack and Cast Speed",
+                  "rolledValues": [
+                    {
+                      "value": 13,
+                      "minValue": 13,
+                      "maxValue": 17,
+                      "sign": "+",
+                      "unit": "%"
+                    },
+                    {
+                      "value": 13,
+                      "minValue": 13,
+                      "maxValue": 17,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "2"
+                },
+                {
+                  "affixId": "b8e92b1f-3415-5af3-a24f-7648cb6c5593",
+                  "tierId": "93c41a85-11f0-506d-a1e8-0ef842e178ba",
+                  "modifierDescription": "+#% Cold Resistance",
+                  "rolledValues": [
+                    {
+                      "value": 19,
+                      "minValue": 16,
+                      "maxValue": 19,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "2"
+                },
+                {
+                  "affixId": "6c8e8cb6-fb55-5296-8a1e-9bbd08ef8e6e",
+                  "tierId": "36894290-b750-5413-b6a3-b3b65f0f9694",
+                  "modifierDescription": "+#% Lightning Resistance",
+                  "rolledValues": [
+                    {
+                      "value": 17,
+                      "minValue": 16,
+                      "maxValue": 19,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "2"
+                }
+              ],
+              "customName": null,
+              "itemLevel": 86
+            }
+          ]
+        },
+        "vorax": {
+          "equipped": {
+            "chest": null,
+            "head": null,
+            "hands": null,
+            "legs": null,
+            "neck": null,
+            "digits": null,
+            "waist": null
+          },
+          "inventory": []
+        },
+        "skills": {
+          "activeSkills": [
+            {
+              "skillGuid": "7f844a9e-9abc-59b6-9baf-18b43efc753e",
+              "enabled": true,
+              "level": 20,
+              "supports": [
+                {
+                  "supportGuid": "faa709b0-6a3a-5158-9db6-5e6c442bd106",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_ExtraProjectiles_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "abe521a0-c85d-5c35-b86e-a7c6077e5f27",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_Pierce_128.webp",
+                  "level": 20
+                },
+                {
+                  "icon": "/images/skill/UI_Skill_Iceshot_support01_Icon_128.webp",
+                  "rank": 1,
+                  "rollValues": [
+                    0.24
+                  ],
+                  "supportGuid": "c8e475d4-3d27-5e11-9a5e-8bb0ffcc44cb",
+                  "tier": 2,
+                  "type": "magnificent_support"
+                },
+                {
+                  "supportGuid": "56c49853-7d67-5a43-bfe7-0cfe5c7e3d84",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_SlowerProjectiles_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "755b0cbe-1599-538f-adea-a48bf87bbc77",
+                  "type": "support",
+                  "icon": "/images/skill/UI_Skill_AddedPhysicalDamage_Icon_128.webp",
+                  "level": 20
+                }
+              ]
+            },
+            {
+              "skillGuid": "77d9dae1-36e5-5804-9d47-de2786e599e9",
+              "enabled": true,
+              "level": 20,
+              "supports": [
+                {
+                  "supportGuid": "695b62ab-9582-5981-80c8-4678f5359fc5",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_FasterTravel_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "dbd9d783-3a5b-514f-b23b-e7e14bcfb14b",
+                  "type": "support",
+                  "icon": "/images/skill/UI_Skill_IntermittentBursts_Icon_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "0dc9d1be-7284-5f07-b218-979b72b43e42",
+                  "type": "support",
+                  "icon": "/images/skill/UI_Skill_AccelerateAfterSpell_Icon_128.webp",
+                  "level": 20
+                },
+                null,
+                null
+              ]
+            },
+            {
+              "skillGuid": "12d2d764-a129-5229-89f3-7c89c004bdf1",
+              "enabled": true,
+              "level": 20,
+              "supports": [
+                {
+                  "supportGuid": "b3c6d1c9-fa0c-5a77-a8f7-451fa3418fb2",
+                  "type": "support",
+                  "icon": "/images/skill/UI_SkillIcon_Skill_BarrierDetonate_Icon_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "2fd5c01f-311c-57ad-b2cc-5a2f46aa210e",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_IncreasedDuration_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "f4d8b862-1282-5365-9efc-62c87f049434",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_CooldownReduce_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "79287ff6-09c6-5148-bcf4-1526477704a5",
+                  "type": "support",
+                  "icon": "/images/skill/UI_Skill_BathInBlood_Icon_128.webp",
+                  "level": 20
+                },
+                null
+              ]
+            },
+            {
+              "skillGuid": "f6c01837-6901-5a04-9e16-877512c29db5",
+              "enabled": true,
+              "level": 20,
+              "supports": [
+                {
+                  "icon": "/images/skill/UI_Skill_CMStationaryUse_Icon_128.webp",
+                  "rollValues": [],
+                  "supportGuid": "2a5b5be6-f54e-58fc-9acb-47facff516e0",
+                  "tier": 1,
+                  "type": "activation_medium"
+                },
+                {
+                  "supportGuid": "c0525b3d-e8fb-5017-affe-f63c4c96e031",
+                  "type": "support",
+                  "icon": "/images/skill/UI_Skill_MassEffect_Icon_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "79287ff6-09c6-5148-bcf4-1526477704a5",
+                  "type": "support",
+                  "icon": "/images/skill/UI_Skill_BathInBlood_Icon_128.webp",
+                  "level": 20
+                },
+                null,
+                null
+              ]
+            },
+            {
+              "skillGuid": "3a77b3ec-7ef9-5647-8690-ea08df1146d0",
+              "enabled": true,
+              "level": 20,
+              "supports": [
+                {
+                  "icon": "/images/skill/UI_Skill_CMStrongRival_Icon_128.webp",
+                  "rollValues": [
+                    7,
+                    7,
+                    16
+                  ],
+                  "supportGuid": "aedc4348-5c67-5bd2-80cb-795c81743e0c",
+                  "tier": 2,
+                  "type": "activation_medium"
+                },
+                {
+                  "supportGuid": "97c67888-18c1-5bed-aae2-cdea40f2c1e5",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_IncreasedArea_128.webp",
+                  "level": 20
+                },
+                null,
+                null,
+                null
+              ]
+            }
+          ],
+          "passiveSkills": [
+            {
+              "skillGuid": "97825e91-6736-5a36-ba4f-be7c7f650795",
+              "enabled": true,
+              "level": 20,
+              "supports": [
+                {
+                  "supportGuid": "3fefae98-44ff-510d-a6ea-57acd1063669",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_Enlightenment_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "a69e9a49-3163-52c0-9d64-f2d08ccb9e00",
+                  "type": "support",
+                  "icon": "/images/skill/UI_SkillIcon_Support_BloodMagic_Icon_128.webp",
+                  "level": 20
+                },
+                null,
+                null,
+                null
+              ]
+            },
+            {
+              "skillGuid": "155c0bf6-adf6-52d3-926c-a25e2a3170bb",
+              "enabled": true,
+              "level": 20,
+              "supports": [
+                {
+                  "supportGuid": "ae0fb5dd-d7ff-5107-971b-ace6c95fed64",
+                  "type": "support",
+                  "icon": "/images/skill/UI_Skill_AuraEnhance_Icon_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "3fefae98-44ff-510d-a6ea-57acd1063669",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_Enlightenment_128.webp",
+                  "level": 20
+                },
+                null,
+                null,
+                null
+              ]
+            },
+            {
+              "skillGuid": "c6f55129-73f6-5671-a0ed-d87772524bc0",
+              "enabled": true,
+              "level": 18,
+              "supports": [
+                {
+                  "supportGuid": "3fefae98-44ff-510d-a6ea-57acd1063669",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_Enlightenment_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "ae0fb5dd-d7ff-5107-971b-ace6c95fed64",
+                  "type": "support",
+                  "icon": "/images/skill/UI_Skill_AuraEnhance_Icon_128.webp",
+                  "level": 20
+                },
+                null,
+                null,
+                null
+              ]
+            },
+            {
+              "skillGuid": "7b18bd80-e883-568f-ba48-5c9993975518",
+              "enabled": true,
+              "level": 20,
+              "supports": [
+                {
+                  "supportGuid": "3fefae98-44ff-510d-a6ea-57acd1063669",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_Enlightenment_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "ae0fb5dd-d7ff-5107-971b-ace6c95fed64",
+                  "type": "support",
+                  "icon": "/images/skill/UI_Skill_AuraEnhance_Icon_128.webp",
+                  "level": 20
+                },
+                null,
+                null,
+                null
+              ]
+            }
+          ]
+        },
+        "skillTree": {
+          "slots": [
+            {
+              "treeId": "goddess_of_hunting",
+              "nodePoints": {
+                "06d2ad49-d9c1-50c3-a15c-6aa71660fda9": 3,
+                "106f1e55-6635-53a5-8d1e-35c29c7dba71": 3,
+                "16fea382-d50e-5568-a1d7-80bd38ed3501": 3,
+                "41f13b75-a2d1-560a-88e3-93bc0311a734": 3,
+                "c2078be8-6145-552f-8553-5b023a2903f7": 3,
+                "d6a53af5-f37b-5d1f-a30e-b940982add8d": 3,
+                "d95ba2cd-4dce-53b6-9b39-eaa0e0267a54": 3,
+                "ebd0d8e4-41ef-55ec-9b13-1e00552bc1b7": 3
+              },
+              "selectedNotable12": "1a380896-8198-5bb3-8465-dcb2342b7d5f",
+              "selectedNotable24": "820fa0af-97b8-590b-96b3-58e45d491b79",
+              "prismId": null,
+              "equippedPrism": null,
+              "prismCoreTalentOverride": null,
+              "inverseImageState": null
+            },
+            {
+              "treeId": "marksman",
+              "nodePoints": {
+                "241b39af-c13c-51f4-a001-0a927cdb2d41": 3,
+                "3215142f-ccdc-55ef-9e87-66a3551dae4f": 3,
+                "550c6261-b1bf-5db7-be2f-bbff4477b80c": 3,
+                "65865ed9-778a-5ff6-a53d-e4f15f7dd009": 3,
+                "706a9f91-8495-56d3-9e0f-ac7a58558e32": 3,
+                "87039fe3-1718-5ee0-95c2-18b989339ed3": 3,
+                "8f23b8dd-3d42-5185-8445-6418da967781": 1,
+                "8f3315b1-17e7-5b3e-bdd3-ce105d68e23f": 3,
+                "a8ac4dac-6bdb-542e-a349-b4c2b587aee9": 1,
+                "b14764b4-8c4b-5ba1-9cfb-360f9735d733": 1
+              },
+              "selectedNotable12": null,
+              "selectedNotable24": "3e2ef914-325e-555f-ab90-f5f460dffb25",
+              "prismId": null,
+              "equippedPrism": null,
+              "prismCoreTalentOverride": null,
+              "inverseImageState": null
+            },
+            {
+              "treeId": "prophet",
+              "nodePoints": {
+                "13d13eaf-98dd-5f9c-8f65-84ac3b6fddfb": 3,
+                "851d38e7-7f6b-5d7c-a006-54f5b32b5de6": 3,
+                "8f43486c-521c-5c85-893c-87de6dde1a3e": 1,
+                "92d73efc-7a7d-5364-b148-6500a58b0c49": 3,
+                "ab8176f5-aeb5-56d3-9eba-865c7fa36f41": 1,
+                "b31dbb72-05f9-5a3c-a40d-dad08a08a93c": 1,
+                "b873d2df-cdfa-545c-9e1a-63306aca9fd7": 3,
+                "c14ef5de-c749-5c6b-b36e-961fe61dae5c": 3,
+                "c71a9bdc-7ff6-5fde-804b-349207d57287": 3,
+                "d2b348a8-52a9-5650-a6cc-14d820d8efe9": 3,
+                "db27fb2c-5f29-595c-83e1-08a39bfa3634": 3,
+                "dbf7e418-17fa-56fd-af23-790aa7e620c3": 1,
+                "dede12b8-f16e-5282-91f6-e6471b48f8e8": 3,
+                "e1655069-6532-5099-9987-e78bfd4bfa90": 3
+              },
+              "selectedNotable12": null,
+              "selectedNotable24": "43dba54e-5c78-5dab-a6c9-5e32b32a3978",
+              "prismId": null,
+              "equippedPrism": null,
+              "prismCoreTalentOverride": null,
+              "inverseImageState": null
+            },
+            {
+              "treeId": "ranger",
+              "nodePoints": {
+                "15dd6a95-d7b1-572e-ba0e-35db3be66a94": 3,
+                "51cd1b2d-f693-5f0b-87b3-240196c55754": 3,
+                "5b9c940e-8795-56c1-bb30-0a3bf04108ee": 3,
+                "6434b29a-3b46-5f43-8198-03a810e9d19e": 3,
+                "8592f8d3-49e6-5d63-b1db-32de6e71a9ff": 3,
+                "afc3c99a-79ca-5204-9761-797630676bfc": 3,
+                "c3c701fb-f803-55f3-9671-661d0fa46f29": 1,
+                "f121da79-886b-5b3c-ace4-1416375c580b": 3,
+                "f40d7856-e186-5d68-bd94-32af65743e10": 3,
+                "f678147c-2fa6-5450-b8a2-a4829d15f950": 1
+              },
+              "selectedNotable12": null,
+              "selectedNotable24": "8379af76-994c-5d13-800c-9d0998ec182a",
+              "prismId": null,
+              "equippedPrism": null,
+              "prismCoreTalentOverride": null,
+              "inverseImageState": null
+            }
+          ],
+          "allocationOrder": [
+            {
+              "slot": 0,
+              "nodeId": "06d2ad49-d9c1-50c3-a15c-6aa71660fda9"
+            },
+            {
+              "slot": 0,
+              "nodeId": "06d2ad49-d9c1-50c3-a15c-6aa71660fda9"
+            },
+            {
+              "slot": 0,
+              "nodeId": "06d2ad49-d9c1-50c3-a15c-6aa71660fda9"
+            },
+            {
+              "slot": 0,
+              "nodeId": "106f1e55-6635-53a5-8d1e-35c29c7dba71"
+            },
+            {
+              "slot": 0,
+              "nodeId": "106f1e55-6635-53a5-8d1e-35c29c7dba71"
+            },
+            {
+              "slot": 0,
+              "nodeId": "106f1e55-6635-53a5-8d1e-35c29c7dba71"
+            },
+            {
+              "slot": 0,
+              "nodeId": "16fea382-d50e-5568-a1d7-80bd38ed3501"
+            },
+            {
+              "slot": 0,
+              "nodeId": "16fea382-d50e-5568-a1d7-80bd38ed3501"
+            },
+            {
+              "slot": 0,
+              "nodeId": "16fea382-d50e-5568-a1d7-80bd38ed3501"
+            },
+            {
+              "slot": 0,
+              "nodeId": "41f13b75-a2d1-560a-88e3-93bc0311a734"
+            },
+            {
+              "slot": 0,
+              "nodeId": "41f13b75-a2d1-560a-88e3-93bc0311a734"
+            },
+            {
+              "slot": 0,
+              "nodeId": "41f13b75-a2d1-560a-88e3-93bc0311a734"
+            },
+            {
+              "slot": 0,
+              "nodeId": "c2078be8-6145-552f-8553-5b023a2903f7"
+            },
+            {
+              "slot": 0,
+              "nodeId": "c2078be8-6145-552f-8553-5b023a2903f7"
+            },
+            {
+              "slot": 0,
+              "nodeId": "c2078be8-6145-552f-8553-5b023a2903f7"
+            },
+            {
+              "slot": 0,
+              "nodeId": "d6a53af5-f37b-5d1f-a30e-b940982add8d"
+            },
+            {
+              "slot": 0,
+              "nodeId": "d6a53af5-f37b-5d1f-a30e-b940982add8d"
+            },
+            {
+              "slot": 0,
+              "nodeId": "d6a53af5-f37b-5d1f-a30e-b940982add8d"
+            },
+            {
+              "slot": 0,
+              "nodeId": "d95ba2cd-4dce-53b6-9b39-eaa0e0267a54"
+            },
+            {
+              "slot": 0,
+              "nodeId": "d95ba2cd-4dce-53b6-9b39-eaa0e0267a54"
+            },
+            {
+              "slot": 0,
+              "nodeId": "d95ba2cd-4dce-53b6-9b39-eaa0e0267a54"
+            },
+            {
+              "slot": 0,
+              "nodeId": "ebd0d8e4-41ef-55ec-9b13-1e00552bc1b7"
+            },
+            {
+              "slot": 0,
+              "nodeId": "ebd0d8e4-41ef-55ec-9b13-1e00552bc1b7"
+            },
+            {
+              "slot": 0,
+              "nodeId": "ebd0d8e4-41ef-55ec-9b13-1e00552bc1b7"
+            },
+            {
+              "slot": 1,
+              "nodeId": "241b39af-c13c-51f4-a001-0a927cdb2d41"
+            },
+            {
+              "slot": 1,
+              "nodeId": "241b39af-c13c-51f4-a001-0a927cdb2d41"
+            },
+            {
+              "slot": 1,
+              "nodeId": "241b39af-c13c-51f4-a001-0a927cdb2d41"
+            },
+            {
+              "slot": 1,
+              "nodeId": "3215142f-ccdc-55ef-9e87-66a3551dae4f"
+            },
+            {
+              "slot": 1,
+              "nodeId": "3215142f-ccdc-55ef-9e87-66a3551dae4f"
+            },
+            {
+              "slot": 1,
+              "nodeId": "3215142f-ccdc-55ef-9e87-66a3551dae4f"
+            },
+            {
+              "slot": 1,
+              "nodeId": "550c6261-b1bf-5db7-be2f-bbff4477b80c"
+            },
+            {
+              "slot": 1,
+              "nodeId": "550c6261-b1bf-5db7-be2f-bbff4477b80c"
+            },
+            {
+              "slot": 1,
+              "nodeId": "550c6261-b1bf-5db7-be2f-bbff4477b80c"
+            },
+            {
+              "slot": 1,
+              "nodeId": "65865ed9-778a-5ff6-a53d-e4f15f7dd009"
+            },
+            {
+              "slot": 1,
+              "nodeId": "65865ed9-778a-5ff6-a53d-e4f15f7dd009"
+            },
+            {
+              "slot": 1,
+              "nodeId": "65865ed9-778a-5ff6-a53d-e4f15f7dd009"
+            },
+            {
+              "slot": 1,
+              "nodeId": "706a9f91-8495-56d3-9e0f-ac7a58558e32"
+            },
+            {
+              "slot": 1,
+              "nodeId": "706a9f91-8495-56d3-9e0f-ac7a58558e32"
+            },
+            {
+              "slot": 1,
+              "nodeId": "706a9f91-8495-56d3-9e0f-ac7a58558e32"
+            },
+            {
+              "slot": 1,
+              "nodeId": "87039fe3-1718-5ee0-95c2-18b989339ed3"
+            },
+            {
+              "slot": 1,
+              "nodeId": "87039fe3-1718-5ee0-95c2-18b989339ed3"
+            },
+            {
+              "slot": 1,
+              "nodeId": "87039fe3-1718-5ee0-95c2-18b989339ed3"
+            },
+            {
+              "slot": 1,
+              "nodeId": "8f23b8dd-3d42-5185-8445-6418da967781"
+            },
+            {
+              "slot": 1,
+              "nodeId": "8f3315b1-17e7-5b3e-bdd3-ce105d68e23f"
+            },
+            {
+              "slot": 1,
+              "nodeId": "8f3315b1-17e7-5b3e-bdd3-ce105d68e23f"
+            },
+            {
+              "slot": 1,
+              "nodeId": "8f3315b1-17e7-5b3e-bdd3-ce105d68e23f"
+            },
+            {
+              "slot": 1,
+              "nodeId": "a8ac4dac-6bdb-542e-a349-b4c2b587aee9"
+            },
+            {
+              "slot": 1,
+              "nodeId": "b14764b4-8c4b-5ba1-9cfb-360f9735d733"
+            },
+            {
+              "slot": 2,
+              "nodeId": "13d13eaf-98dd-5f9c-8f65-84ac3b6fddfb"
+            },
+            {
+              "slot": 2,
+              "nodeId": "13d13eaf-98dd-5f9c-8f65-84ac3b6fddfb"
+            },
+            {
+              "slot": 2,
+              "nodeId": "13d13eaf-98dd-5f9c-8f65-84ac3b6fddfb"
+            },
+            {
+              "slot": 2,
+              "nodeId": "851d38e7-7f6b-5d7c-a006-54f5b32b5de6"
+            },
+            {
+              "slot": 2,
+              "nodeId": "851d38e7-7f6b-5d7c-a006-54f5b32b5de6"
+            },
+            {
+              "slot": 2,
+              "nodeId": "851d38e7-7f6b-5d7c-a006-54f5b32b5de6"
+            },
+            {
+              "slot": 2,
+              "nodeId": "8f43486c-521c-5c85-893c-87de6dde1a3e"
+            },
+            {
+              "slot": 2,
+              "nodeId": "92d73efc-7a7d-5364-b148-6500a58b0c49"
+            },
+            {
+              "slot": 2,
+              "nodeId": "92d73efc-7a7d-5364-b148-6500a58b0c49"
+            },
+            {
+              "slot": 2,
+              "nodeId": "92d73efc-7a7d-5364-b148-6500a58b0c49"
+            },
+            {
+              "slot": 2,
+              "nodeId": "ab8176f5-aeb5-56d3-9eba-865c7fa36f41"
+            },
+            {
+              "slot": 2,
+              "nodeId": "b31dbb72-05f9-5a3c-a40d-dad08a08a93c"
+            },
+            {
+              "slot": 2,
+              "nodeId": "b873d2df-cdfa-545c-9e1a-63306aca9fd7"
+            },
+            {
+              "slot": 2,
+              "nodeId": "b873d2df-cdfa-545c-9e1a-63306aca9fd7"
+            },
+            {
+              "slot": 2,
+              "nodeId": "b873d2df-cdfa-545c-9e1a-63306aca9fd7"
+            },
+            {
+              "slot": 2,
+              "nodeId": "c14ef5de-c749-5c6b-b36e-961fe61dae5c"
+            },
+            {
+              "slot": 2,
+              "nodeId": "c14ef5de-c749-5c6b-b36e-961fe61dae5c"
+            },
+            {
+              "slot": 2,
+              "nodeId": "c14ef5de-c749-5c6b-b36e-961fe61dae5c"
+            },
+            {
+              "slot": 2,
+              "nodeId": "c71a9bdc-7ff6-5fde-804b-349207d57287"
+            },
+            {
+              "slot": 2,
+              "nodeId": "c71a9bdc-7ff6-5fde-804b-349207d57287"
+            },
+            {
+              "slot": 2,
+              "nodeId": "c71a9bdc-7ff6-5fde-804b-349207d57287"
+            },
+            {
+              "slot": 2,
+              "nodeId": "d2b348a8-52a9-5650-a6cc-14d820d8efe9"
+            },
+            {
+              "slot": 2,
+              "nodeId": "d2b348a8-52a9-5650-a6cc-14d820d8efe9"
+            },
+            {
+              "slot": 2,
+              "nodeId": "d2b348a8-52a9-5650-a6cc-14d820d8efe9"
+            },
+            {
+              "slot": 2,
+              "nodeId": "db27fb2c-5f29-595c-83e1-08a39bfa3634"
+            },
+            {
+              "slot": 2,
+              "nodeId": "db27fb2c-5f29-595c-83e1-08a39bfa3634"
+            },
+            {
+              "slot": 2,
+              "nodeId": "db27fb2c-5f29-595c-83e1-08a39bfa3634"
+            },
+            {
+              "slot": 2,
+              "nodeId": "dbf7e418-17fa-56fd-af23-790aa7e620c3"
+            },
+            {
+              "slot": 2,
+              "nodeId": "dede12b8-f16e-5282-91f6-e6471b48f8e8"
+            },
+            {
+              "slot": 2,
+              "nodeId": "dede12b8-f16e-5282-91f6-e6471b48f8e8"
+            },
+            {
+              "slot": 2,
+              "nodeId": "dede12b8-f16e-5282-91f6-e6471b48f8e8"
+            },
+            {
+              "slot": 2,
+              "nodeId": "e1655069-6532-5099-9987-e78bfd4bfa90"
+            },
+            {
+              "slot": 2,
+              "nodeId": "e1655069-6532-5099-9987-e78bfd4bfa90"
+            },
+            {
+              "slot": 2,
+              "nodeId": "e1655069-6532-5099-9987-e78bfd4bfa90"
+            },
+            {
+              "slot": 3,
+              "nodeId": "15dd6a95-d7b1-572e-ba0e-35db3be66a94"
+            },
+            {
+              "slot": 3,
+              "nodeId": "15dd6a95-d7b1-572e-ba0e-35db3be66a94"
+            },
+            {
+              "slot": 3,
+              "nodeId": "15dd6a95-d7b1-572e-ba0e-35db3be66a94"
+            },
+            {
+              "slot": 3,
+              "nodeId": "51cd1b2d-f693-5f0b-87b3-240196c55754"
+            },
+            {
+              "slot": 3,
+              "nodeId": "51cd1b2d-f693-5f0b-87b3-240196c55754"
+            },
+            {
+              "slot": 3,
+              "nodeId": "51cd1b2d-f693-5f0b-87b3-240196c55754"
+            },
+            {
+              "slot": 3,
+              "nodeId": "5b9c940e-8795-56c1-bb30-0a3bf04108ee"
+            },
+            {
+              "slot": 3,
+              "nodeId": "5b9c940e-8795-56c1-bb30-0a3bf04108ee"
+            },
+            {
+              "slot": 3,
+              "nodeId": "5b9c940e-8795-56c1-bb30-0a3bf04108ee"
+            },
+            {
+              "slot": 3,
+              "nodeId": "6434b29a-3b46-5f43-8198-03a810e9d19e"
+            },
+            {
+              "slot": 3,
+              "nodeId": "6434b29a-3b46-5f43-8198-03a810e9d19e"
+            },
+            {
+              "slot": 3,
+              "nodeId": "6434b29a-3b46-5f43-8198-03a810e9d19e"
+            },
+            {
+              "slot": 3,
+              "nodeId": "8592f8d3-49e6-5d63-b1db-32de6e71a9ff"
+            },
+            {
+              "slot": 3,
+              "nodeId": "8592f8d3-49e6-5d63-b1db-32de6e71a9ff"
+            },
+            {
+              "slot": 3,
+              "nodeId": "8592f8d3-49e6-5d63-b1db-32de6e71a9ff"
+            },
+            {
+              "slot": 3,
+              "nodeId": "afc3c99a-79ca-5204-9761-797630676bfc"
+            },
+            {
+              "slot": 3,
+              "nodeId": "afc3c99a-79ca-5204-9761-797630676bfc"
+            },
+            {
+              "slot": 3,
+              "nodeId": "afc3c99a-79ca-5204-9761-797630676bfc"
+            },
+            {
+              "slot": 3,
+              "nodeId": "c3c701fb-f803-55f3-9671-661d0fa46f29"
+            },
+            {
+              "slot": 3,
+              "nodeId": "f121da79-886b-5b3c-ace4-1416375c580b"
+            },
+            {
+              "slot": 3,
+              "nodeId": "f121da79-886b-5b3c-ace4-1416375c580b"
+            },
+            {
+              "slot": 3,
+              "nodeId": "f121da79-886b-5b3c-ace4-1416375c580b"
+            },
+            {
+              "slot": 3,
+              "nodeId": "f40d7856-e186-5d68-bd94-32af65743e10"
+            },
+            {
+              "slot": 3,
+              "nodeId": "f40d7856-e186-5d68-bd94-32af65743e10"
+            },
+            {
+              "slot": 3,
+              "nodeId": "f40d7856-e186-5d68-bd94-32af65743e10"
+            },
+            {
+              "slot": 3,
+              "nodeId": "f678147c-2fa6-5450-b8a2-a4829d15f950"
+            }
+          ],
+          "recordOrder": false
+        },
+        "divinity": {
+          "inventory": [
+            {
+              "affixes": [
+                {
+                  "description": "+40 % Attack Critical Strike Rating when holding a Two-Handed Weapon",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/JL_AtkSpeed_64.webp",
+                  "modGuid": "df49f78a-db54-56a9-a40b-d4f72acae6d8",
+                  "nodeType": "Medium Talent",
+                  "slateType": "Onslaughter",
+                  "slotIndex": 0
+                },
+                {
+                  "description": "+1 to Attack Skill Level",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/JL_Atk_64.webp",
+                  "modGuid": "8e4b6fc8-9588-5509-8c48-0545c78d447a",
+                  "nodeType": "Legendary Medium Talent",
+                  "slateType": "God of Might",
+                  "slotIndex": 1
+                },
+                {
+                  "description": "+6 % Attack and Cast Speed\n+6 % Minion Attack and Cast Speed",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/JL_Agi_64.webp",
+                  "modGuid": "24661095-b0a9-552f-8164-85244b3c2bca",
+                  "nodeType": "Medium Talent",
+                  "slateType": "Warrior",
+                  "slotIndex": 2
+                },
+                {
+                  "description": "+6 % chance to Ignite targets\n+12 % Ignite chance for Minions",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/JL_DmgAll_64.webp",
+                  "modGuid": "c98e167f-c1b1-5251-8b85-eb0f3026d0b6",
+                  "nodeType": "Medium Talent",
+                  "slateType": "Warlord",
+                  "slotIndex": 3
+                },
+                {
+                  "description": "+20 % Attack Critical Strike Rating\n+5 % Critical Strike Damage",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/JL_DmgExtra_64.webp",
+                  "modGuid": "6ae4b653-0cfc-5e3a-bedc-1f50f9f11e1b",
+                  "nodeType": "Medium Talent",
+                  "slateType": "God of Might",
+                  "slotIndex": 4
+                }
+              ],
+              "god": "Might",
+              "id": "260506_f1e326b7-81d5-11f1-aa52-00000000113c",
+              "orientation": {
+                "flipH": true,
+                "flipV": false,
+                "rotation": 90
+              },
+              "shapeId": "L1",
+              "type": "rare"
+            },
+            {
+              "affixes": [
+                {
+                  "description": "Adds 13 - 17 Cold Damage to your and your Minions' Attacks and Spells",
+                  "icon": "",
+                  "modGuid": "a047a38b-c10c-5e2a-9bbb-1dc37eff8fda",
+                  "nodeType": "Micro",
+                  "slateType": "Nether King",
+                  "slotIndex": 0
+                },
+                {
+                  "description": "+3 % Max Life",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/JL_Agi_64.webp",
+                  "modGuid": "07716e81-5966-54ce-9f06-608a8e9731db",
+                  "nodeType": "Micro Talent",
+                  "slateType": "The Brave",
+                  "slotIndex": 2
+                },
+                {
+                  "description": "+8 Strength",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/JL_DmgEle_64.webp",
+                  "modGuid": "f5008aba-de20-581e-93c6-baaaf9782341",
+                  "nodeType": "Micro Talent",
+                  "slateType": "God of Might",
+                  "slotIndex": 3
+                }
+              ],
+              "id": "394001_2c84008e-81ed-11f1-9f16-000000001182",
+              "netherItemId": "08c7acfb-af8c-5fac-bd95-e959a49f2474",
+              "netherType": "Judgment",
+              "orientation": {
+                "flipH": false,
+                "flipV": false,
+                "rotation": 0
+              },
+              "shapeId": "O1",
+              "type": "netherking"
+            },
+            {
+              "affixes": [
+                {
+                  "description": "+5 to Max Frostbite Rating",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/ZS_Bow02_64.webp",
+                  "modGuid": "6cc2f5e1-0e33-5d1a-ad39-03edc606f263",
+                  "nodeType": "Medium Talent",
+                  "slateType": "Prophet",
+                  "slotIndex": 0
+                },
+                {
+                  "description": "+18 % damage",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/ZS_DmgAll_64.webp",
+                  "modGuid": "9b32fc6b-ca42-5f46-a259-1dbcbed879c2",
+                  "nodeType": "Medium Talent",
+                  "slateType": "Goddess of Knowledge",
+                  "slotIndex": 1
+                },
+                {
+                  "description": "+4 % Max Mana",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/ZS_Defence03_64.webp",
+                  "modGuid": "ca0a8e50-271a-5874-a232-3b31770fd6b9",
+                  "nodeType": "Micro Talent",
+                  "slateType": "Arcanist",
+                  "slotIndex": 2
+                },
+                {
+                  "description": "+10 % Focus Blessing Duration\n+10 % damage while Focus Blessing is active",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/ZS_Crit01_64.webp",
+                  "modGuid": "ed1ee811-d99a-5219-b0ab-8c9cf96f6023",
+                  "nodeType": "Micro Talent",
+                  "slateType": "Goddess of Knowledge",
+                  "slotIndex": 3
+                },
+                {
+                  "description": "+20 % Critical Strike Rating\n+5 % Critical Strike Damage",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/ZS_Crit01_64.webp",
+                  "modGuid": "300d68a3-0c5f-521b-843e-1279a87c0159",
+                  "nodeType": "Medium Talent",
+                  "slateType": "Arcanist",
+                  "slotIndex": 4
+                }
+              ],
+              "god": "Knowledge",
+              "id": "260205_75935362-81cd-11f1-894c-000000000020",
+              "orientation": {
+                "flipH": false,
+                "flipV": false,
+                "rotation": 0
+              },
+              "shapeId": "Z1",
+              "type": "rare"
+            },
+            {
+              "affixes": [
+                {
+                  "description": "+9 % Projectile Damage\n+6 % Projectile Speed",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/ZZ_DmgAll_64.webp",
+                  "modGuid": "5e56899a-93e4-55c3-ae71-31ae9f6bcc6c",
+                  "nodeType": "Medium Talent",
+                  "slateType": "Ranger",
+                  "slotIndex": 0
+                },
+                {
+                  "description": "Critical Strikes eliminate enemies under 8 % Life",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/ZZ_Crit02_64.webp",
+                  "modGuid": "02ce2b3d-cd06-5433-a698-4c7beb26a3a8",
+                  "nodeType": "Legendary Medium Talent",
+                  "slateType": "Ranger",
+                  "slotIndex": 1
+                },
+                {
+                  "description": "+30 % Critical Strike Rating",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/ZZ_Crit02_64.webp",
+                  "modGuid": "93daa249-e36c-5582-8d29-1f5af840ace8",
+                  "nodeType": "Medium Talent",
+                  "slateType": "Ranger",
+                  "slotIndex": 2
+                },
+                {
+                  "description": "+18 % Attack Damage",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/ZZ_DmgExtra_64.webp",
+                  "modGuid": "9ee401bf-3c49-535e-837f-52bbacbdc1f9",
+                  "nodeType": "Medium Talent",
+                  "slateType": "Ronin",
+                  "slotIndex": 3
+                },
+                {
+                  "description": "+12 % Skill Area\n+12 % Projectile Speed",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/ZZ_Area_64.webp",
+                  "modGuid": "00661c53-609b-56cc-970e-0c7e9a19d703",
+                  "nodeType": "Medium Talent",
+                  "slateType": "God of War",
+                  "slotIndex": 4
+                }
+              ],
+              "god": "War",
+              "id": "260302_a7af2b04-81fb-11f1-95eb-000000000110",
+              "orientation": {
+                "flipH": true,
+                "flipV": false,
+                "rotation": 0
+              },
+              "shapeId": "L1",
+              "type": "rare"
+            }
+          ],
+          "placements": [
+            {
+              "col": 2,
+              "row": 0,
+              "slateId": "260506_f1e326b7-81d5-11f1-aa52-00000000113c"
+            },
+            {
+              "col": 1,
+              "row": 1,
+              "slateId": "394001_2c84008e-81ed-11f1-9f16-000000001182"
+            },
+            {
+              "col": 1,
+              "row": 4,
+              "slateId": "260205_75935362-81cd-11f1-894c-000000000020"
+            },
+            {
+              "col": 0,
+              "row": 1,
+              "slateId": "260302_a7af2b04-81fb-11f1-95eb-000000000110"
+            }
+          ]
+        },
+        "pactspirits": [
+          {
+            "guid": "53f1db18-0d58-5ffc-b993-1a12d1110df4",
+            "level": 3,
+            "allocatedNodes": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11"
+            ],
+            "expansions": {}
+          },
+          {
+            "guid": "131210d1-0e5b-561d-b906-332223543916",
+            "level": 1,
+            "allocatedNodes": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11"
+            ],
+            "expansions": {}
+          },
+          {
+            "guid": "bfb31a4f-3d21-5171-8562-d8c9b9fd474e",
+            "level": 1,
+            "allocatedNodes": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11"
+            ],
+            "expansions": {}
+          }
+        ],
+        "kismets": [],
+        "scentBottle": null
+      },
+      {
+        "id": "tli_dump_loadout_tv3bak",
+        "name": "7B ice shot",
+        "order": 1,
+        "hiddenInGuide": false,
+        "hero": {
+          "heroGuid": "c89dce15-cbeb-562d-83ec-993059bbf0ec",
+          "heroId": "Bing: Blast Nova",
+          "traits": {
+            "level1": "7eb1ad5c-35ab-5ae8-a003-ba6cde830ade",
+            "level45": "4fbc0d8e-39e8-5033-bb23-c0352e019946",
+            "level60": "837b91e7-cf64-5e20-bb97-98d247d24906",
+            "level75": "e5c77ce6-703d-582a-a21a-327d918f5a85"
+          }
+        },
+        "heroMemories": {
+          "equipped": {
+            "slot45": "tli_dump_memory_1kwhnhf",
+            "slot60": "tli_dump_memory_1w3j61l",
+            "slot75": "tli_dump_memory_5q0gfk",
+            "slotLevel1Special": null
+          },
+          "inventory": [
+            {
+              "baseStat": {
+                "guid": "a1e0f3b3-41d9-513d-902f-57a7a3b67712",
+                "sign": "+",
+                "tier": 1,
+                "unit": null,
+                "value": 90
+              },
+              "fixedAffixes": [
+                {
+                  "guid": "d23ab90b-863c-578e-8662-f67b8423cfc2",
+                  "sign": "+",
+                  "tier": 1,
+                  "unit": "%",
+                  "value": 30
+                },
+                {
+                  "guid": "c20d2c88-ec26-54ed-b92c-ad12df87bcdb",
+                  "sign": "+",
+                  "tier": 3,
+                  "unit": "%",
+                  "value": 6
+                }
+              ],
+              "memoryType": "Origin",
+              "randomAffixes": [
+                {
+                  "guid": "77b82239-75e8-5864-b8a4-e708dcc1470f",
+                  "sign": "+",
+                  "tier": 2,
+                  "unit": "%",
+                  "value": 31
+                },
+                {
+                  "guid": "e12b7fb3-a261-5cb9-8988-7f8105b9612a",
+                  "sign": "+",
+                  "tier": 2,
+                  "unit": "%",
+                  "value": 32
+                }
+              ],
+              "rarity": "Legendary",
+              "waxAndWane": false,
+              "id": "tli_dump_memory_1kwhnhf"
+            },
+            {
+              "baseStat": {
+                "guid": "63e0e857-04ff-5637-bb0a-0805327bb8f1",
+                "sign": "+",
+                "tier": 17,
+                "unit": null,
+                "value": 337
+              },
+              "fixedAffixes": [
+                {
+                  "guid": "8f934586-a103-50cf-98d5-bbb6627bc3ea",
+                  "sign": "+",
+                  "tier": 3,
+                  "unit": "%",
+                  "value": 16
+                },
+                {
+                  "guid": "1139471d-591a-5896-80e0-7e216c99f738",
+                  "sign": "+",
+                  "tier": 3,
+                  "unit": "%",
+                  "value": 14
+                }
+              ],
+              "memoryType": "Discipline",
+              "randomAffixes": [],
+              "rarity": "Legendary",
+              "waxAndWane": false,
+              "id": "tli_dump_memory_1w3j61l"
+            },
+            {
+              "baseStat": {
+                "guid": "e621cd57-89e7-593b-87d4-88428194e3bf",
+                "sign": "+",
+                "tier": 1,
+                "unit": "%",
+                "value": 36
+              },
+              "fixedAffixes": [
+                {
+                  "guid": "aa77d8a1-83c0-5f72-8b71-3ed88040da86",
+                  "sign": "+",
+                  "tier": 1,
+                  "unit": "%",
+                  "value": 30
+                },
+                {
+                  "guid": "81c3bbfa-6a70-5ec4-9857-9c98f172b548",
+                  "sign": "+",
+                  "tier": 2,
+                  "unit": "%",
+                  "value": 10
+                }
+              ],
+              "memoryType": "Progress",
+              "randomAffixes": [
+                {
+                  "guid": "bf96ac95-45b1-59ca-aa03-0010e3e0ac27",
+                  "sign": "+",
+                  "tier": 3,
+                  "unit": "%",
+                  "value": 40
+                },
+                {
+                  "guid": "7222dcd6-2a48-5f46-8b22-0f10ba583067",
+                  "sign": "+",
+                  "tier": 2,
+                  "unit": "%",
+                  "value": 38
+                }
+              ],
+              "rarity": "Legendary",
+              "waxAndWane": false,
+              "id": "tli_dump_memory_5q0gfk"
+            }
+          ]
+        },
+        "etherealPrisms": {
+          "equipped": {
+            "slot1": null,
+            "slot2": null,
+            "slot3": null
+          },
+          "inventory": []
+        },
+        "gear": {
+          "equipped": {
+            "helmet": "tli_dump_gear_1wf0tr9",
+            "chest": "tli_dump_gear_frdu7c",
+            "gloves": "tli_dump_gear_w68wce",
+            "boots": "tli_dump_gear_1h9p6gh",
+            "belt": "tli_dump_gear_1qrm4t",
+            "ring1": "tli_dump_gear_1u9yqbe",
+            "ring2": "tli_dump_gear_o3su1s",
+            "necklace": "tli_dump_gear_17z2khg",
+            "mainHand": "tli_dump_gear_jittj9",
+            "offHand": null
+          },
+          "inventory": [
+            {
+              "id": "tli_dump_gear_1wf0tr9",
+              "gearCategory": "helmet",
+              "gearSubType": "dex_helmet",
+              "corrosionImplicit": null,
+              "beltBlend": null,
+              "displayName": "Blind Vision",
+              "displayIcon": "/images/legendaries/helmet/dex_helmet/Icon_Equip_Helmet_Epic_409_112.webp",
+              "rarity": "Legendary",
+              "legendaryItem": {
+                "legendaryId": "19dd76c6-42c5-5038-b183-c58c8291d59c",
+                "name": "Blind Vision",
+                "icon": "/images/legendaries/helmet/dex_helmet/Icon_Equip_Helmet_Epic_409_112.webp",
+                "requiredLevel": 1
+              },
+              "legendaryMods": [
+                {
+                  "modId": "7c58d0d7-3f89-5afd-9d3a-88b563898ee9",
+                  "description": "+238 Max Life",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 238,
+                      "minValue": 187,
+                      "maxValue": 242,
+                      "sign": "+"
+                    }
+                  ]
+                },
+                {
+                  "modId": "abcabd23-3f55-5a2b-948b-d8fae0fe7571",
+                  "description": "The Main Skill is supported by Lv. 10 Wind Projectiles.",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 10,
+                      "minValue": 10,
+                      "maxValue": 10
+                    }
+                  ]
+                },
+                {
+                  "modId": "dd438408-df17-5f61-ba0c-377c71681b05",
+                  "description": "67% of the Projectile Speed bonus is also applied to Projectile Damage",
+                  "variant": "normal",
+                  "rolledValues": [
+                    {
+                      "value": 67,
+                      "minValue": 50,
+                      "maxValue": 70,
+                      "unit": "%"
+                    }
+                  ]
+                },
+                {
+                  "modId": "463fc7f3-1aa9-5316-9e44-3a21fc64ae1b",
+                  "description": "Immune to Blinding",
+                  "variant": "normal",
+                  "rolledValues": []
+                }
+              ],
+              "randomAffixSlots": []
+            },
+            {
+              "id": "tli_dump_gear_1h9p6gh",
+              "gearCategory": "boots",
+              "gearSubType": "int_boots",
+              "corrosionImplicit": null,
+              "beltBlend": null,
+              "displayName": "Long Night Sorcerer's Boots",
+              "displayIcon": "/images/rare-gear/boots/int_boots/Icon_Equip_Shoes_Int_Norm_004_02_112.webp",
+              "rarity": "Rare",
+              "baseItem": {
+                "baseItemId": "1bdafe54-3851-5f86-af33-5914fc01edb0",
+                "name": "Long Night Sorcerer's Boots",
+                "icon": "/images/rare-gear/boots/int_boots/Icon_Equip_Shoes_Int_Norm_004_02_112.webp",
+                "requiredLevel": 82,
+                "implicits": [
+                  {
+                    "description": "+146 gear Energy Shield",
+                    "rawText": "+146 gear Energy Shield",
+                    "values": [
+                      {
+                        "maxValue": 146,
+                        "minValue": 146,
+                        "sign": "+",
+                        "value": 146
+                      }
+                    ]
+                  }
+                ]
+              },
+              "towerSequence": null,
+              "sweetDreamAffix": null,
+              "baseAffix": null,
+              "baseAffix2": null,
+              "prefixes": [
+                {
+                  "affixId": "94022b28-3511-593c-b406-e796fcb332aa",
+                  "tierId": "75a0df41-eb27-5c64-b2e7-78989a68a459",
+                  "modifierDescription": "+#% Projectile Speed",
+                  "rolledValues": [
+                    {
+                      "value": 44,
+                      "minValue": 33,
+                      "maxValue": 45,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                },
+                {
+                  "affixId": "5725d42e-3d0d-5a5b-9b43-ef4df0f83fae",
+                  "tierId": "44e31c8b-dee5-5d85-93c1-f708f102f416",
+                  "modifierDescription": "+#% gear Energy Shield",
+                  "rolledValues": [
+                    {
+                      "value": 41,
+                      "minValue": 39,
+                      "maxValue": 46,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "2"
+                },
+                {
+                  "affixId": "51082d86-fb73-579d-ba5d-59993d9e5aac",
+                  "tierId": "0bc6940b-7b2e-537b-bc78-a48bee4b0a74",
+                  "modifierDescription": "+# gear Energy Shield",
+                  "rolledValues": [
+                    {
+                      "value": 170,
+                      "minValue": 137,
+                      "maxValue": 170,
+                      "sign": "+"
+                    }
+                  ],
+                  "tier": "3"
+                }
+              ],
+              "suffixes": [
+                {
+                  "affixId": "caf195d6-b33f-5525-b341-8c4e436126c3",
+                  "tierId": "82731009-3a3b-5f81-9f76-f1e4704c44c4",
+                  "modifierDescription": "+#% Attack and Cast Speed\n+#% Minion Attack and Cast Speed",
+                  "rolledValues": [
+                    {
+                      "value": 20,
+                      "minValue": 18,
+                      "maxValue": 24,
+                      "sign": "+",
+                      "unit": "%"
+                    },
+                    {
+                      "value": 20,
+                      "minValue": 18,
+                      "maxValue": 24,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                },
+                {
+                  "affixId": "b8e92b1f-3415-5af3-a24f-7648cb6c5593",
+                  "tierId": "93c41a85-11f0-506d-a1e8-0ef842e178ba",
+                  "modifierDescription": "+#% Cold Resistance",
+                  "rolledValues": [
+                    {
+                      "value": 19,
+                      "minValue": 16,
+                      "maxValue": 19,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "2"
+                },
+                {
+                  "affixId": "6c8e8cb6-fb55-5296-8a1e-9bbd08ef8e6e",
+                  "tierId": "36894290-b750-5413-b6a3-b3b65f0f9694",
+                  "modifierDescription": "+#% Lightning Resistance",
+                  "rolledValues": [
+                    {
+                      "value": 17,
+                      "minValue": 16,
+                      "maxValue": 19,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "2"
+                }
+              ],
+              "customName": null,
+              "itemLevel": 86
+            },
+            {
+              "id": "tli_dump_gear_jittj9",
+              "gearCategory": "two_handed",
+              "gearSubType": "crossbow",
+              "corrosionImplicit": null,
+              "beltBlend": null,
+              "displayName": "War Ranger's Crossbow",
+              "displayIcon": "/images/rare-gear/two_handed/crossbow/Icon_Equip_Weapon_Crossbow_Norm_001_112.webp",
+              "rarity": "Rare",
+              "baseItem": {
+                "baseItemId": "7327dcfb-4b1a-56b2-99a5-bc61109d76f2",
+                "name": "War Ranger's Crossbow",
+                "icon": "/images/rare-gear/two_handed/crossbow/Icon_Equip_Weapon_Crossbow_Norm_001_112.webp",
+                "requiredLevel": 86,
+                "implicits": [
+                  {
+                    "description": "220 - 220 Physical Damage",
+                    "rawText": "220 - 220 Physical Damage",
+                    "values": [
+                      {
+                        "maxValue": 220,
+                        "minValue": 220,
+                        "value": 220
+                      },
+                      {
+                        "maxValue": 220,
+                        "minValue": 220,
+                        "value": 220
+                      }
+                    ]
+                  },
+                  {
+                    "description": "500 Critical Strike Rating",
+                    "rawText": "500 Critical Strike Rating",
+                    "values": [
+                      {
+                        "maxValue": 500,
+                        "minValue": 500,
+                        "value": 500
+                      }
+                    ]
+                  },
+                  {
+                    "description": "1.5 Attack Speed",
+                    "rawText": "1.5 Attack Speed",
+                    "values": [
+                      {
+                        "maxValue": 1.5,
+                        "minValue": 1.5,
+                        "value": 1.5
+                      }
+                    ]
+                  }
+                ]
+              },
+              "towerSequence": null,
+              "sweetDreamAffix": null,
+              "baseAffix": null,
+              "baseAffix2": null,
+              "prefixes": [
+                {
+                  "affixId": "b1ea0d44-7b94-5078-b79f-92b574752db1",
+                  "tierId": "24998900-6d5a-5471-91af-3bc8be1a6ab1",
+                  "modifierDescription": "Adds # - # Physical Damage to the gear",
+                  "rolledValues": [
+                    {
+                      "value": 73,
+                      "minValue": 71,
+                      "maxValue": 73
+                    },
+                    {
+                      "value": 87,
+                      "minValue": 87,
+                      "maxValue": 89
+                    }
+                  ],
+                  "tier": "1"
+                },
+                {
+                  "affixId": "bfa3d5c2-8a95-58c9-b05e-1b3cae0ef1ae",
+                  "tierId": "a8d1c863-c83f-51af-aea4-8d3436c83e89",
+                  "modifierDescription": "+#% Gear Physical Damage",
+                  "rolledValues": [
+                    {
+                      "value": 70,
+                      "minValue": 49,
+                      "maxValue": 80,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                },
+                {
+                  "affixId": "92562fd3-4558-5d7a-9e2c-a1657074465c",
+                  "tierId": "d69bd761-2203-5b89-af0d-dc0d4b88bb8b",
+                  "modifierDescription": "Adds # - # Cold Damage to the gear",
+                  "rolledValues": [
+                    {
+                      "value": 156,
+                      "minValue": 154,
+                      "maxValue": 156
+                    },
+                    {
+                      "value": 205,
+                      "minValue": 204,
+                      "maxValue": 206
+                    }
+                  ],
+                  "tier": "1"
+                }
+              ],
+              "suffixes": [
+                {
+                  "affixId": "03dadac8-d9a0-526f-81b6-234cd8376868",
+                  "tierId": "ef986c46-183c-51d7-8210-0a229fb21061",
+                  "modifierDescription": "+#% Elemental Damage",
+                  "rolledValues": [
+                    {
+                      "value": 204,
+                      "minValue": 152,
+                      "maxValue": 216,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                },
+                {
+                  "affixId": "12e8fb25-f708-5719-8de1-7dfe75c4bd00",
+                  "tierId": "3d68cb10-7243-5704-a182-5ba98b55728a",
+                  "modifierDescription": "+#% Critical Strike Damage",
+                  "rolledValues": [
+                    {
+                      "value": 117,
+                      "minValue": 91,
+                      "maxValue": 126,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "2"
+                },
+                {
+                  "affixId": "c69cef00-f8d8-579b-9125-bfb37d6414b5",
+                  "tierId": "7f24fa3f-72a2-56ad-a7db-b901fb2da78d",
+                  "modifierDescription": "+#% Physical Damage",
+                  "rolledValues": [
+                    {
+                      "value": 204,
+                      "minValue": 152,
+                      "maxValue": 216,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                }
+              ],
+              "customName": null,
+              "itemLevel": 86
+            },
+            {
+              "id": "tli_dump_gear_frdu7c",
+              "gearCategory": "chest_armor",
+              "gearSubType": "int_chest_armor",
+              "corrosionImplicit": null,
+              "beltBlend": null,
+              "displayName": "Long Night Sorcerer's Robe",
+              "displayIcon": "/images/rare-gear/chest_armor/int_chest_armor/Icon_Equip_Armor_Int_Norm_004_02_112.webp",
+              "rarity": "Rare",
+              "baseItem": {
+                "baseItemId": "572a8bcb-d574-5365-bc9a-a65e40b7debd",
+                "name": "Long Night Sorcerer's Robe",
+                "icon": "/images/rare-gear/chest_armor/int_chest_armor/Icon_Equip_Armor_Int_Norm_004_02_112.webp",
+                "requiredLevel": 82,
+                "implicits": [
+                  {
+                    "description": "+170 gear Energy Shield",
+                    "rawText": "+170 gear Energy Shield",
+                    "values": [
+                      {
+                        "maxValue": 170,
+                        "minValue": 170,
+                        "sign": "+",
+                        "value": 170
+                      }
+                    ]
+                  }
+                ]
+              },
+              "towerSequence": null,
+              "sweetDreamAffix": null,
+              "baseAffix": null,
+              "baseAffix2": null,
+              "prefixes": [
+                {
+                  "affixId": "2625b2ea-4931-5f9c-89d5-ac6a59f50918",
+                  "tierId": "dedc1a41-0853-58b2-baef-9bdc7880e340",
+                  "modifierDescription": "+# gear Energy Shield",
+                  "rolledValues": [
+                    {
+                      "value": 275,
+                      "minValue": 201,
+                      "maxValue": 280,
+                      "sign": "+"
+                    }
+                  ],
+                  "tier": "2"
+                },
+                {
+                  "affixId": "6875aae5-6658-556d-a65c-39d3bbc2e009",
+                  "tierId": "21e4d8dc-0832-5853-91bb-68486031df52",
+                  "modifierDescription": "+# Dexterity",
+                  "rolledValues": [
+                    {
+                      "value": 42,
+                      "minValue": 31,
+                      "maxValue": 42,
+                      "sign": "+"
+                    }
+                  ],
+                  "tier": "2"
+                },
+                {
+                  "affixId": "12c51350-c994-57be-a74a-8fbe5c4b701c",
+                  "tierId": "e146c43d-5fa6-59aa-9d9b-0f6dac3946d2",
+                  "modifierDescription": "+#% gear Energy Shield",
+                  "rolledValues": [
+                    {
+                      "value": 61,
+                      "minValue": 47,
+                      "maxValue": 66,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                }
+              ],
+              "suffixes": [
+                {
+                  "affixId": "fbf49ef2-88ff-5327-a562-2d2ffec00656",
+                  "tierId": "ea279b8c-c7dc-5403-ab78-028c353ed942",
+                  "modifierDescription": "+#% Attack and Cast Speed\n+#% Minion Attack and Cast Speed",
+                  "rolledValues": [
+                    {
+                      "value": 18,
+                      "minValue": 18,
+                      "maxValue": 24,
+                      "sign": "+",
+                      "unit": "%"
+                    },
+                    {
+                      "value": 18,
+                      "minValue": 18,
+                      "maxValue": 24,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                },
+                {
+                  "affixId": "523ab0a8-fcdf-503e-9b3c-d43bc47c9d05",
+                  "tierId": "ec49fc9d-badd-5853-9439-10042f9c50aa",
+                  "modifierDescription": "+#% Critical Strike Rating",
+                  "rolledValues": [
+                    {
+                      "value": 82,
+                      "minValue": 62,
+                      "maxValue": 86,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "2"
+                },
+                {
+                  "affixId": "6641b6d2-509c-5a5f-aa6c-33f977b97c90",
+                  "tierId": "edaa7c6e-4dba-5a11-9f5a-c31a42618fa3",
+                  "modifierDescription": "+#% Fire Resistance",
+                  "rolledValues": [
+                    {
+                      "value": 19,
+                      "minValue": 16,
+                      "maxValue": 19,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "2"
+                }
+              ],
+              "customName": null,
+              "itemLevel": 87
+            },
+            {
+              "id": "tli_dump_gear_17z2khg",
+              "gearCategory": "trinket",
+              "gearSubType": "necklace",
+              "corrosionImplicit": null,
+              "beltBlend": null,
+              "displayName": "Onslaughter's Pendant",
+              "displayIcon": "/images/rare-gear/trinket/necklace/Icon_Equip_Amulet_Norm_005_03_112.webp",
+              "rarity": "Rare",
+              "baseItem": {
+                "baseItemId": "646bb5f3-b7bf-5da9-81e6-31b7b206a20f",
+                "name": "Onslaughter's Pendant",
+                "icon": "/images/rare-gear/trinket/necklace/Icon_Equip_Amulet_Norm_005_03_112.webp",
+                "requiredLevel": 86,
+                "implicits": [
+                  {
+                    "description": "+24 Dexterity",
+                    "rawText": "+24 Dexterity",
+                    "values": [
+                      {
+                        "maxValue": 24,
+                        "minValue": 24,
+                        "sign": "+",
+                        "value": 24
+                      }
+                    ]
+                  }
+                ]
+              },
+              "towerSequence": null,
+              "sweetDreamAffix": null,
+              "baseAffix": null,
+              "baseAffix2": null,
+              "prefixes": [
+                {
+                  "affixId": "5fcb8eb0-523a-5678-9964-63b69cae4de8",
+                  "tierId": "3c5f31b0-e254-5b04-8374-0ba236493001",
+                  "modifierDescription": "+#% damage",
+                  "rolledValues": [
+                    {
+                      "value": 62,
+                      "minValue": 51,
+                      "maxValue": 72,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                },
+                {
+                  "affixId": "ad894df1-3980-5034-86f1-e3ccedfbfaa9",
+                  "tierId": "3d49070d-2631-530d-aef3-8ee0ab9e0c78",
+                  "modifierDescription": "+# Dexterity",
+                  "rolledValues": [
+                    {
+                      "value": 60,
+                      "minValue": 43,
+                      "maxValue": 60,
+                      "sign": "+"
+                    }
+                  ],
+                  "tier": "1"
+                },
+                {
+                  "affixId": "b0af4d63-3e5c-551a-a1c3-9df6d766c280",
+                  "tierId": "9f83ab69-e783-5306-8936-05f4e5435bfa",
+                  "modifierDescription": "Gains Attack Aggression when casting an Attack Skill\n+#% Attack Aggression Effect",
+                  "rolledValues": [
+                    {
+                      "value": 23,
+                      "minValue": 10,
+                      "maxValue": 30,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                }
+              ],
+              "suffixes": [
+                {
+                  "affixId": "fc7cd587-f4de-53b4-b581-afef30a663f4",
+                  "tierId": "7b1d3979-59f3-5ba9-a7e1-98ba7fa6120f",
+                  "modifierDescription": "+#% Fire Resistance",
+                  "rolledValues": [
+                    {
+                      "value": 17,
+                      "minValue": 16,
+                      "maxValue": 19,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "2"
+                },
+                {
+                  "affixId": "7ac5f76e-fc1d-573a-ab73-ead3f4d915a0",
+                  "tierId": "32b0f9b7-6d61-5a2e-9136-b57da2f3fae1",
+                  "modifierDescription": "+#% Projectile Speed",
+                  "rolledValues": [
+                    {
+                      "value": 40,
+                      "minValue": 33,
+                      "maxValue": 45,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                },
+                {
+                  "affixId": "669a87c3-f80e-5012-b39e-638e7fe226fd",
+                  "tierId": "787b6a97-3f56-5838-b0bf-dc447f9a979b",
+                  "modifierDescription": "+#% Cold Resistance",
+                  "rolledValues": [
+                    {
+                      "value": 13,
+                      "minValue": 11,
+                      "maxValue": 14,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "3"
+                }
+              ],
+              "customName": null,
+              "itemLevel": 88
+            },
+            {
+              "id": "tli_dump_gear_1u9yqbe",
+              "gearCategory": "trinket",
+              "gearSubType": "ring",
+              "corrosionImplicit": null,
+              "beltBlend": null,
+              "displayName": "Perishing Inferno Flame Ring",
+              "displayIcon": "/images/rare-gear/trinket/ring/Icon_Equip_Ring_Norm_002_02_112.webp",
+              "rarity": "Rare",
+              "baseItem": {
+                "baseItemId": "44654c87-8d9a-55b7-9015-5c59c5580dc8",
+                "name": "Perishing Inferno Flame Ring",
+                "icon": "/images/rare-gear/trinket/ring/Icon_Equip_Ring_Norm_002_02_112.webp",
+                "requiredLevel": 82,
+                "implicits": [
+                  {
+                    "description": "+12% Fire Resistance",
+                    "rawText": "+12% Fire Resistance",
+                    "values": [
+                      {
+                        "maxValue": 12,
+                        "minValue": 12,
+                        "sign": "+",
+                        "unit": "%",
+                        "value": 12
+                      }
+                    ]
+                  }
+                ]
+              },
+              "towerSequence": null,
+              "sweetDreamAffix": null,
+              "baseAffix": null,
+              "baseAffix2": null,
+              "prefixes": [
+                {
+                  "affixId": "f50891e6-2d53-5c6d-b6f5-45abd2dbcd24",
+                  "tierId": "6a023196-1498-5ea3-be69-ea3286d5bb15",
+                  "modifierDescription": "+# Max Energy Shield",
+                  "rolledValues": [
+                    {
+                      "value": 231,
+                      "minValue": 206,
+                      "maxValue": 245,
+                      "sign": "+"
+                    }
+                  ],
+                  "tier": "2"
+                },
+                {
+                  "affixId": "8b35a1eb-328a-5a8a-b0bf-226565c9f776",
+                  "tierId": "a64922f9-0b62-54d1-a3fd-db5a70ab3a83",
+                  "modifierDescription": "Adds # - # Physical Damage to Attacks and Spells",
+                  "rolledValues": [
+                    {
+                      "value": 45,
+                      "minValue": 44,
+                      "maxValue": 46
+                    },
+                    {
+                      "value": 55,
+                      "minValue": 54,
+                      "maxValue": 56
+                    }
+                  ],
+                  "tier": "1"
+                },
+                {
+                  "affixId": "8eab2769-311e-54a1-8116-7b86de5ba08d",
+                  "tierId": "076663c0-8821-549b-a379-259563b17b40",
+                  "modifierDescription": "+#% damage",
+                  "rolledValues": [
+                    {
+                      "value": 52,
+                      "minValue": 51,
+                      "maxValue": 72,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                }
+              ],
+              "suffixes": [
+                {
+                  "affixId": "37acc15f-0b30-580d-beaf-34504e2607ae",
+                  "tierId": "2b982e4d-2902-520a-8fff-16ebc9b2c5e1",
+                  "modifierDescription": "+# to Max Frostbite Rating",
+                  "rolledValues": [
+                    {
+                      "value": 14,
+                      "minValue": 11,
+                      "maxValue": 14,
+                      "sign": "+"
+                    }
+                  ],
+                  "tier": "2"
+                },
+                {
+                  "affixId": "f5196b5b-7fe4-5ec7-9356-c90278b83e86",
+                  "tierId": "6b30a81c-a1e1-5052-b43d-b8fe50190040",
+                  "modifierDescription": "+#% Critical Strike Rating",
+                  "rolledValues": [
+                    {
+                      "value": 114,
+                      "minValue": 87,
+                      "maxValue": 120,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                },
+                {
+                  "affixId": "026857de-6d48-5640-a84f-73542b1f5fc7",
+                  "tierId": "be81c713-6be7-5d19-aaed-91fdecb20f2d",
+                  "modifierDescription": "+#% Lightning Resistance",
+                  "rolledValues": [
+                    {
+                      "value": 25,
+                      "minValue": 19,
+                      "maxValue": 27,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                }
+              ],
+              "customName": null,
+              "itemLevel": 86
+            },
+            {
+              "id": "tli_dump_gear_o3su1s",
+              "gearCategory": "trinket",
+              "gearSubType": "ring",
+              "corrosionImplicit": null,
+              "beltBlend": null,
+              "displayName": "Eternal Sleep Ice Ring",
+              "displayIcon": "/images/rare-gear/trinket/ring/Icon_Equip_Ring_Norm_002_02_112.webp",
+              "rarity": "Rare",
+              "baseItem": {
+                "baseItemId": "d2fb27cd-b267-5846-8066-f0f11eb0ab26",
+                "name": "Eternal Sleep Ice Ring",
+                "icon": "/images/rare-gear/trinket/ring/Icon_Equip_Ring_Norm_002_02_112.webp",
+                "requiredLevel": 82,
+                "implicits": [
+                  {
+                    "description": "+12% Cold Resistance",
+                    "rawText": "+12% Cold Resistance",
+                    "values": [
+                      {
+                        "maxValue": 12,
+                        "minValue": 12,
+                        "sign": "+",
+                        "unit": "%",
+                        "value": 12
+                      }
+                    ]
+                  }
+                ]
+              },
+              "towerSequence": null,
+              "sweetDreamAffix": null,
+              "baseAffix": null,
+              "baseAffix2": null,
+              "prefixes": [
+                {
+                  "affixId": "8eab2769-311e-54a1-8116-7b86de5ba08d",
+                  "tierId": "076663c0-8821-549b-a379-259563b17b40",
+                  "modifierDescription": "+#% damage",
+                  "rolledValues": [
+                    {
+                      "value": 67,
+                      "minValue": 51,
+                      "maxValue": 72,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                },
+                {
+                  "affixId": "59aa5d05-7def-56f1-ba2e-0e4b39d57bb9",
+                  "tierId": "a7cad2cc-8ae5-59d0-9c1a-8fe961cdef0b",
+                  "modifierDescription": "+# Dexterity",
+                  "rolledValues": [
+                    {
+                      "value": 38,
+                      "minValue": 31,
+                      "maxValue": 42,
+                      "sign": "+"
+                    }
+                  ],
+                  "tier": "2"
+                },
+                {
+                  "affixId": "f50891e6-2d53-5c6d-b6f5-45abd2dbcd24",
+                  "tierId": "0e9afdf7-b4fb-5ade-9ec4-8cae8a69e845",
+                  "modifierDescription": "+# Max Energy Shield",
+                  "rolledValues": [
+                    {
+                      "value": 167,
+                      "minValue": 147,
+                      "maxValue": 175,
+                      "sign": "+"
+                    }
+                  ],
+                  "tier": "3"
+                }
+              ],
+              "suffixes": [
+                {
+                  "affixId": "f5196b5b-7fe4-5ec7-9356-c90278b83e86",
+                  "tierId": "6b30a81c-a1e1-5052-b43d-b8fe50190040",
+                  "modifierDescription": "+#% Critical Strike Rating",
+                  "rolledValues": [
+                    {
+                      "value": 93,
+                      "minValue": 87,
+                      "maxValue": 120,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                },
+                {
+                  "affixId": "b4427cc2-e8e8-572f-aafd-887950548564",
+                  "tierId": "fd3a653a-87fe-56b8-a31e-fe994a5d45b9",
+                  "modifierDescription": "+#% Fire Resistance",
+                  "rolledValues": [
+                    {
+                      "value": 12,
+                      "minValue": 11,
+                      "maxValue": 14,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "3"
+                },
+                {
+                  "affixId": "37acc15f-0b30-580d-beaf-34504e2607ae",
+                  "tierId": "8dec55f0-85af-5452-b3b0-702fb0369e82",
+                  "modifierDescription": "+# to Max Frostbite Rating",
+                  "rolledValues": [
+                    {
+                      "value": 10,
+                      "minValue": 8,
+                      "maxValue": 10,
+                      "sign": "+"
+                    }
+                  ],
+                  "tier": "3"
+                }
+              ],
+              "customName": null,
+              "itemLevel": 86
+            },
+            {
+              "id": "tli_dump_gear_1qrm4t",
+              "gearCategory": "trinket",
+              "gearSubType": "belt",
+              "corrosionImplicit": null,
+              "beltBlend": {
+                "blendId": "eed210ba-7f7a-5cca-81b5-9e0745098afb",
+                "description": "+10% additional damage against Frozen enemies",
+                "rolledValues": [],
+                "type": "Medium Talent Lv.0",
+                "modifierId": "3401012"
+              },
+              "displayName": "Arcanist Girdle",
+              "displayIcon": "/images/rare-gear/trinket/belt/Icon_Equip_Belt_Norm_003_02_112.webp",
+              "rarity": "Rare",
+              "baseItem": {
+                "baseItemId": "0765171a-8d4e-5045-914f-1c50fd073b66",
+                "name": "Arcanist Girdle",
+                "icon": "/images/rare-gear/trinket/belt/Icon_Equip_Belt_Norm_003_02_112.webp",
+                "requiredLevel": 76,
+                "implicits": [
+                  {
+                    "description": "+110 Max Energy Shield",
+                    "rawText": "+110 Max Energy Shield",
+                    "values": [
+                      {
+                        "maxValue": 110,
+                        "minValue": 110,
+                        "sign": "+",
+                        "value": 110
+                      }
+                    ]
+                  }
+                ]
+              },
+              "towerSequence": null,
+              "sweetDreamAffix": null,
+              "baseAffix": null,
+              "baseAffix2": null,
+              "prefixes": [
+                {
+                  "affixId": "1bf2424f-23f9-52ba-8911-e3afbb2a0a16",
+                  "tierId": "0bd48e1b-12cb-5884-b03b-4d6aa8bab17a",
+                  "modifierDescription": "+# Dexterity",
+                  "rolledValues": [
+                    {
+                      "value": 37,
+                      "minValue": 31,
+                      "maxValue": 42,
+                      "sign": "+"
+                    }
+                  ],
+                  "tier": "2"
+                },
+                {
+                  "affixId": "e6766477-2d27-56b7-99c2-7e995b5d38db",
+                  "tierId": "08c4d51c-b41c-5595-a5c6-616f691e508e",
+                  "modifierDescription": "+#% damage",
+                  "rolledValues": [
+                    {
+                      "value": 43,
+                      "minValue": 37,
+                      "maxValue": 50,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "2"
+                },
+                {
+                  "affixId": "427266cf-d289-55d5-a87e-52d65f39e140",
+                  "tierId": "65b85724-e77d-56be-b1c0-d3e1338cc947",
+                  "modifierDescription": "+# Max Energy Shield",
+                  "rolledValues": [
+                    {
+                      "value": 238,
+                      "minValue": 176,
+                      "maxValue": 245,
+                      "sign": "+"
+                    }
+                  ],
+                  "tier": "2"
+                }
+              ],
+              "suffixes": [
+                {
+                  "affixId": "f22c6507-651c-587f-9adb-7e83c8a95066",
+                  "tierId": "838f0614-b671-5dba-9dbe-1ac68974cba7",
+                  "modifierDescription": "+#% Lightning Resistance",
+                  "rolledValues": [
+                    {
+                      "value": 19,
+                      "minValue": 16,
+                      "maxValue": 19,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "2"
+                },
+                {
+                  "affixId": "68895c23-9604-5faf-8838-25c4dea60a86",
+                  "tierId": "6dc79f6b-6054-5444-9323-019de1ba4244",
+                  "modifierDescription": "+#% Fire Resistance",
+                  "rolledValues": [
+                    {
+                      "value": 17,
+                      "minValue": 16,
+                      "maxValue": 19,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "2"
+                },
+                {
+                  "affixId": "4ecc7cd5-53b2-514b-b6cc-ec790c1a9bc7",
+                  "tierId": "11388cb7-0115-5f06-b017-ca8a1bd20833",
+                  "modifierDescription": "+#% Cold Resistance",
+                  "rolledValues": [
+                    {
+                      "value": 18,
+                      "minValue": 16,
+                      "maxValue": 19,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "2"
+                }
+              ],
+              "customName": null,
+              "itemLevel": 82
+            },
+            {
+              "id": "tli_dump_gear_w68wce",
+              "gearCategory": "gloves",
+              "gearSubType": "int_gloves",
+              "corrosionImplicit": null,
+              "beltBlend": null,
+              "displayName": "Long Night Sorcerer's Wristband",
+              "displayIcon": "/images/rare-gear/gloves/int_gloves/Icon_Equip_Gloves_Int_Norm_004_02_112.webp",
+              "rarity": "Rare",
+              "baseItem": {
+                "baseItemId": "171a960d-e38e-55ce-924f-860f973bd480",
+                "name": "Long Night Sorcerer's Wristband",
+                "icon": "/images/rare-gear/gloves/int_gloves/Icon_Equip_Gloves_Int_Norm_004_02_112.webp",
+                "requiredLevel": 82,
+                "implicits": [
+                  {
+                    "description": "+146 gear Energy Shield",
+                    "rawText": "+146 gear Energy Shield",
+                    "values": [
+                      {
+                        "maxValue": 146,
+                        "minValue": 146,
+                        "sign": "+",
+                        "value": 146
+                      }
+                    ]
+                  }
+                ]
+              },
+              "towerSequence": null,
+              "sweetDreamAffix": null,
+              "baseAffix": null,
+              "baseAffix2": null,
+              "prefixes": [
+                {
+                  "affixId": "a0d311c9-72fc-5a4b-8fac-eb99dc0c0dbb",
+                  "tierId": "acdd8686-a036-5409-81fa-034aa9606f90",
+                  "modifierDescription": "Adds # - # Physical Damage to Attacks and Spells",
+                  "rolledValues": [
+                    {
+                      "value": 44,
+                      "minValue": 44,
+                      "maxValue": 46
+                    },
+                    {
+                      "value": 56,
+                      "minValue": 54,
+                      "maxValue": 56
+                    }
+                  ],
+                  "tier": "1"
+                },
+                {
+                  "affixId": "41b69b1d-41db-5f3b-a654-78cdd2f02dcc",
+                  "tierId": "bef84354-aae8-5299-b559-136703228421",
+                  "modifierDescription": "+# gear Energy Shield",
+                  "rolledValues": [
+                    {
+                      "value": 328,
+                      "minValue": 239,
+                      "maxValue": 340,
+                      "sign": "+"
+                    }
+                  ],
+                  "tier": "1"
+                },
+                {
+                  "affixId": "964b0456-9236-52a0-b5eb-2a1dcd83b226",
+                  "tierId": "74821c9b-8c42-5bed-96dd-75abae573083",
+                  "modifierDescription": "+#% damage",
+                  "rolledValues": [
+                    {
+                      "value": 66,
+                      "minValue": 51,
+                      "maxValue": 72,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                }
+              ],
+              "suffixes": [
+                {
+                  "affixId": "ea974875-1cb7-5a81-8f98-5b0ac9b85f5d",
+                  "tierId": "aebe0eca-9165-5ba8-9dcb-71f5f6a5764b",
+                  "modifierDescription": "+#% Cold Resistance",
+                  "rolledValues": [
+                    {
+                      "value": 27,
+                      "minValue": 19,
+                      "maxValue": 27,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                },
+                {
+                  "affixId": "ca1e2b6b-b26d-5d2a-9430-73672cc77892",
+                  "tierId": "a124b6f5-8674-5077-8f1f-e0ae37fab3da",
+                  "modifierDescription": "+#% Attack and Cast Speed\n+#% Minion Attack and Cast Speed",
+                  "rolledValues": [
+                    {
+                      "value": 17,
+                      "minValue": 17,
+                      "maxValue": 24,
+                      "sign": "+",
+                      "unit": "%"
+                    },
+                    {
+                      "value": 17,
+                      "minValue": 17,
+                      "maxValue": 24,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                },
+                {
+                  "affixId": "23610dac-5062-57a3-bddb-3a545743079f",
+                  "tierId": "db83d3cd-22d2-5ae3-9221-6e175563af80",
+                  "modifierDescription": "+#% Life Regain and Energy Shield Regain",
+                  "rolledValues": [
+                    {
+                      "value": 10,
+                      "minValue": 8,
+                      "maxValue": 10,
+                      "sign": "+",
+                      "unit": "%"
+                    }
+                  ],
+                  "tier": "1"
+                }
+              ],
+              "customName": null,
+              "itemLevel": 87
+            }
+          ]
+        },
+        "vorax": {
+          "equipped": {
+            "chest": null,
+            "head": null,
+            "hands": null,
+            "legs": null,
+            "neck": null,
+            "digits": null,
+            "waist": null
+          },
+          "inventory": []
+        },
+        "skills": {
+          "activeSkills": [
+            {
+              "skillGuid": "7f844a9e-9abc-59b6-9baf-18b43efc753e",
+              "enabled": true,
+              "level": 20,
+              "supports": [
+                {
+                  "supportGuid": "faa709b0-6a3a-5158-9db6-5e6c442bd106",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_ExtraProjectiles_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "dcb47367-34df-5e86-a9df-0b5d5f130998",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_IncreasedCriticalDamage_128.webp",
+                  "level": 20
+                },
+                {
+                  "icon": "/images/skill/UI_Skill_Iceshot_support01_Icon_128.webp",
+                  "rank": 1,
+                  "rollValues": [
+                    0.24
+                  ],
+                  "supportGuid": "c8e475d4-3d27-5e11-9a5e-8bb0ffcc44cb",
+                  "tier": 2,
+                  "type": "magnificent_support"
+                },
+                {
+                  "supportGuid": "56c49853-7d67-5a43-bfe7-0cfe5c7e3d84",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_SlowerProjectiles_128.webp",
+                  "level": 20
+                },
+                {
+                  "icon": "/images/skill/UI_Skill_Iceshot_support02_Icon_128.webp",
+                  "rank": 1,
+                  "rollValues": [
+                    -6
+                  ],
+                  "supportGuid": "b4109242-4a85-5137-b400-faf98fb618fe",
+                  "tier": 2,
+                  "type": "noble_support"
+                }
+              ]
+            },
+            {
+              "skillGuid": "77d9dae1-36e5-5804-9d47-de2786e599e9",
+              "enabled": true,
+              "level": 20,
+              "supports": [
+                {
+                  "supportGuid": "695b62ab-9582-5981-80c8-4678f5359fc5",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_FasterTravel_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "dbd9d783-3a5b-514f-b23b-e7e14bcfb14b",
+                  "type": "support",
+                  "icon": "/images/skill/UI_Skill_IntermittentBursts_Icon_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "0dc9d1be-7284-5f07-b218-979b72b43e42",
+                  "type": "support",
+                  "icon": "/images/skill/UI_Skill_AccelerateAfterSpell_Icon_128.webp",
+                  "level": 20
+                },
+                null,
+                null
+              ]
+            },
+            {
+              "skillGuid": "12d2d764-a129-5229-89f3-7c89c004bdf1",
+              "enabled": true,
+              "level": 20,
+              "supports": [
+                {
+                  "icon": "/images/skill/UI_Skill_CMStrongRival_Icon_128.webp",
+                  "rollValues": [
+                    25,
+                    25,
+                    14
+                  ],
+                  "supportGuid": "aedc4348-5c67-5bd2-80cb-795c81743e0c",
+                  "tier": 1,
+                  "type": "activation_medium"
+                },
+                {
+                  "supportGuid": "2fd5c01f-311c-57ad-b2cc-5a2f46aa210e",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_IncreasedDuration_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "f4d8b862-1282-5365-9efc-62c87f049434",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_CooldownReduce_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "79287ff6-09c6-5148-bcf4-1526477704a5",
+                  "type": "support",
+                  "icon": "/images/skill/UI_Skill_BathInBlood_Icon_128.webp",
+                  "level": 20
+                },
+                null
+              ]
+            },
+            {
+              "skillGuid": "f6c01837-6901-5a04-9e16-877512c29db5",
+              "enabled": true,
+              "level": 20,
+              "supports": [
+                {
+                  "icon": "/images/skill/UI_Skill_CMStationaryUse_Icon_128.webp",
+                  "rollValues": [],
+                  "supportGuid": "2a5b5be6-f54e-58fc-9acb-47facff516e0",
+                  "tier": 1,
+                  "type": "activation_medium"
+                },
+                {
+                  "supportGuid": "c0525b3d-e8fb-5017-affe-f63c4c96e031",
+                  "type": "support",
+                  "icon": "/images/skill/UI_Skill_MassEffect_Icon_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "79287ff6-09c6-5148-bcf4-1526477704a5",
+                  "type": "support",
+                  "icon": "/images/skill/UI_Skill_BathInBlood_Icon_128.webp",
+                  "level": 20
+                },
+                null,
+                null
+              ]
+            },
+            {
+              "skillGuid": "3a77b3ec-7ef9-5647-8690-ea08df1146d0",
+              "enabled": true,
+              "level": 20,
+              "supports": [
+                {
+                  "icon": "/images/skill/UI_Skill_CMStrongRival_Icon_128.webp",
+                  "rollValues": [
+                    7,
+                    7,
+                    16
+                  ],
+                  "supportGuid": "aedc4348-5c67-5bd2-80cb-795c81743e0c",
+                  "tier": 2,
+                  "type": "activation_medium"
+                },
+                {
+                  "supportGuid": "97c67888-18c1-5bed-aae2-cdea40f2c1e5",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_IncreasedArea_128.webp",
+                  "level": 20
+                },
+                null,
+                null,
+                null
+              ]
+            }
+          ],
+          "passiveSkills": [
+            {
+              "skillGuid": "97825e91-6736-5a36-ba4f-be7c7f650795",
+              "enabled": true,
+              "level": 20,
+              "supports": [
+                {
+                  "supportGuid": "3fefae98-44ff-510d-a6ea-57acd1063669",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_Enlightenment_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "a69e9a49-3163-52c0-9d64-f2d08ccb9e00",
+                  "type": "support",
+                  "icon": "/images/skill/UI_SkillIcon_Support_BloodMagic_Icon_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "38b31949-b85f-5262-b765-40a0c9b7416c",
+                  "type": "support",
+                  "icon": "/images/skill/UI_SkillIcon_Skill_FieldOfShield_Icon_128.webp",
+                  "level": 20
+                },
+                null,
+                null
+              ]
+            },
+            {
+              "skillGuid": "155c0bf6-adf6-52d3-926c-a25e2a3170bb",
+              "enabled": true,
+              "level": 20,
+              "supports": [
+                {
+                  "supportGuid": "ae0fb5dd-d7ff-5107-971b-ace6c95fed64",
+                  "type": "support",
+                  "icon": "/images/skill/UI_Skill_AuraEnhance_Icon_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "3fefae98-44ff-510d-a6ea-57acd1063669",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_Enlightenment_128.webp",
+                  "level": 20
+                },
+                null,
+                null,
+                null
+              ]
+            },
+            {
+              "skillGuid": "bd7007ce-4c8c-5ca1-ba92-2c3f4dc108a3",
+              "enabled": true,
+              "level": 20,
+              "supports": [
+                {
+                  "supportGuid": "3fefae98-44ff-510d-a6ea-57acd1063669",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_Enlightenment_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "ae0fb5dd-d7ff-5107-971b-ace6c95fed64",
+                  "type": "support",
+                  "icon": "/images/skill/UI_Skill_AuraEnhance_Icon_128.webp",
+                  "level": 20
+                },
+                null,
+                null,
+                null
+              ]
+            },
+            {
+              "skillGuid": "7b18bd80-e883-568f-ba48-5c9993975518",
+              "enabled": true,
+              "level": 20,
+              "supports": [
+                {
+                  "supportGuid": "3fefae98-44ff-510d-a6ea-57acd1063669",
+                  "type": "support",
+                  "icon": "/images/skill/Icon_Support_Enlightenment_128.webp",
+                  "level": 20
+                },
+                {
+                  "supportGuid": "ae0fb5dd-d7ff-5107-971b-ace6c95fed64",
+                  "type": "support",
+                  "icon": "/images/skill/UI_Skill_AuraEnhance_Icon_128.webp",
+                  "level": 20
+                },
+                null,
+                null,
+                null
+              ]
+            }
+          ]
+        },
+        "skillTree": {
+          "slots": [
+            {
+              "treeId": "goddess_of_hunting",
+              "nodePoints": {
+                "06d2ad49-d9c1-50c3-a15c-6aa71660fda9": 3,
+                "106f1e55-6635-53a5-8d1e-35c29c7dba71": 3,
+                "16fea382-d50e-5568-a1d7-80bd38ed3501": 3,
+                "41f13b75-a2d1-560a-88e3-93bc0311a734": 3,
+                "c2078be8-6145-552f-8553-5b023a2903f7": 3,
+                "d6a53af5-f37b-5d1f-a30e-b940982add8d": 3,
+                "d95ba2cd-4dce-53b6-9b39-eaa0e0267a54": 3,
+                "ebd0d8e4-41ef-55ec-9b13-1e00552bc1b7": 3
+              },
+              "selectedNotable12": "1a380896-8198-5bb3-8465-dcb2342b7d5f",
+              "selectedNotable24": "820fa0af-97b8-590b-96b3-58e45d491b79",
+              "prismId": null,
+              "equippedPrism": null,
+              "prismCoreTalentOverride": null,
+              "inverseImageState": null
+            },
+            {
+              "treeId": "marksman",
+              "nodePoints": {
+                "241b39af-c13c-51f4-a001-0a927cdb2d41": 3,
+                "3215142f-ccdc-55ef-9e87-66a3551dae4f": 3,
+                "550c6261-b1bf-5db7-be2f-bbff4477b80c": 3,
+                "65865ed9-778a-5ff6-a53d-e4f15f7dd009": 3,
+                "706a9f91-8495-56d3-9e0f-ac7a58558e32": 3,
+                "87039fe3-1718-5ee0-95c2-18b989339ed3": 3,
+                "8f23b8dd-3d42-5185-8445-6418da967781": 1,
+                "8f3315b1-17e7-5b3e-bdd3-ce105d68e23f": 3,
+                "a8ac4dac-6bdb-542e-a349-b4c2b587aee9": 1,
+                "b14764b4-8c4b-5ba1-9cfb-360f9735d733": 1
+              },
+              "selectedNotable12": null,
+              "selectedNotable24": "3e2ef914-325e-555f-ab90-f5f460dffb25",
+              "prismId": null,
+              "equippedPrism": null,
+              "prismCoreTalentOverride": null,
+              "inverseImageState": null
+            },
+            {
+              "treeId": "prophet",
+              "nodePoints": {
+                "13d13eaf-98dd-5f9c-8f65-84ac3b6fddfb": 3,
+                "851d38e7-7f6b-5d7c-a006-54f5b32b5de6": 3,
+                "8f43486c-521c-5c85-893c-87de6dde1a3e": 1,
+                "92d73efc-7a7d-5364-b148-6500a58b0c49": 3,
+                "ab8176f5-aeb5-56d3-9eba-865c7fa36f41": 1,
+                "b31dbb72-05f9-5a3c-a40d-dad08a08a93c": 1,
+                "b873d2df-cdfa-545c-9e1a-63306aca9fd7": 3,
+                "c14ef5de-c749-5c6b-b36e-961fe61dae5c": 3,
+                "c71a9bdc-7ff6-5fde-804b-349207d57287": 3,
+                "d2b348a8-52a9-5650-a6cc-14d820d8efe9": 3,
+                "db27fb2c-5f29-595c-83e1-08a39bfa3634": 3,
+                "dbf7e418-17fa-56fd-af23-790aa7e620c3": 1,
+                "dede12b8-f16e-5282-91f6-e6471b48f8e8": 3,
+                "e1655069-6532-5099-9987-e78bfd4bfa90": 3
+              },
+              "selectedNotable12": null,
+              "selectedNotable24": "43dba54e-5c78-5dab-a6c9-5e32b32a3978",
+              "prismId": null,
+              "equippedPrism": null,
+              "prismCoreTalentOverride": null,
+              "inverseImageState": null
+            },
+            {
+              "treeId": "ranger",
+              "nodePoints": {
+                "15dd6a95-d7b1-572e-ba0e-35db3be66a94": 3,
+                "51cd1b2d-f693-5f0b-87b3-240196c55754": 3,
+                "5b9c940e-8795-56c1-bb30-0a3bf04108ee": 3,
+                "6434b29a-3b46-5f43-8198-03a810e9d19e": 3,
+                "8592f8d3-49e6-5d63-b1db-32de6e71a9ff": 3,
+                "abbd102f-0a2c-5abb-b0d8-f8ef9fadfdcf": 1,
+                "afc3c99a-79ca-5204-9761-797630676bfc": 3,
+                "c3c701fb-f803-55f3-9671-661d0fa46f29": 1,
+                "f121da79-886b-5b3c-ace4-1416375c580b": 3,
+                "f40d7856-e186-5d68-bd94-32af65743e10": 3,
+                "f678147c-2fa6-5450-b8a2-a4829d15f950": 1
+              },
+              "selectedNotable12": null,
+              "selectedNotable24": "8379af76-994c-5d13-800c-9d0998ec182a",
+              "prismId": null,
+              "equippedPrism": null,
+              "prismCoreTalentOverride": null,
+              "inverseImageState": null
+            }
+          ],
+          "allocationOrder": [
+            {
+              "slot": 0,
+              "nodeId": "06d2ad49-d9c1-50c3-a15c-6aa71660fda9"
+            },
+            {
+              "slot": 0,
+              "nodeId": "06d2ad49-d9c1-50c3-a15c-6aa71660fda9"
+            },
+            {
+              "slot": 0,
+              "nodeId": "06d2ad49-d9c1-50c3-a15c-6aa71660fda9"
+            },
+            {
+              "slot": 0,
+              "nodeId": "106f1e55-6635-53a5-8d1e-35c29c7dba71"
+            },
+            {
+              "slot": 0,
+              "nodeId": "106f1e55-6635-53a5-8d1e-35c29c7dba71"
+            },
+            {
+              "slot": 0,
+              "nodeId": "106f1e55-6635-53a5-8d1e-35c29c7dba71"
+            },
+            {
+              "slot": 0,
+              "nodeId": "16fea382-d50e-5568-a1d7-80bd38ed3501"
+            },
+            {
+              "slot": 0,
+              "nodeId": "16fea382-d50e-5568-a1d7-80bd38ed3501"
+            },
+            {
+              "slot": 0,
+              "nodeId": "16fea382-d50e-5568-a1d7-80bd38ed3501"
+            },
+            {
+              "slot": 0,
+              "nodeId": "41f13b75-a2d1-560a-88e3-93bc0311a734"
+            },
+            {
+              "slot": 0,
+              "nodeId": "41f13b75-a2d1-560a-88e3-93bc0311a734"
+            },
+            {
+              "slot": 0,
+              "nodeId": "41f13b75-a2d1-560a-88e3-93bc0311a734"
+            },
+            {
+              "slot": 0,
+              "nodeId": "c2078be8-6145-552f-8553-5b023a2903f7"
+            },
+            {
+              "slot": 0,
+              "nodeId": "c2078be8-6145-552f-8553-5b023a2903f7"
+            },
+            {
+              "slot": 0,
+              "nodeId": "c2078be8-6145-552f-8553-5b023a2903f7"
+            },
+            {
+              "slot": 0,
+              "nodeId": "d6a53af5-f37b-5d1f-a30e-b940982add8d"
+            },
+            {
+              "slot": 0,
+              "nodeId": "d6a53af5-f37b-5d1f-a30e-b940982add8d"
+            },
+            {
+              "slot": 0,
+              "nodeId": "d6a53af5-f37b-5d1f-a30e-b940982add8d"
+            },
+            {
+              "slot": 0,
+              "nodeId": "d95ba2cd-4dce-53b6-9b39-eaa0e0267a54"
+            },
+            {
+              "slot": 0,
+              "nodeId": "d95ba2cd-4dce-53b6-9b39-eaa0e0267a54"
+            },
+            {
+              "slot": 0,
+              "nodeId": "d95ba2cd-4dce-53b6-9b39-eaa0e0267a54"
+            },
+            {
+              "slot": 0,
+              "nodeId": "ebd0d8e4-41ef-55ec-9b13-1e00552bc1b7"
+            },
+            {
+              "slot": 0,
+              "nodeId": "ebd0d8e4-41ef-55ec-9b13-1e00552bc1b7"
+            },
+            {
+              "slot": 0,
+              "nodeId": "ebd0d8e4-41ef-55ec-9b13-1e00552bc1b7"
+            },
+            {
+              "slot": 1,
+              "nodeId": "241b39af-c13c-51f4-a001-0a927cdb2d41"
+            },
+            {
+              "slot": 1,
+              "nodeId": "241b39af-c13c-51f4-a001-0a927cdb2d41"
+            },
+            {
+              "slot": 1,
+              "nodeId": "241b39af-c13c-51f4-a001-0a927cdb2d41"
+            },
+            {
+              "slot": 1,
+              "nodeId": "3215142f-ccdc-55ef-9e87-66a3551dae4f"
+            },
+            {
+              "slot": 1,
+              "nodeId": "3215142f-ccdc-55ef-9e87-66a3551dae4f"
+            },
+            {
+              "slot": 1,
+              "nodeId": "3215142f-ccdc-55ef-9e87-66a3551dae4f"
+            },
+            {
+              "slot": 1,
+              "nodeId": "550c6261-b1bf-5db7-be2f-bbff4477b80c"
+            },
+            {
+              "slot": 1,
+              "nodeId": "550c6261-b1bf-5db7-be2f-bbff4477b80c"
+            },
+            {
+              "slot": 1,
+              "nodeId": "550c6261-b1bf-5db7-be2f-bbff4477b80c"
+            },
+            {
+              "slot": 1,
+              "nodeId": "65865ed9-778a-5ff6-a53d-e4f15f7dd009"
+            },
+            {
+              "slot": 1,
+              "nodeId": "65865ed9-778a-5ff6-a53d-e4f15f7dd009"
+            },
+            {
+              "slot": 1,
+              "nodeId": "65865ed9-778a-5ff6-a53d-e4f15f7dd009"
+            },
+            {
+              "slot": 1,
+              "nodeId": "706a9f91-8495-56d3-9e0f-ac7a58558e32"
+            },
+            {
+              "slot": 1,
+              "nodeId": "706a9f91-8495-56d3-9e0f-ac7a58558e32"
+            },
+            {
+              "slot": 1,
+              "nodeId": "706a9f91-8495-56d3-9e0f-ac7a58558e32"
+            },
+            {
+              "slot": 1,
+              "nodeId": "87039fe3-1718-5ee0-95c2-18b989339ed3"
+            },
+            {
+              "slot": 1,
+              "nodeId": "87039fe3-1718-5ee0-95c2-18b989339ed3"
+            },
+            {
+              "slot": 1,
+              "nodeId": "87039fe3-1718-5ee0-95c2-18b989339ed3"
+            },
+            {
+              "slot": 1,
+              "nodeId": "8f23b8dd-3d42-5185-8445-6418da967781"
+            },
+            {
+              "slot": 1,
+              "nodeId": "8f3315b1-17e7-5b3e-bdd3-ce105d68e23f"
+            },
+            {
+              "slot": 1,
+              "nodeId": "8f3315b1-17e7-5b3e-bdd3-ce105d68e23f"
+            },
+            {
+              "slot": 1,
+              "nodeId": "8f3315b1-17e7-5b3e-bdd3-ce105d68e23f"
+            },
+            {
+              "slot": 1,
+              "nodeId": "a8ac4dac-6bdb-542e-a349-b4c2b587aee9"
+            },
+            {
+              "slot": 1,
+              "nodeId": "b14764b4-8c4b-5ba1-9cfb-360f9735d733"
+            },
+            {
+              "slot": 2,
+              "nodeId": "13d13eaf-98dd-5f9c-8f65-84ac3b6fddfb"
+            },
+            {
+              "slot": 2,
+              "nodeId": "13d13eaf-98dd-5f9c-8f65-84ac3b6fddfb"
+            },
+            {
+              "slot": 2,
+              "nodeId": "13d13eaf-98dd-5f9c-8f65-84ac3b6fddfb"
+            },
+            {
+              "slot": 2,
+              "nodeId": "851d38e7-7f6b-5d7c-a006-54f5b32b5de6"
+            },
+            {
+              "slot": 2,
+              "nodeId": "851d38e7-7f6b-5d7c-a006-54f5b32b5de6"
+            },
+            {
+              "slot": 2,
+              "nodeId": "851d38e7-7f6b-5d7c-a006-54f5b32b5de6"
+            },
+            {
+              "slot": 2,
+              "nodeId": "8f43486c-521c-5c85-893c-87de6dde1a3e"
+            },
+            {
+              "slot": 2,
+              "nodeId": "92d73efc-7a7d-5364-b148-6500a58b0c49"
+            },
+            {
+              "slot": 2,
+              "nodeId": "92d73efc-7a7d-5364-b148-6500a58b0c49"
+            },
+            {
+              "slot": 2,
+              "nodeId": "92d73efc-7a7d-5364-b148-6500a58b0c49"
+            },
+            {
+              "slot": 2,
+              "nodeId": "ab8176f5-aeb5-56d3-9eba-865c7fa36f41"
+            },
+            {
+              "slot": 2,
+              "nodeId": "b31dbb72-05f9-5a3c-a40d-dad08a08a93c"
+            },
+            {
+              "slot": 2,
+              "nodeId": "b873d2df-cdfa-545c-9e1a-63306aca9fd7"
+            },
+            {
+              "slot": 2,
+              "nodeId": "b873d2df-cdfa-545c-9e1a-63306aca9fd7"
+            },
+            {
+              "slot": 2,
+              "nodeId": "b873d2df-cdfa-545c-9e1a-63306aca9fd7"
+            },
+            {
+              "slot": 2,
+              "nodeId": "c14ef5de-c749-5c6b-b36e-961fe61dae5c"
+            },
+            {
+              "slot": 2,
+              "nodeId": "c14ef5de-c749-5c6b-b36e-961fe61dae5c"
+            },
+            {
+              "slot": 2,
+              "nodeId": "c14ef5de-c749-5c6b-b36e-961fe61dae5c"
+            },
+            {
+              "slot": 2,
+              "nodeId": "c71a9bdc-7ff6-5fde-804b-349207d57287"
+            },
+            {
+              "slot": 2,
+              "nodeId": "c71a9bdc-7ff6-5fde-804b-349207d57287"
+            },
+            {
+              "slot": 2,
+              "nodeId": "c71a9bdc-7ff6-5fde-804b-349207d57287"
+            },
+            {
+              "slot": 2,
+              "nodeId": "d2b348a8-52a9-5650-a6cc-14d820d8efe9"
+            },
+            {
+              "slot": 2,
+              "nodeId": "d2b348a8-52a9-5650-a6cc-14d820d8efe9"
+            },
+            {
+              "slot": 2,
+              "nodeId": "d2b348a8-52a9-5650-a6cc-14d820d8efe9"
+            },
+            {
+              "slot": 2,
+              "nodeId": "db27fb2c-5f29-595c-83e1-08a39bfa3634"
+            },
+            {
+              "slot": 2,
+              "nodeId": "db27fb2c-5f29-595c-83e1-08a39bfa3634"
+            },
+            {
+              "slot": 2,
+              "nodeId": "db27fb2c-5f29-595c-83e1-08a39bfa3634"
+            },
+            {
+              "slot": 2,
+              "nodeId": "dbf7e418-17fa-56fd-af23-790aa7e620c3"
+            },
+            {
+              "slot": 2,
+              "nodeId": "dede12b8-f16e-5282-91f6-e6471b48f8e8"
+            },
+            {
+              "slot": 2,
+              "nodeId": "dede12b8-f16e-5282-91f6-e6471b48f8e8"
+            },
+            {
+              "slot": 2,
+              "nodeId": "dede12b8-f16e-5282-91f6-e6471b48f8e8"
+            },
+            {
+              "slot": 2,
+              "nodeId": "e1655069-6532-5099-9987-e78bfd4bfa90"
+            },
+            {
+              "slot": 2,
+              "nodeId": "e1655069-6532-5099-9987-e78bfd4bfa90"
+            },
+            {
+              "slot": 2,
+              "nodeId": "e1655069-6532-5099-9987-e78bfd4bfa90"
+            },
+            {
+              "slot": 3,
+              "nodeId": "15dd6a95-d7b1-572e-ba0e-35db3be66a94"
+            },
+            {
+              "slot": 3,
+              "nodeId": "15dd6a95-d7b1-572e-ba0e-35db3be66a94"
+            },
+            {
+              "slot": 3,
+              "nodeId": "15dd6a95-d7b1-572e-ba0e-35db3be66a94"
+            },
+            {
+              "slot": 3,
+              "nodeId": "51cd1b2d-f693-5f0b-87b3-240196c55754"
+            },
+            {
+              "slot": 3,
+              "nodeId": "51cd1b2d-f693-5f0b-87b3-240196c55754"
+            },
+            {
+              "slot": 3,
+              "nodeId": "51cd1b2d-f693-5f0b-87b3-240196c55754"
+            },
+            {
+              "slot": 3,
+              "nodeId": "5b9c940e-8795-56c1-bb30-0a3bf04108ee"
+            },
+            {
+              "slot": 3,
+              "nodeId": "5b9c940e-8795-56c1-bb30-0a3bf04108ee"
+            },
+            {
+              "slot": 3,
+              "nodeId": "5b9c940e-8795-56c1-bb30-0a3bf04108ee"
+            },
+            {
+              "slot": 3,
+              "nodeId": "6434b29a-3b46-5f43-8198-03a810e9d19e"
+            },
+            {
+              "slot": 3,
+              "nodeId": "6434b29a-3b46-5f43-8198-03a810e9d19e"
+            },
+            {
+              "slot": 3,
+              "nodeId": "6434b29a-3b46-5f43-8198-03a810e9d19e"
+            },
+            {
+              "slot": 3,
+              "nodeId": "8592f8d3-49e6-5d63-b1db-32de6e71a9ff"
+            },
+            {
+              "slot": 3,
+              "nodeId": "8592f8d3-49e6-5d63-b1db-32de6e71a9ff"
+            },
+            {
+              "slot": 3,
+              "nodeId": "8592f8d3-49e6-5d63-b1db-32de6e71a9ff"
+            },
+            {
+              "slot": 3,
+              "nodeId": "abbd102f-0a2c-5abb-b0d8-f8ef9fadfdcf"
+            },
+            {
+              "slot": 3,
+              "nodeId": "afc3c99a-79ca-5204-9761-797630676bfc"
+            },
+            {
+              "slot": 3,
+              "nodeId": "afc3c99a-79ca-5204-9761-797630676bfc"
+            },
+            {
+              "slot": 3,
+              "nodeId": "afc3c99a-79ca-5204-9761-797630676bfc"
+            },
+            {
+              "slot": 3,
+              "nodeId": "c3c701fb-f803-55f3-9671-661d0fa46f29"
+            },
+            {
+              "slot": 3,
+              "nodeId": "f121da79-886b-5b3c-ace4-1416375c580b"
+            },
+            {
+              "slot": 3,
+              "nodeId": "f121da79-886b-5b3c-ace4-1416375c580b"
+            },
+            {
+              "slot": 3,
+              "nodeId": "f121da79-886b-5b3c-ace4-1416375c580b"
+            },
+            {
+              "slot": 3,
+              "nodeId": "f40d7856-e186-5d68-bd94-32af65743e10"
+            },
+            {
+              "slot": 3,
+              "nodeId": "f40d7856-e186-5d68-bd94-32af65743e10"
+            },
+            {
+              "slot": 3,
+              "nodeId": "f40d7856-e186-5d68-bd94-32af65743e10"
+            },
+            {
+              "slot": 3,
+              "nodeId": "f678147c-2fa6-5450-b8a2-a4829d15f950"
+            }
+          ],
+          "recordOrder": false
+        },
+        "divinity": {
+          "inventory": [
+            {
+              "affixes": [
+                {
+                  "description": "Adds 13 - 17 Cold Damage to your and your Minions' Attacks and Spells",
+                  "icon": "",
+                  "modGuid": "a047a38b-c10c-5e2a-9bbb-1dc37eff8fda",
+                  "nodeType": "Micro",
+                  "slateType": "Nether King",
+                  "slotIndex": 0
+                },
+                {
+                  "description": "+3 % Max Life",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/JL_Agi_64.webp",
+                  "modGuid": "07716e81-5966-54ce-9f06-608a8e9731db",
+                  "nodeType": "Micro Talent",
+                  "slateType": "The Brave",
+                  "slotIndex": 2
+                },
+                {
+                  "description": "+8 Strength",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/JL_DmgEle_64.webp",
+                  "modGuid": "f5008aba-de20-581e-93c6-baaaf9782341",
+                  "nodeType": "Micro Talent",
+                  "slateType": "God of Might",
+                  "slotIndex": 3
+                }
+              ],
+              "id": "394001_2c84008e-81ed-11f1-9f16-000000001182",
+              "netherItemId": "08c7acfb-af8c-5fac-bd95-e959a49f2474",
+              "netherType": "Judgment",
+              "orientation": {
+                "flipH": false,
+                "flipV": false,
+                "rotation": 0
+              },
+              "shapeId": "O1",
+              "type": "netherking"
+            },
+            {
+              "affixes": [
+                {
+                  "description": "+9 % Projectile Damage\n+6 % Projectile Speed",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/ZZ_DmgAll_64.webp",
+                  "modGuid": "5e56899a-93e4-55c3-ae71-31ae9f6bcc6c",
+                  "nodeType": "Medium Talent",
+                  "slateType": "Ranger",
+                  "slotIndex": 0
+                },
+                {
+                  "description": "Critical Strikes eliminate enemies under 8 % Life",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/ZZ_Crit02_64.webp",
+                  "modGuid": "02ce2b3d-cd06-5433-a698-4c7beb26a3a8",
+                  "nodeType": "Legendary Medium Talent",
+                  "slateType": "Ranger",
+                  "slotIndex": 1
+                },
+                {
+                  "description": "+30 % Critical Strike Rating",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/ZZ_Crit02_64.webp",
+                  "modGuid": "93daa249-e36c-5582-8d29-1f5af840ace8",
+                  "nodeType": "Medium Talent",
+                  "slateType": "Ranger",
+                  "slotIndex": 2
+                },
+                {
+                  "description": "+18 % Attack Damage",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/ZZ_DmgExtra_64.webp",
+                  "modGuid": "9ee401bf-3c49-535e-837f-52bbacbdc1f9",
+                  "nodeType": "Medium Talent",
+                  "slateType": "Ronin",
+                  "slotIndex": 3
+                },
+                {
+                  "description": "+12 % Skill Area\n+12 % Projectile Speed",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/ZZ_Area_64.webp",
+                  "modGuid": "00661c53-609b-56cc-970e-0c7e9a19d703",
+                  "nodeType": "Medium Talent",
+                  "slateType": "God of War",
+                  "slotIndex": 4
+                }
+              ],
+              "god": "War",
+              "id": "260302_a7af2b04-81fb-11f1-95eb-000000000110",
+              "orientation": {
+                "flipH": true,
+                "flipV": false,
+                "rotation": 0
+              },
+              "shapeId": "L1",
+              "type": "rare"
+            },
+            {
+              "affixes": [
+                {
+                  "description": "When Reaping, immediately starts Charging Energy Shield. Interval: 2 s",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/QZ_Curse_64.webp",
+                  "modGuid": "bff813b0-504c-5c43-bc93-f557c85ada34",
+                  "nodeType": "Legendary Medium Talent",
+                  "slateType": "Psychic",
+                  "slotIndex": 0
+                },
+                {
+                  "description": "+10 % additional damage against Frozen enemies",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/ZS_Bow02_64.webp",
+                  "modGuid": "87b0dcb7-42c4-5844-8421-41269921cbc0",
+                  "nodeType": "Legendary Medium Talent",
+                  "slateType": "Prophet",
+                  "slotIndex": 1
+                }
+              ],
+              "id": "261005_6348f2c1-8215-11f1-acec-000000000052",
+              "legendaryIcon": "/images/divinity-slate/UI_MI_TalantNG_Gold_V1_0_Icon_112.webp",
+              "legendaryTemplate": "A Corner of Divinity",
+              "legendaryTemplateId": "11cbdf43-aa58-5743-8884-cbed0838a790",
+              "orientation": {
+                "flipH": false,
+                "flipV": false,
+                "rotation": 0
+              },
+              "shapeId": "O1",
+              "type": "legendary"
+            },
+            {
+              "affixes": [
+                {
+                  "description": "+40 % Attack Critical Strike Rating when holding a Two-Handed Weapon",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/JL_AtkSpeed_64.webp",
+                  "modGuid": "df49f78a-db54-56a9-a40b-d4f72acae6d8",
+                  "nodeType": "Medium Talent",
+                  "slateType": "Onslaughter",
+                  "slotIndex": 0
+                },
+                {
+                  "description": "+1 to Attack Skill Level",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/JL_Atk_64.webp",
+                  "modGuid": "8e4b6fc8-9588-5509-8c48-0545c78d447a",
+                  "nodeType": "Legendary Medium Talent",
+                  "slateType": "God of Might",
+                  "slotIndex": 1
+                },
+                {
+                  "description": "+6 % Attack and Cast Speed\n+6 % Minion Attack and Cast Speed",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/JL_Agi_64.webp",
+                  "modGuid": "24661095-b0a9-552f-8164-85244b3c2bca",
+                  "nodeType": "Medium Talent",
+                  "slateType": "Warrior",
+                  "slotIndex": 2
+                },
+                {
+                  "description": "+6 % chance to Ignite targets\n+12 % Ignite chance for Minions",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/JL_DmgAll_64.webp",
+                  "modGuid": "c98e167f-c1b1-5251-8b85-eb0f3026d0b6",
+                  "nodeType": "Medium Talent",
+                  "slateType": "Warlord",
+                  "slotIndex": 3
+                },
+                {
+                  "description": "+20 % Attack Critical Strike Rating\n+5 % Critical Strike Damage",
+                  "icon": "https://cdn.tlidb.com/UIV2/TalentV2/UI/Textures/AtlasTalentPoint/JL_DmgExtra_64.webp",
+                  "modGuid": "6ae4b653-0cfc-5e3a-bedc-1f50f9f11e1b",
+                  "nodeType": "Medium Talent",
+                  "slateType": "God of Might",
+                  "slotIndex": 4
+                }
+              ],
+              "god": "Might",
+              "id": "260506_f1e326b7-81d5-11f1-aa52-00000000113c",
+              "orientation": {
+                "flipH": true,
+                "flipV": false,
+                "rotation": 90
+              },
+              "shapeId": "L1",
+              "type": "rare"
+            }
+          ],
+          "placements": [
+            {
+              "col": 1,
+              "row": 1,
+              "slateId": "394001_2c84008e-81ed-11f1-9f16-000000001182"
+            },
+            {
+              "col": 0,
+              "row": 1,
+              "slateId": "260302_a7af2b04-81fb-11f1-95eb-000000000110"
+            },
+            {
+              "col": 2,
+              "row": 4,
+              "slateId": "261005_6348f2c1-8215-11f1-acec-000000000052"
+            },
+            {
+              "col": 2,
+              "row": 0,
+              "slateId": "260506_f1e326b7-81d5-11f1-aa52-00000000113c"
+            }
+          ]
+        },
+        "pactspirits": [
+          {
+            "guid": "53f1db18-0d58-5ffc-b993-1a12d1110df4",
+            "level": 3,
+            "allocatedNodes": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11"
+            ],
+            "expansions": {}
+          },
+          {
+            "guid": "131210d1-0e5b-561d-b906-332223543916",
+            "level": 1,
+            "allocatedNodes": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11"
+            ],
+            "expansions": {}
+          },
+          {
+            "guid": "bfb31a4f-3d21-5171-8562-d8c9b9fd474e",
+            "level": 1,
+            "allocatedNodes": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11"
+            ],
+            "expansions": {}
+          }
+        ],
+        "kismets": [],
+        "scentBottle": {
+          "activeScent": "basic",
+          "basic": {
+            "skillGuid": null,
+            "damageIngredient": null,
+            "defenseIngredient": null,
+            "functionalIngredient": null,
+            "specialIngredients": [
+              null,
+              null
+            ]
+          },
+          "special": {
+            "skillGuid": null,
+            "damageIngredient": null,
+            "defenseIngredient": null,
+            "functionalIngredient": null,
+            "specialIngredients": [
+              null,
+              null
+            ]
+          }
+        }
+      }
+    ],
+    "currentLoadoutId": "tli_dump_loadout_tv3bak"
+  }
+}

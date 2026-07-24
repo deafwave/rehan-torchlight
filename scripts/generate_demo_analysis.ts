@@ -166,9 +166,13 @@ function analyzeBuild(file: string, id: string) {
         : null,
       defenseReady ? "player-defense" : null,
     ].filter((value): value is string => Boolean(value));
-    const sourceNote = id === "wuxia" && imported.summonEvidence?.length
+    const isWuxiaFamily = id === "wuxia" || id.includes("wuxia");
+    const isBingFamily = id === "bing"
+      || id.startsWith("bing")
+      || id.startsWith("moto");
+    const sourceNote = isWuxiaFamily && imported.summonEvidence?.length
       ? `The installed Spirit Magus actor/action records${allMinionSocketsReady ? ", socket terms" : ""}, Iris traits${defenseReady ? ", and player-defense inputs" : ""} are available. ${allMinionSocketsReady ? "" : "Unsupported socket evidence remains blocked. "}AI rotation, complete minion modifiers, Growth/Breeze state, and total player EHP remain uncalculated.`
-      : id === "bing" && imported.bingIntrinsicEvidence
+      : isBingFamily && imported.bingIntrinsicEvidence
         ? `Guarded ${readableList(bingSlices)} evidence is available. ${imported.bingIntrinsicEvidence.topology.status === "calculated-partial" ? "" : "Blast Nova emission topology remains blocked. "}Full DPS remains uncalculated until landed-hit geometry, cadence, complete modifiers, enemy state, and uptime are modeled.`
         : imported.sourceNote;
     return {
@@ -331,10 +335,26 @@ const teachingBuild = {
   ],
 };
 
-const files = [
-  { id: "bing", file: path.resolve(ROOT, "..", "bing_china.json") },
-  { id: "wuxia", file: path.resolve(ROOT, "..", "WuxiaSS13.json") },
-];
+/** Stable ids for files under data/builds (Supported tab + tests). */
+const BUILD_FILE_IDS: Record<string, string> = {
+  "bing_china.json": "bing",
+  "WuxiaSS13.json": "wuxia",
+  "bing1_FurryLover3.json": "bing1-furrylover3",
+  "moto2_FurryLover3.json": "moto2-furrylover3",
+};
+
+const BUILDS_DIR = path.join(ROOT, "data", "builds");
+const files = fs.readdirSync(BUILDS_DIR)
+  .filter((name) => name.endsWith(".json"))
+  .sort((a, b) => a.localeCompare(b))
+  .map((name) => ({
+    id: BUILD_FILE_IDS[name] ?? path.basename(name, ".json"),
+    file: path.join(BUILDS_DIR, name),
+  }));
+
+if (!files.length) {
+  throw new Error(`No Compendium builds found in ${BUILDS_DIR}`);
+}
 
 const output = {
   modelNotice: "Guarded source evidence only. Partial hits, emissions, minion contacts, defense inputs, DPS, and EHP remain distinct.",

@@ -26,14 +26,14 @@ const emptyCatalog: ImportCatalog = {
 
 function bing(): AnalyzedBuild {
   return importBuild(
-    JSON.parse(fs.readFileSync(fromRoot("../bing_china.json"), "utf8")),
+    JSON.parse(fs.readFileSync(fromRoot("data/builds/bing_china.json"), "utf8")),
     emptyCatalog,
   );
 }
 
 function wuxia(): AnalyzedBuild {
   return importBuild(
-    JSON.parse(fs.readFileSync(fromRoot("../WuxiaSS13.json"), "utf8")),
+    JSON.parse(fs.readFileSync(fromRoot("data/builds/WuxiaSS13.json"), "utf8")),
     emptyCatalog,
   );
 }

@@ -174,9 +174,9 @@ pnpm build                                     # page typecheck + production bun
 pnpm dev
 ```
 
-`pnpm demo` reads `../bing_china.json` and `../WuxiaSS13.json` and rewrites the
-checked-in comparison fixture used by the site. Regenerate it whenever an
-import or evidence contract changes.
+`pnpm demo` reads every Compendium export in `data/builds/` and rewrites the
+checked-in comparison fixture used by the site (Supported tab). Regenerate it
+whenever an import or evidence contract changes.
 
 Production hosting is configured at the repository root with `vercel.json`.
 Vercel should use the repository root, run `pnpm build`, and publish

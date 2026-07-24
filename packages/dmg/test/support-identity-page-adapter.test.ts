@@ -11,7 +11,7 @@ const readJson = (path: string) => JSON.parse(fs.readFileSync(path, "utf8"));
 
 describe("player support evidence identity page adapter", () => {
   it("carries actor/skill/socket identity and keeps duplicate support sockets distinct", () => {
-    const build = readJson(fromRoot("../bing_china.json"));
+    const build = readJson(fromRoot("data/builds/bing_china.json"));
     build.loadouts.loadouts[1] = structuredClone(build.loadouts.loadouts[0]);
     const beforeSupports = build.loadouts.loadouts[0].skills.activeSkills[0].supports;
     const afterSupports = build.loadouts.loadouts[1].skills.activeSkills[0].supports;

@@ -11,8 +11,8 @@ import {
 } from "../src/bingIntrinsic.js";
 
 const readJson = (path: string) => JSON.parse(fs.readFileSync(path, "utf8"));
-const bing = () => readJson(fromRoot("../bing_china.json"));
-const wuxia = () => readJson(fromRoot("../WuxiaSS13.json"));
+const bing = () => readJson(fromRoot("data/builds/bing_china.json"));
+const wuxia = () => readJson(fromRoot("data/builds/WuxiaSS13.json"));
 
 describe("guarded SS13 Bing intrinsic envelope", () => {
   it("covers all seven supplied loadouts without publishing a total hit or DPS", () => {

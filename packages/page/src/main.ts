@@ -114,10 +114,76 @@ app.innerHTML = `<main class="app-loading" aria-live="polite">
 </main>`;
 const importDialog = document.getElementById("import-dialog") as HTMLDialogElement;
 const importStatus = document.getElementById("import-status")!;
+const importLead = document.getElementById("import-lead");
 const fileInput = document.getElementById("build-file") as HTMLInputElement;
 const pasteInput = document.getElementById("build-paste") as HTMLTextAreaElement;
+const codeInput = document.getElementById("build-code") as HTMLTextAreaElement;
 const dropZone = document.getElementById("drop-zone")!;
 const MAX_IMPORT_BYTES = 25 * 1024 * 1024;
+
+/** Preferred Before/After indices for catalog builds (from data/builds). */
+const SUPPORTED_BUILD_DEFAULTS: Record<string, { beforeIndex: number; afterIndex: number }> = {
+  bing: { beforeIndex: 2, afterIndex: 3 },
+  wuxia: { beforeIndex: 5, afterIndex: 8 },
+  "bing1-furrylover3": { beforeIndex: 0, afterIndex: 1 },
+  "moto2-furrylover3": { beforeIndex: 0, afterIndex: 1 },
+};
+
+const SUPPORTED_BUILD_META: Record<string, { title: string; blurb: string }> = {
+  bing: {
+    title: "Bing · Hammer of Ash (SS13hss)",
+    blurb: "Guarded weapon, support, and emission terms",
+  },
+  wuxia: {
+    title: "Wuxia · Spirit Magus",
+    blurb: "Guarded minion actor and action terms",
+  },
+  "bing1-furrylover3": {
+    title: "Bing · FurryLover3 ice shot",
+    blurb: "Two-step ice-shot progression",
+  },
+  "moto2-furrylover3": {
+    title: "Moto · FurryLover3",
+    blurb: "Moto progression · multi-stage damage setups",
+  },
+};
+
+function isSupportedCatalogBuild(build: AnalyzedBuild) {
+  // Catalog builds come from data/builds via demo-builds.json (source = filename.json).
+  return build.id !== "scaling-lesson"
+    && !build.needsResolution
+    && !build.imported
+    && (Boolean(SUPPORTED_BUILD_META[build.id]) || /\.json$/i.test(build.source ?? ""));
+}
+
+function defaultLoadoutPair(build: AnalyzedBuild) {
+  const preset = SUPPORTED_BUILD_DEFAULTS[build.id];
+  if (preset) return preset;
+  return {
+    beforeIndex: 0,
+    afterIndex: Math.min(1, Math.max(0, build.loadouts.length - 1)),
+  };
+}
+
+function renderSupportedBuildList() {
+  const host = document.getElementById("supported-build-list");
+  if (!host) return;
+  const catalog = builds.filter(isSupportedCatalogBuild);
+  if (!catalog.length) {
+    host.innerHTML = `<p class="import-panel-note">No supported builds are loaded yet.</p>`;
+    return;
+  }
+  host.innerHTML = catalog.map((build) => {
+    const meta = SUPPORTED_BUILD_META[build.id];
+    const title = meta?.title ?? build.name;
+    const blurb = meta?.blurb
+      ?? `${build.loadouts.length} loadout${build.loadouts.length === 1 ? "" : "s"} · ${build.patch}`;
+    return `<button type="button" class="supported-build-card" data-supported-build="${escAttr(build.id)}">
+      <strong>${esc(title)}</strong>
+      <span>${esc(blurb)} · ${build.loadouts.length} loadouts</span>
+    </button>`;
+  }).join("");
+}
 
 const esc = (value: unknown) => String(value ?? "")
   .replaceAll("&", "&amp;")
@@ -210,7 +276,7 @@ function buildPicker(side: Side, build: AnalyzedBuild, loadout: AnalyzedLoadout)
       <span class="model-state ${state}">
         <span class="state-dot"></span>${esc(confidenceLabel(loadout))}
       </span>
-      <button class="quiet-button" type="button" data-import="${side}">Import</button>
+      <button class="quiet-button" type="button" data-import="${side}">Add build</button>
     </div>
   </article>`;
 }
@@ -2571,9 +2637,9 @@ function render() {
   <main class="workspace" id="workspace">
     <section class="workspace-intro">
       <div>
-        <span class="eyebrow">Import → compare → improve</span>
+        <span class="eyebrow">Load → compare → improve</span>
         <h2>Find the next DPS win.</h2>
-        <p>Compare two loadouts, rank the changes that matter, and run one controlled experiment at a time.</p>
+        <p>Load a supported progression, a Compendium build code, or a tli_dump export. Then rank the change that matters.</p>
       </div>
     </section>
     <section class="comparison-bar" aria-label="Build comparison">
@@ -2606,6 +2672,47 @@ function importSizeMessage(size: number) {
   return `This input is ${mib.toFixed(1)} MiB. Imports are limited to 25 MiB; export one build snapshot or remove unrelated data and try again.`;
 }
 
+function openImportDialog(side: Side) {
+  importTarget = side;
+  if (importLead) {
+    importLead.textContent =
+      `Loading into ${sideLabel(side)}. Pick a supported progression, paste a Compendium build code, or import a tli_dump / Compendium JSON export.`;
+  }
+  setImportStatus(`Adding a build to ${sideLabel(side)}.`);
+  const supportedTab = document.getElementById("import-tab-supported") as HTMLButtonElement | null;
+  if (supportedTab) activateImportTab(supportedTab);
+  importDialog.showModal();
+  window.requestAnimationFrame(() => {
+    importDialog.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]')?.focus();
+  });
+}
+
+function applySupportedBuild(buildId: string) {
+  const build = builds.find((item) => item.id === buildId);
+  if (!build?.loadouts.length) {
+    setImportStatus("That supported build is not available in this session.", "error");
+    return;
+  }
+  const defaults = defaultLoadoutPair(build);
+  const beforeLoadout = build.loadouts[defaults.beforeIndex] ?? build.loadouts[0];
+  const afterLoadout = build.loadouts[defaults.afterIndex]
+    ?? build.loadouts[Math.min(1, build.loadouts.length - 1)]
+    ?? build.loadouts[build.loadouts.length - 1];
+  // Selecting a supported progression loads a sensible pair so comparison is ready.
+  beforeSelection = { buildId: build.id, loadoutId: beforeLoadout.id };
+  afterSelection = { buildId: build.id, loadoutId: afterLoadout.id };
+  reportCopyState = "idle";
+  setImportStatus(
+    `${build.name} loaded · ${build.loadouts.length} loadouts. Adjust Before / After in the dropdowns.`,
+    "success",
+  );
+  window.setTimeout(() => {
+    importDialog.close();
+    render();
+    restoreWorkspaceFocus(`#${importTarget}-loadout`);
+  }, 350);
+}
+
 function activateImported(build: AnalyzedBuild) {
   builds.push(build);
   const loadout = build.loadouts.find((item) => item.isCurrent) ?? build.loadouts[0];
@@ -2615,14 +2722,17 @@ function activateImported(build: AnalyzedBuild) {
   reportCopyState = "idle";
   setImportStatus(
     build.needsResolution
-      ? "Build code recognized. Capture the opened build with tli_dump to resolve its loadout."
+      ? "Build code saved. Open it in-game, capture with tli_dump, then import that JSON on the tli_dump tab."
       : `${build.name} imported with ${build.loadouts.length} loadout${build.loadouts.length === 1 ? "" : "s"}.`,
     build.needsResolution ? "info" : "success",
   );
   window.setTimeout(() => {
     importDialog.close();
+    if (build.needsResolution) activeView = "diagnosis";
     render();
-    restoreWorkspaceFocus(`#${importTarget}-loadout`);
+    restoreWorkspaceFocus(
+      build.needsResolution ? ".capture-handoff" : `#${importTarget}-loadout`,
+    );
   }, 450);
 }
 
@@ -2873,11 +2983,7 @@ app.addEventListener("click", (event) => {
   const side = target.dataset.import as Side | undefined;
   if (side) {
     importTarget = side;
-    setImportStatus(`Importing into ${sideLabel(side)}.`);
-    importDialog.showModal();
-    window.requestAnimationFrame(() => {
-      importDialog.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]')?.focus();
-    });
+    openImportDialog(side);
     return;
   }
   if (target.hasAttribute("data-swap")) {
@@ -2954,6 +3060,13 @@ importTabs.forEach((button, index) => {
   });
 });
 
+importDialog.addEventListener("click", (event) => {
+  const target = (event.target as HTMLElement).closest<HTMLElement>("[data-supported-build]");
+  if (!target) return;
+  event.preventDefault();
+  applySupportedBuild(target.dataset.supportedBuild!);
+});
+
 fileInput.addEventListener("change", () => {
   const file = fileInput.files?.[0];
   if (file) void readFile(file);
@@ -2981,10 +3094,26 @@ dropZone.addEventListener("keydown", (event) => {
   fileInput.click();
 });
 
+document.getElementById("analyze-code")!.addEventListener("click", () => {
+  const raw = codeInput.value.trim();
+  if (!raw) {
+    setImportStatus("Paste a Compendium or in-game build code first.", "error");
+    return;
+  }
+  try {
+    activateImported(importBuildCode(raw));
+  } catch (error) {
+    setImportStatus(
+      error instanceof Error ? error.message : "That build code could not be read.",
+      "error",
+    );
+  }
+});
+
 document.getElementById("analyze-paste")!.addEventListener("click", async () => {
   const raw = pasteInput.value.trim();
   if (!raw) {
-    setImportStatus("Paste an in-game build code or exported JSON first.", "error");
+    setImportStatus("Paste tli_dump or Compendium JSON first.", "error");
     return;
   }
   const rawBytes = new TextEncoder().encode(raw).byteLength;
@@ -2993,21 +3122,28 @@ document.getElementById("analyze-paste")!.addEventListener("click", async () => 
     return;
   }
   try {
-    if (raw.startsWith("{")) {
-      const value = JSON.parse(raw);
-      setImportStatus("Loading the pinned import catalogs…");
-      const catalog = await loadImportCatalog();
-      activateImported(importBuild(value, catalog, demo.builds, "Pasted JSON"));
-    } else {
-      activateImported(importBuildCode(raw));
+    if (!raw.startsWith("{") && !raw.startsWith("[")) {
+      setImportStatus(
+        "This looks like a build code. Use the Build code tab, then resolve it with tli_dump.",
+        "error",
+      );
+      return;
     }
+    const value = JSON.parse(raw);
+    setImportStatus("Loading the pinned import catalogs…");
+    const catalog = await loadImportCatalog();
+    activateImported(importBuild(value, catalog, demo.builds, "Pasted JSON"));
   } catch (error) {
-    setImportStatus(error instanceof Error ? error.message : "The pasted data could not be imported.", "error");
+    setImportStatus(
+      error instanceof Error ? error.message : "The pasted JSON could not be imported.",
+      "error",
+    );
   }
 });
 
 importDialog.addEventListener("close", () => {
   pasteInput.value = "";
+  codeInput.value = "";
   setImportStatus("");
 });
 
@@ -3018,19 +3154,19 @@ async function initializeWorkspace() {
       throw new Error(`Fixture data could not be loaded (${response.status}).`);
     }
     demo = await response.json() as DemoData;
-    const initial = demo.builds.find((build) => build.id === "scaling-lesson");
-    if (!initial || initial.loadouts.length < 2) {
-      throw new Error("The comparison fixture set is incomplete.");
-    }
     builds.push(...structuredClone(demo.builds));
-    beforeSelection = {
-      buildId: initial.id,
-      loadoutId: initial.loadouts[0].id,
-    };
-    afterSelection = {
-      buildId: initial.id,
-      loadoutId: initial.loadouts[1].id,
-    };
+    renderSupportedBuildList();
+    const initial = builds.find((build) => build.id === "bing")
+      ?? builds.find(isSupportedCatalogBuild);
+    if (!initial || initial.loadouts.length < 2) {
+      throw new Error("No supported progression with two loadouts is available.");
+    }
+    const defaults = defaultLoadoutPair(initial);
+    const beforeLoadout = initial.loadouts[defaults.beforeIndex] ?? initial.loadouts[0];
+    const afterLoadout = initial.loadouts[defaults.afterIndex]
+      ?? initial.loadouts[Math.min(1, initial.loadouts.length - 1)];
+    beforeSelection = { buildId: initial.id, loadoutId: beforeLoadout.id };
+    afterSelection = { buildId: initial.id, loadoutId: afterLoadout.id };
     render();
   } catch (error) {
     const message = error instanceof Error

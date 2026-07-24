@@ -87,8 +87,8 @@ describe("guarded compiler input safety", () => {
 
   it("does not throw when source-bearing loadout projections are malformed", () => {
     const fixtures = [
-      ["Bing", readJson(fromRoot("../bing_china.json"))],
-      ["Wuxia", readJson(fromRoot("../WuxiaSS13.json"))],
+      ["Bing", readJson(fromRoot("data/builds/bing_china.json"))],
+      ["Wuxia", readJson(fromRoot("data/builds/WuxiaSS13.json"))],
     ] as const;
     const failures: string[] = [];
     for (const [fixtureName, fixture] of fixtures) {
