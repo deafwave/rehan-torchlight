@@ -776,13 +776,19 @@ function renderLoadoutPage(build: AnalyzedBuild, loadout: AnalyzedLoadout) {
   if (activeView === "survival") {
     return `${head}${navigation()}${renderSurvival(loadout, loadout)}`;
   }
-  // Default page-2: gear → suggested packages → DPS formula.
+  // Default page-2: three columns — equipped | next upgrades | damage formula.
   return `${head}
     ${navigation()}
-    <div class="loadout-page-stack">
-      ${renderBuildOverview(loadout)}
-      ${renderSuggestedChanges(loadout)}
-      ${renderExplain(loadout)}
+    <div class="loadout-page-columns" aria-label="Loadout analysis columns">
+      <div class="loadout-col loadout-col--equipped">
+        ${renderBuildOverview(loadout)}
+      </div>
+      <div class="loadout-col loadout-col--upgrades">
+        ${renderSuggestedChanges(loadout)}
+      </div>
+      <div class="loadout-col loadout-col--damage">
+        ${renderExplain(loadout)}
+      </div>
     </div>`;
 }
 

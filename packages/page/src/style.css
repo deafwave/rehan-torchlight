@@ -6152,6 +6152,11 @@ input:focus-visible,
   margin-bottom: 28px;
 }
 
+/* Loadout inspect page: use the full shell width for the three-column body */
+.workspace:has(.loadout-page) {
+  width: min(1680px, calc(100% - 40px));
+}
+
 .loadout-page {
   display: grid;
   gap: 0;
@@ -6195,10 +6200,73 @@ input:focus-visible,
   font-size: var(--text-detail);
 }
 
-.loadout-page-stack {
+/* Three columns: equipped · upgrades · damage */
+.loadout-page-columns {
   display: grid;
-  gap: 20px;
+  grid-template-columns:
+    minmax(220px, 0.85fr)
+    minmax(300px, 1.05fr)
+    minmax(320px, 1.2fr);
+  align-items: start;
+  gap: 16px;
   margin-top: 18px;
+}
+
+.loadout-col {
+  min-width: 0;
+  display: grid;
+  gap: 16px;
+}
+
+.loadout-col > .single-panel,
+.loadout-col > .explain-view {
+  margin: 0;
+}
+
+/* Denser panels so three columns fit without sprawling */
+.loadout-page-columns .single-panel,
+.loadout-page-columns .formula-panel,
+.loadout-page-columns .damage-hero {
+  padding: 18px 18px 20px;
+}
+
+.loadout-page-columns .build-overview-grid {
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.loadout-page-columns .suggestion-stack-summary {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 10px 0 12px;
+  padding: 10px;
+}
+
+.loadout-page-columns .section-intro {
+  font-size: var(--text-detail);
+  line-height: 1.5;
+}
+
+.loadout-page-columns .damage-hero {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.loadout-page-columns .damage-hero-number {
+  justify-items: start;
+  text-align: left;
+}
+
+.loadout-page-columns .factor-impact-row {
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 8px 10px;
+}
+
+.loadout-page-columns .factor-value,
+.loadout-page-columns .factor-impact {
+  grid-column: 2;
+  text-align: left;
 }
 
 .loadout-gear-panel {
@@ -6392,7 +6460,35 @@ input:focus-visible,
   pointer-events: none;
 }
 
-@media (max-width: 720px) {
+/* Two columns: upgrades + damage side-by-side, equipped full width above */
+@media (max-width: 1180px) {
+  .loadout-page-columns {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  }
+
+  .loadout-col--equipped {
+    grid-column: 1 / -1;
+  }
+
+  .loadout-page-columns .build-overview-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Single column on phones / narrow tablets */
+@media (max-width: 780px) {
+  .loadout-page-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .loadout-col--equipped {
+    grid-column: auto;
+  }
+
+  .loadout-page-columns .build-overview-grid {
+    grid-template-columns: 1fr;
+  }
+
   .loadout-page-head {
     flex-direction: column;
     align-items: flex-start;
