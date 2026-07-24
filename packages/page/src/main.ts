@@ -11,6 +11,15 @@ import {
   signedPercent,
   type WaterfallStep,
 } from "./analysis";
+import { summarizeTradeoff } from "./diagnosis";
+import { compareStructure, type BuildSystem } from "./structural-analysis";
+import {
+  compareDefense,
+  type DefenseCategory,
+  type DefenseCategoryDiff,
+} from "./defense-analysis";
+import { compareSupportTerms, type SupportTermChange } from "./support-evidence";
+import { compareSummonTerms, type SummonTermChange } from "./summon-evidence";
 import type {
   AnalyzedBuild,
   AnalyzedLoadout,
@@ -25,7 +34,7 @@ const catalog = importCatalogJson as ImportCatalog;
 const builds: AnalyzedBuild[] = structuredClone(demo.builds);
 
 type Side = "before" | "after";
-type View = "diagnosis" | "changes" | "formula" | "coverage";
+type View = "diagnosis" | "changes" | "formula" | "survival" | "coverage";
 type ChangeSection = "gear" | "skills" | "trees" | "memories" | "slates" | "pacts";
 
 interface Selection {
@@ -61,6 +70,28 @@ const esc = (value: unknown) => String(value ?? "")
 const escAttr = (value: unknown) => esc(value).replaceAll('"', "&quot;");
 const sideLabel = (side: Side) => side === "before" ? "Before" : "After";
 
+function provenanceLabel(source: string) {
+  return /^https:\/\//i.test(source)
+    ? `<a href="${escAttr(source)}" target="_blank" rel="noopener">${esc(source)} ↗</a>`
+    : `<strong>${esc(source)}</strong>`;
+}
+
+function provenanceLinks(entries: Array<{ source: string }>) {
+  const sources = [...new Set(entries.map((entry) => entry.source))]
+    .filter((source) => /^https:\/\//i.test(source));
+  if (!sources.length) return "";
+  return `<div class="evidence-sources"><span>Sources</span>${sources.map((source) => {
+    let label = source;
+    try {
+      const url = new URL(source);
+      label = `${url.hostname} · ${url.pathname.split("/").filter(Boolean).at(-1) ?? "data"}`;
+    } catch {
+      // Keep the escaped source string when a future non-standard locator is used.
+    }
+    return `<a href="${escAttr(source)}" target="_blank" rel="noopener">${esc(label)} ↗</a>`;
+  }).join("")}</div>`;
+}
+
 function selected(side: Side) {
   const selection = side === "before" ? beforeSelection : afterSelection;
   const build = builds.find((item) => item.id === selection.buildId) ?? builds[0];
@@ -93,6 +124,12 @@ function allOptions(active: Selection) {
 }
 
 function confidenceLabel(loadout: AnalyzedLoadout) {
+  if (loadout.resolutionHandoff) return "Local capture needed";
+  if (!loadout.model && (
+    loadout.partialMetrics?.length
+    || loadout.supportEvidence?.length
+    || loadout.summonEvidence?.length
+  )) return "Guarded source evidence";
   if (!loadout.model) return "Structure imported";
   if (loadout.sourceNote?.startsWith("Calibrated teaching")) return "Calibrated formula scenario";
   if (loadout.model.confidence === "experimental") return "Experimental minion coverage";
@@ -106,7 +143,15 @@ function isMinionLoadout(loadout: AnalyzedLoadout) {
 
 function buildPicker(side: Side, build: AnalyzedBuild, loadout: AnalyzedLoadout) {
   const selection = side === "before" ? beforeSelection : afterSelection;
-  const modeled = Boolean(loadout.model);
+  const state = loadout.resolutionHandoff
+    ? "capture"
+    : loadout.model
+      ? "modeled"
+      : (loadout.partialMetrics?.length
+          || loadout.supportEvidence?.length
+          || loadout.summonEvidence?.length)
+        ? "evidence"
+        : "waiting";
   return `<article class="build-picker build-picker--${side}">
     <div class="picker-topline">
       <span class="side-marker">${side === "before" ? "A" : "B"}</span>
@@ -123,7 +168,7 @@ function buildPicker(side: Side, build: AnalyzedBuild, loadout: AnalyzedLoadout)
       <span>${esc(build.source)}</span>
     </div>
     <div class="picker-bottom">
-      <span class="model-state ${modeled ? "modeled" : "waiting"}">
+      <span class="model-state ${state}">
         <span class="state-dot"></span>${esc(confidenceLabel(loadout))}
       </span>
       <button class="quiet-button" type="button" data-import="${side}">Import</button>
@@ -144,12 +189,23 @@ function renderSummary(before: AnalyzedLoadout, after: AnalyzedLoadout) {
   const afterDps = after.model?.dps;
   const bothModeled = beforeDps != null && afterDps != null;
   const delta = bothModeled ? percentChange(beforeDps, afterDps) : null;
+  const structure = compareStructure(before, after);
+  const defense = compareDefense(before, after);
+  const classificationRates = [before.coverage?.classificationRate, after.coverage?.classificationRate]
+    .filter((value): value is number => value != null);
+  const classificationFloor = classificationRates.length
+    ? Math.min(...classificationRates)
+    : null;
   const deltaClass = delta == null ? "neutral" : delta < 0 ? "negative" : "positive";
   const headline = delta == null
-    ? "Ready to inspect"
+    ? structure.changedSystems.length
+      ? `${structure.changedSystems.length} build system${structure.changedSystems.length === 1 ? "" : "s"} changed`
+      : "No imported changes found"
     : `${signedPercent(delta)} supported DPS`;
   const note = delta == null
-    ? "Calculation is waiting for a compatible model"
+    ? structure.insights[0]
+      ? `First review: ${structure.insights[0].title}`
+      : "Calculation is waiting for a compatible model"
     : delta < 0
       ? "The changed build is weaker under the same boss scenario"
       : "The changed build is stronger under the same boss scenario";
@@ -171,21 +227,40 @@ function renderSummary(before: AnalyzedLoadout, after: AnalyzedLoadout) {
     <div class="summary-metrics">
       ${summaryMetric("Before DPS", beforeDps == null ? "Not calculated" : compactNumber(beforeDps), before.name, "before")}
       ${summaryMetric("After DPS", afterDps == null ? "Not calculated" : compactNumber(afterDps), after.name, "after")}
-      ${summaryMetric("EHP", "Not calculated", "Defense model comes next", "disabled")}
       ${summaryMetric(
-        "Formula coverage",
-        bothModeled ? `${Math.round(lowestCoverage * 100)}%+` : "Pending",
-        bothModeled ? "Classified modifier lines" : "Imported structure only",
-        lowestCoverage < 0.6 ? "warning" : "",
+        "EHP",
+        "Not calculated",
+        defense.removed || defense.added
+          ? `${defense.removed} defensive lines removed · ${defense.added} added`
+          : "No defensive gear-line change found",
+        "disabled",
+      )}
+      ${summaryMetric(
+        bothModeled ? "Formula coverage" : "Classification coverage",
+        bothModeled
+          ? `${Math.round(lowestCoverage * 100)}%+`
+          : classificationFloor == null ? "Pending" : `${Math.round(classificationFloor * 100)}%+`,
+        bothModeled
+          ? "Classified modifier lines"
+          : classificationFloor == null ? "Imported structure only" : "Recognized lines; no DPS claim",
+        (bothModeled ? lowestCoverage : classificationFloor ?? 0) < 0.6 ? "warning" : "",
       )}
     </div>
-    <div class="scenario-strip">
-      <span class="scenario-label">Shared scenario</span>
-      <span>Boss target</span>
-      <span>30% elemental / erosion resistance</span>
-      <span>Full configured uptime</span>
-      <button type="button" class="text-button" data-view="coverage">Review assumptions</button>
-    </div>
+    ${bothModeled
+      ? `<div class="scenario-strip">
+          <span class="scenario-label">Shared scenario</span>
+          <span>Boss target</span>
+          <span>30% elemental / erosion resistance</span>
+          <span>Full configured uptime</span>
+          <button type="button" class="text-button" data-view="coverage">Review assumptions</button>
+        </div>`
+      : `<div class="scenario-strip evidence-scope">
+          <span class="scenario-label">Evidence scope</span>
+          <span>Imported entities and source terms</span>
+          <span>No target scenario applied</span>
+          <span>DPS / EHP not guessed</span>
+          <button type="button" class="text-button" data-view="coverage">Review coverage</button>
+        </div>`}
   </section>`;
 }
 
@@ -227,6 +302,45 @@ function waterfallRow(step: WaterfallStep, max: number) {
     <span class="waterfall-value">${changed ? esc(signedCompact(step.delta)) : "—"}</span>
     <span class="waterfall-detail">${esc(fieldText)}</span>
   </button>`;
+}
+
+function renderTradeoff(steps: WaterfallStep[]) {
+  const summary = summarizeTradeoff(steps);
+  if (Math.abs(summary.netDelta) < 0.5 && summary.totalGain < 0.5 && summary.totalLoss < 0.5) {
+    return "";
+  }
+  const isLoss = summary.netDelta < -0.5;
+  const isGain = summary.netDelta > 0.5;
+  const primary = isLoss ? summary.primaryLoss : summary.primaryGain;
+  const offset = isLoss ? summary.primaryGain : summary.primaryLoss;
+  const outcome = isLoss ? "loss" : isGain ? "gain" : "neutral";
+  const outcomeLabel = isLoss ? "DPS lost" : isGain ? "DPS gained" : "Net change";
+
+  return `<section class="tradeoff-summary ${outcome}" aria-labelledby="tradeoff-title">
+    <div class="tradeoff-equation" aria-label="Modeled losses plus modeled gains equals the final DPS change">
+      <div class="tradeoff-part loss">
+        <span>All modeled losses</span>
+        <strong>${summary.totalLoss < 0.5 ? "0" : `−${esc(compactNumber(summary.totalLoss))}`}</strong>
+      </div>
+      <span class="tradeoff-operator" aria-hidden="true">+</span>
+      <div class="tradeoff-part gain">
+        <span>All modeled gains</span>
+        <strong>${summary.totalGain < 0.5 ? "0" : `+${esc(compactNumber(summary.totalGain))}`}</strong>
+      </div>
+      <span class="tradeoff-operator" aria-hidden="true">=</span>
+      <div class="tradeoff-part net">
+        <span id="tradeoff-title">${outcomeLabel}</span>
+        <strong>${esc(signedCompact(summary.netDelta))}</strong>
+      </div>
+    </div>
+    ${primary ? `<div class="tradeoff-lesson">
+      <span class="eyebrow">${isLoss ? "Why the upgrade lost" : isGain ? "Why the upgrade won" : "What canceled out"}</span>
+      <p><strong>${esc(primary.label)} was the main driver.</strong>
+        ${esc(primary.description)}
+        ${offset ? `The strongest offset was ${esc(offset.label.toLowerCase())} at ${esc(signedCompact(offset.delta))}.` : ""}
+      </p>
+    </div>` : ""}
+  </section>`;
 }
 
 const CHECK_COPY: Record<string, { title: string; body: string }> = {
@@ -314,19 +428,243 @@ function nextChecks(steps: WaterfallStep[] | null, after: AnalyzedLoadout) {
   </aside>`;
 }
 
+const SYSTEM_LABELS: Record<BuildSystem, string> = {
+  gear: "Gear",
+  skills: "Skills",
+  trees: "Talent trees",
+  memories: "Memories",
+  slates: "Slates",
+  pacts: "Pactspirits",
+};
+
+function renderStructuralDiagnosis(before: AnalyzedLoadout, after: AnalyzedLoadout) {
+  const comparison = compareStructure(before, after);
+  if (!comparison.insights.length) {
+    return `<div class="structural-empty">
+      <strong>No imported loadout differences were found.</strong>
+      <p>Choose two different loadouts or import a changed build to begin the comparison.</p>
+    </div>`;
+  }
+  return `<div class="structural-diagnosis">
+    <div class="structural-head">
+      <div>
+        <span class="eyebrow">Evidence before arithmetic</span>
+        <h3>Start with the changes most likely to alter the formula</h3>
+      </div>
+      <span class="exact-badge">${comparison.changedSystems.length} systems changed</span>
+    </div>
+    <p class="structural-note">These are investigation priorities from the imported entities—not DPS estimates. Each card explains why the change matters and links to its source details.</p>
+    <div class="insight-list">
+      ${comparison.insights.slice(0, 5).map((insight, index) => `<button type="button"
+        class="insight-card ${insight.tone}" data-open-section="${insight.section}">
+        <span class="insight-rank">${index + 1}</span>
+        <span class="insight-copy">
+          <span class="insight-label">${esc(insight.label)} · ${esc(SYSTEM_LABELS[insight.section])}</span>
+          <strong>${esc(insight.title)}</strong>
+          <span>${esc(insight.explanation)}</span>
+          <small>${insight.evidence.map((line) => esc(line)).join(" · ")}</small>
+        </span>
+        <span class="insight-open" aria-hidden="true">Review →</span>
+      </button>`).join("")}
+    </div>
+  </div>`;
+}
+
+function weaponFoundation(loadout: AnalyzedLoadout) {
+  return loadout.partialMetrics?.find((metric) => metric.id === "bing-weapon-hit-foundation");
+}
+
+function renderPartialComparison(before: AnalyzedLoadout, after: AnalyzedLoadout) {
+  const left = weaponFoundation(before);
+  const right = weaponFoundation(after);
+  if (!left && !right) return "";
+  if (!left || !right) {
+    const metric = left ?? right!;
+    return `<section class="partial-proof">
+      <div class="partial-proof-head">
+        <div><span class="eyebrow">Proven partial calculation</span><h3>${esc(metric.label)}</h3></div>
+        <span class="not-dps-badge">Not DPS</span>
+      </div>
+      <strong class="partial-single">${esc(metric.display)}</strong>
+      <p>Only one side has all inputs required for this guarded metric, so no A/B ratio is shown.</p>
+    </section>`;
+  }
+  const delta = right.value - left.value;
+  const deltaPct = left.value === 0 ? null : delta / left.value;
+  const direction = delta < -1e-9 ? "loss" : delta > 1e-9 ? "gain" : "neutral";
+  const confidence = left.confidence === "confirmed-partial" && right.confidence === "confirmed-partial"
+    ? "Confirmed partial"
+    : "Partly inferred";
+  return `<section class="partial-proof ${direction}">
+    <div class="partial-proof-head">
+      <div>
+        <span class="eyebrow">Proven partial calculation</span>
+        <h3>Equipped-weapon contribution to one raw Hammer of Ash hit</h3>
+      </div>
+      <div class="partial-badges"><span>${confidence}</span><b>Not DPS</b></div>
+    </div>
+    <div class="partial-comparison">
+      <div><span>Before foundation</span><strong>${esc(left.display)}</strong>
+        <small>${esc(left.inputs[0]?.display)} weapon × ${esc(left.inputs[1]?.display)} WAD</small></div>
+      <i aria-hidden="true">→</i>
+      <div><span>After foundation</span><strong>${esc(right.display)}</strong>
+        <small>${esc(right.inputs[0]?.display)} weapon × ${esc(right.inputs[1]?.display)} WAD</small></div>
+      <div class="partial-delta"><span>Partial change</span>
+        <strong>${deltaPct == null ? "—" : esc(signedPercent(deltaPct))}</strong>
+        <small>${esc(signedCompact(delta))} raw hit</small></div>
+    </div>
+    <p>This proves movement in the weapon-and-skill foundation only. Supports, global scaling, critical strikes, conversion, mitigation, bomb overlap, damage over time, and uptime remain outside this number.</p>
+  </section>`;
+}
+
+function supportTermSide(
+  evidence: SupportTermChange["before"],
+  label: string,
+) {
+  if (!evidence) return `<div class="support-term-side empty"><span>${esc(label)}</span><strong>Not socketed</strong></div>`;
+  if (evidence.status === "unsupported") {
+    return `<div class="support-term-side unsupported"><span>${esc(label)}</span>
+      <strong>${esc(evidence.supportName ?? "Unknown support")}</strong>
+      <p>${evidence.blockers.map((blocker) => esc(blocker)).join(" ")}</p></div>`;
+  }
+  return `<div class="support-term-side">
+    <span>${esc(label)}${evidence.level ? ` · L${evidence.level}` : ""}</span>
+    <strong>${esc(evidence.supportName ?? "Unknown support")}</strong>
+    <ul>${evidence.effects.map((effect) => `<li>
+      <b>${esc(effect.display)}</b>
+      <span><strong>${esc(effect.label)}</strong><small>${esc(effect.scope)}${effect.condition ? ` · ${esc(effect.condition)}` : ""}</small></span>
+    </li>`).join("")}</ul>
+  </div>`;
+}
+
+function renderSupportTermChanges(before: AnalyzedLoadout, after: AnalyzedLoadout) {
+  const changes = compareSupportTerms(before, after);
+  if (!changes.length) return "";
+  const provenance = changes.flatMap((change) => [
+    ...(change.before?.provenance ?? []),
+    ...(change.after?.provenance ?? []),
+  ]);
+  return `<section class="support-evidence-panel">
+    <div class="partial-proof-head">
+      <div><span class="eyebrow">Exact support text</span><h3>What the main-skill socket changes actually say</h3></div>
+      <div class="partial-badges"><span>SS13 source terms</span><b>Net DPS pending</b></div>
+    </div>
+    <p>These values come from the season support tables. They are not added together: damage-type share, critical chance, projectile geometry, enemy Life, and uptime still decide their net value.</p>
+    <div class="support-change-list">
+      ${changes.map((change) => `<article class="support-change ${change.kind}">
+        <div class="support-change-head"><span>${esc(change.kind)}</span><strong>${esc(change.supportName)}</strong></div>
+        <div class="support-term-sides">
+          ${supportTermSide(change.before, "Before")}
+          ${supportTermSide(change.after, "After")}
+        </div>
+      </article>`).join("")}
+    </div>
+    ${provenanceLinks(provenance)}
+  </section>`;
+}
+
+function summonTermSide(
+  evidence: SummonTermChange["before"],
+  label: string,
+) {
+  if (!evidence) {
+    return `<div class="support-term-side empty"><span>${esc(label)}</span><strong>Not active</strong></div>`;
+  }
+  const tags = evidence.damageTags.join(" · ");
+  return `<div class="support-term-side summon-term-side">
+    <span>${esc(label)} · L${evidence.level}</span>
+    <strong>${esc(evidence.skillName)}</strong>
+    <small class="summon-actor-label">Summoned actor · ${esc(tags)}</small>
+    <ul>${evidence.terms.map((term) => `<li>
+      <b>${esc(term.display)}</b>
+      <span>
+        <strong>${esc(term.label)}</strong>
+        <small>${term.scope === "player" ? "Player Origin term" : "Summoned actor"}${term.condition ? ` · ${esc(term.condition)}` : ""}</small>
+      </span>
+    </li>`).join("")}</ul>
+  </div>`;
+}
+
+function renderSummonTermChanges(before: AnalyzedLoadout, after: AnalyzedLoadout) {
+  const beforeEvidence = before.summonEvidence ?? [];
+  const afterEvidence = after.summonEvidence ?? [];
+  if (!beforeEvidence.length && !afterEvidence.length) return "";
+  const changes = compareSummonTerms(before, after);
+  const reference = afterEvidence[0] ?? beforeEvidence[0];
+  const minionDpsBlockers = [...new Set(reference?.minionDps.blockers ?? [])];
+  const playerEhpBlockers = [...new Set(reference?.playerEhp.blockers ?? [])];
+  const provenance = [...beforeEvidence, ...afterEvidence]
+    .flatMap((evidence) => evidence.provenance);
+  const evidenceBody = changes.length
+    ? changes.map((change) => `<article class="support-change ${change.kind}">
+        <div class="support-change-head"><span>${esc(change.kind)}</span><strong>${esc(change.skillName)}</strong></div>
+        <div class="support-term-sides">
+          ${summonTermSide(change.before, "Before")}
+          ${summonTermSide(change.after, "After")}
+        </div>
+      </article>`).join("")
+    : `<div class="summon-steady">
+        <strong>No intrinsic summon source term changed.</strong>
+        <p>The active terms are shown for orientation; other equipment, supports, traits, and tree state can still differ.</p>
+        <div class="summon-steady-grid">
+          ${(afterEvidence.length ? afterEvidence : beforeEvidence)
+            .map((evidence) => summonTermSide(evidence, "Active evidence"))
+            .join("")}
+        </div>
+      </div>`;
+  return `<section class="support-evidence-panel summon-evidence-panel">
+    <div class="partial-proof-head">
+      <div><span class="eyebrow">Exact summon text</span><h3>What the Spirit Magus source records actually prove</h3></div>
+      <div class="partial-badges"><span>SS13 source terms</span><b>Not minion DPS</b><b>Not total EHP</b></div>
+    </div>
+    <p>Summon count, intrinsic conversion, and player-facing Origin lines come directly from the season tables. They remain separate inputs: no attack rotation or survival total is manufactured from them.</p>
+    <div class="summon-boundaries">
+      <div><strong>Minion DPS blocked</strong><span>${minionDpsBlockers.map((blocker) => esc(blocker)).join(" ")}</span></div>
+      <div><strong>Total EHP blocked</strong><span>${playerEhpBlockers.map((blocker) => esc(blocker)).join(" ")}</span></div>
+    </div>
+    <div class="support-change-list">${evidenceBody}</div>
+    ${provenanceLinks(provenance)}
+  </section>`;
+}
+
+function renderLocalCaptureHandoff(...loadouts: AnalyzedLoadout[]) {
+  const handoff = loadouts.find((loadout) => loadout.resolutionHandoff)?.resolutionHandoff;
+  if (!handoff) return "";
+  return `<section class="capture-handoff" aria-labelledby="capture-handoff-title">
+    <div class="capture-handoff-head">
+      <div>
+        <span class="eyebrow">Local resolution required</span>
+        <h3 id="capture-handoff-title">Turn this code into build data</h3>
+      </div>
+      <code>${esc(handoff.buildCode)}</code>
+    </div>
+    <ol>
+      ${handoff.steps.map((step) => `<li>
+        <span aria-hidden="true"></span>
+        <div><strong>${esc(step.title)}</strong><p>${esc(step.detail)}</p></div>
+      </li>`).join("")}
+    </ol>
+    <p class="capture-privacy"><strong>Private by design:</strong> TLI Lens cannot attach to the game process. Only the JSON you explicitly paste or drop is read, in this browser.</p>
+  </section>`;
+}
+
 function renderDiagnosis(before: AnalyzedLoadout, after: AnalyzedLoadout) {
   if (!before.snapshot || !after.snapshot || !before.model || !after.model) {
     return `<div class="content-grid">
       <section class="analysis-panel empty-analysis">
         <span class="eyebrow">Diagnosis</span>
-        <h2>The builds imported; the formula has not.</h2>
+        <h2>The builds imported. The investigation can start now.</h2>
         <p>${esc(after.sourceNote ?? before.sourceNote ?? "This build format is not connected to the damage model yet.")}</p>
+        ${renderLocalCaptureHandoff(after, before)}
+        ${renderPartialComparison(before, after)}
+        ${renderSupportTermChanges(before, after)}
+        ${renderSummonTermChanges(before, after)}
+        ${renderStructuralDiagnosis(before, after)}
         <div class="honesty-grid">
           <div><span>Imported</span><strong>Loadout structure</strong><p>Items, skills, trees, memories, slates, and pacts.</p></div>
-          <div><span>Waiting</span><strong>Damage classification</strong><p>Season data and build-specific mechanics must be resolved.</p></div>
+          <div><span>Prioritized</span><strong>Changes to investigate</strong><p>Support, weapon, tree, and secondary-system differences.</p></div>
           <div><span>Not guessed</span><strong>DPS and EHP</strong><p>Unavailable values stay unavailable instead of becoming false zeroes.</p></div>
         </div>
-        <button type="button" class="secondary-button" data-view="changes">Compare imported loadout details</button>
       </section>
       ${nextChecks(null, after)}
     </div>`;
@@ -344,6 +682,7 @@ function renderDiagnosis(before: AnalyzedLoadout, after: AnalyzedLoadout) {
         <span class="exact-badge">Reconciles to ${esc(compactNumber(after.model.dps))}</span>
       </div>
       <p class="short-answer">${shortAnswer(steps, totalDelta)}</p>
+      ${renderTradeoff(steps)}
       <div class="waterfall-head">
         <span>Formula layer</span><span>Replay contribution</span><span>Δ DPS</span>
       </div>
@@ -376,8 +715,8 @@ function gearChangeRows(before: AnalyzedLoadout, after: AnalyzedLoadout) {
       label: slot.replace(/([a-z])([A-Z])/g, "$1 $2"),
       before: left.name,
       after: right.name,
-      beforeDetail: left.lines.slice(0, 3),
-      afterDetail: right.lines.slice(0, 3),
+      beforeDetail: left.lines.slice(0, 6),
+      afterDetail: right.lines.slice(0, 6),
       changed: left.name !== right.name || JSON.stringify(left.lines) !== JSON.stringify(right.lines),
     };
   });
@@ -387,10 +726,20 @@ function skillName(skill: SkillRow | undefined) {
   return skill ? `${skill.name}${skill.level ? ` · L${skill.level}` : ""}` : "Empty";
 }
 
+function supportDetail(support: SkillRow["supports"][number]) {
+  return [
+    support.name,
+    support.level != null ? `L${support.level}` : "",
+    support.tier != null ? `T${support.tier}` : "",
+    support.rank != null ? `R${support.rank}` : "",
+    support.rollValues?.length ? `rolls ${support.rollValues.join(" / ")}` : "",
+  ].filter(Boolean).join(" · ");
+}
+
 function skillChangeRows(before: AnalyzedLoadout, after: AnalyzedLoadout) {
-  const group = (loadout: AnalyzedLoadout, kind: "active" | "passive") =>
+  const group = (loadout: AnalyzedLoadout, kind: SkillRow["kind"]) =>
     loadout.skills.filter((skill) => skill.kind === kind);
-  return (["active", "passive"] as const).flatMap((kind) => {
+  return (["active", "passive", "support", "unknown"] as const).flatMap((kind) => {
     const a = group(before, kind);
     const b = group(after, kind);
     return Array.from({ length: Math.max(a.length, b.length) }, (_, index) => {
@@ -401,8 +750,8 @@ function skillChangeRows(before: AnalyzedLoadout, after: AnalyzedLoadout) {
         label: `${kind} ${index + 1}`,
         before: skillName(left),
         after: skillName(right),
-        beforeDetail: left?.supports.map((support) => support.name) ?? [],
-        afterDetail: right?.supports.map((support) => support.name) ?? [],
+        beforeDetail: left?.supports.map(supportDetail) ?? [],
+        afterDetail: right?.supports.map(supportDetail) ?? [],
         changed: JSON.stringify(left) !== JSON.stringify(right),
       };
     });
@@ -416,24 +765,36 @@ function simpleChangeRows(before: AnalyzedLoadout, after: AnalyzedLoadout, secti
       b: after.trees,
       label: (_item: any, index: number) => `tree ${index + 1}`,
       value: (item: any) => item ? `${item.name} · ${item.points} pts${item.hasPrism ? " · prism" : ""}` : "Empty",
+      detail: (item: any) => item ? [
+        item.notable12 ? `12-point notable · ${item.notable12}` : "",
+        item.notable24 ? `24-point notable · ${item.notable24}` : "",
+        item.prismId ? `Prism · ${item.prismId}` : "",
+        ...Object.entries<number>(item.nodePoints ?? {})
+          .filter(([, points]) => points > 0)
+          .slice(0, 9)
+          .map(([node, points]) => `${node} · ${points} pt${points === 1 ? "" : "s"}`),
+      ].filter(Boolean) : [],
     },
     memories: {
       a: before.memories,
       b: after.memories,
       label: (item: any, index: number) => item?.slot ?? `memory ${index + 1}`,
       value: (item: any) => item ? `${item.name} · ${item.affixes} affixes` : "Empty",
+      detail: (item: any) => item?.lines ?? [],
     },
     slates: {
       a: before.slates,
       b: after.slates,
       label: (_item: any, index: number) => `slate ${index + 1}`,
       value: (item: any) => item ? `${item.name} · ${item.affixes} affixes` : "Empty",
+      detail: (item: any) => item?.lines ?? [],
     },
     pacts: {
       a: before.pactspirits,
       b: after.pactspirits,
       label: (_item: any, index: number) => `pact ${index + 1}`,
       value: (item: any) => item ? `${item.name}${item.level ? ` · L${item.level}` : ""} · ${item.nodes} nodes · ${item.kismets} kismets` : "Empty",
+      detail: (item: any) => item?.details ?? [],
     },
   }[section as Exclude<ChangeSection, "gear" | "skills">];
   if (!config) return [];
@@ -447,8 +808,8 @@ function simpleChangeRows(before: AnalyzedLoadout, after: AnalyzedLoadout, secti
       label: config.label(right ?? left, index),
       before: aValue,
       after: bValue,
-      beforeDetail: [] as string[],
-      afterDetail: [] as string[],
+      beforeDetail: config.detail(left),
+      afterDetail: config.detail(right),
       changed: JSON.stringify(left) !== JSON.stringify(right),
     };
   });
@@ -461,17 +822,42 @@ function changeCount(before: AnalyzedLoadout, after: AnalyzedLoadout, section: C
   return rows.filter((row) => row.changed).length;
 }
 
+function lineTemplate(line: string) {
+  return line
+    .toLocaleLowerCase()
+    .replace(/[+-]?\d+(?:\.\d+)?/g, "#")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function renderDetailLines(
+  lines: string[],
+  otherLines: string[],
+  side: "before" | "after",
+) {
+  if (!lines.length) return "";
+  const otherExact = new Set(otherLines);
+  const otherTemplates = new Set(otherLines.map(lineTemplate));
+  return `<ul>${lines.map((line) => {
+    const status = otherExact.has(line)
+      ? "same"
+      : otherTemplates.has(lineTemplate(line)) ? "roll" : side === "before" ? "removed" : "added";
+    const marker = status === "same" ? "·" : status === "roll" ? "±" : side === "before" ? "−" : "+";
+    return `<li class="detail-line ${status}"><i aria-hidden="true">${marker}</i>${esc(line)}</li>`;
+  }).join("")}</ul>`;
+}
+
 function renderChangeRow(row: ReturnType<typeof gearChangeRows>[number]) {
   return `<article class="diff-row ${row.changed ? "is-changed" : "is-same"}">
     <div class="diff-slot"><span>${esc(row.label)}</span>${rowChange(row.before, row.after)}</div>
     <div class="diff-side before">
       <span class="diff-side-label">Before</span><strong>${esc(row.before)}</strong>
-      ${row.beforeDetail.length ? `<ul>${row.beforeDetail.map((line) => `<li>${esc(line)}</li>`).join("")}</ul>` : ""}
+      ${renderDetailLines(row.beforeDetail, row.afterDetail, "before")}
     </div>
     <div class="diff-arrow" aria-hidden="true">→</div>
     <div class="diff-side after">
       <span class="diff-side-label">After</span><strong>${esc(row.after)}</strong>
-      ${row.afterDetail.length ? `<ul>${row.afterDetail.map((line) => `<li>${esc(line)}</li>`).join("")}</ul>` : ""}
+      ${renderDetailLines(row.afterDetail, row.beforeDetail, "after")}
     </div>
   </article>`;
 }
@@ -514,10 +900,49 @@ function renderChanges(before: AnalyzedLoadout, after: AnalyzedLoadout) {
 function renderFormula(before: AnalyzedLoadout, after: AnalyzedLoadout) {
   const active = formulaSide === "before" ? before : after;
   if (!active.snapshot || !active.model) {
+    const partial = weaponFoundation(active);
+    if (partial) {
+      return `<section class="formula-panel partial-formula">
+        <div class="analysis-heading">
+          <div><span class="eyebrow">Guarded partial arithmetic</span><h2>${esc(active.name)}</h2></div>
+          <div class="segmented">
+            <button type="button" class="${formulaSide === "before" ? "active" : ""}" data-formula-side="before">Before</button>
+            <button type="button" class="${formulaSide === "after" ? "active" : ""}" data-formula-side="after">After</button>
+          </div>
+        </div>
+        <div class="partial-formula-total">
+          <div><span>${esc(partial.label)}</span><strong>${esc(partial.display)}</strong><small>${esc(partial.unit)}</small></div>
+          <b>NOT DPS</b>
+        </div>
+        <div class="partial-equation" aria-label="Partial formula">
+          ${partial.inputs.map((input, index) => `${index ? `<i>${index === 1 ? "×" : "+"}</i>` : ""}
+            <span><small>${esc(input.label)}</small><strong>${esc(input.display)}</strong></span>`).join("")}
+          <i>=</i><span class="result"><small>Raw foundation</small><strong>${esc(partial.display)}</strong></span>
+        </div>
+        <p class="section-intro">${esc(partial.scope)}. Its ${partial.confidence === "confirmed-partial" ? "formula and imported inputs are confirmed" : "formula is confirmed and one routing rule is inferred"}.</p>
+        <div class="partial-detail-grid">
+          <div>
+            <span class="panel-kicker">Source trail</span>
+            <ul>${partial.provenance.slice(0, 8).map((source) =>
+              `<li>${provenanceLabel(source.source)}<span>${esc(source.locator)}</span></li>`).join("")}</ul>
+          </div>
+          <div>
+            <span class="panel-kicker">Deliberately excluded</span>
+            <ul>${partial.excluded.map((item) => `<li><span>${esc(item)}</span></li>`).join("")}</ul>
+          </div>
+        </div>
+        <div class="model-boundary">
+          <div class="boundary-icon">!</div>
+          <div><strong>This number must not be read as total hit damage or DPS.</strong>
+          <p>The full build still needs its actor, support, rotation, target, and uptime compilers.</p></div>
+        </div>
+      </section>`;
+    }
     return `<section class="single-panel empty-analysis">
       <span class="eyebrow">Exact formula</span>
       <h2>Not calculated for this import</h2>
       <p>${esc(active.sourceNote ?? "This build is not connected to a compatible damage model.")}</p>
+      ${renderLocalCaptureHandoff(active)}
     </section>`;
   }
   const result = cycleDps(active.snapshot);
@@ -586,10 +1011,11 @@ function unsupportedList(label: string, loadout: AnalyzedLoadout) {
 
 function renderCoverage(before: AnalyzedLoadout, after: AnalyzedLoadout) {
   const minion = isMinionLoadout(before) || isMinionLoadout(after);
+  const bothModeled = Boolean(before.model && after.model);
   return `<section class="coverage-panel">
     <div class="analysis-heading">
       <div><span class="eyebrow">Trust the boundaries</span><h2>Coverage & assumptions</h2></div>
-      <span class="exact-badge">${minion ? "Experimental build type" : "Partial model"}</span>
+      <span class="exact-badge">${bothModeled ? (minion ? "Experimental build type" : "Partial model") : "Evidence boundary"}</span>
     </div>
     <p class="section-intro">A calculated number is only useful when you can see what was imported, classified, assumed, and left unsupported.</p>
     <div class="coverage-grid">
@@ -599,18 +1025,119 @@ function renderCoverage(before: AnalyzedLoadout, after: AnalyzedLoadout) {
     ${minion ? `<div class="model-boundary">
       <div class="boundary-icon">!</div>
       <div><strong>Minion DPS is not settled by the player-hit formula.</strong>
-      <p>Base minion actions, quantity, AI/uptime, trait mechanics, and minion-only scaling are incomplete. Imported minion stats stay visible, while the output remains directional.</p></div>
+      <p>Base minion actions, quantity, AI/uptime, trait mechanics, and minion-only scaling are incomplete. Imported source terms stay visible, while DPS remains unavailable.</p></div>
     </div>` : ""}
-    <div class="assumption-grid">
-      <div><span>Target</span><strong>Boss, 30% elemental and erosion resistance</strong></div>
-      <div><span>Uptime</span><strong>Configured buffs and debuffs at full modeled uptime</strong></div>
-      <div><span>Defense</span><strong>Not calculated yet; unavailable is not zero</strong></div>
-      <div><span>Attribution</span><strong>Fixed replay order with overlapping isolated checks</strong></div>
-    </div>
+    ${bothModeled
+      ? `<div class="assumption-grid">
+          <div><span>Target</span><strong>Boss, 30% elemental and erosion resistance</strong></div>
+          <div><span>Uptime</span><strong>Configured buffs and debuffs at full modeled uptime</strong></div>
+          <div><span>Defense</span><strong>Not calculated yet; unavailable is not zero</strong></div>
+          <div><span>Attribution</span><strong>Fixed replay order with overlapping isolated checks</strong></div>
+        </div>`
+      : `<div class="assumption-grid">
+          <div><span>Target</span><strong>No target scenario applied</strong></div>
+          <div><span>Uptime</span><strong>No rotation or uptime assumed</strong></div>
+          <div><span>Defense</span><strong>Evidence lines only; EHP is unavailable</strong></div>
+          <div><span>Attribution</span><strong>Source entities prioritized without assigning DPS direction</strong></div>
+        </div>`}
     <div class="unsupported-grid">
       ${unsupportedList("Before · unsupported", before)}
       ${unsupportedList("After · unsupported", after)}
     </div>
+  </section>`;
+}
+
+const DEFENSE_COPY: Record<DefenseCategory, { label: string; explanation: string }> = {
+  life: {
+    label: "Life pool",
+    explanation: "Flat and percentage maximum Life establish the pool that later mitigation protects.",
+  },
+  energy: {
+    label: "Energy Shield & barriers",
+    explanation: "Energy Shield and barrier effects add a separate pool whose recharge, regain, and uptime matter.",
+  },
+  resistance: {
+    label: "Resistances",
+    explanation: "Resistance values must be evaluated against their cap and the incoming damage type.",
+  },
+  armor: {
+    label: "Armor",
+    explanation: "Armor mitigation depends on the size of the incoming physical hit; the sheet number alone is not EHP.",
+  },
+  evasion: {
+    label: "Evasion",
+    explanation: "Avoidance changes expected hit frequency, but does not reduce a hit that connects.",
+  },
+  avoidance: {
+    label: "Block & avoidance",
+    explanation: "Block, dodge, and avoidance need their chance, effect, and eligible hit types to become expected EHP.",
+  },
+  recovery: {
+    label: "Recovery",
+    explanation: "Regain and restoration improve sustained survival, but are not part of one-hit effective health.",
+  },
+  mitigation: {
+    label: "Damage mitigation",
+    explanation: "Damage-taken, Injury Buffer, and Fortitude effects are late defensive layers and often conditional.",
+  },
+};
+
+function defenseEvidenceList(
+  rows: DefenseCategoryDiff["removed"],
+  tone: "removed" | "added",
+) {
+  if (!rows.length) return "";
+  return `<div class="defense-delta ${tone}">
+    <span>${tone === "removed" ? "Removed" : "Added"}</span>
+    <ul>${rows.slice(0, 6).map((row) => `<li>
+      <strong>${esc(row.text)}</strong><small>${esc(row.source)}</small>
+    </li>`).join("")}</ul>
+    ${rows.length > 6 ? `<small>+${rows.length - 6} more imported lines</small>` : ""}
+  </div>`;
+}
+
+function renderSurvival(before: AnalyzedLoadout, after: AnalyzedLoadout) {
+  const comparison = compareDefense(before, after);
+  const changed = comparison.categories.filter((row) => row.removed.length || row.added.length);
+  return `<section class="survival-panel">
+    <div class="analysis-heading">
+      <div><span class="eyebrow">Survival evidence</span><h2>See what changed before calculating EHP</h2></div>
+      <span class="exact-badge">Evidence only · no fake EHP</span>
+    </div>
+    <p class="section-intro">This view finds defensive lines on imported gear and shows exactly what was removed or added. It does not sum unlike defenses into a misleading score.</p>
+    <div class="survival-summary">
+      <div><span>Before evidence</span><strong>${comparison.before.length}</strong><small>defensive gear lines</small></div>
+      <div><span>Removed</span><strong class="loss">${comparison.removed}</strong><small>lines to review</small></div>
+      <div><span>Added</span><strong class="gain">${comparison.added}</strong><small>new defensive lines</small></div>
+      <div><span>Exact EHP</span><strong>Pending</strong><small>scenario compiler required</small></div>
+    </div>
+    <div class="defense-category-list">
+      ${changed.length ? changed.map((row) => {
+        const copy = DEFENSE_COPY[row.category];
+        return `<article class="defense-category">
+          <div class="defense-category-head">
+            <div><span>${esc(copy.label)}</span><p>${esc(copy.explanation)}</p></div>
+            <b>${row.before.length} → ${row.after.length} lines</b>
+          </div>
+          <div class="defense-deltas">
+            ${defenseEvidenceList(row.removed, "removed")}
+            ${defenseEvidenceList(row.added, "added")}
+          </div>
+        </article>`;
+      }).join("") : `<div class="structural-empty">
+        <strong>No defensive gear-line differences were found.</strong>
+        <p>The loadouts may still differ through talents, hero traits, memories, slates, buffs, or live sheet values that this evidence pass cannot resolve yet.</p>
+      </div>`}
+    </div>
+    <aside class="ehp-requirements">
+      <div><span class="eyebrow">Required for exact EHP</span><h3>One build needs several incoming-damage scenarios</h3></div>
+      <ol>
+        <li><b>1</b><span><strong>Pool</strong>Live Life, Energy Shield, barrier, and reservation state.</span></li>
+        <li><b>2</b><span><strong>Mitigation</strong>Actual resistances, caps, armor, damage-taken layers, and conditions.</span></li>
+        <li><b>3</b><span><strong>Threat</strong>Physical, elemental, erosion, hit, and damage-over-time scenarios.</span></li>
+        <li><b>4</b><span><strong>Sustain</strong>Regain, restoration, avoidance, cooldowns, and realistic uptime.</span></li>
+      </ol>
+    </aside>
   </section>`;
 }
 
@@ -619,13 +1146,14 @@ function navigation() {
     { id: "diagnosis", label: "Diagnosis" },
     { id: "changes", label: "Build changes" },
     { id: "formula", label: "Damage formula" },
+    { id: "survival", label: "Survival" },
     { id: "coverage", label: "Coverage" },
   ];
   return `<nav class="view-tabs" aria-label="Analysis views">
-    ${items.map((item) => `<button type="button" data-view="${item.id}" class="${activeView === item.id ? "active" : ""}">
+    ${items.map((item) => `<button type="button" data-view="${item.id}" class="${activeView === item.id ? "active" : ""}"
+      ${activeView === item.id ? `aria-current="page"` : ""}>
       ${esc(item.label)}${item.count ? `<span>${esc(item.count)}</span>` : ""}
     </button>`).join("")}
-    <button type="button" class="disabled-tab" disabled title="EHP model is not implemented yet">Survival <span>soon</span></button>
     <button type="button" class="disabled-tab" disabled title="Optimizer is not implemented yet">Suggestions <span>later</span></button>
   </nav>`;
 }
@@ -637,6 +1165,7 @@ function render() {
   if (activeView === "diagnosis") content = renderDiagnosis(before.loadout, after.loadout);
   else if (activeView === "changes") content = renderChanges(before.loadout, after.loadout);
   else if (activeView === "formula") content = renderFormula(before.loadout, after.loadout);
+  else if (activeView === "survival") content = renderSurvival(before.loadout, after.loadout);
   else content = renderCoverage(before.loadout, after.loadout);
 
   app.innerHTML = `<header class="site-header">
@@ -685,6 +1214,11 @@ function render() {
   </footer>`;
 }
 
+function restoreWorkspaceFocus(selector: string) {
+  const element = app.querySelector<HTMLElement>(selector);
+  element?.focus({ preventScroll: true });
+}
+
 function setImportStatus(message: string, type: "success" | "error" | "info" = "info") {
   importStatus.className = `import-status ${type}`;
   importStatus.textContent = message;
@@ -705,6 +1239,7 @@ function activateImported(build: AnalyzedBuild) {
   window.setTimeout(() => {
     importDialog.close();
     render();
+    restoreWorkspaceFocus(`#${importTarget}-loadout`);
   }, 450);
 }
 
@@ -725,9 +1260,11 @@ app.addEventListener("change", (event) => {
   if (!target.matches("[data-selection]")) return;
   const selection = readSelectionKey(target.value);
   if (!selection) return;
-  if (target.dataset.selection === "before") beforeSelection = selection;
+  const side = target.dataset.selection as Side;
+  if (side === "before") beforeSelection = selection;
   else afterSelection = selection;
   render();
+  restoreWorkspaceFocus(`#${side}-loadout`);
 });
 
 app.addEventListener("click", (event) => {
@@ -739,6 +1276,7 @@ app.addEventListener("click", (event) => {
     event.preventDefault();
     activeView = view ?? viewLink!;
     render();
+    restoreWorkspaceFocus(`[data-view="${activeView}"]`);
     document.querySelector(".view-tabs")?.scrollIntoView({ behavior: "smooth", block: "start" });
     return;
   }
@@ -747,23 +1285,37 @@ app.addEventListener("click", (event) => {
     importTarget = side;
     setImportStatus(`Importing into ${sideLabel(side)}.`);
     importDialog.showModal();
+    window.requestAnimationFrame(() => {
+      importDialog.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]')?.focus();
+    });
     return;
   }
   if (target.hasAttribute("data-swap")) {
     [beforeSelection, afterSelection] = [afterSelection, beforeSelection];
     render();
+    restoreWorkspaceFocus("[data-swap]");
     return;
   }
   const section = target.dataset.changeSection as ChangeSection | undefined;
   if (section) {
     changeSection = section;
     render();
+    restoreWorkspaceFocus(`[data-change-section="${section}"]`);
+    return;
+  }
+  const openSection = target.dataset.openSection as ChangeSection | undefined;
+  if (openSection) {
+    changeSection = openSection;
+    activeView = "changes";
+    render();
+    restoreWorkspaceFocus(`[data-change-section="${openSection}"]`);
     return;
   }
   const requestedFormulaSide = target.dataset.formulaSide as Side | undefined;
   if (requestedFormulaSide) {
     formulaSide = requestedFormulaSide;
     render();
+    restoreWorkspaceFocus(`[data-formula-side="${requestedFormulaSide}"]`);
     return;
   }
   const jump = target.dataset.jumpSection;
@@ -774,6 +1326,7 @@ app.addEventListener("click", (event) => {
       activeView = "formula";
       formulaSide = "after";
       render();
+      restoreWorkspaceFocus(".bd-total");
     }
     return;
   }
@@ -784,33 +1337,52 @@ app.addEventListener("click", (event) => {
     afterSelection = { buildId: build.id, loadoutId: build.loadouts[1].id };
     activeView = "diagnosis";
     render();
+    restoreWorkspaceFocus('[data-preset="lesson"]');
   } else if (preset === "bing") {
     const build = builds.find((item) => item.id === "bing")!;
     beforeSelection = { buildId: build.id, loadoutId: build.loadouts[2].id };
     afterSelection = { buildId: build.id, loadoutId: build.loadouts[3].id };
-    activeView = "changes";
+    activeView = "diagnosis";
     render();
+    restoreWorkspaceFocus('[data-preset="bing"]');
   } else if (preset === "wuxia") {
     const build = builds.find((item) => item.id === "wuxia")!;
     beforeSelection = { buildId: build.id, loadoutId: build.loadouts[5].id };
     afterSelection = { buildId: build.id, loadoutId: build.loadouts[8].id };
-    activeView = "coverage";
+    activeView = "diagnosis";
     render();
+    restoreWorkspaceFocus('[data-preset="wuxia"]');
   }
 });
 
-document.querySelectorAll<HTMLButtonElement>("[data-import-tab]").forEach((button) => {
-  button.addEventListener("click", () => {
-    const tab = button.dataset.importTab;
-    document.querySelectorAll<HTMLElement>("[data-import-panel]").forEach((panel) => {
-      panel.hidden = panel.dataset.importPanel !== tab;
-    });
-    document.querySelectorAll<HTMLButtonElement>("[data-import-tab]").forEach((candidate) => {
-      const active = candidate === button;
-      candidate.classList.toggle("active", active);
-      candidate.setAttribute("aria-selected", String(active));
-    });
-    setImportStatus("");
+const importTabs = [...document.querySelectorAll<HTMLButtonElement>("[data-import-tab]")];
+
+function activateImportTab(button: HTMLButtonElement, focus = false) {
+  const tab = button.dataset.importTab;
+  document.querySelectorAll<HTMLElement>("[data-import-panel]").forEach((panel) => {
+    panel.hidden = panel.dataset.importPanel !== tab;
+  });
+  importTabs.forEach((candidate) => {
+    const active = candidate === button;
+    candidate.classList.toggle("active", active);
+    candidate.setAttribute("aria-selected", String(active));
+    candidate.tabIndex = active ? 0 : -1;
+  });
+  if (focus) button.focus();
+  setImportStatus("");
+}
+
+importTabs.forEach((button, index) => {
+  button.addEventListener("click", () => activateImportTab(button));
+  button.addEventListener("keydown", (event) => {
+    let nextIndex: number | null = null;
+    if (event.key === "ArrowRight") nextIndex = (index + 1) % importTabs.length;
+    else if (event.key === "ArrowLeft") nextIndex = (index - 1 + importTabs.length) % importTabs.length;
+    else if (event.key === "Home") nextIndex = 0;
+    else if (event.key === "End") nextIndex = importTabs.length - 1;
+    if (nextIndex == null) return;
+    event.preventDefault();
+    activateImportTab(importTabs[nextIndex], true);
   });
 });
 
@@ -835,11 +1407,16 @@ dropZone.addEventListener("drop", (event) => {
   const file = (event as DragEvent).dataTransfer?.files[0];
   if (file) void readFile(file);
 });
+dropZone.addEventListener("keydown", (event) => {
+  if (event.key !== "Enter" && event.key !== " ") return;
+  event.preventDefault();
+  fileInput.click();
+});
 
 document.getElementById("analyze-paste")!.addEventListener("click", () => {
   const raw = pasteInput.value.trim();
   if (!raw) {
-    setImportStatus("Paste a build code, share URL, or JSON first.", "error");
+    setImportStatus("Paste an in-game build code or exported JSON first.", "error");
     return;
   }
   try {

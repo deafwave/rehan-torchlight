@@ -8,142 +8,196 @@ import type {
   SkillRow,
   SlateRow,
   TreeRow,
+  UnmatchedRow,
+  PartialMetric,
+  SupportSocketEvidence,
+  SummonSourceEvidence,
 } from "./analysis-types";
+import { partialMetricsForCompendium } from "./partial-metrics";
+import { supportEvidenceForCompendium } from "./support-evidence";
+import {
+  createLocalCaptureHandoff,
+  extractInGameBuildCode,
+} from "./build-code-handoff";
+import { summonEvidenceForCompendium } from "./summon-evidence";
+import {
+  formatModifierEvidence,
+  normalizeBuildSnapshot,
+  type ImportDiagnostic,
+  type NormalizedBuild,
+  type NormalizedIdentity,
+  type NormalizedLoadout,
+} from "./snapshot-adapter";
 
-const asArray = <T = any>(value: unknown): T[] => Array.isArray(value) ? value : [];
-const asObject = (value: unknown): Record<string, any> =>
-  value && typeof value === "object" && !Array.isArray(value) ? value as Record<string, any> : {};
+let importSequence = 0;
 
-const friendlyId = (value: unknown, fallback: string) => {
-  const text = typeof value === "string" ? value.trim() : "";
-  return text || fallback;
-};
-
-function gearRows(loadout: any): GearRow[] {
-  const inventory = new Map<string, any>(
-    [...asArray(loadout.gear?.inventory), ...asArray(loadout.vorax?.inventory)]
-      .map((item) => [item.id, item]),
-  );
-  return Object.entries<string | null>(asObject(loadout.gear?.equipped)).map(([slot, id]) => {
-    const item = id ? inventory.get(id) : null;
-    return {
-      slot,
-      name: asArray(item?.affixes).find((affix) => affix?.legendaryName)?.legendaryName
-        ?? item?.displayName
-        ?? item?.legendaryName
-        ?? item?.limbType
-        ?? "Empty",
-      rarity: item?.rarity ?? null,
-      category: item?.gearCategory ?? null,
-      lines: item
-        ? [
-            ...asArray(item.legendaryMods).map((mod) => mod.description),
-            ...asArray(item.baseItem?.implicits).map((mod) => mod.description),
-            ...asArray(item.prefixes).filter(Boolean).map((mod) => mod.modifierDescription),
-            ...asArray(item.suffixes).filter(Boolean).map((mod) => mod.modifierDescription),
-            ...asArray(item.affixes).filter(Boolean).map((mod) => mod.modifierDescription),
-          ].filter(Boolean).slice(0, 12)
-        : [],
-    };
-  });
+function catalogName(identity: NormalizedIdentity, catalog: ImportCatalog) {
+  const id = identity.catalogId;
+  if (id) {
+    if (identity.domain === "skill" && catalog.skillNames[id]) return catalog.skillNames[id];
+    if (identity.domain === "pactspirit" && catalog.pactNames[id]) return catalog.pactNames[id];
+    if ((identity.domain === "talent-tree" || identity.domain === "tree")
+        && catalog.treeNames[id]) return catalog.treeNames[id];
+    if ((identity.domain === "hero-trait" || identity.domain === "hero")
+        && catalog.heroNames[id]) return catalog.heroNames[id];
+  }
+  return identity.label
+    ?? (id ? `Unknown ${identity.domain ?? "catalog record"} · ${id.slice(0, 8)}` : null)
+    ?? (identity.nativeId
+      ? `Unresolved ${identity.domain ?? "game record"} · ${identity.nativeId}`
+      : "Unresolved record");
 }
 
-function skillRows(loadout: any, catalog: ImportCatalog): SkillRow[] {
-  const row = (skill: any, kind: "active" | "passive"): SkillRow => ({
-    kind,
-    guid: skill.skillGuid,
-    name: catalog.skillNames[skill.skillGuid] ?? `Unknown skill · ${String(skill.skillGuid).slice(0, 8)}`,
-    level: Number.isFinite(skill.level) ? skill.level : null,
-    enabled: skill.enabled !== false,
+function gearRows(loadout: NormalizedLoadout): GearRow[] {
+  return loadout.gear.map((item) => ({
+    slot: item.slot,
+    name: item.name,
+    rarity: item.rarity,
+    category: item.category ?? item.subtype ?? item.itemKind,
+    lines: [
+      ...item.modifiers.map(formatModifierEvidence),
+      ...item.diagnostics.map((value) => `Capture note: ${value}`),
+    ].slice(0, 12),
+    fingerprint: item.fingerprint,
+  }));
+}
+
+function skillRows(loadout: NormalizedLoadout, catalog: ImportCatalog): SkillRow[] {
+  return loadout.skills.map((skill) => ({
+    kind: skill.kind,
+    guid: skill.identity.catalogId ?? skill.identity.nativeId ?? undefined,
+    name: catalogName(skill.identity, catalog),
+    level: skill.level,
+    enabled: skill.enabled,
     supports: [
-      ...asArray(skill.supports).filter(Boolean).map((support) => ({
-        guid: support.supportGuid,
-        name: catalog.skillNames[support.supportGuid]
-          ?? `Unknown support · ${String(support.supportGuid).slice(0, 8)}`,
-        type: support.type ?? "support",
-        level: Number.isFinite(support.level) ? support.level : null,
+      ...skill.supports.map((support) => ({
+        guid: support.identity.catalogId ?? support.identity.nativeId ?? undefined,
+        name: catalogName(support.identity, catalog),
+        type: support.type,
+        level: support.level,
+        tier: support.tier,
+        rank: support.rank,
+        rollValues: support.rolls,
+        fingerprint: support.fingerprint,
       })),
-      ...asArray<string>(skill.modifiers).filter(Boolean).map((guid) => ({
-        guid,
-        name: catalog.skillNames[guid] ?? `Unknown module · ${String(guid).slice(0, 8)}`,
+      ...skill.modules.map((module) => ({
+        guid: module.catalogId ?? module.nativeId ?? undefined,
+        name: catalogName(module, catalog),
         type: "modularization",
         level: null,
       })),
     ],
-  });
-  return [
-    ...asArray(loadout.skills?.activeSkills).filter(Boolean).map((skill) => row(skill, "active")),
-    ...asArray(loadout.skills?.passiveSkills).filter(Boolean).map((skill) => row(skill, "passive")),
-  ];
-}
-
-function treeRows(loadout: any, catalog: ImportCatalog): TreeRow[] {
-  return asArray(loadout.skillTree?.slots).map((slot) => ({
-    id: friendlyId(slot.treeId, "unknown-tree"),
-    name: catalog.treeNames[slot.treeId]
-      ?? friendlyId(slot.treeId, "Unknown tree").replaceAll("_", " "),
-    points: Object.values<number>(asObject(slot.nodePoints)).reduce((sum, points) => sum + points, 0),
-    notable12: slot.selectedNotable12 ?? null,
-    notable24: slot.selectedNotable24 ?? null,
-    hasPrism: Boolean(slot.equippedPrism?.prismId || slot.prismCoreTalentOverride),
+    moduleSlots: skill.moduleSlots,
+    fingerprint: skill.fingerprint,
   }));
 }
 
-function memoryRows(loadout: any): MemoryRow[] {
-  const inventory = new Map<string, any>(
-    asArray(loadout.heroMemories?.inventory).map((memory) => [memory.id, memory]),
-  );
-  return Object.entries<string | null>(asObject(loadout.heroMemories?.equipped)).map(([slot, id]) => {
-    const memory = id ? inventory.get(id) : null;
-    return {
-      slot,
-      name: memory?.customName || memory?.memoryType || "Empty",
-      type: memory?.memoryType ?? null,
-      affixes: memory
-        ? [memory.baseStat, ...asArray(memory.fixedAffixes), ...asArray(memory.randomAffixes)]
-          .filter(Boolean).length
-        : 0,
-    };
-  });
-}
-
-function slateRows(loadout: any): SlateRow[] {
-  const inventory = new Map<string, any>(
-    asArray(loadout.divinity?.inventory).map((slate) => [slate.id, slate]),
-  );
-  return asArray(loadout.divinity?.placements).map((placement) => {
-    const slate = inventory.get(placement.slateId);
-    return {
-      name: slate?.legendaryTemplate || slate?.type || "Divinity slate",
-      god: placement.god ?? placement.godId ?? null,
-      affixes: asArray(slate?.affixes).length,
-    };
-  });
-}
-
-function pactRows(loadout: any, catalog: ImportCatalog): PactRow[] {
-  return asArray(loadout.pactspirits).map((pact, index) => ({
-    name: catalog.pactNames[pact.guid] ?? friendlyId(pact.guid, "Unknown pactspirit"),
-    level: Number.isFinite(pact.level) ? pact.level : null,
-    nodes: asArray(pact.allocatedNodes).length,
-    kismets: asArray(loadout.kismets).filter((kismet) => kismet?.pactspritIndex === index).length,
+function treeRows(loadout: NormalizedLoadout, catalog: ImportCatalog): TreeRow[] {
+  return loadout.trees.map((tree) => ({
+    id: tree.treeId,
+    name: catalog.treeNames[tree.treeId]
+      ?? tree.identity?.label
+      ?? tree.treeId.replaceAll("_", " "),
+    points: Object.values(tree.nodePoints).reduce((sum, points) => sum + points, 0),
+    notable12: tree.selectedNotable12,
+    notable24: tree.selectedNotable24,
+    hasPrism: Boolean(tree.prismFingerprint),
+    nodePoints: tree.nodePoints,
+    prismId: tree.prismId,
+    prismFingerprint: tree.prismFingerprint,
+    fingerprint: tree.fingerprint,
   }));
 }
 
-function compendiumLoadout(
-  loadout: any,
-  index: number,
-  currentId: string | null,
+function memoryRows(loadout: NormalizedLoadout): MemoryRow[] {
+  return loadout.memories.map((memory) => ({
+    slot: memory.slot,
+    name: memory.name,
+    type: memory.type,
+    affixes: memory.modifiers.length,
+    lines: memory.modifiers.map(formatModifierEvidence).slice(0, 12),
+    fingerprint: memory.fingerprint,
+  }));
+}
+
+function slateRows(loadout: NormalizedLoadout): SlateRow[] {
+  return loadout.slates.map((slate) => ({
+    name: slate.name,
+    god: slate.god,
+    affixes: slate.affixes.length,
+    lines: slate.affixes.map(formatModifierEvidence).slice(0, 12),
+    fingerprint: slate.fingerprint,
+  }));
+}
+
+function pactRows(loadout: NormalizedLoadout, catalog: ImportCatalog): PactRow[] {
+  return loadout.pactspirits.map((pact) => ({
+    name: catalogName(pact.identity, catalog),
+    level: pact.level,
+    nodes: pact.allocatedNodes.length,
+    kismets: pact.kismets.length,
+    details: [
+      ...pact.allocatedNodes.map((node) => `Allocated node · ${node}`),
+      ...pact.kismets.map((kismet) => [
+        kismet.identity?.label ?? kismet.identity?.catalogId ?? "Kismet",
+        kismet.nodeId ? `node ${kismet.nodeId}` : "",
+        kismet.rolls.length ? `rolls ${kismet.rolls.join(" / ")}` : "",
+      ].filter(Boolean).join(" · ")),
+    ].slice(0, 12),
+    fingerprint: pact.fingerprint,
+  }));
+}
+
+function diagnosticRows(diagnostics: ImportDiagnostic[]): UnmatchedRow[] {
+  const unique = new Map<string, ImportDiagnostic>();
+  for (const issue of diagnostics) {
+    unique.set(`${issue.code}\u001f${issue.path}\u001f${issue.message}`, issue);
+  }
+  const grouped = new Map<string, UnmatchedRow>();
+  for (const issue of unique.values()) {
+    const key = `${issue.code}\u001f${issue.message}`;
+    const existing = grouped.get(key);
+    if (existing) {
+      existing.count += 1;
+      if (!existing.sources.includes(issue.path)) existing.sources.push(issue.path);
+    } else {
+      grouped.set(key, {
+        text: issue.message,
+        count: 1,
+        sources: [issue.path],
+      });
+    }
+  }
+  return [...grouped.values()];
+}
+
+function analyzedLoadout(
+  loadout: NormalizedLoadout,
+  build: NormalizedBuild,
   catalog: ImportCatalog,
+  partialMetrics: PartialMetric[],
+  supportEvidence: SupportSocketEvidence[],
+  summonEvidence: SummonSourceEvidence[],
 ): AnalyzedLoadout {
-  const heroGuid = loadout.hero?.heroGuid;
+  const diagnostics = [
+    ...build.diagnostics.filter((issue) =>
+      !issue.path.startsWith("build.loadouts.loadouts[")
+      || issue.path.startsWith(`build.loadouts.loadouts[${loadout.index}]`)),
+    ...loadout.diagnostics,
+  ];
+  const portable = build.sourceKind === "portable-v3";
   return {
-    id: friendlyId(loadout.id, `imported-${index}`),
-    index,
-    name: friendlyId(loadout.name, `Loadout ${index + 1}`),
-    hero: friendlyId(loadout.hero?.heroId, catalog.heroNames[heroGuid] ?? heroGuid ?? "Unknown hero"),
-    isCurrent: loadout.id === currentId,
+    id: loadout.id,
+    index: loadout.index,
+    name: loadout.name,
+    hero: loadout.hero.identity
+      ? loadout.hero.identity.label ?? catalogName(loadout.hero.identity, catalog)
+      : loadout.hero.name,
+    isCurrent: loadout.isCurrent,
     model: null,
+    partialMetrics,
+    supportEvidence,
+    summonEvidence,
     snapshot: null,
     gear: gearRows(loadout),
     skills: skillRows(loadout, catalog),
@@ -151,150 +205,53 @@ function compendiumLoadout(
     memories: memoryRows(loadout),
     slates: slateRows(loadout),
     pactspirits: pactRows(loadout, catalog),
-    unmatched: [],
-    sourceNote: "The loadout imported successfully. Calculation is waiting for the season parser.",
+    unmatched: diagnosticRows(diagnostics),
+    sourceNote: portable
+      ? "Portable-v3 evidence imported. DPS remains uncalculated until an actor/skill compiler consumes the normalized records."
+      : "Compendium structure imported from this document. DPS remains uncalculated until an actor/skill compiler supports the loadout.",
   };
 }
 
-function portableSectionItems(section: unknown) {
-  return asArray(asObject(section).items);
-}
-
-function portableSectionRecords(section: unknown) {
-  return asArray(asObject(section).records);
-}
-
-function identityLabel(value: unknown, fallback: string) {
-  const identity = asObject(value);
-  return friendlyId(identity.label, friendlyId(identity.compendiumId, fallback));
-}
-
-function portableLoadout(value: any, catalog: ImportCatalog): AnalyzedLoadout {
-  const source = asObject(value.proBuild?.loadout);
-  const gear: GearRow[] = portableSectionItems(source.gear).map((item, index) => ({
-    slot: String(item.location?.equipSlot ?? item.location?.slot ?? index + 1),
-    name: identityLabel(item.identity?.special ?? item.identity?.base, `Imported gear ${index + 1}`),
-    rarity: item.rarity == null ? null : String(item.rarity),
-    category: item.identity?.base?.domain ?? null,
-    lines: asArray(item.diagnostics).slice(0, 8),
-  }));
-  const skills: SkillRow[] = portableSectionItems(source.skills).map((item, index) => {
-    const guid = item.identity?.special?.compendiumId ?? item.identity?.base?.compendiumId;
-    return {
-      kind: /passive/i.test(item.identity?.special?.metadata?.skillType ?? "") ? "passive" : "active",
-      guid,
-      name: identityLabel(item.identity?.special ?? item.identity?.base, `Imported skill ${index + 1}`),
-      level: Number.isFinite(item.itemLevel) ? item.itemLevel : null,
-      enabled: true,
-      supports: [],
-    };
-  });
-  const trees: TreeRow[] = portableSectionRecords(source.skillTree).map((record, index) => {
-    const treeId = record.identity?.metadata?.treeId ?? record.identity?.compendiumId ?? `tree-${index + 1}`;
-    return {
-      id: treeId,
-      name: catalog.treeNames[treeId] ?? identityLabel(record.identity, `Talent tree ${index + 1}`),
-      points: Object.values<number>(asObject(record.data?.nodePoints)).reduce((sum, points) => sum + points, 0),
-      notable12: record.data?.selectedNotable12 ?? null,
-      notable24: record.data?.selectedNotable24 ?? null,
-      hasPrism: false,
-    };
-  });
-  const memories: MemoryRow[] = portableSectionItems(source.heroMemories).map((item, index) => ({
-    slot: String(item.location?.equipSlot ?? index + 1),
-    name: identityLabel(item.identity?.special ?? item.identity?.base, `Hero memory ${index + 1}`),
-    type: item.identity?.special?.metadata?.memoryType ?? null,
-    affixes: Object.values(asObject(item.affixes)).filter(Boolean).length,
-  }));
-  const slates: SlateRow[] = portableSectionRecords(source.divinity).map((record, index) => ({
-    name: identityLabel(record.identity, `Divinity slate ${index + 1}`),
-    god: record.identity?.metadata?.divinityGod ?? null,
-    affixes: asArray(record.data?.affixes).length,
-  }));
-  const pactspirits: PactRow[] = portableSectionRecords(source.pactspirits).map((record, index) => ({
-    name: identityLabel(record.identity, `Pactspirit ${index + 1}`),
-    level: Number.isFinite(record.data?.level) ? record.data.level : null,
-    nodes: asArray(record.data?.allocatedNodes).length,
-    kismets: 0,
-  }));
-  const issueRows = asArray(value.mappingIssues).map((issue) => ({
-    text: friendlyId(issue.message, friendlyId(issue.kind, "Unresolved portable record")),
-    count: 1,
-    sources: [friendlyId(issue.sourcePath, friendlyId(issue.path, "portable snapshot"))],
-  }));
-  return {
-    id: friendlyId(value.proBuild?.id, "portable-loadout"),
-    index: 0,
-    name: friendlyId(value.proBuild?.name, "Live tli_dump snapshot"),
-    hero: identityLabel(source.hero?.identity, friendlyId(source.hero?.sourceName, "Unknown hero")),
-    isCurrent: true,
-    model: null,
-    snapshot: null,
-    gear,
-    skills,
-    trees,
-    memories,
-    slates,
-    pactspirits,
-    unmatched: issueRows,
-    sourceNote: "Portable snapshot imported. Catalog-backed calculation is not connected in the browser yet.",
-  };
-}
-
+/**
+ * Import through the canonical structural adapter.
+ *
+ * `knownBuilds` remains in the public signature for callers compiled against
+ * the original importer, but uploaded bytes are never replaced with a demo
+ * fixture merely because a name or one loadout id happens to match.
+ */
 export function importBuild(
   value: unknown,
   catalog: ImportCatalog,
-  knownBuilds: AnalyzedBuild[],
+  _knownBuilds: AnalyzedBuild[] = [],
   sourceName = "Imported JSON",
 ): AnalyzedBuild {
-  const object = asObject(value);
-  if (asObject(object.portable).schemaVersion === 3) {
-    return importBuild(object.portable, catalog, knownBuilds, sourceName);
-  }
-  if (object.loadouts?.loadouts && Array.isArray(object.loadouts.loadouts)) {
-    const known = knownBuilds.find((build) =>
-      build.name === object.name
-      || build.loadouts.some((loadout) => object.loadouts.loadouts.some((item: any) => item.id === loadout.id)),
-    );
-    if (known) {
-      return {
-        ...structuredClone(known),
-        id: `imported-${known.id}-${Date.now()}`,
-        source: sourceName,
-        imported: true,
-      };
-    }
-    const currentId = typeof object.loadouts.currentLoadoutId === "string"
-      ? object.loadouts.currentLoadoutId
-      : null;
-    return {
-      id: `imported-${Date.now()}`,
-      name: friendlyId(object.name, sourceName.replace(/\.json$/i, "")),
-      patch: friendlyId(object.patch, "Unknown patch"),
-      source: sourceName,
-      imported: true,
-      loadouts: object.loadouts.loadouts.map((loadout: any, index: number) =>
-        compendiumLoadout(loadout, index, currentId, catalog)),
-    };
-  }
-  if (object.schemaVersion === 3 && object.proBuild?.loadout) {
-    return {
-      id: `portable-${Date.now()}`,
-      name: friendlyId(object.proBuild.name, "Live tli_dump snapshot"),
-      patch: friendlyId(object.source?.catalogPatch, "Unknown patch"),
-      source: sourceName,
-      imported: true,
-      loadouts: [portableLoadout(object, catalog)],
-    };
-  }
-  throw new Error("This JSON is not a TLI Compendium build or a tli_dump portable snapshot.");
+  const normalized = normalizeBuildSnapshot(value);
+  const source = value as any;
+  const compilerSource = normalized.sourceKind === "compendium"
+    ? (source?.payload?.loadouts?.loadouts ? source.payload : source)
+    : null;
+  importSequence += 1;
+  return {
+    id: `imported-${normalized.sourceKind}-${normalized.fingerprint}-${Date.now().toString(36)}-${importSequence}`,
+    name: normalized.name,
+    patch: normalized.patch,
+    source: sourceName,
+    imported: true,
+    loadouts: normalized.loadouts.map((loadout) =>
+      analyzedLoadout(
+        loadout,
+        normalized,
+        catalog,
+        compilerSource ? partialMetricsForCompendium(compilerSource, loadout.index) : [],
+        compilerSource ? supportEvidenceForCompendium(compilerSource, loadout.index) : [],
+        compilerSource ? summonEvidenceForCompendium(compilerSource, loadout.index) : [],
+      )),
+  };
 }
 
 export function importBuildCode(raw: string): AnalyzedBuild {
-  const value = raw.trim();
-  const match = value.match(/[A-Za-z0-9+/]{20,}={0,2}/);
-  if (!match) throw new Error("No supported build code or JSON was found.");
-  const code = match[0];
+  const code = extractInGameBuildCode(raw);
+  if (!code) throw new Error("No supported build code or JSON was found.");
   return {
     id: `code-${Date.now()}`,
     name: "Unresolved in-game build code",
@@ -317,7 +274,8 @@ export function importBuildCode(raw: string): AnalyzedBuild {
       slates: [],
       pactspirits: [],
       unmatched: [],
-      sourceNote: "A game build code identifies a remote character; it does not contain the loadout. tli_dump must resolve it while the build is open in-game.",
+      sourceNote: "A game build code is an opaque reference, not a character payload. Resolve it from the active in-game Build Reference with a local tli_dump capture, then import that JSON here.",
+      resolutionHandoff: createLocalCaptureHandoff(code),
     }],
   };
 }

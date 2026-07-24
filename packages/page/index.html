@@ -6,26 +6,31 @@
     <meta name="color-scheme" content="dark" />
     <meta
       name="description"
-      content="Compare Torchlight: Infinite builds, understand every DPS change, and find the next upgrade that actually helps."
+      content="Compare Torchlight: Infinite builds, see exactly what changed, and understand which damage and survival layers need attention."
     />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://tli-lens.ckreeses.chatgpt.site/" />
     <meta property="og:title" content="TLI Lens — See exactly where your damage went." />
     <meta
       property="og:description"
-      content="Compare real TLI loadouts, replay the damage formula, and separate proven changes from unsupported mechanics."
+      content="Compare real TLI loadouts and separate proven formula evidence from unsupported mechanics."
     />
     <meta property="og:image" content="https://tli-lens.ckreeses.chatgpt.site/og.png" />
+    <meta property="og:image:alt" content="TLI Lens build comparison interface" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="TLI Lens — See exactly where your damage went." />
     <meta
       name="twitter:description"
-      content="Compare real TLI loadouts and understand why an upgrade raised or lowered your damage."
+      content="Compare real TLI loadouts, inspect guarded formula evidence, and learn what still blocks an exact answer."
     />
     <meta name="twitter:image" content="https://tli-lens.ckreeses.chatgpt.site/og.png" />
+    <meta name="twitter:image:alt" content="TLI Lens build comparison interface" />
     <style>
       html { background: #090b0d; color-scheme: dark; }
     </style>
     <title>TLI Lens — Understand your build</title>
+    <link rel="canonical" href="https://tli-lens.ckreeses.chatgpt.site/" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -46,24 +51,62 @@
           <button class="icon-button" value="cancel" aria-label="Close import dialog">×</button>
         </div>
         <div class="import-tabs" role="tablist" aria-label="Import method">
-          <button type="button" class="import-tab active" data-import-tab="file" role="tab" aria-selected="true">
+          <button
+            type="button"
+            class="import-tab active"
+            id="import-tab-file"
+            data-import-tab="file"
+            role="tab"
+            aria-controls="import-panel-file"
+            aria-selected="true"
+            tabindex="0"
+          >
             Build file
           </button>
-          <button type="button" class="import-tab" data-import-tab="paste" role="tab" aria-selected="false">
+          <button
+            type="button"
+            class="import-tab"
+            id="import-tab-paste"
+            data-import-tab="paste"
+            role="tab"
+            aria-controls="import-panel-paste"
+            aria-selected="false"
+            tabindex="-1"
+          >
             Paste code or JSON
           </button>
         </div>
-        <section class="import-panel" data-import-panel="file">
-          <label class="drop-zone" id="drop-zone" for="build-file">
+        <section
+          class="import-panel"
+          id="import-panel-file"
+          data-import-panel="file"
+          role="tabpanel"
+          aria-labelledby="import-tab-file"
+        >
+          <label
+            class="drop-zone"
+            id="drop-zone"
+            for="build-file"
+            role="button"
+            tabindex="0"
+            aria-describedby="drop-help"
+          >
             <span class="drop-icon" aria-hidden="true">↓</span>
             <strong>Drop a build JSON here</strong>
-            <span>TLI Compendium exports and tli_dump portable snapshots are accepted.</span>
+            <span id="drop-help">TLI Compendium exports and tli_dump portable snapshots are accepted.</span>
             <span class="file-button">Choose a file</span>
           </label>
           <input id="build-file" type="file" accept=".json,application/json" hidden />
         </section>
-        <section class="import-panel" data-import-panel="paste" hidden>
-          <label class="paste-label" for="build-paste">Build code, share URL, or exported JSON</label>
+        <section
+          class="import-panel"
+          id="import-panel-paste"
+          data-import-panel="paste"
+          role="tabpanel"
+          aria-labelledby="import-tab-paste"
+          hidden
+        >
+          <label class="paste-label" for="build-paste">In-game build code or exported JSON</label>
           <textarea
             id="build-paste"
             rows="8"

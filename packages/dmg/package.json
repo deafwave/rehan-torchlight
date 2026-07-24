@@ -5,6 +5,9 @@
   "type": "module",
   "exports": {
     "./damageModel": "./src/damageModel.ts",
+    "./guardedCompiler": "./src/guardedCompiler.ts",
+    "./minionEvidence": "./src/minionEvidence.ts",
+    "./supportEvidence": "./src/supportEvidence.ts",
     "./supports": "./src/supports.ts"
   },
   "scripts": {

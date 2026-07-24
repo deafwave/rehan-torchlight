@@ -6,6 +6,7 @@ export interface GearRow {
   rarity: string | null;
   category: string | null;
   lines: string[];
+  fingerprint?: string;
 }
 
 export interface SupportRow {
@@ -13,15 +14,21 @@ export interface SupportRow {
   guid?: string;
   type: string;
   level: number | null;
+  tier?: number | null;
+  rank?: number | null;
+  rollValues?: Array<number | string>;
+  fingerprint?: string;
 }
 
 export interface SkillRow {
-  kind: "active" | "passive";
+  kind: "active" | "passive" | "support" | "unknown";
   name: string;
   guid?: string;
   level: number | null;
   enabled: boolean;
   supports: SupportRow[];
+  moduleSlots?: Array<string | null>;
+  fingerprint?: string;
 }
 
 export interface TreeRow {
@@ -31,6 +38,10 @@ export interface TreeRow {
   notable12: string | null;
   notable24: string | null;
   hasPrism: boolean;
+  nodePoints?: Record<string, number>;
+  prismId?: string | null;
+  prismFingerprint?: string | null;
+  fingerprint?: string;
 }
 
 export interface MemoryRow {
@@ -38,12 +49,16 @@ export interface MemoryRow {
   name: string;
   type: string | null;
   affixes: number;
+  lines?: string[];
+  fingerprint?: string;
 }
 
 export interface SlateRow {
   name: string;
   god: string | number | null;
   affixes: number;
+  lines?: string[];
+  fingerprint?: string;
 }
 
 export interface PactRow {
@@ -51,6 +66,8 @@ export interface PactRow {
   level: number | null;
   nodes: number;
   kismets: number;
+  details?: string[];
+  fingerprint?: string;
 }
 
 export interface UnmatchedRow {
@@ -78,6 +95,107 @@ export interface CoverageSummary {
   classificationRate: number;
 }
 
+export interface PartialMetricInput {
+  label: string;
+  value: number;
+  display: string;
+}
+
+export interface PartialMetricSource {
+  source: string;
+  locator: string;
+  confidence?: "source-data" | "confirmed-mechanic" | "inferred-mechanic";
+}
+
+export interface PartialMetric {
+  id: string;
+  label: string;
+  value: number;
+  display: string;
+  unit: string;
+  isDps: false;
+  confidence: "confirmed-partial" | "inferred-partial";
+  scope: string;
+  inputs: PartialMetricInput[];
+  provenance: PartialMetricSource[];
+  excluded: string[];
+}
+
+export interface SupportEffectEvidence {
+  id: string;
+  label: string;
+  value: number;
+  display: string;
+  application: string;
+  scope: string;
+  condition: string | null;
+  isNetDps: false;
+}
+
+export interface SupportSocketEvidence {
+  status: "source-terms" | "unsupported";
+  supportId: string;
+  supportName: string | null;
+  level: number | null;
+  tier: number | null;
+  rank: number | null;
+  effects: SupportEffectEvidence[];
+  blockers: string[];
+  isDps: false;
+  provenance: PartialMetricSource[];
+}
+
+export interface SummonTermEvidence {
+  id: string;
+  label: string;
+  value: number;
+  display: string;
+  unit: "count" | "percent";
+  scope: "summoned-actor" | "player";
+  condition: string | null;
+  isDps: false;
+  isTotalEhp: false;
+}
+
+export interface SummonSourceEvidence {
+  status: "source-terms";
+  skillId: string;
+  skillName: string;
+  level: number;
+  actor: "minion";
+  damageTags: string[];
+  terms: SummonTermEvidence[];
+  minionDps: {
+    status: "not-calculated";
+    blockers: string[];
+  };
+  playerEhp: {
+    status: "not-calculated";
+    blockers: string[];
+  };
+  isDps: false;
+  isTotalEhp: false;
+  provenance: PartialMetricSource[];
+}
+
+export interface LocalCaptureStep {
+  title: string;
+  detail: string;
+}
+
+/**
+ * An in-game code is only an identifier. The browser cannot safely attach to
+ * Torchlight: Infinite, so resolving it is an explicit local handoff.
+ */
+export interface LocalCaptureHandoff {
+  kind: "tli-dump-local-capture";
+  buildCode: string;
+  resolver: "tli_dump";
+  privacy: "local-export";
+  steps: LocalCaptureStep[];
+  acceptedDocuments: Array<"tli_dump portable-v3 JSON" | "TLI Compendium build JSON">;
+}
+
 export interface AnalyzedLoadout {
   id: string;
   index: number;
@@ -86,6 +204,9 @@ export interface AnalyzedLoadout {
   isCurrent: boolean;
   model: ModelSummary | null;
   coverage?: CoverageSummary;
+  partialMetrics?: PartialMetric[];
+  supportEvidence?: SupportSocketEvidence[];
+  summonEvidence?: SummonSourceEvidence[];
   snapshot: Snapshot | null;
   gear: GearRow[];
   skills: SkillRow[];
@@ -95,6 +216,7 @@ export interface AnalyzedLoadout {
   pactspirits: PactRow[];
   unmatched: UnmatchedRow[];
   sourceNote?: string;
+  resolutionHandoff?: LocalCaptureHandoff;
 }
 
 export interface AnalyzedBuild {
