@@ -1,22 +1,21 @@
 # TLI Lens
 
-TLI Lens is an import-first build comparison and damage-explanation tool for
-Torchlight: Infinite.
+TLI Lens is an import-first **damage explanation** tool for Torchlight: Infinite.
 
-The product goal is simple: when a player says “every upgrade lowered my
-damage,” the site should show what changed, where it enters the formula, why the
-new number is weaker, and which parts of the answer are still unsupported.
+The product goal is simple: load one real loadout and understand **what the
+current damage number is** and **why** — which formula layers and factors build
+it, which levers move it most, and which parts are still unsupported.
 
-TLI Lens is a DPS improver, not a build planner. It does not try to reproduce
-every planner control or let the user assemble an arbitrary character from
-scratch. It starts from real before/after builds, teaches how their scaling
-changed, and turns the strongest available evidence into controlled upgrade
-experiments. Constraint-based optimization can come later, after the damage,
-survival, legality, and cost contracts are trustworthy.
+TLI Lens is not a build planner. It does not try to reproduce every planner
+control or let the user assemble an arbitrary character from scratch. It starts
+from an imported loadout, runs the guarded damage model when possible, and
+shows a factor decomposition of the current claim. Constraint-based optimization
+can come later, after the damage, survival, legality, and cost contracts are
+trustworthy.
 
 The first web slice includes:
 
-- Before/after loadout selection across multi-loadout build files.
+- Single-loadout selection across multi-loadout build files (home path).
 - A canonical, version-aware import boundary for TLI Compendium JSON and
   `tli_dump` portable-v3 snapshots, with stable structural fingerprints and
   exact roll evidence (including roll-only support changes).

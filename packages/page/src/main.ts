@@ -3,6 +3,12 @@ import { cycleDps } from "@rehan/dmg/damageModel";
 import { knownMinionDamageCoverageMatches } from "@rehan/dmg/minionDamageEnvelope";
 import { renderBreakdown } from "./breakdown";
 import {
+  explainCurrentDamage,
+  formatFactorValue,
+  type DamageExplanation,
+  type FactorImpact,
+} from "./explain";
+import {
   buildWaterfall,
   compactNumber,
   percentChange,
@@ -84,13 +90,16 @@ function loadImportCatalog(): Promise<ImportCatalog> {
 }
 
 type Side = "before" | "after";
+/** Primary product views. Compare-era views remain for secondary deep-links only. */
 type View =
+  | "explain"
+  | "build"
+  | "coverage"
   | "diagnosis"
   | "actions"
   | "changes"
   | "formula"
-  | "survival"
-  | "coverage";
+  | "survival";
 type ChangeSection = "gear" | "skills" | "trees" | "memories" | "slates" | "pacts";
 
 interface Selection {
@@ -98,19 +107,41 @@ interface Selection {
   loadoutId: string;
 }
 
+/** Single active loadout — the home path explains this build only. */
+let selection: Selection;
+/** Kept in sync for secondary compare helpers that still take two sides. */
 let beforeSelection: Selection;
 let afterSelection: Selection;
-let activeView: View = "actions";
+let activeView: View = "explain";
 let changeSection: ChangeSection = "gear";
 let formulaSide: Side = "after";
+/** Import dialog still tags a side; always applied to the single active loadout. */
 let importTarget: Side = "after";
 let reportCopyState: "idle" | "copied" | "failed" = "idle";
+
+// Compare-era helpers stay compiled (demoted, not deleted) for secondary tooling.
+// Referenced so strict noUnusedLocals does not force a bulk delete this pass.
+function retainCompareShell() {
+  return {
+    importTarget,
+    formulaSide,
+    buildComparisonActionPlan,
+    buildPicker,
+    renderSummary,
+    renderDiagnosis,
+    renderChanges,
+    renderFormula,
+    renderActions,
+    actionPlanReport,
+  };
+}
+void retainCompareShell;
 
 const app = document.getElementById("app")!;
 app.innerHTML = `<main class="app-loading" aria-live="polite">
   <div><span class="brand-mark" aria-hidden="true"><i></i></span>
-  <strong>Loading the comparison workspace…</strong>
-  <small>Preparing the Bing and Wuxia evidence fixtures.</small></div>
+  <strong>Loading your damage workspace…</strong>
+  <small>Preparing build fixtures and the damage model.</small></div>
 </main>`;
 const importDialog = document.getElementById("import-dialog") as HTMLDialogElement;
 const importStatus = document.getElementById("import-status")!;
@@ -192,13 +223,29 @@ const esc = (value: unknown) => String(value ?? "")
 const escAttr = (value: unknown) => esc(value).replaceAll('"', "&quot;");
 const sideLabel = (side: Side) => side === "before" ? "Before" : "After";
 
-function selected(side: Side) {
-  const selection = side === "before" ? beforeSelection : afterSelection;
-  const build = builds.find((item) => item.id === selection.buildId) ?? builds[0];
-  const loadout = build.loadouts.find((item) => item.id === selection.loadoutId)
+function setSelection(next: Selection) {
+  selection = next;
+  // Secondary compare helpers still read both sides; keep them pointed at the
+  // active loadout so leftover dual-path code does not invent a second build.
+  beforeSelection = next;
+  afterSelection = next;
+}
+
+function selected(side?: Side) {
+  const active = side === "before"
+    ? beforeSelection
+    : side === "after"
+      ? afterSelection
+      : selection;
+  const build = builds.find((item) => item.id === active.buildId) ?? builds[0];
+  const loadout = build.loadouts.find((item) => item.id === active.loadoutId)
     ?? build.loadouts.find((item) => item.isCurrent)
     ?? build.loadouts[0];
   return { build, loadout };
+}
+
+function activeLoadout() {
+  return selected();
 }
 
 function selectionKey(build: AnalyzedBuild, loadout: AnalyzedLoadout) {
@@ -246,7 +293,7 @@ function isMinionLoadout(loadout: AnalyzedLoadout) {
 }
 
 function buildPicker(side: Side, build: AnalyzedBuild, loadout: AnalyzedLoadout) {
-  const selection = side === "before" ? beforeSelection : afterSelection;
+  const sideSelection = side === "before" ? beforeSelection : afterSelection;
   const readiness = guardedEvidenceReadiness(loadout);
   const state = loadout.resolutionHandoff
     ? "capture"
@@ -265,7 +312,7 @@ function buildPicker(side: Side, build: AnalyzedBuild, loadout: AnalyzedLoadout)
     </div>
     <label class="sr-only" for="${side}-loadout">Choose ${sideLabel(side).toLowerCase()} loadout</label>
     <select id="${side}-loadout" class="loadout-select" data-selection="${side}">
-      ${allOptions(selection)}
+      ${allOptions(sideSelection)}
     </select>
     <div class="picker-meta">
       <span>${esc(loadout.hero)}</span>
@@ -279,6 +326,193 @@ function buildPicker(side: Side, build: AnalyzedBuild, loadout: AnalyzedLoadout)
       <button class="quiet-button" type="button" data-import="${side}">Add build</button>
     </div>
   </article>`;
+}
+
+/** Primary home control: one loadout to explain. */
+function singleLoadoutPicker(build: AnalyzedBuild, loadout: AnalyzedLoadout) {
+  const readiness = guardedEvidenceReadiness(loadout);
+  const state = loadout.resolutionHandoff
+    ? "capture"
+    : loadout.model
+      ? "modeled"
+      : readiness === "blocked"
+        ? "blocked"
+        : readiness === "ready" || readiness === "partial"
+          ? "evidence"
+          : "waiting";
+  return `<article class="build-picker build-picker--after loadout-picker-single">
+    <div class="picker-topline">
+      <span class="picker-label">Loadout</span>
+      <span class="source-pill">${esc(build.patch)}</span>
+    </div>
+    <label class="sr-only" for="active-loadout">Choose loadout to explain</label>
+    <select id="active-loadout" class="loadout-select" data-selection="active">
+      ${allOptions(selection)}
+    </select>
+    <div class="picker-meta">
+      <span>${esc(loadout.hero)}</span>
+      <span aria-hidden="true">•</span>
+      <span>${esc(build.name)}</span>
+      <span aria-hidden="true">•</span>
+      <span>${esc(build.source)}</span>
+    </div>
+    <div class="picker-bottom">
+      <span class="model-state ${state}">
+        <span class="state-dot"></span>${esc(confidenceLabel(loadout))}
+      </span>
+      <button class="quiet-button" type="button" data-import="after">Load build</button>
+    </div>
+  </article>`;
+}
+
+function impactPctLabel(impact: number): string {
+  const pct = Math.round(impact * 100);
+  if (pct === 0) return "—";
+  return pct > 0 ? `−${pct}% if removed` : `+${Math.abs(pct)}% if removed`;
+}
+
+function renderFactorImpactList(factors: FactorImpact[]) {
+  const ranked = factors.filter((f) => f.op !== "base" && Math.abs(f.impact) >= 0.005).slice(0, 12);
+  if (!ranked.length) return "";
+  return `<section class="factor-impact-panel" aria-labelledby="factor-impact-title">
+    <div class="analysis-heading">
+      <div>
+        <span class="eyebrow">Largest levers</span>
+        <h2 id="factor-impact-title">What moves this number most</h2>
+      </div>
+    </div>
+    <p class="section-intro">Each row is a factor in the live damage product. Impact is the share of DPS lost if that factor is neutralized.</p>
+    <ol class="factor-impact-list">
+      ${ranked.map((factor, index) => `<li class="factor-impact-row factor-impact--${factor.kind}">
+        <span class="factor-rank">${index + 1}</span>
+        <span class="factor-copy">
+          <strong>${esc(factor.label)}</strong>
+          <small>${esc(factor.kind)}</small>
+        </span>
+        <b class="factor-value">${esc(formatFactorValue(factor))}</b>
+        <span class="factor-impact">${esc(impactPctLabel(factor.impact))}</span>
+      </li>`).join("")}
+    </ol>
+  </section>`;
+}
+
+function renderExplain(loadout: AnalyzedLoadout) {
+  const explained: DamageExplanation = explainCurrentDamage(loadout);
+  const { reading, breakdown, factors, gaps } = explained;
+
+  const hero = `<section class="damage-hero" aria-labelledby="damage-title">
+    <div class="damage-hero-copy">
+      <span class="eyebrow">Current damage</span>
+      <h1 id="damage-title">${esc(reading.label)}</h1>
+      <p>${esc(reading.note)}</p>
+    </div>
+    <div class="damage-hero-number ${reading.kind}">
+      <strong>${esc(reading.display)}</strong>
+      <span>${esc(reading.unit)}</span>
+      ${reading.isDps ? "" : `<b class="not-dps-badge">Not full DPS</b>`}
+    </div>
+  </section>`;
+
+  let body = "";
+  if (breakdown) {
+    body = `<section class="formula-panel explain-panel">
+      <div class="analysis-heading">
+        <div>
+          <span class="eyebrow">Why this number</span>
+          <h2>Damage product</h2>
+        </div>
+      </div>
+      <p class="section-intro">Every chip below is used by the real damage model. Impact badges show what happens if that factor is neutralized.</p>
+      <div class="formula-primer" aria-label="Damage formula overview">
+        <span>base hit</span><i>×</i><span>increased pool</span><i>×</i><span>additional layers</span>
+        <i>×</i><span>crit expectation</span><i>×</i><span>mitigation</span><i>×</i><span>cadence</span><i>+</i><span>DoT</span>
+      </div>
+      ${renderBreakdown(breakdown)}
+      ${renderFactorImpactList(factors)}
+    </section>`;
+  } else if (loadout.summonEvidence?.length) {
+    body = renderMinionFormulaView(loadout);
+  } else if (weaponFoundation(loadout)) {
+    const partial = weaponFoundation(loadout)!;
+    body = `<section class="formula-panel partial-formula explain-panel">
+      <div class="analysis-heading">
+        <div><span class="eyebrow">Guarded partial arithmetic</span><h2>${esc(partial.label)}</h2></div>
+      </div>
+      <div class="partial-formula-total">
+        <div><span>${esc(partial.label)}</span><strong>${esc(partial.display)}</strong><small>${esc(partial.unit)}</small></div>
+        <b>NOT DPS</b>
+      </div>
+      <div class="partial-equation" aria-label="Partial formula">
+        ${partial.inputs.map((input, index) => `${index ? `<i>${index === 1 ? "×" : "+"}</i>` : ""}
+          <span><small>${esc(input.label)}</small><strong>${esc(input.display)}</strong></span>`).join("")}
+        <i>=</i><span class="result"><small>Raw foundation</small><strong>${esc(partial.display)}</strong></span>
+      </div>
+      <p class="section-intro">${esc(partial.scope)}. Its ${partial.confidence === "confirmed-partial" ? "formula and imported inputs are confirmed" : "formula is confirmed and one routing rule is inferred"}.</p>
+      ${loadout.bingIntrinsicEvidence ? `<section class="bing-formula-envelope">
+        <div><span class="panel-kicker">Next guarded layer</span><h3>Conversion, Demolisher, and emission topology</h3></div>
+        <p>The hit envelope and the emission envelope stay separate until target geometry and cadence are known.</p>
+        ${bingIntrinsicSide(loadout.bingIntrinsicEvidence, "Current")}
+      </section>` : ""}
+      ${partial.excluded.length ? `<div class="partial-detail-grid">
+        <div>
+          <span class="panel-kicker">Deliberately excluded</span>
+          <ul>${partial.excluded.map((item) => `<li><span>${esc(item)}</span></li>`).join("")}</ul>
+        </div>
+      </div>` : ""}
+    </section>`;
+  } else {
+    body = `<section class="single-panel empty-analysis explain-panel">
+      <div class="analysis-heading">
+        <div><span class="eyebrow">Why this number</span><h2>Not calculated for this import</h2></div>
+      </div>
+      <p>${esc(loadout.sourceNote ?? "This build is not connected to a compatible damage model yet.")}</p>
+      ${renderLocalCaptureHandoff(loadout)}
+    </section>`;
+  }
+
+  const gapsPanel = gaps.length
+    ? `<details class="density-fold explain-gaps">
+        <summary>What is still incomplete <span>${gaps.length} gap${gaps.length === 1 ? "" : "s"}</span></summary>
+        <ul class="guarded-unavailable-list">${gaps.map((gap) =>
+          `<li><strong>${esc(gap)}</strong></li>`).join("")}</ul>
+      </details>`
+    : "";
+
+  return `<div class="explain-view">${hero}${body}${gapsPanel}</div>`;
+}
+
+function renderBuildOverview(loadout: AnalyzedLoadout) {
+  const skillLines = loadout.skills
+    .filter((skill) => skill.enabled)
+    .slice(0, 12)
+    .map((skill) => `${skillDisplay(skill)}${skill.supports.length ? ` · ${skill.supports.length} supports` : ""}`);
+  const gearLines = loadout.gear
+    .filter((row) => row.name && row.name !== "Empty")
+    .slice(0, 12)
+    .map((row) => `${row.slot.replace(/([a-z])([A-Z])/g, "$1 $2")}: ${row.name}`);
+  return `<section class="single-panel explain-panel">
+    <div class="analysis-heading">
+      <div>
+        <span class="eyebrow">This loadout</span>
+        <h2>${esc(loadout.name)}</h2>
+      </div>
+    </div>
+    <p class="section-intro">Inventory of the active loadout. Open Your DPS to see how these inputs feed the current damage number.</p>
+    <div class="build-overview-grid">
+      <div>
+        <span class="panel-kicker">Skills</span>
+        <ul>${skillLines.length
+          ? skillLines.map((line) => `<li>${esc(line)}</li>`).join("")
+          : "<li>No enabled skills imported</li>"}</ul>
+      </div>
+      <div>
+        <span class="panel-kicker">Gear</span>
+        <ul>${gearLines.length
+          ? gearLines.map((line) => `<li>${esc(line)}</li>`).join("")
+          : "<li>No gear rows imported</li>"}</ul>
+      </div>
+    </div>
+  </section>`;
 }
 
 function summaryMetric(label: string, value: string, note: string, className = "") {
@@ -1423,10 +1657,8 @@ function renderChanges(before: AnalyzedLoadout, after: AnalyzedLoadout) {
 }
 
 function formulaSideControls() {
-  return `<div class="segmented" aria-label="Formula side">
-    <button type="button" class="${formulaSide === "before" ? "active" : ""}" data-formula-side="before">Before</button>
-    <button type="button" class="${formulaSide === "after" ? "active" : ""}" data-formula-side="after">After</button>
-  </div>`;
+  // Dual-side formula toggle retired with the compare shell.
+  return "";
 }
 
 function renderMinionFormulaView(active: AnalyzedLoadout) {
@@ -2584,38 +2816,41 @@ function renderActions(
   </section>`;
 }
 
-function navigation(plan: ComparisonActionPlan) {
-  const items: { id: View; label: string; count?: string }[] = [
-    { id: "actions", label: "Improve DPS", count: String(plan.findings.length) },
-    { id: "diagnosis", label: "Why it changed" },
-    { id: "changes", label: "Build changes" },
-    { id: "formula", label: "Formula" },
-    { id: "survival", label: "Survival" },
-    { id: "coverage", label: "Coverage" },
+function navigation() {
+  const items: { id: View; label: string }[] = [
+    { id: "explain", label: "Your DPS" },
+    { id: "build", label: "This loadout" },
+    { id: "coverage", label: "Unmodeled" },
   ];
-  return `<nav class="view-tabs" aria-label="Analysis views">
+  return `<nav class="view-tabs" aria-label="Damage views">
     ${items.map((item) => `<button type="button" data-view="${item.id}" class="${activeView === item.id ? "active" : ""}"
       ${activeView === item.id ? `aria-current="page"` : ""}>
-      ${esc(item.label)}${item.count ? `<span>${esc(item.count)}</span>` : ""}
+      ${esc(item.label)}
     </button>`).join("")}
   </nav>`;
 }
 
 function render() {
-  const before = selected("before");
-  const after = selected("after");
-  const plan = buildComparisonActionPlan(before.loadout, after.loadout);
+  const active = activeLoadout();
+  // Keep dual-side pointers aligned for any secondary helpers still invoked.
+  beforeSelection = selection;
+  afterSelection = selection;
+
   let content = "";
-  if (activeView === "diagnosis") {
-    content = renderDiagnosis(before.loadout, after.loadout, plan);
+  if (activeView === "explain" || activeView === "formula") {
+    content = renderExplain(active.loadout);
+  } else if (activeView === "build" || activeView === "changes") {
+    content = renderBuildOverview(active.loadout);
+  } else if (activeView === "coverage") {
+    content = renderCoverage(active.loadout, active.loadout);
+  } else if (activeView === "survival") {
+    content = renderSurvival(active.loadout, active.loadout);
+  } else if (activeView === "diagnosis" || activeView === "actions") {
+    // Compare-era views demoted: redirect to single-build explain.
+    content = renderExplain(active.loadout);
+  } else {
+    content = renderExplain(active.loadout);
   }
-  else if (activeView === "actions") {
-    content = renderActions(before.loadout, after.loadout, plan);
-  }
-  else if (activeView === "changes") content = renderChanges(before.loadout, after.loadout);
-  else if (activeView === "formula") content = renderFormula(before.loadout, after.loadout);
-  else if (activeView === "survival") content = renderSurvival(before.loadout, after.loadout);
-  else content = renderCoverage(before.loadout, after.loadout);
 
   app.innerHTML = `<header class="site-header">
     <div class="header-inner">
@@ -2625,8 +2860,9 @@ function render() {
         <em>alpha</em>
       </a>
       <nav class="primary-nav" aria-label="Primary">
-        <a href="#workspace" class="active">Compare</a>
-        <a href="#formula-guide" data-view-link="formula">Learn scaling</a>
+        <a href="#workspace" class="active">Your DPS</a>
+        <a href="/rehan">Rehan guide</a>
+        <a href="/bing">Bing guide</a>
       </nav>
       <div class="header-meta">
         <span class="season-dot"></span><span title="Guarded mechanics use SS13 evidence. Some display labels come from cached SS12.5 bundles with SS13 skill and pact overlays.">SS13 mechanics</span>
@@ -2637,18 +2873,15 @@ function render() {
   <main class="workspace" id="workspace">
     <section class="workspace-intro">
       <div>
-        <span class="eyebrow">Load → compare → improve</span>
-        <h2>Find the next DPS win.</h2>
-        <p>Load a supported progression, a Compendium build code, or a tli_dump export. Then rank the change that matters.</p>
+        <span class="eyebrow">Load → read the number → see why</span>
+        <h2>Understand your current DPS.</h2>
+        <p>Load a supported build, Compendium code, or tli_dump export. See what the damage model claims and which factors build that number.</p>
       </div>
     </section>
-    <section class="comparison-bar" aria-label="Build comparison">
-      ${buildPicker("before", before.build, before.loadout)}
-      <button type="button" class="swap-button" data-swap aria-label="Swap before and after builds">⇄<span>swap</span></button>
-      ${buildPicker("after", after.build, after.loadout)}
+    <section class="loadout-bar" aria-label="Active loadout">
+      ${singleLoadoutPicker(active.build, active.loadout)}
     </section>
-    ${renderSummary(before.loadout, after.loadout, plan)}
-    ${navigation(plan)}
+    ${navigation()}
     <div class="view-content">${content}</div>
   </main>
   <footer class="site-footer">
@@ -2676,7 +2909,7 @@ function openImportDialog(side: Side) {
   importTarget = side;
   if (importLead) {
     importLead.textContent =
-      `Loading into ${sideLabel(side)}. Pick a supported progression, paste a Compendium build code, or import a tli_dump / Compendium JSON export.`;
+      "Pick a supported build, paste a Compendium build code, or import a tli_dump / Compendium JSON export to explain its damage.";
   }
   setImportStatus(`Adding a build to ${sideLabel(side)}.`);
   const supportedTab = document.getElementById("import-tab-supported") as HTMLButtonElement | null;
@@ -2694,44 +2927,42 @@ function applySupportedBuild(buildId: string) {
     return;
   }
   const defaults = defaultLoadoutPair(build);
-  const beforeLoadout = build.loadouts[defaults.beforeIndex] ?? build.loadouts[0];
-  const afterLoadout = build.loadouts[defaults.afterIndex]
-    ?? build.loadouts[Math.min(1, build.loadouts.length - 1)]
-    ?? build.loadouts[build.loadouts.length - 1];
-  // Selecting a supported progression loads a sensible pair so comparison is ready.
-  beforeSelection = { buildId: build.id, loadoutId: beforeLoadout.id };
-  afterSelection = { buildId: build.id, loadoutId: afterLoadout.id };
+  // Prefer the later progression stage as the loadout to explain.
+  const loadout = build.loadouts[defaults.afterIndex]
+    ?? build.loadouts.find((item) => item.isCurrent)
+    ?? build.loadouts[build.loadouts.length - 1]
+    ?? build.loadouts[0];
+  setSelection({ buildId: build.id, loadoutId: loadout.id });
+  activeView = "explain";
   reportCopyState = "idle";
   setImportStatus(
-    `${build.name} loaded · ${build.loadouts.length} loadouts. Adjust Before / After in the dropdowns.`,
+    `${build.name} loaded · explaining “${loadout.name}” (${build.loadouts.length} loadouts available).`,
     "success",
   );
   window.setTimeout(() => {
     importDialog.close();
     render();
-    restoreWorkspaceFocus(`#${importTarget}-loadout`);
+    restoreWorkspaceFocus("#active-loadout");
   }, 350);
 }
 
 function activateImported(build: AnalyzedBuild) {
   builds.push(build);
   const loadout = build.loadouts.find((item) => item.isCurrent) ?? build.loadouts[0];
-  const selection = { buildId: build.id, loadoutId: loadout.id };
-  if (importTarget === "before") beforeSelection = selection;
-  else afterSelection = selection;
+  setSelection({ buildId: build.id, loadoutId: loadout.id });
   reportCopyState = "idle";
   setImportStatus(
     build.needsResolution
       ? "Build code saved. Open it in-game, capture with tli_dump, then import that JSON on the tli_dump tab."
-      : `${build.name} imported with ${build.loadouts.length} loadout${build.loadouts.length === 1 ? "" : "s"}.`,
+      : `${build.name} imported · explaining “${loadout.name}”.`,
     build.needsResolution ? "info" : "success",
   );
   window.setTimeout(() => {
     importDialog.close();
-    if (build.needsResolution) activeView = "diagnosis";
+    activeView = "explain";
     render();
     restoreWorkspaceFocus(
-      build.needsResolution ? ".capture-handoff" : `#${importTarget}-loadout`,
+      build.needsResolution ? ".capture-handoff" : "#active-loadout",
     );
   }, 450);
 }
@@ -2903,14 +3134,15 @@ app.addEventListener("change", (event) => {
     return;
   }
   if (!target.matches("[data-selection]")) return;
-  const selection = readSelectionKey(target.value);
-  if (!selection) return;
-  const side = target.dataset.selection as Side;
-  if (side === "before") beforeSelection = selection;
-  else afterSelection = selection;
+  const next = readSelectionKey(target.value);
+  if (!next) return;
+  const side = target.dataset.selection;
+  if (side === "active" || side === "after" || side === "before") {
+    setSelection(next);
+  }
   reportCopyState = "idle";
   render();
-  restoreWorkspaceFocus(`#${side}-loadout`);
+  restoreWorkspaceFocus(side === "active" ? "#active-loadout" : `#${side}-loadout`);
 });
 
 app.addEventListener("click", (event) => {
@@ -3156,22 +3388,28 @@ async function initializeWorkspace() {
     demo = await response.json() as DemoData;
     builds.push(...structuredClone(demo.builds));
     renderSupportedBuildList();
-    const initial = builds.find((build) => build.id === "bing")
+    // Prefer a loadout that can show a full modeled explanation (scaling lesson),
+    // then supported catalog builds.
+    const modeled = builds.find((build) =>
+      build.loadouts.some((loadout) => loadout.model && loadout.snapshot));
+    const initial = modeled
+      ?? builds.find((build) => build.id === "bing")
       ?? builds.find(isSupportedCatalogBuild);
-    if (!initial || initial.loadouts.length < 2) {
-      throw new Error("No supported progression with two loadouts is available.");
+    if (!initial?.loadouts.length) {
+      throw new Error("No supported loadout is available to explain.");
     }
     const defaults = defaultLoadoutPair(initial);
-    const beforeLoadout = initial.loadouts[defaults.beforeIndex] ?? initial.loadouts[0];
-    const afterLoadout = initial.loadouts[defaults.afterIndex]
-      ?? initial.loadouts[Math.min(1, initial.loadouts.length - 1)];
-    beforeSelection = { buildId: initial.id, loadoutId: beforeLoadout.id };
-    afterSelection = { buildId: initial.id, loadoutId: afterLoadout.id };
+    const preferred = initial.loadouts.find((loadout) => loadout.model && loadout.snapshot)
+      ?? initial.loadouts[defaults.afterIndex]
+      ?? initial.loadouts.find((loadout) => loadout.isCurrent)
+      ?? initial.loadouts[0];
+    setSelection({ buildId: initial.id, loadoutId: preferred.id });
+    activeView = "explain";
     render();
   } catch (error) {
     const message = error instanceof Error
       ? error.message
-      : "The comparison workspace could not be loaded.";
+      : "The damage workspace could not be loaded.";
     app.innerHTML = `<main class="app-loading app-loading--error">
       <div><strong>Unable to load TLI Lens</strong>
       <small>${esc(message)} Refresh the page to try again.</small></div>

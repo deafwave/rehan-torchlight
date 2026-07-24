@@ -28,15 +28,27 @@ if (existsSync(path.join(outputRoot, "client", "index.html"))) {
 }
 
 const pages = [
-  { path: indexPath, mustInclude: "TLI Lens" },
+  {
+    path: indexPath,
+    mustInclude: "TLI Lens",
+    // Home product is single-loadout explain, not dual compare.
+    mustIncludeAny: ["current DPS", "Understand your current DPS", "Your DPS"],
+  },
   { path: rehanPath, mustInclude: "Rehan" },
   { path: bingPath, mustInclude: "Bing" },
 ];
 
-for (const { path: pagePath, mustInclude } of pages) {
+for (const page of pages) {
+  const { path: pagePath, mustInclude } = page;
   const html = readFileSync(pagePath, "utf8");
   if (!html.includes(mustInclude)) {
     throw new Error(`Static shell ${path.basename(pagePath)} is missing expected identity (${mustInclude}).`);
+  }
+  if (page.mustIncludeAny?.length && !page.mustIncludeAny.some((s) => html.includes(s))) {
+    throw new Error(
+      `Static shell ${path.basename(pagePath)} is missing home explain copy `
+      + `(expected one of: ${page.mustIncludeAny.join(" | ")}).`,
+    );
   }
   const assetPaths = [...html.matchAll(/(?:src|href)="(\/[^"]+)"/gu)]
     .map((match) => match[1])
