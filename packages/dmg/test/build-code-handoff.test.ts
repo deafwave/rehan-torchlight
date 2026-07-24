@@ -31,6 +31,8 @@ describe("in-game build-code handoff", () => {
     expect(instructions).toContain("active ViewPlayerBDReference page");
     expect(instructions).toContain("Copy TLI Compendium JSON");
     expect(instructions).toContain("--portable-json");
+    expect(instructions).toContain("structural inspection");
+    expect(instructions).toContain("formula inputs remain blocked");
     expect(instructions).toContain("does not resolve codes over the web");
     expect(handoff.acceptedDocuments).toEqual([
       "tli_dump portable-v3 JSON",

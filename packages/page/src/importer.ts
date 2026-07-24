@@ -12,14 +12,24 @@ import type {
   PartialMetric,
   SupportSocketEvidence,
   SummonSourceEvidence,
+  GuardedEvidenceBlocker,
 } from "./analysis-types";
+import type { PlayerDefenseDisplayEvidenceResult } from "./player-defense-evidence";
+import type { BingIntrinsicEnvelope } from "@rehan/dmg/bingIntrinsic";
 import { partialMetricsForCompendium } from "./partial-metrics";
 import { supportEvidenceForCompendium } from "./support-evidence";
 import {
   createLocalCaptureHandoff,
   extractInGameBuildCode,
 } from "./build-code-handoff";
-import { summonEvidenceForCompendium } from "./summon-evidence";
+import { summonEvidenceResultForCompendium } from "./summon-evidence";
+import { playerDefenseEvidenceForCompendium } from "./player-defense-evidence";
+import { bingIntrinsicEvidenceResultForCompendium } from "./bing-intrinsic-evidence";
+import {
+  resolveCompilerSource,
+  type PortableCompilerConversion,
+} from "./portable-compiler-source";
+import { guardedEvidenceReadiness } from "./evidence-state";
 import {
   formatModifierEvidence,
   normalizeBuildSnapshot,
@@ -64,6 +74,7 @@ function gearRows(loadout: NormalizedLoadout): GearRow[] {
 
 function skillRows(loadout: NormalizedLoadout, catalog: ImportCatalog): SkillRow[] {
   return loadout.skills.map((skill) => ({
+    slot: skill.slot,
     kind: skill.kind,
     guid: skill.identity.catalogId ?? skill.identity.nativeId ?? undefined,
     name: catalogName(skill.identity, catalog),
@@ -178,6 +189,11 @@ function analyzedLoadout(
   partialMetrics: PartialMetric[],
   supportEvidence: SupportSocketEvidence[],
   summonEvidence: SummonSourceEvidence[],
+  summonEvidenceBlockers: GuardedEvidenceBlocker[],
+  bingIntrinsicEvidence?: BingIntrinsicEnvelope,
+  bingIntrinsicBlockers: GuardedEvidenceBlocker[] = [],
+  playerDefenseEvidence?: PlayerDefenseDisplayEvidenceResult,
+  portableConversion?: PortableCompilerConversion | null,
 ): AnalyzedLoadout {
   const diagnostics = [
     ...build.diagnostics.filter((issue) =>
@@ -185,7 +201,48 @@ function analyzedLoadout(
       || issue.path.startsWith(`build.loadouts.loadouts[${loadout.index}]`)),
     ...loadout.diagnostics,
   ];
-  const portable = build.sourceKind === "portable-v3";
+  const portable = build.sourceKind === "portable-v3"
+    || build.sourceKind === "portable-converter";
+  const converterWrapper = build.sourceKind === "portable-converter";
+  const conversionSource = converterWrapper
+    ? "tli_dump converter-result wrapper"
+    : "portable-v3 → Compendium conversion";
+  const conversionRows: UnmatchedRow[] = portableConversion
+    ? [
+        ...portableConversion.omitted.map((entry) => ({
+          text: `tli_dump omitted ${entry.section}: ${entry.reason}`,
+          count: entry.observedCount,
+          sources: [conversionSource],
+        })),
+        ...(portableConversion.error
+          ? [{
+              text: `Portable converter validation/report failed: ${portableConversion.error}`,
+              count: 1,
+              sources: [conversionSource],
+            }]
+          : []),
+        ...(portableConversion.compilerAccess.reason !== "conversion-failed"
+          ? [{
+              text: `Guarded formula access blocked: ${portableConversion.compilerAccess.message}`,
+              count: 1,
+              sources: ["portable-v3 trust boundary"],
+            }]
+          : []),
+      ]
+    : [];
+  const guardedReadiness = guardedEvidenceReadiness({
+    partialMetrics,
+    supportEvidence,
+    summonEvidence,
+    summonEvidenceBlockers,
+    bingIntrinsicEvidence,
+    bingIntrinsicBlockers,
+    playerDefenseEvidence,
+  });
+  const guardedEvidenceAvailable =
+    guardedReadiness === "ready" || guardedReadiness === "partial";
+  const guardedEvidenceBlocked =
+    guardedReadiness === "blocked" || guardedReadiness === "partial";
   return {
     id: loadout.id,
     index: loadout.index,
@@ -198,6 +255,10 @@ function analyzedLoadout(
     partialMetrics,
     supportEvidence,
     summonEvidence,
+    summonEvidenceBlockers,
+    bingIntrinsicEvidence,
+    bingIntrinsicBlockers,
+    playerDefenseEvidence,
     snapshot: null,
     gear: gearRows(loadout),
     skills: skillRows(loadout, catalog),
@@ -205,10 +266,22 @@ function analyzedLoadout(
     memories: memoryRows(loadout),
     slates: slateRows(loadout),
     pactspirits: pactRows(loadout, catalog),
-    unmatched: diagnosticRows(diagnostics),
+    unmatched: [...diagnosticRows(diagnostics), ...conversionRows],
     sourceNote: portable
-      ? "Portable-v3 evidence imported. DPS remains uncalculated until an actor/skill compiler consumes the normalized records."
-      : "Compendium structure imported from this document. DPS remains uncalculated until an actor/skill compiler supports the loadout.",
+      ? portableConversion?.status === "failed"
+        ? `${converterWrapper ? "tli_dump converter-result payload" : "Portable-v3 structure"} imported structurally, but converter validation/report failed. Guarded formula evidence remains unavailable; see Unmatched data.`
+        : portableConversion
+          ? converterWrapper
+            ? `A complete tli_dump converter-result wrapper was imported structurally and its report was retained (${portableConversion.status}; ${portableConversion.importedCount} structurally materialized records). Its payload is not used as a formula source until the originating portable catalog metadata can be independently attested.`
+            : portableConversion.compilerAccess.reason === "incompatible-source-state"
+            ? `Portable-v3 structure imported and the tli_dump converter report was retained (${portableConversion.status}; ${portableConversion.importedCount} structurally materialized records). Guarded formula evidence is blocked because the capture was not both connected and layout-compatible.`
+            : `Portable-v3 structure imported and the tli_dump converter report was retained (${portableConversion.status}; ${portableConversion.importedCount} structurally materialized records). Converted records are not used as formula inputs until their embedded catalog metadata can be independently attested against the pinned SS13 catalog.`
+          : "Portable-v3 evidence imported. Formula evidence remains unavailable because no guarded Compendium conversion was produced."
+      : guardedEvidenceAvailable
+        ? `Compendium structure imported. Supported guarded source terms are shown below${guardedEvidenceBlocked ? "; blocked guarded layers remain explicit" : ""}. Unresolved runtime state and modifier pools keep total DPS/EHP uncalculated.`
+        : guardedEvidenceBlocked
+          ? "Compendium structure imported. Guarded formula checks ran but are blocked; blocker evidence is shown instead of source terms or invented DPS/EHP."
+          : "Compendium structure imported from this document. DPS remains uncalculated until an actor/skill compiler supports the loadout.",
   };
 }
 
@@ -226,10 +299,8 @@ export function importBuild(
   sourceName = "Imported JSON",
 ): AnalyzedBuild {
   const normalized = normalizeBuildSnapshot(value);
-  const source = value as any;
-  const compilerSource = normalized.sourceKind === "compendium"
-    ? (source?.payload?.loadouts?.loadouts ? source.payload : source)
-    : null;
+  const compilerResolution = resolveCompilerSource(value, normalized);
+  const compilerSource = compilerResolution.source;
   importSequence += 1;
   return {
     id: `imported-${normalized.sourceKind}-${normalized.fingerprint}-${Date.now().toString(36)}-${importSequence}`,
@@ -237,15 +308,38 @@ export function importBuild(
     patch: normalized.patch,
     source: sourceName,
     imported: true,
-    loadouts: normalized.loadouts.map((loadout) =>
-      analyzedLoadout(
+    loadouts: normalized.loadouts.map((loadout) => {
+      const summonResult = compilerSource
+        ? summonEvidenceResultForCompendium(compilerSource, loadout.index)
+        : null;
+      const bingResult = compilerSource
+        ? bingIntrinsicEvidenceResultForCompendium(compilerSource, loadout.index)
+        : null;
+      const summonBlockers = summonResult?.status === "not-calculated"
+        ? summonResult.blockers.filter((blocker) => blocker.code !== "unsupported-actor")
+        : [];
+      const bingBlockers = bingResult?.status === "not-calculated"
+        ? bingResult.blockers.filter((blocker) => blocker.code !== "unsupported-actor")
+        : [];
+      return analyzedLoadout(
         loadout,
         normalized,
         catalog,
         compilerSource ? partialMetricsForCompendium(compilerSource, loadout.index) : [],
         compilerSource ? supportEvidenceForCompendium(compilerSource, loadout.index) : [],
-        compilerSource ? summonEvidenceForCompendium(compilerSource, loadout.index) : [],
-      )),
+        summonResult?.status === "source-terms" ? summonResult.summons : [],
+        summonBlockers,
+        bingResult?.status === "calculated-partial" ? bingResult : undefined,
+        bingBlockers,
+        compilerSource
+          ? playerDefenseEvidenceForCompendium(compilerSource, loadout.index, {
+              catalog: catalog.defenseCatalog,
+              catalogSha256: catalog.defenseCatalogSha256,
+            })
+          : undefined,
+        compilerResolution.portableConversion,
+      );
+    }),
   };
 }
 

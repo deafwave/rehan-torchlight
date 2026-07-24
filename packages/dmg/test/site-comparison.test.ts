@@ -7,6 +7,11 @@ import { importBuild, importBuildCode } from "../../page/src/importer.js";
 import { compareStructure } from "../../page/src/structural-analysis.js";
 import { compareSupportTerms } from "../../page/src/support-evidence.js";
 import { compareSummonTerms } from "../../page/src/summon-evidence.js";
+import { guardedEvidenceReadiness } from "../../page/src/evidence-state.js";
+import {
+  presentedChangeKind,
+  skillDisplay,
+} from "../../page/src/change-presentation.js";
 import type { ImportCatalog } from "../../page/src/analysis-types.js";
 import {
   IRIS_VIGILANT_BREEZE_ID,
@@ -68,6 +73,32 @@ describe("comparison website model", () => {
     expect(build.loadouts[3].model).toBeNull();
   });
 
+  it("keeps Bing per-hit damage and Blast Nova emissions as separate guarded evidence", () => {
+    const build = (demoData as any).builds.find((item: any) => item.id === "bing");
+    const evidence = build.loadouts[3].bingIntrinsicEvidence;
+
+    expect(evidence).toMatchObject({
+      status: "calculated-partial",
+      isDps: false,
+      isTotalHit: false,
+      normalWeaponSourcedPerHit: {
+        total: { average: 5657.4342 },
+      },
+      demolisherChargedWeaponSourcedPerHit: {
+        total: { average: 17820.91773 },
+      },
+      topology: {
+        status: "calculated-partial",
+        isDps: false,
+        isTargetHits: false,
+        projectilesPerBomb: 9,
+        expectedEmittedProjectilesPerThrow: 22.5,
+      },
+      actualDps: { status: "not-calculated", isDps: false },
+    });
+    expect(evidence.effectiveTargetHits.status).toBe("not-calculated");
+  });
+
   it("generates bundled examples through the exact-roll structural importer", () => {
     const build = (demoData as any).builds.find((item: any) => item.id === "bing");
     const allGearLines = build.loadouts.flatMap((loadout: any) =>
@@ -105,8 +136,18 @@ describe("comparison website model", () => {
 
   it("publishes Wuxia summon and Origin terms without labeling them DPS or EHP", () => {
     const build = (demoData as any).builds.find((item: any) => item.id === "wuxia");
+    expect(build.loadouts.every((loadout: any) =>
+      Array.isArray(loadout.summonEvidenceBlockers)
+      && Array.isArray(loadout.bingIntrinsicBlockers))).toBe(true);
+    expect(build.loadouts.every((loadout: any) =>
+      loadout.summonEvidence.length === 2)).toBe(true);
     const evidence = build.loadouts[8].summonEvidence;
+    expect(evidence.map((summon: any) => summon.skillName)).toEqual([
+      "Summon Rock Magus",
+      "Summon Erosion Magus",
+    ]);
     const erosion = evidence.find((summon: any) => summon.skillName === "Summon Erosion Magus");
+    const rock = evidence.find((summon: any) => summon.skillName === "Summon Rock Magus");
 
     expect(erosion.level).toBe(21);
     expect(erosion.isDps).toBe(false);
@@ -125,6 +166,32 @@ describe("comparison website model", () => {
       scope: "player",
       isTotalEhp: false,
     }));
+    expect(erosion.baseline).toMatchObject({
+      baseDamage: 300,
+      baseLife: 4500,
+      isTotalMinionEhp: false,
+    });
+    expect(erosion.actions).toHaveLength(4);
+    expect(erosion.actions).toContainEqual(expect.objectContaining({
+      actionName: "World of Thorns",
+      foundation: expect.objectContaining({
+        rawDamagePerContact: 6894,
+        rawDamageAtDeterministicFullContact: null,
+        isDps: false,
+        isTotalDamage: false,
+      }),
+    }));
+    expect(rock.actions).toContainEqual(expect.objectContaining({
+      actionName: "Rock Blast",
+      foundation: expect.objectContaining({
+        deterministicContacts: null,
+        rawDamageAtDeterministicFullContact: null,
+        isDps: false,
+        isTotalDamage: false,
+      }),
+    }));
+    expect(erosion.supports.every((support: any) => support.isDps === false)).toBe(true);
+    expect(erosion.heroTraits).toHaveLength(4);
     expect(build.loadouts[8].sourceNote).toContain("total player EHP");
   });
 
@@ -152,6 +219,40 @@ describe("comparison website model", () => {
     expect(comparison.added).toBeGreaterThan(0);
     expect(comparison.categories.some((row) => row.category === "resistance")).toBe(true);
     expect(build.loadouts[8].model).toBeNull();
+  });
+
+  it("publishes typed player-defense inputs and source sums without calling them EHP", () => {
+    const build = (demoData as any).builds.find((item: any) => item.id === "wuxia");
+    const evidence = build.loadouts[8].playerDefenseEvidence;
+
+    expect(evidence).toMatchObject({
+      status: "source-terms",
+      actor: "player",
+      isTotalEhp: false,
+      guards: {
+        isTotalEhp: false,
+        sourceSumsAreCharacterTotals: false,
+        comparisonValuesAreEhpDeltas: false,
+        recommendationReady: false,
+      },
+      coverage: {
+        playerScopedTerms: 45,
+        unparsedDefensiveLines: 0,
+        catalog: {
+          status: "matched-ss13",
+          requiredReferences: 32,
+          resolvedReferences: 32,
+        },
+      },
+      playerEhp: { status: "not-calculated" },
+    });
+    expect(evidence.sourceSums.every((sum: any) =>
+      sum.isCharacterTotal === false && sum.isEhp === false)).toBe(true);
+    expect(evidence.terms).toContainEqual(expect.objectContaining({
+      stat: "additional-damage-taken",
+      candidateValues: [-20, -24, -28, -32, -36],
+      isTotalEhp: false,
+    }));
   });
 
   it("does not mislabel minion defenses as player survival evidence", () => {
@@ -222,6 +323,40 @@ describe("comparison website model", () => {
     expect(build.loadouts[0].gear[0].name).toBe("Empty");
   });
 
+  it("keeps guarded source evidence distinct from blocker-only checks", () => {
+    expect(guardedEvidenceReadiness({
+      playerDefenseEvidence: {
+        status: "not-calculated",
+        blockers: [{ code: "unsupported-patch", message: "Wrong patch." }],
+      } as any,
+    })).toBe("blocked");
+    expect(guardedEvidenceReadiness({
+      partialMetrics: [{ id: "one" }] as any,
+      bingIntrinsicBlockers: [{
+        code: "missing-source",
+        message: "A guarded input is missing.",
+      }],
+    })).toBe("partial");
+    expect(guardedEvidenceReadiness({
+      supportEvidence: [{
+        status: "source-terms",
+      }] as any,
+    })).toBe("ready");
+  });
+
+  it("labels detail-only changes and skill enablement truthfully", () => {
+    expect(presentedChangeKind("Same item", "Same item", true)).toBe("changed");
+    expect(presentedChangeKind("Same item", "Same item", false)).toBe("same");
+    expect(skillDisplay({
+      slot: "active:0",
+      kind: "active",
+      name: "Summon Rock Magus",
+      level: 20,
+      enabled: false,
+      supports: [],
+    })).toBe("Summon Rock Magus · L20 · disabled");
+  });
+
   it("attaches guarded summon evidence during a Compendium import", () => {
     const build = importBuild({
       name: "Iris import",
@@ -239,9 +374,9 @@ describe("comparison website model", () => {
               skillGuid: SUMMON_ROCK_MAGUS_ID,
               level: 20,
               enabled: true,
-              supports: [],
-            }],
-            passiveSkills: [],
+              supports: [null, null, null, null, null],
+            }, null, null, null, null],
+            passiveSkills: [null, null, null, null],
           },
           skillTree: { slots: [] },
           heroMemories: { inventory: [], equipped: {} },
@@ -262,6 +397,47 @@ describe("comparison website model", () => {
       minionDps: { status: "not-calculated" },
       playerEhp: { status: "not-calculated" },
     });
+    expect(build.loadouts[0].sourceNote).toContain("guarded source terms");
+    expect(build.loadouts[0].sourceNote).not.toContain(
+      "until an actor/skill compiler supports",
+    );
+  });
+
+  it("does not surface irrelevant Bing or Iris season blockers for another actor", () => {
+    const build = importBuild({
+      name: "Future unrelated import",
+      patch: "SS14",
+      loadouts: {
+        currentLoadoutId: "other",
+        loadouts: [{
+          id: "other",
+          name: "Current",
+          hero: { heroId: "unrelated-hero" },
+          gear: { inventory: [], equipped: {} },
+          vorax: { inventory: [] },
+          skills: {
+            activeSkills: [null, null, null, null, null],
+            passiveSkills: [null, null, null, null],
+          },
+          skillTree: { slots: [] },
+          heroMemories: { inventory: [], equipped: {} },
+          divinity: { inventory: [], placements: [] },
+          pactspirits: [],
+          kismets: [],
+        }],
+      },
+    }, emptyCatalog, []);
+
+    expect(build.loadouts[0].bingIntrinsicBlockers).toEqual([]);
+    expect(build.loadouts[0].summonEvidenceBlockers).toEqual([]);
+    expect(build.loadouts[0].playerDefenseEvidence).toMatchObject({
+      status: "not-calculated",
+      blockers: [{ code: "unsupported-patch" }],
+    });
+    expect(build.loadouts[0].sourceNote).toContain("checks ran but are blocked");
+    expect(build.loadouts[0].sourceNote).not.toContain(
+      "Supported guarded source terms are shown",
+    );
   });
 
   it("treats an in-game build code as an unresolved identifier", () => {

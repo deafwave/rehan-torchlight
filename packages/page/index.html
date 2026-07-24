@@ -93,7 +93,7 @@
           >
             <span class="drop-icon" aria-hidden="true">↓</span>
             <strong>Drop a build JSON here</strong>
-            <span id="drop-help">TLI Compendium exports and tli_dump portable snapshots are accepted.</span>
+            <span id="drop-help">TLI Compendium exports and tli_dump portable snapshots up to 25 MiB are accepted.</span>
             <span class="file-button">Choose a file</span>
           </label>
           <input id="build-file" type="file" accept=".json,application/json" hidden />
@@ -106,10 +106,11 @@
           aria-labelledby="import-tab-paste"
           hidden
         >
-          <label class="paste-label" for="build-paste">In-game build code or exported JSON</label>
+          <label class="paste-label" for="build-paste">In-game build code or exported JSON · 25 MiB max</label>
           <textarea
             id="build-paste"
             rows="8"
+            maxlength="26214400"
             spellcheck="false"
             placeholder="2L8xV4YBEfGpdQAAAAAACw=="
           ></textarea>

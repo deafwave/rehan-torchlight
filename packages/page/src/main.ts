@@ -1,6 +1,4 @@
 import "./style.css";
-import demoJson from "./data/demo-builds.json";
-import importCatalogJson from "./data/import-catalog.json";
 import { cycleDps } from "@rehan/dmg/damageModel";
 import { renderBreakdown } from "./breakdown";
 import {
@@ -21,6 +19,11 @@ import {
 import { compareSupportTerms, type SupportTermChange } from "./support-evidence";
 import { compareSummonTerms, type SummonTermChange } from "./summon-evidence";
 import type {
+  PlayerDefenseDisplayEvidence,
+  PlayerDefenseDisplayEvidenceResult,
+  PlayerDefenseDisplayTerm,
+} from "./player-defense-evidence";
+import type {
   AnalyzedBuild,
   AnalyzedLoadout,
   DemoData,
@@ -28,10 +31,34 @@ import type {
   SkillRow,
 } from "./analysis-types";
 import { importBuild, importBuildCode } from "./importer";
+import {
+  guardedEvidenceReadiness,
+  type GuardedEvidenceReadiness,
+} from "./evidence-state";
+import { presentedChangeKind, skillDisplay } from "./change-presentation";
 
-const demo = demoJson as unknown as DemoData;
-const catalog = importCatalogJson as ImportCatalog;
-const builds: AnalyzedBuild[] = structuredClone(demo.builds);
+let demo: DemoData;
+const builds: AnalyzedBuild[] = [];
+const demoDataUrl = new URL("./data/demo-builds.json", import.meta.url);
+const importCatalogUrl = new URL("./data/import-catalog.json", import.meta.url);
+let importCatalogPromise: Promise<ImportCatalog> | null = null;
+
+function loadImportCatalog(): Promise<ImportCatalog> {
+  if (!importCatalogPromise) {
+    importCatalogPromise = fetch(importCatalogUrl)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`The SS13 import catalog could not be loaded (${response.status}).`);
+        }
+        return response.json() as Promise<ImportCatalog>;
+      })
+      .catch((error) => {
+        importCatalogPromise = null;
+        throw error;
+      });
+  }
+  return importCatalogPromise;
+}
 
 type Side = "before" | "after";
 type View = "diagnosis" | "changes" | "formula" | "survival" | "coverage";
@@ -42,26 +69,25 @@ interface Selection {
   loadoutId: string;
 }
 
-const initialBing = builds.find((build) => build.id === "scaling-lesson")!;
-let beforeSelection: Selection = {
-  buildId: initialBing.id,
-  loadoutId: initialBing.loadouts[0].id,
-};
-let afterSelection: Selection = {
-  buildId: initialBing.id,
-  loadoutId: initialBing.loadouts[1].id,
-};
+let beforeSelection: Selection;
+let afterSelection: Selection;
 let activeView: View = "diagnosis";
 let changeSection: ChangeSection = "gear";
 let formulaSide: Side = "after";
 let importTarget: Side = "after";
 
 const app = document.getElementById("app")!;
+app.innerHTML = `<main class="app-loading" aria-live="polite">
+  <div><span class="brand-mark" aria-hidden="true"><i></i></span>
+  <strong>Loading the comparison workspace…</strong>
+  <small>Preparing the Bing and Wuxia evidence fixtures.</small></div>
+</main>`;
 const importDialog = document.getElementById("import-dialog") as HTMLDialogElement;
 const importStatus = document.getElementById("import-status")!;
 const fileInput = document.getElementById("build-file") as HTMLInputElement;
 const pasteInput = document.getElementById("build-paste") as HTMLTextAreaElement;
 const dropZone = document.getElementById("drop-zone")!;
+const MAX_IMPORT_BYTES = 25 * 1024 * 1024;
 
 const esc = (value: unknown) => String(value ?? "")
   .replaceAll("&", "&amp;")
@@ -76,10 +102,15 @@ function provenanceLabel(source: string) {
     : `<strong>${esc(source)}</strong>`;
 }
 
-function provenanceLinks(entries: Array<{ source: string }>) {
+function provenanceLinks(entries: Array<{ source: string; locator?: string }>) {
   const sources = [...new Set(entries.map((entry) => entry.source))]
     .filter((source) => /^https:\/\//i.test(source));
-  if (!sources.length) return "";
+  const local = [...new Map(
+    entries
+      .filter((entry) => !/^https:\/\//i.test(entry.source) && entry.locator)
+      .map((entry) => [`${entry.source}\u0000${entry.locator}`, entry]),
+  ).values()];
+  if (!sources.length && !local.length) return "";
   return `<div class="evidence-sources"><span>Sources</span>${sources.map((source) => {
     let label = source;
     try {
@@ -89,7 +120,11 @@ function provenanceLinks(entries: Array<{ source: string }>) {
       // Keep the escaped source string when a future non-standard locator is used.
     }
     return `<a href="${escAttr(source)}" target="_blank" rel="noopener">${esc(label)} ↗</a>`;
-  }).join("")}</div>`;
+  }).join("")}${local.length ? `<details class="evidence-locators">
+    <summary>${local.length} imported source path${local.length === 1 ? "" : "s"}</summary>
+    <ul>${local.slice(0, 12).map((entry) => `<li><strong>${esc(entry.source)}</strong><code>${esc(entry.locator)}</code></li>`).join("")}</ul>
+    ${local.length > 12 ? `<small>+${local.length - 12} more paths retained in the evidence payload</small>` : ""}
+  </details>` : ""}</div>`;
 }
 
 function selected(side: Side) {
@@ -125,11 +160,12 @@ function allOptions(active: Selection) {
 
 function confidenceLabel(loadout: AnalyzedLoadout) {
   if (loadout.resolutionHandoff) return "Local capture needed";
-  if (!loadout.model && (
-    loadout.partialMetrics?.length
-    || loadout.supportEvidence?.length
-    || loadout.summonEvidence?.length
-  )) return "Guarded source evidence";
+  if (!loadout.model) {
+    const readiness = guardedEvidenceReadiness(loadout);
+    if (readiness === "blocked") return "Guarded evidence blocked";
+    if (readiness === "partial") return "Guarded evidence · partial";
+    if (readiness === "ready") return "Guarded source evidence";
+  }
   if (!loadout.model) return "Structure imported";
   if (loadout.sourceNote?.startsWith("Calibrated teaching")) return "Calibrated formula scenario";
   if (loadout.model.confidence === "experimental") return "Experimental minion coverage";
@@ -137,21 +173,25 @@ function confidenceLabel(loadout: AnalyzedLoadout) {
 }
 
 function isMinionLoadout(loadout: AnalyzedLoadout) {
+  if (loadout.summonEvidence?.length || loadout.summonEvidenceBlockers?.length) {
+    return true;
+  }
   const main = loadout.skills.find((skill) => skill.kind === "active" && skill.enabled)?.name ?? "";
   return /minion|spirit magus|summon|module:/i.test(`${main} ${loadout.sourceNote ?? ""}`);
 }
 
 function buildPicker(side: Side, build: AnalyzedBuild, loadout: AnalyzedLoadout) {
   const selection = side === "before" ? beforeSelection : afterSelection;
+  const readiness = guardedEvidenceReadiness(loadout);
   const state = loadout.resolutionHandoff
     ? "capture"
     : loadout.model
       ? "modeled"
-      : (loadout.partialMetrics?.length
-          || loadout.supportEvidence?.length
-          || loadout.summonEvidence?.length)
-        ? "evidence"
-        : "waiting";
+      : readiness === "blocked"
+        ? "blocked"
+        : readiness === "ready" || readiness === "partial"
+          ? "evidence"
+          : "waiting";
   return `<article class="build-picker build-picker--${side}">
     <div class="picker-topline">
       <span class="side-marker">${side === "before" ? "A" : "B"}</span>
@@ -191,11 +231,21 @@ function renderSummary(before: AnalyzedLoadout, after: AnalyzedLoadout) {
   const delta = bothModeled ? percentChange(beforeDps, afterDps) : null;
   const structure = compareStructure(before, after);
   const defense = compareDefense(before, after);
+  const beforeDefenseEvidence = exactDefense(before);
+  const afterDefenseEvidence = exactDefense(after);
   const classificationRates = [before.coverage?.classificationRate, after.coverage?.classificationRate]
     .filter((value): value is number => value != null);
   const classificationFloor = classificationRates.length
     ? Math.min(...classificationRates)
     : null;
+  const guardedStates = [
+    guardedEvidenceReadiness(before),
+    guardedEvidenceReadiness(after),
+  ];
+  const guardedReady = guardedStates.some((state) =>
+    state === "ready" || state === "partial");
+  const guardedBlocked = guardedStates.some((state) =>
+    state === "blocked" || state === "partial");
   const deltaClass = delta == null ? "neutral" : delta < 0 ? "negative" : "positive";
   const headline = delta == null
     ? structure.changedSystems.length
@@ -230,9 +280,11 @@ function renderSummary(before: AnalyzedLoadout, after: AnalyzedLoadout) {
       ${summaryMetric(
         "EHP",
         "Not calculated",
-        defense.removed || defense.added
-          ? `${defense.removed} defensive lines removed · ${defense.added} added`
-          : "No defensive gear-line change found",
+        beforeDefenseEvidence && afterDefenseEvidence
+          ? `${beforeDefenseEvidence.coverage.playerScopedTerms} → ${afterDefenseEvidence.coverage.playerScopedTerms} typed player-defense terms`
+          : defense.removed || defense.added
+            ? `${defense.removed} defensive lines removed · ${defense.added} added`
+            : "No defensive gear-line change found",
         "disabled",
       )}
       ${summaryMetric(
@@ -256,8 +308,8 @@ function renderSummary(before: AnalyzedLoadout, after: AnalyzedLoadout) {
         </div>`
       : `<div class="scenario-strip evidence-scope">
           <span class="scenario-label">Evidence scope</span>
-          <span>Imported entities and source terms</span>
-          <span>No target scenario applied</span>
+          <span>${guardedReady ? "Imported entities and guarded source terms" : "Imported structure only"}</span>
+          <span>${guardedBlocked ? "Blocked guarded layers remain explicit" : "No target scenario applied"}</span>
           <span>DPS / EHP not guessed</span>
           <button type="button" class="text-button" data-view="coverage">Review coverage</button>
         </div>`}
@@ -380,21 +432,45 @@ const CHECK_COPY: Record<string, { title: string; body: string }> = {
 
 function nextChecks(steps: WaterfallStep[] | null, after: AnalyzedLoadout) {
   if (!steps || !after.model) {
+    const readiness = guardedEvidenceReadiness(after);
+    const firstTitle = readiness === "blocked"
+      ? "Resolve the guarded evidence blockers"
+      : readiness === "partial"
+        ? "Review blockers, then complete the DPS layers"
+        : readiness === "ready"
+          ? "Complete the remaining DPS layers"
+          : "Connect this build to a season model";
+    const firstBody = readiness === "blocked"
+      ? "The structure is visible, but the guarded checks rejected required inputs. Their blocker evidence is shown instead of a fabricated value."
+      : readiness === "partial"
+        ? "Some source slices compiled and others were withheld. Resolve the explicit blockers before extending the result toward total DPS."
+        : readiness === "ready"
+          ? "Guarded source arithmetic is connected. Rotation, complete modifiers, target state, and uptime still need compatible compilers before DPS."
+          : "The full loadout is visible, but the site will not invent a DPS number for unsupported input.";
+    const minionNotice = isMinionLoadout(after)
+      ? after.summonEvidence?.length
+        ? `<div class="minion-warning"><strong>Minion DPS layers remain</strong>
+            Actor, action, and supported socket evidence is connected. Quantity, full modifiers, AI rotation, overlap, target state, and uptime still block DPS.</div>`
+        : after.summonEvidenceBlockers?.length
+          ? `<div class="minion-warning"><strong>Spirit Magus evidence blocked</strong>
+              Resolve the displayed source-shape or installation blockers; the player-hit formula is not a fallback.</div>`
+          : `<div class="minion-warning"><strong>Minion DPS compiler required</strong>
+              Keep player, Spirit Magus, and Synthetic Troop modifiers actor-scoped; the player-hit formula is not a fallback.</div>`
+      : "";
     return `<aside class="next-checks">
       <div class="panel-kicker">Analysis queue</div>
       <h2>What is needed next</h2>
       <div class="check-card warning">
         <span class="check-rank">1</span>
-        <div><strong>Connect this build to a season model</strong>
-        <p>The full loadout is visible, but the site will not invent a DPS number for unsupported input.</p></div>
+        <div><strong>${esc(firstTitle)}</strong>
+        <p>${esc(firstBody)}</p></div>
       </div>
       <div class="check-card">
         <span class="check-rank">2</span>
         <div><strong>Review imported changes now</strong>
         <p>Gear, skills, trees, memories, slates, and pactspirits can still be compared safely.</p></div>
       </div>
-      ${isMinionLoadout(after) ? `<div class="minion-warning"><strong>Minion compiler required</strong>
-        Keep player, Spirit Magus, and Synthetic Troop modifiers actor-scoped; the player-hit formula is not a fallback.</div>` : ""}
+      ${minionNotice}
     </aside>`;
   }
   const isMinion = after.model.confidence === "experimental";
@@ -480,13 +556,14 @@ function renderPartialComparison(before: AnalyzedLoadout, after: AnalyzedLoadout
   if (!left && !right) return "";
   if (!left || !right) {
     const metric = left ?? right!;
+    const availableSide = left ? "Before" : "After";
     return `<section class="partial-proof">
       <div class="partial-proof-head">
-        <div><span class="eyebrow">Proven partial calculation</span><h3>${esc(metric.label)}</h3></div>
+        <div><span class="eyebrow">${availableSide} · proven partial calculation</span><h3>${esc(metric.label)}</h3></div>
         <span class="not-dps-badge">Not DPS</span>
       </div>
       <strong class="partial-single">${esc(metric.display)}</strong>
-      <p>Only one side has all inputs required for this guarded metric, so no A/B ratio is shown.</p>
+      <p>Only the ${availableSide.toLowerCase()} side has all inputs required for this guarded metric, so the unavailable side is not treated as zero and no A/B ratio is shown.</p>
     </section>`;
   }
   const delta = right.value - left.value;
@@ -514,6 +591,120 @@ function renderPartialComparison(before: AnalyzedLoadout, after: AnalyzedLoadout
         <small>${esc(signedCompact(delta))} raw hit</small></div>
     </div>
     <p>This proves movement in the weapon-and-skill foundation only. Supports, global scaling, critical strikes, conversion, mitigation, bomb overlap, damage over time, and uptime remain outside this number.</p>
+  </section>`;
+}
+
+type BingIntrinsicEvidence = NonNullable<AnalyzedLoadout["bingIntrinsicEvidence"]>;
+
+function damageRangeDisplay(range: { min: number; max: number; average: number }) {
+  if (Math.abs(range.max - range.min) < 1e-9) return compactNumber(range.average);
+  return `${compactNumber(range.min)}–${compactNumber(range.max)}`;
+}
+
+function bingIntrinsicSide(
+  evidence: BingIntrinsicEvidence | undefined,
+  label: string,
+  unavailable: Array<{ message: string; evidence?: string }> = [],
+) {
+  if (!evidence) {
+    return `<div class="bing-intrinsic-side empty"><span>${esc(label)}</span><strong>No guarded Bing envelope</strong>
+      ${unavailable.length
+        ? `<ul>${unavailable.map((blocker) => `<li>${esc(blocker.message)}${blocker.evidence ? `<small>${esc(blocker.evidence)}</small>` : ""}</li>`).join("")}</ul>`
+        : ""}</div>`;
+  }
+  const topology = evidence.topology;
+  const portions = Object.entries(evidence.normalWeaponSourcedPerHit.portions)
+    .filter(([, range]) => range.average !== 0);
+  return `<div class="bing-intrinsic-side">
+    <span>${esc(label)} · Hammer L${evidence.skillLevel}</span>
+    <div class="bing-hit-pair">
+      <div><span>Normal weapon-sourced hit</span><strong>${esc(damageRangeDisplay(evidence.normalWeaponSourcedPerHit.total))}</strong><small>average ${esc(compactNumber(evidence.normalWeaponSourcedPerHit.total.average))}</small></div>
+      <div><span>Demolisher-charged hit</span><strong>${esc(damageRangeDisplay(evidence.demolisherChargedWeaponSourcedPerHit.total))}</strong><small>×${esc(compactNumber(evidence.demolisherChargedWeaponSourcedPerHit.multiplier))} intrinsic instance</small></div>
+    </div>
+    <div class="bing-damage-portions">
+      <span>After Hammer conversion</span>
+      ${portions.map(([damageType, range]) => `<b>${esc(damageType)} · ${esc(compactNumber(range.average))} avg</b>`).join("")}
+    </div>
+    ${topology.status === "calculated-partial"
+      ? `<div class="bing-emission-card">
+          <div class="bing-emission-primary">
+            <span>Source-visible emissions / throw</span>
+            <strong>${esc(compactNumber(topology.expectedEmittedProjectilesPerThrow))}</strong>
+            <small>${esc(compactNumber(topology.projectilesPerBomb))} projectiles / bomb · ${esc(compactNumber(topology.expectedBombsPerThrow))} expected bombs</small>
+          </div>
+          <div class="bing-outcomes">${topology.emittedProjectilesPerThrowOutcomes.map((outcome) => `<span><b>${esc(compactNumber(outcome.probability * 100))}%</b>${outcome.bombs} bombs → ${outcome.projectiles} emitted</span>`).join("")}</div>
+          <div class="bing-source-chips">${topology.projectileQuantitySources.map((source) => `<span>+${source.quantity} · ${esc(source.id.replaceAll("-", " "))}</span>`).join("")}</div>
+          <small>Trait levels: ${Object.entries(topology.heroTraitLevels).map(([slot, level]) => `${slot.replace("level", "L")} ${level}`).join(" · ")} · ${esc(compactNumber(topology.blastBarrageAdditionalBombChancePct))}% additional-bomb chance</small>
+        </div>`
+      : `<div class="bing-emission-card blocked">
+          <span>Emission topology blocked</span>
+          <strong>Per-hit evidence is still valid.</strong>
+          <p>${topology.blockers.map((blocker) => esc(blocker.message)).join(" ")}</p>
+        </div>`}
+  </div>`;
+}
+
+function renderBingIntrinsicComparison(before: AnalyzedLoadout, after: AnalyzedLoadout) {
+  const left = before.bingIntrinsicEvidence;
+  const right = after.bingIntrinsicEvidence;
+  const leftUnavailable = before.bingIntrinsicBlockers ?? [];
+  const rightUnavailable = after.bingIntrinsicBlockers ?? [];
+  if (!left && !right && !leftUnavailable.length && !rightUnavailable.length) return "";
+  const normalDelta = left && right
+    ? right.normalWeaponSourcedPerHit.total.average - left.normalWeaponSourcedPerHit.total.average
+    : null;
+  const chargedDelta = left && right
+    ? right.demolisherChargedWeaponSourcedPerHit.total.average
+      - left.demolisherChargedWeaponSourcedPerHit.total.average
+    : null;
+  const emissionDelta = left?.topology.status === "calculated-partial"
+    && right?.topology.status === "calculated-partial"
+    ? right.topology.expectedEmittedProjectilesPerThrow
+      - left.topology.expectedEmittedProjectilesPerThrow
+    : null;
+  const movement = (value: number) => value > 1e-9 ? "rose" : value < -1e-9 ? "fell" : "did not change";
+  const tradeoff = normalDelta == null
+    ? null
+    : emissionDelta == null
+      ? `Weapon-sourced damage per hit ${movement(normalDelta)}, but at least one side lacks a source-complete emission topology.`
+      : normalDelta * emissionDelta < 0
+        ? `Tradeoff detected: weapon-sourced damage per hit ${movement(normalDelta)} while source-visible emissions per throw ${movement(emissionDelta)}. Landed-hit geometry decides whether that trade wins.`
+        : `Weapon-sourced damage per hit ${movement(normalDelta)} and source-visible emissions per throw ${movement(emissionDelta)}. They point the same way, but complete modifiers, landed hits, cadence, and enemy state can still reverse the result.`;
+  const blockers = [...new Map(
+    [
+      ...[left, right]
+        .filter((value): value is BingIntrinsicEvidence => Boolean(value))
+        .flatMap((value) => value.actualDps.blockers),
+      ...leftUnavailable,
+      ...rightUnavailable,
+    ]
+      .map((blocker) => [blocker.code, blocker]),
+  ).values()];
+  const provenance = [left, right]
+    .filter((value): value is BingIntrinsicEvidence => Boolean(value))
+    .flatMap((value) => value.provenance);
+  return `<section class="bing-intrinsic-panel">
+    <div class="partial-proof-head">
+      <div><span class="eyebrow">Guarded Hammer envelope</span><h3>Separate damage per hit from things merely emitted</h3></div>
+      <div class="partial-badges"><span>SS13 intrinsic rules</span><b>Not total hit</b><b>Not DPS</b></div>
+    </div>
+    <p>Each Pummel, Ember Projectile, and charged Explosion starts with the same Hammer weapon coefficient. Physical weapon damage converts to Fire here. Blast Nova’s bomb/projectile record can prove how many projectiles are emitted, but not how many hit one target—so these two evidence layers are never multiplied.</p>
+    ${tradeoff ? `<div class="bing-tradeoff-callout"><strong>${normalDelta != null && emissionDelta != null && normalDelta * emissionDelta < 0 ? "Competing scaling levers" : "Guarded direction"}</strong><p>${esc(tradeoff)}</p></div>` : ""}
+    ${normalDelta == null ? "" : `<div class="bing-delta-strip ${emissionDelta == null ? "two" : "three"}">
+      <div><span>Normal per-hit Δ</span><strong>${esc(signedCompact(normalDelta))}</strong></div>
+      <div><span>Charged per-hit Δ</span><strong>${esc(signedCompact(chargedDelta ?? 0))}</strong></div>
+      ${emissionDelta == null ? "" : `<div><span>Emitted / throw Δ</span><strong>${esc(signedCompact(emissionDelta))}</strong></div>`}
+      <p>Weapon-sourced slice only; direction is not net DPS.</p>
+    </div>`}
+    <div class="bing-intrinsic-sides">
+      ${bingIntrinsicSide(left, "Before", leftUnavailable)}
+      ${bingIntrinsicSide(right, "After", rightUnavailable)}
+    </div>
+    <details class="bing-blocker-ladder">
+      <summary>The remaining ladder from emissions to real DPS</summary>
+      <ol>${blockers.map((blocker, index) => `<li><b>${index + 1}</b><span><strong>${esc(blocker.message)}</strong>${blocker.evidence ? `<small>${esc(blocker.evidence)}</small>` : ""}</span></li>`).join("")}</ol>
+    </details>
+    ${provenanceLinks(provenance)}
   </section>`;
 }
 
@@ -568,13 +759,23 @@ function summonTermSide(
   label: string,
 ) {
   if (!evidence) {
-    return `<div class="support-term-side empty"><span>${esc(label)}</span><strong>Not active</strong></div>`;
+    return `<div class="support-term-side empty"><span>${esc(label)}</span><strong>Not installed or enabled</strong></div>`;
   }
   const tags = evidence.damageTags.join(" · ");
+  const baselineConfidence = evidence.baseline.confidence === "confirmed-partial"
+    ? "confirmed actor table"
+    : "shared actor table · verify";
   return `<div class="support-term-side summon-term-side">
     <span>${esc(label)} · L${evidence.level}</span>
     <strong>${esc(evidence.skillName)}</strong>
     <small class="summon-actor-label">Summoned actor · ${esc(tags)}</small>
+    <div class="minion-baseline" aria-label="Raw minion actor baseline">
+      <div><span>Base damage</span><b>${esc(compactNumber(evidence.baseline.baseDamage))}</b></div>
+      <div><span>Base Life</span><b>${esc(compactNumber(evidence.baseline.baseLife))}</b></div>
+      <div><span>Base Armor</span><b>${esc(compactNumber(evidence.baseline.baseArmor))}</b></div>
+      <div><span>Base crit</span><b>${esc(compactNumber(evidence.baseline.baseCriticalStrikeRating))}</b></div>
+    </div>
+    <small class="minion-baseline-note">${esc(baselineConfidence)} · all four base resistances ${esc(compactNumber(evidence.baseline.resistances.fire))}% · not minion EHP</small>
     <ul>${evidence.terms.map((term) => `<li>
       <b>${esc(term.display)}</b>
       <span>
@@ -582,20 +783,159 @@ function summonTermSide(
         <small>${term.scope === "player" ? "Player Origin term" : "Summoned actor"}${term.condition ? ` · ${esc(term.condition)}` : ""}</small>
       </span>
     </li>`).join("")}</ul>
+    <div class="minion-action-grid">
+      ${evidence.actions.map((action) => {
+        const foundation = action.foundation;
+        const perContact = foundation.rawDamagePerContact == null
+          ? "No direct hit"
+          : compactNumber(foundation.rawDamagePerContact);
+        const fullContact = foundation.rawDamageAtDeterministicFullContact == null
+          ? null
+          : compactNumber(foundation.rawDamageAtDeterministicFullContact);
+        return `<article class="minion-action-card">
+          <div class="minion-action-head">
+            <span>${esc(action.role)}</span>
+            <strong>${esc(action.actionName)}</strong>
+          </div>
+          <div class="minion-action-math">
+            <div><span>Raw / contact</span><b>${esc(perContact)}</b></div>
+            ${fullContact != null && fullContact !== perContact
+              ? `<div><span>${esc(String(foundation.deterministicContacts))} contacts</span><b>${esc(fullContact)}</b></div>`
+              : ""}
+            <div><span>Cast / cooldown</span><b>${esc(`${action.castTimeSeconds}s${action.cooldownSeconds == null ? "" : ` / ${action.cooldownSeconds}s`}`)}</b></div>
+          </div>
+          ${foundation.baseDamagePctPerContact == null ? "" : `<small>${esc(compactNumber(foundation.baseDamagePctPerContact))}% of the actor's base damage per contact. Modifiers, AI, target state, Growth/Breeze, and overlap are excluded.</small>`}
+          ${action.terms.length ? `<ul>${action.terms.map((term) => `<li><b>${esc(term.display)}</b><span>${esc(term.label)}${term.condition ? ` · ${esc(term.condition)}` : ""}</span></li>`).join("")}</ul>` : ""}
+        </article>`;
+      }).join("")}
+    </div>
+    <details class="minion-support-details">
+      <summary>${evidence.supports.length} main-summon support${evidence.supports.length === 1 ? "" : "s"} · exact socket terms</summary>
+      <div>${evidence.supports.map((support) => `<article class="${support.status}">
+        <strong>${esc(support.supportName ?? "Unknown support")}${support.level ? ` · L${support.level}` : ""}</strong>
+        ${support.status === "unsupported"
+          ? `<p>${(support.blockerEvidence?.length
+              ? support.blockerEvidence.map((blocker) =>
+                  `${esc(blocker.message)}${blocker.evidence ? ` <small>${esc(blocker.evidence)}</small>` : ""}`)
+              : support.blockers.map((blocker) => esc(blocker))).join(" ")}</p>`
+          : `<ul>${support.effects.map((effect) => `<li><b>${esc(effect.display)}</b><span>${esc(effect.label)}<small>${esc(effect.scope)}${effect.condition ? ` · ${esc(effect.condition)}` : ""}</small></span></li>`).join("")}</ul>`}
+      </article>`).join("")}</div>
+    </details>
   </div>`;
+}
+
+function irisTraitSide(
+  evidence: SummonTermChange["before"],
+  label: string,
+) {
+  if (!evidence?.heroTraits.length) return "";
+  return `<div class="iris-trait-side">
+    <span>${esc(label)}</span>
+    ${evidence.heroTraits.map((trait) => `<article>
+      <div><strong>${esc(trait.traitName)}</strong><small>Level ${trait.unlockLevel} trait</small></div>
+      <ul>${trait.terms.map((term) => `<li>
+        <b>${esc(term.display)}</b>
+        <span>${esc(term.label)}<small>${esc(term.scope)}${term.selector === "unresolved-trait-enhancement" ? " · enhancement selector missing" : ""}${term.condition ? ` · ${esc(term.condition)}` : ""}</small></span>
+      </li>`).join("")}</ul>
+      ${trait.unresolved.length ? `<p>${trait.unresolved.map((line) => esc(line)).join(" ")}</p>` : ""}
+    </article>`).join("")}
+  </div>`;
+}
+
+function minionFoundationRows(changes: SummonTermChange[]) {
+  return changes.flatMap((change) => {
+    if (!change.before || !change.after) return [];
+    const beforeActions = new Map(
+      change.before.actions.map((action) => [action.actionId, action]),
+    );
+    return change.after.actions.flatMap((action) => {
+      const earlier = beforeActions.get(action.actionId);
+      if (!earlier) return [];
+      const beforeFull = earlier.foundation.rawDamageAtDeterministicFullContact;
+      const afterFull = action.foundation.rawDamageAtDeterministicFullContact;
+      const useFull = beforeFull != null && afterFull != null;
+      const beforeValue = useFull
+        ? beforeFull
+        : earlier.foundation.rawDamagePerContact;
+      const afterValue = useFull
+        ? afterFull
+        : action.foundation.rawDamagePerContact;
+      if (beforeValue == null || afterValue == null || beforeValue === afterValue) return [];
+      return [{
+        skillName: change.skillName,
+        actionName: action.actionName,
+        scope: useFull && action.foundation.deterministicContacts !== 1
+          ? `${action.foundation.deterministicContacts} deterministic contacts`
+          : "per contact",
+        beforeValue,
+        afterValue,
+        ratio: beforeValue === 0 ? null : afterValue / beforeValue,
+      }];
+    });
+  });
 }
 
 function renderSummonTermChanges(before: AnalyzedLoadout, after: AnalyzedLoadout) {
   const beforeEvidence = before.summonEvidence ?? [];
   const afterEvidence = after.summonEvidence ?? [];
-  if (!beforeEvidence.length && !afterEvidence.length) return "";
+  const beforeUnavailable = before.summonEvidenceBlockers ?? [];
+  const afterUnavailable = after.summonEvidenceBlockers ?? [];
+  if (!beforeEvidence.length
+      && !afterEvidence.length
+      && !beforeUnavailable.length
+      && !afterUnavailable.length) return "";
   const changes = compareSummonTerms(before, after);
   const reference = afterEvidence[0] ?? beforeEvidence[0];
-  const minionDpsBlockers = [...new Set(reference?.minionDps.blockers ?? [])];
+  const compilerBlockers = [...new Set(
+    [...beforeUnavailable, ...afterUnavailable].map((blocker) => blocker.message),
+  )];
+  const minionDpsBlockers = [...new Set([
+    ...(reference?.minionDps.blockers ?? []),
+    ...compilerBlockers,
+  ])];
   const playerEhpBlockers = [...new Set(reference?.playerEhp.blockers ?? [])];
   const provenance = [...beforeEvidence, ...afterEvidence]
     .flatMap((evidence) => evidence.provenance);
-  const evidenceBody = changes.length
+  const beforeReference = beforeEvidence[0] ?? null;
+  const afterReference = afterEvidence[0] ?? null;
+  const bothSidesGuarded = beforeEvidence.length > 0 && afterEvidence.length > 0;
+  const traitsChanged = bothSidesGuarded
+    && JSON.stringify(beforeReference?.heroTraits ?? [])
+      !== JSON.stringify(afterReference?.heroTraits ?? []);
+  const foundationRows = minionFoundationRows(changes);
+  const blockedSide = (
+    label: string,
+    blockers: typeof beforeUnavailable,
+  ) => `<div class="exact-defense-unavailable">
+    <span>${esc(label)}</span><strong>Spirit Magus evidence unavailable</strong>
+    ${blockers.length
+      ? `<ul>${blockers.map((blocker) => `<li>${esc(blocker.message)}${blocker.evidence ? `<small>${esc(blocker.evidence)}</small>` : ""}</li>`).join("")}</ul>`
+      : `<p>This side has no guarded Spirit Magus compiler result.</p>`}
+  </div>`;
+  const availableSide = (
+    label: string,
+    evidence: typeof beforeEvidence,
+  ) => `<div class="summon-available-side ${label.toLowerCase()}">
+    <span>${esc(label)}</span>
+    ${evidence.map((summon) => summonTermSide(summon, "Guarded evidence")).join("")}
+  </div>`;
+  const hasUnavailableSide = !beforeEvidence.length || !afterEvidence.length;
+  const referenceEvidence = afterEvidence.length ? afterEvidence : beforeEvidence;
+  const actorCount = referenceEvidence.length;
+  const actionCount = referenceEvidence.reduce(
+    (sum, summon) => sum + summon.actions.length,
+    0,
+  );
+  const evidenceBody = hasUnavailableSide
+    ? `<div class="exact-defense-deltas">
+        ${beforeEvidence.length
+          ? availableSide("Before", beforeEvidence)
+          : blockedSide("Before", beforeUnavailable)}
+        ${afterEvidence.length
+          ? availableSide("After", afterEvidence)
+          : blockedSide("After", afterUnavailable)}
+      </div>`
+    : changes.length
     ? changes.map((change) => `<article class="support-change ${change.kind}">
         <div class="support-change-head"><span>${esc(change.kind)}</span><strong>${esc(change.skillName)}</strong></div>
         <div class="support-term-sides">
@@ -614,15 +954,36 @@ function renderSummonTermChanges(before: AnalyzedLoadout, after: AnalyzedLoadout
       </div>`;
   return `<section class="support-evidence-panel summon-evidence-panel">
     <div class="partial-proof-head">
-      <div><span class="eyebrow">Exact summon text</span><h3>What the Spirit Magus source records actually prove</h3></div>
+      <div><span class="eyebrow">Actor + action evidence</span><h3>What each Spirit Magus action starts from</h3></div>
       <div class="partial-badges"><span>SS13 source terms</span><b>Not minion DPS</b><b>Not total EHP</b></div>
     </div>
-    <p>Summon count, intrinsic conversion, and player-facing Origin lines come directly from the season tables. They remain separate inputs: no attack rotation or survival total is manufactured from them.</p>
+    <p>The installed actor baseline and action records, socket terms, enabled summon-skill records, conversion, and Origin lines shown here are source-pinned. This guarded side exposes ${actorCount} installed actor record${actorCount === 1 ? "" : "s"} and ${actionCount} action record${actionCount === 1 ? "" : "s"}; it does not claim a runtime minion quantity. “Raw / contact” is only base minion damage × the action coefficient. It is useful for seeing why skill level and action choice matter, but it is not a hit total or DPS.</p>
     <div class="summon-boundaries">
-      <div><strong>Minion DPS blocked</strong><span>${minionDpsBlockers.map((blocker) => esc(blocker)).join(" ")}</span></div>
+      <div><strong>${compilerBlockers.length || hasUnavailableSide ? "Actor/action evidence blocked" : "Minion DPS blocked"}</strong><span>${minionDpsBlockers.map((blocker) => esc(blocker)).join(" ")}</span></div>
       <div><strong>Total EHP blocked</strong><span>${playerEhpBlockers.map((blocker) => esc(blocker)).join(" ")}</span></div>
     </div>
+    ${foundationRows.length ? `<div class="minion-foundation-deltas">
+      <div class="minion-foundation-head"><span>Action foundation</span><span>Before</span><span>After</span><span>Raw ratio</span></div>
+      ${foundationRows.map((row) => `<div>
+        <span><strong>${esc(row.actionName)}</strong><small>${esc(row.skillName)} · ${esc(row.scope)}</small></span>
+        <b>${esc(compactNumber(row.beforeValue))}</b>
+        <b>${esc(compactNumber(row.afterValue))}</b>
+        <b>${row.ratio == null ? "—" : `×${esc(compactNumber(row.ratio))}`}</b>
+      </div>`).join("")}
+      <p>Ratios describe only the source-pinned actor base × action coefficient. They do not include supports, player/minion modifiers, AI frequency, or target contact.</p>
+    </div>` : ""}
     <div class="support-change-list">${evidenceBody}</div>
+    ${beforeReference || afterReference ? `<details class="iris-trait-evidence">
+      <summary>Iris trait inputs · candidate values remain explicit</summary>
+      <div class="${traitsChanged ? "changed" : "steady"}">
+        ${traitsChanged
+          ? `${irisTraitSide(beforeReference, "Before")}${irisTraitSide(afterReference, "After")}`
+          : irisTraitSide(
+              afterReference ?? beforeReference,
+              bothSidesGuarded ? "Active on both sides" : "Available guarded side",
+            )}
+      </div>
+    </details>` : ""}
     ${provenanceLinks(provenance)}
   </section>`;
 }
@@ -657,6 +1018,7 @@ function renderDiagnosis(before: AnalyzedLoadout, after: AnalyzedLoadout) {
         <p>${esc(after.sourceNote ?? before.sourceNote ?? "This build format is not connected to the damage model yet.")}</p>
         ${renderLocalCaptureHandoff(after, before)}
         ${renderPartialComparison(before, after)}
+        ${renderBingIntrinsicComparison(before, after)}
         ${renderSupportTermChanges(before, after)}
         ${renderSummonTermChanges(before, after)}
         ${renderStructuralDiagnosis(before, after)}
@@ -696,11 +1058,9 @@ function renderDiagnosis(before: AnalyzedLoadout, after: AnalyzedLoadout) {
   </div>`;
 }
 
-function rowChange(before: string, after: string) {
-  if (before === after) return `<span class="change-tag same">same</span>`;
-  if (!before || before === "Empty") return `<span class="change-tag added">added</span>`;
-  if (!after || after === "Empty") return `<span class="change-tag removed">removed</span>`;
-  return `<span class="change-tag changed">changed</span>`;
+function rowChange(before: string, after: string, changed: boolean) {
+  const kind = presentedChangeKind(before, after, changed);
+  return `<span class="change-tag ${kind}">${kind}</span>`;
 }
 
 function gearChangeRows(before: AnalyzedLoadout, after: AnalyzedLoadout) {
@@ -723,7 +1083,7 @@ function gearChangeRows(before: AnalyzedLoadout, after: AnalyzedLoadout) {
 }
 
 function skillName(skill: SkillRow | undefined) {
-  return skill ? `${skill.name}${skill.level ? ` · L${skill.level}` : ""}` : "Empty";
+  return skillDisplay(skill);
 }
 
 function supportDetail(support: SkillRow["supports"][number]) {
@@ -737,24 +1097,44 @@ function supportDetail(support: SkillRow["supports"][number]) {
 }
 
 function skillChangeRows(before: AnalyzedLoadout, after: AnalyzedLoadout) {
-  const group = (loadout: AnalyzedLoadout, kind: SkillRow["kind"]) =>
-    loadout.skills.filter((skill) => skill.kind === kind);
-  return (["active", "passive", "support", "unknown"] as const).flatMap((kind) => {
-    const a = group(before, kind);
-    const b = group(after, kind);
-    return Array.from({ length: Math.max(a.length, b.length) }, (_, index) => {
-      const left = a[index];
-      const right = b[index];
-      return {
-        key: `${kind}-${index}`,
-        label: `${kind} ${index + 1}`,
-        before: skillName(left),
-        after: skillName(right),
-        beforeDetail: left?.supports.map(supportDetail) ?? [],
-        afterDetail: right?.supports.map(supportDetail) ?? [],
-        changed: JSON.stringify(left) !== JSON.stringify(right),
-      };
+  const leftBySlot = new Map(before.skills.map((skill) => [skill.slot, skill]));
+  const rightBySlot = new Map(after.skills.map((skill) => [skill.slot, skill]));
+  const order = new Map<SkillRow["kind"], number>([
+    ["active", 0],
+    ["passive", 1],
+    ["support", 2],
+    ["unknown", 3],
+  ]);
+  const slots = [...new Set([...leftBySlot.keys(), ...rightBySlot.keys()])]
+    .sort((leftSlot, rightSlot) => {
+      const left = leftBySlot.get(leftSlot) ?? rightBySlot.get(leftSlot)!;
+      const right = leftBySlot.get(rightSlot) ?? rightBySlot.get(rightSlot)!;
+      const kindOrder = (order.get(left.kind) ?? 9) - (order.get(right.kind) ?? 9);
+      if (kindOrder) return kindOrder;
+      const leftIndex = Number(leftSlot.split(":").at(-1));
+      const rightIndex = Number(rightSlot.split(":").at(-1));
+      if (Number.isFinite(leftIndex) && Number.isFinite(rightIndex)) {
+        return leftIndex - rightIndex;
+      }
+      return leftSlot.localeCompare(rightSlot);
     });
+  return slots.map((slot) => {
+    const left = leftBySlot.get(slot);
+    const right = rightBySlot.get(slot);
+    const reference = right ?? left!;
+    const rawIndex = Number(slot.split(":").at(-1));
+    const label = Number.isSafeInteger(rawIndex) && rawIndex >= 0
+      ? `${reference.kind} ${rawIndex + 1}`
+      : slot.replaceAll(":", " ");
+    return {
+      key: slot,
+      label,
+      before: skillName(left),
+      after: skillName(right),
+      beforeDetail: left?.supports.map(supportDetail) ?? [],
+      afterDetail: right?.supports.map(supportDetail) ?? [],
+      changed: JSON.stringify(left) !== JSON.stringify(right),
+    };
   });
 }
 
@@ -849,7 +1229,7 @@ function renderDetailLines(
 
 function renderChangeRow(row: ReturnType<typeof gearChangeRows>[number]) {
   return `<article class="diff-row ${row.changed ? "is-changed" : "is-same"}">
-    <div class="diff-slot"><span>${esc(row.label)}</span>${rowChange(row.before, row.after)}</div>
+    <div class="diff-slot"><span>${esc(row.label)}</span>${rowChange(row.before, row.after, row.changed)}</div>
     <div class="diff-side before">
       <span class="diff-side-label">Before</span><strong>${esc(row.before)}</strong>
       ${renderDetailLines(row.beforeDetail, row.afterDetail, "before")}
@@ -897,18 +1277,80 @@ function renderChanges(before: AnalyzedLoadout, after: AnalyzedLoadout) {
   </section>`;
 }
 
+function formulaSideControls() {
+  return `<div class="segmented" aria-label="Formula side">
+    <button type="button" class="${formulaSide === "before" ? "active" : ""}" data-formula-side="before">Before</button>
+    <button type="button" class="${formulaSide === "after" ? "active" : ""}" data-formula-side="after">After</button>
+  </div>`;
+}
+
+function renderMinionFormulaView(active: AnalyzedLoadout) {
+  const summons = active.summonEvidence ?? [];
+  const supportBlockers = summons.flatMap((summon) =>
+    summon.supports
+      .filter((support) => support.status === "unsupported")
+      .flatMap((support) => support.blockerEvidence?.length
+        ? support.blockerEvidence.map((blocker) =>
+            `${blocker.message}${blocker.evidence ? ` Source: ${blocker.evidence}.` : ""}`)
+        : support.blockers));
+  const blockers = [...new Set(
+    [
+      ...summons.flatMap((summon) => summon.minionDps.blockers),
+      ...supportBlockers,
+    ],
+  )];
+  const provenance = summons.flatMap((summon) => summon.provenance);
+  return `<section class="formula-panel minion-formula-panel">
+    <div class="analysis-heading">
+      <div><span class="eyebrow">Guarded minion arithmetic</span><h2>${esc(active.name)}</h2></div>
+      ${formulaSideControls()}
+    </div>
+    <div class="minion-formula-primer">
+      <span>actor base damage</span><i>×</i><span>action coefficient</span><i>×</i><span>deterministic contacts, if known</span><i>=</i><strong>raw action foundation</strong>
+    </div>
+    <p class="section-intro">This is the first source-complete arithmetic layer for the summoned actor. It deliberately stops before minion/player modifiers, AI action frequency, target overlap, and enemy mitigation.</p>
+    <div class="minion-formula-actors">
+      ${summons.map((summon) => `<article>
+        <div class="minion-formula-actor-head">
+          <div><span>${esc(summon.skillName)} · L${summon.level}</span><strong>${esc(compactNumber(summon.baseline.baseDamage))} base damage</strong></div>
+          <div><span>Base Life</span><b>${esc(compactNumber(summon.baseline.baseLife))}</b></div>
+          <div><span>Base Armor</span><b>${esc(compactNumber(summon.baseline.baseArmor))}</b></div>
+          <em>${summon.baseline.confidence === "confirmed-partial" ? "confirmed actor row" : "shared actor row · inferred"}</em>
+        </div>
+        <div class="minion-formula-table">
+          <div class="minion-formula-row head"><span>Action</span><span>Coefficient</span><span>Contacts</span><span>Raw / contact</span><span>Known full contact</span></div>
+          ${summon.actions.map((action) => {
+            const foundation = action.foundation;
+            return `<div class="minion-formula-row">
+              <span><strong>${esc(action.actionName)}</strong><small>${esc(action.role)} · cast ${action.castTimeSeconds}s${action.cooldownSeconds == null ? "" : ` · CD ${action.cooldownSeconds}s`}</small></span>
+              <b>${foundation.baseDamagePctPerContact == null ? "—" : `${esc(compactNumber(foundation.baseDamagePctPerContact))}%`}</b>
+              <b>${foundation.deterministicContacts == null ? "runtime" : esc(String(foundation.deterministicContacts))}</b>
+              <b>${foundation.rawDamagePerContact == null ? "—" : esc(compactNumber(foundation.rawDamagePerContact))}</b>
+              <b>${foundation.rawDamageAtDeterministicFullContact == null ? "not proven" : esc(compactNumber(foundation.rawDamageAtDeterministicFullContact))}</b>
+            </div>`;
+          }).join("")}
+        </div>
+      </article>`).join("")}
+    </div>
+    <div class="model-boundary">
+      <div class="boundary-icon">!</div>
+      <div><strong>Raw action foundations are not hit totals or minion DPS.</strong>
+      <p>${blockers.map((blocker) => esc(blocker)).join(" ")}</p></div>
+    </div>
+    ${provenanceLinks(provenance)}
+  </section>`;
+}
+
 function renderFormula(before: AnalyzedLoadout, after: AnalyzedLoadout) {
   const active = formulaSide === "before" ? before : after;
   if (!active.snapshot || !active.model) {
+    if (active.summonEvidence?.length) return renderMinionFormulaView(active);
     const partial = weaponFoundation(active);
     if (partial) {
       return `<section class="formula-panel partial-formula">
         <div class="analysis-heading">
           <div><span class="eyebrow">Guarded partial arithmetic</span><h2>${esc(active.name)}</h2></div>
-          <div class="segmented">
-            <button type="button" class="${formulaSide === "before" ? "active" : ""}" data-formula-side="before">Before</button>
-            <button type="button" class="${formulaSide === "after" ? "active" : ""}" data-formula-side="after">After</button>
-          </div>
+          ${formulaSideControls()}
         </div>
         <div class="partial-formula-total">
           <div><span>${esc(partial.label)}</span><strong>${esc(partial.display)}</strong><small>${esc(partial.unit)}</small></div>
@@ -920,6 +1362,17 @@ function renderFormula(before: AnalyzedLoadout, after: AnalyzedLoadout) {
           <i>=</i><span class="result"><small>Raw foundation</small><strong>${esc(partial.display)}</strong></span>
         </div>
         <p class="section-intro">${esc(partial.scope)}. Its ${partial.confidence === "confirmed-partial" ? "formula and imported inputs are confirmed" : "formula is confirmed and one routing rule is inferred"}.</p>
+        ${active.bingIntrinsicEvidence ? `<section class="bing-formula-envelope">
+          <div><span class="panel-kicker">Next guarded layer</span><h3>Conversion, Demolisher, and emission topology</h3></div>
+          <p>The hit envelope and the emission envelope stay separate until target geometry and cadence are known.</p>
+          ${bingIntrinsicSide(active.bingIntrinsicEvidence, sideLabel(formulaSide))}
+        </section>` : active.bingIntrinsicBlockers?.length
+          ? `<section class="bing-formula-envelope">
+              <div><span class="panel-kicker">Next guarded layer blocked</span><h3>Conversion, Demolisher, and emission topology</h3></div>
+              <ul class="guarded-unavailable-list">${active.bingIntrinsicBlockers.map((blocker) =>
+                `<li><strong>${esc(blocker.message)}</strong>${blocker.evidence ? `<small>${esc(blocker.evidence)}</small>` : ""}</li>`).join("")}</ul>
+            </section>`
+          : ""}
         <div class="partial-detail-grid">
           <div>
             <span class="panel-kicker">Source trail</span>
@@ -939,9 +1392,17 @@ function renderFormula(before: AnalyzedLoadout, after: AnalyzedLoadout) {
       </section>`;
     }
     return `<section class="single-panel empty-analysis">
-      <span class="eyebrow">Exact formula</span>
-      <h2>Not calculated for this import</h2>
+      <div class="analysis-heading">
+        <div><span class="eyebrow">Exact formula</span><h2>Not calculated for this import</h2></div>
+        ${formulaSideControls()}
+      </div>
       <p>${esc(active.sourceNote ?? "This build is not connected to a compatible damage model.")}</p>
+      ${active.bingIntrinsicBlockers?.length || active.summonEvidenceBlockers?.length
+        ? `<ul class="guarded-unavailable-list">${[
+            ...(active.bingIntrinsicBlockers ?? []),
+            ...(active.summonEvidenceBlockers ?? []),
+          ].map((blocker) => `<li><strong>${esc(blocker.message)}</strong>${blocker.evidence ? `<small>${esc(blocker.evidence)}</small>` : ""}</li>`).join("")}</ul>`
+        : ""}
       ${renderLocalCaptureHandoff(active)}
     </section>`;
   }
@@ -949,10 +1410,7 @@ function renderFormula(before: AnalyzedLoadout, after: AnalyzedLoadout) {
   return `<section class="formula-panel">
     <div class="analysis-heading">
       <div><span class="eyebrow">Exact arithmetic</span><h2>${esc(active.name)}</h2></div>
-      <div class="segmented">
-        <button type="button" class="${formulaSide === "before" ? "active" : ""}" data-formula-side="before">Before</button>
-        <button type="button" class="${formulaSide === "after" ? "active" : ""}" data-formula-side="after">After</button>
-      </div>
+      ${formulaSideControls()}
     </div>
     <p class="section-intro">Every chip below is used by the real damage model. Its impact badge shows what happens if that factor is neutralized.</p>
     <div class="formula-primer" aria-label="Damage formula overview">
@@ -964,16 +1422,127 @@ function renderFormula(before: AnalyzedLoadout, after: AnalyzedLoadout) {
   </section>`;
 }
 
+interface GuardedCoverageItem {
+  label: string;
+  state: "ready" | "blocked";
+}
+
+function guardedCoverageItems(loadout: AnalyzedLoadout) {
+  const items: GuardedCoverageItem[] = [];
+  if (loadout.partialMetrics?.length && !loadout.bingIntrinsicEvidence) {
+    items.push({
+      label: `${loadout.partialMetrics.length} guarded partial metric${loadout.partialMetrics.length === 1 ? "" : "s"}`,
+      state: "ready",
+    });
+  }
+  if (loadout.bingIntrinsicEvidence) {
+    items.push({ label: "Hammer per-hit envelope ready", state: "ready" });
+    items.push(loadout.bingIntrinsicEvidence.topology.status === "calculated-partial"
+      ? { label: "Blast Nova emissions ready", state: "ready" }
+      : { label: "Blast Nova emissions blocked", state: "blocked" });
+  } else if (loadout.bingIntrinsicBlockers?.length) {
+    items.push({
+      label: `Hammer envelope blocked · ${loadout.bingIntrinsicBlockers.length}`,
+      state: "blocked",
+    });
+  }
+  if (loadout.supportEvidence?.length) {
+    const compiled = loadout.supportEvidence.filter((support) =>
+      support.status === "source-terms").length;
+    const blocked = loadout.supportEvidence.length - compiled;
+    if (compiled) {
+      items.push({
+        label: `${compiled} compiled main-skill support${compiled === 1 ? "" : "s"}`,
+        state: "ready",
+      });
+    }
+    if (blocked) {
+      items.push({
+        label: `${blocked} blocked main-skill support${blocked === 1 ? "" : "s"}`,
+        state: "blocked",
+      });
+    }
+  }
+  if (loadout.summonEvidence?.length) {
+    items.push({
+      label: `${loadout.summonEvidence.reduce((sum, summon) => sum + summon.actions.length, 0)} minion actions`,
+      state: "ready",
+    });
+    const supports = loadout.summonEvidence.flatMap((summon) => summon.supports);
+    const compiledSupports = supports.filter((support) =>
+      support.status === "source-terms").length;
+    const unsupportedSupports = supports.length - compiledSupports;
+    if (compiledSupports) {
+      items.push({
+        label: `${compiledSupports} compiled supports`,
+        state: "ready",
+      });
+    }
+    if (unsupportedSupports) {
+      items.push({
+        label: `${unsupportedSupports} unsupported support socket${unsupportedSupports === 1 ? "" : "s"}`,
+        state: "blocked",
+      });
+    }
+  } else if (loadout.summonEvidenceBlockers?.length) {
+    items.push({
+      label: `Spirit Magus evidence blocked · ${loadout.summonEvidenceBlockers.length}`,
+      state: "blocked",
+    });
+  }
+  const defense = defenseEvidenceResult(loadout);
+  if (defense?.status === "source-terms") {
+    items.push({
+      label: `${defense.coverage.playerScopedTerms} player-defense terms`,
+      state: "ready",
+    });
+    items.push({
+      label: `${defense.coverage.unparsedDefensiveLines} unparsed defensive lines`,
+      state: defense.coverage.unparsedDefensiveLines ? "blocked" : "ready",
+    });
+  } else if (defense?.status === "not-calculated") {
+    items.push({
+      label: `Player-defense evidence blocked · ${defense.blockers.length}`,
+      state: "blocked",
+    });
+  }
+  return items;
+}
+
+function guardedReadinessLabel(readiness: GuardedEvidenceReadiness) {
+  if (readiness === "ready") return "Guarded evidence";
+  if (readiness === "partial") return "Guarded · partial";
+  if (readiness === "blocked") return "Guarded checks blocked";
+  return "Pending";
+}
+
+function guardedCoverageChips(items: GuardedCoverageItem[]) {
+  if (!items.length) return "";
+  return `<div class="guarded-coverage-chips">${items.map((item) =>
+    `<span class="${item.state}">${esc(item.label)}</span>`).join("")}</div>`;
+}
+
 function coverageCard(label: string, loadout: AnalyzedLoadout) {
   if (!loadout.model && !loadout.coverage) {
+    const guarded = guardedCoverageItems(loadout);
+    const readiness = guardedEvidenceReadiness(loadout);
+    const description = readiness === "blocked"
+      ? "Loadout structure imported, but guarded checks withheld their source evidence. No unavailable value is treated as zero."
+      : readiness === "partial"
+        ? "Some guarded source slices compiled and others were withheld. No aggregate DPS/EHP coverage percentage is claimed."
+        : readiness === "ready"
+          ? "Loadout structure and guarded source evidence are available. No aggregate DPS/EHP coverage percentage is claimed."
+          : "Loadout structure imported; modifier classification and formula coverage have not run.";
     return `<article class="coverage-card">
-      <div class="coverage-title"><span>${esc(label)}</span><strong>Pending</strong></div>
+      <div class="coverage-title"><span>${esc(label)}</span><strong>${guardedReadinessLabel(readiness)}</strong></div>
       <div class="coverage-meter"><span style="width:0%"></span></div>
-      <p>Loadout structure imported; modifier classification and formula coverage have not run.</p>
+      <p>${description}</p>
       <div class="coverage-stats"><span><b>${loadout.gear.length}</b> gear rows</span><span><b>${loadout.skills.length}</b> skills</span></div>
+      ${guardedCoverageChips(guarded)}
     </article>`;
   }
   if (!loadout.model && loadout.coverage) {
+    const guarded = guardedCoverageItems(loadout);
     return `<article class="coverage-card">
       <div class="coverage-title"><span>${esc(label)} · classification</span><strong>${Math.round(loadout.coverage.classificationRate * 100)}%</strong></div>
       <div class="coverage-meter"><span style="width:${Math.round(loadout.coverage.classificationRate * 100)}%"></span></div>
@@ -983,6 +1552,7 @@ function coverageCard(label: string, loadout: AnalyzedLoadout) {
         <span><b>${loadout.coverage.unsupported}</b> unsupported</span>
         <span><b>${loadout.coverage.ignored}</b> irrelevant</span>
       </div>
+      ${guardedCoverageChips(guarded)}
     </article>`;
   }
   const model = loadout.model!;
@@ -1025,7 +1595,7 @@ function renderCoverage(before: AnalyzedLoadout, after: AnalyzedLoadout) {
     ${minion ? `<div class="model-boundary">
       <div class="boundary-icon">!</div>
       <div><strong>Minion DPS is not settled by the player-hit formula.</strong>
-      <p>Base minion actions, quantity, AI/uptime, trait mechanics, and minion-only scaling are incomplete. Imported source terms stay visible, while DPS remains unavailable.</p></div>
+      <p>Actor baselines, action coefficients, cast/cooldown topology, sockets, and Iris trait candidates are visible. Quantity, AI/uptime, Growth/Breeze state, complete minion modifiers, overlap, and target state still block DPS.</p></div>
     </div>` : ""}
     ${bothModeled
       ? `<div class="assumption-grid">
@@ -1037,7 +1607,7 @@ function renderCoverage(before: AnalyzedLoadout, after: AnalyzedLoadout) {
       : `<div class="assumption-grid">
           <div><span>Target</span><strong>No target scenario applied</strong></div>
           <div><span>Uptime</span><strong>No rotation or uptime assumed</strong></div>
-          <div><span>Defense</span><strong>Evidence lines only; EHP is unavailable</strong></div>
+          <div><span>Defense</span><strong>Typed source inputs where available; EHP is unavailable</strong></div>
           <div><span>Attribution</span><strong>Source entities prioritized without assigning DPS direction</strong></div>
         </div>`}
     <div class="unsupported-grid">
@@ -1084,16 +1654,180 @@ const DEFENSE_COPY: Record<DefenseCategory, { label: string; explanation: string
 
 function defenseEvidenceList(
   rows: DefenseCategoryDiff["removed"],
-  tone: "removed" | "added",
+  side: Side,
 ) {
   if (!rows.length) return "";
-  return `<div class="defense-delta ${tone}">
-    <span>${tone === "removed" ? "Removed" : "Added"}</span>
+  return `<div class="defense-delta ${side}">
+    <span>${side === "before" ? "Only before" : "Only after"}</span>
     <ul>${rows.slice(0, 6).map((row) => `<li>
       <strong>${esc(row.text)}</strong><small>${esc(row.source)}</small>
     </li>`).join("")}</ul>
     ${rows.length > 6 ? `<small>+${rows.length - 6} more imported lines</small>` : ""}
   </div>`;
+}
+
+function exactDefense(loadout: AnalyzedLoadout): PlayerDefenseDisplayEvidence | null {
+  const evidence = loadout.playerDefenseEvidence;
+  return evidence?.status === "source-terms" ? evidence : null;
+}
+
+function defenseEvidenceResult(
+  loadout: AnalyzedLoadout,
+): PlayerDefenseDisplayEvidenceResult | null {
+  return loadout.playerDefenseEvidence ?? null;
+}
+
+function defenseTermKey(term: PlayerDefenseDisplayTerm) {
+  return JSON.stringify({
+    stat: term.stat,
+    operation: term.operation,
+    value: term.value,
+    candidateValues: term.candidateValues,
+    scope: term.scope,
+    condition: term.condition,
+    text: term.text,
+    sourceKind: term.source.kind,
+  });
+}
+
+function defenseTermDifference(
+  left: PlayerDefenseDisplayTerm[],
+  right: PlayerDefenseDisplayTerm[],
+) {
+  const counts = new Map<string, number>();
+  for (const term of right) {
+    const key = defenseTermKey(term);
+    counts.set(key, (counts.get(key) ?? 0) + 1);
+  }
+  return left.filter((term) => {
+    const key = defenseTermKey(term);
+    const count = counts.get(key) ?? 0;
+    if (!count) return true;
+    counts.set(key, count - 1);
+    return false;
+  });
+}
+
+function exactSourceSumChanges(
+  before: PlayerDefenseDisplayEvidence,
+  after: PlayerDefenseDisplayEvidence,
+) {
+  const left = new Map(before.sourceSums.map((sum) => [sum.key, sum]));
+  const right = new Map(after.sourceSums.map((sum) => [sum.key, sum]));
+  return [...new Set([...left.keys(), ...right.keys()])].flatMap((key) => {
+    const a = left.get(key);
+    const b = right.get(key);
+    const beforeValue = a?.value ?? 0;
+    const afterValue = b?.value ?? 0;
+    if (beforeValue === afterValue) return [];
+    const reference = b ?? a!;
+    const sign = (value: number) => `${value > 0 ? "+" : value < 0 ? "−" : ""}${compactNumber(Math.abs(value))}${reference.unit === "percent" ? "%" : ""}`;
+    return [{
+      key,
+      label: reference.statLabel,
+      operation: reference.operationLabel,
+      scope: reference.scopeLabel,
+      before: sign(beforeValue),
+      after: sign(afterValue),
+      delta: sign(afterValue - beforeValue),
+    }];
+  });
+}
+
+function exactDefenseTermList(
+  terms: PlayerDefenseDisplayTerm[],
+  side: Side,
+  label = side === "before" ? "Only before" : "Only after",
+) {
+  if (!terms.length) return `<div class="exact-defense-terms empty ${side}"><span>${label}</span><p>No source term in this column.</p></div>`;
+  return `<div class="exact-defense-terms ${side}">
+    <span>${label}</span>
+    <ul>${terms.slice(0, 8).map((term) => `<li>
+      <b>${esc(term.display)}</b>
+      <span><strong>${esc(term.statLabel)}</strong><small>${esc(term.source.kindLabel)}${term.source.label ? ` · ${esc(term.source.label)}` : ""} · ${esc(term.benefitLabel)}</small><small>${esc(term.condition ?? term.text)}</small></span>
+    </li>`).join("")}</ul>
+    ${terms.length > 8 ? `<small>+${terms.length - 8} more exact source terms</small>` : ""}
+  </div>`;
+}
+
+function unavailableDefenseCard(
+  label: string,
+  result: PlayerDefenseDisplayEvidenceResult | null,
+) {
+  const blockers = result?.status === "not-calculated" ? result.blockers : [];
+  return `<div class="exact-defense-unavailable">
+    <span>${esc(label)}</span>
+    <strong>Typed defense evidence unavailable</strong>
+    ${blockers.length
+      ? `<ul>${blockers.map((blocker) => `<li>${esc(blocker.message)}${blocker.evidence ? `<small>${esc(blocker.evidence)}</small>` : ""}</li>`).join("")}</ul>`
+      : `<p>This import has no guarded player-defense compiler result. Structural gear text remains visible below, but it is not equivalent to a complete source pass.</p>`}
+  </div>`;
+}
+
+function renderExactDefenseComparison(before: AnalyzedLoadout, after: AnalyzedLoadout) {
+  const leftResult = defenseEvidenceResult(before);
+  const rightResult = defenseEvidenceResult(after);
+  const left = exactDefense(before);
+  const right = exactDefense(after);
+  if (!left || !right) {
+    const available = left ?? right;
+    const availableSide: Side = left ? "before" : "after";
+    return `<section class="exact-defense-evidence">
+      <div class="partial-proof-head">
+        <div><span class="eyebrow">Typed player-defense inputs</span><h3>No A/B defense delta without evidence on both sides</h3></div>
+        <div class="partial-badges"><b>One-sided evidence preserved</b><b>Not EHP</b></div>
+      </div>
+      <p>${available
+        ? `${sideLabel(availableSide)} has ${available.coverage.playerScopedTerms} typed player terms. The other side is unavailable, so it is not treated as zero and no source-bucket delta is calculated.`
+        : "Neither side has a guarded player-defense result. The structural gear diff below remains visible, but no missing evidence is interpreted as zero."}</p>
+      <div class="exact-defense-deltas">
+        ${left
+          ? exactDefenseTermList(left.terms, "before", "Before evidence")
+          : unavailableDefenseCard("Before", leftResult)}
+        ${right
+          ? exactDefenseTermList(right.terms, "after", "After evidence")
+          : unavailableDefenseCard("After", rightResult)}
+      </div>
+      ${available ? provenanceLinks(available.provenance) : ""}
+    </section>`;
+  }
+  const sumChanges = exactSourceSumChanges(left, right);
+  const removed = defenseTermDifference(left.terms, right.terms);
+  const added = defenseTermDifference(right.terms, left.terms);
+  const blockers = [...new Map(
+    [...left.playerEhp.blockers, ...right.playerEhp.blockers]
+      .map((blocker) => [blocker.code, blocker]),
+  ).values()];
+  const unresolved = left.coverage.unresolved.length + right.coverage.unresolved.length;
+  return `<section class="exact-defense-evidence">
+    <div class="partial-proof-head">
+      <div><span class="eyebrow">Typed player-defense inputs</span><h3>Compare like-for-like source buckets before EHP</h3></div>
+      <div class="partial-badges"><span>${left.coverage.catalog.display}</span><b>Not character totals</b><b>Not EHP deltas</b></div>
+    </div>
+    <p>These buckets include exact player-scoped values from equipped gear, memories, placed slates, prisms, kismets, hero traits, and supported skill effects. Local gear values and global values stay separate, and conditional terms never enter the source sums.</p>
+    <div class="exact-defense-summary">
+      <div><span>Before</span><strong>${left.coverage.playerScopedTerms}</strong><small>typed player terms</small></div>
+      <div><span>After</span><strong>${right.coverage.playerScopedTerms}</strong><small>typed player terms</small></div>
+      <div><span>Changed buckets</span><strong>${sumChanges.length}</strong><small>numeric inputs only</small></div>
+      <div><span>Unresolved</span><strong>${unresolved}</strong><small>preserved source records</small></div>
+    </div>
+    ${sumChanges.length ? `<div class="defense-sum-list">
+      <div class="defense-sum-head"><span>Source bucket</span><span>Before</span><span>After</span><span>Numeric Δ</span></div>
+      ${sumChanges.map((change) => `<div class="defense-sum-row">
+        <span><strong>${esc(change.label)}</strong><small>${esc(change.operation)} · ${esc(change.scope)}</small></span>
+        <b>${esc(change.before)}</b><b>${esc(change.after)}</b><b>${esc(change.delta)}</b>
+      </div>`).join("")}
+    </div>` : `<div class="structural-empty"><strong>No unconditional source bucket changed.</strong><p>Conditional or non-summable defensive mechanics can still differ below.</p></div>`}
+    <div class="exact-defense-deltas">
+      ${exactDefenseTermList(removed, "before")}
+      ${exactDefenseTermList(added, "after")}
+    </div>
+    <details class="ehp-blockers">
+      <summary>Why the site still refuses to print one EHP number</summary>
+      <ul>${blockers.map((blocker) => `<li><strong>${esc(blocker.message)}</strong>${blocker.evidence ? `<small>${esc(blocker.evidence)}</small>` : ""}</li>`).join("")}</ul>
+    </details>
+    ${provenanceLinks([...left.provenance, ...right.provenance])}
+  </section>`;
 }
 
 function renderSurvival(before: AnalyzedLoadout, after: AnalyzedLoadout) {
@@ -1104,13 +1838,14 @@ function renderSurvival(before: AnalyzedLoadout, after: AnalyzedLoadout) {
       <div><span class="eyebrow">Survival evidence</span><h2>See what changed before calculating EHP</h2></div>
       <span class="exact-badge">Evidence only · no fake EHP</span>
     </div>
-    <p class="section-intro">This view finds defensive lines on imported gear and shows exactly what was removed or added. It does not sum unlike defenses into a misleading score.</p>
+    <p class="section-intro">The typed comparison covers player-scoped gear, memories, placed slates, prisms, kismets, traits, and supported skill effects. The quick category list below remains a gear-only text diff. Neither view combines unlike defenses into a misleading score.</p>
     <div class="survival-summary">
-      <div><span>Before evidence</span><strong>${comparison.before.length}</strong><small>defensive gear lines</small></div>
-      <div><span>Removed</span><strong class="loss">${comparison.removed}</strong><small>lines to review</small></div>
-      <div><span>Added</span><strong class="gain">${comparison.added}</strong><small>new defensive lines</small></div>
+      <div><span>Before gear evidence</span><strong>${comparison.before.length}</strong><small>defensive gear lines</small></div>
+      <div><span>Only before</span><strong>${comparison.removed}</strong><small>lines to review</small></div>
+      <div><span>Only after</span><strong>${comparison.added}</strong><small>lines to review</small></div>
       <div><span>Exact EHP</span><strong>Pending</strong><small>scenario compiler required</small></div>
     </div>
+    ${renderExactDefenseComparison(before, after)}
     <div class="defense-category-list">
       ${changed.length ? changed.map((row) => {
         const copy = DEFENSE_COPY[row.category];
@@ -1120,8 +1855,8 @@ function renderSurvival(before: AnalyzedLoadout, after: AnalyzedLoadout) {
             <b>${row.before.length} → ${row.after.length} lines</b>
           </div>
           <div class="defense-deltas">
-            ${defenseEvidenceList(row.removed, "removed")}
-            ${defenseEvidenceList(row.added, "added")}
+            ${defenseEvidenceList(row.removed, "before")}
+            ${defenseEvidenceList(row.added, "after")}
           </div>
         </article>`;
       }).join("") : `<div class="structural-empty">
@@ -1224,6 +1959,11 @@ function setImportStatus(message: string, type: "success" | "error" | "info" = "
   importStatus.textContent = message;
 }
 
+function importSizeMessage(size: number) {
+  const mib = Math.ceil(size / 1024 / 1024 * 10) / 10;
+  return `This input is ${mib.toFixed(1)} MiB. Imports are limited to 25 MiB; export one build snapshot or remove unrelated data and try again.`;
+}
+
 function activateImported(build: AnalyzedBuild) {
   builds.push(build);
   const loadout = build.loadouts.find((item) => item.isCurrent) ?? build.loadouts[0];
@@ -1244,9 +1984,16 @@ function activateImported(build: AnalyzedBuild) {
 }
 
 async function readFile(file: File) {
+  if (file.size > MAX_IMPORT_BYTES) {
+    setImportStatus(importSizeMessage(file.size), "error");
+    fileInput.value = "";
+    return;
+  }
   try {
     setImportStatus(`Reading ${file.name}…`);
     const value = JSON.parse(await file.text());
+    setImportStatus("Loading the pinned SS13 import catalog…");
+    const catalog = await loadImportCatalog();
     activateImported(importBuild(value, catalog, demo.builds, file.name));
   } catch (error) {
     setImportStatus(error instanceof Error ? error.message : "The file could not be imported.", "error");
@@ -1413,15 +2160,23 @@ dropZone.addEventListener("keydown", (event) => {
   fileInput.click();
 });
 
-document.getElementById("analyze-paste")!.addEventListener("click", () => {
+document.getElementById("analyze-paste")!.addEventListener("click", async () => {
   const raw = pasteInput.value.trim();
   if (!raw) {
     setImportStatus("Paste an in-game build code or exported JSON first.", "error");
     return;
   }
+  const rawBytes = new TextEncoder().encode(raw).byteLength;
+  if (rawBytes > MAX_IMPORT_BYTES) {
+    setImportStatus(importSizeMessage(rawBytes), "error");
+    return;
+  }
   try {
     if (raw.startsWith("{")) {
-      activateImported(importBuild(JSON.parse(raw), catalog, demo.builds, "Pasted JSON"));
+      const value = JSON.parse(raw);
+      setImportStatus("Loading the pinned SS13 import catalog…");
+      const catalog = await loadImportCatalog();
+      activateImported(importBuild(value, catalog, demo.builds, "Pasted JSON"));
     } else {
       activateImported(importBuildCode(raw));
     }
@@ -1435,4 +2190,36 @@ importDialog.addEventListener("close", () => {
   setImportStatus("");
 });
 
-render();
+async function initializeWorkspace() {
+  try {
+    const response = await fetch(demoDataUrl);
+    if (!response.ok) {
+      throw new Error(`Fixture data could not be loaded (${response.status}).`);
+    }
+    demo = await response.json() as DemoData;
+    const initial = demo.builds.find((build) => build.id === "scaling-lesson");
+    if (!initial || initial.loadouts.length < 2) {
+      throw new Error("The comparison fixture set is incomplete.");
+    }
+    builds.push(...structuredClone(demo.builds));
+    beforeSelection = {
+      buildId: initial.id,
+      loadoutId: initial.loadouts[0].id,
+    };
+    afterSelection = {
+      buildId: initial.id,
+      loadoutId: initial.loadouts[1].id,
+    };
+    render();
+  } catch (error) {
+    const message = error instanceof Error
+      ? error.message
+      : "The comparison workspace could not be loaded.";
+    app.innerHTML = `<main class="app-loading app-loading--error">
+      <div><strong>Unable to load TLI Lens</strong>
+      <small>${esc(message)} Refresh the page to try again.</small></div>
+    </main>`;
+  }
+}
+
+void initializeWorkspace();

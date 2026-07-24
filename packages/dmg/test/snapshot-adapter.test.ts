@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import { createHash } from "node:crypto";
 import { describe, expect, it } from "vitest";
 import { fromRoot } from "../src/py.js";
 import {
@@ -6,6 +7,8 @@ import {
   formatModifierEvidence,
   normalizeBuildSnapshot,
 } from "../../page/src/snapshot-adapter.js";
+import { resolveCompilerSource } from "../../page/src/portable-compiler-source.js";
+import { createCompendiumExport } from "../../page/src/vendor/tli_dump/compendium-export.mjs";
 import { importBuild } from "../../page/src/importer.js";
 import {
   changedRowsBySystem,
@@ -298,7 +301,25 @@ function portableFixture() {
   };
 }
 
+function rustPortableFixture(): any {
+  return JSON.parse(fs.readFileSync(
+    fromRoot("../poorchlight/tli_dump/ui/fixtures/rust-portable-snapshot.json"),
+    "utf8",
+  ));
+}
+
 describe("canonical snapshot adapter", () => {
+  it("pins the authoritative tli_dump converter bytes used by the website", () => {
+    const sha256 = (file: string) => createHash("sha256")
+      .update(fs.readFileSync(fromRoot(file)))
+      .digest("hex");
+
+    expect(sha256("packages/page/src/vendor/tli_dump/compendium-export.mjs"))
+      .toBe("f4ec95ee3b892299b5de5e1d6e16f2ef448b8c1b8c665afbd673788a9e60482d");
+    expect(sha256("packages/page/src/vendor/tli_dump/dom.js"))
+      .toBe("eaec9905bf17e30b9bdc8104ee0c4647712c98e8413b3661058dc89769187fb5");
+  });
+
   it("normalizes the two supplied builds and the real portable-v3 fixture", () => {
     const read = (file: string) => JSON.parse(fs.readFileSync(fromRoot(file), "utf8"));
     const bingSource = read("../bing_china.json");
@@ -341,7 +362,235 @@ describe("canonical snapshot adapter", () => {
       model: null,
       gear: { length: 1 },
       skills: { length: 1 },
+      partialMetrics: [],
+      supportEvidence: [],
+      summonEvidence: [],
+      bingIntrinsicEvidence: undefined,
+      playerDefenseEvidence: undefined,
     });
+    expect(importedPortable.loadouts[0].sourceNote).toContain(
+      "converter report was retained (partial; 3 structurally materialized records)",
+    );
+    expect(importedPortable.loadouts[0].sourceNote).toContain(
+      "not used as formula inputs",
+    );
+    expect(importedPortable.loadouts[0].unmatched.some((row) =>
+      row.text.startsWith("tli_dump omitted skillSupports:"))).toBe(true);
+    expect(importedPortable.loadouts[0].unmatched.some((row) =>
+      row.text.startsWith("Guarded formula access blocked:"))).toBe(true);
+  });
+
+  it("uses the pinned converter for validation/reporting but never as a formula source", () => {
+    const source = rustPortableFixture();
+    const normalized = normalizeBuildSnapshot(source);
+    const resolved = resolveCompilerSource(source, normalized);
+
+    expect(resolved.portableConversion).toMatchObject({
+      status: "partial",
+      importedCount: 3,
+      error: null,
+      compilerAccess: {
+        status: "blocked",
+        reason: "catalog-attestation-required",
+      },
+    });
+    expect(resolved.portableConversion?.included.map((entry) => entry.section))
+      .toEqual(["hero", "gear", "pactspirits"]);
+    expect(resolved.portableConversion?.omitted.map((entry) => entry.section))
+      .toEqual(["gearPlacement", "skillSupports", "skillTree"]);
+    expect(resolved.source).toBeNull();
+  });
+
+  it.each([
+    {
+      label: "incompatible layout",
+      layoutCompatible: false,
+      processState: "connected",
+    },
+    {
+      label: "non-connected process",
+      layoutCompatible: true,
+      processState: "incompatible",
+    },
+  ])("flags $label and keeps guarded formula access closed", ({
+    layoutCompatible,
+    processState,
+  }) => {
+    const source = rustPortableFixture();
+    source.source.layoutCompatible = layoutCompatible;
+    source.source.processState = processState;
+    const normalized = normalizeBuildSnapshot(source);
+    const resolved = resolveCompilerSource(source, normalized);
+    const imported = importBuild(source, emptyCatalog);
+
+    expect(resolved).toMatchObject({
+      source: null,
+      portableConversion: {
+        status: "partial",
+        importedCount: 3,
+        error: null,
+        compilerAccess: {
+          status: "blocked",
+          reason: "incompatible-source-state",
+        },
+      },
+    });
+    expect(imported.loadouts[0]).toMatchObject({
+      partialMetrics: [],
+      supportEvidence: [],
+      summonEvidence: [],
+      bingIntrinsicEvidence: undefined,
+      playerDefenseEvidence: undefined,
+    });
+    expect(imported.loadouts[0].sourceNote).toContain(
+      "capture was not both connected and layout-compatible",
+    );
+  });
+
+  it("blocks forged portable weapon metadata from the Bing compiler boundary", () => {
+    const source = rustPortableFixture();
+    const gear = source.proBuild.loadout.gear.items[0];
+    gear.location = { bag: 1, equipSlot: 2, page: -1, slot: 2 };
+    const physicalImplicit = gear.identity.base.metadata.implicits[0];
+    physicalImplicit.description = "999999 - 999999 Physical Damage";
+    physicalImplicit.rawText = physicalImplicit.description;
+    physicalImplicit.values = [
+      { minValue: 999999, maxValue: 999999, value: 999999 },
+      { minValue: 999999, maxValue: 999999, value: 999999 },
+    ];
+
+    const skill = source.proBuild.loadout.skills.items[0];
+    skill.identity.base = {
+      gameId: "forged-hammer",
+      domain: "skill",
+      compendiumId: "6f020b6a-022b-50eb-8299-e5fc7492ea8f",
+      label: "Hammer of Ash",
+      metadata: {
+        skillType: "active",
+        icon: "/forged-hammer.webp",
+      },
+    };
+    skill.itemLevel = 20;
+    skill.data = {
+      compendiumPlacement: { kind: "active", slot: 0, groupSize: 1 },
+    };
+
+    const normalized = normalizeBuildSnapshot(source);
+    const resolved = resolveCompilerSource(source, normalized);
+    const imported = importBuild(source, emptyCatalog);
+
+    expect(imported.loadouts[0].gear
+      .find((item) => item.slot === "mainHand")?.lines.join(" "))
+      .toContain("999999 - 999999 Physical Damage");
+    expect(resolved.portableConversion).toMatchObject({
+      status: "partial",
+      compilerAccess: {
+        status: "blocked",
+        reason: "catalog-attestation-required",
+      },
+    });
+    expect(resolved.source).toBeNull();
+    expect(imported.loadouts[0]).toMatchObject({
+      partialMetrics: [],
+      bingIntrinsicEvidence: undefined,
+      playerDefenseEvidence: undefined,
+    });
+  });
+
+  it("blocks forged +999999 Life gear metadata from defence source sums", () => {
+    const source = rustPortableFixture();
+    const gear = source.proBuild.loadout.gear.items[0];
+    gear.location = { bag: 1, equipSlot: 2, page: -1, slot: 2 };
+    const prefix = gear.identity.base.metadata.prefixAffixes[0];
+    prefix.descriptionTemplate = "+# Max Life";
+    prefix.rawText = "+# Max Life";
+    prefix.values = [{
+      minValue: 1,
+      maxValue: 999999,
+      sign: "+",
+      unit: "",
+    }];
+    gear.affixes.prefixInfoList[0].DynArgs = [999999];
+
+    const normalized = normalizeBuildSnapshot(source);
+    const resolved = resolveCompilerSource(source, normalized);
+    const imported = importBuild(source, emptyCatalog);
+
+    expect(imported.loadouts[0].gear
+      .find((item) => item.slot === "mainHand")?.lines.join(" "))
+      .toContain("+999999 Max Life");
+    expect(resolved.source).toBeNull();
+    expect(resolved.portableConversion?.compilerAccess).toMatchObject({
+      status: "blocked",
+      reason: "catalog-attestation-required",
+    });
+    expect(imported.loadouts[0]).toMatchObject({
+      partialMetrics: [],
+      supportEvidence: [],
+      summonEvidence: [],
+      bingIntrinsicEvidence: undefined,
+      playerDefenseEvidence: undefined,
+    });
+  });
+
+  it("rejects converted portable evidence if loadout order or hero identity diverges", () => {
+    const source = rustPortableFixture();
+    const renamed = structuredClone(normalizeBuildSnapshot(source));
+    renamed.loadouts[0].name = "different validated loadout";
+    expect(resolveCompilerSource(source, renamed)).toMatchObject({
+      source: null,
+      portableConversion: {
+        status: "failed",
+        error: expect.stringContaining("loadout order/name"),
+      },
+    });
+
+    const wrongHero = structuredClone(normalizeBuildSnapshot(source));
+    if (!wrongHero.loadouts[0].hero.identity) {
+      throw new Error("fixture should resolve a hero identity");
+    }
+    wrongHero.loadouts[0].hero.identity.catalogId =
+      "00000000-0000-4000-8000-000000000000";
+    expect(resolveCompilerSource(source, wrongHero)).toMatchObject({
+      source: null,
+      portableConversion: {
+        status: "failed",
+        error: expect.stringContaining("hero identity"),
+      },
+    });
+  });
+
+  it("keeps portable imports structural when the converter cannot materialize the patch", () => {
+    const source = portableFixture();
+    source.source.catalogPatch = "SS12.5";
+    const normalized = normalizeBuildSnapshot(source);
+    const resolved = resolveCompilerSource(source, normalized);
+    const imported = importBuild(source, emptyCatalog);
+
+    expect(resolved).toMatchObject({
+      source: null,
+      portableConversion: {
+        status: "failed",
+        importedCount: 0,
+        included: [],
+        omitted: [],
+      },
+    });
+    expect(resolved.portableConversion?.error).toContain(
+      "no materialization catalog for patch SS12.5",
+    );
+    expect(imported.loadouts[0]).toMatchObject({
+      partialMetrics: [],
+      supportEvidence: [],
+      summonEvidence: [],
+      bingIntrinsicEvidence: undefined,
+      playerDefenseEvidence: undefined,
+    });
+    expect(imported.loadouts[0].sourceNote).toContain(
+      "converter validation/report failed",
+    );
+    expect(imported.loadouts[0].unmatched.some((row) =>
+      row.text.includes("no materialization catalog for patch SS12.5"))).toBe(true);
   });
 
   it("normalizes Compendium actor structure and detects roll-only upgrades", () => {
@@ -395,9 +644,9 @@ describe("canonical snapshot adapter", () => {
       .toBe(true);
   });
 
-  it("accepts converter payload wrappers without substituting known demo data", () => {
+  it("keeps a generic payload envelope as user-asserted Compendium state", () => {
     const source = compendiumFixture();
-    const normalized = normalizeBuildSnapshot({ payload: source, status: "partial" });
+    const normalized = normalizeBuildSnapshot({ payload: source });
     const fakeKnown = {
       id: "known",
       name: source.name,
@@ -411,6 +660,7 @@ describe("canonical snapshot adapter", () => {
     } as unknown as AnalyzedBuild;
     const imported = importBuild({ payload: source }, emptyCatalog, [fakeKnown], "upload.json");
 
+    expect(normalized.sourceKind).toBe("compendium");
     expect(normalized.loadouts).toHaveLength(2);
     expect(imported.loadouts).toHaveLength(2);
     expect(imported.loadouts[1].model).toBeNull();
@@ -420,6 +670,103 @@ describe("canonical snapshot adapter", () => {
     expect(imported.loadouts[1].trees[0].fingerprint).toBeTruthy();
     expect(imported.loadouts[1].gear.find((item) => item.slot === "chest")?.lines[0])
       .toContain("+26%");
+  });
+
+  it("keeps a complete tli_dump converter-result wrapper structural-only", () => {
+    const wrapper = createCompendiumExport(rustPortableFixture());
+    const normalized = normalizeBuildSnapshot(wrapper);
+    const resolved = resolveCompilerSource(wrapper, normalized);
+    const imported = importBuild(wrapper, emptyCatalog, [], "converted.json");
+
+    expect(normalized).toMatchObject({
+      sourceKind: "portable-converter",
+      loadouts: { length: 1 },
+    });
+    expect(resolved).toMatchObject({
+      source: null,
+      portableConversion: {
+        status: "partial",
+        importedCount: 3,
+        error: null,
+        compilerAccess: {
+          status: "blocked",
+          reason: "catalog-attestation-required",
+        },
+      },
+    });
+    expect(imported.loadouts[0]).toMatchObject({
+      partialMetrics: [],
+      supportEvidence: [],
+      summonEvidence: [],
+      bingIntrinsicEvidence: undefined,
+      playerDefenseEvidence: undefined,
+    });
+    expect(imported.loadouts[0].sourceNote).toContain(
+      "complete tli_dump converter-result wrapper was imported structurally",
+    );
+    expect(imported.loadouts[0].sourceNote).toContain(
+      "payload is not used as a formula source",
+    );
+    expect(imported.loadouts[0].unmatched.some((row) =>
+      row.text.startsWith("Guarded formula access blocked:"))).toBe(true);
+  });
+
+  it("does not let forged portable metadata bypass the boundary through a converter wrapper", () => {
+    const source = rustPortableFixture();
+    const gear = source.proBuild.loadout.gear.items[0];
+    gear.location = { bag: 1, equipSlot: 2, page: -1, slot: 2 };
+    const physicalImplicit = gear.identity.base.metadata.implicits[0];
+    physicalImplicit.description = "999999 - 999999 Physical Damage";
+    physicalImplicit.rawText = physicalImplicit.description;
+    physicalImplicit.values = [
+      { minValue: 999999, maxValue: 999999, value: 999999 },
+      { minValue: 999999, maxValue: 999999, value: 999999 },
+    ];
+    const skill = source.proBuild.loadout.skills.items[0];
+    skill.identity.base = {
+      gameId: "forged-hammer",
+      domain: "skill",
+      compendiumId: "6f020b6a-022b-50eb-8299-e5fc7492ea8f",
+      label: "Hammer of Ash",
+      metadata: {
+        skillType: "active",
+        icon: "/forged-hammer.webp",
+      },
+    };
+    skill.itemLevel = 20;
+    skill.data = {
+      compendiumPlacement: { kind: "active", slot: 0, groupSize: 1 },
+    };
+
+    const wrapper = createCompendiumExport(source);
+    const normalized = normalizeBuildSnapshot(wrapper);
+    const resolved = resolveCompilerSource(wrapper, normalized);
+    const imported = importBuild(wrapper, emptyCatalog);
+
+    expect(normalized.sourceKind).toBe("portable-converter");
+    expect(resolved.source).toBeNull();
+    expect(imported.loadouts[0].gear
+      .find((item) => item.slot === "mainHand")?.lines.join(" "))
+      .toContain("999999 - 999999 Physical Damage");
+    expect(imported.loadouts[0]).toMatchObject({
+      partialMetrics: [],
+      supportEvidence: [],
+      summonEvidence: [],
+      bingIntrinsicEvidence: undefined,
+      playerDefenseEvidence: undefined,
+    });
+  });
+
+  it("rejects malformed converter-result markers instead of downgrading provenance", () => {
+    const wrapper = createCompendiumExport(rustPortableFixture()) as any;
+    delete wrapper.omitted;
+
+    expect(() => normalizeBuildSnapshot(wrapper)).toThrowError(
+      expect.objectContaining<Partial<SnapshotAdapterError>>({
+        code: "invalid_portable_converter",
+        path: "document",
+      }),
+    );
   });
 
   it("preserves a roll-only support change through the comparison model", () => {
@@ -454,6 +801,20 @@ describe("canonical snapshot adapter", () => {
     expect(insight.id).toBe("main-support-swap");
     expect(insight.title).toContain("configuration changed");
     expect(insight.evidence.join(" ")).toContain("rolls [18] → [19]");
+  });
+
+  it("preserves main-bar slot identity instead of collapsing or reindexing skills", () => {
+    const source = compendiumFixture();
+    const moved = source.loadouts.loadouts[1].skills.activeSkills[0];
+    source.loadouts.loadouts[1].skills.activeSkills = [null as any, moved];
+    const imported = importBuild(source, emptyCatalog);
+
+    expect(imported.loadouts[0].skills.map((skill) => skill.slot))
+      .toEqual(["active:0"]);
+    expect(imported.loadouts[1].skills.map((skill) => skill.slot))
+      .toEqual(["active:1"]);
+    expect(changedRowsBySystem(imported.loadouts[0], imported.loadouts[1]).skills)
+      .toBe(2);
   });
 
   it("normalizes a GUI-wrapped portable-v3 snapshot with raw affix evidence", () => {
@@ -521,6 +882,22 @@ describe("canonical snapshot adapter", () => {
         code: "unsupported_portable_version",
         path: "portable.schemaVersion",
       }),
+    );
+  });
+
+  it("rejects pathological object graphs before recursive fingerprinting", () => {
+    const cyclic: Record<string, unknown> = {};
+    cyclic.self = cyclic;
+    expect(() => normalizeBuildSnapshot(cyclic)).toThrow(
+      /cyclic or repeated object reference/,
+    );
+
+    let deeplyNested: Record<string, unknown> = {};
+    for (let depth = 0; depth < 70; depth += 1) {
+      deeplyNested = { child: deeplyNested };
+    }
+    expect(() => normalizeBuildSnapshot(deeplyNested)).toThrow(
+      /nested more than 64 levels deep/,
     );
   });
 

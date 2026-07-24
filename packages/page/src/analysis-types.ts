@@ -1,4 +1,6 @@
 import type { Snapshot } from "@rehan/dmg/damageModel";
+import type { BingIntrinsicEnvelope } from "@rehan/dmg/bingIntrinsic";
+import type { PlayerDefenseDisplayEvidenceResult } from "./player-defense-evidence";
 
 export interface GearRow {
   slot: string;
@@ -21,6 +23,8 @@ export interface SupportRow {
 }
 
 export interface SkillRow {
+  /** Stable source position such as `active:0` or `passive:2`. */
+  slot: string;
   kind: "active" | "passive" | "support" | "unknown";
   name: string;
   guid?: string;
@@ -157,6 +161,115 @@ export interface SummonTermEvidence {
   isTotalEhp: false;
 }
 
+export type MinionEvidenceUnit =
+  | "percent"
+  | "count"
+  | "seconds"
+  | "meters"
+  | "stacks";
+
+export interface MinionBaselineEvidence {
+  level: number;
+  baseLife: number;
+  baseDamage: number;
+  baseArmor: number;
+  resistances: {
+    fire: number;
+    cold: number;
+    lightning: number;
+    erosion: number;
+  };
+  baseCriticalStrikeRating: number;
+  baseCriticalStrikeDamagePct: number;
+  confidence: "confirmed-partial" | "inferred-partial";
+  isTotalMinionEhp: false;
+}
+
+export interface MinionActionTermEvidence {
+  id: string;
+  label: string;
+  value: number;
+  display: string;
+  unit: MinionEvidenceUnit;
+  application: string;
+  condition: string | null;
+  isDps: false;
+}
+
+export interface MinionActionSourceEvidence {
+  actionId: string;
+  actionName: string;
+  role: "base" | "empower" | "enhanced" | "ultimate";
+  level: number;
+  tags: string[];
+  castTimeSeconds: number;
+  cooldownSeconds: number | null;
+  foundation: {
+    status: "calculated-partial" | "not-damaging";
+    isDps: false;
+    isTotalDamage: false;
+    baseDamagePctPerContact: number | null;
+    deterministicContacts: number | null;
+    rawDamagePerContact: number | null;
+    rawDamageAtDeterministicFullContact: number | null;
+    scope: string;
+    excluded: string[];
+  };
+  terms: MinionActionTermEvidence[];
+}
+
+export interface MinionSupportTermEvidence {
+  id: string;
+  label: string;
+  value: number;
+  display: string;
+  unit: MinionEvidenceUnit;
+  application: string;
+  scope: string;
+  condition: string | null;
+  isNetDps: false;
+}
+
+export interface MinionSupportSourceEvidence {
+  status: "source-terms" | "unsupported";
+  isDps: false;
+  supportId: string;
+  supportName: string | null;
+  supportType?: string;
+  level?: number | null;
+  tier?: number | null;
+  rank?: number | null;
+  rollValues?: number[];
+  effects: MinionSupportTermEvidence[];
+  blockers: string[];
+  blockerEvidence?: GuardedEvidenceBlocker[];
+}
+
+export interface IrisTraitTermEvidence {
+  id: string;
+  label: string;
+  values: number[];
+  display: string;
+  unit: MinionEvidenceUnit;
+  scope: "spirit-magi" | "merged-spirit-magi" | "player";
+  condition: string | null;
+  selector: "constant" | "unresolved-trait-enhancement";
+  application: string;
+  isDps: false;
+  isTotalEhp: false;
+}
+
+export interface IrisTraitSourceEvidence {
+  traitId: string;
+  traitName: string;
+  unlockLevel: 1 | 45 | 60 | 75;
+  terms: IrisTraitTermEvidence[];
+  unresolved: string[];
+  provenance: PartialMetricSource[];
+  isDps: false;
+  isTotalEhp: false;
+}
+
 export interface SummonSourceEvidence {
   status: "source-terms";
   skillId: string;
@@ -164,6 +277,10 @@ export interface SummonSourceEvidence {
   level: number;
   actor: "minion";
   damageTags: string[];
+  baseline: MinionBaselineEvidence;
+  actions: MinionActionSourceEvidence[];
+  supports: MinionSupportSourceEvidence[];
+  heroTraits: IrisTraitSourceEvidence[];
   terms: SummonTermEvidence[];
   minionDps: {
     status: "not-calculated";
@@ -181,6 +298,12 @@ export interface SummonSourceEvidence {
 export interface LocalCaptureStep {
   title: string;
   detail: string;
+}
+
+export interface GuardedEvidenceBlocker {
+  code: string;
+  message: string;
+  evidence?: string;
 }
 
 /**
@@ -207,6 +330,10 @@ export interface AnalyzedLoadout {
   partialMetrics?: PartialMetric[];
   supportEvidence?: SupportSocketEvidence[];
   summonEvidence?: SummonSourceEvidence[];
+  summonEvidenceBlockers?: GuardedEvidenceBlocker[];
+  bingIntrinsicEvidence?: BingIntrinsicEnvelope;
+  bingIntrinsicBlockers?: GuardedEvidenceBlocker[];
+  playerDefenseEvidence?: PlayerDefenseDisplayEvidenceResult;
   snapshot: Snapshot | null;
   gear: GearRow[];
   skills: SkillRow[];
@@ -230,7 +357,6 @@ export interface AnalyzedBuild {
 }
 
 export interface DemoData {
-  generatedAt: string;
   modelNotice: string;
   builds: AnalyzedBuild[];
 }
@@ -240,4 +366,8 @@ export interface ImportCatalog {
   treeNames: Record<string, string>;
   heroNames: Record<string, string>;
   pactNames: Record<string, string>;
+  /** Defensive-resolution subset of poorchlight's SS13 schema-v2 catalog. */
+  defenseCatalog?: unknown;
+  /** SHA-256 of the exact canonical JSON object above. */
+  defenseCatalogSha256?: string;
 }

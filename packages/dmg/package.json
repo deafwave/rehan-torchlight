@@ -4,9 +4,12 @@
   "version": "1.0.0",
   "type": "module",
   "exports": {
+    "./bingIntrinsic": "./src/bingIntrinsic.ts",
     "./damageModel": "./src/damageModel.ts",
     "./guardedCompiler": "./src/guardedCompiler.ts",
+    "./minionActionEvidence": "./src/minionActionEvidence.ts",
     "./minionEvidence": "./src/minionEvidence.ts",
+    "./playerDefenseEvidence": "./src/playerDefenseEvidence.ts",
     "./supportEvidence": "./src/supportEvidence.ts",
     "./supports": "./src/supports.ts"
   },

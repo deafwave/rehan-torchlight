@@ -124,4 +124,87 @@ describe("guarded SS13 support source terms", () => {
       ]);
     }
   });
+
+  it("requires the exact enabled Hammer parent and five guarded support sockets", () => {
+    const implicitParent = bing();
+    const implicitHammer = implicitParent.loadouts.loadouts[0].skills.activeSkills.find(
+      (skill: any) => skill.skillGuid === "6f020b6a-022b-50eb-8299-e5fc7492ea8f",
+    );
+    delete implicitHammer.enabled;
+    expect(compileSs13BingSupportEvidence(implicitParent, 0)).toMatchObject({
+      status: "not-calculated",
+      blockers: [{ code: "disabled-hammer-of-ash" }],
+    });
+
+    const duplicateParent = bing();
+    duplicateParent.loadouts.loadouts[0].skills.activeSkills[1] =
+      structuredClone(duplicateParent.loadouts.loadouts[0].skills.activeSkills[0]);
+    expect(compileSs13BingSupportEvidence(duplicateParent, 0)).toMatchObject({
+      status: "not-calculated",
+      blockers: [{ code: "duplicate-hammer-of-ash" }],
+    });
+
+    for (const supports of [
+      {},
+      [null, null, null, null],
+      [null, null, null, null, null, null],
+    ]) {
+      const malformed = bing();
+      const hammer = malformed.loadouts.loadouts[0].skills.activeSkills.find(
+        (skill: any) => skill.skillGuid === "6f020b6a-022b-50eb-8299-e5fc7492ea8f",
+      );
+      hammer.supports = supports;
+      expect(() => compileSs13BingSupportEvidence(malformed, 0)).not.toThrow();
+      expect(compileSs13BingSupportEvidence(malformed, 0)).toMatchObject({
+        status: "not-calculated",
+        blockers: [{ code: "malformed-support-sockets" }],
+      });
+    }
+
+    const duplicateSupport = bing();
+    const supports = duplicateSupport.loadouts.loadouts[0].skills.activeSkills[0].supports;
+    supports[1] = structuredClone(supports[0]);
+    expect(compileSs13BingSupportEvidence(duplicateSupport, 0)).toMatchObject({
+      status: "not-calculated",
+      blockers: [{ code: "duplicate-main-skill-support" }],
+    });
+  });
+
+  it("rejects spoofed support type and coercible numeric metadata", () => {
+    const wrongType = bing();
+    wrongType.loadouts.loadouts[0].skills.activeSkills[0].supports[0].type =
+      "support";
+    let evidence = compileSs13BingSupportEvidence(wrongType, 0);
+    expect(evidence.status).toBe("source-terms");
+    if (evidence.status !== "source-terms") throw new Error("expected socket evidence");
+    expect(evidence.supports[0]).toMatchObject({
+      status: "unsupported",
+      blockers: [{
+        code: "invalid-support-installation",
+        evidence: expect.stringContaining("supports[0]"),
+      }],
+    });
+
+    const stringLevel = bing();
+    stringLevel.loadouts.loadouts[0].skills.activeSkills[0].supports[1].level =
+      "18";
+    evidence = compileSs13BingSupportEvidence(stringLevel, 0);
+    expect(evidence.status).toBe("source-terms");
+    if (evidence.status !== "source-terms") throw new Error("expected socket evidence");
+    expect(evidence.supports[1]).toMatchObject({
+      status: "unsupported",
+      blockers: [{ code: "unsupported-support-level" }],
+    });
+
+    const extraRoll = bing();
+    extraRoll.loadouts.loadouts[0].skills.activeSkills[0].supports[0].rollValues =
+      [14, 15];
+    evidence = compileSs13BingSupportEvidence(extraRoll, 0);
+    expect(evidence.status).toBe("source-terms");
+    if (evidence.status !== "source-terms") throw new Error("expected socket evidence");
+    expect(evidence.supports[0]).toMatchObject({
+      status: "unsupported",
+      blockers: [{ code: "unsupported-motionless-roll" }],
+    });
+  });
 });

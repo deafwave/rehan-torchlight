@@ -17,15 +17,19 @@ The first web slice includes:
   `tli_dump` resolver.
 - Exact formula replay and a reconciled damage-layer waterfall for guarded
   snapshots.
-- Guarded SS13 Bing evidence for the equipped weapon contribution to one raw
-  Hammer of Ash hit, plus exact support-skill source terms. Both are kept
-  explicitly separate from total hit damage and DPS.
-- Actor-scoped SS13 Wuxia evidence for Spirit Magus summon counts, tags,
-  conversion, and player Origin terms without manufacturing minion DPS or EHP.
+- Guarded SS13 Bing evidence for converted normal and Demolisher-charged
+  weapon-sourced Hammer hits, hero-trait tiers, and Blast Nova bomb/projectile
+  emission outcomes. Emissions remain explicitly separate from target hits and
+  DPS.
+- Actor-scoped SS13 Wuxia evidence for Spirit Magus base stats, all eight
+  Rock/Erosion action records, raw per-contact foundations, socket terms, Iris
+  traits, summon count, conversion, and player Origin terms.
 - Changed-only views for gear, skills, trees, memories, slates, and
   pactspirits.
-- Defensive gear-line comparisons grouped by survival layer without collapsing
-  unlike defenses into a fake EHP score.
+- Typed player-defense inputs from equipped gear, memories, placed slates,
+  prisms, kismets, hero traits, and supported skill effects. Only compatible
+  unconditional source buckets are summed; they are not character totals or
+  EHP.
 - Classification coverage, unsupported modifier text, assumptions, and honest
   “Not calculated” states.
 - The supplied Bing and Wuxia progression files as structural fixtures.
@@ -44,9 +48,23 @@ website keeps real Bing and Wuxia loadouts fully inspectable and only exposes
 smaller formula terms where a season-, actor-, and skill-guarded compiler can
 prove them. Full DPS remains unavailable for both supplied builds.
 
-Wuxia is also a minion build. Minion base actions, quantity, actor-scoped
-modifiers, AI/uptime, and several trait mechanics need their own model rather
-than the player-hit formula.
+Portable-v3 is currently a structural import only. The pinned `tli_dump`
+converter still validates the document and reports exactly which records it
+could materialize or had to omit, but its output is not passed to Bing, minion,
+or defense formula compilers. Portable identities and planner metadata are
+embedded in the uploaded file itself; treating them as formula inputs requires
+independent verification against a pinned SS13 catalog. A complete serialized
+`tli_dump` converter-result wrapper is classified the same way, so importing
+its `.payload` cannot silently upgrade it into a trusted Compendium formula
+source. A capture whose
+`layoutCompatible` flag is false or whose process state is not `connected` is
+also called out explicitly. Direct Compendium JSON remains user-supplied
+planner state, not proof that a build came from an unmodified live capture.
+
+Wuxia is also a minion build. Its source-pinned actor/action foundations are now
+available, but complete actor-scoped modifier pools, quantity, Growth/Breeze
+state, AI/uptime, overlap, and trait-enhancement selection still need a
+dedicated rotation model rather than the player-hit formula.
 
 ## In-game build-code handoff
 
@@ -65,9 +83,11 @@ cargo run -p tli_dump --bin tli_dump -- --portable-json
 ```
 
 TLI Lens accepts the direct portable-v3 document, the Tauri GUI snapshot's
-`.portable` wrapper, the converter's `.payload` wrapper, and raw Compendium
-build JSON. Resolution stays local: the browser never attaches to the game and
-only reads a file or text that the user explicitly imports.
+`.portable` wrapper, a complete converter-result wrapper containing `.payload`,
+and raw Compendium build JSON. Resolution stays local: the browser never
+attaches to the game and only reads a file or text that the user explicitly
+imports. Portable-v3, `.portable`, and complete converter-result inputs remain
+structural/report-only until catalog attestation is implemented.
 
 ## Commands
 
@@ -84,12 +104,16 @@ website is under `packages/page/`.
 
 ## Next engineering slices
 
-1. Complete the Bing Hammer of Ash hit/rotation compiler around the guarded
-   weapon and support terms.
-2. Add Spirit Magus actor actions, quantity, AI/uptime, and merged-state
-   rotation to the Wuxia compiler.
+1. Compile Bing landed-hit geometry, component overlap, throwing cadence,
+   Demolisher share, remaining modifier pools, and enemy state around the
+   guarded hit/emission envelopes.
+2. Compile Spirit Magus quantity, inherited modifier pools, AI/uptime, action
+   selection, target overlap, and merged-state rotation around the guarded
+   actor/action records.
 3. Add stable source IDs to full formula trace factors and compare traces
    directly.
-4. Build physical, elemental, erosion, and DoT survival scenarios.
+4. Turn the guarded player-defense inputs into physical, elemental, erosion,
+   hit, and damage-over-time survival scenarios using live/base character
+   pools.
 5. Add constraint-based DPS/EHP recommendations after the comparison models are
    trustworthy.

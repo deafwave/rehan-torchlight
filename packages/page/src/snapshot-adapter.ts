@@ -7,7 +7,10 @@
  * portable record has planner semantics which its source did not prove.
  */
 
-export type SnapshotSourceKind = "compendium" | "portable-v3";
+export type SnapshotSourceKind =
+  | "compendium"
+  | "portable-v3"
+  | "portable-converter";
 export type DiagnosticSeverity = "warning" | "error";
 
 export interface ImportDiagnostic {
@@ -199,6 +202,8 @@ type JsonObject = Record<string, any>;
 
 const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const MAX_IMPORT_DEPTH = 64;
+const MAX_IMPORT_NODES = 250_000;
 
 const PORTABLE_ROOT_FIELDS = [
   "schemaVersion",
@@ -327,6 +332,53 @@ function scalarText(value: unknown): string | null {
 
 function fail(code: string, path: string, detail: string): never {
   throw new SnapshotAdapterError(code, path, `${path}: ${detail}`);
+}
+
+/**
+ * Imported JSON reaches recursive canonicalization later in this module.
+ * Bound and validate its object graph iteratively first so a deeply nested,
+ * cyclic, or extraordinarily wide programmatic input cannot overflow the
+ * stack or monopolize the browser. Parsed JSON never contains aliases, so a
+ * repeated object identity is also outside the accepted document contract.
+ */
+function assertImportShapeBudget(value: unknown): void {
+  const pending: Array<{ value: unknown; depth: number }> = [{ value, depth: 0 }];
+  const seen = new WeakSet<object>();
+  let nodes = 0;
+  while (pending.length) {
+    const entry = pending.pop()!;
+    nodes += 1;
+    if (nodes > MAX_IMPORT_NODES) {
+      fail(
+        "import_shape_limit",
+        "document",
+        `contains more than ${MAX_IMPORT_NODES.toLocaleString("en-US")} values.`,
+      );
+    }
+    if (entry.depth > MAX_IMPORT_DEPTH) {
+      fail(
+        "import_shape_limit",
+        "document",
+        `is nested more than ${MAX_IMPORT_DEPTH} levels deep.`,
+      );
+    }
+    if (!entry.value || typeof entry.value !== "object") continue;
+    const object = entry.value as object;
+    if (seen.has(object)) {
+      fail(
+        "invalid_json_graph",
+        "document",
+        "contains a cyclic or repeated object reference rather than a JSON tree.",
+      );
+    }
+    seen.add(object);
+    const children = Array.isArray(entry.value)
+      ? entry.value
+      : Object.values(entry.value);
+    for (const child of children) {
+      pending.push({ value: child, depth: entry.depth + 1 });
+    }
+  }
 }
 
 function requiredObject(value: unknown, path: string, code: string): JsonObject {
@@ -2369,17 +2421,96 @@ function looksLikePortable(value: unknown): value is JsonObject {
     );
 }
 
+function hasPortableConverterMarkers(value: JsonObject): boolean {
+  return [
+    "json",
+    "status",
+    "importedCount",
+    "included",
+    "omitted",
+  ].some((field) => Object.hasOwn(value, field));
+}
+
+function validConverterIncluded(value: unknown): boolean {
+  if (!isObject(value)) return false;
+  const importedCount = finiteInteger(value.importedCount);
+  const observedCount = finiteInteger(value.observedCount);
+  return typeof value.section === "string"
+    && importedCount !== null
+    && importedCount >= 0
+    && observedCount !== null
+    && observedCount >= 0
+    && typeof value.detail === "string";
+}
+
+function validConverterOmission(value: unknown): boolean {
+  if (!isObject(value)) return false;
+  const observedCount = finiteInteger(value.observedCount);
+  return typeof value.section === "string"
+    && observedCount !== null
+    && observedCount >= 0
+    && typeof value.reason === "string";
+}
+
+function looksLikePortableConverter(
+  value: JsonObject,
+): value is JsonObject & { payload: JsonObject } {
+  const importedCount = finiteInteger(value.importedCount);
+  return looksLikeCompendium(value.payload)
+    && typeof value.json === "string"
+    && (value.status === "ready" || value.status === "partial")
+    && importedCount !== null
+    && importedCount >= 0
+    && Array.isArray(value.included)
+    && value.included.every(validConverterIncluded)
+    && Array.isArray(value.omitted)
+    && value.omitted.every(validConverterOmission);
+}
+
+function normalizePortableConverter(value: JsonObject & { payload: JsonObject }): NormalizedBuild {
+  const normalized = normalizeCompendium(value.payload);
+  diagnostic(
+    normalized.diagnostics,
+    "portable_converter_structural_only",
+    "document.payload",
+    "A complete tli_dump converter result is structural/report-only; its embedded catalog metadata is not an independently attested formula source.",
+  );
+  return {
+    ...normalized,
+    sourceKind: "portable-converter",
+    fingerprint: structuralFingerprint({
+      sourceKind: "portable-converter",
+      payload: normalized.fingerprint,
+      status: value.status,
+      importedCount: value.importedCount,
+      included: value.included,
+      omitted: value.omitted,
+    }),
+  };
+}
+
 /**
  * Normalize a Compendium build, a portable-v3 document, a GUI snapshot
  * containing `.portable`, or a tli_dump converter result containing `.payload`.
  */
 export function normalizeBuildSnapshot(value: unknown): NormalizedBuild {
+  assertImportShapeBudget(value);
   const root = requiredObject(value, "document", "invalid_document");
   let document: JsonObject = root;
   if (Object.hasOwn(root, "portable")) {
     document = requiredObject(root.portable, "document.portable", "invalid_portable_v3");
   } else if (isObject(root.payload)
       && (looksLikeCompendium(root.payload) || Object.hasOwn(root.payload, "loadouts"))) {
+    if (hasPortableConverterMarkers(root)) {
+      if (!looksLikePortableConverter(root)) {
+        fail(
+          "invalid_portable_converter",
+          "document",
+          "contains converter-result markers but not a complete valid tli_dump conversion report.",
+        );
+      }
+      return normalizePortableConverter(root);
+    }
     document = root.payload;
   }
   if (looksLikePortable(document)) {

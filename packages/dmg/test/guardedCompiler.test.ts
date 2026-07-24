@@ -84,6 +84,126 @@ describe("guarded Bing weapon foundation", () => {
     expect(result.provenance).toContainEqual(WEAPON_FOUNDATION_RULE_SOURCE);
   });
 
+  it("scans explicitly equipped Vorax items with the same guarded main-hand rules", () => {
+    const baseline = compileBingWeaponFoundation(bing(), 0);
+    const build = bing();
+    const loadout = build.loadouts.loadouts[0];
+    loadout.vorax.inventory.push({
+      id: "test-vorax-main-hand-modifier",
+      affixes: [
+        {
+          modifierDescription: "Adds 10 - 20 Physical Damage to the Main-Hand Weapon",
+          rolledValues: [],
+        },
+        {
+          modifierDescription: "+10% Main-Hand Weapon Attack Speed",
+          rolledValues: [],
+        },
+      ],
+    });
+    loadout.vorax.equipped.digits = "test-vorax-main-hand-modifier";
+
+    const result = compileBingWeaponFoundation(build, 0);
+    expect(baseline.status).toBe("calculated-partial");
+    expect(result.status).toBe("calculated-partial");
+    if (baseline.status !== "calculated-partial"
+        || result.status !== "calculated-partial") {
+      throw new Error("expected guarded weapon foundations");
+    }
+
+    expect(result.weaponPhysical.average - baseline.weaponPhysical.average)
+      .toBeCloseTo(22.05, 9);
+    expect(result.rawWeaponSourcedHit.average - baseline.rawWeaponSourcedHit.average)
+      .toBeCloseTo(81.3645, 9);
+    expect(result.localWeaponAttackRate).toBeCloseTo(1.65, 9);
+    expect(result.provenance).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        locator: expect.stringContaining(
+          "vorax.digits.affixes[0]: Adds 10 - 20 Physical Damage to the Main-Hand Weapon",
+        ),
+      }),
+      expect.objectContaining({
+        locator: expect.stringContaining(
+          "vorax.digits.affixes[1]: +10% Main-Hand Weapon Attack Speed",
+        ),
+      }),
+    ]));
+  });
+
+  it("distinguishes an explicit empty Vorax projection from a truncated one", () => {
+    const explicitEmpty = bing();
+    explicitEmpty.loadouts.loadouts[0].vorax = {
+      inventory: [],
+      equipped: {},
+    };
+    expect(compileBingWeaponFoundation(explicitEmpty, 0).status)
+      .toBe("calculated-partial");
+
+    const truncated = bing();
+    delete truncated.loadouts.loadouts[0].vorax;
+    expect(compileBingWeaponFoundation(truncated, 0)).toMatchObject({
+      status: "not-calculated",
+      blockers: [{ code: "missing-vorax-equipment-projection" }],
+    });
+
+    const malformed = bing();
+    malformed.loadouts.loadouts[0].vorax.inventory = {};
+    expect(compileBingWeaponFoundation(malformed, 0)).toMatchObject({
+      status: "not-calculated",
+      blockers: [{ code: "missing-vorax-equipment-projection" }],
+    });
+  });
+
+  it("fails malformed or ambiguous parent and equipped-item projections closed", () => {
+    const malformedSkills = bing();
+    malformedSkills.loadouts.loadouts[0].skills.activeSkills = {};
+    expect(() => compileBingWeaponFoundation(malformedSkills, 0)).not.toThrow();
+    expect(compileBingWeaponFoundation(malformedSkills, 0)).toMatchObject({
+      status: "not-calculated",
+      blockers: [{ code: "malformed-active-skill-projection" }],
+    });
+
+    const truncatedSkills = bing();
+    truncatedSkills.loadouts.loadouts[0].skills.activeSkills.pop();
+    expect(compileBingWeaponFoundation(truncatedSkills, 0)).toMatchObject({
+      status: "not-calculated",
+      blockers: [{ code: "malformed-active-skill-projection" }],
+    });
+
+    const implicitParent = bing();
+    delete implicitParent.loadouts.loadouts[0].skills.activeSkills[0].enabled;
+    expect(compileBingWeaponFoundation(implicitParent, 0)).toMatchObject({
+      status: "not-calculated",
+      blockers: [{ code: "missing-hammer-of-ash" }],
+    });
+
+    const duplicateParent = bing();
+    duplicateParent.loadouts.loadouts[0].skills.activeSkills[1] =
+      structuredClone(duplicateParent.loadouts.loadouts[0].skills.activeSkills[0]);
+    expect(compileBingWeaponFoundation(duplicateParent, 0)).toMatchObject({
+      status: "not-calculated",
+      blockers: [{ code: "duplicate-hammer-of-ash" }],
+    });
+
+    for (const mutate of [
+      (weapon: any) => { weapon.baseItem.implicits = {}; },
+      (weapon: any) => { weapon.prefixes = {}; },
+      (weapon: any) => { weapon.legendaryMods = {}; },
+    ]) {
+      const malformedItem = bing();
+      const loadout = malformedItem.loadouts.loadouts[0];
+      const weapon = loadout.gear.inventory.find(
+        (item: any) => item.id === loadout.gear.equipped.mainHand,
+      );
+      mutate(weapon);
+      expect(() => compileBingWeaponFoundation(malformedItem, 0)).not.toThrow();
+      expect(compileBingWeaponFoundation(malformedItem, 0)).toMatchObject({
+        status: "not-calculated",
+        blockers: [{ code: "malformed-equipped-item-projection" }],
+      });
+    }
+  });
+
   it("can prove a weapon-foundation loss without claiming a total DPS loss", () => {
     const before = compileBingWeaponFoundation(bing(), 3);
     const after = compileBingWeaponFoundation(bing(), 4);
@@ -180,7 +300,7 @@ describe("full-calculation safety assessment", () => {
     expect(assessment.ehp.status).toBe("not-calculated");
     expect(assessment.weaponFoundation.status).toBe("not-calculated");
     expect(assessment.dps.blockers.map((blocker) => blocker.code)).toContain(
-      "missing-minion-action-formula",
+      "missing-minion-ai-rotation",
     );
     expect(assessment.weaponFoundation.isDps).toBe(false);
   });

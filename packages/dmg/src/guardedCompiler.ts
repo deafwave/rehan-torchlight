@@ -214,6 +214,10 @@ function finiteNumber(value: unknown): number | null {
   return Number.isFinite(number) ? number : null;
 }
 
+function arrayValue(value: unknown): any[] {
+  return Array.isArray(value) ? value : [];
+}
+
 function fillHashes(template: unknown, rawValues: unknown): string | null {
   if (typeof template !== "string") return null;
   const values = Array.isArray(rawValues)
@@ -242,15 +246,15 @@ function itemLines(item: any, slot: string, includeBaseImplicits = true): TextLi
   };
 
   if (includeBaseImplicits) {
-    for (const [index, implicit] of (item?.baseItem?.implicits ?? []).entries()) {
+    for (const [index, implicit] of arrayValue(item?.baseItem?.implicits).entries()) {
       push(implicit?.description ?? implicit?.rawText, `${slot}.baseItem.implicits[${index}]`);
     }
   }
-  for (const [index, modifier] of (item?.legendaryMods ?? []).entries()) {
+  for (const [index, modifier] of arrayValue(item?.legendaryMods).entries()) {
     push(modifier?.description ?? modifier?.rawText, `${slot}.legendaryMods[${index}]`);
   }
   for (const collection of ["prefixes", "suffixes", "affixes"] as const) {
-    for (const [index, modifier] of (item?.[collection] ?? []).entries()) {
+    for (const [index, modifier] of arrayValue(item?.[collection]).entries()) {
       if (!modifier) continue;
       const source = `${slot}.${collection}[${index}]`;
       const rendered = fillHashes(
@@ -269,11 +273,97 @@ function itemLines(item: any, slot: string, includeBaseImplicits = true): TextLi
 }
 
 function equippedInventory(loadout: any): Map<string, any> {
+  const gear = Array.isArray(loadout?.gear?.inventory)
+    ? loadout.gear.inventory
+    : [];
+  const vorax = Array.isArray(loadout?.vorax?.inventory)
+    ? loadout.vorax.inventory
+    : [];
   return new Map<string, any>(
-    [...(loadout?.gear?.inventory ?? []), ...(loadout?.vorax?.inventory ?? [])]
+    [...gear, ...vorax]
       .filter((item: any) => typeof item?.id === "string")
       .map((item: any) => [item.id, item]),
   );
+}
+
+interface EquippedItem {
+  item: any;
+  sourcePath: string;
+}
+
+function resolvedEquippedItems(
+  loadout: any,
+  inventory: Map<string, any>,
+): EquippedItem[] | CalculationBlocker {
+  for (const projection of ["gear", "vorax"] as const) {
+    const section = loadout?.[projection];
+    if (!section
+        || typeof section !== "object"
+        || Array.isArray(section)
+        || !section.equipped
+        || typeof section.equipped !== "object"
+        || Array.isArray(section.equipped)
+        || (projection === "vorax" && !Array.isArray(section.inventory))) {
+      return {
+        code: projection === "vorax"
+          ? "missing-vorax-equipment-projection"
+          : "missing-equipment-projection",
+        message: `The imported loadout omits the ${projection} inventory/equipped projection.`,
+        evidence: `An explicit empty ${projection}: { inventory: [], equipped: {} } projection is accepted; an absent or malformed projection cannot prove that no equipped item modifies the main hand.`,
+      };
+    }
+  }
+
+  const inventoryPaths = new Map<string, string>();
+  for (const projection of ["gear", "vorax"] as const) {
+    const sectionInventory = Array.isArray(loadout[projection].inventory)
+      ? loadout[projection].inventory
+      : [];
+    for (const [index, item] of sectionInventory.entries()) {
+      if (typeof item?.id !== "string") continue;
+      const path = `${projection}.inventory[${index}]`;
+      const previousPath = inventoryPaths.get(item.id);
+      if (previousPath) {
+        return {
+          code: "duplicate-equipment-inventory-id",
+          message: "Multiple imported equipment records use the same inventory ID.",
+          evidence: `${previousPath}; ${path}; item=${item.id}`,
+        };
+      }
+      inventoryPaths.set(item.id, path);
+    }
+  }
+
+  const resolved: EquippedItem[] = [];
+  const seen = new Map<string, string>();
+  for (const projection of ["gear", "vorax"] as const) {
+    const equipped = loadout[projection].equipped;
+    for (const [slot, rawItemId] of Object.entries(equipped)) {
+      if (rawItemId == null) continue;
+      if (typeof rawItemId !== "string" || !inventory.has(rawItemId)) {
+        return {
+          code: "unresolved-equipped-item",
+          message: "An equipped gear/Vorax item could not be resolved from either imported inventory.",
+          evidence: `${projection}.equipped.${slot}=${String(rawItemId)}`,
+        };
+      }
+      const sourcePath = `${projection}.${slot}`;
+      const previousPath = seen.get(rawItemId);
+      if (previousPath) {
+        return {
+          code: "duplicate-equipped-item-reference",
+          message: "The same inventory item is referenced by multiple equipped slots.",
+          evidence: `${previousPath}; ${sourcePath}; item=${rawItemId}`,
+        };
+      }
+      seen.set(rawItemId, sourcePath);
+      resolved.push({
+        item: inventory.get(rawItemId),
+        sourcePath,
+      });
+    }
+  }
+  return resolved;
 }
 
 function notCalculated(...blockers: CalculationBlocker[]): NotCalculated {
@@ -295,8 +385,30 @@ function loadoutAt(build: any, loadoutIndex: number): any | null {
 }
 
 function activeSkill(loadout: any, skillId: string): any | null {
-  return (loadout?.skills?.activeSkills ?? [])
-    .find((skill: any) => skill?.skillGuid === skillId && skill?.enabled !== false) ?? null;
+  return arrayValue(loadout?.skills?.activeSkills)
+    .find((skill: any) => skill?.skillGuid === skillId && skill?.enabled === true) ?? null;
+}
+
+function malformedItemCollection(
+  item: any,
+  sourcePath: string,
+): CalculationBlocker | null {
+  const collections: Array<[string, unknown]> = [
+    ["baseItem.implicits", item?.baseItem?.implicits],
+    ["legendaryMods", item?.legendaryMods],
+    ["prefixes", item?.prefixes],
+    ["suffixes", item?.suffixes],
+    ["affixes", item?.affixes],
+  ];
+  const malformed = collections.find(([, value]) =>
+    value !== undefined && value !== null && !Array.isArray(value));
+  return malformed
+    ? {
+        code: "malformed-equipped-item-projection",
+        message: "An equipped item has a malformed modifier collection.",
+        evidence: `${sourcePath}.${malformed[0]} must be an array when present`,
+      }
+    : null;
 }
 
 function mainHandBase(
@@ -314,7 +426,7 @@ function mainHandBase(
   let baseDamageLines = 0;
   const provenance: FormulaProvenance[] = [];
 
-  for (const [index, implicit] of (mainHand?.baseItem?.implicits ?? []).entries()) {
+  for (const [index, implicit] of arrayValue(mainHand?.baseItem?.implicits).entries()) {
     const text = String(implicit?.description ?? implicit?.rawText ?? "").trim();
     const damage = /^(\d+(?:\.\d+)?) - (\d+(?:\.\d+)?) (Physical|Cold|Fire|Lightning|Erosion) Damage$/i.exec(text);
     if (damage) {
@@ -367,12 +479,6 @@ export function compileBingWeaponFoundation(
   build: any,
   loadoutIndex = 0,
 ): WeaponFoundationResult {
-  if (build?.patch !== "SS13") {
-    return unavailableFoundation({
-      code: "unsupported-patch",
-      message: `Only the season-pinned SS13 formula table is available (received ${String(build?.patch ?? "no patch")}).`,
-    });
-  }
   const loadout = loadoutAt(build, loadoutIndex);
   if (!loadout) {
     return unavailableFoundation({
@@ -388,14 +494,39 @@ export function compileBingWeaponFoundation(
       evidence: `Observed hero identity: ${String(heroId ?? "missing")}`,
     });
   }
+  if (build?.patch !== "SS13") {
+    return unavailableFoundation({
+      code: "unsupported-patch",
+      message: `Only the season-pinned SS13 formula table is available (received ${String(build?.patch ?? "no patch")}).`,
+    });
+  }
+  const activeSkills = loadout?.skills?.activeSkills;
+  if (!Array.isArray(activeSkills) || activeSkills.length !== 5) {
+    return unavailableFoundation({
+      code: "malformed-active-skill-projection",
+      message: "The final Compendium loadout must expose exactly five active-bar main-skill positions.",
+      evidence: Array.isArray(activeSkills)
+        ? `received ${activeSkills.length} positions`
+        : "activeSkills is not an array",
+    });
+  }
+  const hammerClaims = activeSkills.filter(
+    (candidate: any) => candidate?.skillGuid === HAMMER_OF_ASH_ID,
+  );
+  if (hammerClaims.length > 1) {
+    return unavailableFoundation({
+      code: "duplicate-hammer-of-ash",
+      message: "Hammer of Ash appears in more than one active-skill slot; every duplicate parent is rejected.",
+    });
+  }
   const skill = activeSkill(loadout, HAMMER_OF_ASH_ID);
   if (!skill) {
     return unavailableFoundation({
       code: "missing-hammer-of-ash",
-      message: "The loadout has no enabled Hammer of Ash skill.",
+      message: "The loadout has no explicitly enabled Hammer of Ash skill.",
     });
   }
-  const formula = ss13HammerOfAshFormula(Number(skill.level));
+  const formula = ss13HammerOfAshFormula(skill.level);
   if (!formula) {
     return unavailableFoundation({
       code: "unsupported-skill-level",
@@ -404,6 +535,15 @@ export function compileBingWeaponFoundation(
   }
 
   const inventory = equippedInventory(loadout);
+  const equippedItems = resolvedEquippedItems(loadout, inventory);
+  if (!Array.isArray(equippedItems)) return unavailableFoundation(equippedItems);
+  for (const equippedItem of equippedItems) {
+    const malformed = malformedItemCollection(
+      equippedItem.item,
+      equippedItem.sourcePath,
+    );
+    if (malformed) return unavailableFoundation(malformed);
+  }
   const mainHandId = loadout?.gear?.equipped?.mainHand;
   const mainHand = typeof mainHandId === "string" ? inventory.get(mainHandId) : null;
   if (!mainHand) {
@@ -461,10 +601,8 @@ export function compileBingWeaponFoundation(
     }
   }
 
-  for (const [slot, itemId] of Object.entries<string | null>(loadout?.gear?.equipped ?? {})) {
-    const item = itemId ? inventory.get(itemId) : null;
-    if (!item) continue;
-    for (const line of itemLines(item, `gear.${slot}`)) {
+  for (const equippedItem of equippedItems) {
+    for (const line of itemLines(equippedItem.item, equippedItem.sourcePath)) {
       const added = /^Adds (\d+(?:\.\d+)?) - (\d+(?:\.\d+)?) Physical Damage to the Main-Hand Weapon$/i.exec(line.text);
       if (added) {
         addRange(physical, Number(added[1]), Number(added[2]));
@@ -700,12 +838,12 @@ export function assessCompendiumBuild(
       targetSkillIds: summonIds,
       dps: notCalculated(
         {
-          code: "missing-minion-action-formula",
-          message: "The SS13 summon records expose summon count and player Origin effects, but not the Spirit Magus attack base, action coefficients, cooldowns, or AI rotation.",
+          code: "missing-minion-ai-rotation",
+          message: "The SS13 actor/action tables expose the Spirit Magus base, coefficients, cast times, and cooldowns, but the planner snapshot does not determine which actions its AI uses or when.",
         },
         {
-          code: "missing-minion-actor-state",
-          message: "Growth, merge/Vigilant state, quantity, inherited player bonuses, and minion-scoped support effects need a separate actor compiler.",
+          code: "unsupported-minion-modifier-pools",
+          message: "Growth, Breeze, merge/Vigilant state, quantity, inherited player bonuses, target state, and remaining minion-scoped modifiers are not fully compiled.",
         },
       ),
       ehp: notCalculated(

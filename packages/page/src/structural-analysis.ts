@@ -41,7 +41,7 @@ function primarySkill(loadout: AnalyzedLoadout) {
 }
 
 function skillKey(skill: SkillRow) {
-  return skill.guid || `${skill.kind}:${normalized(skill.name)}`;
+  return skill.slot || skill.guid || `${skill.kind}:${normalized(skill.name)}`;
 }
 
 function supportKey(support: SkillRow["supports"][number]) {

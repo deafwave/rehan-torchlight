@@ -26,7 +26,7 @@ export function createLocalCaptureHandoff(buildCode: string): LocalCaptureHandof
       },
       {
         title: "Export JSON locally",
-        detail: "Use “Copy TLI Compendium JSON” in tli_dump. A portable-v3 file produced with --portable-json is also accepted.",
+        detail: "Use “Copy TLI Compendium JSON” in tli_dump. A portable-v3 file produced with --portable-json is also accepted for structural inspection and its converter coverage report; portable formula inputs remain blocked until catalog attestation is implemented.",
       },
       {
         title: "Bring the export back here",

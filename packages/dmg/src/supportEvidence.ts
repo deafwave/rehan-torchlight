@@ -136,6 +136,7 @@ export type SupportEvidenceComparisonResult =
 
 interface SupportDefinition {
   name: string;
+  expectedType: "support" | "activation_medium" | "magnificent_support";
   compile: (support: any) => SupportEffectTerm[] | CalculationBlocker;
 }
 
@@ -160,8 +161,11 @@ function term(
 }
 
 function levelOf(support: any): number | CalculationBlocker {
-  const level = Number(support?.level);
-  if (Number.isInteger(level) && level >= 1 && level <= 40) return level;
+  const level = support?.level;
+  if (typeof level === "number"
+      && Number.isSafeInteger(level)
+      && level >= 1
+      && level <= 40) return level;
   return {
     code: "unsupported-support-level",
     message: `Support level ${String(support?.level)} is outside the exact SS13 level table's integer 1-40 range.`,
@@ -177,18 +181,29 @@ function levelTerms(
 }
 
 function rollValues(support: any): number[] {
-  return (support?.rollValues ?? [])
-    .map((value: unknown) => Number(value))
-    .filter(Number.isFinite);
+  return Array.isArray(support?.rollValues)
+    ? support.rollValues.filter(
+        (value: unknown): value is number =>
+          typeof value === "number" && Number.isFinite(value),
+      )
+    : [];
 }
 
 const SUPPORTS: Record<string, SupportDefinition> = {
   [ACTIVATION_MOTIONLESS]: {
     name: "Activation Medium: Motionless",
+    expectedType: "activation_medium",
     compile: (support) => {
-      const tier = Number(support?.tier);
-      const [roll] = rollValues(support);
-      if (tier !== 0 || !Number.isFinite(roll) || roll < 12 || roll > 15) {
+      const tier = support?.tier;
+      const rolls = rollValues(support);
+      const [roll] = rolls;
+      if (typeof tier !== "number"
+          || !Number.isSafeInteger(tier)
+          || tier !== 0
+          || support?.rank !== undefined
+          || rolls.length !== 1
+          || !Number.isFinite(roll)
+          || roll < 12 || roll > 15) {
         return {
           code: "unsupported-motionless-roll",
           message: "Motionless evidence currently requires its explicit SS13 tier-0 12-15% roll.",
@@ -206,6 +221,7 @@ const SUPPORTS: Record<string, SupportDefinition> = {
   },
   [MELEE_KNOCKBACK]: {
     name: "Melee Knockback",
+    expectedType: "support",
     compile: (support) => levelTerms(support, (level) => [
       term("knockback-chance", "Knockback chance", 19 + level,
         "utility-only", "supported skill"),
@@ -217,6 +233,7 @@ const SUPPORTS: Record<string, SupportDefinition> = {
   },
   [CRITICAL_STRIKE_DAMAGE]: {
     name: "Critical Strike Damage Increase",
+    expectedType: "support",
     compile: (support) => levelTerms(support, (level) => [
       term("additional-damage-on-crit", "additional damage on Critical Strike",
         25.5 + level * 0.5, "additional-layer-input", "critical hits only",
@@ -225,6 +242,7 @@ const SUPPORTS: Record<string, SupportDefinition> = {
   },
   [STEAMROLL]: {
     name: "Steamroll",
+    expectedType: "support",
     compile: (support) => levelTerms(support, (level) => [
       term("additional-melee-damage", "additional Melee Damage", 30.5 + level * 0.5,
         "additional-layer-input", "melee damage of the supported skill"),
@@ -236,6 +254,7 @@ const SUPPORTS: Record<string, SupportDefinition> = {
   },
   [ELEMENTAL_FUSION]: {
     name: "Elemental Fusion",
+    expectedType: "support",
     compile: (support) => levelTerms(support, (level) => [
       term("additional-elemental-damage", "additional Elemental Damage",
         25 + level * 0.5, "additional-layer-input", "elemental portions of the supported skill",
@@ -244,6 +263,7 @@ const SUPPORTS: Record<string, SupportDefinition> = {
   },
   [SLOW_PROJECTILE]: {
     name: "Slow Projectile",
+    expectedType: "support",
     compile: (support) => levelTerms(support, (level) => [
       term("additional-projectile-speed", "additional Projectile Speed", -30,
         "projectile-geometry-input", "projectiles of the supported skill"),
@@ -253,6 +273,7 @@ const SUPPORTS: Record<string, SupportDefinition> = {
   },
   [PASSIVATION]: {
     name: "Passivation",
+    expectedType: "support",
     compile: (support) => levelTerms(support, (level) => [
       term("maximum-additional-erosion-damage", "up to additional Erosion Damage",
         40 + level, "additional-layer-input", "erosion portions of the supported skill",
@@ -261,12 +282,20 @@ const SUPPORTS: Record<string, SupportDefinition> = {
   },
   [UPHEAVAL_MAGNIFICENT]: {
     name: "Hammer of Ash: Upheaval (Magnificent)",
+    expectedType: "magnificent_support",
     compile: (support) => {
-      const tier = Number(support?.tier);
-      const rank = Number(support?.rank);
-      const [roll] = rollValues(support);
+      const tier = support?.tier;
+      const rank = support?.rank;
+      const rolls = rollValues(support);
+      const [roll] = rolls;
       const bounds = tier === 0 ? [42, 48] : tier === 1 ? [35, 38] : tier === 2 ? [30, 33] : null;
-      if (rank !== 1 || !bounds || !Number.isFinite(roll)
+      if (typeof tier !== "number"
+          || !Number.isSafeInteger(tier)
+          || typeof rank !== "number"
+          || !Number.isSafeInteger(rank)
+          || rank !== 1
+          || rolls.length !== 1
+          || !bounds || !Number.isFinite(roll)
           || roll < bounds[0] || roll > bounds[1]) {
         return {
           code: "unsupported-upheaval-roll",
@@ -294,30 +323,84 @@ function unavailable(...blockers: CalculationBlocker[]): UnavailableMainSkillSup
   return { status: "not-calculated", isDps: false, blockers };
 }
 
-function supportEvidence(support: any): SupportEvidence {
+function unsupportedSupport(
+  supportId: string,
+  supportName: string | null,
+  blocker: CalculationBlocker,
+): UnsupportedSupportTerms {
+  return {
+    status: "unsupported",
+    isDps: false,
+    supportId,
+    supportName,
+    blockers: [blocker],
+  };
+}
+
+function supportEvidence(support: any, sourceLocator: string): SupportEvidence {
+  if (!support || typeof support !== "object" || Array.isArray(support)) {
+    return unsupportedSupport("", null, {
+      code: "malformed-support-record",
+      message: "A non-empty Hammer support socket must contain one Compendium support object.",
+      evidence: sourceLocator,
+    });
+  }
   const supportId = String(support?.supportGuid ?? "");
+  if (!supportId) {
+    return unsupportedSupport("", null, {
+      code: "malformed-support-record",
+      message: "A non-empty Hammer support socket has no supportGuid.",
+      evidence: sourceLocator,
+    });
+  }
   const definition = SUPPORTS[supportId];
   if (!definition) {
-    return {
-      status: "unsupported",
-      isDps: false,
-      supportId,
-      supportName: null,
-      blockers: [{
-        code: "unsupported-support-formula",
-        message: "This support has no source-term compiler in the guarded SS13 Bing subset.",
-      }],
-    };
+    return unsupportedSupport(supportId, null, {
+      code: "unsupported-support-formula",
+      message: "This support has no source-term compiler in the guarded SS13 Bing subset.",
+      evidence: sourceLocator,
+    });
+  }
+  if (support.type !== definition.expectedType) {
+    return unsupportedSupport(supportId, definition.name, {
+      code: "invalid-support-installation",
+      message: `${definition.name} requires support type ${definition.expectedType}; received ${String(support.type ?? "missing")}.`,
+      evidence: sourceLocator,
+    });
+  }
+  if (support.rollValues !== undefined
+      && (!Array.isArray(support.rollValues)
+        || support.rollValues.some((roll: unknown) =>
+          typeof roll !== "number" || !Number.isFinite(roll)))) {
+    return unsupportedSupport(supportId, definition.name, {
+      code: "malformed-support-rolls",
+      message: `${definition.name} has a malformed rollValues projection.`,
+      evidence: sourceLocator,
+    });
+  }
+  if (definition.expectedType === "support"
+      && (support.tier !== undefined
+        || support.rank !== undefined
+        || support.rollValues !== undefined)) {
+    return unsupportedSupport(supportId, definition.name, {
+      code: "invalid-support-encoding",
+      message: `${definition.name} is an ordinary level support and must not carry tier, rank, or rolled-value metadata.`,
+      evidence: sourceLocator,
+    });
+  }
+  if (definition.expectedType !== "support" && support.level !== undefined) {
+    return unsupportedSupport(supportId, definition.name, {
+      code: "invalid-support-encoding",
+      message: `${definition.name} is a rolled special support and must not carry an ordinary support level.`,
+      evidence: sourceLocator,
+    });
   }
   const effects = definition.compile(support);
   if (!Array.isArray(effects)) {
-    return {
-      status: "unsupported",
-      isDps: false,
-      supportId,
-      supportName: definition.name,
-      blockers: [effects],
-    };
+    return unsupportedSupport(supportId, definition.name, {
+      ...effects,
+      evidence: effects.evidence ?? sourceLocator,
+    });
   }
   return {
     status: "source-terms",
@@ -325,12 +408,23 @@ function supportEvidence(support: any): SupportEvidence {
     supportId,
     supportName: definition.name,
     supportType: String(support?.type ?? "support"),
-    level: Number.isInteger(Number(support?.level)) ? Number(support.level) : null,
-    tier: Number.isInteger(Number(support?.tier)) ? Number(support.tier) : null,
-    rank: Number.isInteger(Number(support?.rank)) ? Number(support.rank) : null,
+    level: typeof support?.level === "number" && Number.isSafeInteger(support.level)
+      ? support.level
+      : null,
+    tier: typeof support?.tier === "number" && Number.isSafeInteger(support.tier)
+      ? support.tier
+      : null,
+    rank: typeof support?.rank === "number" && Number.isSafeInteger(support.rank)
+      ? support.rank
+      : null,
     rollValues: rollValues(support),
     effects,
     provenance: [
+      {
+        source: "imported Compendium/tli_dump loadout",
+        locator: sourceLocator,
+        confidence: "source-data",
+      },
       { ...SS13_SUPPORT_FORMULA_SOURCE, locator: `${SS13_SUPPORT_FORMULA_SOURCE.locator}[id=${supportId}]` },
       { ...SS13_SKILL_TEXT_SOURCE, locator: `${SS13_SKILL_TEXT_SOURCE.locator}[id=${supportId}]` },
     ],
@@ -368,12 +462,67 @@ export function compileSs13BingSupportEvidence(
       message: "Support evidence is currently scoped to Bing: Blast Nova.",
     });
   }
-  const hammer = (loadout?.skills?.activeSkills ?? [])
-    .find((skill: any) => skill?.skillGuid === HAMMER_OF_ASH_ID && skill?.enabled !== false);
-  if (!hammer) {
+  const activeSkills = loadout?.skills?.activeSkills;
+  if (!Array.isArray(activeSkills) || activeSkills.length !== 5) {
     return unavailable({
-      code: "missing-hammer-of-ash",
-      message: "The loadout has no enabled Hammer of Ash skill.",
+      code: "malformed-main-skill-layout",
+      message: "The final Compendium loadout must expose exactly five active-bar main-skill positions.",
+      evidence: Array.isArray(activeSkills)
+        ? `received ${activeSkills.length} positions`
+        : "activeSkills is not an array",
+    });
+  }
+  const hammerClaims = activeSkills
+    .map((skill: any, skillIndex: number) => ({ skill, skillIndex }))
+    .filter(({ skill }) => skill?.skillGuid === HAMMER_OF_ASH_ID);
+  if (hammerClaims.length !== 1) {
+    return unavailable({
+      code: hammerClaims.length > 1
+        ? "duplicate-hammer-of-ash"
+        : "missing-hammer-of-ash",
+      message: hammerClaims.length > 1
+        ? "Hammer of Ash appears in more than one active-skill slot; every duplicate parent is rejected."
+        : "The loadout has no Hammer of Ash skill.",
+    });
+  }
+  const [{ skill: hammer, skillIndex: hammerIndex }] = hammerClaims;
+  if (hammer?.enabled !== true) {
+    return unavailable({
+      code: "disabled-hammer-of-ash",
+      message: "Support evidence requires an explicitly enabled Hammer of Ash parent.",
+    });
+  }
+  const supportSlots = hammer.supports;
+  if (!Array.isArray(supportSlots) || supportSlots.length !== 5) {
+    return unavailable({
+      code: "malformed-support-sockets",
+      message: "Hammer of Ash must expose exactly five support socket positions.",
+      evidence: Array.isArray(supportSlots)
+        ? `received ${supportSlots.length} positions`
+        : "supports is not an array",
+    });
+  }
+  const supportClaims = supportSlots
+    .map((support: any, supportIndex: number) => ({
+      support,
+      supportIndex,
+      supportId: typeof support?.supportGuid === "string"
+        ? support.supportGuid
+        : null,
+    }))
+    .filter(({ support }) => support != null);
+  const supportCounts = new Map<string, number>();
+  for (const { supportId } of supportClaims) {
+    if (supportId) {
+      supportCounts.set(supportId, (supportCounts.get(supportId) ?? 0) + 1);
+    }
+  }
+  const duplicateSupport = [...supportCounts.entries()]
+    .find(([, count]) => count > 1);
+  if (duplicateSupport) {
+    return unavailable({
+      code: "duplicate-main-skill-support",
+      message: `Support ${duplicateSupport[0]} appears in more than one Hammer socket; every duplicate installation is rejected.`,
     });
   }
   return {
@@ -384,7 +533,11 @@ export function compileSs13BingSupportEvidence(
     skillId: HAMMER_OF_ASH_ID,
     loadoutIndex,
     loadoutName: String(loadout.name ?? `Loadout ${loadoutIndex + 1}`),
-    supports: (hammer.supports ?? []).filter(Boolean).map(supportEvidence),
+    supports: supportClaims.map(({ support, supportIndex }) =>
+      supportEvidence(
+        support,
+        `loadouts.loadouts[${loadoutIndex}].skills.activeSkills[${hammerIndex}].supports[${supportIndex}]`,
+      )),
     provenance: [SS13_SUPPORT_FORMULA_SOURCE, SS13_SKILL_TEXT_SOURCE],
     warning: "These are exact socket text terms, not net support multipliers or DPS.",
   };

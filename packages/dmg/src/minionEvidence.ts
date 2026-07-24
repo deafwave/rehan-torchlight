@@ -19,6 +19,14 @@ import {
   SS13_SKILL_TEXT_SOURCE,
   SS13_SUPPORT_FORMULA_SOURCE,
 } from "./supportEvidence.js";
+import {
+  compileIrisTraitEvidence,
+  compileSpiritMagusActionSet,
+  type IrisTraitEvidence,
+  type MinionActionEvidence,
+  type MinionSupportEvidence,
+  type SpiritMagusBaseline,
+} from "./minionActionEvidence.js";
 
 export interface SummonFormulaTerm {
   id: string;
@@ -40,6 +48,9 @@ export interface SummonSkillEvidence {
   level: number;
   actor: "minion";
   damageTags: string[];
+  baseline: SpiritMagusBaseline;
+  actions: MinionActionEvidence[];
+  supports: MinionSupportEvidence[];
   terms: SummonFormulaTerm[];
   provenance: FormulaProvenance[];
   minionDps: {
@@ -61,6 +72,7 @@ export interface WuxiaSummonEvidence {
   loadoutIndex: number;
   loadoutName: string;
   summons: SummonSkillEvidence[];
+  heroTraits: IrisTraitEvidence[];
   provenance: FormulaProvenance[];
   warning: string;
 }
@@ -91,6 +103,9 @@ export interface WuxiaSummonEvidenceComparison {
   beforeIndex: number;
   afterIndex: number;
   changes: SummonEvidenceChange[];
+  heroTraitsChanged: boolean;
+  beforeHeroTraits: IrisTraitEvidence[];
+  afterHeroTraits: IrisTraitEvidence[];
   provenance: FormulaProvenance[];
   warning: string;
 }
@@ -130,8 +145,13 @@ function term(
 }
 
 function supportedLevel(skill: any): number | null {
-  const level = Number(skill?.level);
-  return Number.isInteger(level) && level >= 1 && level <= 40 ? level : null;
+  const level = skill?.level;
+  return typeof level === "number"
+    && Number.isSafeInteger(level)
+    && level >= 1
+    && level <= 40
+    ? level
+    : null;
 }
 
 function cappedProgression(level: number, atOne: number): number {
@@ -139,13 +159,30 @@ function cappedProgression(level: number, atOne: number): number {
   return Number(value.toFixed(10));
 }
 
-function compileSummon(skill: any): SummonSkillEvidence | null {
+function importedEvidence(locator: string): FormulaProvenance {
+  return {
+    source: "imported Compendium/tli_dump loadout",
+    locator,
+    confidence: "source-data",
+  };
+}
+
+function compileSummon(
+  skill: any,
+  loadoutIndex: number,
+  collection: "activeSkills" | "passiveSkills",
+  skillIndex: number,
+): SummonSkillEvidence | null {
   const level = supportedLevel(skill);
   if (level === null) return null;
-  const commonDpsBlocker: CalculationBlocker = {
-    code: "missing-minion-action-formula",
-    message: "The summon record has no minion attack base, action coefficients, cooldowns, or AI rotation.",
-  };
+  const skillLocator =
+    `loadouts.loadouts[${loadoutIndex}].skills.${collection}[${skillIndex}]`;
+  const actionSet = compileSpiritMagusActionSet(skill, {
+    patch: "SS13",
+    sourceLocator: skillLocator,
+  });
+  if ("code" in actionSet) return null;
+  const skillInputSource = importedEvidence(skillLocator);
   const commonEhpBlockers: CalculationBlocker[] = [
     {
       code: "origin-uptime-unresolved",
@@ -167,6 +204,9 @@ function compileSummon(skill: any): SummonSkillEvidence | null {
       level,
       actor: "minion",
       damageTags: ["spell", "summon", "physical", "spirit-magus"],
+      baseline: actionSet.baseline,
+      actions: actionSet.actions,
+      supports: actionSet.supports,
       terms: [
         term("summoned-count", "Rock Magi summoned", 1, "count", "summoned-actor"),
         term("maximum-count", "maximum Rock Magi from this skill", 1, "count", "summoned-actor"),
@@ -179,8 +219,13 @@ function compileSummon(skill: any): SummonSkillEvidence | null {
           "per the active Origin state; the source caps the combined line at -50%",
         ),
       ],
-      provenance: [SUMMON_FORMULA_SOURCE, SUMMON_TEXT_SOURCE],
-      minionDps: { status: "not-calculated", blockers: [commonDpsBlocker] },
+      provenance: [
+        skillInputSource,
+        SUMMON_FORMULA_SOURCE,
+        SUMMON_TEXT_SOURCE,
+        ...actionSet.provenance,
+      ],
+      minionDps: { status: "not-calculated", blockers: actionSet.blockers },
       playerEhp: { status: "not-calculated", blockers: commonEhpBlockers },
     };
   }
@@ -194,6 +239,9 @@ function compileSummon(skill: any): SummonSkillEvidence | null {
       level,
       actor: "minion",
       damageTags: ["spell", "summon", "erosion", "spirit-magus"],
+      baseline: actionSet.baseline,
+      actions: actionSet.actions,
+      supports: actionSet.supports,
       terms: [
         term("summoned-count", "Erosion Magi summoned", 1, "count", "summoned-actor"),
         term("maximum-count", "maximum Erosion Magi from this skill", 1, "count", "summoned-actor"),
@@ -213,8 +261,13 @@ function compileSummon(skill: any): SummonSkillEvidence | null {
           "per the active Origin state; the source caps the combined line at -50%",
         ),
       ],
-      provenance: [SUMMON_FORMULA_SOURCE, SUMMON_TEXT_SOURCE],
-      minionDps: { status: "not-calculated", blockers: [commonDpsBlocker] },
+      provenance: [
+        skillInputSource,
+        SUMMON_FORMULA_SOURCE,
+        SUMMON_TEXT_SOURCE,
+        ...actionSet.provenance,
+      ],
+      minionDps: { status: "not-calculated", blockers: actionSet.blockers },
       playerEhp: { status: "not-calculated", blockers: commonEhpBlockers },
     };
   }
@@ -235,16 +288,21 @@ function unavailable(...blockers: CalculationBlocker[]): UnavailableWuxiaSummonE
   };
 }
 
+function uniqueProvenance(sources: FormulaProvenance[]): FormulaProvenance[] {
+  const unique = new Map<string, FormulaProvenance>();
+  for (const source of sources) {
+    unique.set(
+      `${source.source}\u0000${source.locator}\u0000${source.sha256 ?? ""}\u0000${source.confidence ?? ""}`,
+      source,
+    );
+  }
+  return [...unique.values()];
+}
+
 export function compileWuxiaSummonEvidence(
   build: any,
   loadoutIndex = 0,
 ): WuxiaSummonEvidenceResult {
-  if (build?.patch !== "SS13") {
-    return unavailable({
-      code: "unsupported-patch",
-      message: "Summon evidence is season-pinned to SS13.",
-    });
-  }
   const loadout = loadoutAt(build, loadoutIndex);
   if (!loadout) {
     return unavailable({
@@ -259,13 +317,52 @@ export function compileWuxiaSummonEvidence(
       message: "Summon evidence is currently scoped to Iris: Vigilant Breeze.",
     });
   }
-  const relevant = (loadout?.skills?.activeSkills ?? [])
-    .filter((skill: any) =>
-      skill?.enabled !== false
+  if (build?.patch !== "SS13") {
+    return unavailable({
+      code: "unsupported-patch",
+      message: "Summon evidence is season-pinned to SS13.",
+    });
+  }
+  const activeSkills = loadout?.skills?.activeSkills;
+  const passiveSkills = loadout?.skills?.passiveSkills;
+  if (!Array.isArray(activeSkills)
+      || activeSkills.length !== 5
+      || !Array.isArray(passiveSkills)
+      || passiveSkills.length !== 4) {
+    return unavailable({
+      code: "malformed-main-skill-layout",
+      message: "The final Compendium loadout must expose exactly five active-bar and four passive-bar main-skill positions.",
+      evidence: `active=${Array.isArray(activeSkills) ? activeSkills.length : "not-array"}, passive=${Array.isArray(passiveSkills) ? passiveSkills.length : "not-array"}`,
+    });
+  }
+  const relevant = ([
+    ["activeSkills", activeSkills],
+    ["passiveSkills", passiveSkills],
+  ] as const).flatMap(([collection, skills]) =>
+    skills.flatMap((skill: any, skillIndex: number) =>
+      skill?.enabled === true
       && (skill?.skillGuid === SUMMON_ROCK_MAGUS_ID
-        || skill?.skillGuid === SUMMON_EROSION_MAGUS_ID));
+        || skill?.skillGuid === SUMMON_EROSION_MAGUS_ID)
+        ? [{ skill, collection, skillIndex }]
+        : []));
+  const identityCounts = new Map<string, number>();
+  for (const { skill } of relevant) {
+    identityCounts.set(
+      skill.skillGuid,
+      (identityCounts.get(skill.skillGuid) ?? 0) + 1,
+    );
+  }
+  const duplicateIdentity = [...identityCounts.entries()]
+    .find(([, count]) => count !== 1);
+  if (duplicateIdentity) {
+    return unavailable({
+      code: "duplicate-supported-summon",
+      message: `The enabled summon ${duplicateIdentity[0]} appears in more than one skill slot; every duplicate parent is rejected.`,
+    });
+  }
   const summons = relevant
-    .map((skill: any) => compileSummon(skill))
+    .map(({ skill, collection, skillIndex }) =>
+      compileSummon(skill, loadoutIndex, collection, skillIndex))
     .filter((skill: SummonSkillEvidence | null): skill is SummonSkillEvidence => skill !== null);
   if (summons.length !== relevant.length || !summons.length) {
     return unavailable({
@@ -275,6 +372,14 @@ export function compileWuxiaSummonEvidence(
         : "The loadout has no enabled supported Spirit Magus summon skill.",
     });
   }
+  const heroTraits = compileIrisTraitEvidence(loadout);
+  const provenance = uniqueProvenance([
+    SUMMON_FORMULA_SOURCE,
+    SUMMON_TEXT_SOURCE,
+    importedEvidence(`loadouts.loadouts[${loadoutIndex}].hero.traits`),
+    ...summons.flatMap((summon: SummonSkillEvidence) => summon.provenance),
+    ...heroTraits.flatMap((trait) => trait.provenance),
+  ]);
   return {
     status: "source-terms",
     isDps: false,
@@ -284,8 +389,9 @@ export function compileWuxiaSummonEvidence(
     loadoutIndex,
     loadoutName: String(loadout.name ?? `Loadout ${loadoutIndex + 1}`),
     summons,
-    provenance: [SUMMON_FORMULA_SOURCE, SUMMON_TEXT_SOURCE],
-    warning: "These are summon and player-Origin inputs only; they are not minion DPS or total player EHP.",
+    heroTraits,
+    provenance,
+    warning: "These are actor baselines, raw action foundations, sockets, traits, summon, and player-Origin inputs; they are not minion DPS or total player EHP.",
   };
 }
 
@@ -293,8 +399,20 @@ function fingerprint(evidence: SummonSkillEvidence): string {
   return JSON.stringify({
     level: evidence.level,
     tags: evidence.damageTags,
+    baseline: evidence.baseline,
+    actions: evidence.actions,
+    supports: evidence.supports.map((support) =>
+      support.status === "unsupported"
+        ? {
+            ...support,
+            blockers: support.blockers.map(({ code, message }) => ({
+              code,
+              message,
+            })),
+          }
+        : support),
     terms: evidence.terms,
-  });
+  }, (key, value) => key === "provenance" ? undefined : value);
 }
 
 export function compareWuxiaSummonEvidence(
@@ -335,7 +453,13 @@ export function compareWuxiaSummonEvidence(
     beforeIndex,
     afterIndex,
     changes,
-    provenance: [SUMMON_FORMULA_SOURCE, SUMMON_TEXT_SOURCE],
-    warning: "Summon inputs are compared without manufacturing a minion attack model or total EHP.",
+    heroTraitsChanged: JSON.stringify(before.heroTraits) !== JSON.stringify(after.heroTraits),
+    beforeHeroTraits: before.heroTraits,
+    afterHeroTraits: after.heroTraits,
+    provenance: uniqueProvenance([
+      ...before.provenance,
+      ...after.provenance,
+    ]),
+    warning: "Action foundations and source inputs are compared without manufacturing an AI rotation, total minion DPS, or total EHP.",
   };
 }
