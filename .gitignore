@@ -16,3 +16,6 @@ Torchlight Sanity Retention.xlsx
 
 # figure memo (guide evaluator)
 .cache/
+
+# guide advise output (pnpm guide advise writes it in packages/guide)
+advice.json
