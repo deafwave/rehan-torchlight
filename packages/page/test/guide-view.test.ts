@@ -197,3 +197,12 @@ describe('a step reads like a plan, not a model dump', () => {
   });
 });
 
+describe('the price basis is said', () => {
+  it('last league by leg, or live etor prices', () => {
+    expect(renderGuide({ ...g, knobs: { ...g.knobs, priceWindows: { iceShot: 'day1', hoa: 'days1to3' } } })).toContain('day 1 prices for Ice Shot, days 1–3 for Hammer of Ash');
+    const live = renderGuide({ ...g, etor: { season: '1601', fetchedAt: '2026-10-16T03:00:00Z' }, knobs: { ...g.knobs, livePrices: true } });
+    expect(live).toContain('live etor prices');
+    expect(live).toContain('2026-10-16 03:00 UTC');
+  });
+});
+

@@ -86,7 +86,7 @@ async function ideal(ev: Evaluator, K: IdealKnobs, prices: PriceBook | Record<Sk
   let s: State = { ...start.state, level: K.startLevel };
   const notes = [...start.notes];
   const out = (o: Partial<GuideOut>): GuideOut => ({
-    mode: 'ideal', pin: ev.pin, etor: { season: books.season, fetchedAt: books.fetchedAt }, knobs: { ...K, fight: ev.fight, fightNote: ev.fightNote, rollBudget: ev.rollBudget, target: ev.target, ...(!prices || !isBook(prices) ? { priceWindows: LEG_WINDOWS } : {}) }, startNotes: notes, steps: [], notSearched: [], unpriced: [], notCalculable: [], ...o,
+    mode: 'ideal', pin: ev.pin, etor: { season: books.season, fetchedAt: books.fetchedAt }, knobs: { ...K, fight: ev.fight, fightNote: ev.fightNote, rollBudget: ev.rollBudget, target: ev.target, ...(!prices ? { priceWindows: LEG_WINDOWS } : {}) }, startNotes: notes, steps: [], notSearched: [], unpriced: [], notCalculable: [], ...o,
   }) as GuideOut;
 
   const first = await ev.run(s.loadout, [], ctxOfState(s));
@@ -118,7 +118,7 @@ async function ideal(ev: Evaluator, K: IdealKnobs, prices: PriceBook | Record<Sk
   };
   /** the output so far; callers pass `partialRun` until the run completes */
   const snap = (extra: Record<string, unknown>) => out({ start: first.figure, inputs, steps: [...steps], legs: legs.map((l) => ({ ...l })), notSearched: [...notSearched], unpriced: [...unpriced], notCalculable: [...mem.notCalculable],
-    knobs: { ...K, fight: ev.fight, fightNote: ev.fightNote, rollBudget: ev.rollBudget, target: ev.target, ...(!prices || !isBook(prices) ? { priceWindows: LEG_WINDOWS } : {}), ...extra } });
+    knobs: { ...K, fight: ev.fight, fightNote: ev.fightNote, rollBudget: ev.rollBudget, target: ev.target, ...(!prices ? { priceWindows: LEG_WINDOWS } : {}), ...extra } });
   let tried = -1;
   /** the planned switch at `level` (once per level): true once taken as a step; a stop or a switch not offered yet leaves the Ice Shot leg as it is */
   const trySwitch = async (level: number): Promise<boolean> => {

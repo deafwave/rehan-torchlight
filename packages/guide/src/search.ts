@@ -6,6 +6,7 @@ export interface Knobs { churn: number; topK: number; maxRounds: number; refresh
   /** wall-clock minutes; once over, the run stops after the current step (knobs.stoppedBy = 'budget') */ budgetMinutes?: number;
   /** Hammer of Ash's bosses in order and when a leg moves on: once its boss dies within this many seconds (modes.ts BOSS_ORDER) */ targets?: string[]; moveOnSeconds?: number;
   /** echoed only: the prices file laid over etor (cli `--prices` / prices.json) and how many items it names */ prices?: { file: string; overrides: number };
+  /** echoed only: the price basis - etor's live snapshot, or last season's history window per leg */ livePrices?: boolean; priceWindows?: Record<string, string>;
   /** advise: once the FE is spent, steps still searched without the budget (each noted "beyond your FE") */ continueSteps: number;
   /** the best enabler (own figure) is re-solved only when its figure reaches this share of the current kill average (ponytail: a heuristic bound, one
    *  re-solve round would need a 1/floor gain to rescue it; set 0 to always re-solve the best) */ enablerFloor: number }

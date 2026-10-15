@@ -23,7 +23,7 @@ records the pin commit and the memo key includes it. Never edit dps-debug from h
 
 ## Commands
 
-`pnpm guide ideal | advise <export.json> [--fe N] [--season N] | figure <loadout.json> [--skill hoa|iceShot] [--level N]`;
+`pnpm guide ideal [--live] | live [--every M] | advise <export.json> [--fe N] [--season N] | figure <loadout.json> [--skill hoa|iceShot] [--level N]`;
 shared flags `--workers --bombs --roll-budget --budget-minutes --out` (advise: `--budget-minutes` defaults to 30); ideal / advise read your prices
 (`prices.json` at the repository root when it exists, or `--prices <file>`: `{ "<item name>": FE }` over etor, `withPrices`). `pnpm dev` / `pnpm build` / `pnpm test`
 (guide: `tsc --noEmit && vitest run`). `GUIDE_REAL=1` also runs real-figure tests; they and the pool pause while
@@ -39,6 +39,8 @@ the `game.busy` file exists (`DEFAULT_BUSY_FILE` in `engine/pool.ts`, env `GUIDE
   levelling leg, on its dummy. Kill speed (`kill.ts`) = Life per second from 100 % down to the model's cull (CULL1; 0 when blocked), DPS at most the
   model's damage lock (CAP1, 1.5e13 per attacker per victim); time to kill = max Life / kill speed. Defense after the kill goal is not modelled.
 - One enabler per step is re-solved: the best own figure, when it reaches `enablerFloor` (0.25) x the current kill average.
+- Ideal prices: last season's etor history, day 1 for the Ice Shot leg and days 1-3 for Hammer of Ash (`LEG_WINDOWS`); `--live`: etor's live snapshot for
+  both legs; `guide live` reruns that every M minutes (one warm evaluator) and commits + pushes guide.json.
 - Hammer of Ash goes boss by boss (`BOSS_ORDER`: Cube 1, Keegan 2, Cube 2, Cube 3; knob `targets`): a leg moves on once its boss dies within
   `moveOnSeconds` (10); the last runs to the damage lock (the goal), the last stage taking up to `finalSteps`. Each leg is one page tab (`GuideOut.legs`).
   Advise starts on the first boss the character does not kill within `moveOnSeconds`, and by default prices the next-buys list only (`--steps N` adds a plan).

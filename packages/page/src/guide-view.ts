@@ -71,7 +71,10 @@ function goalCard(g: GuideOut): string {
   const last = g.steps.at(-1)?.after ?? g.start, fe = g.steps.at(-1)?.cumFE ?? 0;
   const boss = [g.start, ...g.steps.map((s) => s.after)].find((f) => f.target)?.target;
   const blocked = (g.startNotes ?? []).map((n) => /planned switch cannot be priced yet: (.*)$/.exec(n)?.[1]).find(Boolean);
-  const title = g.mode === 'advise' ? 'Your upgrade plan' : 'Ideal path (last league’s prices)';
+  const W: Record<string, string> = { day1: 'day 1', days1to3: 'days 1–3', week1: 'week 1', week2: 'week 2' }, pw = g.knobs?.priceWindows as Record<string, string> | undefined;
+  const at = (iso: string) => iso.replace('T', ' ').replace(/:\d\d(\.\d+)?Z$/, ' UTC');
+  const title = g.mode === 'advise' ? 'Your upgrade plan' : g.knobs?.livePrices ? `Ideal path (live etor prices, ${esc(at(g.etor.fetchedAt))})`
+    : pw ? `Ideal path (last league’s ${esc(W[pw.iceShot] ?? pw.iceShot)} prices for Ice Shot, ${esc(W[pw.hoa] ?? pw.hoa)} for Hammer of Ash)` : 'Ideal path (last league’s prices)';
   const t = killTime(last);
   return `<div class="gl-goal"><h2>${title}</h2>`
     + `<p class="goal-line">Goal: ${boss ? `kill <b>${esc(bossName(g.legs?.at(-1)?.target ?? boss))}</b> as fast as possible` : 'the fastest kill'}${g.mode === 'advise' && isFinite(Number(g.knobs.fe)) ? ` with your ${fmtFE(Number(g.knobs.fe))} FE` : ''}</p>`
