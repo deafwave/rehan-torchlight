@@ -248,6 +248,14 @@ describe('fix round 1', () => {
     expect(sw.triggered.map((m) => m.label)).toContainEqual(expect.stringMatching(/^Swap .+ for a white .+ \(chest\)$/));
     expect(sw.after.kill).toBe(100);
   });
+  it('the Ice Shot leg ends at switchAt: no Ice Shot step starts at or above it, and the stage says so', async () => {
+    const out = await runIdeal(stubEv(), { ...small, startLevel: 60, endLevel: 65, stepsPerStage: 10, switchAt: 150 });
+    const ice = out.steps.filter((st) => st.move.kind !== 'switch');
+    expect(ice.length).toBeGreaterThan(0);
+    expect(ice.every((st) => st.before.kill < 150)).toBe(true);
+    expect(ice.at(-1)!.after.kill).toBeGreaterThanOrEqual(150);
+    expect(out.startNotes!.some((n) => /^L6[05]: the Ice Shot leg reached .* \(switchAt 1\.5e\+2\): no more Ice Shot upgrades/.test(n))).toBe(true);
+  });
   it('the planned switch waits (named) while the target page does not fit the level points', async () => {
     const out = await runIdeal(stubEv(), { ...small, startLevel: 60, endLevel: 60, stepsPerStage: 0, switchAt: 0 });
     expect(out.steps.some((st) => st.move.kind === 'switch')).toBe(false);

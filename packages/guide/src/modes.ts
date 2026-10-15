@@ -28,7 +28,8 @@ export interface IdealKnobs extends Knobs {
   /** accepted steps per level stage before the path moves on */ stepsPerStage: number;
   startLevel: number; endLevel: number; stageStep: number;
   /** full-level talent budget (below 93 scaled by round(full x (L - 1) / 92)) */ talentPoints: number;
-  /** the planned leg change: at the first stage start whose Ice Shot kill average reaches this (or after a stage with no step), the path switches to
+  /** the Ice Shot leg's end: no Ice Shot step once its kill average reaches this. The planned leg change: at the first stage start whose Ice Shot kill
+   *  average reaches it (or after a stage with no step), the path switches to
    *  Hammer of Ash on the target build's talent page; never a greedy step (its figure is against the boss, the Ice Shot leg's the dummy) */ switchAt: number;
   /** reconfiguration rounds re-solved right after the planned switch (churn 0) */ switchRounds: number;
 }
@@ -115,7 +116,9 @@ async function ideal(ev: Evaluator, K: IdealKnobs, prices: PriceBook | undefined
       for (const m of spent.taken) for (const c of m.changes as { kind: string; node?: number }[]) if (c.kind === 'talent') per.set(c.node!, (per.get(c.node!) ?? 0) + 1);
       notes.push(`L${level}: ${spent.taken.length} new talent point(s) spent: ${[...per].map(([n, p]) => `${talentName(n)} (+${p})`).join(', ')}`); s = spent.state; f = spent.figure; }
     const before = steps.length;
-    for (let n = 0; n < K.stepsPerStage; n++) {
+    const capped = () => s.skill === 'iceShot' && f.kill >= K.switchAt;
+    if (capped()) notes.push(`L${level}: the Ice Shot leg reached ${f.kill.toExponential(2)} (switchAt ${K.switchAt.toExponential(1)}): no more Ice Shot upgrades; the planned switch waits for the target talent page`);
+    for (let n = 0; n < K.stepsPerStage && !capped(); n++) {
       if (overBudget(K, t0, ev)) { stopped = true; break; }
       const ctx = ctxOf(s);
       const r = await step(s, f, ev, acq, recon, ctx, K, mem, talentPointMoves);
@@ -127,9 +130,9 @@ async function ideal(ev: Evaluator, K: IdealKnobs, prices: PriceBook | undefined
     }
     if (stopped || overBudget(K, t0, ev)) { stopped = true; break; }
     if (K.stepsPerStage > 0 && steps.length === before) stalled = true;   // kept until the switch is taken (it may wait for the page to fit)
-    // acquisitions nobody sells: what they would add, never ranked
+    // acquisitions nobody sells: what they would add, never ranked (none for an Ice Shot leg that has ended)
     const ctx = ctxOf(s);
-    const cands = unpricedAcquisitions(acq, s, ctx);
+    const cands = capped() ? [] : unpricedAcquisitions(acq, s, ctx);
     const evs = await Promise.all(cands.map((m) => ev.run(s.loadout, m.changes, { level, skill: m.skill ?? s.skill })));
     ctx.notSearched.forEach((x) => notSearched.add(x));
     cands.map((m, i) => ({ m, e: evs[i].figure }))
