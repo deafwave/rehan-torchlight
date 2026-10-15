@@ -697,6 +697,23 @@ a.t-branch:hover,a.t-branch:focus-visible{text-decoration:underline}
 .respecs{grid-column:2/-1;list-style:none;margin:2px 0 0;padding:0}
 .respecs .respec{font-size:12.5px;color:var(--muted);padding:2px 0 2px 12px;border-left:2px solid var(--ice-line)}
 
+.gl-tabs{margin-top:22px}
+.gl-tabs>input{position:absolute;opacity:0;pointer-events:none}
+.gl-tabs>label{display:inline-block;padding:8px 16px;margin:0 4px -1px 0;border:1px solid var(--ice-line);border-radius:8px 8px 0 0;color:var(--muted);cursor:pointer;font-size:14px}
+.gl-tabs>input:checked+label{color:var(--frost);background:rgba(127,216,232,.12);border-color:var(--frost)}
+.gl-tabs>input:focus-visible+label{outline:2px solid var(--frost);outline-offset:2px}
+.gl-tab-panels{border:1px solid var(--ice-line);border-radius:0 10px 10px 10px;padding:14px 16px}
+.gl-leg{display:none}
+.gl-tabs>input:nth-of-type(1):checked~.gl-tab-panels>.gl-leg:nth-of-type(1),
+.gl-tabs>input:nth-of-type(2):checked~.gl-tab-panels>.gl-leg:nth-of-type(2),
+.gl-tabs>input:nth-of-type(3):checked~.gl-tab-panels>.gl-leg:nth-of-type(3),
+.gl-tabs>input:nth-of-type(4):checked~.gl-tab-panels>.gl-leg:nth-of-type(4),
+.gl-tabs>input:nth-of-type(5):checked~.gl-tab-panels>.gl-leg:nth-of-type(5),
+.gl-tabs>input:nth-of-type(6):checked~.gl-tab-panels>.gl-leg:nth-of-type(6),
+.gl-tabs>input:nth-of-type(7):checked~.gl-tab-panels>.gl-leg:nth-of-type(7),
+.gl-tabs>input:nth-of-type(8):checked~.gl-tab-panels>.gl-leg:nth-of-type(8){display:block}
+.leg-head b{font-family:Marcellus,serif;font-weight:400;font-size:18px;color:var(--frost)}
+.leg-end{margin-top:14px;color:var(--frost);font-size:14px}
 .gl-next{margin-top:22px}
 .gl-next h3{font-family:Marcellus,serif;font-weight:400;font-size:20px;color:var(--frost)}
 .gl-next .muted{font-size:13px;margin:4px 0 10px}

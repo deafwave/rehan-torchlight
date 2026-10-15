@@ -323,7 +323,7 @@ describe('fix round 1', () => {
     const st = fromExport(exportOf({ loadout: { ...idealStart().loadout, skills: [{ sid: 1110, level: 20, place: { kind: 'active', slot: 0 } }] } }));
     const out = await runAdvise(bossEv(), { ...st, loadout: { ...st.loadout, __n: 50 } }, { maxRounds: 1, topK: 2, maxSteps: 1 });
     // kill (100 + 500) x 10 = 6000: Cube 1 in 1.7 s, Keegan 2 in 3.3 s, Cube 2 in 5 s, Cube 3 not: the advice is for Cube 3
-    expect(out.legs).toEqual([{ skill: 'hoa', target: 'cube3', firstStep: 0 }]);
+    expect(out.legs).toEqual([{ skill: 'hoa', target: 'cube3', firstStep: 0, start: out.start }]);
     expect(out.start.target).toBe('cube3');
   });
   it('the advice carries the character it starts from: level, skill, FE, owned items and worn gear by slot', async () => {

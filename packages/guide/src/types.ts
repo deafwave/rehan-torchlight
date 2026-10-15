@@ -93,7 +93,7 @@ export interface Step {
   notes?: string[];
 }
 /** One tab of the guide: a skill against one yardstick (target null = the training dummy), from step `firstStep` on; `end` says why it ended */
-export interface Leg { skill: Skill; target: string | null; firstStep: number; end?: string }
+export interface Leg { skill: Skill; target: string | null; firstStep: number; end?: string; /** the figure the leg begins with, on its own yardstick */ start: Figure }
 export interface NextBuy { label: string; kind: MoveKind; gain: number; kill: number; costFE: number | null; market?: Move['market']; buy?: Move['buy']; partial?: string[] }
 export interface GuideOut {
   mode: 'ideal' | 'advise';

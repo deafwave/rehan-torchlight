@@ -98,7 +98,7 @@ async function ideal(ev: Evaluator, K: IdealKnobs, prices: PriceBook | undefined
   let f = first.figure, stopped = false, halted = false, stalls = 0;   // stalls: stages in a row with no step
   const targets = K.targets ?? BOSS_ORDER, moveOn = K.moveOnSeconds ?? 10;
   let ti = 0;
-  const legs: Leg[] = [{ skill: s.skill, target: null, firstStep: 0 }];
+  const legs: Leg[] = [{ skill: s.skill, target: null, firstStep: 0, start: first.figure }];
   /** while the current boss dies within moveOn seconds its leg ends and the next boss's begins (the last boss stays: its goal is the lock); false = the
    *  next boss's figure stopped */
   const advance = async (): Promise<boolean> => {
@@ -108,7 +108,7 @@ async function ideal(ev: Evaluator, K: IdealKnobs, prices: PriceBook | undefined
       const g = (await ev.run(s.loadout, [], ctxOfState(s))).figure;
       legs[legs.length - 1].end = `${bossName(from)} dies in ${secs(t)} (under ${moveOn} s): move on to ${bossName(targets[ti])}`;
       notes.push(`L${s.level}: ${legs[legs.length - 1].end}`);
-      legs.push({ skill: 'hoa', target: targets[ti], firstStep: steps.length });
+      legs.push({ skill: 'hoa', target: targets[ti], firstStep: steps.length, start: g });
       f = g; mem.scores.clear(); mem.since = 0;
       if (g.stop) { const why = `L${s.level} Hammer of Ash on ${bossName(targets[ti])} cannot be priced yet: ${g.stop}`; mem.notCalculable.add(why); notes.push(why); return false; }
     }
@@ -131,7 +131,7 @@ async function ideal(ev: Evaluator, K: IdealKnobs, prices: PriceBook | undefined
     mem.cumFE += m.costFE!;
     const why = f.kill >= K.switchAt ? `the Ice Shot leg reached ${f.kill.toExponential(2)} (switchAt ${K.switchAt.toExponential(0)})` : `the Ice Shot leg stalled (no step in the last ${STALL_STAGES} stages)`;
     legs[legs.length - 1].end = `${why}: switch to Hammer of Ash`;
-    legs.push({ skill: 'hoa', target: targets[0], firstStep: steps.length });
+    legs.push({ skill: 'hoa', target: targets[0], firstStep: steps.length, start: sp.figure });
     steps.push({ level, move: m, triggered: [...r.taken, ...sp.taken], before: f, after: sp.figure, cumFE: mem.cumFE,
       notes: [`planned switch: ${why}${sp.figure.target ? `; from here figures are against ${bossName(sp.figure.target)}, not the Ice Shot leg's training dummy` : ''}`, ...switchNote(f, sp.figure), ...(level < 93 ? ['talent points assumed'] : [])] });
     s = sp.state; f = sp.figure; mem.scores.clear(); mem.since = 0;   // the Ice Shot scores say nothing about Hammer of Ash
@@ -223,7 +223,7 @@ export async function runAdvise(ev: Evaluator, state: State, k: Partial<Knobs> =
     if (first.figure.stop || killTime(first.figure) > moveOn || t === targets.at(-1)) break;
     passed.push(`${bossName(t)} dies in ${secs(killTime(first.figure))}`);
   }
-  const legs: Leg[] = [{ skill: state.skill, target: state.target ?? null, firstStep: 0 }];
+  const legs: Leg[] = [{ skill: state.skill, target: state.target ?? null, firstStep: 0, start: first.figure }];
   if (first.figure.stop) {
     return { ...base, legs, start: first.figure, inputs: first.inputs, steps: [], notSearched: [], unpriced: [],
       notCalculable: [`${state.skill}${state.target ? ` on ${bossName(state.target)}` : ''} cannot be priced yet: ${first.figure.stop}`] };

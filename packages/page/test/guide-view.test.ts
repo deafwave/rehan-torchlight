@@ -141,3 +141,37 @@ describe('what to buy next (your prices)', () => {
   });
 });
 
+describe('one tab per leg (one yardstick each)', () => {
+  const hoa = (kill: number, target: string) => ({ ...g.start, kill, life100: kill, life0: kill, target, lifeMax: 1e10, lock: 1.5e13 });
+  const steps = g.steps.map((st, i) => (i < 3 ? st : { ...st, before: hoa(1e6 * i, 'cube1'), after: hoa(2e6 * i, 'cube1') }));
+  const legs = [
+    { skill: 'iceShot', target: null, firstStep: 0, start: g.start, end: 'the Ice Shot leg reached 2.56e+8 (switchAt 2e+8): switch to Hammer of Ash' },
+    { skill: 'hoa', target: 'cube1', firstStep: 3, start: hoa(5e5, 'cube1'), end: 'Cube 1 dies in 8.20 s (under 10 s): move on to Keegan 2' },
+    { skill: 'hoa', target: 'keegan2', firstStep: 5, start: hoa(9e6, 'keegan2') },
+  ];
+  const guide = { ...g, steps, legs } as unknown as GuideOut;
+  const html = renderGuide(guide), panels = html.split('<section class="gl-leg"').slice(1);
+  it('a tab per leg, labelled by skill and boss, each panel holding only its own steps on its own yardstick', () => {
+    for (const t of ['Ice Shot', 'Cube 1', 'Keegan 2']) expect(html).toContain(`>${t}</label>`);
+    expect(panels).toHaveLength(3);
+    expect(panels[0]).toContain('training dummy');
+    expect(panels[0]).toContain('value="3"');
+    expect(panels[0]).not.toContain('value="4"');
+    expect(panels[1]).toContain('value="4"');
+    expect(panels[1]).toContain('value="5"');
+    expect(panels[1]).toContain('on Cube 1');
+    expect(panels[1]).toContain('500 K');
+  });
+  it('a leg says why it ended; a leg with no step yet says so', () => {
+    expect(panels[0]).toContain('switch to Hammer of Ash');
+    expect(panels[1]).toContain('move on to Keegan 2');
+    expect(panels[2]).toContain('No upgrade');
+    expect(panels[2]).toContain('9.00 M');
+  });
+  it('advice legs are validated', () => {
+    const adv = { ...guide, mode: 'advise' };
+    expect(parseAdvice(JSON.stringify(adv)).legs).toHaveLength(3);
+    expect(() => parseAdvice(JSON.stringify({ ...adv, legs: [{ ...legs[0], firstStep: 'x' }] }))).toThrow(/legs\[0\]\.firstStep/);
+  });
+});
+

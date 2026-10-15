@@ -6,8 +6,10 @@ export interface Character { level: number; skill: string; fe: number; owned?: n
 export interface GuideOut {
   mode: 'ideal' | 'advise'; pin: string; etor: { season: string; fetchedAt: string }; knobs: Record<string, unknown>;
   start: Figure; inputs?: Record<string, unknown>; startNotes?: string[]; steps: Step[]; notSearched: string[]; unpriced: string[]; notCalculable: string[];
-  character?: Character; next?: NextBuy[]; prices?: Record<string, number | null>;
+  character?: Character; next?: NextBuy[]; prices?: Record<string, number | null>; legs?: Leg[];
 }
+/** one tab: a skill against one yardstick (target null = the training dummy), from step `firstStep` on; `end` = why it ended */
+export interface Leg { skill: string; target: string | null; firstStep: number; end?: string; start: Figure }
 /** advise: one upgrade at the start with its exact figure; `buy` = what is bought and how many (cost = qty x its price) */
 export interface NextBuy { label: string; kind: string; gain: number; kill: number; costFE: number | null; market?: string; buy?: { name: string; qty: number }; partial?: string[] }
 
@@ -38,6 +40,8 @@ export function fmtGain(before: number, after: number): string {
 const SLOT: Record<string, string> = { mainHand: 'weapon', offHand: 'off-hand', ring1: 'ring', ring2: 'ring', necklace: 'necklace', belt: 'belt', gloves: 'gloves', boots: 'boots', helmet: 'helmet', chest: 'chest' };
 const slotName = (s: string) => SLOT[s] ?? s;
 const SKILL: Record<string, string> = { hoa: 'Hammer of Ash', iceShot: 'Ice Shot' };
+const BOSS: Record<string, string> = { cube1: 'Cube 1', cube2: 'Cube 2', cube3: 'Cube 3', keegan: 'Keegan 1', keegan2: 'Keegan 2', void1: 'Void 1', void2: 'Void 2', void3: 'Void 3', traveler: 'the Traveler' };
+export const bossName = (t: string) => BOSS[t] ?? t;
 const ICON: Record<string, string> = { craft: '⚒', unique: '★', support: '◆', gear: '⬆', switch: '⇄', talent: '✦', core: '✦', trait: '✧', prism: '◇', slate: '▦', pact: '◈', kismet: '◈', memory: '◇', skill: '◆' };
 
 /** a move as something to do, in the player's words */
@@ -64,7 +68,7 @@ function goalCard(g: GuideOut): string {
   const title = g.mode === 'advise' ? 'Your upgrade plan' : 'Ideal path (last league’s prices)';
   const t = killTime(last);
   return `<div class="gl-goal"><h2>${title}</h2>`
-    + `<p class="goal-line">Goal: ${boss ? `kill <b>${esc(boss === 'cube3' ? 'Cube 3' : boss)}</b> as fast as possible` : 'the fastest kill'}${g.mode === 'advise' && isFinite(Number(g.knobs.fe)) ? ` with your ${fmtFE(Number(g.knobs.fe))} FE` : ''}</p>`
+    + `<p class="goal-line">Goal: ${boss ? `kill <b>${esc(bossName(g.legs?.at(-1)?.target ?? boss))}</b> as fast as possible` : 'the fastest kill'}${g.mode === 'advise' && isFinite(Number(g.knobs.fe)) ? ` with your ${fmtFE(Number(g.knobs.fe))} FE` : ''}</p>`
     + (Number((g.knobs.prices as { overrides?: unknown } | undefined)?.overrides) > 0 ? `<p class="goal-line">Priced with your prices file: ${Number((g.knobs.prices as { overrides: unknown }).overrides)} items at your price, the rest at etor’s.</p>` : '')
     + `<div class="goal-stats"><div><span class="k">kill speed</span><span class="v">${fmtDps(g.start.kill)} → ${fmtDps(last.kill)}</span></div>`
     + `<div><span class="k">upgrades</span><span class="v">${g.steps.length}</span></div><div><span class="k">FE spent</span><span class="v">${fmtFE(fe)}</span></div>`
@@ -79,8 +83,10 @@ const banner = (k: Record<string, unknown>) =>
   + (k.stoppedBy ? `<p class="gl-banner">Stopped early (${esc(k.stoppedBy)}): the path ends here, not at the end level.</p>` : '');
 
 // ---- progress: kill speed (log) against FE spent (log)
-function chart(g: GuideOut): string {
-  const pts = [{ fe: 0, k: g.start.kill }, ...g.steps.map((s) => ({ fe: s.cumFE, k: s.after.kill }))].filter((p) => p.k > 0);
+type Entry = { s: Step; n: number };
+const entries = (steps: Step[], from = 0): Entry[] => steps.map((s, i) => ({ s, n: from + i + 1 }));
+function chart(start: Figure, es: Entry[], fe0 = 0): string {
+  const pts = [{ fe: 0, k: start.kill }, ...es.map(({ s }) => ({ fe: s.cumFE - fe0, k: s.after.kill }))].filter((p) => p.k > 0);
   if (pts.length < 2) return '';
   const W = 600, H = 120, P = 8, lx = (fe: number) => Math.log10(1 + fe), maxX = Math.max(lx(pts.at(-1)!.fe), 1e-9);
   const ys = pts.map((p) => Math.log10(p.k)), lo = Math.min(...ys), hi = Math.max(...ys), span = hi - lo || 1;
@@ -92,10 +98,10 @@ function chart(g: GuideOut): string {
 }
 
 // ---- the plan, by level stage
-function stages(g: GuideOut): string {
-  const groups: { level: number; steps: { s: Step; n: number }[] }[] = [];
-  g.steps.forEach((s, i) => { const last = groups.at(-1); if (last && last.level === s.level) last.steps.push({ s, n: i + 1 }); else groups.push({ level: s.level, steps: [{ s, n: i + 1 }] }); });
-  if (!groups.length) return `<p class="muted">No upgrade improves the kill speed${g.mode === 'advise' ? ' within your FE' : ''}.</p>`;
+function stages(es: Entry[], mode: GuideOut['mode']): string {
+  const groups: { level: number; steps: Entry[] }[] = [];
+  es.forEach((e) => { const last = groups.at(-1); if (last && last.level === e.s.level) last.steps.push(e); else groups.push({ level: e.s.level, steps: [e] }); });
+  if (!groups.length) return `<p class="muted">No upgrade improves the kill speed${mode === 'advise' ? ' within your FE' : ''}${mode === 'ideal' ? ' here yet' : ''}.</p>`;
   return groups.map((gr, k) => {
     const first = gr.steps[0].s, end = gr.steps.at(-1)!.s, fe = end.cumFE - (first.cumFE - (first.move.costFE ?? 0));
     const rows = gr.steps.map(({ s, n }) => {
@@ -106,7 +112,7 @@ function stages(g: GuideOut): string {
         + `<small>${fmtDps(s.after.kill)}${t ? ` · ${t}` : ''}</small></span>`
         + (s.triggered.length ? `<ul class="respecs">${s.triggered.map((x) => `<li class="respec">then: ${esc(actionText(x))}</li>`).join('')}</ul>` : '') + '</li>';
     }).join('');
-    return `<details class="gl-stage"${k === 0 || g.mode === 'advise' ? ' open' : ''}><summary><span class="lvl">Level ${esc(gr.level)}</span>`
+    return `<details class="gl-stage"${k === 0 || mode === 'advise' ? ' open' : ''}><summary><span class="lvl">Level ${esc(gr.level)}</span>`
       + `<span>${gr.steps.length} upgrade${gr.steps.length > 1 ? 's' : ''}</span><span>${fmtFE(fe)} FE</span><span class="gain">${esc(fmtGain(first.before.kill, end.after.kill))}</span></summary>`
       + `<ol class="gl-steps">${rows}</ol></details>`;
   }).join('');
@@ -173,8 +179,29 @@ export function renderNext(next: NextBuy[], etor: Record<string, number | null>,
     + `<div class="paste-actions"><button data-act="download">Download my prices (prices.json)</button><button data-act="reset" class="quiet">Back to etor prices</button></div></section>`;
 }
 
+// ---- one tab per leg: each leg is one yardstick (Ice Shot on the training dummy, then Hammer of Ash boss by boss), so no chart mixes two
+const legName = (l: Leg) => (l.skill === 'iceShot' ? 'Ice Shot' : l.target ? bossName(l.target) : SKILL[l.skill] ?? l.skill);
+const yardstick = (l: Leg) => (l.target ? `on ${bossName(l.target)}` : 'on the training dummy');
+function legPanel(g: GuideOut, l: Leg, i: number): string {
+  const legs = g.legs!, to = legs[i + 1]?.firstStep ?? g.steps.length, es = entries(g.steps.slice(l.firstStep, to), l.firstStep);
+  const own = es.filter((e) => e.s.move.kind !== 'switch'), end = es.at(-1)?.s.after ?? l.start;
+  const fe0 = es.length ? es[0].s.cumFE - (es[0].s.move.costFE ?? 0) : 0, fe = es.length ? es.at(-1)!.s.cumFE - fe0 : 0, t0 = killTime(l.start), t1 = killTime(end);
+  return `<section class="gl-leg" data-leg="${i}"><div class="leg-head"><b>${esc(SKILL[l.skill] ?? l.skill)} ${esc(yardstick(l))}</b>`
+    + `<div class="goal-stats"><div><span class="k">kill speed</span><span class="v">${fmtDps(l.start.kill)} → ${fmtDps(end.kill)}</span></div>`
+    + (t0 || t1 ? `<div><span class="k">time to kill</span><span class="v">${t0 || '—'} → ${t1 || '—'}</span></div>` : '')
+    + `<div><span class="k">upgrades</span><span class="v">${own.length}</span></div><div><span class="k">FE spent</span><span class="v">${fmtFE(fe)}</span></div></div></div>`
+    + chart(l.start, es.filter((e) => e.s.move.kind !== 'switch'), fe0) + stages(es, g.mode)
+    + (l.end ? `<p class="leg-end">→ ${esc(l.end)}</p>` : '') + '</section>';
+}
+function legTabs(g: GuideOut): string {
+  const id = `leg-${g.mode}`, legs = g.legs!;
+  return `<div class="gl-tabs">${legs.map((l, i) => `<input type="radio" name="${id}" id="${id}-${i}"${i === 0 ? ' checked' : ''}><label for="${id}-${i}">${esc(legName(l))}</label>`).join('')}`
+    + `<div class="gl-tab-panels">${legs.map((l, i) => legPanel(g, l, i)).join('')}</div></div>`;
+}
+
 export function renderGuide(g: GuideOut, mine: Record<string, number> = {}): string {
-  return `<div class="gl-plan">${goalCard(g)}${g.character ? renderCharacter(g.character) : ''}${g.next?.length ? renderNext(g.next, g.prices ?? {}, mine) : ''}${chart(g)}${stages(g)}${huntingList(g)}${details(g)}</div>`;
+  const plan = g.legs?.length ? legTabs(g) : chart(g.start, entries(g.steps)) + stages(entries(g.steps), g.mode);
+  return `<div class="gl-plan">${goalCard(g)}${g.character ? renderCharacter(g.character) : ''}${g.next?.length ? renderNext(g.next, g.prices ?? {}, mine) : ''}${plan}${huntingList(g)}${details(g)}</div>`;
 }
 
 // ---- pasted text: the advice from the poorchlight button, or the raw export
@@ -235,6 +262,18 @@ export function parseAdvice(text: string): GuideOut {
       if (n.costFE !== null && !isNum(n.costFE)) throw bad(`${p}.costFE`, n.costFE);
       if (n.buy !== undefined && !(n.buy && typeof n.buy.name === 'string' && isNum(n.buy.qty))) throw bad(`${p}.buy`, n.buy);
       if (n.partial !== undefined && !isStrs(n.partial)) throw bad(`${p}.partial`, n.partial);
+    });
+  }
+  if (j.legs !== undefined) {
+    if (!Array.isArray(j.legs)) throw bad('legs', j.legs);
+    j.legs.forEach((l: any, i: number) => {
+      const p = `legs[${i}]`;
+      if (!l || typeof l !== 'object') throw bad(p, l);
+      if (typeof l.skill !== 'string') throw bad(`${p}.skill`, l.skill);
+      if (l.target !== null && typeof l.target !== 'string') throw bad(`${p}.target`, l.target);
+      if (!Number.isInteger(l.firstStep) || l.firstStep < 0 || l.firstStep > j.steps.length) throw bad(`${p}.firstStep`, l.firstStep);
+      if (l.end !== undefined && typeof l.end !== 'string') throw bad(`${p}.end`, l.end);
+      checkFigure(l.start, `${p}.start`);
     });
   }
   if (j.prices !== undefined && !(j.prices && typeof j.prices === 'object' && Object.values(j.prices).every((v) => v === null || isNum(v)))) throw bad('prices', j.prices);
