@@ -8,7 +8,7 @@ import { memoryMoves } from './candidates/memories';
 import { pactMoves } from './candidates/pacts';
 import { prismMoves } from './candidates/prisms';
 import { slateMoves } from './candidates/slates';
-import { switchWithPage } from './candidates/switch';
+import { switchWithPage, targetPage } from './candidates/switch';
 import { targetMoves } from './candidates/target';
 import { talentMoves, talentPointMoves } from './candidates/talents';
 import { traitMoves } from './candidates/traits';
@@ -34,11 +34,13 @@ export interface IdealKnobs extends Knobs {
    *  Hammer of Ash on the target build's talent page; never a greedy step (its figure is against the boss, the Ice Shot leg's the dummy) */ switchAt: number;
   /** reconfiguration rounds re-solved right after the planned switch (churn 0) */ switchRounds: number;
   /** steps the last stage may take toward the goal (the last boss at the damage lock) */ finalSteps: number;
+  /** the Hammer of Ash leg assembles the known build (user, 2026-10-15: >= 110T with Ruinous Star): its acquisitions are the target build's pieces, cheapest gain
+   *  per FE first, its talent page the target's re-fitted each stage; false = the full search */ hoaTarget: boolean;
 }
 /** Hammer of Ash's bosses in order of difficulty (dps-debug BOSSES keys; Cube 1 3.2e10 Life, Keegan 2 1.4e13, Cube 2 1.6e13: full damage taken;
  *  Cube 3 5.3e13 at -90 % taken): a leg moves on once its boss dies within `moveOnSeconds`; the last runs to the damage lock (user, 2026-10-15) */
 export const BOSS_ORDER = ['cube1', 'keegan2', 'cube2', 'cube3'];
-export const DEFAULT_IDEAL: IdealKnobs = { ...DEFAULT_KNOBS, stepsPerStage: 25, startLevel: 60, endLevel: 90, stageStep: 5, talentPoints: 108, switchAt: 2e8, switchRounds: 5, finalSteps: 100 };
+export const DEFAULT_IDEAL: IdealKnobs = { ...DEFAULT_KNOBS, stepsPerStage: 25, startLevel: 60, endLevel: 90, stageStep: 5, talentPoints: 108, switchAt: 2e8, switchRounds: 5, finalSteps: 100, hoaTarget: true };
 const BOSS_NAME: Record<string, string> = { cube1: 'Cube 1', cube2: 'Cube 2', cube3: 'Cube 3', keegan: 'Keegan 1', keegan2: 'Keegan 2', void1: 'Void 1', void2: 'Void 2', void3: 'Void 3', traveler: 'the Traveler' };
 export const bossName = (t: string) => BOSS_NAME[t] ?? t;
 const secs = (x: number) => (x < 1 ? `${(x * 1000).toPrecision(2)} ms` : x < 600 ? `${x.toPrecision(3)} s` : x < 36_000 ? `${(x / 60).toPrecision(3)} min`
@@ -82,6 +84,8 @@ async function ideal(ev: Evaluator, K: IdealKnobs, prices: PriceBook | Record<Sk
   const isBook = (p: PriceBook | Record<Skill, PriceBook>): p is PriceBook => typeof (p as PriceBook).price === 'function';
   const legBook: Record<Skill, PriceBook> = !prices ? legBooks(localItems(), localHistory()) : isBook(prices) ? { iceShot: prices, hoa: prices } : prices, books = legBook.iceShot;
   const acq = ALL.map(only(true)), recon = ALL.map(only(false));
+  // the Hammer of Ash leg on the known build's path: its pieces only, the white-base swap the only reconfiguration
+  const gen = (skill: Skill) => (skill === 'hoa' && K.hoaTarget ? { acq: [targetMoves].map(only(true)), recon: [whiteBaseMoves].map(only(false)) } : { acq, recon });
   const ctxOf = (s: State): GenCtx => ({ prices: legBook[s.skill], level: s.level, notSearched: new Set() });
   const start = idealStartNotes(K.startLevel);
   let s: State = { ...start.state, level: K.startLevel };
@@ -129,7 +133,7 @@ async function ideal(ev: Evaluator, K: IdealKnobs, prices: PriceBook | Record<Sk
     const e = m && m.costFE !== null ? await ev.run(s.loadout, m.changes, ctxOfState(hoa)) : null;
     if (e?.figure.stop) { const why = `L${level} planned switch cannot be priced yet: ${e.figure.stop}`; mem.notCalculable.add(why); notes.push(why); return false; }
     if (!m || !e) return false;
-    const r = await resolve({ ...hoa, loadout: e.loadout, fe: s.fe - m.costFE! }, ev, recon, ctx, { ...K, churn: 0, maxRounds: K.switchRounds }, e.figure, mem);
+    const r = await resolve({ ...hoa, loadout: e.loadout, fe: s.fe - m.costFE! }, ev, gen('hoa').recon, ctx, { ...K, churn: 0, maxRounds: K.switchRounds }, e.figure, mem);
     const sp = await spendFree(r.state, ev, talentPointMoves, ctx, K, r.figure, mem);
     mem.cumFE += m.costFE!;
     const why = f.kill >= K.switchAt ? `the Ice Shot leg reached ${f.kill.toExponential(2)} (switchAt ${K.switchAt.toExponential(0)})` : `the Ice Shot leg stalled (no step in the last ${STALL_STAGES} stages)`;
@@ -154,8 +158,16 @@ async function ideal(ev: Evaluator, K: IdealKnobs, prices: PriceBook | Record<Sk
     mem.scores.clear(); mem.since = 0;   // scores of the last stage are no upper bound on this one (new level, new points, new prices)
     if (s.skill === 'iceShot' && (f.kill >= K.switchAt || stalls >= STALL_STAGES) && !overBudget(K, t0, ev)) await trySwitch(level);
     if (halted) break;
+    // on the known build's path the new points go to the target page, re-fitted to the level (one figure, not a point-by-point search)
+    if (s.skill === 'hoa' && K.hoaTarget) {
+      const tp = targetPage(s, level), have = Object.values((s.loadout.talents ?? {}) as Record<string, number>).reduce((a, b) => a + b, 0);
+      if (tp.points > have) {
+        const e = await ev.run(s.loadout, tp.changes, ctxOfState(s));
+        if (!e.figure.stop) { s = { ...s, loadout: e.loadout }; f = e.figure; notes.push(`L${level}: the target talent page re-fitted to ${tp.points} points`); }
+      }
+    }
     // the level-up's new talent points are spent at once, free and ungated: one point is worth less than the churn gate
-    const spent = await spendFree(s, ev, talentPointMoves, ctxOf(s), K, f, mem);
+    const spent = s.skill === 'hoa' && K.hoaTarget ? { taken: [] as Move[], state: s, figure: f } : await spendFree(s, ev, talentPointMoves, ctxOf(s), K, f, mem);
     if (spent.taken.length) { const per = new Map<number, number>();
       for (const m of spent.taken) for (const c of m.changes as { kind: string; node?: number }[]) if (c.kind === 'talent') per.set(c.node!, (per.get(c.node!) ?? 0) + 1);
       notes.push(`L${level}: ${spent.taken.length} new talent point(s) spent: ${[...per].map(([n, p]) => `${talentName(n)} (+${p})`).join(', ')}`); s = spent.state; f = spent.figure; }
@@ -175,7 +187,7 @@ async function ideal(ev: Evaluator, K: IdealKnobs, prices: PriceBook | Record<Sk
         break;
       }
       const ctx = ctxOf(s);
-      const r = await step(s, f, ev, acq, recon, ctx, K, mem, talentPointMoves);
+      const r = await step(s, f, ev, gen(s.skill).acq, gen(s.skill).recon, ctx, K, mem, s.skill === 'hoa' && K.hoaTarget ? undefined : talentPointMoves);
       ctx.notSearched.forEach((x) => notSearched.add(x));
       if (!r) break;
       if (level < 93) r.step.notes = [...(r.step.notes ?? []), 'talent points assumed'];
@@ -188,7 +200,7 @@ async function ideal(ev: Evaluator, K: IdealKnobs, prices: PriceBook | Record<Sk
     if (K.stepsPerStage > 0) stalls = steps.length === before ? stalls + 1 : 0;
     // acquisitions nobody sells: what they would add, never ranked (none for an Ice Shot leg that has ended)
     const ctx = ctxOf(s);
-    const cands = capped() ? [] : unpricedAcquisitions(acq, s, ctx);
+    const cands = capped() ? [] : unpricedAcquisitions(gen(s.skill).acq, s, ctx);
     const evs = await Promise.all(cands.map((m) => ev.run(s.loadout, m.changes, ctxOfState(s, m.skill ?? s.skill))));
     ctx.notSearched.forEach((x) => notSearched.add(x));
     cands.map((m, i) => ({ m, e: evs[i].figure }))

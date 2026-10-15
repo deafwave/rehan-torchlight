@@ -355,6 +355,16 @@ describe('fix round 1', () => {
   it('the ideal guide ends at hero level 90 (user, 2026-10-15)', () => {
     expect(DEFAULT_IDEAL.endLevel).toBe(90);
   });
+  it("the Hammer of Ash leg assembles the known build: its steps are the target build's pieces, and a new stage re-fits the target talent page", async () => {
+    const runs: { changes: unknown[]; level: number }[] = [];
+    const out = await runIdeal(stubEv(undefined, { runs }), { ...small, startLevel: 85, endLevel: 90, stepsPerStage: 3, switchAt: 150 });
+    const i = out.steps.findIndex((st) => st.move.kind === 'switch');
+    expect(i).toBeGreaterThan(0);
+    const hoa = out.steps.slice(i + 1);
+    expect(hoa.length).toBeGreaterThan(0);
+    expect(hoa.every((st) => /^Target[: ]/.test(st.move.label) || /^Swap .+ for a white /.test(st.move.label))).toBe(true);
+    expect(out.startNotes!.some((n) => /^L90: the target talent page re-fitted to \d+ points$/.test(n))).toBe(true);
+  }, 300_000);
   it('advice starts on the first boss the character does not kill within moveOnSeconds', async () => {
     const st = fromExport(exportOf({ loadout: { ...idealStart().loadout, skills: [{ sid: 1110, level: 20, place: { kind: 'active', slot: 0 } }] } }));
     const out = await runAdvise(bossEv(), { ...st, loadout: { ...st.loadout, __n: 50 } }, { maxRounds: 1, topK: 2, maxSteps: 1 });
