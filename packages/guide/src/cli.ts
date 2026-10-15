@@ -2,6 +2,7 @@
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { writeAtomic } from './atomic';
+import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { mainSid } from './candidates/gems';
 import { createEvaluator, DEFAULT_FIGHT } from './engine/pool';
@@ -11,8 +12,10 @@ import { fromExport } from './start';
 import type { GuideOut, PriceBook, Skill } from './types';
 
 const [cmd, ...args] = process.argv.slice(2);
-const flag = (name: string) => { const i = args.indexOf(`--${name}`); return i < 0 ? undefined : args[i + 1]; };
-const positional = args.find((a, i) => !a.startsWith('--') && !args[i - 1]?.startsWith('--'));
+/** a path the caller typed, from the caller's directory (`pnpm guide` runs in packages/guide; pnpm keeps the caller's in INIT_CWD) */
+const at = (p: string | undefined) => (p === undefined ? undefined : resolve(process.env.INIT_CWD ?? process.cwd(), p));
+const flag = (name: string) => { const i = args.indexOf(`--${name}`); const v = i < 0 ? undefined : args[i + 1]; return ['out', 'prices'].includes(name) ? at(v) : v; };
+const positional = at(args.find((a, i) => !a.startsWith('--') && !args[i - 1]?.startsWith('--')));
 const num = (name: string) => { const v = flag(name); if (v !== undefined && !Number.isFinite(Number(v))) throw new Error(`--${name} needs a number`); return v === undefined ? undefined : Number(v); };
 const readJson = (p: string) => JSON.parse(readFileSync(p, 'utf8'));
 const bombs = num('bombs');
