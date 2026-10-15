@@ -10,7 +10,9 @@ import type { Change, EvalCtx, Evaluated, Evaluator, Loadout } from '../types';
 import { createMemo, memoKey } from './memo';
 
 /** dps-debug lines that are notes, not omissions (their numbers vary per build): never part of `partial` */
-export const INFO: (string | RegExp)[] = ['price:', /^held buff \d+ \(.*\) not carried: no piece of this build adds it/];
+export const INFO: (string | RegExp)[] = ['price:', /^held buff \d+ \(.*\) not carried: no piece of this build adds it/,
+  // U2-MIX (dps-debug buffrate.ts): how a buff in a mix of states was priced - the expectation over its stack states - not an omission
+  'priced as the expectation over a mix of states (U2-MIX)', 'U2-MIX joint states ', /^the target's buff \(IN1\): .* stated at \d+ of its mix of states \(U2-MIX/];
 
 /** Stated fight inputs (dps-debug Carry.fight): `bombs` = bombs on the battlefield, `inputs` = other named per-cast / fight inputs */
 export interface Fight { bombs?: number; inputs?: Record<string, number> }

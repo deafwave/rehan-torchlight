@@ -77,6 +77,16 @@ describe('evaluator (stub workers)', () => {
     expect(rankable(a, b)).toBe(true);
     expect(INFO[0]).toBe('price:');
   });
+  it("U2-MIX's lines say how a mixed buff was priced (notes); a mix still not priced and a target buff not derived stay omissions", async () => {
+    const notes = ['priced as the expectation over a mix of states (U2-MIX): buff 15184 (50355540 row 1, 50355540 row 2): 2.97255 adds/s x 5 stack(s), life 8 s, cap 40',
+      'priced as the expectation over a mix of states (U2-MIX), on the target: buff 330 (636982 row 1): 2.97255 adds/s x 1 stack(s), life 3 s, cap 1',
+      'U2-MIX joint states of buffs 15184,330 (the product of their weights; states under 0.000001 / 8 taken with all at the cap): 5',
+      "the target's buff (IN1): buff 330 (636982 row 1): stated at 1 of its mix of states (U2-MIX: 1: 9.999e-1, 0: 1.340e-4)"];
+    const kept = ["the target's buff not derived (IN1): buff 260 (103010015 row 1, 103010015 row 1): single-slot policy 1 with a cap of 5",
+      'buff 11730 (13523221 row 1): 2.6 adds/s over a life of 2 s leave P(below the cap 3) = 2.6e-2: a mix of states, not a point'];
+    const ev = await createEvaluator({ factory: stub(() => ({ life100: 200, life0: 100, left: [], needs: [...notes, ...kept] })).factory, workers: 1, pin: 'p' });
+    expect((await ev.run(lo, [], ctx)).figure.partial).toEqual(kept);
+  });
   it('held buff "not carried" lines are informational; "left off" stays an omission', async () => {
     const off = 'held buffs left off: 11210';
     const ev = await createEvaluator({ factory: stub(() => ({ life100: 200, life0: 100, left: [], needs: ['held buff 390 (zhanyi) not carried: no piece of this build adds it', off, 'price: x'] })).factory, workers: 1, pin: 'p' });
