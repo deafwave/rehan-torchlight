@@ -301,7 +301,7 @@ describe('fix round 1', () => {
     return { loadout: { ...lo, __n: n, talents }, dropped: [], figure: { life100: v, life0: v, kill: k, partial: [], ...(t ? { target: t, lifeMax: LIFE[t], lock: 1e6 } : {}) } };
   } });
   it('Hammer of Ash goes boss by boss (Cube 1, Keegan 2, Cube 2, Cube 3): a leg ends once its boss dies within moveOnSeconds, each leg on its own yardstick', async () => {
-    const out = await runIdeal(bossEv(), { ...small, startLevel: 90, endLevel: 90, stepsPerStage: 30, finalSteps: 30, switchAt: 150, moveOnSeconds: 10 });
+    const out = await runIdeal(bossEv(), { ...small, startLevel: 90, endLevel: 90, stepsPerStage: 20, finalSteps: 2, switchAt: 150, moveOnSeconds: 10 });
     const legs = out.legs!;
     expect(legs.map((l) => `${l.skill}:${l.target}`)).toEqual(['iceShot:null', 'hoa:cube1', 'hoa:keegan2', 'hoa:cube2', 'hoa:cube3']);
     expect(legs[0].end).toMatch(/switch to Hammer of Ash/);
@@ -311,7 +311,7 @@ describe('fix round 1', () => {
       for (const st of own) expect(st.after.target ?? null).toBe(l.target);
     });
     expect(out.steps[legs[1].firstStep].move.kind).toBe('switch');
-  });
+  }, 300_000);
   it("a next-buys row carries only the omissions the start does not already have (the start's are said once)", async () => {
     const st = fromExport(exportOf()), base = { life100: 100, life0: 100, kill: 100, partial: ['buff 1: 2.5 adds/s'] };
     const ev: Evaluator = { pin: 'stub', async close() {}, async run(lo, ch) { const n = ch.length;

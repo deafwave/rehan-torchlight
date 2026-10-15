@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import history from './fixtures/etor-history-mini.json';
 import items from './fixtures/etor-items-mini.json';
 import live from './fixtures/etor-snapshot-live.json';
-import { fetchSeason, fetchSnapshot, historyBook, snapshotBook, withPrices, type EtorHistory, type EtorItems } from '../src/pricing';
+import { fetchSeason, fetchSnapshot, historyBook, legBooks, LEG_WINDOWS, snapshotBook, withPrices, type EtorHistory, type EtorItems } from '../src/pricing';
 
 const I = items as EtorItems, H = history as EtorHistory;
 const book = historyBook(I, H);
@@ -32,6 +32,16 @@ describe('historyBook', () => {
   it('1 FE placeholder with no history is null; a real price with no history is kept', () => {
     expect(book.price('God of War\'s Divinity', 60)).toBeNull();
     expect(book.price(400000, 60)).toBe(0.037);
+  });
+});
+
+describe('legBooks (one price window per leg)', () => {
+  it('Ice Shot at day-1 prices, Hammer of Ash at days 1-3, whatever the level; a missing window falls to the later ones', () => {
+    expect(LEG_WINDOWS).toEqual({ iceShot: 'day1', hoa: 'days1to3' });
+    const b = legBooks(I, H), h = H.items['110101']!;
+    for (const lvl of [60, 85, 100]) { expect(b.iceShot.price(110101, lvl)).toBe(h.day1); expect(b.hoa.price(110101, lvl)).toBe(h.days1to3); }
+    const gap = { items: { '110104': { ...H.items['110104']!, days1to3: null } } };
+    expect(legBooks(I, gap).hoa.price(110104, 95)).toBe(H.items['110104']!.week1);
   });
 });
 

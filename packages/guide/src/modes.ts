@@ -12,13 +12,13 @@ import { switchWithPage } from './candidates/switch';
 import { targetMoves } from './candidates/target';
 import { talentMoves, talentPointMoves } from './candidates/talents';
 import { traitMoves } from './candidates/traits';
-import { type EtorHistory, type EtorItems, historyBook, snapshotBook } from './pricing';
+import { type EtorHistory, type EtorItems, legBooks, LEG_WINDOWS, snapshotBook } from './pricing';
 import { CULL_NOT_COUNTED } from './kill';
 import { ctxOfState, pieceKey, DEFAULT_KNOBS, type Knobs, newMem, overBudget, path, rankableMove, resolve, spendFree, step, switchNote } from './search';
 import { ICE_SHOT_INPUTS, idealStartNotes } from './start';
 import { setTalentPoints } from './talentRules';
 import { talentName } from './names';
-import type { Evaluator, Figure, GenCtx, Generator, GuideOut, Leg, Move, NextBuy, PriceBook, State, Step } from './types';
+import type { Evaluator, Figure, GenCtx, Generator, GuideOut, Leg, Move, NextBuy, PriceBook, Skill, State, Step } from './types';
 
 export const SEASON = 1501;
 const etorFile = (f: string) => JSON.parse(readFileSync(fileURLToPath(new URL(`../../../data/etor/${f}_${SEASON}.json`, import.meta.url)), 'utf8'));
@@ -69,22 +69,24 @@ export function unpricedAcquisitions(acq: Generator[], s: State, ctx: GenCtx): M
   return acq.flatMap((g) => g(s, ctx)).filter((m) => m.minLevel <= s.level && m.costFE === null && !seen.has(JSON.stringify(m.changes)) && seen.add(JSON.stringify(m.changes)));
 }
 
-export async function runIdeal(ev: Evaluator, k: Partial<IdealKnobs> = {}, prices?: PriceBook, onStep?: (out: GuideOut) => void): Promise<GuideOut> {
+/** `prices`: one book for both legs (tests), or one per leg; default `legBooks` (Ice Shot at day-1 prices, Hammer of Ash at days 1-3) */
+export async function runIdeal(ev: Evaluator, k: Partial<IdealKnobs> = {}, prices?: PriceBook | Record<Skill, PriceBook>, onStep?: (out: GuideOut) => void): Promise<GuideOut> {
   const K = { ...DEFAULT_IDEAL, ...k };
   setTalentPoints(K.talentPoints);
   try { return await ideal(ev, K, prices, onStep); } finally { setTalentPoints(DEFAULT_IDEAL.talentPoints); }
 }
 
-async function ideal(ev: Evaluator, K: IdealKnobs, prices: PriceBook | undefined, onStep?: (out: GuideOut) => void): Promise<GuideOut> {
+async function ideal(ev: Evaluator, K: IdealKnobs, prices: PriceBook | Record<Skill, PriceBook> | undefined, onStep?: (out: GuideOut) => void): Promise<GuideOut> {
   const t0 = Date.now();
-  const books = prices ?? historyBook(localItems(), localHistory());
+  const isBook = (p: PriceBook | Record<Skill, PriceBook>): p is PriceBook => typeof (p as PriceBook).price === 'function';
+  const legBook: Record<Skill, PriceBook> = !prices ? legBooks(localItems(), localHistory()) : isBook(prices) ? { iceShot: prices, hoa: prices } : prices, books = legBook.iceShot;
   const acq = ALL.map(only(true)), recon = ALL.map(only(false));
-  const ctxOf = (s: State): GenCtx => ({ prices: books, level: s.level, notSearched: new Set() });
+  const ctxOf = (s: State): GenCtx => ({ prices: legBook[s.skill], level: s.level, notSearched: new Set() });
   const start = idealStartNotes(K.startLevel);
   let s: State = { ...start.state, level: K.startLevel };
   const notes = [...start.notes];
   const out = (o: Partial<GuideOut>): GuideOut => ({
-    mode: 'ideal', pin: ev.pin, etor: { season: books.season, fetchedAt: books.fetchedAt }, knobs: { ...K, fight: ev.fight, fightNote: ev.fightNote, rollBudget: ev.rollBudget, target: ev.target }, startNotes: notes, steps: [], notSearched: [], unpriced: [], notCalculable: [], ...o,
+    mode: 'ideal', pin: ev.pin, etor: { season: books.season, fetchedAt: books.fetchedAt }, knobs: { ...K, fight: ev.fight, fightNote: ev.fightNote, rollBudget: ev.rollBudget, target: ev.target, ...(!prices || !isBook(prices) ? { priceWindows: LEG_WINDOWS } : {}) }, startNotes: notes, steps: [], notSearched: [], unpriced: [], notCalculable: [], ...o,
   }) as GuideOut;
 
   const first = await ev.run(s.loadout, [], ctxOfState(s));
@@ -116,12 +118,12 @@ async function ideal(ev: Evaluator, K: IdealKnobs, prices: PriceBook | undefined
   };
   /** the output so far; callers pass `partialRun` until the run completes */
   const snap = (extra: Record<string, unknown>) => out({ start: first.figure, inputs, steps: [...steps], legs: legs.map((l) => ({ ...l })), notSearched: [...notSearched], unpriced: [...unpriced], notCalculable: [...mem.notCalculable],
-    knobs: { ...K, fight: ev.fight, fightNote: ev.fightNote, rollBudget: ev.rollBudget, target: ev.target, ...extra } });
+    knobs: { ...K, fight: ev.fight, fightNote: ev.fightNote, rollBudget: ev.rollBudget, target: ev.target, ...(!prices || !isBook(prices) ? { priceWindows: LEG_WINDOWS } : {}), ...extra } });
   let tried = -1;
   /** the planned switch at `level` (once per level): true once taken as a step; a stop or a switch not offered yet leaves the Ice Shot leg as it is */
   const trySwitch = async (level: number): Promise<boolean> => {
     tried = level;
-    const ctx = ctxOf(s), m = switchWithPage(s, ctx), hoa: State = { ...s, skill: 'hoa', target: targets[0] };
+    const hoa: State = { ...s, skill: 'hoa', target: targets[0] }, ctx = { ...ctxOf(hoa), level }, m = switchWithPage(s, ctx);   // the switch is the Hammer of Ash leg's first buy
     ctx.notSearched.forEach((x) => notSearched.add(x));
     const e = m && m.costFE !== null ? await ev.run(s.loadout, m.changes, ctxOfState(hoa)) : null;
     if (e?.figure.stop) { const why = `L${level} planned switch cannot be priced yet: ${e.figure.stop}`; mem.notCalculable.add(why); notes.push(why); return false; }

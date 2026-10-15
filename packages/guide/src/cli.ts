@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { mainSid } from './candidates/gems';
 import { createEvaluator, DEFAULT_FIGHT } from './engine/pool';
 import { localHistory, localItems, runAdvise, runIdeal } from './modes';
-import { fetchSeason, fetchSnapshot, historyBook, snapshotBook, withPrices } from './pricing';
+import { fetchSeason, fetchSnapshot, legBooks, snapshotBook, withPrices } from './pricing';
 import { fromExport } from './start';
 import type { GuideOut, PriceBook, Skill } from './types';
 
@@ -26,29 +26,32 @@ const dump = (o: GuideOut) => JSON.stringify(o, null, 1) + '\n';
 const evaluator = () => createEvaluator({ workers: num('workers'),
   onBusy: (p) => console.log(p ? 'game busy: evaluator paused' : 'game free: evaluator resumed'), ...(rollBudget === undefined ? {} : { rollBudget }), ...(flag('target') === undefined ? {} : { target: flag('target') === 'dummy' ? null : flag('target') }), ...(bombs === undefined ? {} : { fight: { ...DEFAULT_FIGHT, bombs } }), memoDir: fileURLToPath(new URL('../.cache/memo', import.meta.url)) });
 
-/** your prices over a book: --prices <file>, else prices.json at the repository root when it exists; the knobs say which file and how many */
-function yours(b: PriceBook): { book: PriceBook; knobs: { prices?: { file: string; overrides: number } } } {
+/** your prices, laid over any book: --prices <file>, else prices.json at the repository root when it exists; the knobs say which file and how many */
+function yours(): { wrap: (b: PriceBook) => PriceBook; knobs: { prices?: { file: string; overrides: number } } } {
   const file = flag('prices') ?? fileURLToPath(new URL('../../../prices.json', import.meta.url));
-  if (!flag('prices') && !existsSync(file)) return { book: b, knobs: {} };
+  if (!flag('prices') && !existsSync(file)) return { wrap: (b) => b, knobs: {} };
   const mine = readJson(file);
   if (!mine || typeof mine !== 'object' || Array.isArray(mine)) throw new Error(`${file}: expected { "<item name>": FE, ... }`);
-  const r = withPrices(b, mine);
-  if (r.unknown.length) console.warn(`prices: not on etor, used as game names (check the spelling): ${r.unknown.join(', ')}`);
   console.log(`prices: ${Object.keys(mine).length} item(s) from ${file}`);
-  return { book: r.book, knobs: { prices: { file, overrides: Object.keys(mine).length } } };
+  let warned = false;
+  return { knobs: { prices: { file, overrides: Object.keys(mine).length } }, wrap: (b) => {
+    const r = withPrices(b, mine);
+    if (r.unknown.length && !warned) { warned = true; console.warn(`prices: not on etor, used as game names (check the spelling): ${r.unknown.join(', ')}`); }
+    return r.book;
+  } };
 }
 
 async function main() {
   if (cmd === 'ideal') {
     const out = flag('out') ?? fileURLToPath(new URL('../../page/src/data/guide.json', import.meta.url));
-    const p = yours(historyBook(localItems(), localHistory()));
+    const p = yours(), lb = legBooks(localItems(), localHistory());
     const ev = await evaluator();
-    try { final(out, dump(await runIdeal(ev, { ...(budgetMinutes === undefined ? {} : { budgetMinutes }), ...p.knobs }, p.book, (o) => writeAtomic(out, dump(o))))); } finally { await ev.close(); }
+    try { final(out, dump(await runIdeal(ev, { ...(budgetMinutes === undefined ? {} : { budgetMinutes }), ...p.knobs }, { iceShot: p.wrap(lb.iceShot), hoa: p.wrap(lb.hoa) }, (o) => writeAtomic(out, dump(o))))); } finally { await ev.close(); }
     console.log(`wrote ${out}`);
   } else if (cmd === 'advise') {
     if (!positional) throw new Error('usage: guide advise <export.json> [--fe N] [--out path]');
     const state = fromExport(readJson(positional), num('fe'));
-    const prices = yours(snapshotBook(await Promise.resolve().then(async () => fetchSnapshot(num('season') ?? await fetchSeason().catch((e: Error) => { const s = Number(localItems().seasonId); console.warn(`${e.message}: using season ${s}'s last etor prices`); return s; }), localItems())).catch((e: Error) => { console.warn(`live etor prices unavailable (${e.message}); using the stored snapshot`); return localItems(); })));
+    const mine = yours(), prices = { knobs: mine.knobs, book: mine.wrap(snapshotBook(await Promise.resolve().then(async () => fetchSnapshot(num('season') ?? await fetchSeason().catch((e: Error) => { const s = Number(localItems().seasonId); console.warn(`${e.message}: using season ${s}'s last etor prices`); return s; }), localItems())).catch((e: Error) => { console.warn(`live etor prices unavailable (${e.message}); using the stored snapshot`); return localItems(); }))) };
     const ev = await evaluator();
     const out = flag('out') ?? 'advice.json';
     // the export button waits on this: by default the next-buys list only (every upgrade's exact gain, ranked on the page by your prices); --steps N adds a

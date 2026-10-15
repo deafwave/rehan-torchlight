@@ -1,4 +1,4 @@
-import type { PriceBook } from './types';
+import type { PriceBook, Skill } from './types';
 
 /** Shapes of data/etor/items_<season>.json and history_<season>.json. The files carry ids/seasonId as strings and
  *  `price: null` for unpriced rows, so both are accepted. */
@@ -49,6 +49,13 @@ export function historyBook(items: EtorItems, history: EtorHistory, windows = WI
     for (const k of [...ORDER.slice(ORDER.indexOf(w)), 'last' as const]) if (h[k] != null) return h[k];
     return null;
   });
+}
+
+/** The ideal guide's price window per leg (user, 2026-10-15): the Ice Shot leg buys at the season's day-1 prices, the Hammer of Ash leg at days 1-3 */
+export const LEG_WINDOWS: Record<Skill, Window> = { iceShot: 'day1', hoa: 'days1to3' };
+/** one history book per leg, its window at every level (a missing window falls to the later ones, then `last`) */
+export function legBooks(items: EtorItems, history: EtorHistory): Record<Skill, PriceBook> {
+  return { iceShot: historyBook(items, history, [{ maxLevel: Infinity, window: LEG_WINDOWS.iceShot }]), hoa: historyBook(items, history, [{ maxLevel: Infinity, window: LEG_WINDOWS.hoa }]) };
 }
 
 /** Live mode: the current snapshot price (level ignored); null and the 1-FE placeholder are unpriced. */
