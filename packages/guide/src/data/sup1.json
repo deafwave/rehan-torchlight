@@ -1,0 +1,407 @@
+{
+ "_about": "SUP1 support census (dps-debug .superpowers/sdd/2026-10-12-exact-dps-model-m2/task-SUP1-supports.csv, generated 2026-10-14): support stones with status COMPILES for the skill (G2 tag gate ALLOWED, compiled, priced effect). sid = config_skill_stone id = the loadout gem sid; name = item_base|name|<support_item>. Stones with no English item name are left out (not tradeable gems).",
+ "hoa": [
+  {
+   "sid": 10002010,
+   "name": "Multiple Projectiles"
+  },
+  {
+   "sid": 10002020,
+   "name": "Greater Multiple Projectiles"
+  },
+  {
+   "sid": 10002050,
+   "name": "Multistrike"
+  },
+  {
+   "sid": 10002070,
+   "name": "Increased Area"
+  },
+  {
+   "sid": 10002080,
+   "name": "Melee Knockback"
+  },
+  {
+   "sid": 10002090,
+   "name": "Raid"
+  },
+  {
+   "sid": 10002110,
+   "name": "Tendonslicer"
+  },
+  {
+   "sid": 10002120,
+   "name": "Glacial Freeze"
+  },
+  {
+   "sid": 10002130,
+   "name": "Additional Ignite"
+  },
+  {
+   "sid": 10002140,
+   "name": "High Voltage"
+  },
+  {
+   "sid": 10002180,
+   "name": "Added Erosion Damage"
+  },
+  {
+   "sid": 10002190,
+   "name": "Critical Strike Rating Increase"
+  },
+  {
+   "sid": 10002200,
+   "name": "Critical Strike Damage Increase"
+  },
+  {
+   "sid": 10002210,
+   "name": "Physical to Fire"
+  },
+  {
+   "sid": 10002220,
+   "name": "Lightning to Cold"
+  },
+  {
+   "sid": 10002230,
+   "name": "Deep Wounds"
+  },
+  {
+   "sid": 10002240,
+   "name": "Improved Corrosion"
+  },
+  {
+   "sid": 10002250,
+   "name": "Electric Overload"
+  },
+  {
+   "sid": 10002260,
+   "name": "Passivation"
+  },
+  {
+   "sid": 10002270,
+   "name": "Quick Decision"
+  },
+  {
+   "sid": 10002280,
+   "name": "Cost Conversion"
+  },
+  {
+   "sid": 10002290,
+   "name": "Jump"
+  },
+  {
+   "sid": 10002300,
+   "name": "Shortened Duration"
+  },
+  {
+   "sid": 10002310,
+   "name": "Added Fire Damage"
+  },
+  {
+   "sid": 10002320,
+   "name": "Added Cold Damage"
+  },
+  {
+   "sid": 10002330,
+   "name": "Added Lightning Damage"
+  },
+  {
+   "sid": 10002350,
+   "name": "Elemental Fusion"
+  },
+  {
+   "sid": 10002360,
+   "name": "Fire Penetration"
+  },
+  {
+   "sid": 10002370,
+   "name": "Cold Penetration"
+  },
+  {
+   "sid": 10002380,
+   "name": "Lightning Penetration"
+  },
+  {
+   "sid": 10002390,
+   "name": "Recklessness"
+  },
+  {
+   "sid": 10002400,
+   "name": "Slow Projectile"
+  },
+  {
+   "sid": 10002420,
+   "name": "Projectile Penetration"
+  },
+  {
+   "sid": 10002430,
+   "name": "Steamroll"
+  },
+  {
+   "sid": 10002440,
+   "name": "Cataclysm"
+  },
+  {
+   "sid": 10002490,
+   "name": "Fire Explosion"
+  },
+  {
+   "sid": 10002510,
+   "name": "Precision Strike"
+  },
+  {
+   "sid": 10002580,
+   "name": "Quick Return"
+  },
+  {
+   "sid": 10002590,
+   "name": "Devastator"
+  },
+  {
+   "sid": 10002640,
+   "name": "Attack Focus"
+  },
+  {
+   "sid": 10002670,
+   "name": "Erosion Penetration"
+  },
+  {
+   "sid": 10002690,
+   "name": "Wind Projectiles"
+  },
+  {
+   "sid": 10002720,
+   "name": "Pain Amplification"
+  },
+  {
+   "sid": 10002730,
+   "name": "Blind"
+  },
+  {
+   "sid": 10002740,
+   "name": "Electric Punishment"
+  },
+  {
+   "sid": 10002760,
+   "name": "Enhanced Ailment"
+  },
+  {
+   "sid": 10002780,
+   "name": "Cooldown Reduction"
+  },
+  {
+   "sid": 10003130,
+   "name": "Mark"
+  },
+  {
+   "sid": 10003200,
+   "name": "Hardened"
+  },
+  {
+   "sid": 10003270,
+   "name": "Added Physical Damage"
+  },
+  {
+   "sid": 10003574,
+   "name": "Hammer of Ash: Upheaval (Magnificent)"
+  },
+  {
+   "sid": 10003575,
+   "name": "Hammer of Ash: Rekindle (Magnificent)"
+  },
+  {
+   "sid": 10003577,
+   "name": "Hammer of Ash: Quickfire (Noble)"
+  },
+  {
+   "sid": 10003578,
+   "name": "Hammer of Ash: Blast Quake (Noble)"
+  }
+ ],
+ "iceShot": [
+  {
+   "sid": 10002010,
+   "name": "Multiple Projectiles"
+  },
+  {
+   "sid": 10002020,
+   "name": "Greater Multiple Projectiles"
+  },
+  {
+   "sid": 10002050,
+   "name": "Multistrike"
+  },
+  {
+   "sid": 10002070,
+   "name": "Increased Area"
+  },
+  {
+   "sid": 10002090,
+   "name": "Raid"
+  },
+  {
+   "sid": 10002110,
+   "name": "Tendonslicer"
+  },
+  {
+   "sid": 10002120,
+   "name": "Glacial Freeze"
+  },
+  {
+   "sid": 10002130,
+   "name": "Additional Ignite"
+  },
+  {
+   "sid": 10002140,
+   "name": "High Voltage"
+  },
+  {
+   "sid": 10002180,
+   "name": "Added Erosion Damage"
+  },
+  {
+   "sid": 10002190,
+   "name": "Critical Strike Rating Increase"
+  },
+  {
+   "sid": 10002200,
+   "name": "Critical Strike Damage Increase"
+  },
+  {
+   "sid": 10002210,
+   "name": "Physical to Fire"
+  },
+  {
+   "sid": 10002220,
+   "name": "Lightning to Cold"
+  },
+  {
+   "sid": 10002230,
+   "name": "Deep Wounds"
+  },
+  {
+   "sid": 10002240,
+   "name": "Improved Corrosion"
+  },
+  {
+   "sid": 10002250,
+   "name": "Electric Overload"
+  },
+  {
+   "sid": 10002260,
+   "name": "Passivation"
+  },
+  {
+   "sid": 10002270,
+   "name": "Quick Decision"
+  },
+  {
+   "sid": 10002280,
+   "name": "Cost Conversion"
+  },
+  {
+   "sid": 10002290,
+   "name": "Jump"
+  },
+  {
+   "sid": 10002300,
+   "name": "Shortened Duration"
+  },
+  {
+   "sid": 10002310,
+   "name": "Added Fire Damage"
+  },
+  {
+   "sid": 10002320,
+   "name": "Added Cold Damage"
+  },
+  {
+   "sid": 10002330,
+   "name": "Added Lightning Damage"
+  },
+  {
+   "sid": 10002350,
+   "name": "Elemental Fusion"
+  },
+  {
+   "sid": 10002360,
+   "name": "Fire Penetration"
+  },
+  {
+   "sid": 10002370,
+   "name": "Cold Penetration"
+  },
+  {
+   "sid": 10002380,
+   "name": "Lightning Penetration"
+  },
+  {
+   "sid": 10002390,
+   "name": "Recklessness"
+  },
+  {
+   "sid": 10002400,
+   "name": "Slow Projectile"
+  },
+  {
+   "sid": 10002420,
+   "name": "Projectile Penetration"
+  },
+  {
+   "sid": 10002440,
+   "name": "Cataclysm"
+  },
+  {
+   "sid": 10002490,
+   "name": "Fire Explosion"
+  },
+  {
+   "sid": 10002640,
+   "name": "Attack Focus"
+  },
+  {
+   "sid": 10002670,
+   "name": "Erosion Penetration"
+  },
+  {
+   "sid": 10002690,
+   "name": "Wind Projectiles"
+  },
+  {
+   "sid": 10002720,
+   "name": "Pain Amplification"
+  },
+  {
+   "sid": 10002730,
+   "name": "Blind"
+  },
+  {
+   "sid": 10002740,
+   "name": "Electric Punishment"
+  },
+  {
+   "sid": 10002760,
+   "name": "Enhanced Ailment"
+  },
+  {
+   "sid": 10002780,
+   "name": "Cooldown Reduction"
+  },
+  {
+   "sid": 10003130,
+   "name": "Mark"
+  },
+  {
+   "sid": 10003270,
+   "name": "Added Physical Damage"
+  },
+  {
+   "sid": 10003594,
+   "name": "Ice Shot: Ice Blast (Magnificent)"
+  },
+  {
+   "sid": 10003595,
+   "name": "Ice Shot: Batter (Noble)"
+  }
+ ]
+}

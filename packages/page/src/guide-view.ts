@@ -1,0 +1,216 @@
+/** Structural copy of Figure / Move / Step / GuideOut in packages/guide/src/types.ts (that file imports @dps/*, which only resolves via the guide tsconfig paths). Keep in sync. */
+export interface Figure { life100: number; life0: number; kill: number; partial: string[]; stop?: string; lock?: number; cull?: number; cullNote?: string; target?: string; lifeMax?: number }
+export interface Move { kind: string; label: string; acquisition: boolean; costFE: number | null; minLevel: number; changes: unknown[]; [k: string]: unknown }
+export interface Step { level: number; move: Move; triggered: Move[]; before: Figure; after: Figure; cumFE: number; notes?: string[] }
+export interface Character { level: number; skill: string; fe: number; owned?: number; gear: { slot: string; label: string }[] }
+export interface GuideOut {
+  mode: 'ideal' | 'advise'; pin: string; etor: { season: string; fetchedAt: string }; knobs: Record<string, unknown>;
+  start: Figure; inputs?: Record<string, unknown>; startNotes?: string[]; steps: Step[]; notSearched: string[]; unpriced: string[]; notCalculable: string[];
+  character?: Character;
+}
+
+const ESC: Record<string, string> = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' };
+const esc = (s: unknown) => String(s).replace(/[&<>"]/g, (c) => ESC[c]);
+
+const UNITS: [number, string][] = [[1e15, 'Qa'], [1e12, 'T'], [1e9, 'B'], [1e6, 'M'], [1e3, 'K']];
+/** DPS and Life in short-scale units, 3 significant digits: 712 M, 15.0 T; plain below a thousand */
+export function fmtDps(n: number): string {
+  for (const [v, u] of UNITS) if (Math.abs(n) >= v * 0.9995) return `${(n / v).toPrecision(3)} ${u}`;
+  return String(Math.round(n));
+}
+/** FE: a decimal below 10, then whole numbers with separators */
+export const fmtFE = (n: number) => (n < 10 ? (Math.round(n * 10) / 10).toString() : Math.round(n).toLocaleString('en-US'));
+export function fmtTime(s: number): string {
+  if (s < 60) return `${s.toPrecision(3)} s`;
+  if (s < 3600) return `${(s / 60).toPrecision(3)} min`;
+  if (s < 86400) return `${(s / 3600).toPrecision(3)} h`;
+  return `${(s / 86400).toPrecision(3)} days`;
+}
+/** a step's effect on the kill speed: "+38 %" under a doubling, "x4.2" from there */
+export function fmtGain(before: number, after: number): string {
+  if (!(before > 0) || !(after >= 0)) return '';
+  const r = after / before;
+  return r >= 2 ? `×${r.toPrecision(2)}` : `${r >= 1 ? '+' : '−'}${Math.abs((r - 1) * 100).toFixed(r - 1 < 0.1 && r - 1 > -0.1 ? 1 : 0)} %`;
+}
+
+const SLOT: Record<string, string> = { mainHand: 'weapon', offHand: 'off-hand', ring1: 'ring', ring2: 'ring', necklace: 'necklace', belt: 'belt', gloves: 'gloves', boots: 'boots', helmet: 'helmet', chest: 'chest' };
+const slotName = (s: string) => SLOT[s] ?? s;
+const SKILL: Record<string, string> = { hoa: 'Hammer of Ash', iceShot: 'Ice Shot' };
+const ICON: Record<string, string> = { craft: '⚒', unique: '★', support: '◆', gear: '⬆', switch: '⇄', talent: '✦', core: '✦', trait: '✧', prism: '◇', slate: '▦', pact: '◈', kismet: '◈', memory: '◇', skill: '◆' };
+
+/** a move as something to do, in the player's words */
+export function actionText(m: Move): string {
+  const l = m.label;
+  let x: RegExpExecArray | null;
+  if ((x = /^Unique (.+) in (\w+)$/.exec(l))) return `Buy ${x[1]} (${slotName(x[2])})`;
+  if ((x = /^Craft (T\d+) (.+) \((prefix|suffix)\) on (\w+)$/.exec(l))) return `Craft ${x[1]} “${x[2]}” on your ${slotName(x[4])}`;
+  if ((x = /^Replace socket (\d+) with (.+)$/.exec(l))) return `Swap in the ${x[2]} support (socket ${x[1]})`;
+  if ((x = /^Install in socket (\d+) with (.+)$/.exec(l))) return `Add the ${x[2]} support (socket ${x[1]})`;
+  if ((x = /^Rare base (.+?) \(item level (\d+)\) on (\w+)(.*)$/.exec(l))) return `New ${slotName(x[3])} base: ${x[1]} (item level ${x[2]})${x[4]}`;
+  if ((x = /^Target: (.+) in (\w+)$/.exec(l))) return `Get ${x[1]} (${slotName(x[2])}, as in the 40T build)`;
+  return l;
+}
+const cost = (m: Move) => (m.costFE == null ? 'unpriced' : m.market === 'drop' ? 'free (drops)' : m.costFE === 0 ? 'free' : `${fmtFE(m.costFE)} FE`);
+const partialMark = (f: Figure) => (f.partial.length ? `<span class="warn" title="partial: ${esc(f.partial.join(', '))}">*</span>` : '');
+const killTime = (f: Figure) => (f.stop || !f.lifeMax || !(f.kill > 0) ? '' : fmtTime(f.lifeMax / f.kill));
+
+// ---- the goal card
+function goalCard(g: GuideOut): string {
+  const last = g.steps.at(-1)?.after ?? g.start, fe = g.steps.at(-1)?.cumFE ?? 0;
+  const boss = [g.start, ...g.steps.map((s) => s.after)].find((f) => f.target)?.target;
+  const blocked = (g.startNotes ?? []).map((n) => /planned switch cannot be priced yet: (.*)$/.exec(n)?.[1]).find(Boolean);
+  const title = g.mode === 'advise' ? 'Your upgrade plan' : 'Ideal path (last league’s prices)';
+  const t = killTime(last);
+  return `<div class="gl-goal"><h2>${title}</h2>`
+    + `<p class="goal-line">Goal: ${boss ? `kill <b>${esc(boss === 'cube3' ? 'Cube 3' : boss)}</b> as fast as possible` : 'the fastest kill'}${g.mode === 'advise' && isFinite(Number(g.knobs.fe)) ? ` with your ${fmtFE(Number(g.knobs.fe))} FE` : ''}</p>`
+    + `<div class="goal-stats"><div><span class="k">kill speed</span><span class="v">${fmtDps(g.start.kill)} → ${fmtDps(last.kill)}</span></div>`
+    + `<div><span class="k">upgrades</span><span class="v">${g.steps.length}</span></div><div><span class="k">FE spent</span><span class="v">${fmtFE(fe)}</span></div>`
+    + (t ? `<div><span class="k">time to kill</span><span class="v">${t}</span></div>` : '') + '</div>'
+    + (g.start.stop ? `<p class="warn goal-warn">The start could not be priced (stopped): ${esc(g.start.stop)}</p>` : '')
+    + (blocked ? `<p class="warn goal-warn" title="${esc(blocked)}">The Hammer of Ash leg is not calculable yet (dps-debug: ${esc(blocked.slice(0, 90))}${blocked.length > 90 ? '…' : ''}). The plan stops at Ice Shot.</p>` : '')
+    + banner(g.knobs ?? {}) + '</div>';
+}
+/** a run that is not a finished path says so at the top, never silently */
+const banner = (k: Record<string, unknown>) =>
+  (k.partialRun ? `<p class="gl-banner">Partial run: the search is still going or was cut off; these are the steps found so far.</p>` : '')
+  + (k.stoppedBy ? `<p class="gl-banner">Stopped early (${esc(k.stoppedBy)}): the path ends here, not at the end level.</p>` : '');
+
+// ---- progress: kill speed (log) against FE spent (log)
+function chart(g: GuideOut): string {
+  const pts = [{ fe: 0, k: g.start.kill }, ...g.steps.map((s) => ({ fe: s.cumFE, k: s.after.kill }))].filter((p) => p.k > 0);
+  if (pts.length < 2) return '';
+  const W = 600, H = 120, P = 8, lx = (fe: number) => Math.log10(1 + fe), maxX = Math.max(lx(pts.at(-1)!.fe), 1e-9);
+  const ys = pts.map((p) => Math.log10(p.k)), lo = Math.min(...ys), hi = Math.max(...ys), span = hi - lo || 1;
+  const xy = pts.map((p, i) => [P + (lx(p.fe) / maxX) * (W - 2 * P), H - P - ((ys[i] - lo) / span) * (H - 2 * P)]);
+  return `<figure class="gl-chart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="kill speed against FE spent">`
+    + `<polyline points="${xy.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' ')}"/>`
+    + xy.map(([x, y]) => `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2.5"/>`).join('') + '</svg>'
+    + `<figcaption><span>${fmtDps(pts[0].k)}</span><span>kill speed against FE spent (both on a log scale)</span><span>${fmtDps(pts.at(-1)!.k)} at ${fmtFE(pts.at(-1)!.fe)} FE</span></figcaption></figure>`;
+}
+
+// ---- the plan, by level stage
+function stages(g: GuideOut): string {
+  const groups: { level: number; steps: { s: Step; n: number }[] }[] = [];
+  g.steps.forEach((s, i) => { const last = groups.at(-1); if (last && last.level === s.level) last.steps.push({ s, n: i + 1 }); else groups.push({ level: s.level, steps: [{ s, n: i + 1 }] }); });
+  if (!groups.length) return `<p class="muted">No upgrade improves the kill speed${g.mode === 'advise' ? ' within your FE' : ''}.</p>`;
+  return groups.map((gr, k) => {
+    const first = gr.steps[0].s, end = gr.steps.at(-1)!.s, fe = end.cumFE - (first.cumFE - (first.move.costFE ?? 0));
+    const rows = gr.steps.map(({ s, n }) => {
+      const t = killTime(s.after);
+      return `<li class="step" value="${n}"><span class="ico" title="${esc(s.move.kind)}">${ICON[s.move.kind] ?? '•'}<small>${n}</small></span>`
+        + `<span class="what">${esc(actionText(s.move))}${(s.notes ?? []).map((x) => `<span class="chip">${esc(x)}</span>`).join('')}</span>`
+        + `<span class="cost">${cost(s.move)}</span><span class="gain">${s.after.stop ? '<span class="warn">stopped</span>' : esc(fmtGain(s.before.kill, s.after.kill))}${partialMark(s.after)}`
+        + `<small>${fmtDps(s.after.kill)}${t ? ` · ${t}` : ''}</small></span>`
+        + (s.triggered.length ? `<ul class="respecs">${s.triggered.map((x) => `<li class="respec">then: ${esc(actionText(x))}</li>`).join('')}</ul>` : '') + '</li>';
+    }).join('');
+    return `<details class="gl-stage"${k === 0 || g.mode === 'advise' ? ' open' : ''}><summary><span class="lvl">Level ${esc(gr.level)}</span>`
+      + `<span>${gr.steps.length} upgrade${gr.steps.length > 1 ? 's' : ''}</span><span>${fmtFE(fe)} FE</span><span class="gain">${esc(fmtGain(first.before.kill, end.after.kill))}</span></summary>`
+      + `<ol class="gl-steps">${rows}</ol></details>`;
+  }).join('');
+}
+
+// ---- items nobody sells, best gain first
+export function hunting(unpriced: string[]): { item: string; level: number; gain: number }[] {
+  const best = new Map<string, { item: string; level: number; gain: number }>();
+  for (const u of unpriced) {
+    const m = /^L(\d+) not on the market \/ unpriced: (.+): ([+-]?[\d.]+) % if you get it$/.exec(u);
+    if (!m) continue;
+    const item = m[2].replace(/^Unique /, '').replace(/^Target: /, ''), gain = Number(m[3]);
+    const was = best.get(item);
+    if (!was || gain > was.gain) best.set(item, { item, level: Number(m[1]), gain });
+  }
+  return [...best.values()].sort((a, b) => b.gain - a.gain);
+}
+function huntingList(g: GuideOut): string {
+  const h = hunting(g.unpriced).slice(0, 10);
+  return h.length ? `<section class="gl-hunt"><h3>Worth hunting (not on the market)</h3><ul>${h.map((x) =>
+    `<li><span class="what">${esc(x.item)}</span><span class="gain">${esc(fmtGain(1, 1 + x.gain / 100))}</span><small>at level ${x.level}</small></li>`).join('')}</ul></section>` : '';
+}
+
+// ---- everything else, folded away
+const list = (title: string, xs: string[]) =>
+  xs.length ? `<section class="gl-${title}"><h4>${title} (${xs.length})</h4><ul>${xs.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></section>` : '';
+function details(g: GuideOut): string {
+  const why = new Map<string, number>();
+  for (const n of g.notCalculable) { const r = (/: (?:stopped|dropped)[: ](.*)$/.exec(n)?.[1] ?? n).slice(0, 110); why.set(r, (why.get(r) ?? 0) + 1); }
+  const top = [...why].sort((a, b) => b[1] - a[1]).slice(0, 12);
+  return `<details class="gl-details"><summary>Details: inputs, notes, ${g.notSearched.length} not searched, ${g.notCalculable.length} not calculable, ${g.unpriced.length} unpriced</summary>`
+    + `<p class="muted">${esc(g.mode)} guide · dps-debug pin <code>${esc(g.pin)}</code> · etor season <code>${esc(g.etor.season)}</code> (fetched ${esc(g.etor.fetchedAt)})</p>`
+    + (g.inputs ? `<h4>stated inputs</h4><pre class="gl-inputs">${esc(JSON.stringify(g.inputs, null, 1))}</pre>` : '')
+    + list('startNotes', g.startNotes ?? [])
+    + (top.length ? `<h4>why candidates were not calculable (top reasons)</h4><ul>${top.map(([r, n]) => `<li><b>${n}×</b> ${esc(r)}</li>`).join('')}</ul>` : '')
+    + list('notSearched', g.notSearched) + list('unpriced', g.unpriced) + list('notCalculable', g.notCalculable) + '</details>';
+}
+
+export function renderCharacter(c: Character): string {
+  return `<div class="gl-char"><div class="char-head">Level ${esc(c.level)} · ${esc(SKILL[c.skill] ?? c.skill)} · ${esc(fmtFE(c.fe))} FE${c.owned !== undefined ? ` · ${esc(c.owned)} items owned` : ''}</div>`
+    + `<dl class="char-gear">${c.gear.map((x) => `<dt>${esc(slotName(x.slot))}</dt><dd>${esc(x.label)}</dd>`).join('')}</dl></div>`;
+}
+
+export function renderGuide(g: GuideOut): string {
+  return `<div class="gl-plan">${goalCard(g)}${g.character ? renderCharacter(g.character) : ''}${chart(g)}${stages(g)}${huntingList(g)}${details(g)}</div>`;
+}
+
+// ---- pasted text: the advice from the poorchlight button, or the raw export
+const bad = (path: string, v: unknown) => new Error(`Advice is ${v === undefined ? 'missing' : 'invalid'}: ${path}`);
+const isNum = (v: unknown) => typeof v === 'number' && Number.isFinite(v);
+const isStrs = (v: unknown) => Array.isArray(v) && v.every((x) => typeof x === 'string');
+function checkFigure(f: any, path: string): void {
+  if (!f || typeof f !== 'object') throw bad(path, f);
+  for (const k of ['life100', 'life0', 'kill']) if (!isNum(f[k])) throw bad(`${path}.${k}`, f[k]);
+  if (!isStrs(f.partial)) throw bad(`${path}.partial`, f.partial);
+  if (f.stop !== undefined && typeof f.stop !== 'string') throw bad(`${path}.stop`, f.stop);
+  for (const k of ['lock', 'cull', 'lifeMax']) if (f[k] !== undefined && !isNum(f[k])) throw bad(`${path}.${k}`, f[k]);
+}
+function checkMove(m: any, path: string): void {
+  if (!m || typeof m !== 'object') throw bad(path, m);
+  if (typeof m.label !== 'string') throw bad(`${path}.label`, m.label);
+  if (m.costFE !== null && !isNum(m.costFE)) throw bad(`${path}.costFE`, m.costFE);
+}
+function checkCharacter(c: any, path: string): Character {
+  if (!c || typeof c !== 'object') throw bad(path, c);
+  if (!isNum(c.level)) throw bad(`${path}.level`, c.level);
+  if (!isNum(c.fe)) throw bad(`${path}.fe`, c.fe);
+  if (!Array.isArray(c.gear) || !c.gear.every((x: any) => x && typeof x.slot === 'string' && typeof x.label === 'string')) throw bad(`${path}.gear`, c.gear);
+  return { level: c.level, skill: String(c.skill ?? ''), fe: c.fe, ...(isNum(c.owned) ? { owned: c.owned } : {}), gear: c.gear.map((x: { slot: string; label: string }) => ({ slot: x.slot, label: x.label })) };
+}
+
+export function parseAdvice(text: string): GuideOut {
+  let j: any;
+  try { j = JSON.parse(text); } catch (e) { throw new Error(`Advice is not valid JSON: ${(e as Error).message}`); }
+  if (!j || typeof j !== 'object') throw new Error('Advice must be a JSON object');
+  if (j.mode !== 'advise') throw new Error(`Advice must have mode "advise", got ${JSON.stringify(j.mode)}`);
+  if (typeof j.pin !== 'string') throw bad('pin', j.pin);
+  if (!j.etor || typeof j.etor !== 'object') throw bad('etor', j.etor);
+  for (const k of ['season', 'fetchedAt']) if (typeof j.etor[k] !== 'string') throw bad(`etor.${k}`, j.etor[k]);
+  checkFigure(j.start, 'start');
+  if (!Array.isArray(j.steps)) throw bad('steps', j.steps);
+  j.steps.forEach((s: any, i: number) => {
+    const p = `steps[${i}]`;
+    if (!s || typeof s !== 'object') throw bad(p, s);
+    if (!isNum(s.level)) throw bad(`${p}.level`, s.level);
+    if (!isNum(s.cumFE)) throw bad(`${p}.cumFE`, s.cumFE);
+    checkMove(s.move, `${p}.move`);
+    if (!Array.isArray(s.triggered)) throw bad(`${p}.triggered`, s.triggered);
+    s.triggered.forEach((t: any, k: number) => checkMove(t, `${p}.triggered[${k}]`));
+    checkFigure(s.before, `${p}.before`);
+    checkFigure(s.after, `${p}.after`);
+    if (s.notes !== undefined && !isStrs(s.notes)) throw bad(`${p}.notes`, s.notes);
+  });
+  for (const k of ['notSearched', 'unpriced', 'notCalculable']) if (!isStrs(j[k])) throw bad(k, j[k]);
+  if (j.character !== undefined) j.character = checkCharacter(j.character, 'character');
+  return j as GuideOut;
+}
+
+export type Pasted = { kind: 'advice'; guide: GuideOut } | { kind: 'export'; character: Character };
+/** what the player pasted: the advice the poorchlight button copies, or the raw tli-lens export (gear only: advice needs the local engine) */
+export function parsePaste(text: string): Pasted {
+  let j: any;
+  try { j = JSON.parse(text); } catch (e) { throw new Error(`That is not valid JSON: ${(e as Error).message}`); }
+  if (j?.schema === 'tli-lens-export/1') {
+    const main = (j.loadout?.skills ?? []).find((s: any) => s?.place?.kind === 'active' && s.place.slot === 0);
+    return { kind: 'export', character: checkCharacter({ level: j.hero?.level, fe: j.fe, owned: Array.isArray(j.items) ? j.items.length : undefined,
+      skill: main?.sid === 1110 ? 'hoa' : main?.name ?? '', gear: (j.loadout?.gear ?? []).map((g: any) => ({ slot: String(g?.slot ?? ''), label: String(g?.label ?? '') })) }, 'export') };
+  }
+  return { kind: 'advice', guide: parseAdvice(text) };
+}

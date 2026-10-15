@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "lib": ["ES2022"],
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "types": ["node"],
+    "baseUrl": ".",
+    "paths": { "@dps/*": ["../../../dps-debug/.worktrees/tli-lens-pin/model/*", "../../../../../dps-debug/.worktrees/tli-lens-pin/model/*"] }
+  },
+  "include": ["src", "test"]
+}

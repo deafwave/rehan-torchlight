@@ -1,0 +1,34 @@
+{
+ "items": {
+  "110101": {
+   "name": "Arminius Guillotine",
+   "category": "Legendary Gear",
+   "firstDay": "2026-07-17",
+   "day1": 21.0532,
+   "days1to3": 10.5655,
+   "week1": 6.3827,
+   "week2": 5.711,
+   "last": 9.4773
+  },
+  "110104": {
+   "name": "Highest Glance",
+   "category": "Legendary Gear",
+   "firstDay": "2026-07-17",
+   "day1": 4.5726,
+   "days1to3": 3.1659,
+   "week1": 5.0372,
+   "week2": 5.4198,
+   "last": 5.2613
+  },
+  "112519": {
+   "name": "Cover the Sun",
+   "category": "Legendary Gear",
+   "firstDay": "2026-07-27",
+   "day1": 87.6184,
+   "days1to3": 80.0213,
+   "week1": 71.5617,
+   "week2": null,
+   "last": 46.183
+  }
+ }
+}

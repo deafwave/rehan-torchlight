@@ -1,0 +1,18 @@
+node_modules/
+dist/
+.vercel/
+__pycache__/
+.pytest_cache/
+**/.claude/*
+docs/superpowers
+
+# Include skills
+!/.claude/skills/
+Torchlight Sanity Retention.xlsx
+.env*
+
+# per-task worktrees (removed before the folder rename)
+.worktrees/
+
+# figure memo (guide evaluator)
+.cache/

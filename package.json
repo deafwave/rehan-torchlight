@@ -1,0 +1,13 @@
+{
+  "name": "tli-lens",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm --filter @tli-lens/page dev",
+    "build": "pnpm --filter @tli-lens/page build",
+    "preview": "pnpm --filter @tli-lens/page preview",
+    "test": "pnpm -r test",
+    "guide": "pnpm --filter @tli-lens/guide guide"
+  }
+}

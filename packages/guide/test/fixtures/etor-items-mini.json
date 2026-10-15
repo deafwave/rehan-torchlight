@@ -1,0 +1,48 @@
+{
+ "seasonId": "1501",
+ "season": "SS13",
+ "currency": "FE",
+ "fetchedAt": "2026-10-10T05:17:53Z",
+ "items": [
+  {
+   "id": "110101",
+   "name": "Arminius Guillotine",
+   "nameRaw": "\u963f\u7c73\u5c3c\u4e4c\u65af\u65ad\u5934\u53f0",
+   "category": "Legendary Gear",
+   "price": 10.083,
+   "updatedAt": "2026-10-02T14:45:42.445Z"
+  },
+  {
+   "id": "110104",
+   "name": "Highest Glance",
+   "nameRaw": "\u81f3\u9ad8\u4e00\u77a5",
+   "category": "Legendary Gear",
+   "price": 5.046,
+   "updatedAt": "2026-10-01T17:16:45.461Z"
+  },
+  {
+   "id": "112519",
+   "name": "Cover the Sun",
+   "nameRaw": "\u853d\u65e5",
+   "category": "Legendary Gear",
+   "price": 46.183,
+   "updatedAt": "2026-07-30T04:56:57.683Z"
+  },
+  {
+   "id": "260301",
+   "name": "God of War's Divinity",
+   "nameRaw": "\u5f81\u6218\u4e4b\u795e\u7684\u795e\u683c",
+   "category": "God of War",
+   "price": 1,
+   "updatedAt": "2026-08-30T14:32:27.997Z"
+  },
+  {
+   "id": "400000",
+   "name": "Glacial Abyss Beacon (Timemark 1)",
+   "nameRaw": "\u51b0\u5c01\u5bd2\u6e0a\u7684\u4fe1\u6807\uff08\u65f6\u523b 1\uff09",
+   "category": "Beacon",
+   "price": 0.037,
+   "updatedAt": "2026-09-28T06:10:15.865Z"
+  }
+ ]
+}

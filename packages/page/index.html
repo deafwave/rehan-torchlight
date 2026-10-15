@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<style>html{background:#0c141d;color-scheme:dark}</style>
+<title>TLI Lens — build guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="wrap">
+  <header class="site">
+    <h1>TLI Lens</h1>
+    <p class="tag">Bing1: Ice Shot to level, then Hammer of Ash. The cheapest upgrades toward the fastest Cube 3 kill, priced by the dps-debug calculator.</p>
+  </header>
+
+  <section class="mine">
+    <h2>Your character</h2>
+    <details id="paste" class="gl-paste" open>
+      <summary>Paste your character from poorchlight</summary>
+      <ol class="howto">
+        <li>In poorchlight press <b>Export for tli-lens</b>. It reads your character and runs the guide engine on your PC (about 30 minutes).</li>
+        <li>When it says “Advice copied to the clipboard”, paste it here and press <b>Show my plan</b>.</li>
+      </ol>
+      <textarea id="paste-text" rows="5" placeholder="Paste the advice (or the raw export) here" spellcheck="false"></textarea>
+      <div class="paste-actions"><button id="paste-go">Show my plan</button><button id="paste-clear" class="quiet">Forget it</button></div>
+    </details>
+    <div id="mine-out"></div>
+  </section>
+
+  <section id="ideal" class="ideal"></section>
+</div>
+<script type="module" src="/src/main.ts"></script>
+</body>
+</html>

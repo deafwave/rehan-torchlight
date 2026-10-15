@@ -1,0 +1,13 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "pnpm install",
+  "buildCommand": "pnpm --filter @tli-lens/page build && if [ -d packages/page/dist ]; then rm -rf dist && cp -r packages/page/dist dist; elif [ ! -d dist ]; then echo 'No Vite dist output found' && exit 1; fi",
+  "outputDirectory": "dist",
+  "rewrites": [
+    {
+      "source": "/((?!assets/).*)",
+      "destination": "/index.html"
+    }
+  ]
+}

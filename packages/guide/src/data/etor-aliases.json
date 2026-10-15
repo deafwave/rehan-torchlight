@@ -1,0 +1,8 @@
+{
+  "Last Stand": { "etor": "Fiery Fantasy", "why": "etor id 112505 = config_item_gold id 112505 (lang_en item_gold|name|112505 = Last Stand)" },
+  "Crimson Gash": { "etor": "母神围场", "why": "etor id 113252 = config_item_gold id 113252 (lang_en item_gold|name|113252 = Crimson Gash); etor name untranslated" },
+  "Broken Dream": { "etor": "碎梦", "why": "etor id 113286 = config_item_gold id 113286 (lang_en item_gold|name|113286 = Broken Dream); etor name untranslated" },
+  "Sarituya": { "etor": "萨日图雅", "why": "etor id 112149 = config_item_gold id 112149 (lang_en item_gold|name|112149 = Sarituya); etor name untranslated" },
+  "Aslan": { "etor": "阿日斯兰", "why": "etor id 112150 = config_item_gold id 112150 (lang_en item_gold|name|112150 = Aslan); etor name untranslated" },
+  "Trauma's Embrace": { "etor": "伤逝之拥", "why": "etor id 112255 = config_item_gold id 112255 (lang_en item_gold|name|112255 = Trauma's Embrace); etor name untranslated" }
+}

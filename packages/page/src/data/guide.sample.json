@@ -1,0 +1,162 @@
+{
+ "mode": "ideal",
+ "pin": "sample0",
+ "etor": {
+  "season": "sample",
+  "fetchedAt": "2026-01-01"
+ },
+ "knobs": {},
+ "start": {
+  "life100": 100000,
+  "life0": 80000,
+  "kill": 90000,
+  "partial": []
+ },
+ "steps": [
+  {
+   "level": 60,
+   "move": {
+    "kind": "craft",
+    "label": "Sample step 1",
+    "acquisition": true,
+    "costFE": 0,
+    "minLevel": 60,
+    "changes": []
+   },
+   "triggered": [],
+   "before": {
+    "life100": 100000.0,
+    "life0": 80000.0,
+    "kill": 90000.0,
+    "partial": []
+   },
+   "after": {
+    "life100": 553500.0,
+    "life0": 360000.0,
+    "kill": 429000.00000000006,
+    "partial": []
+   },
+   "cumFE": 0
+  },
+  {
+   "level": 65,
+   "move": {
+    "kind": "craft",
+    "label": "Sample step 2",
+    "acquisition": true,
+    "costFE": 1500,
+    "minLevel": 65,
+    "changes": []
+   },
+   "triggered": [],
+   "before": {
+    "life100": 300000.0,
+    "life0": 240000.0,
+    "kill": 270000.0,
+    "partial": []
+   },
+   "after": {
+    "life100": 1660500.0,
+    "life0": 1080000.0,
+    "kill": 1287000.0,
+    "partial": []
+   },
+   "cumFE": 1500
+  },
+  {
+   "level": 70,
+   "move": {
+    "kind": "craft",
+    "label": "Sample step 3",
+    "acquisition": true,
+    "costFE": 25000,
+    "minLevel": 70,
+    "changes": []
+   },
+   "triggered": [
+    {
+     "kind": "talent",
+     "label": "Respec talent (sample)",
+     "acquisition": false,
+     "costFE": 0,
+     "minLevel": 70,
+     "changes": []
+    }
+   ],
+   "before": {
+    "life100": 900000.0,
+    "life0": 720000.0,
+    "kill": 810000.0,
+    "partial": []
+   },
+   "after": {
+    "life100": 4981500.0,
+    "life0": 3240000.0,
+    "kill": 3861000.0000000005,
+    "partial": []
+   },
+   "cumFE": 26500
+  },
+  {
+   "level": 80,
+   "move": {
+    "kind": "craft",
+    "label": "Sample step 4",
+    "acquisition": true,
+    "costFE": 340000,
+    "minLevel": 80,
+    "changes": []
+   },
+   "triggered": [],
+   "before": {
+    "life100": 2700000.0,
+    "life0": 2160000.0,
+    "kill": 2430000.0,
+    "partial": []
+   },
+   "after": {
+    "life100": 14944500.0,
+    "life0": 9720000.0,
+    "kill": 11583000.000000002,
+    "partial": []
+   },
+   "cumFE": 366500
+  },
+  {
+   "level": 90,
+   "move": {
+    "kind": "craft",
+    "label": "Sample step 5",
+    "acquisition": true,
+    "costFE": 2500000,
+    "minLevel": 90,
+    "changes": []
+   },
+   "triggered": [],
+   "before": {
+    "life100": 8100000.0,
+    "life0": 6480000.0,
+    "kill": 7290000.0,
+    "partial": []
+   },
+   "after": {
+    "life100": 44833500.0,
+    "life0": 29160000.0,
+    "kill": 34749000.0,
+    "partial": [
+     "sample-piece"
+    ]
+   },
+   "cumFE": 2866500
+  }
+ ],
+ "notSearched": [
+  "sample: rule not ported"
+ ],
+ "unpriced": [
+  "sample slate"
+ ],
+ "notCalculable": [
+  "sample candidate: stopped"
+ ]
+}
