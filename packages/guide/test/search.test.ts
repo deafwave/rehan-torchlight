@@ -45,6 +45,14 @@ test('rankable rejects a figure that dropped a new piece', () => {
   expect(rankable(b, { ...b, partial: [], stop: 'x' })).toBe(false);
 });
 
+test('a partial piece is the same piece when only its measured numbers moved (rates, probabilities); a different id is a new piece', () => {
+  const p = (rate: string, P: string, id = 15184) => `buff ${id} (50355540 row 1, 50355540 row 2): ${rate} adds/s over a life of 8 s leave P(below the cap 40) = ${P}: a mix of states, not a point`;
+  const b = { life100: 1, life0: 1, kill: 1, partial: [p('2.85714', '1.08e-4')] };
+  expect(rankable(b, { ...b, partial: [p('2.72727', '2.24e-4')] })).toBe(true);
+  expect(rankable(b, { ...b, partial: [p('1.79906', '2.54e-2')] })).toBe(true);
+  expect(rankable(b, { ...b, partial: [p('2.85714', '1.08e-4', 15185)] })).toBe(false);
+});
+
 describe('step', () => {
   test('all unseen candidates are in flight at once, not one batch per slow figure', async () => {
     const { ev, peak } = stub(8, 5);

@@ -1,6 +1,6 @@
 /** Two-loop progression search (spec §3.2): acquisitions ranked by kill-average gain per FE (lazy greedy),
  *  reconfigurations re-solved by a churn-gated hill climb. */
-import type { Evaluated, Evaluator, Figure, GenCtx, Generator, Move, State, Step } from './types';
+import type { EvalCtx, Evaluated, Evaluator, Figure, GenCtx, Generator, Move, State, Step } from './types';
 
 export interface Knobs { churn: number; topK: number; maxRounds: number; refreshEvery: number; maxSteps: number; targetKill?: number; budgetFE?: number;
   /** wall-clock minutes; once over, the run stops after the current step (knobs.stoppedBy = 'budget') */ budgetMinutes?: number;
@@ -12,9 +12,13 @@ export const overBudget = (k: Knobs, t0: number, ev?: Evaluator) =>
   k.budgetMinutes !== undefined && Date.now() - t0 - (ev?.pausedMs?.() ?? 0) >= k.budgetMinutes * 60_000;
 export const DEFAULT_KNOBS: Knobs = { churn: 0.05, topK: 5, maxRounds: 10, refreshEvery: 10, maxSteps: 400, continueSteps: 10, enablerFloor: 0.25 };
 
+/** A partial piece's identity: its text with the measured decimals (rates, probabilities) taken out, ids kept. dps-debug writes the live numbers into the
+ *  text ("buff 15184 ...: 2.72727 adds/s ... P = 2.24e-4"), so nearly any change moved them and made the same omission look new. */
+export const pieceKey = (p: string) => p.replace(/\d+\.\d+(?:e[-+]?\d+)?|\d+e[-+]?\d+/gi, '#');
 /** A figure is rankable only if it dropped no piece the baseline still had, and it computed. */
 export function rankable(before: Figure, after: Figure): boolean {
-  return !after.stop && after.partial.every((p) => before.partial.includes(p));
+  const had = new Set(before.partial.map(pieceKey));
+  return !after.stop && after.partial.every((p) => had.has(pieceKey(p)));
 }
 
 /** A move's figure is rankable by `rankable`, except a skill switch: a different skill compiles different pieces, so its omissions need not be a subset
@@ -30,7 +34,7 @@ export interface Mem { scores: Map<string, number>; since: number; cumFE: number
 export const newMem = (): Mem => ({ scores: new Map(), since: 0, cumFE: 0, unpriced: new Set(), notCalculable: new Set() });
 
 const key = (m: Move) => `${m.kind}|${m.label}`;
-const why = (b: Figure, a: Figure) => a.stop ? `stopped: ${a.stop}` : `dropped ${a.partial.filter((p) => !b.partial.includes(p)).join(', ')}`;
+const why = (b: Figure, a: Figure) => a.stop ? `stopped: ${a.stop}` : `dropped ${a.partial.filter((p) => !b.partial.map(pieceKey).includes(pieceKey(p))).join(', ')}`;
 
 /** Memoise run() per (loadout object, changes, ctx) so one step never evaluates the same thing twice (in-flight promises shared). */
 function memoEv(ev: Evaluator): Evaluator {
@@ -46,7 +50,9 @@ function memoEv(ev: Evaluator): Evaluator {
   };
 }
 
-const evalMove = (s: State, m: Move, ev: Evaluator) => ev.run(s.loadout, m.changes, { level: s.level, skill: m.skill ?? s.skill });
+/** the evaluation context of a state: its level, skill and boss */
+export const ctxOfState = (s: State, skill = s.skill): EvalCtx => ({ level: s.level, skill, ...(s.target !== undefined ? { target: s.target } : {}) });
+const evalMove = (s: State, m: Move, ev: Evaluator) => ev.run(s.loadout, m.changes, ctxOfState(s, m.skill ?? s.skill));
 const apply = (s: State, m: Move, e: Evaluated): State => ({
   ...s, loadout: e.loadout, fe: s.fe - (m.costFE ?? 0), skill: m.skill ?? s.skill,
   owned: m.consumes ? s.owned.flatMap((o) => (o.itemId !== m.consumes ? [o] : (o.count ?? 1) > 1 ? [{ ...o, count: o.count - 1 }] : [])) : s.owned,
@@ -57,7 +63,7 @@ const scoreOf = (gain: number, cost: number) => (gain <= 0 ? gain : cost === 0 ?
 
 export async function resolve(s: State, ev: Evaluator, gens: Generator[], ctx: GenCtx, k: Knobs, f?: Figure, mem: Mem = newMem()):
   Promise<{ state: State; figure: Figure; taken: Move[] }> {
-  let figure = f ?? (await ev.run(s.loadout, [], { level: s.level, skill: s.skill })).figure;
+  let figure = f ?? (await ev.run(s.loadout, [], ctxOfState(s))).figure;
   const taken: Move[] = [];
   for (let round = 0; round < k.maxRounds; round++) {
     const moves = gens.flatMap((g) => g(s, ctx)).filter((m) => legal(s, m) && (m.costFE !== null || (mem.unpriced.add(m.label), false)));
@@ -144,7 +150,7 @@ export async function path(s0: State, ev: Evaluator, acq: Generator[], recon: Ge
   onStep?: (p: PathOut) => void):
   Promise<PathOut> {
   const t0 = Date.now();
-  const start = (await ev.run(s0.loadout, [], { level: s0.level, skill: s0.skill })).figure;
+  const start = (await ev.run(s0.loadout, [], ctxOfState(s0))).figure;
   const mem = newMem(), notSearched = new Set<string>(), steps: Step[] = [];
   let s = s0, f = start;
   const snap = (): PathOut => ({ start, steps: [...steps], notCalculable: [...mem.notCalculable], unpriced: [...mem.unpriced], notSearched: [...notSearched] });
