@@ -1,6 +1,6 @@
 {
  "mode": "ideal",
- "pin": "eb064d6c96745d48712375014097ea17f51184bf",
+ "pin": "35b6ff671f0816b12ee80fa7276c3fe3ea6b8020",
  "etor": {
   "season": "SS13",
   "fetchedAt": "2026-10-10T05:17:53Z"
@@ -5866,232 +5866,6 @@
    "notes": [
     "talent points assumed"
    ]
-  },
-  {
-   "level": 85,
-   "move": {
-    "kind": "support",
-    "label": "Replace socket 2 with Fire Penetration",
-    "acquisition": true,
-    "costFE": 0,
-    "market": "drop",
-    "costNote": "drop",
-    "buy": {
-     "name": "Fire Penetration",
-     "qty": 1
-    },
-    "minLevel": 1,
-    "changes": [
-     {
-      "kind": "support",
-      "action": "replace",
-      "owner": {
-       "kind": "active",
-       "slot": 0
-      },
-      "socket": 2,
-      "gem": {
-       "sid": 10002360,
-       "level": 19,
-       "name": "Fire Penetration"
-      }
-     }
-    ]
-   },
-   "triggered": [
-    {
-     "kind": "core",
-     "label": "Add core talent Tradeoff",
-     "acquisition": false,
-     "costFE": 0,
-     "minLevel": 1,
-     "changes": [
-      {
-       "kind": "core",
-       "node": 42001200,
-       "action": "add"
-      }
-     ],
-     "enabler": true
-    }
-   ],
-   "before": {
-    "life100": 21251850.40817863,
-    "life0": 21251850.40817863,
-    "kill": 21251850.40817863,
-    "partial": [
-     "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
-     "the target's buff not derived (IN1): buff 260 (103010015 row 1, 103010015 row 1): single-slot policy 1 with a cap of 5",
-     "item 3706: comp 0x23 rarity tag list (5000501..5000505; the source is not located)",
-     "item 3403: comp 0x23 rarity tag list (5000501..5000505; the source is not located)",
-     "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
-     "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
-     "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
-     "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
-     "not in this figure: node 2215 (execute 0x1407d0580 `mov al, 1; ret`) - affix class 1010080264 row 1 (hero 4001 spawn class 1010080264) - ticked at the grant",
-     "not in this figure: node 626 ([inf] the owner's comp 0x12 buffs: a value from buff +0xc8 / +0x68 × +0xe8 / the +0xd0 +0x110 table and the node's +0x98..+0xb0 handed to the buff's +0x20 object (vt+0x10 — its target not identified, so \"no record\" is inferred); no direct comp 0xc / 0x25 call (execute FUN_141af35a0, c9b_trigexec.c 313-858)) - affix class 775414272 row 1 (hero 4001 spawn class 77541427",
-     "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
-     "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
-     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
-     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
-     "not in this figure: node 2320 (comp 0x82 / 0x91, triggers a skill (execute FUN_141a9df70, c9b_nodes.c 4093-4466)) - affix class 847438 row 1 (buff 10 class 847438) - ticked at the grant",
-     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
-     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 2)) - ticked at the grant",
-     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 72818 row 1 (gem 7006 (skill 1110)) - ticked at the grant",
-     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7031 modifier 771009001) - ticked at the grant",
-     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7130 modifier 771009001) - ticked at the grant",
-     "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a",
-     "not in this figure: node 2207 (execute 0x1407d0580) - affix class 1059163184 row 1 (map modifier class 1059163184) - ticked at the grant (x10)",
-     "not in this figure: node 2206 (execute 0x1407d0580) - affix class 122060011 row 1 (map modifier class 122060011) - ticked at the grant (x4)",
-     "not in this figure: node 2206 (execute 0x1407d0580) - affix class 122060013 row 1 (map modifier class 122060013) - ticked at the grant (x10)"
-    ],
-    "lock": 15000000000000,
-    "target": "cube1",
-    "lifeMax": 31633200895
-   },
-   "after": {
-    "life100": 30131547.34211788,
-    "life0": 30131547.34211788,
-    "kill": 30131547.34211788,
-    "partial": [
-     "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
-     "the target's buff not derived (IN1): buff 260 (103010015 row 1, 103010015 row 1): single-slot policy 1 with a cap of 5",
-     "item 3706: comp 0x23 rarity tag list (5000501..5000505; the source is not located)",
-     "item 3403: comp 0x23 rarity tag list (5000501..5000505; the source is not located)",
-     "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
-     "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
-     "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
-     "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
-     "not in this figure: node 2215 (execute 0x1407d0580 `mov al, 1; ret`) - affix class 1010080264 row 1 (hero 4001 spawn class 1010080264) - ticked at the grant",
-     "not in this figure: node 626 ([inf] the owner's comp 0x12 buffs: a value from buff +0xc8 / +0x68 × +0xe8 / the +0xd0 +0x110 table and the node's +0x98..+0xb0 handed to the buff's +0x20 object (vt+0x10 — its target not identified, so \"no record\" is inferred); no direct comp 0xc / 0x25 call (execute FUN_141af35a0, c9b_trigexec.c 313-858)) - affix class 775414272 row 1 (hero 4001 spawn class 77541427",
-     "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
-     "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
-     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
-     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
-     "not in this figure: node 2320 (comp 0x82 / 0x91, triggers a skill (execute FUN_141a9df70, c9b_nodes.c 4093-4466)) - affix class 847438 row 1 (buff 10 class 847438) - ticked at the grant",
-     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
-     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 2)) - ticked at the grant",
-     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 72818 row 1 (gem 7006 (skill 1110)) - ticked at the grant",
-     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7031 modifier 771009001) - ticked at the grant",
-     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7130 modifier 771009001) - ticked at the grant",
-     "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a",
-     "not in this figure: node 2207 (execute 0x1407d0580) - affix class 1059163184 row 1 (map modifier class 1059163184) - ticked at the grant (x10)",
-     "not in this figure: node 2206 (execute 0x1407d0580) - affix class 122060011 row 1 (map modifier class 122060011) - ticked at the grant (x4)",
-     "not in this figure: node 2206 (execute 0x1407d0580) - affix class 122060013 row 1 (map modifier class 122060013) - ticked at the grant (x10)"
-    ],
-    "lock": 15000000000000,
-    "target": "cube1",
-    "lifeMax": 31633200895
-   },
-   "cumFE": 2359.123784318182,
-   "notes": [
-    "talent points assumed"
-   ]
-  },
-  {
-   "level": 85,
-   "move": {
-    "kind": "support",
-    "label": "Replace socket 3 with Multiple Projectiles",
-    "acquisition": true,
-    "costFE": 0,
-    "market": "drop",
-    "costNote": "drop",
-    "buy": {
-     "name": "Multiple Projectiles",
-     "qty": 1
-    },
-    "minLevel": 1,
-    "changes": [
-     {
-      "kind": "support",
-      "action": "replace",
-      "owner": {
-       "kind": "active",
-       "slot": 0
-      },
-      "socket": 3,
-      "gem": {
-       "sid": 10002010,
-       "level": 2,
-       "name": "Multiple Projectiles"
-      }
-     }
-    ]
-   },
-   "triggered": [],
-   "before": {
-    "life100": 30131547.34211788,
-    "life0": 30131547.34211788,
-    "kill": 30131547.34211788,
-    "partial": [
-     "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
-     "the target's buff not derived (IN1): buff 260 (103010015 row 1, 103010015 row 1): single-slot policy 1 with a cap of 5",
-     "item 3706: comp 0x23 rarity tag list (5000501..5000505; the source is not located)",
-     "item 3403: comp 0x23 rarity tag list (5000501..5000505; the source is not located)",
-     "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
-     "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
-     "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
-     "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
-     "not in this figure: node 2215 (execute 0x1407d0580 `mov al, 1; ret`) - affix class 1010080264 row 1 (hero 4001 spawn class 1010080264) - ticked at the grant",
-     "not in this figure: node 626 ([inf] the owner's comp 0x12 buffs: a value from buff +0xc8 / +0x68 × +0xe8 / the +0xd0 +0x110 table and the node's +0x98..+0xb0 handed to the buff's +0x20 object (vt+0x10 — its target not identified, so \"no record\" is inferred); no direct comp 0xc / 0x25 call (execute FUN_141af35a0, c9b_trigexec.c 313-858)) - affix class 775414272 row 1 (hero 4001 spawn class 77541427",
-     "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
-     "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
-     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
-     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
-     "not in this figure: node 2320 (comp 0x82 / 0x91, triggers a skill (execute FUN_141a9df70, c9b_nodes.c 4093-4466)) - affix class 847438 row 1 (buff 10 class 847438) - ticked at the grant",
-     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
-     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 2)) - ticked at the grant",
-     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 72818 row 1 (gem 7006 (skill 1110)) - ticked at the grant",
-     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7031 modifier 771009001) - ticked at the grant",
-     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7130 modifier 771009001) - ticked at the grant",
-     "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a",
-     "not in this figure: node 2207 (execute 0x1407d0580) - affix class 1059163184 row 1 (map modifier class 1059163184) - ticked at the grant (x10)",
-     "not in this figure: node 2206 (execute 0x1407d0580) - affix class 122060011 row 1 (map modifier class 122060011) - ticked at the grant (x4)",
-     "not in this figure: node 2206 (execute 0x1407d0580) - affix class 122060013 row 1 (map modifier class 122060013) - ticked at the grant (x10)"
-    ],
-    "lock": 15000000000000,
-    "target": "cube1",
-    "lifeMax": 31633200895
-   },
-   "after": {
-    "life100": 30950260.623032857,
-    "life0": 30950260.623032857,
-    "kill": 30950260.623032857,
-    "partial": [
-     "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
-     "the target's buff not derived (IN1): buff 260 (103010015 row 1, 103010015 row 1): single-slot policy 1 with a cap of 5",
-     "item 3706: comp 0x23 rarity tag list (5000501..5000505; the source is not located)",
-     "item 3403: comp 0x23 rarity tag list (5000501..5000505; the source is not located)",
-     "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
-     "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
-     "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
-     "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
-     "not in this figure: node 2215 (execute 0x1407d0580 `mov al, 1; ret`) - affix class 1010080264 row 1 (hero 4001 spawn class 1010080264) - ticked at the grant",
-     "not in this figure: node 626 ([inf] the owner's comp 0x12 buffs: a value from buff +0xc8 / +0x68 × +0xe8 / the +0xd0 +0x110 table and the node's +0x98..+0xb0 handed to the buff's +0x20 object (vt+0x10 — its target not identified, so \"no record\" is inferred); no direct comp 0xc / 0x25 call (execute FUN_141af35a0, c9b_trigexec.c 313-858)) - affix class 775414272 row 1 (hero 4001 spawn class 77541427",
-     "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
-     "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
-     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
-     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
-     "not in this figure: node 2320 (comp 0x82 / 0x91, triggers a skill (execute FUN_141a9df70, c9b_nodes.c 4093-4466)) - affix class 847438 row 1 (buff 10 class 847438) - ticked at the grant",
-     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
-     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 2)) - ticked at the grant",
-     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 72818 row 1 (gem 7006 (skill 1110)) - ticked at the grant",
-     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7031 modifier 771009001) - ticked at the grant",
-     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7130 modifier 771009001) - ticked at the grant",
-     "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a",
-     "not in this figure: node 2207 (execute 0x1407d0580) - affix class 1059163184 row 1 (map modifier class 1059163184) - ticked at the grant (x10)",
-     "not in this figure: node 2206 (execute 0x1407d0580) - affix class 122060011 row 1 (map modifier class 122060011) - ticked at the grant (x4)",
-     "not in this figure: node 2206 (execute 0x1407d0580) - affix class 122060013 row 1 (map modifier class 122060013) - ticked at the grant (x10)"
-    ],
-    "lock": 15000000000000,
-    "target": "cube1",
-    "lifeMax": 31633200895
-   },
-   "cumFE": 2359.123784318182,
-   "notes": [
-    "talent points assumed"
-   ]
   }
  ],
  "notSearched": [
@@ -6372,8 +6146,7 @@
   "single slates: board adjacency is resolved server-side",
   "target hero memories: dps-debug has no what-if change for them; not offered",
   "target vorax limbs: dps-debug has no what-if change for them; not offered",
-  "target kismets appear once their pact is equipped in that slot",
-  "point shifts beyond the best 60 of 1025 (maxShifts)"
+  "target kismets appear once their pact is equipped in that slot"
  ],
  "unpriced": [
   "L60 not on the market / unpriced: Unique Endless Night - Prototype in boots: +101.3 % if you get it",
@@ -7053,28 +6826,14 @@
   "Replace socket 5 with Hammer of Ash: Rekindle (Magnificent): dropped ailment 3 is inflicted by reaction_normal with chance 30% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 3 is inflicted by reaction_enhance with chance 30% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 3 is inflicted by reaction_enhance_extra_attack_bullet_hit with chance 30% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range)",
   "Target: Agony Darkness Ring in ring1: dropped the target's buff not derived (IN1): buff 260 (103010015 row 1): single-slot policy 1 with a cap of 5, 51512840",
   "Target: Old King's Sabatons in boots: dropped item 3910: comp 0x23 rarity tag list (5000501..5000505; the source is not located), buff 15184 (50355540 row 1, 50355540 row 2): 3.42857 adds/s over a life of 8 s leave P(below the cap 40) = 3.75e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Remove the support in socket 1: dropped buff 15184 (50355540 row 1, 50355540 row 2): 2.97255 adds/s over a life of 8 s leave P(below the cap 40) = 5.57e-5: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Trait Phantom Delivery instead of Blast Barrage (tier 2): dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.16484 adds/s over a life of 8 s leave P(below the cap 40) = 1.81e-5: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported, not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 976195584 row 1 (started by node 112, affix class 976195584 row 2 (trait 810022 tier 2)) - ticked at the grant, not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 9836197 row 1 (trait 810022 tier 2) - fires on event 0xf429a, not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 9836197 row 2 (trait 810022 tier 2) - fires on event 0xf429a",
+  "Swap Ranger's Broken Mask for a white Long Night Sorcerer's Mask (helmet): dropped item 3811: comp 0x23 rarity tag list (5000501..5000505; the source is not located)",
   "Remove the support in socket 1: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.47119 adds/s over a life of 8 s leave P(below the cap 40) = 2.90e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
   "Swap core talent Great Strength for Judgment: dropped the target's buff (IN1): buff 230 (103010022 row 1): 12.9808 adds/s x 1 stack(s), life 4 s, cap 1 (policy 1): P(fewer than 1 adds in one life) = 2.82e-23 -> steady at 1 [event 1000033 12.9808/s x 100 %]",
   "Swap talent tree Bladerunner for Shadowmaster: dropped ailment 4 is inflicted by reaction_normal with chance 27% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 4 is inflicted by reaction_enhance with chance 27% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 4 is inflicted by reaction_enhance_extra_attack_bullet_hit with chance 27% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range)",
   "Swap talent tree Bladerunner for Warlock: dropped ailment 0 is inflicted by reaction_normal with chance 9% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 3 is inflicted by reaction_normal with chance 9% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 4 is inflicted by reaction_normal with chance 9% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 0 is inflicted by reaction_enhance with chance 9% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 3 is inflicted by reaction_enhance with chance 9% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 4 is inflicted by reaction_enhance with chance 9% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 0 is inflicted by reaction_enhance_extra_attack_bullet_hit with chance 9% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 3 is inflicted by reaction_enhance_extra_attack_bullet_hit with chance 9% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 4 is inflicted by reaction_enhance_extra_attack_bullet_hit with chance 9% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range)",
-  "Swap talent tree Lich for Assassin: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.27164 adds/s over a life of 8 s leave P(below the cap 40) = 9.63e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
-  "Remove the support in socket 1: dropped buff 15184 (50355540 row 1, 50355540 row 2): 2.97255 adds/s over a life of 8 s leave P(below the cap 40) = 5.57e-5: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
-  "Trait Phantom Delivery instead of Blast Barrage (tier 2): dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.16484 adds/s over a life of 8 s leave P(below the cap 40) = 1.81e-5: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported, not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 976195584 row 1 (started by node 112, affix class 976195584 row 2 (trait 810022 tier 2)) - ticked at the grant, not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 9836197 row 1 (trait 810022 tier 2) - fires on event 0xf429a, not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 9836197 row 2 (trait 810022 tier 2) - fires on event 0xf429a",
-  "Swap Ranger's Broken Mask for a white Long Night Sorcerer's Mask (helmet): dropped item 3811: comp 0x23 rarity tag list (5000501..5000505; the source is not located)",
-  "Replace socket 4 with Passivation: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.42857 adds/s over a life of 8 s leave P(below the cap 40) = 3.75e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
-  "Target: Old King's Sabatons in boots: dropped item 3910: comp 0x23 rarity tag list (5000501..5000505; the source is not located)",
-  "Remove the support in socket 4: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.42857 adds/s over a life of 8 s leave P(below the cap 40) = 3.75e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
-  "Swap core talent Great Strength for Judgment: dropped the target's buff (IN1): buff 230 (103010022 row 1): 12.0536 adds/s x 1 stack(s), life 4 s, cap 1 (policy 1): P(fewer than 1 adds in one life) = 1.15e-21 -> steady at 1 [event 1000033 12.0536/s x 100 %]",
-  "Add core talent Centralize: dropped not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 894924 row 1 (talent 42001300 x1) - fires on event 0xf4261, not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 570574 row 2 (talent 42001300 x1) - fires on event 0xf4265",
-  "Add core talent Endless Fervor: stopped: not ported: attr 4802 dyn_48 counter 45: no fixed rating (comp 0x26 key 1, node 639) reached the owner's store",
-  "Swap talent tree Ronin for Shadowdancer: dropped ailment 0 is inflicted by reaction_normal with chance 9% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 0 is inflicted by reaction_enhance with chance 9% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 0 is inflicted by reaction_enhance_extra_attack_bullet_hit with chance 9% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range)",
-  "Swap talent tree Ronin for Shadowmaster: dropped ailment 4 is inflicted by reaction_normal with chance 27% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 4 is inflicted by reaction_enhance with chance 27% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 4 is inflicted by reaction_enhance_extra_attack_bullet_hit with chance 27% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range)",
-  "Swap talent tree Ronin for Warlock: dropped ailment 0 is inflicted by reaction_normal with chance 9% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 3 is inflicted by reaction_normal with chance 9% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 4 is inflicted by reaction_normal with chance 9% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 0 is inflicted by reaction_enhance with chance 9% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 3 is inflicted by reaction_enhance with chance 9% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 4 is inflicted by reaction_enhance with chance 9% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 0 is inflicted by reaction_enhance_extra_attack_bullet_hit with chance 9% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 3 is inflicted by reaction_enhance_extra_attack_bullet_hit with chance 9% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 4 is inflicted by reaction_enhance_extra_attack_bullet_hit with chance 9% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range)",
-  "Replace socket 4 with Critical Strike Damage Increase: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.42857 adds/s over a life of 8 s leave P(below the cap 40) = 3.75e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
-  "Swap core talent Great Strength for Judgment: dropped the target's buff (IN1): buff 230 (103010022 row 1): 14.7321 adds/s x 1 stack(s), life 4 s, cap 1 (policy 1): P(fewer than 1 adds in one life) = 2.56e-26 -> steady at 1 [event 1000033 14.7321/s x 100 %]",
-  "Swap core talent Tradeoff for Centralize: dropped not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 894924 row 1 (talent 42001300 x1) - fires on event 0xf4261, not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 570574 row 2 (talent 42001300 x1) - fires on event 0xf4265",
-  "Swap core talent Tradeoff for Endless Fervor: stopped: not ported: attr 4802 dyn_48 counter 45: no fixed rating (comp 0x26 key 1, node 639) reached the owner's store",
-  "Swap talent tree Lich for Assassin: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.43590 adds/s over a life of 8 s leave P(below the cap 40) = 3.59e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported"
+  "Swap talent tree Lich for Assassin: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.27164 adds/s over a life of 8 s leave P(below the cap 40) = 9.63e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported"
  ],
  "start": {
   "life100": 81901.04911237008,
