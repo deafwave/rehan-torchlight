@@ -328,6 +328,15 @@ describe('fix round 1', () => {
     expect(out.knobs.stoppedBy).toBeUndefined();
     expect(out.knobs.partialRun).toBeUndefined();
   });
+  it('a plan that runs out of priceable upgrades says so on its last leg, with the most common reason', async () => {
+    // after 2 changes every candidate drops a new piece, with numbers that move: the leg ends with that reason, not silently
+    const ev: Evaluator = { pin: 'stub', async close() {}, async run(lo, changes) {
+      const n = ((lo as { __n?: number }).__n ?? 0) + changes.length, k = 100 + 10 * n;
+      return { loadout: { ...lo, __n: n }, dropped: [], figure: { life100: k, life0: k, kill: k, partial: n > 2 && changes.length ? [`buff 15184: ${n}.5 adds/s, a mix of states`] : [] } };
+    } };
+    const out = await runIdeal(ev, { ...small, startLevel: 60, endLevel: 65, stepsPerStage: 5, switchAt: Infinity });
+    expect(out.legs!.at(-1)!.end).toMatch(/^the plan ends here at L65: no upgrade the model can price fully raises the kill speed \(most often: buff 15184: # adds\/s, a mix of states\)$/);
+  });
   it('advice starts on the first boss the character does not kill within moveOnSeconds', async () => {
     const st = fromExport(exportOf({ loadout: { ...idealStart().loadout, skills: [{ sid: 1110, level: 20, place: { kind: 'active', slot: 0 } }] } }));
     const out = await runAdvise(bossEv(), { ...st, loadout: { ...st.loadout, __n: 50 } }, { maxRounds: 1, topK: 2, maxSteps: 1 });

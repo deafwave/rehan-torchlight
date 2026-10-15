@@ -97,7 +97,7 @@ async function ideal(ev: Evaluator, K: IdealKnobs, prices: PriceBook | Record<Sk
     return out({ start: first.figure, inputs, notCalculable: [why] });
   }
   const mem = newMem(), steps: Step[] = [], notSearched = new Set<string>(CULL_NOT_COUNTED), unpriced: string[] = [];
-  let f = first.figure, stopped = false, halted = false, stalls = 0;   // stalls: stages in a row with no step
+  let f = first.figure, stopped = false, halted = false, goal = false, stalls = 0, lastLevel = K.startLevel, stageReasons = 0;   // stalls: stages in a row with no step
   const targets = K.targets ?? BOSS_ORDER, moveOn = K.moveOnSeconds ?? 10;
   let ti = 0;
   const legs: Leg[] = [{ skill: s.skill, target: null, firstStep: 0, start: first.figure }];
@@ -159,11 +159,13 @@ async function ideal(ev: Evaluator, K: IdealKnobs, prices: PriceBook | Record<Sk
       for (const m of spent.taken) for (const c of m.changes as { kind: string; node?: number }[]) if (c.kind === 'talent') per.set(c.node!, (per.get(c.node!) ?? 0) + 1);
       notes.push(`L${level}: ${spent.taken.length} new talent point(s) spent: ${[...per].map(([n, p]) => `${talentName(n)} (+${p})`).join(', ')}`); s = spent.state; f = spent.figure; }
     const before = steps.length, last = level + K.stageStep > K.endLevel;
+    lastLevel = level; stageReasons = mem.notCalculable.size;
     // the last stage keeps going toward the goal: the last boss at the damage lock
     for (let n = 0; n < (last && s.skill === 'hoa' ? Math.max(K.stepsPerStage, K.finalSteps) : K.stepsPerStage); n++) {
       if (overBudget(K, t0, ev)) { stopped = true; break; }
       if (s.skill === 'hoa' && ti === targets.length - 1 && lockBound(f)) {
-        notes.push(`L${level}: goal reached: ${bossName(targets[ti])} is lock-bound (more damage no longer kills it faster; ${secs(killTime(f))} to kill)`);
+        legs[legs.length - 1].end = `goal reached: ${bossName(targets[ti])} is lock-bound (more damage no longer kills it faster; ${secs(killTime(f))} to kill)`;
+        notes.push(`L${level}: ${legs[legs.length - 1].end}`); goal = true;
         break;
       }
       // the Ice Shot leg ends at switchAt: the switch follows at once, at this level; until it can, no more Ice Shot upgrades
@@ -194,6 +196,13 @@ async function ideal(ev: Evaluator, K: IdealKnobs, prices: PriceBook | Record<Sk
     onStep?.(snap({ partialRun: true }));
   }
   if (mem.unpriced.size) unpriced.push(`${mem.unpriced.size} distinct acquisitions had no price; the best ${K.topK} per stage are listed above`);
+  // a plan that ran out of upgrades the model can price fully says so, with the reason its last stage gave most often
+  if (!stopped && !halted && !goal && !legs[legs.length - 1].end) {
+    const count = new Map<string, number>();
+    for (const r of [...mem.notCalculable].slice(stageReasons)) { const k = pieceKey(/: (?:dropped|stopped:) (.*)$/.exec(r)?.[1] ?? r).slice(0, 140); count.set(k, (count.get(k) ?? 0) + 1); }
+    const top = [...count].sort((a, b) => b[1] - a[1])[0]?.[0];
+    legs[legs.length - 1].end = `the plan ends here at L${lastLevel}: no upgrade the model can price fully raises the kill speed${top ? ` (most often: ${top})` : ''}`;
+  }
   return snap(stopped ? { stoppedBy: 'budget' } : {});
 }
 
