@@ -22,7 +22,10 @@ export const STILL_KEY = 'castLogSum id=10000000 window=4s tags=[[],[],[],[]]';
 export const DEFAULT_ROLL_BUDGET = 1 << 20;
 /** the boss Hammer of Ash is priced against (user, 2026-10-15: kill Cube 3 as fast as possible); Ice Shot, the levelling leg, stays on its dummy */
 export const DEFAULT_TARGET = 'cube3';
-export const DEFAULT_FIGHT: Fight = { bombs: 10, inputs: { [STILL_KEY]: 0 } };
+/** Old King's Armor's movement-speed bonus (chest 3010, modifier 51416041): 100 at a consume, -5 per 0.1 s (dps-debug GF1). It only writes movement
+ *  speed, which nothing priced reads: the l100 capture is bit-equal at 0 and 100 (2026-10-15), so 0 is stated */
+export const OLD_KING_KEY = 'affix class 782097792 var 1';
+export const DEFAULT_FIGHT: Fight = { bombs: 10, inputs: { [STILL_KEY]: 0, [OLD_KING_KEY]: 0 } };
 export interface Job { loadout: Loadout; changes: (Change | LoadoutPatch)[]; ctx: EvalCtx; fight: Fight; rollBudget: number; /** a dps-debug BOSSES key (hoa) */ target?: string }
 export interface JobResult { loadout: Loadout; dropped: string[]; fig: { life100: number; life0: number; left: string[]; needs: string[]; stop?: string; inputs?: Record<string, unknown>;
   /** the damage lock's ceiling, the build's cull on the target (CULL1), the boss's max Life */ lock?: number; cull?: { threshold: number; blocked: string[]; stop?: string }; lifeMax?: number } }

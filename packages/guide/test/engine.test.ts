@@ -120,7 +120,7 @@ describe('evaluator (stub workers)', () => {
     const [d, five, again] = [await mk(), await mk({ bombs: 5 }), await mk({ bombs: 5 })];
     await d.run(lo, [], ctx); await five.run(lo, [], ctx); await again.run(lo, [], ctx);
     expect(s.jobs.map(j => j.fight)).toEqual([DEFAULT_FIGHT, { bombs: 5 }]);
-    expect(d.fight).toEqual({ bombs: 10, inputs: { 'castLogSum id=10000000 window=4s tags=[[],[],[],[]]': 0 } });
+    expect(d.fight).toEqual({ bombs: 10, inputs: { 'castLogSum id=10000000 window=4s tags=[[],[],[],[]]': 0, 'affix class 782097792 var 1': 0 } });
     expect(d.fightNote).toBe('training dummy stands still (dps-debug STILL / e2e1-lib.ts)');
     // same bombs, different named input: its own entry too
     await (await mk({ bombs: 5, inputs: { x: 1 } })).run(lo, [], ctx);
@@ -392,14 +392,13 @@ describe('figure session reuse (real worker)', () => {
 });
 
 describe('stated fight inputs (real worker)', () => {
-  it.skipIf(!!skipReal)('the L100 Phantom Delivery loadout gets past the bombs and castLogSum stops', async () => {
+  it.skipIf(!!skipReal)("the L100 Phantom Delivery loadout prices: bombs, castLogSum and Old King's Armor's movement bonus are stated", async () => {
     const dir = join(pinRoot(), 'game'), f = readdirSync(dir).filter(x => /^loadout_l100-.*\.json$/.test(x)).sort().pop()!;
     const ev = await createEvaluator({ workers: 1 });
     try {
       const r = await ev.run(JSON.parse(readFileSync(join(dir, f), 'utf8')), [], { level: 93, skill: 'hoa' });
-      // past the bombs and castLogSum stops; it stops on something else dps-debug does not have yet (expected)
-      expect(r.figure.stop).toMatch(/^(not ported|the scenario did not supply the fight input) /);
-      expect(r.figure.stop).not.toMatch(/bombs|castLogSum/);
+      expect(r.figure.stop).toBeUndefined();
+      expect(r.figure.kill).toBeGreaterThan(0);
     } finally { await ev.close(); }
   }, 900_000);
 });
