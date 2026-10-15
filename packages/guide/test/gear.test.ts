@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it, vi } from 'vitest';
-import { basesFor, gearMoves } from '../src/candidates/gear';
+import { basesFor, gearMoves, whiteBaseMoves } from '../src/candidates/gear';
 import { craftOptions, type LibraryAffix } from '../src/craft';
 import { pinRoot, table } from '../src/pin';
 import { GROUND, L100, applyAll, loadout } from './apply';
@@ -208,5 +208,19 @@ describe('gearMoves', () => {
     expect(swapped(mh).modifiers.baseAttr.map((m: { id: number }) => m.id)).toEqual(real);
     expect(swapped(mh).modifiers.baseAffix).toBeUndefined();
     expect([...c.notSearched].some(x => /rolled base implicit \(BAffixInfoList\) not modelled/.test(x))).toBe(true);
+  });
+});
+
+describe('whiteBaseMoves', () => {
+  it("a worn item can be swapped for the slot's best white base: free, a reconfiguration; never the weapon, never a white base already worn", () => {
+    const chest = basesFor('chest', 90, 'hoa').at(-1)!, helm = basesFor('helmet', 90, 'hoa').at(-1)!;
+    const moves = whiteBaseMoves(state('hoa', 90, [MAUL, CHEST, item('helmet', helm.baseId, helm.name)]), ctx(90));
+    expect(moves.map(m => (m.changes[0] as { slot: string }).slot)).toEqual(['chest']);
+    expect(moves[0]).toMatchObject({ kind: 'gear', acquisition: false, costFE: 0, market: 'drop', minLevel: chest.level,
+      label: `Swap Brute's Chestguard for a white ${chest.name} (chest)` });
+    const it2 = swapped(moves[0]);
+    expect(it2).toMatchObject({ baseId: chest.baseId, baseName: chest.name, level: chest.level });
+    expect(Object.keys(it2.modifiers)).toEqual(['baseAttr']);
+    expect(it2.modifiers.baseAttr.map((m: { id: number }) => m.id)).toEqual(rows('config_item_base')[chest.baseId].a1b8);
   });
 });

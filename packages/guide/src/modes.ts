@@ -1,14 +1,14 @@
 /** The two guide modes (spec §3.3): `runIdeal` paths the Bing1 progression from map entry, `runAdvise` advises a live character. */
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { gearMoves, slotsOfBase } from './candidates/gear';
+import { gearMoves, slotsOfBase, whiteBaseMoves } from './candidates/gear';
 import { GEM_LEVEL, gemLevelAt, gemMoves } from './candidates/gems';
 import { kismetMoves } from './candidates/kismets';
 import { memoryMoves } from './candidates/memories';
 import { pactMoves } from './candidates/pacts';
 import { prismMoves } from './candidates/prisms';
 import { slateMoves } from './candidates/slates';
-import { switchMoves, switchWithPage } from './candidates/switch';
+import { switchWithPage } from './candidates/switch';
 import { targetMoves } from './candidates/target';
 import { talentMoves, talentPointMoves } from './candidates/talents';
 import { traitMoves } from './candidates/traits';
@@ -29,12 +29,13 @@ export interface IdealKnobs extends Knobs {
   startLevel: number; endLevel: number; stageStep: number;
   /** full-level talent budget (below 93 scaled by round(full x (L - 1) / 92)) */ talentPoints: number;
   /** the planned leg change: at the first stage start whose Ice Shot kill average reaches this (or after a stage with no step), the path switches to
-   *  Hammer of Ash on the target build's talent page; a greedy step never takes it (a bare maul cannot beat a geared bow) */ switchAt: number;
+   *  Hammer of Ash on the target build's talent page; never a greedy step (its figure is against the boss, the Ice Shot leg's the dummy) */ switchAt: number;
   /** reconfiguration rounds re-solved right after the planned switch (churn 0) */ switchRounds: number;
 }
 export const DEFAULT_IDEAL: IdealKnobs = { ...DEFAULT_KNOBS, stepsPerStage: 25, startLevel: 60, endLevel: 100, stageStep: 5, talentPoints: 108, switchAt: 2e8, switchRounds: 5 };
 
-const ALL: Generator[] = [gearMoves, gemMoves, kismetMoves, memoryMoves, pactMoves, prismMoves, slateMoves, switchMoves, talentMoves, traitMoves, targetMoves];
+// the Ice Shot -> Hammer of Ash switch is planned (`switchWithPage`), never a greedy step: its figure is against the boss, the Ice Shot leg's the dummy
+const ALL: Generator[] = [gearMoves, gemMoves, kismetMoves, memoryMoves, pactMoves, prismMoves, slateMoves, talentMoves, traitMoves, targetMoves, whiteBaseMoves];
 const only = (acquisition: boolean) => (g: Generator): Generator => (s, c) => g(s, c).filter((m) => m.acquisition === acquisition);
 
 /** Mode 2: an owned (non-equipped) gear item is worn at 0 FE, once (the search drops it from `owned` when taken). */
@@ -152,7 +153,8 @@ export async function runAdvise(ev: Evaluator, state: State, k: Partial<Knobs> =
     return { ...base, start: first.figure, inputs: first.inputs, steps: [], notSearched: [], unpriced: [],
       notCalculable: [`${state.skill} cannot be priced yet: ${first.figure.stop}`] };
   }
-  const { stoppedBy, ...r } = await path(state, ev, acq, recon, (s) => ({ prices: books, level: s.level, notSearched: new Set() }), K,
+  const { stoppedBy, ...r } = await path(state, ev, acq, recon, (s) => ({ prices: books, level: s.level,
+    notSearched: new Set(s.skill === 'iceShot' ? ['switch to Hammer of Ash: planned in the ideal guide, not searched for an Ice Shot character'] : []) }), K,
     onStep && ((p) => onStep({ ...base, knobs: { ...base.knobs, partialRun: true }, inputs: first.inputs, ...p } as GuideOut)));
   return { ...base, ...(stoppedBy ? { knobs: { ...base.knobs, stoppedBy } } : {}), inputs: first.inputs, ...r } as GuideOut;
 }

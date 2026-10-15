@@ -127,6 +127,15 @@ let goldGroups: Set<number> | undefined;
 const isUnique = (it: GearItem) => (it.itemId ?? '').startsWith('guide-unique-') || it.affixes.some(a => (goldGroups ??= new Set(Object.values(cat().gold)
   .flatMap(g => ['m88', 'ma8', 'mc8', 'me8', 'm108', 'm128', 'm148', 'm168'].flatMap(k => Object.keys(g[k] ?? {}).map(Number))))).has(Math.floor(a.id / 10)));
 
+/** A worn item that lowers the figure (after the Ice Shot -> Hammer of Ash switch, Demon Slayer's Skin's Edict of Trinity zeroes every Hammer of Ash
+ *  hit) is swapped for the slot's best white base: a free drop and a reconfiguration, so the slot keeps its crafts, base upgrades and uniques. */
+export const whiteBaseMoves: Generator = (s: State, ctx: GenCtx): Move[] => (s.loadout.gear as GearItem[]).flatMap((it): Move[] => {
+  const best = it.slot && SLOT_TYPE[it.slot] ? basesFor(it.slot, ctx.level, s.skill).at(-1) : undefined;
+  if (!best || (it.baseId === best.baseId && !it.affixes.some(a => a.list !== 'BaseAttrInfoList'))) return [];
+  const item: Dump = { baseId: best.baseId, baseName: best.name, itemId: `guide-white-${best.baseId}`, level: best.level, modifiers: { baseAttr: attrMods(cat().rows.get(best.baseId)!) } };
+  return [{ kind: 'gear', label: `Swap ${it.label} for a white ${best.name} (${it.slot})`, acquisition: false, costFE: 0, market: 'drop', costNote: 'drop', minLevel: best.level, changes: swap(it.slot!, item) }];
+});
+
 export const gearMoves: Generator = (s: State, ctx: GenCtx): Move[] => {
   const c = cat(), moves: Move[] = [];
   const slots = new Set<string>();

@@ -7,7 +7,6 @@ import { legalAllocation, pointsAtLevel, treeOf } from '../src/talentRules';
 import { gearMoves } from '../src/candidates/gear';
 import { slateMoves } from '../src/candidates/slates';
 import { pactMoves } from '../src/candidates/pacts';
-import { switchMoves } from '../src/candidates/switch';
 import type { Evaluator, Generator } from '../src/types';
 import { parseAdvice, renderGuide } from '../../page/src/guide-view';
 
@@ -190,7 +189,7 @@ describe('fix round 1', () => {
     const out = await runIdeal(stubEv(undefined, { runs }), { ...small, endLevel: 60, stepsPerStage: 0 });
     const s = idealStart();
     const ctx = { prices: historyBook(localItems(), localHistory()), level: 60, notSearched: new Set<string>() };
-    const want = unpricedAcquisitions([gearMoves, switchMoves, slateMoves, pactMoves].map((g): Generator => (st, c) => g(st, c).filter((m) => m.acquisition)), s, ctx);
+    const want = unpricedAcquisitions([gearMoves, slateMoves, pactMoves].map((g): Generator => (st, c) => g(st, c).filter((m) => m.acquisition)), s, ctx);
     expect(want.length).toBeGreaterThan(0);
     expect(out.knobs).not.toHaveProperty('unpricedEval');
     const seen = new Set(runs.map((r) => JSON.stringify(r.changes)));
@@ -226,6 +225,28 @@ describe('fix round 1', () => {
     expect(sw.notes![0]).toBe('planned switch: the Ice Shot leg stalled (no step last stage); the kill average may drop here');
     const kinds = (sw.move.changes.slice(2) as { kind: string; action?: string; points?: number }[]).map((c) => (c.kind === 'core' ? `core-${c.action}` : c.points === 0 ? 'zero' : 'set'));
     expect(kinds.join(',')).toMatch(/^(zero,)+(core-remove,)*(set,)+(core-add,)*core-add$/);
+  });
+  it('an Ice Shot stage never prices a greedy switch (its Cube 3 figure is no measure against the dummy); an Ice Shot advice says the switch is not searched', async () => {
+    const skills: string[] = [];
+    const ev = stubEv(), spy: Evaluator = { ...ev, run: (lo, ch, ctx) => (skills.push(ctx.skill), ev.run(lo, ch, ctx)) };
+    await runIdeal(spy, { ...small, startLevel: 90, endLevel: 90, stepsPerStage: 1, switchAt: Infinity });
+    expect(skills).not.toContain('hoa');
+    const out = await runAdvise(stubEv(), fromExport(exportOf()), { maxRounds: 1, topK: 2, maxSteps: 1 });
+    expect(out.notSearched).toContain('switch to Hammer of Ash: planned in the ideal guide, not searched for an Ice Shot character');
+  });
+  it('the planned switch re-solve swaps a worn item that zeroes Hammer of Ash for a white base', async () => {
+    // stub: Hammer of Ash prices 0 while the start chest is worn (Demon Slayer's Skin's Edict of Trinity), 100 once the chest is a white swap
+    const ev: Evaluator = { pin: 'stub', async close() {}, async run(lo, changes, ctx) {
+      let gear = (lo as { gear: { slot: string; itemId: string; label: string; affixes: unknown[] }[] }).gear;
+      for (const c of changes as { kind: string; slot?: string; item?: { itemId: string } }[])
+        if (c.kind === 'gear' && c.item) gear = [...gear.filter((g) => g.slot !== c.slot), { slot: c.slot!, itemId: c.item.itemId, label: c.item.itemId, affixes: [] }];
+      const k = ctx.skill === 'hoa' && !gear.find((g) => g.slot === 'chest')?.itemId.startsWith('guide-white-') ? 0 : 100;
+      return { loadout: { ...lo, gear }, dropped: [], figure: { life100: k, life0: k, kill: k, partial: [] } };
+    } };
+    const out = await runIdeal(ev, { ...small, startLevel: 90, endLevel: 90, stepsPerStage: 0, switchAt: 0 });
+    const sw = out.steps.find((st) => st.move.kind === 'switch')!;
+    expect(sw.triggered.map((m) => m.label)).toContainEqual(expect.stringMatching(/^Swap .+ for a white .+ \(chest\)$/));
+    expect(sw.after.kill).toBe(100);
   });
   it('the planned switch waits (named) while the target page does not fit the level points', async () => {
     const out = await runIdeal(stubEv(), { ...small, startLevel: 60, endLevel: 60, stepsPerStage: 0, switchAt: 0 });

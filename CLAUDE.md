@@ -39,7 +39,9 @@ the `game.busy` file exists (`DEFAULT_BUSY_FILE` in `engine/pool.ts`, env `GUIDE
   model's damage lock (CAP1, 1.5e13 per attacker per victim); time to kill = max Life / kill speed. Defense after the kill goal is not modelled.
 - An enabler is re-solved only when its own figure reaches `enablerFloor` (0.25) x the current kill average.
 - Ideal: the Ice Shot -> Hammer of Ash switch is planned, not searched: at the first stage start whose kill average reaches
-  `switchAt` (2e8), or after a stage with no step, on the target build's talent page once it fits the level's points.
+  `switchAt` (2e8), or after a stage with no step, on the target build's talent page once it fits the level's points. Never a greedy step (its figure
+  is against the boss, Ice Shot's the dummy); advise does not search it for an Ice Shot character. A worn item that lowers the figure (Demon Slayer's Skin
+  zeroes Hammer of Ash) can be swapped for the slot's best white base, a free reconfiguration (`whiteBaseMoves`).
 - Unported rules are skipped and named in `notSearched`, never guessed.
 
 ## Invariants
