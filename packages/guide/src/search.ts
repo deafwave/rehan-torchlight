@@ -4,6 +4,7 @@ import type { Evaluated, Evaluator, Figure, GenCtx, Generator, Move, State, Step
 
 export interface Knobs { churn: number; topK: number; maxRounds: number; refreshEvery: number; maxSteps: number; targetKill?: number; budgetFE?: number;
   /** wall-clock minutes; once over, the run stops after the current step (knobs.stoppedBy = 'budget') */ budgetMinutes?: number;
+  /** echoed only: the prices file laid over etor (cli `--prices` / prices.json) and how many items it names */ prices?: { file: string; overrides: number };
   /** advise: once the FE is spent, steps still searched without the budget (each noted "beyond your FE") */ continueSteps: number;
   /** the best enabler (own figure) is re-solved only when its figure reaches this share of the current kill average (ponytail: a heuristic bound, one
    *  re-solve round would need a 1/floor gain to rescue it; set 0 to always re-solve the best) */ enablerFloor: number }

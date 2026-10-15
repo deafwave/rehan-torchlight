@@ -30,6 +30,15 @@ function book(snapshot: EtorItems, priceOf: (id: string, level: number, row: Eto
   };
 }
 
+/** Your prices (`prices.json`: { "<item name>": FE }) over a book: a named item costs that at every hero level, the rest keep the book's price.
+ *  Callers price by English name (etor's, or the game's for a white base or gem), so a name etor does not list still applies; it is
+ *  returned in `unknown` so a typo is said. A price that is not a number of FE (0 or more) is refused. */
+export function withPrices(b: PriceBook, mine: Record<string, number>): { book: PriceBook; unknown: string[] } {
+  for (const [name, fe] of Object.entries(mine)) if (typeof fe !== 'number' || !(fe >= 0)) throw new Error(`prices: "${name}" needs a price in FE (a number, 0 or more), got ${JSON.stringify(fe)}`);
+  const unknown = Object.keys(mine).filter((name) => (b.category?.(name) ?? null) === null);
+  return { unknown, book: { ...b, price: (key, level) => (typeof key === 'string' && Object.hasOwn(mine, key) ? mine[key] : b.price(key, level)) } };
+}
+
 /** Ideal mode: the history window for the hero level, else the next later window, else `last`. An item with no history
  *  takes its snapshot price unless that is null or the 1-FE placeholder (then unpriced). */
 export function historyBook(items: EtorItems, history: EtorHistory, windows = WINDOWS): PriceBook {

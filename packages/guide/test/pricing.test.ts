@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import history from './fixtures/etor-history-mini.json';
 import items from './fixtures/etor-items-mini.json';
 import live from './fixtures/etor-snapshot-live.json';
-import { fetchSeason, fetchSnapshot, historyBook, snapshotBook, type EtorHistory, type EtorItems } from '../src/pricing';
+import { fetchSeason, fetchSnapshot, historyBook, snapshotBook, withPrices, type EtorHistory, type EtorItems } from '../src/pricing';
 
 const I = items as EtorItems, H = history as EtorHistory;
 const book = historyBook(I, H);
@@ -42,6 +42,25 @@ describe('snapshotBook', () => {
     expect(s.price('Arminius Guillotine', 100)).toBe(10.083);
     expect(s.price('God of War\'s Divinity', 60)).toBeNull();
     expect([s.season, s.fetchedAt]).toEqual([I.season, I.fetchedAt]);
+  });
+});
+
+describe('withPrices (your prices file)', () => {
+  it('a named item costs what the file says at every level; the rest keep the book price', () => {
+    const { book, unknown } = withPrices(historyBook(I, H), { 'Arminius Guillotine': 3, 'Highest Glance': 0 });
+    for (const level of [60, 80, 100]) expect(book.price('Arminius Guillotine', level)).toBe(3);
+    expect(book.price('Highest Glance', 70)).toBe(0);
+    expect(book.price('Cover the Sun', 100)).toBe(historyBook(I, H).price('Cover the Sun', 100));
+    expect(unknown).toEqual([]);
+  });
+  it('a name etor does not list is applied (a game name, e.g. a white base) and reported', () => {
+    const { book, unknown } = withPrices(snapshotBook(I), { 'Sierra Reverberation Maul': 2 });
+    expect(book.price('Sierra Reverberation Maul', 90)).toBe(2);
+    expect(unknown).toEqual(['Sierra Reverberation Maul']);
+  });
+  it('a price that is not a number of FE (0 or more) is refused with its name', () => {
+    expect(() => withPrices(snapshotBook(I), { 'Highest Glance': -1 })).toThrow(/Highest Glance/);
+    expect(() => withPrices(snapshotBook(I), { 'Highest Glance': '5' as never })).toThrow(/Highest Glance/);
   });
 });
 

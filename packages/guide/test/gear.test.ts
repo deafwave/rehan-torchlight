@@ -211,6 +211,14 @@ describe('gearMoves', () => {
   });
 });
 
+describe('corrosion', () => {
+  it('buying or making a Corroded item is not searched, and the guide says so', () => {
+    const c = ctx(90);
+    gearMoves(hoa60(), c);
+    expect([...c.notSearched]).toContain('corrosion: a Corroded item is not offered (etor lists no corroded variant, and the corrosion outcome table is not extracted); one you own is priced as read');
+  });
+});
+
 describe('whiteBaseMoves', () => {
   it("a worn item can be swapped for the slot's best white base: free, a reconfiguration; never the weapon, never a white base already worn", () => {
     const chest = basesFor('chest', 90, 'hoa').at(-1)!, helm = basesFor('helmet', 90, 'hoa').at(-1)!;

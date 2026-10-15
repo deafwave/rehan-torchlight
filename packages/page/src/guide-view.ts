@@ -63,6 +63,7 @@ function goalCard(g: GuideOut): string {
   const t = killTime(last);
   return `<div class="gl-goal"><h2>${title}</h2>`
     + `<p class="goal-line">Goal: ${boss ? `kill <b>${esc(boss === 'cube3' ? 'Cube 3' : boss)}</b> as fast as possible` : 'the fastest kill'}${g.mode === 'advise' && isFinite(Number(g.knobs.fe)) ? ` with your ${fmtFE(Number(g.knobs.fe))} FE` : ''}</p>`
+    + (Number((g.knobs.prices as { overrides?: unknown } | undefined)?.overrides) > 0 ? `<p class="goal-line">Priced with your prices file: ${Number((g.knobs.prices as { overrides: unknown }).overrides)} items at your price, the rest at etor’s.</p>` : '')
     + `<div class="goal-stats"><div><span class="k">kill speed</span><span class="v">${fmtDps(g.start.kill)} → ${fmtDps(last.kill)}</span></div>`
     + `<div><span class="k">upgrades</span><span class="v">${g.steps.length}</span></div><div><span class="k">FE spent</span><span class="v">${fmtFE(fe)}</span></div>`
     + (t ? `<div><span class="k">time to kill</span><span class="v">${t}</span></div>` : '') + '</div>'

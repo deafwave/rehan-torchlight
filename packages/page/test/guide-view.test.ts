@@ -52,6 +52,10 @@ describe('guide view', () => {
     expect(h).toContain('kill <b>Cube 3</b> as fast as possible');
     expect(h).toContain('5.00 s');
   });
+  it('a plan priced with your prices file says so; one on etor alone does not', () => {
+    expect(renderGuide({ ...g, knobs: { ...g.knobs, prices: { file: 'prices.json', overrides: 3 } } })).toContain('Priced with your prices file: 3 items at your price, the rest at etor');
+    expect(renderGuide(g)).not.toContain('your prices file');
+  });
   it('a blocked Hammer of Ash leg is said plainly', () => {
     const h = renderGuide({ ...g, startNotes: ['L90 planned switch cannot be priced yet: not ported: CalcFinalHurt early exit'] });
     expect(h).toContain('The Hammer of Ash leg is not calculable yet');
