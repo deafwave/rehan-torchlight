@@ -5,8 +5,8 @@ import type { Evaluated, Evaluator, Figure, GenCtx, Generator, Move, State, Step
 export interface Knobs { churn: number; topK: number; maxRounds: number; refreshEvery: number; maxSteps: number; targetKill?: number; budgetFE?: number;
   /** wall-clock minutes; once over, the run stops after the current step (knobs.stoppedBy = 'budget') */ budgetMinutes?: number;
   /** advise: once the FE is spent, steps still searched without the budget (each noted "beyond your FE") */ continueSteps: number;
-  /** an enabler is re-solved only when its own figure reaches this share of the current kill average (ponytail: a heuristic bound, one
-   *  re-solve round would need a 1/floor gain to rescue it; set 0 to re-solve every enabler) */ enablerFloor: number }
+  /** the best enabler (own figure) is re-solved only when its figure reaches this share of the current kill average (ponytail: a heuristic bound, one
+   *  re-solve round would need a 1/floor gain to rescue it; set 0 to always re-solve the best) */ enablerFloor: number }
 export const overBudget = (k: Knobs, t0: number, ev?: Evaluator) =>
   k.budgetMinutes !== undefined && Date.now() - t0 - (ev?.pausedMs?.() ?? 0) >= k.budgetMinutes * 60_000;
 export const DEFAULT_KNOBS: Knobs = { churn: 0.05, topK: 5, maxRounds: 10, refreshEvery: 10, maxSteps: 400, continueSteps: 10, enablerFloor: 0.25 };
@@ -110,7 +110,10 @@ async function stepOnce(s: State, f: Figure, rawEv: Evaluator, acq: Generator[],
   }
   const byScore = (a: { score: number; gain: number }, b: { score: number; gain: number }) => (b.score - a.score) || (b.gain - a.gain) || 0;
   const all = [...fresh.values()].filter((r) => r.gain > -Infinity);
-  const picks = new Set([...all.sort(byScore).slice(0, k.topK), ...all.filter((r) => r.m.enabler && r.e.figure.kill >= f.kill * k.enablerFloor)]);
+  // ponytail: one enabler re-solved per step, the best own figure over the floor (each re-solve prices every reconfiguration; none won a step in the
+  // 2026-10-15 guides); re-solve more if a lost step shows it
+  const enabler = all.filter((r) => r.m.enabler && r.e.figure.kill >= f.kill * k.enablerFloor).sort((a, b) => b.e.figure.kill - a.e.figure.kill)[0];
+  const picks = new Set([...all.sort(byScore).slice(0, k.topK), ...(enabler ? [enabler] : [])]);
   const solved = await Promise.all([...picks].map(async (r) => {
     const s1 = apply(s, r.m, r.e);
     let res = await resolve(s1, ev, recon, ctx, k, r.e.figure, mem);

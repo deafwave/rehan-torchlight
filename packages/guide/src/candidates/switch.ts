@@ -9,7 +9,7 @@ import { pinRoot, table } from '../pin';
 import { basesFor } from './gear';
 import { costOf } from '../priceOf';
 import { gemLevelAt, gemRequires, mainSid, supportsFor } from './gems';
-import { pointsAtLevel, treeOf } from '../talentRules';
+import { pointsAtLevel, treeOf, trimPage } from '../talentRules';
 import { talentName, treeName } from '../names';
 import type { Change, Generator, Move } from '../types';
 
@@ -21,21 +21,23 @@ const targetFile = (): TargetFile => target ??= JSON.parse(readFileSync(join(pin
 const targetSkills = (): Gem[] => targetFile().skills;
 
 /** The planned leg change (ideal mode): the switch move plus the target build's talent page (every point and core of the current page removed, the
- *  target's set), so Hammer of Ash starts on its own trees instead of Ice Shot's. Null (with the reason in notSearched) until the page fits the level's
- *  points or while the switch itself is not offered. */
+ *  target's set), so Hammer of Ash starts on its own trees instead of Ice Shot's. Below the page's points it is trimmed to the level's (`trimPage`).
+ *  Null (with the reason in notSearched) while the switch itself is not offered. */
 export const switchWithPage: (s: Parameters<Generator>[0], ctx: Parameters<Generator>[1]) => Move | null = (s, ctx) => {
   const m = switchMoves(s, ctx)[0];
   if (!m || m.minLevel > ctx.level) { ctx.notSearched.add(`planned switch waits: the switch is not offered at level ${ctx.level}`); return null; }
-  const t = targetFile(), need = Object.values(t.talents).reduce((a, b) => a + b, 0), have = pointsAtLevel(ctx.level);
-  if (need > have) { ctx.notSearched.add(`planned switch waits: the target talent page needs ${need} points, level ${ctx.level} has ${have}`); return null; }
+  const t = targetFile(), sum = (p: Record<string, number>) => Object.values(p).reduce((a, b) => a + b, 0);
+  const page = trimPage(t.talents, t.coreTalents, pointsAtLevel(ctx.level)), need = sum(t.talents), n = sum(page.talents);
   const l = s.loadout as { talents?: Record<string, number>; coreTalents?: number[] };
-  const page: Change[] = [
+  const changes: Change[] = [
     ...Object.entries(l.talents ?? {}).filter(([, p]) => p > 0).map(([k]) => ({ kind: 'talent', node: +k, points: 0 }) as Change),
     ...(l.coreTalents ?? []).map(c => ({ kind: 'core', node: c, action: 'remove' }) as Change),
-    ...Object.entries(t.talents).map(([k, p]) => ({ kind: 'talent', node: +k, points: p }) as Change),
-    ...t.coreTalents.map(c => ({ kind: 'core', node: c, action: 'add' }) as Change),
+    ...Object.entries(page.talents).map(([k, p]) => ({ kind: 'talent', node: +k, points: p }) as Change),
+    ...page.cores.map(c => ({ kind: 'core', node: c, action: 'add' }) as Change),
   ];
-  return { ...m, label: `${m.label}, on the target build's talent page (${need} points; ${[...new Set(Object.keys(t.talents).map(k => treeOf(Number(k))))].map(treeName).join(', ')}; cores ${t.coreTalents.map(talentName).join(', ')})`, changes: [...m.changes, ...page] };
+  const trees = [...new Set(Object.keys(page.talents).map(k => treeOf(Number(k))))].map(treeName).join(', ');
+  return { ...m, label: `${m.label}, on the target build's talent page ${n < need ? `trimmed to ${n} of ${need} points (` : `(${need} points; `}${trees}; cores ${page.cores.map(talentName).join(', ') || 'none'})`,
+    changes: [...m.changes, ...changes] };
 };
 
 export const switchMoves: Generator = (s, ctx) => {

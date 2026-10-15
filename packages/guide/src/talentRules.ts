@@ -87,3 +87,25 @@ export function violations(tree: number, points: Record<number, number>, copies:
   return bad;
 }
 export const legalAllocation = (tree: number, points: Record<number, number>, copies: readonly Copy[] = []) => violations(tree, points, copies).length === 0;
+
+/** A talent page cut to `points`, judged against the page as given (the target build reaches some of its points through prism copies and slates the
+ *  switch does not carry, so it breaks the bare rules: a cut may add no violation the page did not have, and a core's `need` counts at most what its tree
+ *  had). One point at a time comes off the deepest row whose removal keeps that (while another removal can, never one that takes a tree below the need of
+ *  a core it carries); then every core whose tree is below its need is dropped. These are the points a player levelling into the page places last. */
+export function trimPage(talents: Record<string | number, number>, cores: number[], points: number): { talents: Record<number, number>; cores: number[] } {
+  const t: Record<number, number> = Object.fromEntries(Object.entries(talents).map(([k, v]) => [Number(k), v]));
+  const tree = (p: Record<number, number>, tr: number) => Object.fromEntries(Object.entries(p).filter(([k]) => treeOf(+k) === tr).map(([k, v]) => [+k, v]));
+  const inTree = (p: Record<number, number>, tr: number) => Object.values(tree(p, tr)).reduce((a, b) => a + b, 0);
+  const given = new Map([...new Set(Object.keys(t).map(k => treeOf(+k)))].map(tr => [tr, { sum: inTree(t, tr), bad: new Set(violations(tr, tree(t, tr))) }]));
+  const need = (c: number) => Math.min(nodeRow(c)?.need ?? 0, given.get(treeOf(c))?.sum ?? 0);
+  const coreNeed = (tr: number) => Math.max(0, ...cores.filter(c => treeOf(c) === tr).map(need));
+  const ok = (k: number) => violations(treeOf(k), { ...tree(t, treeOf(k)), [k]: t[k] - 1 }).every(v => given.get(treeOf(k))!.bad.has(v));
+  for (let total = Object.values(t).reduce((a, b) => a + b, 0); total > points; total--) {
+    const legal = Object.keys(t).map(Number).filter(k => t[k] > 0 && ok(k));
+    if (!legal.length) break;
+    const keeps = (k: number) => Number(inTree(t, treeOf(k)) - 1 >= coreNeed(treeOf(k)));
+    const k = legal.sort((a, b) => keeps(b) - keeps(a) || nodeRow(b)!.row - nodeRow(a)!.row || b - a)[0];
+    if (--t[k] === 0) delete t[k];
+  }
+  return { talents: t, cores: cores.filter(c => inTree(t, treeOf(c)) >= need(c)) };
+}

@@ -37,9 +37,11 @@ the `game.busy` file exists (`DEFAULT_BUSY_FILE` in `engine/pool.ts`, env `GUIDE
 - Target: Hammer of Ash is priced against Cube 3 (`target` / `--target`, a dps-debug `BOSSES` key, `dummy` = the ground's dummy); Ice Shot, the
   levelling leg, on its dummy. Kill speed (`kill.ts`) = Life per second from 100 % down to the model's cull (CULL1; 0 when blocked), DPS at most the
   model's damage lock (CAP1, 1.5e13 per attacker per victim); time to kill = max Life / kill speed. Defense after the kill goal is not modelled.
-- An enabler is re-solved only when its own figure reaches `enablerFloor` (0.25) x the current kill average.
-- Ideal: the Ice Shot leg ends at `switchAt` (2e8): no Ice Shot step once its kill average reaches it. The Ice Shot -> Hammer of Ash switch is
-  planned, not searched: at the first stage start whose kill average reaches `switchAt`, or after a stage with no step, on the target build's talent page once it fits the level's points. Never a greedy step (its figure
+- One enabler per step is re-solved: the best own figure, when it reaches `enablerFloor` (0.25) x the current kill average.
+- Ideal: the Ice Shot leg ends at `switchAt` (2e8): the Ice Shot -> Hammer of Ash switch follows at once, at that level (mid-stage too), or at
+  the next stage start after a stage with no step. It is planned, not searched: the target build's talent page, trimmed to the level's points
+  below its own (`trimPage`: deepest rows first, no rule broken the page did not break, a core dropped below its tree's need). Until the switch
+  can be taken (a stop, a level gate) no Ice Shot upgrade is bought. Never a greedy step (its figure
   is against the boss, Ice Shot's the dummy); advise does not search it for an Ice Shot character. A worn item that lowers the figure (Demon Slayer's Skin
   zeroes Hammer of Ash) can be swapped for the slot's best white base, a free reconfiguration (`whiteBaseMoves`).
 - Unported rules are skipped and named in `notSearched`, never guessed.

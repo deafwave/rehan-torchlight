@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { talentMoves, talentMovesWith } from '../src/candidates/talents';
 import { pinRoot } from '../src/pin';
 import { talentName, treeName } from '../src/names';
-import { POINT_OBSERVATIONS, copiesOf, legalAllocation, nodeRow, pointsAtLevel, treeCores, treeOf, treeSlotsAllowed, violations } from '../src/talentRules';
+import { POINT_OBSERVATIONS, copiesOf, legalAllocation, nodeRow, pointsAtLevel, treeCores, treeOf, treeSlotsAllowed, trimPage, violations } from '../src/talentRules';
 
 const pin = pinRoot();
 const l94 = JSON.parse(readFileSync(`${pin}/game/loadout_l94-20261013-160234.json`, 'utf8'));
@@ -196,5 +196,40 @@ describe('talent moves', () => {
       for (const c of (l.coreTalents ?? []).filter((x: number) => nodeRow(x))) expect(total(Object.fromEntries(Object.entries(l.talents as Record<string, number>).filter(([k]) => treeOf(+k) === treeOf(c)))) + copies.reduce((a, x) => a + (x.tree === treeOf(c) ? x.point : 0), 0), `${f} core ${c}`).toBeGreaterThanOrEqual(nodeRow(c)!.need);
     }
     expect(withCopy).toBeGreaterThan(100);
+  });
+});
+
+describe('trimPage', () => {
+  const t = JSON.parse(readFileSync(`${pin}/re/evidence/loadout_probuild-hanshansi-bing.json`, 'utf8')) as { talents: Record<string, number>; coreTalents: number[] };
+  const sum = (p: Record<number, number>) => Object.values(p).reduce((a, b) => a + b, 0);
+  it('a page that fits is kept whole', () => {
+    expect(trimPage(t.talents, t.coreTalents, 200)).toEqual({ talents: Object.fromEntries(Object.entries(t.talents).map(([k, v]) => [Number(k), v])), cores: t.coreTalents });
+  });
+  // the target page breaks the bare rules (it reaches points through prism copies and slates): a cut adds no violation it did not have
+  const own = (p: Record<string | number, number>, tree: number) => Object.fromEntries(Object.entries(p).filter(([k]) => treeOf(+k) === tree).map(([k, v]) => [+k, v]));
+  const inTree = (p: Record<string | number, number>, tree: number) => sum(own(p, tree));
+  it('a page cut to the level points: no new rule broken per tree, never above the target, a core kept only while its tree has its need', () => {
+    for (const points of [99, 69]) {
+      const r = trimPage(t.talents, t.coreTalents, points);
+      expect(sum(r.talents)).toBe(points);
+      for (const tree of new Set(Object.keys(r.talents).map((k) => treeOf(+k)))) {
+        const before = new Set(violations(tree, own(t.talents, tree)));
+        expect(violations(tree, own(r.talents, tree)).filter((v) => !before.has(v)), `tree ${tree} at ${points}`).toEqual([]);
+      }
+      for (const [k, v] of Object.entries(r.talents)) expect(v).toBeLessThanOrEqual(t.talents[k]);
+      for (const c of t.coreTalents) {
+        const need = Math.min(nodeRow(c)!.need, inTree(t.talents, treeOf(c)));
+        expect(r.cores.includes(c), `core ${c} at ${points}`).toBe(inTree(r.talents, treeOf(c)) >= need);
+      }
+    }
+  });
+  it('the points come off the deepest rows first', () => {
+    const r = trimPage(t.talents, t.coreTalents, 99), cut = Object.keys(t.talents).filter((k) => (r.talents[+k] ?? 0) < t.talents[k]);
+    const kept = Object.keys(r.talents).filter((k) => r.talents[+k] === t.talents[k]);
+    for (const tree of new Set(cut.map((k) => treeOf(+k)))) {
+      const low = Math.min(...cut.filter((k) => treeOf(+k) === tree).map((k) => nodeRow(+k)!.row));
+      const deeperKept = kept.filter((k) => treeOf(+k) === tree && nodeRow(+k)!.row > low);
+      expect(deeperKept, `tree ${tree}`).toEqual([]);
+    }
   });
 });

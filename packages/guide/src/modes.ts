@@ -86,6 +86,26 @@ async function ideal(ev: Evaluator, K: IdealKnobs, prices: PriceBook | undefined
   /** the output so far; callers pass `partialRun` until the run completes */
   const snap = (extra: Record<string, unknown>) => out({ start: first.figure, inputs, steps: [...steps], notSearched: [...notSearched], unpriced: [...unpriced], notCalculable: [...mem.notCalculable],
     knobs: { ...K, fight: ev.fight, fightNote: ev.fightNote, rollBudget: ev.rollBudget, target: ev.target, ...extra } });
+  let tried = -1;
+  /** the planned switch at `level` (once per level): true once taken as a step; a stop or a switch not offered yet leaves the Ice Shot leg as it is */
+  const trySwitch = async (level: number): Promise<boolean> => {
+    tried = level;
+    const ctx = ctxOf(s), m = switchWithPage(s, ctx);
+    ctx.notSearched.forEach((x) => notSearched.add(x));
+    const e = m && m.costFE !== null ? await ev.run(s.loadout, m.changes, { level, skill: 'hoa' }) : null;
+    if (e?.figure.stop) { const why = `L${level} planned switch cannot be priced yet: ${e.figure.stop}`; mem.notCalculable.add(why); notes.push(why); return false; }
+    if (!m || !e) return false;
+    const r = await resolve({ ...s, loadout: e.loadout, skill: 'hoa', fe: s.fe - m.costFE! }, ev, recon, ctx, { ...K, churn: 0, maxRounds: K.switchRounds }, e.figure, mem);
+    const sp = await spendFree(r.state, ev, talentPointMoves, ctx, K, r.figure, mem);
+    mem.cumFE += m.costFE!;
+    const why = f.kill >= K.switchAt ? `the Ice Shot leg reached ${f.kill.toExponential(2)} (switchAt ${K.switchAt.toExponential(0)})` : 'the Ice Shot leg stalled (no step last stage)';
+    steps.push({ level, move: m, triggered: [...r.taken, ...sp.taken], before: f, after: sp.figure, cumFE: mem.cumFE,
+      notes: [`planned switch: ${why}; the kill average may drop here${sp.figure.target ? `; from here figures are against ${sp.figure.target}, not the Ice Shot leg's dummy` : ''}`, ...switchNote(f, sp.figure), ...(level < 93 ? ['talent points assumed'] : [])] });
+    s = sp.state; f = sp.figure; mem.scores.clear(); mem.since = 0;   // the Ice Shot scores say nothing about Hammer of Ash
+    onStep?.(snap({ partialRun: true }));
+    return true;
+  };
+  const capped = () => s.skill === 'iceShot' && f.kill >= K.switchAt;
   for (let level = K.startLevel; level <= K.endLevel; level += K.stageStep) {
     // stage upkeep: gems level up with the hero (to what each ladder allows)
     const skills = (s.loadout.skills as { sid: number; level: number }[]).map((g) => ({ ...g, level: Math.max(g.level, gemLevelAt(g.sid, level, GEM_LEVEL)) }));
@@ -94,32 +114,20 @@ async function ideal(ev: Evaluator, K: IdealKnobs, prices: PriceBook | undefined
     f = (await ev.run(s.loadout, [], { level, skill: s.skill })).figure;
     if (f.stop) { const why = `L${level} ${s.skill} leg cannot be priced yet: ${f.stop}`; mem.notCalculable.add(why); notes.push(why); break; }
     mem.scores.clear(); mem.since = 0;   // scores of the last stage are no upper bound on this one (new level, new points, new prices)
-    if (s.skill === 'iceShot' && (f.kill >= K.switchAt || stalled) && !overBudget(K, t0, ev)) {
-      const ctx = ctxOf(s), m = switchWithPage(s, ctx);
-      ctx.notSearched.forEach((x) => notSearched.add(x));
-      const e = m && m.costFE !== null ? await ev.run(s.loadout, m.changes, { level, skill: 'hoa' }) : null;
-      if (e?.figure.stop) { const why = `L${level} planned switch cannot be priced yet: ${e.figure.stop}`; mem.notCalculable.add(why); notes.push(why); }
-      else if (m && e) {
-        const r = await resolve({ ...s, loadout: e.loadout, skill: 'hoa', fe: s.fe - m.costFE! }, ev, recon, ctx, { ...K, churn: 0, maxRounds: K.switchRounds }, e.figure, mem);
-        const sp = await spendFree(r.state, ev, talentPointMoves, ctx, K, r.figure, mem);
-        mem.cumFE += m.costFE!;
-        const why = f.kill >= K.switchAt ? `the Ice Shot leg reached ${f.kill.toExponential(2)} (switchAt ${K.switchAt.toExponential(0)})` : 'the Ice Shot leg stalled (no step last stage)';
-        steps.push({ level, move: m, triggered: [...r.taken, ...sp.taken], before: f, after: sp.figure, cumFE: mem.cumFE,
-          notes: [`planned switch: ${why}; the kill average may drop here${sp.figure.target ? `; from here figures are against ${sp.figure.target}, not the Ice Shot leg's dummy` : ''}`, ...switchNote(f, sp.figure), ...(level < 93 ? ['talent points assumed'] : [])] });
-        s = sp.state; f = sp.figure;
-        onStep?.(snap({ partialRun: true }));
-      }
-    }
+    if (s.skill === 'iceShot' && (f.kill >= K.switchAt || stalled) && !overBudget(K, t0, ev)) await trySwitch(level);
     // the level-up's new talent points are spent at once, free and ungated: one point is worth less than the churn gate
     const spent = await spendFree(s, ev, talentPointMoves, ctxOf(s), K, f, mem);
     if (spent.taken.length) { const per = new Map<number, number>();
       for (const m of spent.taken) for (const c of m.changes as { kind: string; node?: number }[]) if (c.kind === 'talent') per.set(c.node!, (per.get(c.node!) ?? 0) + 1);
       notes.push(`L${level}: ${spent.taken.length} new talent point(s) spent: ${[...per].map(([n, p]) => `${talentName(n)} (+${p})`).join(', ')}`); s = spent.state; f = spent.figure; }
     const before = steps.length;
-    const capped = () => s.skill === 'iceShot' && f.kill >= K.switchAt;
-    if (capped()) notes.push(`L${level}: the Ice Shot leg reached ${f.kill.toExponential(2)} (switchAt ${K.switchAt.toExponential(1)}): no more Ice Shot upgrades; the planned switch waits for the target talent page`);
-    for (let n = 0; n < K.stepsPerStage && !capped(); n++) {
+    for (let n = 0; n < K.stepsPerStage; n++) {
       if (overBudget(K, t0, ev)) { stopped = true; break; }
+      // the Ice Shot leg ends at switchAt: the switch follows at once, at this level; until it can, no more Ice Shot upgrades
+      if (capped() && (tried === level || !(await trySwitch(level)))) {
+        notes.push(`L${level}: the Ice Shot leg reached ${f.kill.toExponential(2)} (switchAt ${K.switchAt.toExponential(1)}): no more Ice Shot upgrades until the switch can be taken`);
+        break;
+      }
       const ctx = ctxOf(s);
       const r = await step(s, f, ev, acq, recon, ctx, K, mem, talentPointMoves);
       ctx.notSearched.forEach((x) => notSearched.add(x));

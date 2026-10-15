@@ -93,6 +93,13 @@ describe('step', () => {
     expect(r!.step.after.kill).toBeCloseTo(300);
   });
 
+  test('of several enablers over the floor only the one with the best own figure is re-solved', async () => {
+    const { ev, calls } = stub();
+    const r = await step(state(), base, ev, [fixed(mv('+1%', { enabler: true }), mv('E', { enabler: true, changes: [ch('E'), ch('+2%')] }))], [fixed(rc('R'))], ctx(), { ...K, topK: 1 });
+    expect(r!.step.move.label).toBe('E');
+    expect(calls.some((c) => c.startsWith('[["+1%"],[{"label":"R"}]'))).toBe(false);
+  });
+
   test('an enabler whose own figure is under enablerFloor x the current kill is not re-solved', async () => {
     const r = await step(state(), base, stub().ev, [fixed(mv('+20%'), mv('E', { enabler: true }))], [fixed(rc('R'))], ctx(), { ...K, topK: 1, enablerFloor: 1.01 });
     expect(r!.step.move.label).toBe('+20%');
