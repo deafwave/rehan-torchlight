@@ -175,3 +175,25 @@ describe('one tab per leg (one yardstick each)', () => {
   });
 });
 
+describe('a step reads like a plan, not a model dump', () => {
+  const hoa = (kill: number) => ({ ...g.start, kill, life100: kill, life0: kill, target: 'cube1', lifeMax: 3.16e10, lock: 1.5e13 });
+  const sw = { ...g.steps[0], level: 85, move: { ...g.steps[0].move, kind: 'switch', label: 'Switch to Hammer of Ash with Forger\'s Maul' }, before: { ...g.start, kill: 2.56e8 }, after: hoa(1.02e7),
+    notes: ['planned switch: the Ice Shot leg reached 2.56e+8 (switchAt 2e+8); from here figures are against Cube 1', 'omissions differ across the skill switch: +the target\'s class 200000250 (BOSS1): below a Life threshold', 'talent points assumed'] };
+  const legs = [{ skill: 'iceShot', target: null, firstStep: 0, start: g.start, end: 'the Ice Shot leg reached 2.56e+8 (switchAt 2e+8): switch to Hammer of Ash' },
+    { skill: 'hoa', target: 'cube1', firstStep: 1, start: hoa(1.02e7) }];
+  const html = renderGuide({ ...g, steps: [g.steps[0], sw], legs, knobs: { ...g.knobs, partialRun: true } } as unknown as GuideOut);
+  const cube1 = html.split('<section class="gl-leg"')[2];
+  it('the switch shows no gain across two yardsticks', () => {
+    expect(cube1).not.toMatch(/−9\d %/);
+    expect(cube1).toContain('new yardstick');
+  });
+  it("the model's omission list is not shown on a step; numbers read as units", () => {
+    expect(html).not.toContain('omissions differ');
+    expect(html).toContain('256 M (switchAt 200 M)');
+    expect(html).not.toContain('2.56e+8');
+  });
+  it('the leg still being computed says so', () => {
+    expect(cube1).toContain('still computing');
+  });
+});
+

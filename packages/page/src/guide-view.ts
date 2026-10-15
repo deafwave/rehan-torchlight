@@ -59,6 +59,12 @@ export function actionText(m: Move): string {
 const cost = (m: Move) => (m.costFE == null ? 'unpriced' : m.market === 'drop' ? 'free (drops)' : m.costFE === 0 ? 'free' : `${fmtFE(m.costFE)} FE`);
 const partialMark = (f: Figure) => (f.partial.length ? `<span class="warn" title="partial: ${esc(f.partial.join(', '))}">*</span>` : '');
 const killTime = (f: Figure) => (f.stop || !f.lifeMax || !(f.kill > 0) ? '' : fmtTime(f.lifeMax / f.kill));
+/** model notes in the player's units: 2.56e+8 -> 256 M */
+const human = (t: string) => t.replace(/\b(\d+(?:\.\d+)?)e\+?(\d+)\b/g, (_, m: string, e: string) => fmtDps(Number(m) * 10 ** Number(e)));
+/** a step's notes worth showing: the model's omission list stays in the data (Details), not on the plan */
+const shownNotes = (s: Step) => (s.notes ?? []).filter((n) => !/^omissions differ/.test(n)).map(human);
+/** before and after on the same yardstick (the switch and a boss change are not) */
+const sameYard = (s: Step) => (s.before.target ?? null) === (s.after.target ?? null);
 
 // ---- the goal card
 function goalCard(g: GuideOut): string {
@@ -103,17 +109,17 @@ function stages(es: Entry[], mode: GuideOut['mode']): string {
   es.forEach((e) => { const last = groups.at(-1); if (last && last.level === e.s.level) last.steps.push(e); else groups.push({ level: e.s.level, steps: [e] }); });
   if (!groups.length) return `<p class="muted">No upgrade improves the kill speed${mode === 'advise' ? ' within your FE' : ''}${mode === 'ideal' ? ' here yet' : ''}.</p>`;
   return groups.map((gr, k) => {
-    const first = gr.steps[0].s, end = gr.steps.at(-1)!.s, fe = end.cumFE - (first.cumFE - (first.move.costFE ?? 0));
+    const first = gr.steps[0].s, end = gr.steps.at(-1)!.s, fe = end.cumFE - (first.cumFE - (first.move.costFE ?? 0)), b0 = sameYard(first) ? first.before.kill : first.after.kill;
     const rows = gr.steps.map(({ s, n }) => {
       const t = killTime(s.after);
       return `<li class="step" value="${n}"><span class="ico" title="${esc(s.move.kind)}">${ICON[s.move.kind] ?? '•'}<small>${n}</small></span>`
-        + `<span class="what">${esc(actionText(s.move))}${(s.notes ?? []).map((x) => `<span class="chip">${esc(x)}</span>`).join('')}</span>`
-        + `<span class="cost">${cost(s.move)}</span><span class="gain">${s.after.stop ? '<span class="warn">stopped</span>' : esc(fmtGain(s.before.kill, s.after.kill))}${partialMark(s.after)}`
+        + `<span class="what">${esc(actionText(s.move))}${shownNotes(s).map((x) => `<span class="chip">${esc(x)}</span>`).join('')}</span>`
+        + `<span class="cost">${cost(s.move)}</span><span class="gain">${s.after.stop ? '<span class="warn">stopped</span>' : sameYard(s) ? esc(fmtGain(s.before.kill, s.after.kill)) : '<span class="muted">new yardstick</span>'}${partialMark(s.after)}`
         + `<small>${fmtDps(s.after.kill)}${t ? ` · ${t}` : ''}</small></span>`
         + (s.triggered.length ? `<ul class="respecs">${s.triggered.map((x) => `<li class="respec">then: ${esc(actionText(x))}</li>`).join('')}</ul>` : '') + '</li>';
     }).join('');
     return `<details class="gl-stage"${k === 0 || mode === 'advise' ? ' open' : ''}><summary><span class="lvl">Level ${esc(gr.level)}</span>`
-      + `<span>${gr.steps.length} upgrade${gr.steps.length > 1 ? 's' : ''}</span><span>${fmtFE(fe)} FE</span><span class="gain">${esc(fmtGain(first.before.kill, end.after.kill))}</span></summary>`
+      + `<span>${gr.steps.length} upgrade${gr.steps.length > 1 ? 's' : ''}</span><span>${fmtFE(fe)} FE</span><span class="gain">${b0 === end.after.kill ? '' : esc(fmtGain(b0, end.after.kill))}</span></summary>`
       + `<ol class="gl-steps">${rows}</ol></details>`;
   }).join('');
 }
@@ -191,7 +197,7 @@ function legPanel(g: GuideOut, l: Leg, i: number): string {
     + (t0 || t1 ? `<div><span class="k">time to kill</span><span class="v">${t0 || '—'} → ${t1 || '—'}</span></div>` : '')
     + `<div><span class="k">upgrades</span><span class="v">${own.length}</span></div><div><span class="k">FE spent</span><span class="v">${fmtFE(fe)}</span></div></div></div>`
     + chart(l.start, es.filter((e) => e.s.move.kind !== 'switch'), fe0) + stages(es, g.mode)
-    + (l.end ? `<p class="leg-end">→ ${esc(l.end)}</p>` : '') + '</section>';
+    + (l.end ? `<p class="leg-end">→ ${esc(human(l.end))}</p>` : i === legs.length - 1 && g.knobs?.partialRun ? `<p class="leg-end">… still computing: ${own.length} upgrade${own.length === 1 ? '' : 's'} so far on ${esc(l.target ? bossName(l.target) : 'this leg')}</p>` : '') + '</section>';
 }
 function legTabs(g: GuideOut): string {
   const id = `leg-${g.mode}`, legs = g.legs!;
