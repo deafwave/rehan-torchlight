@@ -28,6 +28,9 @@ const targetSkills = (): Gem[] => targetFile().skills;
 export const switchWithPage: (s: Parameters<Generator>[0], ctx: Parameters<Generator>[1]) => Move | null = (s, ctx) => {
   const m = switchMoves(s, ctx)[0];
   if (!m || m.minLevel > ctx.level) { ctx.notSearched.add(`planned switch waits: the switch is not offered at level ${ctx.level}`); return null; }
+  // the >= 110T path starts with Ruinous Star on (user, 2026-10-15): the planned switch waits for a level that wears it
+  const star = goldItem(RUINOUS_STAR, ctx.level);
+  if (star && star.minLevel > ctx.level) { ctx.notSearched.add(`planned switch waits for Ruinous Star (hero level ${star.minLevel})`); return null; }
   const t = targetFile(), sum = (p: Record<string, number>) => Object.values(p).reduce((a, b) => a + b, 0);
   const page = trimPage(t.talents, t.coreTalents, pointsAtLevel(ctx.level)), need = sum(t.talents), n = sum(page.talents);
   const l = s.loadout as { talents?: Record<string, number>; coreTalents?: number[] };

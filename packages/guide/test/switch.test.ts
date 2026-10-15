@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { basesFor } from '../src/candidates/gear';
 import { gemLevelAt, mainSid, supportsFor } from '../src/candidates/gems';
 import { table } from '../src/pin';
-import { switchMoves } from '../src/candidates/switch';
+import { switchMoves, switchWithPage } from '../src/candidates/switch';
 import type { Skill } from '../src/types';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -46,6 +46,13 @@ describe('switchMoves', () => {
     const low = gen('iceShot', 81, all);
     expect(low.moves[0].changes.some(c => (c as { item?: { itemId: string } }).item?.itemId === 'guide-unique-112158')).toBe(false);
     expect([...low.notSearched]).toContain('switch: Ruinous Star needs hero level 82; the switch at level 81 goes without it');
+  });
+  it('the planned switch waits for a level that wears Ruinous Star (82), and is named waiting', () => {
+    const at = (level: number) => { const notSearched = new Set<string>(); return { m: switchWithPage({ loadout: l94, owned: [], fe: 0, level, skill: 'iceShot' }, { prices: fakePrices(all), level, notSearched }), notSearched }; };
+    const low = at(81);
+    expect(low.m).toBeNull();
+    expect([...low.notSearched]).toContain('planned switch waits for Ruinous Star (hero level 82)');
+    expect(at(85).m!.label).toMatch(/Ruinous Star/);
   });
   it('main skill sids come from the pin loadouts: Ice Shot 1030 (l94), Hammer of Ash 1110 (target build)', () => {
     expect([mainSid('iceShot'), mainSid('hoa')]).toEqual([1030, 1110]);

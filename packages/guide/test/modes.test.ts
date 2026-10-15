@@ -253,12 +253,12 @@ describe('fix round 1', () => {
     expect(sw.after.kill).toBe(100);
   });
   it('the Ice Shot leg ends at switchAt: the switch follows at once, mid-stage, at that level, and Hammer of Ash steps go on', async () => {
-    const out = await runIdeal(stubEv(), { ...small, startLevel: 60, endLevel: 60, stepsPerStage: 10, switchAt: 150 });
+    const out = await runIdeal(stubEv(), { ...small, startLevel: 85, endLevel: 85, stepsPerStage: 10, switchAt: 150 });
     const i = out.steps.findIndex((st) => st.move.kind === 'switch');
     expect(i).toBeGreaterThan(0);
     expect(out.steps.slice(0, i).every((st) => st.before.kill < 150)).toBe(true);
     expect(out.steps[i - 1].after.kill).toBeGreaterThanOrEqual(150);
-    expect(out.steps[i].level).toBe(60);
+    expect(out.steps[i].level).toBe(85);
     expect(out.steps.length).toBeGreaterThan(i + 1);
   });
   it('a switch whose figure stops leaves the Ice Shot leg ended (no more Ice Shot steps), said in the notes', async () => {
@@ -266,18 +266,18 @@ describe('fix round 1', () => {
       const r = await ev.run(lo, ch, c);
       return c.skill === 'hoa' ? { ...r, figure: { ...r.figure, stop: 'not ported: x' } } : r;
     } };
-    const out = await runIdeal(hoaStops, { ...small, startLevel: 60, endLevel: 60, stepsPerStage: 10, switchAt: 150 });
+    const out = await runIdeal(hoaStops, { ...small, startLevel: 85, endLevel: 85, stepsPerStage: 10, switchAt: 150 });
     expect(out.steps.every((st) => st.before.kill < 150 && st.move.kind !== 'switch')).toBe(true);
-    expect(out.startNotes!.some((n) => /^L60 planned switch cannot be priced yet: not ported: x$/.test(n))).toBe(true);
-    expect(out.startNotes!.some((n) => /^L60: the Ice Shot leg reached .* \(switchAt 1\.5e\+2\): no more Ice Shot upgrades/.test(n))).toBe(true);
+    expect(out.startNotes!.some((n) => /^L85 planned switch cannot be priced yet: not ported: x$/.test(n))).toBe(true);
+    expect(out.startNotes!.some((n) => /^L85: the Ice Shot leg reached .* \(switchAt 1\.5e\+2\): no more Ice Shot upgrades/.test(n))).toBe(true);
   });
   it("below the target page's points the switch does not wait: the page is trimmed to the level points", async () => {
-    const out = await runIdeal(stubEv(), { ...small, startLevel: 60, endLevel: 60, stepsPerStage: 0, switchAt: 0 });
+    const out = await runIdeal(stubEv(), { ...small, startLevel: 85, endLevel: 85, stepsPerStage: 0, switchAt: 0 });
     const sw = out.steps.find((st) => st.move.kind === 'switch')!;
-    expect(sw.level).toBe(60);
-    expect(sw.move.label).toMatch(new RegExp(`on the target build's talent page trimmed to ${pointsAtLevel(60)} of \\d+ points`));
+    expect(sw.level).toBe(85);
+    expect(sw.move.label).toMatch(new RegExp(`on the target build's talent page trimmed to ${pointsAtLevel(85)} of \\d+ points`));
     const set = (sw.move.changes as { kind: string; points?: number }[]).filter((c) => c.kind === 'talent' && c.points! > 0);
-    expect(set.reduce((a, c) => a + c.points!, 0)).toBe(pointsAtLevel(60));
+    expect(set.reduce((a, c) => a + c.points!, 0)).toBe(pointsAtLevel(85));
   });
   it('the cull sources the model does not count are named, in the ideal guide and in Hammer of Ash advice', async () => {
     const ideal = await runIdeal(stubEv(), { ...small, endLevel: 60, stepsPerStage: 0 });
