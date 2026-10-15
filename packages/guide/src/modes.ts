@@ -159,7 +159,7 @@ async function ideal(ev: Evaluator, K: IdealKnobs, prices: PriceBook | Record<Sk
       for (const m of spent.taken) for (const c of m.changes as { kind: string; node?: number }[]) if (c.kind === 'talent') per.set(c.node!, (per.get(c.node!) ?? 0) + 1);
       notes.push(`L${level}: ${spent.taken.length} new talent point(s) spent: ${[...per].map(([n, p]) => `${talentName(n)} (+${p})`).join(', ')}`); s = spent.state; f = spent.figure; }
     const before = steps.length, last = level + K.stageStep > K.endLevel;
-    lastLevel = level; stageReasons = mem.notCalculable.size;
+    lastLevel = level; if (stalls === 0) stageReasons = mem.notCalculable.size;   // the reasons since the last stage that found a step
     // the last stage keeps going toward the goal: the last boss at the damage lock
     for (let n = 0; n < (last && s.skill === 'hoa' ? Math.max(K.stepsPerStage, K.finalSteps) : K.stepsPerStage); n++) {
       if (overBudget(K, t0, ev)) { stopped = true; break; }

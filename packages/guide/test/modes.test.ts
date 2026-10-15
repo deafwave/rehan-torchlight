@@ -332,7 +332,7 @@ describe('fix round 1', () => {
     // after 2 changes every candidate drops a new piece, with numbers that move: the leg ends with that reason, not silently
     const ev: Evaluator = { pin: 'stub', async close() {}, async run(lo, changes) {
       const n = ((lo as { __n?: number }).__n ?? 0) + changes.length, k = 100 + 10 * n;
-      return { loadout: { ...lo, __n: n }, dropped: [], figure: { life100: k, life0: k, kill: k, partial: n > 2 && changes.length ? [`buff 15184: ${n}.5 adds/s, a mix of states`] : [] } };
+      return { loadout: { ...lo, __n: n }, dropped: [], figure: { life100: k, life0: k, kill: k, partial: n > 2 && changes.length ? ['buff 15184: 3.5 adds/s, a mix of states'] : [] } };   // the same text every stage: the set keeps one
     } };
     const out = await runIdeal(ev, { ...small, startLevel: 60, endLevel: 65, stepsPerStage: 5, switchAt: Infinity });
     expect(out.legs!.at(-1)!.end).toMatch(/^the plan ends here at L65: no upgrade the model can price fully raises the kill speed \(most often: buff 15184: # adds\/s, a mix of states\)$/);
