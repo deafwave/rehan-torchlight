@@ -217,12 +217,13 @@ describe('fix round 1', () => {
     expect(sw.notes![0]).toMatch(/^planned switch: the Ice Shot leg reached /);
     expect((await at(Infinity)).steps.some((st) => st.move.kind === 'switch')).toBe(false);
   });
-  it('the planned switch fires after a stage with no step, and its page zeroes the old points, removes cores, then sets the target page', async () => {
+  it('the planned switch fires after two stages in a row with no step (one is a lull), and its page zeroes the old points, removes cores, then sets the target page', async () => {
     const flat: Evaluator = { pin: 'stub', async close() {}, async run(lo) { return { loadout: lo, dropped: [], figure: { life100: 100, life0: 100, kill: 100, partial: [] } }; } };
-    const out = await runIdeal(flat, { ...small, startLevel: 90, endLevel: 95, stepsPerStage: 1, switchAt: Infinity });
+    expect((await runIdeal(flat, { ...small, startLevel: 90, endLevel: 95, stepsPerStage: 1, switchAt: Infinity })).steps).toEqual([]);
+    const out = await runIdeal(flat, { ...small, startLevel: 85, endLevel: 95, stepsPerStage: 1, switchAt: Infinity });
     const sw = out.steps.find((st) => st.move.kind === 'switch')!;
     expect(sw.level).toBe(95);
-    expect(sw.notes![0]).toBe('planned switch: the Ice Shot leg stalled (no step last stage); the kill average may drop here');
+    expect(sw.notes![0]).toBe('planned switch: the Ice Shot leg stalled (no step in the last 2 stages); the kill average may drop here');
     const kinds = (sw.move.changes.slice(2) as { kind: string; action?: string; points?: number }[]).map((c) => (c.kind === 'core' ? `core-${c.action}` : c.points === 0 ? 'zero' : 'set'));
     expect(kinds.join(',')).toMatch(/^(zero,)+(core-remove,)*(set,)+(core-add,)*core-add$/);
   });
