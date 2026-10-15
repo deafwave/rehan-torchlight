@@ -4,6 +4,7 @@ import { localHistory, localItems, ownedGear, runAdvise, runIdeal, unpricedAcqui
 import { historyBook } from '../src/pricing';
 import { fromExport, idealStart, ICE_SHOT_INPUTS } from '../src/start';
 import { legalAllocation, pointsAtLevel, treeOf } from '../src/talentRules';
+import { CULL_NOT_COUNTED } from '../src/kill';
 import { gearMoves } from '../src/candidates/gear';
 import { slateMoves } from '../src/candidates/slates';
 import { pactMoves } from '../src/candidates/pacts';
@@ -276,6 +277,11 @@ describe('fix round 1', () => {
     expect(sw.move.label).toMatch(new RegExp(`on the target build's talent page trimmed to ${pointsAtLevel(60)} of \\d+ points`));
     const set = (sw.move.changes as { kind: string; points?: number }[]).filter((c) => c.kind === 'talent' && c.points! > 0);
     expect(set.reduce((a, c) => a + c.points!, 0)).toBe(pointsAtLevel(60));
+  });
+  it('the cull sources the model does not count are named, in the ideal guide and in Hammer of Ash advice', async () => {
+    const ideal = await runIdeal(stubEv(), { ...small, endLevel: 60, stepsPerStage: 0 });
+    for (const n of CULL_NOT_COUNTED) expect(ideal.notSearched).toContain(n);
+    expect(CULL_NOT_COUNTED.some((n) => /Machine Lord/.test(n)) && CULL_NOT_COUNTED.some((n) => /Ill Omen/.test(n))).toBe(true);
   });
   it('advice lists every next upgrade with its exact gain, priced or not, best first, and the etor price of what each buys', async () => {
     const out = await runAdvise(stubEv(), fromExport(exportOf()), { maxRounds: 1, topK: 2, maxSteps: 1 });

@@ -9,3 +9,10 @@ export function killSpeed(d100: number, d0: number, lock = Infinity, cull = 0): 
   const x = D === 0 ? -1 : (lock - d0) / D;   // where the line meets the lock
   return 1 / (x > cull && x < 1 ? part(cull, x) + part(x, 1) : part(cull, 1));
 }
+
+/** Cull sources dps-debug's CULL1 does not count on a Hammer of Ash figure, with why (its coordinator, 2026-10-15); the Elimination core (talent 10001100,
+ *  18 % on Attack hits) and the slates' culls are counted */
+export const CULL_NOT_COUNTED = [
+  "cull: Machine Lord's helmet culls only on its minions' hits, which the figure does not simulate; not counted",
+  'cull: Ill Omen / Ominous is no cull: a once-per-boss 20 % max-Life hit after 50 % of max Life dealt as DoT, Reap or Spacetime damage, which Hammer of Ash does not deal',
+];

@@ -215,7 +215,7 @@ describe('corrosion', () => {
   it('buying or making a Corroded item is not searched, and the guide says so', () => {
     const c = ctx(90);
     gearMoves(hoa60(), c);
-    expect([...c.notSearched]).toContain('corrosion: a Corroded item is not offered (etor lists no corroded variant, and the corrosion outcome table is not extracted); one you own is priced as read');
+    expect([...c.notSearched]).toContain('corrosion: a Corroded item is not offered (etor lists no corroded variant, and which affix a corrosion upgrades or adds is decided by the server, so its odds are unknown); one you own is priced as read');
   });
 });
 

@@ -138,7 +138,7 @@ export const whiteBaseMoves: Generator = (s: State, ctx: GenCtx): Move[] => (s.l
 
 export const gearMoves: Generator = (s: State, ctx: GenCtx): Move[] => {
   const c = cat(), moves: Move[] = [];
-  ctx.notSearched.add('corrosion: a Corroded item is not offered (etor lists no corroded variant, and the corrosion outcome table is not extracted); one you own is priced as read');
+  ctx.notSearched.add('corrosion: a Corroded item is not offered (etor lists no corroded variant, and which affix a corrosion upgrades or adds is decided by the server, so its odds are unknown); one you own is priced as read');
   const slots = new Set<string>();
   for (const it of s.loadout.gear as GearItem[]) {
     const slot = it.slot;

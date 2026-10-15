@@ -13,6 +13,7 @@ import { targetMoves } from './candidates/target';
 import { talentMoves, talentPointMoves } from './candidates/talents';
 import { traitMoves } from './candidates/traits';
 import { type EtorHistory, type EtorItems, historyBook, snapshotBook } from './pricing';
+import { CULL_NOT_COUNTED } from './kill';
 import { DEFAULT_KNOBS, type Knobs, newMem, overBudget, path, rankableMove, resolve, spendFree, step, switchNote } from './search';
 import { ICE_SHOT_INPUTS, idealStartNotes } from './start';
 import { setTalentPoints } from './talentRules';
@@ -83,7 +84,7 @@ async function ideal(ev: Evaluator, K: IdealKnobs, prices: PriceBook | undefined
     notes.push(why);
     return out({ start: first.figure, inputs, notCalculable: [why] });
   }
-  const mem = newMem(), steps: Step[] = [], notSearched = new Set<string>(), unpriced: string[] = [];
+  const mem = newMem(), steps: Step[] = [], notSearched = new Set<string>(CULL_NOT_COUNTED), unpriced: string[] = [];
   let f = first.figure, stopped = false, stalls = 0;   // stages in a row with no step
   /** the output so far; callers pass `partialRun` until the run completes */
   const snap = (extra: Record<string, unknown>) => out({ start: first.figure, inputs, steps: [...steps], notSearched: [...notSearched], unpriced: [...unpriced], notCalculable: [...mem.notCalculable],
@@ -179,7 +180,7 @@ export async function runAdvise(ev: Evaluator, state: State, k: Partial<Knobs> =
       notCalculable: [`${state.skill} cannot be priced yet: ${first.figure.stop}`] };
   }
   const ctxOf = (s: State): GenCtx => ({ prices: books, level: s.level,
-    notSearched: new Set(s.skill === 'iceShot' ? ['switch to Hammer of Ash: planned in the ideal guide, not searched for an Ice Shot character'] : []) });
+    notSearched: new Set(s.skill === 'iceShot' ? ['switch to Hammer of Ash: planned in the ideal guide, not searched for an Ice Shot character'] : CULL_NOT_COUNTED) });
   const next = await nextBuys(state, ev, acq, ctxOf(state), first.figure);
   const bought = Object.fromEntries(next.filter((n) => n.buy).map((n) => [n.buy!.name, books.price(n.buy!.name, state.level)]));
   const withNext = { ...base, next, prices: bought };
