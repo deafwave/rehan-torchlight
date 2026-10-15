@@ -7,7 +7,7 @@ the Vite page (`packages/page`) renders it. Nothing on the page is typed in by h
 ## The pin
 
 `@dps/*` resolves to `<tli>/dps-debug/.worktrees/tli-lens-pin/model/*` (a detached, locked worktree of dps-debug; now
-dps-debug main 35b6ff67 (GL1 bosses, CULL1 culls, GE1, PERF1, PS2, BA1, RC1 / AQ1 / EX1, SS14 opt-in (not used), PF2 / PF3: the session's
+dps-debug main 7d2d40ea (U2-MIX: a buff in a mix of states priced as the expectation over its stack states; GL1 bosses, CULL1 culls, GE1, PERF1, PS2, BA1, RC1 / AQ1 / EX1, SS14 opt-in (not used), PF2 / PF3: the session's
 whole-figure and per-piece caches, 2.5-3x on one-change variants; pin only a main commit with a recorded green gate); tsconfig paths + vitest alias; env `DPS_DEBUG_PIN` overrides, see `packages/guide/src/pin.ts`). Every output
 records the pin commit and the memo key includes it. Never edit dps-debug from here. Refresh:
 `git -C <pin> checkout --detach main`, `npm ci` in `model/` if its lockfile moved, then rerun dps-debug's guide gates
@@ -45,6 +45,8 @@ the `game.busy` file exists (`DEFAULT_BUSY_FILE` in `engine/pool.ts`, env `GUIDE
 - Hammer of Ash goes boss by boss (`BOSS_ORDER`: Cube 1, Keegan 2, Cube 2, Cube 3; knob `targets`): a leg moves on once its boss dies within
   `moveOnSeconds` (10); the last runs to the damage lock (the goal), the last stage taking up to `finalSteps`. Each leg is one page tab (`GuideOut.legs`).
   Advise starts on the first boss the character does not kill within `moveOnSeconds`, and by default prices the next-buys list only (`--steps N` adds a plan).
+- The planned switch also puts on Ruinous Star (gold 112158, chest; the >= 110T build's core, user 2026-10-15). The known build's rares cost base + crafting
+  embers (affixes outside the craft pool named, not costed); its pacts and slate board are farmed (0 FE).
 - Ideal: the Ice Shot leg ends at `switchAt` (2e8): the Ice Shot -> Hammer of Ash switch follows at once, at that level (mid-stage too), or at
   the next stage start after a stage with no step. It is planned, not searched: the target build's talent page, trimmed to the level's points
   below its own (`trimPage`: deepest rows first, no rule broken the page did not break, a core dropped below its tree's need). Until the switch
