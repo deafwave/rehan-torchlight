@@ -24,7 +24,8 @@ records the pin commit and the memo key includes it. Never edit dps-debug from h
 ## Commands
 
 `pnpm guide ideal | advise <export.json> [--fe N] [--season N] | figure <loadout.json> [--skill hoa|iceShot] [--level N]`;
-shared flags `--workers --bombs --roll-budget --budget-minutes --out` (advise: `--budget-minutes` defaults to 30). `pnpm dev` / `pnpm build` / `pnpm test`
+shared flags `--workers --bombs --roll-budget --budget-minutes --out` (advise: `--budget-minutes` defaults to 30); ideal / advise read your prices
+(`prices.json` at the repository root when it exists, or `--prices <file>`: `{ "<item name>": FE }` over etor, `withPrices`). `pnpm dev` / `pnpm build` / `pnpm test`
 (guide: `tsc --noEmit && vitest run`). `GUIDE_REAL=1` also runs real-figure tests; they and the pool pause while
 the `game.busy` file exists (`DEFAULT_BUSY_FILE` in `engine/pool.ts`, env `GUIDE_BUSY_FILE`).
 
@@ -44,6 +45,9 @@ the `game.busy` file exists (`DEFAULT_BUSY_FILE` in `engine/pool.ts`, env `GUIDE
   can be taken (a stop, a level gate) no Ice Shot upgrade is bought. Never a greedy step (its figure
   is against the boss, Ice Shot's the dummy); advise does not search it for an Ice Shot character. A worn item that lowers the figure (Demon Slayer's Skin
   zeroes Hammer of Ash) can be swapped for the slot's best white base, a free reconfiguration (`whiteBaseMoves`).
+- Advise first prices every acquisition at the start (`nextBuys`: exact gain, priced or not, `buy` = item x quantity) and writes it before the path;
+  the page ranks that list by the player's typed prices (etor's by default, kept in the browser, exported as `prices.json`).
+- Cull sources CULL1 does not count are named (`CULL_NOT_COUNTED`: Machine Lord's helmet, Ill Omen); corrosion is not offered (server-side odds).
 - Unported rules are skipped and named in `notSearched`, never guessed.
 
 ## Invariants
