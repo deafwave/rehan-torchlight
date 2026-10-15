@@ -6,8 +6,8 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { pinRoot, table } from '../pin';
-import { basesFor } from './gear';
-import { costOf } from '../priceOf';
+import { basesFor, goldItem } from './gear';
+import { costOf, priceOfGold } from '../priceOf';
 import { gemLevelAt, gemRequires, mainSid, supportsFor } from './gems';
 import { pointsAtLevel, treeOf, trimPage } from '../talentRules';
 import { talentName, treeName } from '../names';
@@ -15,6 +15,8 @@ import type { Change, Generator, Move } from '../types';
 
 type Gem = { sid: number; name: string; level: number; mods?: [number, number[]][]; place: { kind: string; slot: number; ownerKind?: string; ownerSlot?: number } };
 const TARGET = 're/evidence/loadout_probuild-hanshansi-bing.json';
+/** config_item_gold 112158, Ruinous Star (chest, base 3211 Long Night Sorcerer's Robe, level 82) */
+const RUINOUS_STAR = 112158;
 type TargetFile = { skills: Gem[]; talents: Record<string, number>; coreTalents: number[] };
 let target: TargetFile | undefined;
 const targetFile = (): TargetFile => target ??= JSON.parse(readFileSync(join(pinRoot(), TARGET), 'utf8'));
@@ -72,14 +74,19 @@ export const switchMoves: Generator = (s, ctx) => {
     else if (have.has(socket)) sockets.push({ kind: 'support', action: 'remove', owner, socket });
   }
   const maulName = table<{ rows: Record<string, string> }>('lang_en').rows[`item_base|name|${maul.baseId}`];
-  const parts = [costOf(ctx.prices, 'Hammer of Ash', ctx.level, 'gem'), ...gems.map(g => costOf(ctx.prices, g.name, ctx.level, 'gem')), costOf(ctx.prices, maulName, ctx.level, 'bare')];
-  const names = ['Hammer of Ash', ...gems.map(g => g.name), maulName], unpriced = names.filter((_, i) => parts[i].costFE === null);
+  // Ruinous Star, a chest unique, is the >= 110T build's core (user, 2026-10-15: "it requires a ruinous star, go down that path"): the switch puts it on
+  const star = goldItem(RUINOUS_STAR, ctx.level), withStar = !!star && star.minLevel <= ctx.level;
+  if (star && !withStar) ns.add(`switch: Ruinous Star needs hero level ${star.minLevel}; the switch at level ${ctx.level} goes without it`);
+  const parts = [costOf(ctx.prices, 'Hammer of Ash', ctx.level, 'gem'), ...gems.map(g => costOf(ctx.prices, g.name, ctx.level, 'gem')), costOf(ctx.prices, maulName, ctx.level, 'bare'),
+    ...(withStar ? [{ costFE: priceOfGold(ctx.prices, RUINOUS_STAR, ctx.level).fe, market: 'tradeable' as const }] : [])];
+  const names = ['Hammer of Ash', ...gems.map(g => g.name), maulName, ...(withStar ? [star!.name] : [])], unpriced = names.filter((_, i) => parts[i].costFE === null);
   if (unpriced.length) ns.add(`switch unpriced (${unpriced.join(', ')}): no etor price and not a white base / normal gem`);
   const allDrop = parts.every(p => p.market === 'drop');
   return [{
     kind: 'switch', skill: 'hoa', acquisition: true, minLevel: Math.max(maul.level, need), enabler: true,
-    label: `Switch to Hammer of Ash with ${maul.name} (level ${maul.level}) and ${gems.map(g => g.name).join(', ')}`,
+    label: `Switch to Hammer of Ash with ${maul.name} (level ${maul.level})${withStar ? ', Ruinous Star' : ''} and ${gems.map(g => g.name).join(', ')}`,
     costFE: unpriced.length ? null : parts.reduce((a, p) => a + p.costFE!, 0), market: allDrop ? 'drop' : 'tradeable', ...(allDrop ? { costNote: 'drop' } : {}),
-    changes: [weapon, { kind: 'multi', changes: [{ kind: 'skill', action: 'replace', owner, gem: { sid: hoa.sid, level: hoaLevel, name: hoa.name } }, ...sockets] as never }],
+    changes: [weapon, { kind: 'multi', changes: [{ kind: 'skill', action: 'replace', owner, gem: { sid: hoa.sid, level: hoaLevel, name: hoa.name } }, ...sockets] as never },
+      ...(withStar ? [{ kind: 'gear', slot: 'chest', item: star!.item } as Change] : [])],
   }];
 };

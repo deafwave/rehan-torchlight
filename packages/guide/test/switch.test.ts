@@ -19,7 +19,7 @@ const gen = (skill: Skill, level: number, prices: Record<string, number> = {}, l
 const lang = table<{ rows: Record<string, string> }>('lang_en').rows;
 const mauls = (level: number) => basesFor('mainHand', level, 'hoa');
 const maulName = (level: number) => lang[`item_base|name|${mauls(level).at(-1)!.baseId}`];
-const names = ['Hammer of Ash', ...targetSupports.map(g => g.name), maulName(94)];
+const names = ['Hammer of Ash', ...targetSupports.map(g => g.name), maulName(94), 'Ruinous Star'];
 const all = Object.fromEntries(names.map((n, i) => [n, i + 1]));
 
 describe('switchMoves', () => {
@@ -37,6 +37,15 @@ describe('switchMoves', () => {
     const first = mauls(100)[0].level;
     expect(gen('iceShot', first - 1, all).moves).toHaveLength(0);
     expect(gen('iceShot', first, all).moves).toHaveLength(1);
+  });
+  it('the switch puts on Ruinous Star (chest; the >= 110T path) and pays its etor price; below its level it is named and left off', () => {
+    const m = gen('iceShot', 94, all).moves[0], chest = m.changes[2] as unknown as { kind: string; slot: string; item: { itemId: string; modifiers: { prefix: unknown[] } } };
+    expect([chest.kind, chest.slot, chest.item.itemId]).toEqual(['gear', 'chest', 'guide-unique-112158']);
+    expect(chest.item.modifiers.prefix.length).toBeGreaterThan(0);
+    expect(m.label).toMatch(/Ruinous Star/);
+    const low = gen('iceShot', 81, all);
+    expect(low.moves[0].changes.some(c => (c as { item?: { itemId: string } }).item?.itemId === 'guide-unique-112158')).toBe(false);
+    expect([...low.notSearched]).toContain('switch: Ruinous Star needs hero level 82; the switch at level 81 goes without it');
   });
   it('main skill sids come from the pin loadouts: Ice Shot 1030 (l94), Hammer of Ash 1110 (target build)', () => {
     expect([mainSid('iceShot'), mainSid('hoa')]).toEqual([1030, 1110]);

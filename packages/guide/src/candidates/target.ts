@@ -11,7 +11,7 @@ import { fileURLToPath } from 'node:url';
 import { applyChanges, openCatalog } from '@dps/guide/figure';
 import { pinRoot, table } from '../pin';
 import { priceOfBase, priceOfGold } from '../priceOf';
-import { slotsOfBase } from './gear';
+import { craftCostOf, slotsOfBase } from './gear';
 import type { LoadoutPatch } from '../patches';
 import type { Change, Generator, Move } from '../types';
 
@@ -110,27 +110,31 @@ export const targetMoves: Generator = (s, ctx) => {
     const attrs = new Set<number>(base[baseId].a1b8 ?? []), modifiers: Record<string, { id: number; dynArgs: number[] }[]> = {};
     for (const a of it.affixes) (modifiers[attrs.has(a.id) ? 'baseAttr' : sideOf(a.id) ?? 'fixed'] ??= []).push({ id: a.id, dynArgs: [...a.dyn] });
     const gid = goldOf(it, baseId);
-    const cost = gid ? { costFE: priceOfGold(ctx.prices, Number(gid), ctx.level).fe } : { costFE: null, costNote: 'rare: its affixes have no market price' };
+    // a rare has no market price: its base plus each crafted affix at the expected embers of its tier (craftCostOf)
+    // (an affix the craft pool does not hold - blended, corroded - is not costed, and the note says how many)
+    const c = gid ? undefined : craftCostOf(baseId, it.affixes.filter(a => !attrs.has(a.id)).map(a => a.id), ctx);
+    const cost = gid ? { costFE: priceOfGold(ctx.prices, Number(gid), ctx.level).fe }
+      : { costFE: c!.costFE, costNote: `crafted: base + ${c!.crafted} affix(es) at their expected embers${c!.uncraftable ? `; ${c!.uncraftable} affix(es) outside its craft pool not costed` : ''}` };
     keep(mk({ kind: 'gear', label: `Target: ${it.label} in ${slot}`, ...cost, minLevel: level,
       changes: [{ kind: 'gear', slot, item: { baseId, baseName: it.label, itemId: `guide-target-${baseId}`, level, modifiers } }] }), it.label);
   }
 
-  // the slate board: one acquisition, the resolved arrays written into the loadout. A slate is priced only by a sourced etor mapping (its game item name, or its
-  // tree); the target data carries neither (baseId 0, talents span several trees), so no slate maps and the board is unpriced.
+  // the slate board: one acquisition, the resolved arrays written into the loadout. Slates drop and etor has no row for these (the target data gives no item name
+  // or tree): farmed, 0 FE, like a white base (user, 2026-10-15: price the known build's pieces)
   const items = targetBoard(), placed = ((l.slateItems ?? []) as { itemId: string }[]).map(x => x.itemId).sort().join();
   if (items.length && placed !== items.map(x => x.itemId).sort().join())
-    out.push(mk({ kind: 'slate', label: `Target slate board (${items.length} slates)`, costFE: null,
-      costNote: `unmapped slates (no etor row: the target data gives no item name or tree): ${items.map(x => x.itemId).join(', ')}`,
+    out.push(mk({ kind: 'slate', label: `Target slate board (${items.length} slates)`, costFE: 0, market: 'drop',
+      costNote: `farmed: slates drop (no etor row for them): ${items.map(x => x.itemId).join(', ')}`,
       changes: [{ kind: 'patch', op: 'slate-board', items }] }));
 
-  // pacts: not on the market
+  // pacts: not on the market - a pactspirit rank is levelled, not bought: farmed, 0 FE
   const pacts = (l.pacts ?? []) as { servantId: number; slot?: number; rank: number }[];
   for (const p of t.pacts) {
     if (pacts.some(x => x.servantId === p.servantId && x.slot === p.slot && x.rank === p.rank)) continue;
     if (pacts.some(x => x.servantId === p.servantId && x.slot !== p.slot)) continue;   // already held in another slot: no duplicate servant
     const occupant = pacts.find(x => x.slot === p.slot);
     const name = lang[`servant|name|${p.servantId}`] ?? String(p.servantId);
-    keep(mk({ kind: 'pact', label: `Target: ${name} (rank ${p.rank}) in pact slot ${p.slot}`, costFE: null, market: 'not-on-market',
+    keep(mk({ kind: 'pact', label: `Target: ${name} (rank ${p.rank}) in pact slot ${p.slot}`, costFE: 0, market: 'drop', costNote: 'farmed: a pactspirit rank is levelled, not bought (not on the market)',
       changes: [{ kind: 'multi', changes: [...(occupant ? [{ kind: 'pact', action: 'remove', servantId: occupant.servantId } as const] : []),
         { kind: 'pact', action: 'equip', servantId: p.servantId, slot: p.slot, rank: p.rank, promotionLevels: p.promotionLevels, contractKeys: t.contractKeys.filter(k => Math.floor(k / 100) === p.slot) }] }] }), name);
   }

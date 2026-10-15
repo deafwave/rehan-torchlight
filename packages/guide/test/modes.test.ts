@@ -226,7 +226,8 @@ describe('fix round 1', () => {
     const sw = out.steps.find((st) => st.move.kind === 'switch')!;
     expect(sw.level).toBe(95);
     expect(sw.notes![0]).toBe('planned switch: the Ice Shot leg stalled (no step in the last 2 stages)');
-    const kinds = (sw.move.changes.slice(2) as { kind: string; action?: string; points?: number }[]).map((c) => (c.kind === 'core' ? `core-${c.action}` : c.points === 0 ? 'zero' : 'set'));
+    const page = sw.move.changes.findIndex((c) => ['talent', 'core'].includes((c as { kind: string }).kind));   // after the maul, the skill group, Ruinous Star
+    const kinds = (sw.move.changes.slice(page) as { kind: string; action?: string; points?: number }[]).map((c) => (c.kind === 'core' ? `core-${c.action}` : c.points === 0 ? 'zero' : 'set'));
     expect(kinds.join(',')).toMatch(/^(zero,)+(core-remove,)*(set,)+(core-add,)*core-add$/);
   });
   it('an Ice Shot stage never prices a greedy switch (its Cube 3 figure is no measure against the dummy); an Ice Shot advice says the switch is not searched', async () => {

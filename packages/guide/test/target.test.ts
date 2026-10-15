@@ -25,8 +25,8 @@ describe('targetMoves', () => {
     expect(of('pact').length).toBe(5);   // 19330 is already held in another slot
     expect(moves.every(m => m.acquisition && m.enabler && /^Target[: ]/.test(m.label))).toBe(true);
   });
-  it('pacts are not on the market and unpriced even when etor names them', () => {
-    expect(of('pact').every(m => m.costFE === null && m.market === 'not-on-market')).toBe(true);
+  it('pacts are farmed, not bought: 0 FE, ranked like a drop, said so', () => {
+    expect(of('pact').every(m => m.costFE === 0 && m.market === 'drop' && /^farmed: /.test(m.costNote ?? ''))).toBe(true);
   });
   it('every gear and pact move applies through dps-debug', () => {
     for (const m of [...of('gear'), ...of('pact')]) expect(applied(m), m.label).toBeNull();
@@ -61,12 +61,16 @@ describe('targetMoves', () => {
   it('a legendary with a fixed affix keeps it under modifiers.fixed', () => {
     expect(of('gear').some(m => (gearItem(m).item.modifiers.fixed?.length ?? 0) > 0)).toBe(true);
   });
-  it('a legendary is priced by its gold item, a rare is unpriced with a note', () => {
+  it('a legendary is priced by its gold item; a rare at its base plus each crafted affix at the expected embers of its tier', () => {
     const priced = targetMoves({ loadout: l100, owned: [], fe: 0, level: 100, skill: 'hoa' }, { prices: { season: 't', fetchedAt: 't', price: k => (typeof k === 'string' ? 5 : null) }, level: 100, notSearched: new Set() }).filter(m => m.kind === 'gear');
-    const gold = priced.filter(m => m.costFE === 5), rare = priced.filter(m => m.costFE === null);
+    const gold = priced.filter(m => m.costFE === 5 && !m.costNote), rare = priced.filter(m => /^crafted: /.test(m.costNote ?? ''));
     expect(gold.length).toBeGreaterThan(0);
     expect(rare.length).toBeGreaterThan(0);
-    expect(rare.every(m => m.costNote === 'rare: its affixes have no market price')).toBe(true);
+    expect(rare.every(m => m.costFE! >= 5)).toBe(true);   // the base (5), plus the ember-priced crafts
+    expect(rare.some(m => m.costFE! > 5)).toBe(true);
+    // an affix outside the base's craft pool (blended, corroded) is not costed, and the note says how many
+    for (const m of rare) expect(m.costNote).toMatch(/^crafted: base \+ \d+ affix\(es\) at their expected embers(; \d+ affix\(es\) outside its craft pool not costed)?$/);
+    expect(rare.some(m => /outside its craft pool not costed$/.test(m.costNote!))).toBe(true);
   });
   it('goldOf: a real legendary matches; the same item padded with unrelated groups is a rare', () => {
     const lang = table<{ rows: Record<string, string> }>('lang_en').rows, base = table<{ rows: Record<string, { a1b8?: number[] }> }>('config_item_base').rows;
@@ -84,11 +88,11 @@ describe('targetMoves', () => {
     expect(r.moves.some(m => /Waistguard/.test(m.label))).toBe(false);
     expect([...r.notSearched].some(n => /^target Dragon Scale Waistguard: /.test(n))).toBe(true);
   });
-  it('offers the target slate board as one unpriced enabler patch naming the unmapped slates', () => {
+  it('offers the target slate board as one farmed enabler patch (slates drop, etor has no row) naming its slates', () => {
     const b = of('slate');
     expect(b).toHaveLength(1);
-    expect(b[0]).toMatchObject({ label: 'Target slate board (7 slates)', acquisition: true, enabler: true, costFE: null });
-    expect(b[0].costNote).toMatch(/^unmapped slates .*probuild_\d+(, probuild_\d+){6}$/);
+    expect(b[0]).toMatchObject({ label: 'Target slate board (7 slates)', acquisition: true, enabler: true, costFE: 0, market: 'drop' });
+    expect(b[0].costNote).toMatch(/^farmed: slates drop .*probuild_\d+(, probuild_\d+){6}$/);
     expect(b[0].changes).toHaveLength(1);
     const patch = b[0].changes[0] as Extract<Parameters<typeof applyPatch>[1], { op: 'slate-board' }>;
     const lo = applyPatch({ ...l100, slateItems: [] }, patch) as { slateItems: { itemId: string; talents: number[]; influence: { EffectTalentIds: number[] } }[] };

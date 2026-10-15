@@ -122,6 +122,43 @@ function rebased(d: Dump, nb: Row, id: string, ctx: GenCtx): { item: Dump; recra
   return { item: { ...d, itemId: id, modifiers }, recraft, dropped };
 }
 const swap = (slot: string, item: Dump): Change[] => [{ kind: 'gear', slot, item }];
+
+/** a unique's modifiers: one per fixed group at the midpoint of its best tier (tier digit 0, docs/gear-rules.md); a slot listing several groups is a random
+ *  pool (Enamor: four slots drawn from one pool of 20) - no roll is assumed, the slot is named in `pooled`; a group the catalog lacks is in `lost` */
+function goldMods(g: Record<string, Record<string, unknown> | undefined>): { mods: { id: number; dynArgs: number[] }[]; pooled: string[]; lost: string[] } {
+  const mods: { id: number; dynArgs: number[] }[] = [], pooled: string[] = [], lost: string[] = [];
+  for (const key of ['m88', 'ma8', 'mc8', 'me8', 'm108', 'm128', 'm148', 'm168']) {
+    const groups = Object.keys(g[key] ?? {});
+    if (groups.length > 1) { pooled.push(`${key}: 1 of ${groups.length}`); continue; }
+    for (const grp of groups) { const id = Number(grp) * 10, dyn = mids(id); if (dyn) mods.push({ id, dynArgs: dyn }); else lost.push(grp); }
+  }
+  return { mods, pooled, lost };
+}
+/** a unique (config_item_gold id) as the guide's item, as gearMoves offers it; null when its base or a modifier group is not in the catalog */
+export function goldItem(gid: number, level: number): { name: string; minLevel: number; item: Dump } | null {
+  const c = cat(), g = c.gold[gid], name = g && c.lang[`item_gold|name|${gid}`], nb = g && c.rows.get(g.i8);
+  if (!g || !name || !nb) return null;
+  const { mods, lost } = goldMods(g);
+  if (lost.length || !mods.length) return null;
+  return { name, minLevel: nb.level, item: { baseId: g.i8, baseName: nb.name, itemId: `guide-unique-${gid}`, level, modifiers: { baseAttr: attrMods(nb), prefix: mods } } };
+}
+
+/** What a rare costs to make (a target build's rare: no market price): its base (etor, else a white drop at 0) plus each crafted affix at the expected embers of
+ *  its tier, as a craft step is priced. Null when an ember is unpriced; an affix outside the base's craft pool is counted in `uncraftable`, not costed. */
+export function craftCostOf(baseId: number, affixIds: number[], ctx: GenCtx): { costFE: number | null; crafted: number; uncraftable: number } {
+  const r = cat().rows.get(baseId);
+  if (!r?.lib) return { costFE: null, crafted: 0, uncraftable: affixIds.length };
+  const opts = new Map(craftOptions(library, r.lib, 100).map(o => [Number(o.tierAffixId), o]));
+  let costFE: number | null = costOf(ctx.prices, r.name, ctx.level, 'bare').costFE, crafted = 0, uncraftable = 0;
+  for (const id of affixIds) {
+    const o = opts.get(id);
+    if (!o) { uncraftable++; continue; }
+    const p = ctx.prices.price(o.ember, ctx.level);
+    costFE = costFE === null || p === null ? null : costFE + o.expectedEmbers * p;
+    crafted++;
+  }
+  return { costFE, crafted, uncraftable };
+}
 let goldGroups: Set<number> | undefined;
 /** a unique (one the guide bought, or a game item carrying a config_item_gold modifier group) takes no ember craft and keeps its base */
 const isUnique = (it: GearItem) => (it.itemId ?? '').startsWith('guide-unique-') || it.affixes.some(a => (goldGroups ??= new Set(Object.values(cat().gold)
@@ -199,17 +236,7 @@ export const gearMoves: Generator = (s: State, ctx: GenCtx): Move[] => {
     const targets = isWeapon(raw.i20, raw.i24, raw.a1b8 ?? []) ? (SKILL_GROUPS[s.skill].includes(raw.i24) ? ['mainHand'] : []) : TYPE_SLOTS[raw.i20] ?? [];
     const here = targets.filter(t => slots.has(t));
     if (!here.length) continue;
-    const mods: { id: number; dynArgs: number[] }[] = [], lost: string[] = [];
-    // a slot listing several groups is a random pool (Enamor: four slots drawn from one pool of 20): no roll is assumed, the slot is named instead
-    const pooled: string[] = [];
-    for (const key of ['m88', 'ma8', 'mc8', 'me8', 'm108', 'm128', 'm148', 'm168']) {
-      const groups = Object.keys(g[key] ?? {});
-      if (groups.length > 1) { pooled.push(`${key}: 1 of ${groups.length}`); continue; }
-      for (const grp of groups) {
-        const id = Number(grp) * 10, dyn = mids(id);   // tier digit 0 = best rolls (docs/gear-rules.md)
-        if (dyn) mods.push({ id, dynArgs: dyn }); else lost.push(grp);
-      }
-    }
+    const { mods, pooled, lost } = goldMods(g);
     if (pooled.length) ctx.notSearched.add(`unique ${name}: random affix slots (${pooled.join(', ')}) not priced; offered with its fixed affixes only`);
     if (lost.length) { ctx.notSearched.add(`unique ${name}: modifier group(s) ${lost.join(', ')} not in the catalog; not offered`); continue; }
     if (!mods.length) continue;
