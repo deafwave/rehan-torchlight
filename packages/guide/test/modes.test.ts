@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { basesFor, slotsOfBase } from '../src/candidates/gear';
-import { localHistory, localItems, nextBuys, ownedGear, runAdvise, runIdeal, unpricedAcquisitions } from '../src/modes';
+import { DEFAULT_IDEAL, localHistory, localItems, nextBuys, ownedGear, runAdvise, runIdeal, unpricedAcquisitions } from '../src/modes';
 import { historyBook } from '../src/pricing';
 import { fromExport, idealStart, ICE_SHOT_INPUTS } from '../src/start';
 import { legalAllocation, pointsAtLevel, treeOf } from '../src/talentRules';
@@ -352,6 +352,9 @@ describe('fix round 1', () => {
     expect(legs[2].end).toBe('not reached: the plan ends on Cube 1; with its last build Keegan 2 dies in 33.3 min');
     for (const l of legs.slice(2)) expect(l.firstStep).toBe(out.steps.length);
   }, 300_000);
+  it('the ideal guide ends at hero level 90 (user, 2026-10-15)', () => {
+    expect(DEFAULT_IDEAL.endLevel).toBe(90);
+  });
   it('advice starts on the first boss the character does not kill within moveOnSeconds', async () => {
     const st = fromExport(exportOf({ loadout: { ...idealStart().loadout, skills: [{ sid: 1110, level: 20, place: { kind: 'active', slot: 0 } }] } }));
     const out = await runAdvise(bossEv(), { ...st, loadout: { ...st.loadout, __n: 50 } }, { maxRounds: 1, topK: 2, maxSteps: 1 });
