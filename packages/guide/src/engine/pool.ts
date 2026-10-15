@@ -113,7 +113,7 @@ export async function createEvaluator(o: EvaluatorOpts = {}): Promise<Evaluator>
   const queue: { go: () => void; fail: (e: Error) => void }[] = [];
   let closed = false;
   const fight = o.fight ?? DEFAULT_FIGHT, rollBudget = o.rollBudget ?? DEFAULT_ROLL_BUDGET, target = o.target === undefined ? DEFAULT_TARGET : o.target;
-  const targetOf = (ctx: EvalCtx) => (ctx.skill === 'hoa' && target ? target : undefined);
+  const targetOf = (ctx: EvalCtx) => { const t = ctx.target === undefined ? target : ctx.target; return ctx.skill === 'hoa' && t ? t : undefined; };
   const memo = createMemo<Evaluated>(pin, o.memoDir, o.memoEntries);
   // env GUIDE_TRACE=1: once a minute, how busy the pool is; a figure over 2 minutes is named
   let done = 0, workMs = 0;

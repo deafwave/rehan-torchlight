@@ -1,4 +1,4 @@
-/** guide ideal [--out path] | advise <export.json> [--fe N] [--season N] [--out path] [--budget-minutes N, default 30] | figure <loadout.json> [--skill hoa|iceShot] [--level N]   (ideal / advise: [--prices <file>, default prices.json at the repository root when it exists: { "<item name>": FE }]; all: [--workers N] [--bombs N, default 10] [--budget-minutes N] [--roll-budget N, default 1<<20] [--target <dps-debug BOSSES key | dummy>, default cube3: what Hammer of Ash is priced against]) */
+/** guide ideal [--out path] | advise <export.json> [--fe N] [--season N] [--out path] [--steps N, default 0: the next-buys list only] [--budget-minutes N, default 30] | figure <loadout.json> [--skill hoa|iceShot] [--level N]   (ideal / advise: [--prices <file>, default prices.json at the repository root when it exists: { "<item name>": FE }]; all: [--workers N] [--bombs N, default 10] [--budget-minutes N] [--roll-budget N, default 1<<20] [--target <dps-debug BOSSES key | dummy>, default cube3: what Hammer of Ash is priced against]) */
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { writeAtomic } from './atomic';
@@ -51,8 +51,9 @@ async function main() {
     const prices = yours(snapshotBook(await Promise.resolve().then(async () => fetchSnapshot(num('season') ?? await fetchSeason().catch((e: Error) => { const s = Number(localItems().seasonId); console.warn(`${e.message}: using season ${s}'s last etor prices`); return s; }), localItems())).catch((e: Error) => { console.warn(`live etor prices unavailable (${e.message}); using the stored snapshot`); return localItems(); })));
     const ev = await evaluator();
     const out = flag('out') ?? 'advice.json';
-    // the export button waits on this: a Hammer of Ash figure is slow, so advise stops after 30 minutes unless told otherwise (the page shows a partial run)
-    try { final(out, dump(await runAdvise(ev, state, { budgetMinutes: budgetMinutes ?? 30, ...prices.knobs }, prices.book, (o) => writeAtomic(out, dump(o))))); } finally { await ev.close(); }
+    // the export button waits on this: by default the next-buys list only (every upgrade's exact gain, ranked on the page by your prices); --steps N adds a
+    // multi-step plan at etor prices, stopped after --budget-minutes (default 30; the page shows a partial run)
+    try { final(out, dump(await runAdvise(ev, state, { budgetMinutes: budgetMinutes ?? 30, maxSteps: num('steps') ?? 0, ...prices.knobs }, prices.book, (o) => writeAtomic(out, dump(o))))); } finally { await ev.close(); }
     // UTF-8 through an env-named file, as reader/export.py does, so non-ASCII names survive
     execFileSync('powershell', ['-NoProfile', '-Command', 'Set-Clipboard -Value ([IO.File]::ReadAllText($env:ADVICE_FILE, [Text.Encoding]::UTF8))'], { env: { ...process.env, ADVICE_FILE: out } });
     console.log(`wrote ${out} and copied it to the clipboard`);

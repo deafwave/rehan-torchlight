@@ -39,6 +39,9 @@ the `game.busy` file exists (`DEFAULT_BUSY_FILE` in `engine/pool.ts`, env `GUIDE
   levelling leg, on its dummy. Kill speed (`kill.ts`) = Life per second from 100 % down to the model's cull (CULL1; 0 when blocked), DPS at most the
   model's damage lock (CAP1, 1.5e13 per attacker per victim); time to kill = max Life / kill speed. Defense after the kill goal is not modelled.
 - One enabler per step is re-solved: the best own figure, when it reaches `enablerFloor` (0.25) x the current kill average.
+- Hammer of Ash goes boss by boss (`BOSS_ORDER`: Cube 1, Keegan 2, Cube 2, Cube 3; knob `targets`): a leg moves on once its boss dies within
+  `moveOnSeconds` (10); the last runs to the damage lock (the goal), the last stage taking up to `finalSteps`. Each leg is one page tab (`GuideOut.legs`).
+  Advise starts on the first boss the character does not kill within `moveOnSeconds`, and by default prices the next-buys list only (`--steps N` adds a plan).
 - Ideal: the Ice Shot leg ends at `switchAt` (2e8): the Ice Shot -> Hammer of Ash switch follows at once, at that level (mid-stage too), or at
   the next stage start after a stage with no step. It is planned, not searched: the target build's talent page, trimmed to the level's points
   below its own (`trimPage`: deepest rows first, no rule broken the page did not break, a core dropped below its tree's need). Until the switch

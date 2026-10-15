@@ -14,7 +14,8 @@ export interface OwnedItem {
   modifiers: Record<string, { id: number; dynArgs: number[] }[]>;
 }
 
-export interface State { loadout: Loadout; owned: OwnedItem[]; fe: number; level: number; skill: Skill }
+/** `target`: the boss Hammer of Ash is priced against in this state (a dps-debug BOSSES key; absent = the evaluator's default) */
+export interface State { loadout: Loadout; owned: OwnedItem[]; fe: number; level: number; skill: Skill; target?: string }
 
 /** A dps-debug figure reduced to what the search needs. `partial` = names of dropped pieces / needs; `stop` = the figure did not compute. `kill` = the kill speed
  *  (kill.ts killSpeed) under the model's damage lock `lock` and its cull `cull` (0 when none counts or `cullNote` says why not); `target` = the boss priced against
@@ -51,7 +52,8 @@ export interface Move {
   skill?: Skill;
 }
 
-export interface EvalCtx { level: number; skill: Skill }
+/** `target`: the dps-debug BOSSES key Hammer of Ash is priced against for this call (null = the training dummy; absent = the evaluator's) */
+export interface EvalCtx { level: number; skill: Skill; target?: string | null }
 /** `inputs` = the scenario the figure was priced under (dps-debug GuideFigure.inputs), shown in the guide header */
 export interface Evaluated { loadout: Loadout; figure: Figure; dropped: string[]; inputs?: Record<string, unknown> }
 export interface Evaluator {
@@ -90,6 +92,8 @@ export interface Step {
   /** plain-language caveats for this step (e.g. assumed talent points) */
   notes?: string[];
 }
+/** One tab of the guide: a skill against one yardstick (target null = the training dummy), from step `firstStep` on; `end` says why it ended */
+export interface Leg { skill: Skill; target: string | null; firstStep: number; end?: string }
 export interface NextBuy { label: string; kind: MoveKind; gain: number; kill: number; costFE: number | null; market?: Move['market']; buy?: Move['buy']; partial?: string[] }
 export interface GuideOut {
   mode: 'ideal' | 'advise';
@@ -107,6 +111,8 @@ export interface GuideOut {
   /** advise: every acquisition at the start that raises the kill average, priced or not, with its exact figure (best gain first): the page ranks them by
    *  the player's prices, exact for the next purchase */
   next?: NextBuy[];
+  /** the legs in order (Ice Shot on the dummy, then Hammer of Ash boss by boss): each moves on when the boss is lock-bound */
+  legs?: Leg[];
   /** advise: the price book's FE for every `next[].buy.name` (null = no price), the page's default */
   prices?: Record<string, number | null>;
   /** configurations not generated because their resolution rule is not ported, by reason */

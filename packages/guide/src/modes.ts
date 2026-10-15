@@ -14,11 +14,11 @@ import { talentMoves, talentPointMoves } from './candidates/talents';
 import { traitMoves } from './candidates/traits';
 import { type EtorHistory, type EtorItems, historyBook, snapshotBook } from './pricing';
 import { CULL_NOT_COUNTED } from './kill';
-import { DEFAULT_KNOBS, type Knobs, newMem, overBudget, path, rankableMove, resolve, spendFree, step, switchNote } from './search';
+import { ctxOfState, DEFAULT_KNOBS, type Knobs, newMem, overBudget, path, rankableMove, resolve, spendFree, step, switchNote } from './search';
 import { ICE_SHOT_INPUTS, idealStartNotes } from './start';
 import { setTalentPoints } from './talentRules';
 import { talentName } from './names';
-import type { Evaluator, Figure, GenCtx, Generator, GuideOut, Move, NextBuy, PriceBook, State, Step } from './types';
+import type { Evaluator, Figure, GenCtx, Generator, GuideOut, Leg, Move, NextBuy, PriceBook, State, Step } from './types';
 
 export const SEASON = 1501;
 const etorFile = (f: string) => JSON.parse(readFileSync(fileURLToPath(new URL(`../../../data/etor/${f}_${SEASON}.json`, import.meta.url)), 'utf8'));
@@ -33,8 +33,18 @@ export interface IdealKnobs extends Knobs {
    *  average reaches it (or after a stage with no step), the path switches to
    *  Hammer of Ash on the target build's talent page; never a greedy step (its figure is against the boss, the Ice Shot leg's the dummy) */ switchAt: number;
   /** reconfiguration rounds re-solved right after the planned switch (churn 0) */ switchRounds: number;
+  /** steps the last stage may take toward the goal (the last boss at the damage lock) */ finalSteps: number;
 }
-export const DEFAULT_IDEAL: IdealKnobs = { ...DEFAULT_KNOBS, stepsPerStage: 25, startLevel: 60, endLevel: 100, stageStep: 5, talentPoints: 108, switchAt: 2e8, switchRounds: 5 };
+/** Hammer of Ash's bosses in order of difficulty (dps-debug BOSSES keys; Cube 1 3.2e10 Life, Keegan 2 1.4e13, Cube 2 1.6e13: full damage taken;
+ *  Cube 3 5.3e13 at -90 % taken): a leg moves on once its boss dies within `moveOnSeconds`; the last runs to the damage lock (user, 2026-10-15) */
+export const BOSS_ORDER = ['cube1', 'keegan2', 'cube2', 'cube3'];
+export const DEFAULT_IDEAL: IdealKnobs = { ...DEFAULT_KNOBS, stepsPerStage: 25, startLevel: 60, endLevel: 100, stageStep: 5, talentPoints: 108, switchAt: 2e8, switchRounds: 5, finalSteps: 100 };
+const BOSS_NAME: Record<string, string> = { cube1: 'Cube 1', cube2: 'Cube 2', cube3: 'Cube 3', keegan: 'Keegan 1', keegan2: 'Keegan 2', void1: 'Void 1', void2: 'Void 2', void3: 'Void 3', traveler: 'the Traveler' };
+export const bossName = (t: string) => BOSS_NAME[t] ?? t;
+const secs = (x: number) => (x < 1 ? `${(x * 1000).toPrecision(2)} ms` : x < 600 ? `${x.toPrecision(3)} s` : `${(x / 60).toPrecision(3)} min`);
+/** the time this figure takes to kill its boss (Infinity off a boss or at no kill speed) */
+const killTime = (f: Figure) => (f.lifeMax && f.kill > 0 ? f.lifeMax / f.kill : Infinity);
+const lockBound = (f: Figure) => f.lock !== undefined && f.life0 >= f.lock;
 
 // the Ice Shot -> Hammer of Ash switch is planned (`switchWithPage`), never a greedy step: its figure is against the boss, the Ice Shot leg's the dummy
 /** stages in a row with no Ice Shot step before the switch is taken short of switchAt (one is a lull: L75 had none, L80's uniques took the leg on) */
@@ -77,7 +87,7 @@ async function ideal(ev: Evaluator, K: IdealKnobs, prices: PriceBook | undefined
     mode: 'ideal', pin: ev.pin, etor: { season: books.season, fetchedAt: books.fetchedAt }, knobs: { ...K, fight: ev.fight, fightNote: ev.fightNote, rollBudget: ev.rollBudget, target: ev.target }, startNotes: notes, steps: [], notSearched: [], unpriced: [], notCalculable: [], ...o,
   }) as GuideOut;
 
-  const first = await ev.run(s.loadout, [], { level: s.level, skill: s.skill });
+  const first = await ev.run(s.loadout, [], ctxOfState(s));
   const inputs = { ...first.inputs, ...(s.skill === 'iceShot' ? { iceShot: { ...ICE_SHOT_INPUTS, ...(first.inputs as Record<string, any> | undefined)?.iceShot, status: 'unverified' } } : {}) };   // eslint-disable-line @typescript-eslint/no-explicit-any
   if (first.figure.stop) {
     const why = `L${s.level} ${s.skill} leg cannot be priced yet: ${first.figure.stop}`;
@@ -85,26 +95,47 @@ async function ideal(ev: Evaluator, K: IdealKnobs, prices: PriceBook | undefined
     return out({ start: first.figure, inputs, notCalculable: [why] });
   }
   const mem = newMem(), steps: Step[] = [], notSearched = new Set<string>(CULL_NOT_COUNTED), unpriced: string[] = [];
-  let f = first.figure, stopped = false, stalls = 0;   // stages in a row with no step
+  let f = first.figure, stopped = false, halted = false, stalls = 0;   // stalls: stages in a row with no step
+  const targets = K.targets ?? BOSS_ORDER, moveOn = K.moveOnSeconds ?? 10;
+  let ti = 0;
+  const legs: Leg[] = [{ skill: s.skill, target: null, firstStep: 0 }];
+  /** while the current boss dies within moveOn seconds its leg ends and the next boss's begins (the last boss stays: its goal is the lock); false = the
+   *  next boss's figure stopped */
+  const advance = async (): Promise<boolean> => {
+    while (s.skill === 'hoa' && ti < targets.length - 1 && killTime(f) <= moveOn) {
+      const from = targets[ti], t = killTime(f);
+      ti++; s = { ...s, target: targets[ti] };
+      const g = (await ev.run(s.loadout, [], ctxOfState(s))).figure;
+      legs[legs.length - 1].end = `${bossName(from)} dies in ${secs(t)} (under ${moveOn} s): move on to ${bossName(targets[ti])}`;
+      notes.push(`L${s.level}: ${legs[legs.length - 1].end}`);
+      legs.push({ skill: 'hoa', target: targets[ti], firstStep: steps.length });
+      f = g; mem.scores.clear(); mem.since = 0;
+      if (g.stop) { const why = `L${s.level} Hammer of Ash on ${bossName(targets[ti])} cannot be priced yet: ${g.stop}`; mem.notCalculable.add(why); notes.push(why); return false; }
+    }
+    return true;
+  };
   /** the output so far; callers pass `partialRun` until the run completes */
-  const snap = (extra: Record<string, unknown>) => out({ start: first.figure, inputs, steps: [...steps], notSearched: [...notSearched], unpriced: [...unpriced], notCalculable: [...mem.notCalculable],
+  const snap = (extra: Record<string, unknown>) => out({ start: first.figure, inputs, steps: [...steps], legs: legs.map((l) => ({ ...l })), notSearched: [...notSearched], unpriced: [...unpriced], notCalculable: [...mem.notCalculable],
     knobs: { ...K, fight: ev.fight, fightNote: ev.fightNote, rollBudget: ev.rollBudget, target: ev.target, ...extra } });
   let tried = -1;
   /** the planned switch at `level` (once per level): true once taken as a step; a stop or a switch not offered yet leaves the Ice Shot leg as it is */
   const trySwitch = async (level: number): Promise<boolean> => {
     tried = level;
-    const ctx = ctxOf(s), m = switchWithPage(s, ctx);
+    const ctx = ctxOf(s), m = switchWithPage(s, ctx), hoa: State = { ...s, skill: 'hoa', target: targets[0] };
     ctx.notSearched.forEach((x) => notSearched.add(x));
-    const e = m && m.costFE !== null ? await ev.run(s.loadout, m.changes, { level, skill: 'hoa' }) : null;
+    const e = m && m.costFE !== null ? await ev.run(s.loadout, m.changes, ctxOfState(hoa)) : null;
     if (e?.figure.stop) { const why = `L${level} planned switch cannot be priced yet: ${e.figure.stop}`; mem.notCalculable.add(why); notes.push(why); return false; }
     if (!m || !e) return false;
-    const r = await resolve({ ...s, loadout: e.loadout, skill: 'hoa', fe: s.fe - m.costFE! }, ev, recon, ctx, { ...K, churn: 0, maxRounds: K.switchRounds }, e.figure, mem);
+    const r = await resolve({ ...hoa, loadout: e.loadout, fe: s.fe - m.costFE! }, ev, recon, ctx, { ...K, churn: 0, maxRounds: K.switchRounds }, e.figure, mem);
     const sp = await spendFree(r.state, ev, talentPointMoves, ctx, K, r.figure, mem);
     mem.cumFE += m.costFE!;
     const why = f.kill >= K.switchAt ? `the Ice Shot leg reached ${f.kill.toExponential(2)} (switchAt ${K.switchAt.toExponential(0)})` : `the Ice Shot leg stalled (no step in the last ${STALL_STAGES} stages)`;
+    legs[legs.length - 1].end = `${why}: switch to Hammer of Ash`;
+    legs.push({ skill: 'hoa', target: targets[0], firstStep: steps.length });
     steps.push({ level, move: m, triggered: [...r.taken, ...sp.taken], before: f, after: sp.figure, cumFE: mem.cumFE,
-      notes: [`planned switch: ${why}; the kill average may drop here${sp.figure.target ? `; from here figures are against ${sp.figure.target}, not the Ice Shot leg's dummy` : ''}`, ...switchNote(f, sp.figure), ...(level < 93 ? ['talent points assumed'] : [])] });
+      notes: [`planned switch: ${why}${sp.figure.target ? `; from here figures are against ${bossName(sp.figure.target)}, not the Ice Shot leg's training dummy` : ''}`, ...switchNote(f, sp.figure), ...(level < 93 ? ['talent points assumed'] : [])] });
     s = sp.state; f = sp.figure; mem.scores.clear(); mem.since = 0;   // the Ice Shot scores say nothing about Hammer of Ash
+    if (!(await advance())) halted = true;
     onStep?.(snap({ partialRun: true }));
     return true;
   };
@@ -114,18 +145,25 @@ async function ideal(ev: Evaluator, K: IdealKnobs, prices: PriceBook | undefined
     const skills = (s.loadout.skills as { sid: number; level: number }[]).map((g) => ({ ...g, level: Math.max(g.level, gemLevelAt(g.sid, level, GEM_LEVEL)) }));
     if (level > K.startLevel) notes.push(`L${level}: gems raised to the hero-level limit`);
     s = { ...s, level, loadout: { ...s.loadout, skills } };
-    f = (await ev.run(s.loadout, [], { level, skill: s.skill })).figure;
+    f = (await ev.run(s.loadout, [], ctxOfState(s))).figure;
     if (f.stop) { const why = `L${level} ${s.skill} leg cannot be priced yet: ${f.stop}`; mem.notCalculable.add(why); notes.push(why); break; }
+    if (!(await advance())) break;
     mem.scores.clear(); mem.since = 0;   // scores of the last stage are no upper bound on this one (new level, new points, new prices)
     if (s.skill === 'iceShot' && (f.kill >= K.switchAt || stalls >= STALL_STAGES) && !overBudget(K, t0, ev)) await trySwitch(level);
+    if (halted) break;
     // the level-up's new talent points are spent at once, free and ungated: one point is worth less than the churn gate
     const spent = await spendFree(s, ev, talentPointMoves, ctxOf(s), K, f, mem);
     if (spent.taken.length) { const per = new Map<number, number>();
       for (const m of spent.taken) for (const c of m.changes as { kind: string; node?: number }[]) if (c.kind === 'talent') per.set(c.node!, (per.get(c.node!) ?? 0) + 1);
       notes.push(`L${level}: ${spent.taken.length} new talent point(s) spent: ${[...per].map(([n, p]) => `${talentName(n)} (+${p})`).join(', ')}`); s = spent.state; f = spent.figure; }
-    const before = steps.length;
-    for (let n = 0; n < K.stepsPerStage; n++) {
+    const before = steps.length, last = level + K.stageStep > K.endLevel;
+    // the last stage keeps going toward the goal: the last boss at the damage lock
+    for (let n = 0; n < (last && s.skill === 'hoa' ? Math.max(K.stepsPerStage, K.finalSteps) : K.stepsPerStage); n++) {
       if (overBudget(K, t0, ev)) { stopped = true; break; }
+      if (s.skill === 'hoa' && ti === targets.length - 1 && lockBound(f)) {
+        notes.push(`L${level}: goal reached: ${bossName(targets[ti])} is lock-bound (more damage no longer kills it faster; ${secs(killTime(f))} to kill)`);
+        break;
+      }
       // the Ice Shot leg ends at switchAt: the switch follows at once, at this level; until it can, no more Ice Shot upgrades
       if (capped() && (tried === level || !(await trySwitch(level)))) {
         notes.push(`L${level}: the Ice Shot leg reached ${f.kill.toExponential(2)} (switchAt ${K.switchAt.toExponential(1)}): no more Ice Shot upgrades until the switch can be taken`);
@@ -137,14 +175,16 @@ async function ideal(ev: Evaluator, K: IdealKnobs, prices: PriceBook | undefined
       if (!r) break;
       if (level < 93) r.step.notes = [...(r.step.notes ?? []), 'talent points assumed'];
       steps.push(r.step); s = r.state; f = r.step.after;
+      if (!(await advance())) { halted = true; break; }
       onStep?.(snap({ partialRun: true }));
     }
+    if (halted) break;
     if (stopped || overBudget(K, t0, ev)) { stopped = true; break; }
     if (K.stepsPerStage > 0) stalls = steps.length === before ? stalls + 1 : 0;
     // acquisitions nobody sells: what they would add, never ranked (none for an Ice Shot leg that has ended)
     const ctx = ctxOf(s);
     const cands = capped() ? [] : unpricedAcquisitions(acq, s, ctx);
-    const evs = await Promise.all(cands.map((m) => ev.run(s.loadout, m.changes, { level, skill: m.skill ?? s.skill })));
+    const evs = await Promise.all(cands.map((m) => ev.run(s.loadout, m.changes, ctxOfState(s, m.skill ?? s.skill))));
     ctx.notSearched.forEach((x) => notSearched.add(x));
     cands.map((m, i) => ({ m, e: evs[i].figure }))
       .filter(({ m, e }) => rankableMove(m, f, e) && e.kill > f.kill).sort((a, b) => b.e.kill - a.e.kill).slice(0, K.topK)
@@ -160,7 +200,7 @@ async function ideal(ev: Evaluator, K: IdealKnobs, prices: PriceBook | undefined
 export async function nextBuys(s: State, ev: Evaluator, acq: Generator[], ctx: GenCtx, f: Figure): Promise<NextBuy[]> {
   const seen = new Set<string>();
   const ms = acq.flatMap((g) => g(s, ctx)).filter((m) => m.minLevel <= s.level && !seen.has(JSON.stringify(m.changes)) && !!seen.add(JSON.stringify(m.changes)));
-  const evs = await Promise.all(ms.map((m) => ev.run(s.loadout, m.changes, { level: s.level, skill: m.skill ?? s.skill })));
+  const evs = await Promise.all(ms.map((m) => ev.run(s.loadout, m.changes, ctxOfState(s, m.skill ?? s.skill))));
   return ms.map((m, i) => ({ m, e: evs[i].figure })).filter(({ e }) => !e.stop && e.kill > f.kill)
     .map(({ m, e }): NextBuy => ({ label: m.label, kind: m.kind, gain: e.kill / f.kill, kill: e.kill, costFE: m.costFE,
       ...(m.market ? { market: m.market } : {}), ...(m.buy ? { buy: m.buy } : {}), ...(e.partial.length ? { partial: e.partial } : {}) }))
@@ -174,16 +214,26 @@ export async function runAdvise(ev: Evaluator, state: State, k: Partial<Knobs> =
   const base = { mode: 'advise' as const, pin: ev.pin, etor: { season: books.season, fetchedAt: books.fetchedAt }, knobs: { ...K, fight: ev.fight, fightNote: ev.fightNote, rollBudget: ev.rollBudget, target: ev.target, fe: state.fe, level: state.level, skill: state.skill },
     character: { level: state.level, skill: state.skill, fe: state.fe, owned: state.owned.length,
       gear: ((state.loadout.gear ?? []) as { slot?: string; label: string }[]).map((g) => ({ slot: g.slot ?? '', label: g.label })) } };
-  const first = await ev.run(state.loadout, [], { level: state.level, skill: state.skill });
-  if (first.figure.stop) {
-    return { ...base, start: first.figure, inputs: first.inputs, steps: [], notSearched: [], unpriced: [],
-      notCalculable: [`${state.skill} cannot be priced yet: ${first.figure.stop}`] };
+  // Hammer of Ash: the first boss (in order) the character does not kill within moveOnSeconds; the last boss when it kills them all
+  const targets = K.targets ?? BOSS_ORDER, moveOn = K.moveOnSeconds ?? 10, passed: string[] = [];
+  let first = await ev.run(state.loadout, [], ctxOfState(state));
+  if (state.skill === 'hoa') for (const t of targets) {
+    state = { ...state, target: t };
+    first = await ev.run(state.loadout, [], ctxOfState(state));
+    if (first.figure.stop || killTime(first.figure) > moveOn || t === targets.at(-1)) break;
+    passed.push(`${bossName(t)} dies in ${secs(killTime(first.figure))}`);
   }
+  const legs: Leg[] = [{ skill: state.skill, target: state.target ?? null, firstStep: 0 }];
+  if (first.figure.stop) {
+    return { ...base, legs, start: first.figure, inputs: first.inputs, steps: [], notSearched: [], unpriced: [],
+      notCalculable: [`${state.skill}${state.target ? ` on ${bossName(state.target)}` : ''} cannot be priced yet: ${first.figure.stop}`] };
+  }
+  const startNotes = passed.length ? [`${passed.join(', ')} (under ${moveOn} s): the advice is for ${bossName(state.target!)}`] : [];
   const ctxOf = (s: State): GenCtx => ({ prices: books, level: s.level,
     notSearched: new Set(s.skill === 'iceShot' ? ['switch to Hammer of Ash: planned in the ideal guide, not searched for an Ice Shot character'] : CULL_NOT_COUNTED) });
   const next = await nextBuys(state, ev, acq, ctxOf(state), first.figure);
   const bought = Object.fromEntries(next.filter((n) => n.buy).map((n) => [n.buy!.name, books.price(n.buy!.name, state.level)]));
-  const withNext = { ...base, next, prices: bought };
+  const withNext = { ...base, legs, startNotes, next, prices: bought };
   onStep?.({ ...withNext, knobs: { ...base.knobs, partialRun: true }, inputs: first.inputs, start: first.figure, steps: [], notSearched: [], unpriced: [], notCalculable: [] });
   const { stoppedBy, ...r } = await path(state, ev, acq, recon, ctxOf, K,
     onStep && ((p) => onStep({ ...withNext, knobs: { ...base.knobs, partialRun: true }, inputs: first.inputs, ...p } as GuideOut)));

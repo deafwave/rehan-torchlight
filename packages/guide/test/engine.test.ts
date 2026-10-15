@@ -51,6 +51,15 @@ describe('evaluator (stub workers)', () => {
     expect(s.jobs[2].target).toBeUndefined();
     expect(memoKey('p', 'hoa', 1, lo, [], {}, 1, 'cube3')).not.toBe(memoKey('p', 'hoa', 1, lo, [], {}, 1));
   });
+  it("a call can ask for the training dummy (ctx.target null): the same Hammer of Ash build on Ice Shot's yardstick", async () => {
+    const s = stub(() => fig(300, 100));
+    const ev = await createEvaluator({ factory: s.factory, workers: 1, pin: 'p' });
+    const r = await ev.run(lo, [], { ...ctx, target: null });
+    expect(s.jobs[0].target).toBeUndefined();
+    expect(r.figure.target).toBeUndefined();
+    await ev.run(lo, [], ctx);
+    expect(s.jobs[1].target).toBe('cube3');   // its own memo entry, not the dummy's
+  });
   it('a blocked cull ends nothing: cull 0, the reason kept', async () => {
     const s = stub(() => fig(300, 100, { lock: 150, cull: { threshold: 0.2, blocked: ['HP lock'] } }));
     const r = await (await createEvaluator({ factory: s.factory, workers: 1, pin: 'p' })).run(lo, [], ctx);

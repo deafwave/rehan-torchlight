@@ -24,7 +24,7 @@ const stubEv = (stop?: string, o: { runs?: { changes: unknown[]; level: number }
       figure: stop ? { life100: 0, life0: 0, kill: 0, partial: [], stop } : { life100: k, life0: k, kill: k, partial: [] } };
   },
 });
-const small = { stepsPerStage: 1, endLevel: 65, topK: 2, maxRounds: 1 };
+const small = { stepsPerStage: 1, endLevel: 65, topK: 2, maxRounds: 1, finalSteps: 0 };
 
 const helmet = basesFor('helmet', 60, 'iceShot').at(-1)!, ring = basesFor('ring1', 60, 'iceShot').at(-1)!;
 const item = (itemId: string, where: string, base: { baseId: number; name: string; level: number }) =>
@@ -225,7 +225,7 @@ describe('fix round 1', () => {
     const out = await runIdeal(flat, { ...small, startLevel: 85, endLevel: 95, stepsPerStage: 1, switchAt: Infinity });
     const sw = out.steps.find((st) => st.move.kind === 'switch')!;
     expect(sw.level).toBe(95);
-    expect(sw.notes![0]).toBe('planned switch: the Ice Shot leg stalled (no step in the last 2 stages); the kill average may drop here');
+    expect(sw.notes![0]).toBe('planned switch: the Ice Shot leg stalled (no step in the last 2 stages)');
     const kinds = (sw.move.changes.slice(2) as { kind: string; action?: string; points?: number }[]).map((c) => (c.kind === 'core' ? `core-${c.action}` : c.points === 0 ? 'zero' : 'set'));
     expect(kinds.join(',')).toMatch(/^(zero,)+(core-remove,)*(set,)+(core-add,)*core-add$/);
   });
@@ -291,6 +291,40 @@ describe('fix round 1', () => {
     expect(next.some((n) => n.costFE === null)).toBe(true);
     expect(next.map((n) => n.gain)).toEqual([...next.map((n) => n.gain)].sort((a, b) => b - a));
     for (const n of next) if (n.buy) expect(Object.hasOwn(out.prices!, n.buy.name), n.buy.name).toBe(true);
+  });
+  // bosses as yardsticks: kill = (100 + 10 per change) x 10, at most the lock 1e6; Life sets the time to kill
+  const LIFE: Record<string, number> = { cube1: 1e4, keegan2: 2e4, cube2: 3e4, cube3: 1e9 };
+  const bossEv = (): Evaluator => ({ pin: 'stub', async close() {}, async run(lo, changes, ctx) {
+    const n = ((lo as { __n?: number }).__n ?? 0) + changes.length, v = (100 + 10 * n) * (ctx.skill === 'hoa' ? 10 : 1), t = ctx.skill === 'hoa' ? ctx.target ?? undefined : undefined;
+    const k = Math.min(v, 1e6), talents = { ...(lo as { talents?: Record<number, number> }).talents };
+    for (const c of changes as { kind: string; node: number; points: number }[]) if (c.kind === 'talent') talents[c.node] = c.points;
+    return { loadout: { ...lo, __n: n, talents }, dropped: [], figure: { life100: v, life0: v, kill: k, partial: [], ...(t ? { target: t, lifeMax: LIFE[t], lock: 1e6 } : {}) } };
+  } });
+  it('Hammer of Ash goes boss by boss (Cube 1, Keegan 2, Cube 2, Cube 3): a leg ends once its boss dies within moveOnSeconds, each leg on its own yardstick', async () => {
+    const out = await runIdeal(bossEv(), { ...small, startLevel: 90, endLevel: 90, stepsPerStage: 30, finalSteps: 30, switchAt: 150, moveOnSeconds: 10 });
+    const legs = out.legs!;
+    expect(legs.map((l) => `${l.skill}:${l.target}`)).toEqual(['iceShot:null', 'hoa:cube1', 'hoa:keegan2', 'hoa:cube2', 'hoa:cube3']);
+    expect(legs[0].end).toMatch(/switch to Hammer of Ash/);
+    for (const l of legs.slice(1, -1)) expect(l.end).toMatch(/dies in .* \(under 10 s\): move on to (Keegan 2|Cube 2|Cube 3)$/);
+    legs.forEach((l, i) => {
+      const own = out.steps.slice(l.firstStep, legs[i + 1]?.firstStep ?? out.steps.length);
+      for (const st of own) expect(st.after.target ?? null).toBe(l.target);
+    });
+    expect(out.steps[legs[1].firstStep].move.kind).toBe('switch');
+  });
+  it('advice with maxSteps 0 is the next-buys list alone: no plan steps, not stopped', async () => {
+    const out = await runAdvise(stubEv(), fromExport(exportOf()), { maxRounds: 1, topK: 2, maxSteps: 0 });
+    expect(out.next!.length).toBeGreaterThan(0);
+    expect(out.steps).toEqual([]);
+    expect(out.knobs.stoppedBy).toBeUndefined();
+    expect(out.knobs.partialRun).toBeUndefined();
+  });
+  it('advice starts on the first boss the character does not kill within moveOnSeconds', async () => {
+    const st = fromExport(exportOf({ loadout: { ...idealStart().loadout, skills: [{ sid: 1110, level: 20, place: { kind: 'active', slot: 0 } }] } }));
+    const out = await runAdvise(bossEv(), { ...st, loadout: { ...st.loadout, __n: 50 } }, { maxRounds: 1, topK: 2, maxSteps: 1 });
+    // kill (100 + 500) x 10 = 6000: Cube 1 in 1.7 s, Keegan 2 in 3.3 s, Cube 2 in 5 s, Cube 3 not: the advice is for Cube 3
+    expect(out.legs).toEqual([{ skill: 'hoa', target: 'cube3', firstStep: 0 }]);
+    expect(out.start.target).toBe('cube3');
   });
   it('the advice carries the character it starts from: level, skill, FE, owned items and worn gear by slot', async () => {
     const st = fromExport(exportOf());
