@@ -34,8 +34,7 @@
   "priceWindows": {
    "iceShot": "day1",
    "hoa": "days1to3"
-  },
-  "partialRun": true
+  }
  },
  "startNotes": [
   "base loadout: game/loadout_l94-20261013-160234.json (the owner's L94 Ice Shot character, dps-debug pin)",
@@ -60,7 +59,12 @@
   "L80: gems raised to the hero-level limit",
   "L80: 6 new talent point(s) spent: Prophet: Max Frostbite Rating (+3), Prophet: Max Frostbite Rating (+3)",
   "L85: gems raised to the hero-level limit",
-  "L85: 6 new talent point(s) spent: Marksman: Projectile Critical Strike Rating (+3), Marksman: +12% Projectile Damage (+3)"
+  "L85: 6 new talent point(s) spent: Marksman: Projectile Critical Strike Rating (+3), Marksman: +12% Projectile Damage (+3)",
+  "L90: gems raised to the hero-level limit",
+  "L90: 5 new talent point(s) spent: Lich: All Skills' Levels (+1), Ronin: Attack Speed (+1), Onslaughter: +4% additional Base Damage for Two-Handed Weapons (+3)",
+  "L95: gems raised to the hero-level limit",
+  "L95: 4 new talent point(s) spent: Onslaughter: +12% additional Base Damage for Two-Handed Weapons (+1), Onslaughter: +40% Attack Critical Strike Rating when holding a Two-Handed Weapon (+3)",
+  "L100: gems raised to the hero-level limit"
  ],
  "steps": [
   {
@@ -7377,6 +7381,524 @@
    "notes": [
     "talent points assumed"
    ]
+  },
+  {
+   "level": 85,
+   "move": {
+    "kind": "unique",
+    "label": "Unique Death's Touch in gloves",
+    "acquisition": true,
+    "costFE": 1683.272,
+    "buy": {
+     "name": "Death's Touch",
+     "qty": 1
+    },
+    "minLevel": 82,
+    "changes": [
+     {
+      "kind": "gear",
+      "slot": "gloves",
+      "item": {
+       "baseId": 3311,
+       "baseName": "Ranger's Rusted Gauntlets",
+       "itemId": "guide-unique-112346",
+       "level": 85,
+       "modifiers": {
+        "baseAttr": [
+         {
+          "id": 580011,
+          "dynArgs": [
+           1920
+          ]
+         }
+        ],
+        "prefix": [
+         {
+          "id": 51434610,
+          "dynArgs": [
+           395
+          ]
+         },
+         {
+          "id": 51434620,
+          "dynArgs": [
+           110
+          ]
+         },
+         {
+          "id": 51434630,
+          "dynArgs": [
+           50.5
+          ]
+         },
+         {
+          "id": 51434670,
+          "dynArgs": [
+           20.5
+          ]
+         }
+        ]
+       }
+      }
+     }
+    ]
+   },
+   "triggered": [],
+   "before": {
+    "life100": 162814134.1953883,
+    "life0": 162814134.1953883,
+    "kill": 162814134.1953883,
+    "partial": [
+     "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "the target's buff not derived (IN1): buff 260 (103010015 row 1, 103010015 row 1): single-slot policy 1 with a cap of 5",
+     "item 3403: comp 0x23 rarity tag list (5000501..5000505; the source is not located)",
+     "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
+     "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
+     "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
+     "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
+     "not in this figure: node 2215 (execute 0x1407d0580 `mov al, 1; ret`) - affix class 1010080264 row 1 (hero 4001 spawn class 1010080264) - ticked at the grant",
+     "not in this figure: node 626 ([inf] the owner's comp 0x12 buffs: a value from buff +0xc8 / +0x68 × +0xe8 / the +0xd0 +0x110 table and the node's +0x98..+0xb0 handed to the buff's +0x20 object (vt+0x10 — its target not identified, so \"no record\" is inferred); no direct comp 0xc / 0x25 call (execute FUN_141af35a0, c9b_trigexec.c 313-858)) - affix class 775414272 row 1 (hero 4001 spawn class 77541427",
+     "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
+     "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
+     "not in this figure: node 2320 (comp 0x82 / 0x91, triggers a skill (execute FUN_141a9df70, c9b_nodes.c 4093-4466)) - affix class 847438 row 1 (buff 10 class 847438) - ticked at the grant",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 2)) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 72818 row 1 (gem 7006 (skill 1110)) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7031 modifier 771009001) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7130 modifier 771009001) - ticked at the grant",
+     "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a",
+     "not in this figure: node 2207 (execute 0x1407d0580) - affix class 1059163184 row 1 (map modifier class 1059163184) - ticked at the grant (x10)",
+     "not in this figure: node 2206 (execute 0x1407d0580) - affix class 122060011 row 1 (map modifier class 122060011) - ticked at the grant (x4)",
+     "not in this figure: node 2206 (execute 0x1407d0580) - affix class 122060013 row 1 (map modifier class 122060013) - ticked at the grant (x10)"
+    ],
+    "lock": 15000000000000,
+    "target": "cube1",
+    "lifeMax": 31633200895
+   },
+   "after": {
+    "life100": 258689019.82383788,
+    "life0": 258689019.82383788,
+    "kill": 258689019.82383788,
+    "partial": [
+     "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "the target's buff not derived (IN1): buff 260 (103010015 row 1, 103010015 row 1): single-slot policy 1 with a cap of 5",
+     "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
+     "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
+     "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
+     "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
+     "not in this figure: node 2215 (execute 0x1407d0580 `mov al, 1; ret`) - affix class 1010080264 row 1 (hero 4001 spawn class 1010080264) - ticked at the grant",
+     "not in this figure: node 626 ([inf] the owner's comp 0x12 buffs: a value from buff +0xc8 / +0x68 × +0xe8 / the +0xd0 +0x110 table and the node's +0x98..+0xb0 handed to the buff's +0x20 object (vt+0x10 — its target not identified, so \"no record\" is inferred); no direct comp 0xc / 0x25 call (execute FUN_141af35a0, c9b_trigexec.c 313-858)) - affix class 775414272 row 1 (hero 4001 spawn class 77541427",
+     "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
+     "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
+     "not in this figure: node 2320 (comp 0x82 / 0x91, triggers a skill (execute FUN_141a9df70, c9b_nodes.c 4093-4466)) - affix class 847438 row 1 (buff 10 class 847438) - ticked at the grant",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 2)) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 72818 row 1 (gem 7006 (skill 1110)) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7031 modifier 771009001) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7130 modifier 771009001) - ticked at the grant",
+     "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a",
+     "not in this figure: node 2207 (execute 0x1407d0580) - affix class 1059163184 row 1 (map modifier class 1059163184) - ticked at the grant (x10)",
+     "not in this figure: node 2206 (execute 0x1407d0580) - affix class 122060011 row 1 (map modifier class 122060011) - ticked at the grant (x4)",
+     "not in this figure: node 2206 (execute 0x1407d0580) - affix class 122060013 row 1 (map modifier class 122060013) - ticked at the grant (x10)"
+    ],
+    "lock": 15000000000000,
+    "target": "cube1",
+    "lifeMax": 31633200895
+   },
+   "cumFE": 4511.781934140612,
+   "notes": [
+    "talent points assumed"
+   ]
+  },
+  {
+   "level": 85,
+   "move": {
+    "kind": "unique",
+    "label": "Unique Trickster's Tread in boots",
+    "acquisition": true,
+    "costFE": 1,
+    "buy": {
+     "name": "Trickster's Tread",
+     "qty": 1
+    },
+    "minLevel": 39,
+    "changes": [
+     {
+      "kind": "gear",
+      "slot": "boots",
+      "item": {
+       "baseId": 4004,
+       "baseName": "Prospector's Short Boots",
+       "itemId": "guide-unique-112442",
+       "level": 85,
+       "modifiers": {
+        "baseAttr": [
+         {
+          "id": 590004,
+          "dynArgs": [
+           599
+          ]
+         }
+        ],
+        "prefix": [
+         {
+          "id": 51444210,
+          "dynArgs": [
+           40
+          ]
+         },
+         {
+          "id": 51444220,
+          "dynArgs": [
+           35
+          ]
+         },
+         {
+          "id": 51444230,
+          "dynArgs": []
+         }
+        ]
+       }
+      }
+     }
+    ]
+   },
+   "triggered": [],
+   "before": {
+    "life100": 258689019.82383788,
+    "life0": 258689019.82383788,
+    "kill": 258689019.82383788,
+    "partial": [
+     "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "the target's buff not derived (IN1): buff 260 (103010015 row 1, 103010015 row 1): single-slot policy 1 with a cap of 5",
+     "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
+     "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
+     "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
+     "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
+     "not in this figure: node 2215 (execute 0x1407d0580 `mov al, 1; ret`) - affix class 1010080264 row 1 (hero 4001 spawn class 1010080264) - ticked at the grant",
+     "not in this figure: node 626 ([inf] the owner's comp 0x12 buffs: a value from buff +0xc8 / +0x68 × +0xe8 / the +0xd0 +0x110 table and the node's +0x98..+0xb0 handed to the buff's +0x20 object (vt+0x10 — its target not identified, so \"no record\" is inferred); no direct comp 0xc / 0x25 call (execute FUN_141af35a0, c9b_trigexec.c 313-858)) - affix class 775414272 row 1 (hero 4001 spawn class 77541427",
+     "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
+     "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
+     "not in this figure: node 2320 (comp 0x82 / 0x91, triggers a skill (execute FUN_141a9df70, c9b_nodes.c 4093-4466)) - affix class 847438 row 1 (buff 10 class 847438) - ticked at the grant",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 2)) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 72818 row 1 (gem 7006 (skill 1110)) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7031 modifier 771009001) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7130 modifier 771009001) - ticked at the grant",
+     "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a",
+     "not in this figure: node 2207 (execute 0x1407d0580) - affix class 1059163184 row 1 (map modifier class 1059163184) - ticked at the grant (x10)",
+     "not in this figure: node 2206 (execute 0x1407d0580) - affix class 122060011 row 1 (map modifier class 122060011) - ticked at the grant (x4)",
+     "not in this figure: node 2206 (execute 0x1407d0580) - affix class 122060013 row 1 (map modifier class 122060013) - ticked at the grant (x10)"
+    ],
+    "lock": 15000000000000,
+    "target": "cube1",
+    "lifeMax": 31633200895
+   },
+   "after": {
+    "life100": 273060632.0362733,
+    "life0": 273060632.0362733,
+    "kill": 273060632.0362733,
+    "partial": [
+     "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "the target's buff not derived (IN1): buff 260 (103010015 row 1, 103010015 row 1): single-slot policy 1 with a cap of 5",
+     "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
+     "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
+     "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
+     "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
+     "not in this figure: node 2215 (execute 0x1407d0580 `mov al, 1; ret`) - affix class 1010080264 row 1 (hero 4001 spawn class 1010080264) - ticked at the grant",
+     "not in this figure: node 626 ([inf] the owner's comp 0x12 buffs: a value from buff +0xc8 / +0x68 × +0xe8 / the +0xd0 +0x110 table and the node's +0x98..+0xb0 handed to the buff's +0x20 object (vt+0x10 — its target not identified, so \"no record\" is inferred); no direct comp 0xc / 0x25 call (execute FUN_141af35a0, c9b_trigexec.c 313-858)) - affix class 775414272 row 1 (hero 4001 spawn class 77541427",
+     "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
+     "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
+     "not in this figure: node 2320 (comp 0x82 / 0x91, triggers a skill (execute FUN_141a9df70, c9b_nodes.c 4093-4466)) - affix class 847438 row 1 (buff 10 class 847438) - ticked at the grant",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 2)) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 72818 row 1 (gem 7006 (skill 1110)) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7031 modifier 771009001) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7130 modifier 771009001) - ticked at the grant",
+     "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a",
+     "not in this figure: node 2207 (execute 0x1407d0580) - affix class 1059163184 row 1 (map modifier class 1059163184) - ticked at the grant (x10)",
+     "not in this figure: node 2206 (execute 0x1407d0580) - affix class 122060011 row 1 (map modifier class 122060011) - ticked at the grant (x4)",
+     "not in this figure: node 2206 (execute 0x1407d0580) - affix class 122060013 row 1 (map modifier class 122060013) - ticked at the grant (x10)"
+    ],
+    "lock": 15000000000000,
+    "target": "cube1",
+    "lifeMax": 31633200895
+   },
+   "cumFE": 4512.781934140612,
+   "notes": [
+    "talent points assumed"
+   ]
+  },
+  {
+   "level": 90,
+   "move": {
+    "kind": "gear",
+    "label": "Rare base Sierra Reverberation Maul (item level 86) on mainHand, 6 affix(es) crafted again",
+    "acquisition": true,
+    "costFE": 8.447693636363637,
+    "market": "drop",
+    "costNote": "drop + re-craft 8.45 FE",
+    "minLevel": 86,
+    "changes": [
+     {
+      "kind": "gear",
+      "slot": "mainHand",
+      "item": {
+       "baseId": 1019,
+       "baseName": "Sierra Reverberation Maul",
+       "itemId": "guide-base-1019",
+       "level": 85,
+       "modifiers": {
+        "baseAttr": [
+         {
+          "id": 510020,
+          "dynArgs": [
+           220,
+           220
+          ]
+         },
+         {
+          "id": 740000,
+          "dynArgs": [
+           500
+          ]
+         },
+         {
+          "id": 740001,
+          "dynArgs": [
+           1.5
+          ]
+         }
+        ],
+        "prefix": [
+         {
+          "id": 109110007,
+          "dynArgs": [
+           32
+          ]
+         },
+         {
+          "id": 107110007,
+          "dynArgs": [
+           4
+          ]
+         },
+         {
+          "id": 140110407,
+          "dynArgs": [
+           38
+          ]
+         }
+        ],
+        "suffix": [
+         {
+          "id": 110110007,
+          "dynArgs": [
+           -7.5,
+           22
+          ]
+         },
+         {
+          "id": 111110406,
+          "dynArgs": [
+           42
+          ]
+         },
+         {
+          "id": 110110107,
+          "dynArgs": [
+           9.5
+          ]
+         }
+        ]
+       }
+      }
+     }
+    ]
+   },
+   "triggered": [],
+   "before": {
+    "life100": 429845357.88337076,
+    "life0": 429845357.88337076,
+    "kill": 429845357.88337076,
+    "partial": [
+     "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "the target's buff not derived (IN1): buff 260 (103010015 row 1, 103010015 row 1): single-slot policy 1 with a cap of 5",
+     "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
+     "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
+     "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
+     "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
+     "not in this figure: node 2215 (execute 0x1407d0580 `mov al, 1; ret`) - affix class 1010080264 row 1 (hero 4001 spawn class 1010080264) - ticked at the grant",
+     "not in this figure: node 626 ([inf] the owner's comp 0x12 buffs: a value from buff +0xc8 / +0x68 × +0xe8 / the +0xd0 +0x110 table and the node's +0x98..+0xb0 handed to the buff's +0x20 object (vt+0x10 — its target not identified, so \"no record\" is inferred); no direct comp 0xc / 0x25 call (execute FUN_141af35a0, c9b_trigexec.c 313-858)) - affix class 775414272 row 1 (hero 4001 spawn class 77541427",
+     "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
+     "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
+     "not in this figure: node 2320 (comp 0x82 / 0x91, triggers a skill (execute FUN_141a9df70, c9b_nodes.c 4093-4466)) - affix class 847438 row 1 (buff 10 class 847438) - ticked at the grant",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 2)) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 72818 row 1 (gem 7006 (skill 1110)) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7031 modifier 771009001) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7130 modifier 771009001) - ticked at the grant",
+     "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a",
+     "not in this figure: node 2207 (execute 0x1407d0580) - affix class 1059163184 row 1 (map modifier class 1059163184) - ticked at the grant (x10)",
+     "not in this figure: node 2206 (execute 0x1407d0580) - affix class 122060011 row 1 (map modifier class 122060011) - ticked at the grant (x4)",
+     "not in this figure: node 2206 (execute 0x1407d0580) - affix class 122060013 row 1 (map modifier class 122060013) - ticked at the grant (x10)"
+    ],
+    "lock": 15000000000000,
+    "target": "cube1",
+    "lifeMax": 31633200895
+   },
+   "after": {
+    "life100": 462586601.0232683,
+    "life0": 462586601.0232683,
+    "kill": 462586601.0232683,
+    "partial": [
+     "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "the target's buff not derived (IN1): buff 260 (103010015 row 1, 103010015 row 1): single-slot policy 1 with a cap of 5",
+     "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
+     "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
+     "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
+     "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
+     "not in this figure: node 2215 (execute 0x1407d0580 `mov al, 1; ret`) - affix class 1010080264 row 1 (hero 4001 spawn class 1010080264) - ticked at the grant",
+     "not in this figure: node 626 ([inf] the owner's comp 0x12 buffs: a value from buff +0xc8 / +0x68 × +0xe8 / the +0xd0 +0x110 table and the node's +0x98..+0xb0 handed to the buff's +0x20 object (vt+0x10 — its target not identified, so \"no record\" is inferred); no direct comp 0xc / 0x25 call (execute FUN_141af35a0, c9b_trigexec.c 313-858)) - affix class 775414272 row 1 (hero 4001 spawn class 77541427",
+     "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
+     "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
+     "not in this figure: node 2320 (comp 0x82 / 0x91, triggers a skill (execute FUN_141a9df70, c9b_nodes.c 4093-4466)) - affix class 847438 row 1 (buff 10 class 847438) - ticked at the grant",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 2)) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 72818 row 1 (gem 7006 (skill 1110)) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7031 modifier 771009001) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7130 modifier 771009001) - ticked at the grant",
+     "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a",
+     "not in this figure: node 2207 (execute 0x1407d0580) - affix class 1059163184 row 1 (map modifier class 1059163184) - ticked at the grant (x10)",
+     "not in this figure: node 2206 (execute 0x1407d0580) - affix class 122060011 row 1 (map modifier class 122060011) - ticked at the grant (x4)",
+     "not in this figure: node 2206 (execute 0x1407d0580) - affix class 122060013 row 1 (map modifier class 122060013) - ticked at the grant (x10)"
+    ],
+    "lock": 15000000000000,
+    "target": "cube1",
+    "lifeMax": 31633200895
+   },
+   "cumFE": 4521.229627776976,
+   "notes": [
+    "talent points assumed"
+   ]
+  },
+  {
+   "level": 90,
+   "move": {
+    "kind": "unique",
+    "label": "Unique Truth in necklace",
+    "acquisition": true,
+    "costFE": 2394.2982,
+    "buy": {
+     "name": "Truth",
+     "qty": 1
+    },
+    "minLevel": 32,
+    "changes": [
+     {
+      "kind": "gear",
+      "slot": "necklace",
+      "item": {
+       "baseId": 4533,
+       "baseName": "Shaman's Necklace",
+       "itemId": "guide-unique-113208",
+       "level": 90,
+       "modifiers": {
+        "baseAttr": [],
+        "prefix": [
+         {
+          "id": 51520810,
+          "dynArgs": [
+           7.5
+          ]
+         }
+        ]
+       }
+      }
+     }
+    ]
+   },
+   "triggered": [],
+   "before": {
+    "life100": 462586601.0232683,
+    "life0": 462586601.0232683,
+    "kill": 462586601.0232683,
+    "partial": [
+     "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "the target's buff not derived (IN1): buff 260 (103010015 row 1, 103010015 row 1): single-slot policy 1 with a cap of 5",
+     "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
+     "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
+     "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
+     "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
+     "not in this figure: node 2215 (execute 0x1407d0580 `mov al, 1; ret`) - affix class 1010080264 row 1 (hero 4001 spawn class 1010080264) - ticked at the grant",
+     "not in this figure: node 626 ([inf] the owner's comp 0x12 buffs: a value from buff +0xc8 / +0x68 × +0xe8 / the +0xd0 +0x110 table and the node's +0x98..+0xb0 handed to the buff's +0x20 object (vt+0x10 — its target not identified, so \"no record\" is inferred); no direct comp 0xc / 0x25 call (execute FUN_141af35a0, c9b_trigexec.c 313-858)) - affix class 775414272 row 1 (hero 4001 spawn class 77541427",
+     "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
+     "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
+     "not in this figure: node 2320 (comp 0x82 / 0x91, triggers a skill (execute FUN_141a9df70, c9b_nodes.c 4093-4466)) - affix class 847438 row 1 (buff 10 class 847438) - ticked at the grant",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 2)) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 72818 row 1 (gem 7006 (skill 1110)) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7031 modifier 771009001) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7130 modifier 771009001) - ticked at the grant",
+     "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a",
+     "not in this figure: node 2207 (execute 0x1407d0580) - affix class 1059163184 row 1 (map modifier class 1059163184) - ticked at the grant (x10)",
+     "not in this figure: node 2206 (execute 0x1407d0580) - affix class 122060011 row 1 (map modifier class 122060011) - ticked at the grant (x4)",
+     "not in this figure: node 2206 (execute 0x1407d0580) - affix class 122060013 row 1 (map modifier class 122060013) - ticked at the grant (x10)"
+    ],
+    "lock": 15000000000000,
+    "target": "cube1",
+    "lifeMax": 31633200895
+   },
+   "after": {
+    "life100": 674967810.1505469,
+    "life0": 674967810.1505469,
+    "kill": 674967810.1505469,
+    "partial": [
+     "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "the target's buff not derived (IN1): buff 260 (103010015 row 1, 103010015 row 1): single-slot policy 1 with a cap of 5",
+     "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
+     "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
+     "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
+     "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
+     "not in this figure: node 2215 (execute 0x1407d0580 `mov al, 1; ret`) - affix class 1010080264 row 1 (hero 4001 spawn class 1010080264) - ticked at the grant",
+     "not in this figure: node 626 ([inf] the owner's comp 0x12 buffs: a value from buff +0xc8 / +0x68 × +0xe8 / the +0xd0 +0x110 table and the node's +0x98..+0xb0 handed to the buff's +0x20 object (vt+0x10 — its target not identified, so \"no record\" is inferred); no direct comp 0xc / 0x25 call (execute FUN_141af35a0, c9b_trigexec.c 313-858)) - affix class 775414272 row 1 (hero 4001 spawn class 77541427",
+     "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
+     "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
+     "not in this figure: node 2320 (comp 0x82 / 0x91, triggers a skill (execute FUN_141a9df70, c9b_nodes.c 4093-4466)) - affix class 847438 row 1 (buff 10 class 847438) - ticked at the grant",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 2)) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 72818 row 1 (gem 7006 (skill 1110)) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7031 modifier 771009001) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7130 modifier 771009001) - ticked at the grant",
+     "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a",
+     "not in this figure: node 2207 (execute 0x1407d0580) - affix class 1059163184 row 1 (map modifier class 1059163184) - ticked at the grant (x10)",
+     "not in this figure: node 2206 (execute 0x1407d0580) - affix class 122060011 row 1 (map modifier class 122060011) - ticked at the grant (x4)",
+     "not in this figure: node 2206 (execute 0x1407d0580) - affix class 122060013 row 1 (map modifier class 122060013) - ticked at the grant (x10)"
+    ],
+    "lock": 15000000000000,
+    "target": "cube1",
+    "lifeMax": 31633200895
+   },
+   "cumFE": 6915.527827776976,
+   "notes": [
+    "talent points assumed"
+   ]
   }
  ],
  "notSearched": [
@@ -7660,14 +8182,25 @@
   "target kismets appear once their pact is equipped in that slot",
   "point shifts beyond the best 60 of 1025 (maxShifts)",
   "craft on mainHand: suffix side full (3); replacing an affix is not ported",
-  "craft on mainHand: prefix side full (3); replacing an affix is not ported"
+  "craft on mainHand: prefix side full (3); replacing an affix is not ported",
+  "craft on mainHand: 11 tiers whose library text ranges differ from the catalog rolls",
+  "point shifts beyond the best 60 of 1007 (maxShifts)",
+  "talent points at level 90: no level -> points table exists; 104 points assumed (round(108 x (L - 1) / 92) below 93, the value observed at 93-96 above; docs/talent-rules.md)",
+  "point shifts beyond the best 60 of 1037 (maxShifts)",
+  "craft on mainHand: 20 tiers whose library text ranges differ from the catalog rolls",
+  "talent points at level 100: no level -> points table exists; 108 points assumed (round(108 x (L - 1) / 92) below 93, the value observed at 93-96 above; docs/talent-rules.md)"
  ],
  "unpriced": [
   "L60 not on the market / unpriced: Unique Endless Night - Prototype in boots: +101.3 % if you get it",
   "L65 not on the market / unpriced: Unique Endless Night - Prototype in boots: +80.9 % if you get it",
   "L70 not on the market / unpriced: Unique Endless Night - Prototype in boots: +63.4 % if you get it",
   "L75 not on the market / unpriced: Unique Endless Night - Prototype in boots: +58.8 % if you get it",
-  "L80 not on the market / unpriced: Unique Endless Night - Prototype in boots: +60.6 % if you get it"
+  "L80 not on the market / unpriced: Unique Endless Night - Prototype in boots: +60.6 % if you get it",
+  "L85 not on the market / unpriced: Target: Kitty Express (rank 5) in pact slot 3: +82.0 % if you get it",
+  "L90 not on the market / unpriced: Target: Sierra Reverberation Maul in mainHand: +1312.8 % if you get it",
+  "L95 not on the market / unpriced: Target: Sierra Reverberation Maul in mainHand: +1321.7 % if you get it",
+  "L100 not on the market / unpriced: Target: Sierra Reverberation Maul in mainHand: +1321.7 % if you get it",
+  "147 distinct acquisitions had no price; the best 1 per stage are listed above"
  ],
  "notCalculable": [
   "Craft T5 Reaps 0.03 s of Damage Over Time when inflicting Trauma. The effect has a 1 s Recovery Time against the same target (suffix) on belt: dropped not in this figure: node 631 (N2: 'Reap': for each task-filter target FUN_141e0bcd0(world service +0x1a8, the executor, the target, a hit descriptor FUN_141a4b8d0, reapTime +0x78 (f64, FUN_141980a40), tags +0x80, reapFromSelf +0x90, 0, 1.0, b38 flag +0x91 == 0, the id of the type-4 payload entry or -1) - the damage pipeline's reap of the target's damage-over-time; no attribute / char-field record ",
@@ -8340,14 +8873,14 @@
   "Replace socket 5 with Hammer of Ash: Rekindle (Magnificent): dropped ailment 3 is inflicted by reaction_normal with chance 30% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 3 is inflicted by reaction_enhance with chance 30% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 3 is inflicted by reaction_enhance_extra_attack_bullet_hit with chance 30% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range)",
   "Target: Agony Darkness Ring in ring1: dropped the target's buff not derived (IN1): buff 260 (103010015 row 1): single-slot policy 1 with a cap of 5, 51512840",
   "Target: Old King's Sabatons in boots: dropped item 3910: comp 0x23 rarity tag list (5000501..5000505; the source is not located), buff 15184 (50355540 row 1, 50355540 row 2): 3.42857 adds/s over a life of 8 s leave P(below the cap 40) = 3.75e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
-  "Remove the support in socket 1: dropped buff 15184 (50355540 row 1, 50355540 row 2): 2.97255 adds/s over a life of 8 s leave P(below the cap 40) = 5.57e-5: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
-  "Trait Phantom Delivery instead of Blast Barrage (tier 2): dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.16484 adds/s over a life of 8 s leave P(below the cap 40) = 1.81e-5: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported, not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 976195584 row 1 (started by node 112, affix class 976195584 row 2 (trait 810022 tier 2)) - ticked at the grant, not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 9836197 row 1 (trait 810022 tier 2) - fires on event 0xf429a, not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 9836197 row 2 (trait 810022 tier 2) - fires on event 0xf429a",
-  "Swap Ranger's Broken Mask for a white Long Night Sorcerer's Mask (helmet): dropped item 3811: comp 0x23 rarity tag list (5000501..5000505; the source is not located)",
   "Remove the support in socket 1: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.47119 adds/s over a life of 8 s leave P(below the cap 40) = 2.90e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
   "Swap core talent Great Strength for Judgment: dropped the target's buff (IN1): buff 230 (103010022 row 1): 12.9808 adds/s x 1 stack(s), life 4 s, cap 1 (policy 1): P(fewer than 1 adds in one life) = 2.82e-23 -> steady at 1 [event 1000033 12.9808/s x 100 %]",
   "Swap talent tree Bladerunner for Shadowmaster: dropped ailment 4 is inflicted by reaction_normal with chance 27% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 4 is inflicted by reaction_enhance with chance 27% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 4 is inflicted by reaction_enhance_extra_attack_bullet_hit with chance 27% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range)",
   "Swap talent tree Bladerunner for Warlock: dropped ailment 0 is inflicted by reaction_normal with chance 9% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 3 is inflicted by reaction_normal with chance 9% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 4 is inflicted by reaction_normal with chance 9% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 0 is inflicted by reaction_enhance with chance 9% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 3 is inflicted by reaction_enhance with chance 9% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 4 is inflicted by reaction_enhance with chance 9% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 0 is inflicted by reaction_enhance_extra_attack_bullet_hit with chance 9% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 3 is inflicted by reaction_enhance_extra_attack_bullet_hit with chance 9% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 4 is inflicted by reaction_enhance_extra_attack_bullet_hit with chance 9% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range)",
   "Swap talent tree Lich for Assassin: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.27164 adds/s over a life of 8 s leave P(below the cap 40) = 9.63e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Remove the support in socket 1: dropped buff 15184 (50355540 row 1, 50355540 row 2): 2.97255 adds/s over a life of 8 s leave P(below the cap 40) = 5.57e-5: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Trait Phantom Delivery instead of Blast Barrage (tier 2): dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.16484 adds/s over a life of 8 s leave P(below the cap 40) = 1.81e-5: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported, not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 976195584 row 1 (started by node 112, affix class 976195584 row 2 (trait 810022 tier 2)) - ticked at the grant, not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 9836197 row 1 (trait 810022 tier 2) - fires on event 0xf429a, not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 9836197 row 2 (trait 810022 tier 2) - fires on event 0xf429a",
+  "Swap Ranger's Broken Mask for a white Long Night Sorcerer's Mask (helmet): dropped item 3811: comp 0x23 rarity tag list (5000501..5000505; the source is not located)",
   "Replace socket 4 with Increased Area: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.42857 adds/s over a life of 8 s leave P(below the cap 40) = 3.75e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
   "Replace socket 4 with Melee Knockback: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.42857 adds/s over a life of 8 s leave P(below the cap 40) = 3.75e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
   "Replace socket 4 with Added Erosion Damage: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.42857 adds/s over a life of 8 s leave P(below the cap 40) = 3.75e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
@@ -8372,9 +8905,9 @@
   "Replace socket 4 with Precision Strike: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.42857 adds/s over a life of 8 s leave P(below the cap 40) = 3.75e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
   "Replace socket 4 with Wind Projectiles: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.42857 adds/s over a life of 8 s leave P(below the cap 40) = 3.75e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
   "Replace socket 4 with Added Physical Damage: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.42857 adds/s over a life of 8 s leave P(below the cap 40) = 3.75e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Swap core talent Great Strength for Judgment: dropped the target's buff (IN1): buff 230 (103010022 row 1): 14.7321 adds/s x 1 stack(s), life 4 s, cap 1 (policy 1): P(fewer than 1 adds in one life) = 2.56e-26 -> steady at 1 [event 1000033 14.7321/s x 100 %]",
   "Swap core talent Tradeoff for Centralize: dropped not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 894924 row 1 (talent 42001300 x1) - fires on event 0xf4261, not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 570574 row 2 (talent 42001300 x1) - fires on event 0xf4265",
   "Swap core talent Tradeoff for Endless Fervor: stopped: not ported: attr 4802 dyn_48 counter 45: no fixed rating (comp 0x26 key 1, node 639) reached the owner's store",
-  "Swap core talent Great Strength for Judgment: dropped the target's buff (IN1): buff 230 (103010022 row 1): 14.7321 adds/s x 1 stack(s), life 4 s, cap 1 (policy 1): P(fewer than 1 adds in one life) = 2.56e-26 -> steady at 1 [event 1000033 14.7321/s x 100 %]",
   "Swap talent tree Lich for Assassin: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.43590 adds/s over a life of 8 s leave P(below the cap 40) = 3.59e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
   "Swap Paladin's Heavy Helm for a white Long Night Sorcerer's Mask (helmet): dropped item 3811: comp 0x23 rarity tag list (5000501..5000505; the source is not located)",
   "Swap core talent Great Strength for Judgment: dropped the target's buff (IN1): buff 230 (103010022 row 1): 15.6250 adds/s x 1 stack(s), life 4 s, cap 1 (policy 1): P(fewer than 1 adds in one life) = 7.19e-28 -> steady at 1 [event 1000033 15.6250/s x 100 %]",
@@ -8424,7 +8957,102 @@
   "Replace socket 4 with Fire Explosion: dropped buff 11730 (13523221 row 1): 0.910364 adds/s over a life of 4 s leave P(below the cap 1) = 2.62e-2: a mix of states, not a point, not calculable without buff 11730's instance count over the fight (added by 13523221 row 1 on event 1000030, deferred false): an uptime rule that is not ported",
   "Replace socket 4 with Mark: dropped the target's buff not derived (IN1): buff 330 (636982 row 1): 4.06250 adds/s over a life of 3 s leave P(below the cap 1) = 5.09e-6: a mix of states, not a point",
   "Replace socket 5 with Fire Explosion: dropped buff 11730 (13523221 row 1): 0.939850 adds/s over a life of 4 s leave P(below the cap 1) = 2.33e-2: a mix of states, not a point, not calculable without buff 11730's instance count over the fight (added by 13523221 row 1 on event 1000030, deferred false): an uptime rule that is not ported",
-  "Replace socket 5 with Mark: dropped the target's buff (IN1): buff 330 (636982 row 1): 6.25000 adds/s x 1 stack(s), life 3 s, cap 1 (policy 1): P(fewer than 1 adds in one life) = 7.19e-9 -> steady at 1 [event 1000033 15.6250/s x 40 %]"
+  "Replace socket 5 with Mark: dropped the target's buff (IN1): buff 330 (636982 row 1): 6.25000 adds/s x 1 stack(s), life 3 s, cap 1 (policy 1): P(fewer than 1 adds in one life) = 7.19e-9 -> steady at 1 [event 1000033 15.6250/s x 40 %]",
+  "Remove the support in socket 1: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.53182 adds/s over a life of 8 s leave P(below the cap 40) = 2.00e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Swap core talent Great Strength for Judgment: dropped the target's buff (IN1): buff 230 (103010022 row 1): 13.8889 adds/s x 1 stack(s), life 4 s, cap 1 (policy 1): P(fewer than 1 adds in one life) = 7.46e-25 -> steady at 1 [event 1000033 13.8889/s x 100 %]",
+  "Swap talent tree Ronin for Assassin: dropped buff 15184 (50355540 row 1, 50355540 row 2): 2.89339 adds/s over a life of 8 s leave P(below the cap 40) = 8.77e-5: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Swap talent tree Lich for Assassin: dropped buff 15184 (50355540 row 1, 50355540 row 2): 2.74872 adds/s over a life of 8 s leave P(below the cap 40) = 1.99e-4: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Swap Ranger's Rusted Gauntlets for a white Long Night Sorcerer's Wristband (gloves): dropped item 3511: comp 0x23 rarity tag list (5000501..5000505; the source is not located)",
+  "Unique Berserker Bracer in gloves: dropped item 3403: comp 0x23 rarity tag list (5000501..5000505; the source is not located)",
+  "Remove the support in socket 4: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.61111 adds/s over a life of 8 s leave P(below the cap 40) = 1.23e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Swap core talent Great Strength for Judgment: dropped the target's buff (IN1): buff 230 (103010022 row 1): 14.7059 adds/s x 1 stack(s), life 4 s, cap 1 (policy 1): P(fewer than 1 adds in one life) = 2.84e-26 -> steady at 1 [event 1000033 14.7059/s x 100 %]",
+  "Swap talent tree Ronin for Assassin: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.05413 adds/s over a life of 8 s leave P(below the cap 40) = 3.47e-5: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Swap talent tree Lich for Assassin: dropped buff 15184 (50355540 row 1, 50355540 row 2): 2.89339 adds/s over a life of 8 s leave P(below the cap 40) = 8.77e-5: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Swap Prospector's Short Boots for a white Long Night Sorcerer's Boots (boots): dropped item 4111: comp 0x23 rarity tag list (5000501..5000505; the source is not located)",
+  "+1 point: Onslaughter: +-15% additional Life Regain Interval: dropped not in this figure: node 500 (event payload into the tree context: walks the payload entries (types 3 / 5 / 0xc / 0xf) and hands entity ids / values to the tree (execute FUN_141af14e0, t3b_exec.ann.c 1-75)) - affix class 200000005 row 1 (talent 12080400 x1) - fires on event 0xf428a, not in this figure: node 122 (comp 0x6f resource change, FUN_141c5d060 (execute FUN_141a61780, t3b_exec.ann.c 153-226)) - affix class 200000005 row 1 (talent 12080400 x1) - fires on event 0xf428a",
+  "Unique Hunting the Eye of the Kraken in helmet: dropped item 3711: comp 0x23 rarity tag list (5000501..5000505; the source is not located), buff 15184 (50355540 row 1, 50355540 row 2): 1.76471 adds/s over a life of 8 s leave P(below the cap 40) = 2.96e-2: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported, not in this figure: node 500 (event payload into the tree context: walks the payload entries (types 3 / 5 / 0xc / 0xf) and hands entity ids / values to the tree (execute FUN_141af14e0, t3b_exec.ann.c 1-75)) - affix class 495742688 row 1 (gear 3711 modifier 51423140) - fires on event 0xf424a, not in this figure: node 1035 (casts a skill: comps 0x82 / 0x83 / 0x1e (execute FUN_141a59940, t3b_exec.ann.c 1024-1347)) - affix class 495742688 row 1 (gear 3711 modifier 51423140) - fires on event 0xf424a, not in this figure: node 500 (event payload into the tree context: walks the payload entries (types 3 / 5 / 0xc / 0xf) and hands entity ids / values to the tree (execute FUN_141af14e0, t3b_exec.ann.c 1-75)) - affix class 495742688 row 2 (gear 3711 modifier 51423140) - fires on event 0xf424a, not in this figure: node 1035 (casts a skill: comps 0x82 / 0x83 / 0x1e (execute FUN_141a59940, t3b_exec.ann.c 1024-1347)) - affix class 495742688 row 2 (gear 3711 modifier 51423140) - fires on event 0xf424a, not in this figure: node 1003 (a hit that kills the target when its comp 0x6f life is at or below max life x 0.01 x f8: FUN_141e0c8d0 (execute FUN_141a52ea0, t3b_exec.ann.c 306-384)) - affix class 877987 row 1 (gear 3711 modifier 51423150) - fires on event 0xf424a, not in this figure: node 1003 (a hit that kills the target when its comp 0x6f life is at or below max life x 0.01 x f8: FUN_141e0c8d0 (execute FUN_141a52ea0, t3b_exec.ann.c 306-384)) - affix class 877987 row 2 (gear 3711 modifier 51423150) - fires on event 0xf424a",
+  "Unique Mask of Infernal Iron in helmet: dropped the target's buff (IN1): buff 3441 (767113280 row 1): 14.7059 adds/s x 1 stack(s), life 10 s, cap 1 (policy 1): P(fewer than 1 adds in one life) = 1.36e-64 -> steady at 1 [event 1000033 14.7059/s x 100 %]",
+  "Unique Crow's Plume in boots: dropped the target's buff (IN1): buff 230 (142644 row 1): 5.95238 adds/s x 1 stack(s), life 4 s, cap 1 (policy 1): P(fewer than 1 adds in one life) = 4.57e-11 -> steady at 1 [event 1000033 11.9048/s x 50 %], the target's buff (IN1): buff 20060 (574297 row 1): inert - its affixList holds no record and no affix class reads it, so any count prices nothing",
+  "Unique Wind Chasers in boots: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.45802 adds/s over a life of 8 s leave P(below the cap 40) = 3.14e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Electric Overload: dropped buff 10800 (446638 row 1): 5.73842 adds/s over a life of 2 s leave P(below the cap 1) = 1.04e-5: a mix of states, not a point, not calculable without buff 10800's instance count over the fight (added by 446638 row 1 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Fire Explosion: dropped buff 11730 (13523221 row 1): 0.907989 adds/s over a life of 4 s leave P(below the cap 1) = 2.65e-2: a mix of states, not a point, not calculable without buff 11730's instance count over the fight (added by 13523221 row 1 on event 1000030, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Precision Strike: dropped buff 15184 (50355540 row 1, 50355540 row 2): 2.83569 adds/s over a life of 8 s leave P(below the cap 40) = 1.22e-4: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Wind Projectiles: dropped buff 15184 (50355540 row 1, 50355540 row 2): 1.88232 adds/s over a life of 8 s leave P(below the cap 40) = 1.74e-2: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Mark: dropped the target's buff not derived (IN1): buff 330 (636982 row 1): 3.94732 adds/s over a life of 3 s leave P(below the cap 1) = 7.20e-6: a mix of states, not a point",
+  "Replace socket 2 with Fire Explosion: dropped buff 11730 (13523221 row 1): 0.936330 adds/s over a life of 4 s leave P(below the cap 1) = 2.36e-2: a mix of states, not a point, not calculable without buff 11730's instance count over the fight (added by 13523221 row 1 on event 1000030, deferred false): an uptime rule that is not ported",
+  "Replace socket 2 with Mark: dropped the target's buff (IN1): buff 330 (636982 row 1): 5.88235 adds/s x 1 stack(s), life 3 s, cap 1 (policy 1): P(fewer than 1 adds in one life) = 2.17e-8 -> steady at 1 [event 1000033 14.7059/s x 40 %]",
+  "Replace socket 3 with Electric Overload: dropped buff 10800 (446638 row 1): 6.84118 adds/s over a life of 2 s leave P(below the cap 1) = 1.14e-6: a mix of states, not a point, not calculable without buff 10800's instance count over the fight (added by 446638 row 1 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 3 with Fire Explosion: dropped buff 11730 (13523221 row 1): 0.921659 adds/s over a life of 4 s leave P(below the cap 1) = 2.51e-2: a mix of states, not a point, not calculable without buff 11730's instance count over the fight (added by 13523221 row 1 on event 1000030, deferred false): an uptime rule that is not ported",
+  "Replace socket 3 with Mark: dropped the target's buff (IN1): buff 330 (636982 row 1): 4.70588 adds/s x 1 stack(s), life 3 s, cap 1 (policy 1): P(fewer than 1 adds in one life) = 7.39e-7 -> steady at 1 [event 1000033 11.7647/s x 40 %]",
+  "Replace socket 4 with Electric Overload: dropped buff 10800 (446638 row 1): 5.55846 adds/s over a life of 2 s leave P(below the cap 1) = 1.49e-5: a mix of states, not a point, not calculable without buff 10800's instance count over the fight (added by 446638 row 1 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 4 with Fire Explosion: dropped buff 11730 (13523221 row 1): 0.905292 adds/s over a life of 4 s leave P(below the cap 1) = 2.68e-2: a mix of states, not a point, not calculable without buff 11730's instance count over the fight (added by 13523221 row 1 on event 1000030, deferred false): an uptime rule that is not ported",
+  "Replace socket 4 with Mark: dropped the target's buff not derived (IN1): buff 330 (636982 row 1): 3.82353 adds/s over a life of 3 s leave P(below the cap 1) = 1.04e-5: a mix of states, not a point",
+  "Replace socket 5 with Fire Explosion: dropped buff 11730 (13523221 row 1): 0.936330 adds/s over a life of 4 s leave P(below the cap 1) = 2.36e-2: a mix of states, not a point, not calculable without buff 11730's instance count over the fight (added by 13523221 row 1 on event 1000030, deferred false): an uptime rule that is not ported",
+  "Replace socket 5 with Mark: dropped the target's buff (IN1): buff 330 (636982 row 1): 5.88235 adds/s x 1 stack(s), life 3 s, cap 1 (policy 1): P(fewer than 1 adds in one life) = 2.17e-8 -> steady at 1 [event 1000033 14.7059/s x 40 %]",
+  "Move a point: Onslaughter: +4% additional Base Damage for Two-Handed Weapons -> Onslaughter: +-15% additional Life Regain Interval: dropped not in this figure: node 500 (event payload into the tree context: walks the payload entries (types 3 / 5 / 0xc / 0xf) and hands entity ids / values to the tree (execute FUN_141af14e0, t3b_exec.ann.c 1-75)) - affix class 200000005 row 1 (talent 12080400 x1) - fires on event 0xf428a, not in this figure: node 122 (comp 0x6f resource change, FUN_141c5d060 (execute FUN_141a61780, t3b_exec.ann.c 153-226)) - affix class 200000005 row 1 (talent 12080400 x1) - fires on event 0xf428a",
+  "Swap core talent Well Matched for Focused Strike: stopped: not ported: FUN_141de59e0 area-center damage (field 0x1ea050 / attr 5901)",
+  "Swap core talent Well Matched for Sacrifice: dropped not in this figure: node 625 (buff component 0x12 of each task-filter target (FUN_141bc4eb0): FUN_141bacb60(comp 0x12, buff +0x78, count +0x7c) - registers the source in the buff's map +0x48 and raises the buff slot's +0x7c (FUN_141bd4f00) when below it, i.e. the buff's stack limit (T3d: data vt 0x14524d780, build FUN_141b15f00, execute FUN_141af3470, abort FUN_141aff1b0 -> FUN_141bcf640, returns ",
+  "Swap talent tree Onslaughter for Assassin: dropped buff 15184 (50355540 row 1, 50355540 row 2): 2.22687 adds/s over a life of 8 s leave P(below the cap 40) = 3.26e-3: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Swap talent tree Onslaughter for Shadowmaster: dropped ailment 4 is inflicted by reaction_normal with chance 27% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 4 is inflicted by reaction_enhance with chance 27% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 4 is inflicted by reaction_enhance_extra_attack_bullet_hit with chance 27% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range)",
+  "Swap talent tree Lich for Shadowdancer: dropped ailment 0 is inflicted by reaction_normal with chance 15% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 0 is inflicted by reaction_enhance with chance 15% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 0 is inflicted by reaction_enhance_extra_attack_bullet_hit with chance 15% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range)",
+  "Remove the support in socket 1: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Swap talent tree Onslaughter for Assassin: dropped buff 15184 (50355540 row 1, 50355540 row 2): 2.00294 adds/s over a life of 8 s leave P(below the cap 40) = 9.86e-3: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Swap talent tree Ronin for Assassin: dropped buff 15184 (50355540 row 1, 50355540 row 2): 2.59874 adds/s over a life of 8 s leave P(below the cap 40) = 4.56e-4: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Swap talent tree Lich for Assassin: dropped buff 15184 (50355540 row 1, 50355540 row 2): 2.59874 adds/s over a life of 8 s leave P(below the cap 40) = 4.56e-4: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Unique Wind Chasers in boots: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.04100 adds/s over a life of 8 s leave P(below the cap 40) = 3.74e-5: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Melee Knockback: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Raid: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Tendonslicer: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported, not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 13336589 row 1 (support 7411 (skill 10002110) on gem 7006) - fires on event 0xf425e",
+  "Replace socket 1 with Glacial Freeze: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported, ailment 2 is inflicted by reaction_normal with chance 100% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 2 is inflicted by reaction_enhance with chance 100% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 2 is inflicted by reaction_enhance_extra_attack_bullet_hit with chance 100% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range)",
+  "Replace socket 1 with Additional Ignite: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported, ailment 3 is inflicted by reaction_normal with chance 15% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 3 is inflicted by reaction_enhance with chance 15% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 3 is inflicted by reaction_enhance_extra_attack_bullet_hit with chance 15% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), not in this figure: node 343 (queues an inflict request on each task-filter target's comp 0xf: FUN_141bacd50(comp 0xf, kind +0x78, id +0x7c, probability +0x80 (f64), count +0x88, tag lists +0x90 / +0xa0) - no attribute / char-field record (T3d: data vt 0x14524cb20, build FUN_141ad1060, execute FUN_141aad500 once per target, abort FUN_141ab5450; t3d_a.ann.c). The EffectNote carries the task: its ch",
+  "Replace socket 1 with High Voltage: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported, ailment 5 is inflicted by reaction_normal with chance 100% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 5 is inflicted by reaction_enhance with chance 100% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 5 is inflicted by reaction_enhance_extra_attack_bullet_hit with chance 100% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range)",
+  "Replace socket 1 with Added Erosion Damage: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Critical Strike Rating Increase: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Critical Strike Damage Increase: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Physical to Fire: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Lightning to Cold: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Deep Wounds: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported, ailment 0 is inflicted by reaction_normal with chance 15% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 0 is inflicted by reaction_enhance with chance 15% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 0 is inflicted by reaction_enhance_extra_attack_bullet_hit with chance 15% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range)",
+  "Replace socket 1 with Improved Corrosion: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported, ailment 4 is inflicted by reaction_normal with chance 15% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 4 is inflicted by reaction_enhance with chance 15% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 4 is inflicted by reaction_enhance_extra_attack_bullet_hit with chance 15% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), not in this figure: node 343 (queues an inflict request on each task-filter target's comp 0xf: FUN_141bacd50(comp 0xf, kind +0x78, id +0x7c, probability +0x80 (f64), count +0x88, tag lists +0x90 / +0xa0) - no attribute / char-field record (T3d: data vt 0x14524cb20, build FUN_141ad1060, execute FUN_141aad500 once per target, abort FUN_141ab5450; t3d_a.ann.c). The EffectNote carries the task: its ch",
+  "Replace socket 1 with Electric Overload: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, buff 10800 (446638 row 1): 3.81511 adds/s over a life of 2 s leave P(below the cap 1) = 4.86e-4: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported, not calculable without buff 10800's instance count over the fight (added by 446638 row 1 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Passivation: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Quick Decision: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Cost Conversion: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Jump: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Shortened Duration: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Added Fire Damage: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Added Cold Damage: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Added Lightning Damage: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Elemental Fusion: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Cold Penetration: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Lightning Penetration: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Projectile Penetration: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Cataclysm: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported, not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 599597 row 1 (support 7444 (skill 10002440) on gem 7006) - fires on event 0xf425e",
+  "Replace socket 1 with Fire Explosion: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, buff 11730 (13523221 row 1): 0.893571 adds/s over a life of 4 s leave P(below the cap 1) = 2.80e-2: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported, not calculable without buff 11730's instance count over the fight (added by 13523221 row 1 on event 1000030, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Precision Strike: dropped buff 15184 (50355540 row 1, 50355540 row 2): 2.37578 adds/s over a life of 8 s leave P(below the cap 40) = 1.51e-3: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Devastator: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Erosion Penetration: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Wind Projectiles: dropped buff 15184 (50355540 row 1, 50355540 row 2): 1.79544 adds/s over a life of 8 s leave P(below the cap 40) = 2.58e-2: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Pain Amplification: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Blind: dropped the target's buff (IN1): buff 20060 (276803 row 1): inert - its affixList holds no record and no affix class reads it, so any count prices nothing, buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Electric Punishment: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Enhanced Ailment: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported, ailment 0 is inflicted by reaction_normal with chance 40% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 3 is inflicted by reaction_normal with chance 40% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 4 is inflicted by reaction_normal with chance 40% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 0 is inflicted by reaction_enhance with chance 40% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 3 is inflicted by reaction_enhance with chance 40% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 4 is inflicted by reaction_enhance with chance 40% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 0 is inflicted by reaction_enhance_extra_attack_bullet_hit with chance 40% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 3 is inflicted by reaction_enhance_extra_attack_bullet_hit with chance 40% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 4 is inflicted by reaction_enhance_extra_attack_bullet_hit with chance 40% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range)",
+  "Replace socket 1 with Cooldown Reduction: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Mark: dropped the target's buff not derived (IN1): buff 330 (636982 row 1): 3.35837 adds/s over a life of 3 s leave P(below the cap 1) = 4.21e-5: a mix of states, not a point, buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Added Physical Damage: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Hammer of Ash: Rekindle (Magnificent): dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported, ailment 3 is inflicted by reaction_normal with chance 30% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 3 is inflicted by reaction_enhance with chance 30% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 3 is inflicted by reaction_enhance_extra_attack_bullet_hit with chance 30% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range)",
+  "Replace socket 1 with Hammer of Ash: Quickfire (Noble): dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Hammer of Ash: Blast Quake (Noble): dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 2 with Electric Overload: dropped buff 10800 (446638 row 1): 6.68236 adds/s over a life of 2 s leave P(below the cap 1) = 1.57e-6: a mix of states, not a point, not calculable without buff 10800's instance count over the fight (added by 446638 row 1 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 3 with Electric Overload: dropped buff 10800 (446638 row 1): 5.34589 adds/s over a life of 2 s leave P(below the cap 1) = 2.27e-5: a mix of states, not a point, not calculable without buff 10800's instance count over the fight (added by 446638 row 1 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 4 with Electric Overload: dropped buff 10800 (446638 row 1): 4.34353 adds/s over a life of 2 s leave P(below the cap 1) = 1.69e-4: a mix of states, not a point, not calculable without buff 10800's instance count over the fight (added by 446638 row 1 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 5 with Electric Overload: dropped buff 10800 (446638 row 1): 6.68236 adds/s over a life of 2 s leave P(below the cap 1) = 1.57e-6: a mix of states, not a point, not calculable without buff 10800's instance count over the fight (added by 446638 row 1 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 1 with Electric Overload: dropped buff 15184 (50355540 row 1, 50355540 row 2): 3.35837 adds/s over a life of 8 s leave P(below the cap 40) = 5.73e-6: a mix of states, not a point, buff 10800 (446638 row 1): 4.41794 adds/s over a life of 2 s leave P(below the cap 1) = 1.45e-4: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported, not calculable without buff 10800's instance count over the fight (added by 446638 row 1 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 3 with Electric Overload: dropped buff 10800 (446638 row 1): 6.19059 adds/s over a life of 2 s leave P(below the cap 1) = 4.20e-6: a mix of states, not a point, not calculable without buff 10800's instance count over the fight (added by 446638 row 1 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Replace socket 4 with Electric Overload: dropped buff 10800 (446638 row 1): 5.02986 adds/s over a life of 2 s leave P(below the cap 1) = 4.28e-5: a mix of states, not a point, not calculable without buff 10800's instance count over the fight (added by 446638 row 1 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Move a point: Onslaughter: +12% additional Base Damage for Two-Handed Weapons -> Onslaughter: +-15% additional Life Regain Interval: dropped not in this figure: node 500 (event payload into the tree context: walks the payload entries (types 3 / 5 / 0xc / 0xf) and hands entity ids / values to the tree (execute FUN_141af14e0, t3b_exec.ann.c 1-75)) - affix class 200000005 row 1 (talent 12080400 x1) - fires on event 0xf428a, not in this figure: node 122 (comp 0x6f resource change, FUN_141c5d060 (execute FUN_141a61780, t3b_exec.ann.c 153-226)) - affix class 200000005 row 1 (talent 12080400 x1) - fires on event 0xf428a",
+  "Move a point: Onslaughter: +40% Attack Critical Strike Rating when holding a Two-Handed Weapon -> Onslaughter: +-15% additional Life Regain Interval: dropped not in this figure: node 500 (event payload into the tree context: walks the payload entries (types 3 / 5 / 0xc / 0xf) and hands entity ids / values to the tree (execute FUN_141af14e0, t3b_exec.ann.c 1-75)) - affix class 200000005 row 1 (talent 12080400 x1) - fires on event 0xf428a, not in this figure: node 122 (comp 0x6f resource change, FUN_141c5d060 (execute FUN_141a61780, t3b_exec.ann.c 153-226)) - affix class 200000005 row 1 (talent 12080400 x1) - fires on event 0xf428a",
+  "Swap talent tree Onslaughter for Druid: dropped buff 15184 (50355540 row 1, 50355540 row 2): 2.76449 adds/s over a life of 8 s leave P(below the cap 40) = 1.82e-4: a mix of states, not a point, not calculable without buff 15184's instance count over the fight (added by 50355540 row 1 on event 1000010, deferred false): an uptime rule that is not ported, not calculable without buff 15184's instance count over the fight (added by 50355540 row 2 on event 1000033, deferred false): an uptime rule that is not ported",
+  "Swap talent tree Onslaughter for Shadowdancer: dropped ailment 0 is inflicted by reaction_normal with chance 21% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 0 is inflicted by reaction_enhance with chance 21% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range), ailment 0 is inflicted by reaction_enhance_extra_attack_bullet_hit with chance 21% and its damage is not priced by dps (the tick and the registration snapshot are ported, ailtick.ts dotRecord / dotSnapshot; the application is not simulated, re/evidence/ail2_snapshot.md; ailment.ts ailmentBase gives the base range)"
  ],
  "start": {
   "life100": 81901.04911237008,
@@ -8647,7 +9275,8 @@
     "lock": 15000000000000,
     "target": "cube1",
     "lifeMax": 31633200895
-   }
+   },
+   "end": "the plan ends here at L100: no upgrade the model can price fully raises the kill speed (most often: buff 10800 (446638 row 1): # adds/s over a life of 2 s leave P(below the cap 1) = #: a mix of states, not a point, not calculable without bu)"
   }
  ]
 }
