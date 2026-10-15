@@ -10,7 +10,7 @@ import type { Job, JobResult } from './pool';
 
 register();
 const { applyPatch, isPatch } = await import('../patches');
-const { applyInOrder, figureDefaultFirst } = await import('./apply');
+const { applyInOrder, figureDefaultFirst, withAsked } = await import('./apply');
 const root = (workerData as { pinRoot: string }).pinRoot;
 const fig: typeof import('@dps/guide/figure') = await import(pathToFileURL(join(root, 'model', 'guide', 'figure.ts')).href);
 const cat = fig.openCatalog(join(root, 'catalog'));
@@ -22,8 +22,8 @@ function price({ loadout, changes, ctx, fight, rollBudget, target }: Job): JobRe
   const base = fig.GROUNDS[ctx.skill];
   const boss = target === undefined ? undefined : (fig.BOSSES as Record<string, string>)[target];
   if (target !== undefined && !boss) throw new Error(`no boss target ${target} (dps-debug BOSSES: ${Object.keys(fig.BOSSES).join(', ')})`);
-  const ground = { ...base, ...(boss ? { target: boss } : {}), carry: { ...base.carry, fight } };
-  const g = figureDefaultFirst(o => session.figure(lo as never, ctx.skill, { heroLevel: ctx.level, ground, ...o }), rollBudget);
+  const ground = (extra: Record<string, number>) => ({ ...base, ...(boss ? { target: boss } : {}), carry: { ...base.carry, fight: { ...fight, inputs: { ...fight.inputs, ...extra } } } });
+  const g = withAsked(extra => figureDefaultFirst(o => session.figure(lo as never, ctx.skill, { heroLevel: ctx.level, ground: ground(extra), ...o }), rollBudget));
   const cull = g.cull ? { threshold: g.cull.threshold, blocked: g.cull.blocked, ...(g.cull.stop ? { stop: g.cull.stop } : {}) } : undefined;
   return { loadout: lo, dropped, fig: { life100: g.life100, life0: g.life0, left: g.left.map(x => x.name), needs: g.needs, stop: g.stop, inputs: g.inputs as never,
     lock: g.lock?.ceiling, ...(cull ? { cull } : {}), ...(boss ? { lifeMax: (g.inputs as { target?: { lifeMax: number } }).target?.lifeMax } : {}) } };

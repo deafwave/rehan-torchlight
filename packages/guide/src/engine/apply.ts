@@ -21,6 +21,20 @@ export function applyInOrder(lo: Loadout, changes: (Change | LoadoutPatch)[], a:
   return { loadout: lo, dropped };
 }
 
+/** Fight inputs stated only when a figure names them in its stop, so every other figure keeps its memo key. Old King's Armor's movement-speed bonus (chest
+ *  3010, modifier 51416041; dps-debug GF1: 100 at a consume, -5 per 0.1 s) only writes movement speed: the l100 capture is bit-equal at 0 and 100 (2026-10-15). */
+export const ON_ASK: Record<string, number> = { 'affix class 782097792 var 1': 0 };
+const ASKED = /the scenario did not supply the fight input (.+?)(?: \(|$)/;
+/** price with no extra input; while the figure stops naming an ON_ASK input not yet given, price again with it */
+export function withAsked<R extends { stop?: string }>(figure: (extra: Record<string, number>) => R): R {
+  let extra: Record<string, number> = {}, r = figure(extra);
+  for (let m = r.stop ? ASKED.exec(r.stop) : null; m && m[1] in ON_ASK && !(m[1] in extra); m = r.stop ? ASKED.exec(r.stop) : null) {
+    extra = { ...extra, [m[1]]: ON_ASK[m[1]] };
+    r = figure(extra);
+  }
+  return r;
+}
+
 /** dps-debug's two "exceeds the budget … price is not affine" stops (calc.ts) */
 const NOT_AFFINE = /exceeds the (?:enumeration )?budget(?: \d+)? and the price is not affine/;
 

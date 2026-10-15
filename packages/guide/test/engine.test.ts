@@ -6,7 +6,7 @@ import { applyPatch, type LoadoutPatch } from '../src/patches';
 import { killSpeed } from '../src/kill';
 import { memoKey } from '../src/engine/memo';
 import { pinRoot } from '../src/pin';
-import { applyInOrder, figureDefaultFirst } from '../src/engine/apply';
+import { applyInOrder, figureDefaultFirst, withAsked } from '../src/engine/apply';
 import { type Knobs, overBudget, rankable } from '../src/search';
 import { writeAtomic } from '../src/atomic';
 import { createEvaluator, DEFAULT_FIGHT, DEFAULT_TARGET, INFO, type Fight, WorkerDied, type Job, type JobResult, type WorkerLike } from '../src/engine/pool';
@@ -129,7 +129,7 @@ describe('evaluator (stub workers)', () => {
     const [d, five, again] = [await mk(), await mk({ bombs: 5 }), await mk({ bombs: 5 })];
     await d.run(lo, [], ctx); await five.run(lo, [], ctx); await again.run(lo, [], ctx);
     expect(s.jobs.map(j => j.fight)).toEqual([DEFAULT_FIGHT, { bombs: 5 }]);
-    expect(d.fight).toEqual({ bombs: 10, inputs: { 'castLogSum id=10000000 window=4s tags=[[],[],[],[]]': 0, 'affix class 782097792 var 1': 0 } });
+    expect(d.fight).toEqual({ bombs: 10, inputs: { 'castLogSum id=10000000 window=4s tags=[[],[],[],[]]': 0 } });
     expect(d.fightNote).toBe('training dummy stands still (dps-debug STILL / e2e1-lib.ts)');
     // same bombs, different named input: its own entry too
     await (await mk({ bombs: 5, inputs: { x: 1 } })).run(lo, [], ctx);
@@ -410,6 +410,20 @@ describe('stated fight inputs (real worker)', () => {
       expect(r.figure.kill).toBeGreaterThan(0);
     } finally { await ev.close(); }
   }, 900_000);
+});
+
+describe('withAsked (fight inputs stated only when a figure asks)', () => {
+  const ask = (k: string) => `the scenario did not supply the fight input ${k} (gear 3010 modifier 51416041)`;
+  it("re-prices with an on-ask input when the figure names it, and leaves every other figure alone", () => {
+    const seen: Record<string, number>[] = [];
+    const r = withAsked((x) => { seen.push(x); return x['affix class 782097792 var 1'] === 0 ? { v: 1 } as { stop?: string; v: number } : { stop: ask('affix class 782097792 var 1'), v: 0 }; });
+    expect(r.v).toBe(1);
+    expect(seen).toEqual([{}, { 'affix class 782097792 var 1': 0 }]);
+    const once: Record<string, number>[] = [];
+    expect(withAsked((x) => (once.push(x), { stop: ask('affix class 1 var 1') })).stop).toMatch(/affix class 1 var 1/);
+    expect(once).toEqual([{}]);
+    expect(DEFAULT_FIGHT.inputs).not.toHaveProperty(['affix class 782097792 var 1']);
+  });
 });
 
 describe('figureDefaultFirst', () => {
