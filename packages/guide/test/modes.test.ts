@@ -337,6 +337,20 @@ describe('fix round 1', () => {
     const out = await runIdeal(ev, { ...small, startLevel: 60, endLevel: 65, stepsPerStage: 5, switchAt: Infinity });
     expect(out.legs!.at(-1)!.end).toMatch(/^the plan ends here at L65: no upgrade the model can price fully raises the kill speed \(most often: buff 15184: # adds\/s, a mix of states\)$/);
   });
+  it('bosses the plan does not reach get their own tab too: the last build priced on each, marked not reached, with why', async () => {
+    // Hammer of Ash never improves here (every change prices the same): the plan ends on Cube 1
+    const ev: Evaluator = { pin: 'stub', async close() {}, async run(lo, changes, ctx) {
+      const n = ((lo as { __n?: number }).__n ?? 0) + changes.length, t = ctx.skill === 'hoa' ? ctx.target ?? undefined : undefined;
+      const k = ctx.skill === 'hoa' ? 1000 : 100 + 10 * n;
+      return { loadout: { ...lo, __n: n }, dropped: [], figure: { life100: k, life0: k, kill: k, partial: [], ...(t ? { target: t, lifeMax: LIFE[t] * 100, lock: 1e6 } : {}) } };
+    } };
+    const out = await runIdeal(ev, { ...small, startLevel: 90, endLevel: 90, stepsPerStage: 20, finalSteps: 2, switchAt: 150, moveOnSeconds: 10 });
+    const legs = out.legs!;
+    expect(legs.map((l) => `${l.target}:${l.reached ?? true}`)).toEqual(['null:true', 'cube1:true', 'keegan2:false', 'cube2:false', 'cube3:false']);
+    expect(legs[1].end).toMatch(/^the plan ends here at L90/);
+    expect(legs[2].end).toBe('not reached: the plan ends on Cube 1; with its last build Keegan 2 dies in 33.3 min');
+    for (const l of legs.slice(2)) expect(l.firstStep).toBe(out.steps.length);
+  }, 300_000);
   it('advice starts on the first boss the character does not kill within moveOnSeconds', async () => {
     const st = fromExport(exportOf({ loadout: { ...idealStart().loadout, skills: [{ sid: 1110, level: 20, place: { kind: 'active', slot: 0 } }] } }));
     const out = await runAdvise(bossEv(), { ...st, loadout: { ...st.loadout, __n: 50 } }, { maxRounds: 1, topK: 2, maxSteps: 1 });

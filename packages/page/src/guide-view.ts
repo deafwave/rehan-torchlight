@@ -9,7 +9,7 @@ export interface GuideOut {
   character?: Character; next?: NextBuy[]; prices?: Record<string, number | null>; legs?: Leg[];
 }
 /** one tab: a skill against one yardstick (target null = the training dummy), from step `firstStep` on; `end` = why it ended */
-export interface Leg { skill: string; target: string | null; firstStep: number; end?: string; start: Figure }
+export interface Leg { skill: string; target: string | null; firstStep: number; end?: string; start: Figure; reached?: false }
 /** advise: one upgrade at the start with its exact figure; `buy` = what is bought and how many (cost = qty x its price) */
 export interface NextBuy { label: string; kind: string; gain: number; kill: number; costFE: number | null; market?: string; buy?: { name: string; qty: number }; partial?: string[] }
 
@@ -189,9 +189,16 @@ export function renderNext(next: NextBuy[], etor: Record<string, number | null>,
 }
 
 // ---- one tab per leg: each leg is one yardstick (Ice Shot on the training dummy, then Hammer of Ash boss by boss), so no chart mixes two
-const legName = (l: Leg) => (l.skill === 'iceShot' ? 'Ice Shot' : l.target ? bossName(l.target) : SKILL[l.skill] ?? l.skill);
+const legName = (l: Leg) => (l.skill === 'iceShot' ? 'Ice Shot' : l.target ? bossName(l.target) : SKILL[l.skill] ?? l.skill) + (l.reached === false ? ' · not reached' : '');
 const yardstick = (l: Leg) => (l.target ? `on ${bossName(l.target)}` : 'on the training dummy');
 function legPanel(g: GuideOut, l: Leg, i: number): string {
+  if (l.reached === false) {   // a boss the plan did not reach: the plan's last build there
+    const t = killTime(l.start);
+    return `<section class="gl-leg" data-leg="${i}"><div class="leg-head"><b>${esc(SKILL[l.skill] ?? l.skill)} ${esc(yardstick(l))}: not reached yet</b>`
+      + `<div class="goal-stats"><div><span class="k">kill speed (last build)</span><span class="v">${fmtDps(l.start.kill)}</span></div>`
+      + (t ? `<div><span class="k">time to kill</span><span class="v">${t}</span></div>` : '') + '</div></div>'
+      + (l.end ? `<p class="leg-end">→ ${esc(human(l.end))}</p>` : '') + '</section>';
+  }
   const legs = g.legs!, to = legs[i + 1]?.firstStep ?? g.steps.length, es = entries(g.steps.slice(l.firstStep, to), l.firstStep);
   const own = es.filter((e) => e.s.move.kind !== 'switch'), end = es.at(-1)?.s.after ?? l.start;
   const fe0 = es.length ? es[0].s.cumFE - (es[0].s.move.costFE ?? 0) : 0, fe = es.length ? es.at(-1)!.s.cumFE - fe0 : 0, t0 = killTime(l.start), t1 = killTime(end);
@@ -282,6 +289,7 @@ export function parseAdvice(text: string): GuideOut {
       if (l.target !== null && typeof l.target !== 'string') throw bad(`${p}.target`, l.target);
       if (!Number.isInteger(l.firstStep) || l.firstStep < 0 || l.firstStep > j.steps.length) throw bad(`${p}.firstStep`, l.firstStep);
       if (l.end !== undefined && typeof l.end !== 'string') throw bad(`${p}.end`, l.end);
+      if (l.reached !== undefined && l.reached !== false) throw bad(`${p}.reached`, l.reached);
       checkFigure(l.start, `${p}.start`);
     });
   }

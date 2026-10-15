@@ -206,3 +206,19 @@ describe('the price basis is said', () => {
   });
 });
 
+describe('a boss the plan does not reach', () => {
+  it('still gets its tab: the last build there, marked not reached, with why, and no empty plan', () => {
+    const boss = (kill: number, target: string, lifeMax: number) => ({ ...g.start, kill, life100: kill, life0: kill, target, lifeMax, lock: 1.5e13 });
+    const legs = [{ skill: 'iceShot', target: null, firstStep: 0, start: g.start, end: 'switch to Hammer of Ash' },
+      { skill: 'hoa', target: 'cube1', firstStep: 3, start: boss(1e7, 'cube1', 3.16e10), end: 'the plan ends here at L100: no upgrade the model can price fully raises the kill speed' },
+      { skill: 'hoa', target: 'cube3', firstStep: 5, start: boss(6.75e7, 'cube3', 5.35e13), reached: false, end: 'not reached: the plan ends on Cube 1; with its last build Cube 3 dies in 9.17 d' }];
+    const html = renderGuide({ ...g, legs } as unknown as GuideOut), cube3 = html.split('<section class="gl-leg"')[3];
+    expect(html).toContain('>Cube 3 · not reached</label>');
+    expect(cube3).toContain('not reached yet');
+    expect(cube3).toContain('67.5 M');
+    expect(cube3).toContain('not reached: the plan ends on Cube 1');
+    expect(cube3).not.toContain('gl-stage');
+    expect(cube3).not.toContain('No upgrade');
+  });
+});
+

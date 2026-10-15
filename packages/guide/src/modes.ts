@@ -203,6 +203,12 @@ async function ideal(ev: Evaluator, K: IdealKnobs, prices: PriceBook | Record<Sk
     const top = [...count].sort((a, b) => b[1] - a[1])[0]?.[0];
     legs[legs.length - 1].end = `the plan ends here at L${lastLevel}: no upgrade the model can price fully raises the kill speed${top ? ` (most often: ${top})` : ''}`;
   }
+  // the bosses after the one the plan ended on: a tab each, the plan's last build priced on it
+  if (s.skill === 'hoa' && !halted) for (let j = ti + 1; j < targets.length; j++) {
+    const g = (await ev.run(s.loadout, [], ctxOfState({ ...s, target: targets[j] }))).figure;
+    legs.push({ skill: 'hoa', target: targets[j], firstStep: steps.length, start: g, reached: false,
+      end: `not reached: the ${stopped ? 'run stopped' : 'plan ends'} on ${bossName(targets[ti])}; ${g.stop ? `the last build cannot be priced on ${bossName(targets[j])}: ${g.stop}` : `with its last build ${bossName(targets[j])} dies in ${secs(killTime(g))}`}` });
+  }
   return snap(stopped ? { stoppedBy: 'budget' } : {});
 }
 
