@@ -41,7 +41,8 @@ export const BOSS_ORDER = ['cube1', 'keegan2', 'cube2', 'cube3'];
 export const DEFAULT_IDEAL: IdealKnobs = { ...DEFAULT_KNOBS, stepsPerStage: 25, startLevel: 60, endLevel: 100, stageStep: 5, talentPoints: 108, switchAt: 2e8, switchRounds: 5, finalSteps: 100 };
 const BOSS_NAME: Record<string, string> = { cube1: 'Cube 1', cube2: 'Cube 2', cube3: 'Cube 3', keegan: 'Keegan 1', keegan2: 'Keegan 2', void1: 'Void 1', void2: 'Void 2', void3: 'Void 3', traveler: 'the Traveler' };
 export const bossName = (t: string) => BOSS_NAME[t] ?? t;
-const secs = (x: number) => (x < 1 ? `${(x * 1000).toPrecision(2)} ms` : x < 600 ? `${x.toPrecision(3)} s` : `${(x / 60).toPrecision(3)} min`);
+const secs = (x: number) => (x < 1 ? `${(x * 1000).toPrecision(2)} ms` : x < 600 ? `${x.toPrecision(3)} s` : x < 36_000 ? `${(x / 60).toPrecision(3)} min`
+  : x < 172_800 ? `${(x / 3600).toPrecision(3)} h` : `${(x / 86_400).toPrecision(3)} days`);
 /** the time this figure takes to kill its boss (Infinity off a boss or at no kill speed) */
 const killTime = (f: Figure) => (f.lifeMax && f.kill > 0 ? f.lifeMax / f.kill : Infinity);
 const lockBound = (f: Figure) => f.lock !== undefined && f.life0 >= f.lock;
