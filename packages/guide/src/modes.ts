@@ -14,7 +14,7 @@ import { talentMoves, talentPointMoves } from './candidates/talents';
 import { traitMoves } from './candidates/traits';
 import { type EtorHistory, type EtorItems, historyBook, snapshotBook } from './pricing';
 import { CULL_NOT_COUNTED } from './kill';
-import { ctxOfState, DEFAULT_KNOBS, type Knobs, newMem, overBudget, path, rankableMove, resolve, spendFree, step, switchNote } from './search';
+import { ctxOfState, pieceKey, DEFAULT_KNOBS, type Knobs, newMem, overBudget, path, rankableMove, resolve, spendFree, step, switchNote } from './search';
 import { ICE_SHOT_INPUTS, idealStartNotes } from './start';
 import { setTalentPoints } from './talentRules';
 import { talentName } from './names';
@@ -201,9 +201,11 @@ export async function nextBuys(s: State, ev: Evaluator, acq: Generator[], ctx: G
   const seen = new Set<string>();
   const ms = acq.flatMap((g) => g(s, ctx)).filter((m) => m.minLevel <= s.level && !seen.has(JSON.stringify(m.changes)) && !!seen.add(JSON.stringify(m.changes)));
   const evs = await Promise.all(ms.map((m) => ev.run(s.loadout, m.changes, ctxOfState(s, m.skill ?? s.skill))));
+  const had = new Set(f.partial.map(pieceKey));   // the start's omissions are said once, on the start; a row names only its new ones
   return ms.map((m, i) => ({ m, e: evs[i].figure })).filter(({ e }) => !e.stop && e.kill > f.kill)
-    .map(({ m, e }): NextBuy => ({ label: m.label, kind: m.kind, gain: e.kill / f.kill, kill: e.kill, costFE: m.costFE,
-      ...(m.market ? { market: m.market } : {}), ...(m.buy ? { buy: m.buy } : {}), ...(e.partial.length ? { partial: e.partial } : {}) }))
+    .map(({ m, e }): NextBuy => { const extra = e.partial.filter((p) => !had.has(pieceKey(p)));
+      return { label: m.label, kind: m.kind, gain: e.kill / f.kill, kill: e.kill, costFE: m.costFE,
+        ...(m.market ? { market: m.market } : {}), ...(m.buy ? { buy: m.buy } : {}), ...(extra.length ? { partial: extra } : {}) }; })
     .sort((a, b) => b.gain - a.gain);
 }
 

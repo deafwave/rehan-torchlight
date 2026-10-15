@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { basesFor, slotsOfBase } from '../src/candidates/gear';
-import { localHistory, localItems, ownedGear, runAdvise, runIdeal, unpricedAcquisitions } from '../src/modes';
+import { localHistory, localItems, nextBuys, ownedGear, runAdvise, runIdeal, unpricedAcquisitions } from '../src/modes';
 import { historyBook } from '../src/pricing';
 import { fromExport, idealStart, ICE_SHOT_INPUTS } from '../src/start';
 import { legalAllocation, pointsAtLevel, treeOf } from '../src/talentRules';
@@ -8,7 +8,7 @@ import { CULL_NOT_COUNTED } from '../src/kill';
 import { gearMoves } from '../src/candidates/gear';
 import { slateMoves } from '../src/candidates/slates';
 import { pactMoves } from '../src/candidates/pacts';
-import type { Evaluator, Generator } from '../src/types';
+import type { Evaluator, Generator, Move } from '../src/types';
 import { parseAdvice, renderGuide } from '../../page/src/guide-view';
 
 /** stub: every applied change adds 10 to the kill average; `stop` makes every figure refuse */
@@ -311,6 +311,15 @@ describe('fix round 1', () => {
       for (const st of own) expect(st.after.target ?? null).toBe(l.target);
     });
     expect(out.steps[legs[1].firstStep].move.kind).toBe('switch');
+  });
+  it("a next-buys row carries only the omissions the start does not already have (the start's are said once)", async () => {
+    const st = fromExport(exportOf()), base = { life100: 100, life0: 100, kill: 100, partial: ['buff 1: 2.5 adds/s'] };
+    const ev: Evaluator = { pin: 'stub', async close() {}, async run(lo, ch) { const n = ch.length;
+      return { loadout: lo, dropped: [], figure: { life100: 100 + n, life0: 100 + n, kill: 100 + n, partial: ['buff 1: 3.5 adds/s', ...(n > 1 ? ['node 9 not in this figure'] : [])] } }; } };
+    const g: Generator = () => [1, 2].map((n) => ({ kind: 'gear', label: `m${n}`, acquisition: true, costFE: 1, minLevel: 0, changes: Array(n).fill({ kind: 'x' }) }) as Move);
+    const rows = await nextBuys(st, ev, [g], { prices: historyBook(localItems(), localHistory()), level: 60, notSearched: new Set() }, base);
+    expect(rows.find((r) => r.label === 'm1')!.partial).toBeUndefined();
+    expect(rows.find((r) => r.label === 'm2')!.partial).toEqual(['node 9 not in this figure']);
   });
   it('advice with maxSteps 0 is the next-buys list alone: no plan steps, not stopped', async () => {
     const out = await runAdvise(stubEv(), fromExport(exportOf()), { maxRounds: 1, topK: 2, maxSteps: 0 });
