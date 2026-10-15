@@ -48,7 +48,7 @@ async function main() {
   } else if (cmd === 'advise') {
     if (!positional) throw new Error('usage: guide advise <export.json> [--fe N] [--out path]');
     const state = fromExport(readJson(positional), num('fe'));
-    const prices = yours(snapshotBook(await Promise.resolve().then(async () => fetchSnapshot(num('season') ?? await fetchSeason(), localItems())).catch((e: Error) => { console.warn(`live etor prices unavailable (${e.message}); using the stored snapshot`); return localItems(); })));
+    const prices = yours(snapshotBook(await Promise.resolve().then(async () => fetchSnapshot(num('season') ?? await fetchSeason().catch((e: Error) => { const s = Number(localItems().seasonId); console.warn(`${e.message}: using season ${s}'s last etor prices`); return s; }), localItems())).catch((e: Error) => { console.warn(`live etor prices unavailable (${e.message}); using the stored snapshot`); return localItems(); })));
     const ev = await evaluator();
     const out = flag('out') ?? 'advice.json';
     // the export button waits on this: a Hammer of Ash figure is slow, so advise stops after 30 minutes unless told otherwise (the page shows a partial run)

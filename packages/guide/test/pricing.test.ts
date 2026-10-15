@@ -102,4 +102,7 @@ describe('fetchSeason', () => {
     await expect(fetchSeason(json(null))).rejects.toThrow(/currentSeasonId/);
     await expect(fetchSeason(json({}, 503))).rejects.toThrow('503');
   });
+  it('between seasons (currentSeasonId "") it says so, naming the upcoming one, instead of asking for season 0', async () => {
+    await expect(fetchSeason(json({ currentSeasonId: '', activeSeasonIds: [], upcomingSeasonIds: ['1601'] }))).rejects.toThrow(/no current season.*1601/);
+  });
 });

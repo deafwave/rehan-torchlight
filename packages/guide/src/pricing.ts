@@ -63,8 +63,10 @@ const HEADERS = { 'x-frontend-version': '1.0.6.2' };
 export async function fetchSeason(fetchImpl: typeof fetch = fetch): Promise<number> {
   const res = await fetchImpl(`${API}/player/season-status`, { headers: HEADERS });
   if (!res.ok) throw new Error(`etor season-status: HTTP ${res.status}`);
-  const id = Number(((await res.json()) as { currentSeasonId?: unknown })?.currentSeasonId);
-  if (!Number.isInteger(id)) throw new Error('etor season-status: no currentSeasonId in the response');
+  const body = (await res.json()) as { currentSeasonId?: unknown; upcomingSeasonIds?: unknown } | null;
+  if (body?.currentSeasonId === '') throw new Error(`etor has no current season (between seasons; upcoming ${JSON.stringify(body.upcomingSeasonIds ?? [])})`);
+  const id = Number(body?.currentSeasonId);
+  if (!Number.isInteger(id) || id <= 0) throw new Error('etor season-status: no currentSeasonId in the response');
   return id;
 }
 
