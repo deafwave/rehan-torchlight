@@ -9,7 +9,7 @@ import { pinRoot } from '../src/pin';
 import { applyInOrder, figureDefaultFirst } from '../src/engine/apply';
 import { type Knobs, overBudget, rankable } from '../src/search';
 import { writeAtomic } from '../src/atomic';
-import { createEvaluator, DEFAULT_FIGHT, INFO, type Fight, WorkerDied, type Job, type JobResult, type WorkerLike } from '../src/engine/pool';
+import { createEvaluator, DEFAULT_FIGHT, DEFAULT_TARGET, INFO, type Fight, WorkerDied, type Job, type JobResult, type WorkerLike } from '../src/engine/pool';
 import type { Change } from '../src/types';
 import { realSkip } from './real';
 
@@ -350,12 +350,15 @@ describe('evaluator (real workers, pinned dps-debug)', () => {
     try {
       const [r, p, ice] = await Promise.all([
         ev.run(l, [], ctx), ev.run(l, [patch], ctx), ev.run(l, [], { level: 94, skill: 'iceShot' })]);
-      const ground = { ...fx.GROUNDS.hoa, carry: { ...fx.GROUNDS.hoa.carry, fight: { bombs: 10 } } };
+      // the evaluator prices Hammer of Ash against DEFAULT_TARGET (Cube 3): the reference is the same ground with that target
+      const ground = { ...fx.GROUNDS.hoa, target: (fx.BOSSES as Record<string, string>)[DEFAULT_TARGET], carry: { ...fx.GROUNDS.hoa.carry, fight: DEFAULT_FIGHT } };
       const ref = fx.guideFigure(fx.openCatalog(), structuredClone(l), 'hoa', { heroLevel: 100, ground });
       expect(r.figure.stop).toBeUndefined();
       expect(r.figure.life100).toBe(ref.life100);
       expect(r.figure.life0).toBe(ref.life0);
-      expect(r.figure.kill).toBe(killSpeed(ref.life100, ref.life0));
+      expect(r.figure.lock).toBe(ref.lock?.ceiling);
+      const cull = ref.cull && !ref.cull.blocked.length && !ref.cull.stop ? ref.cull.threshold : 0;
+      expect(r.figure.kill).toBe(killSpeed(ref.life100, ref.life0, ref.lock?.ceiling ?? Infinity, cull));
       expect(ev.pin).toMatch(/^[0-9a-f]{40}(\+dirty)?$/);
       expect(p.loadout).toEqual(applyPatch(l, patch));
       expect(ice.figure.stop).toMatch(/not ported|refused: skill \d+ is limited to the weapon rows/);
@@ -372,7 +375,7 @@ describe('figure session reuse (real worker)', () => {
     l.slateItems = read('re/evidence/t5_slate_v2_probuild.json').filter((v: any) => v.EffectTalentIds.every((t: number) => mine.has(t)))
       .map((v: any) => ({ itemId: `probuild_${v.id}`, baseId: 0, talents: v.EffectTalentIds, influence: v }));
     const patch: LoadoutPatch = { kind: 'patch', op: 'prism-provide', tree: 1, extraAffix: [] };
-    const cat = fx.openCatalog(), ground = { ...fx.GROUNDS.hoa, carry: { ...fx.GROUNDS.hoa.carry, fight: DEFAULT_FIGHT } };
+    const cat = fx.openCatalog(), ground = { ...fx.GROUNDS.hoa, target: (fx.BOSSES as Record<string, string>)[DEFAULT_TARGET], carry: { ...fx.GROUNDS.hoa.carry, fight: DEFAULT_FIGHT } };
     const cold = (lo: unknown) => fx.guideFigure(cat, structuredClone(lo) as never, 'hoa', { heroLevel: 100, ground });
     const ev = await createEvaluator({ workers: 1 });
     try {
@@ -394,8 +397,9 @@ describe('stated fight inputs (real worker)', () => {
     const ev = await createEvaluator({ workers: 1 });
     try {
       const r = await ev.run(JSON.parse(readFileSync(join(dir, f), 'utf8')), [], { level: 93, skill: 'hoa' });
-      // past the bombs and castLogSum stops; it stops on a real unported mechanic of dps-debug (expected)
-      expect(r.figure.stop).toMatch(/not ported: an uptime add on event 1000074/);
+      // past the bombs and castLogSum stops; it stops on something else dps-debug does not have yet (expected)
+      expect(r.figure.stop).toMatch(/^(not ported|the scenario did not supply the fight input) /);
+      expect(r.figure.stop).not.toMatch(/bombs|castLogSum/);
     } finally { await ev.close(); }
   }, 900_000);
 });

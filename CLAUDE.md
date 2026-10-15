@@ -7,7 +7,7 @@ the Vite page (`packages/page`) renders it. Nothing on the page is typed in by h
 ## The pin
 
 `@dps/*` resolves to `<tli>/dps-debug/.worktrees/tli-lens-pin/model/*` (a detached, locked worktree of dps-debug; now
-branch `track-ps2` 06530d08 = dps-debug main (GL1 bosses, CULL1 culls, GE1, PERF1) + the boss loader's catalog-root fix; tsconfig paths + vitest alias; env `DPS_DEBUG_PIN` overrides, see `packages/guide/src/pin.ts`). Every output
+dps-debug main eb064d6c (GL1 bosses, CULL1 culls, GE1, PERF1, PS2, BA1, RC1 / AQ1 / EX1: CalcFinalHurt's early exit prices 0; pin only a main commit with a recorded green gate); tsconfig paths + vitest alias; env `DPS_DEBUG_PIN` overrides, see `packages/guide/src/pin.ts`). Every output
 records the pin commit and the memo key includes it. Never edit dps-debug from here. Refresh:
 `git -C <pin> checkout --detach main`, `npm ci` in `model/` if its lockfile moved, then rerun dps-debug's guide gates
 (`GUIDE_GATES=1`, tests in `model/guide/`).
