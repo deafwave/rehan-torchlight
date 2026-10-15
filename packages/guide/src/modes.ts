@@ -17,7 +17,7 @@ import { DEFAULT_KNOBS, type Knobs, newMem, overBudget, path, rankableMove, reso
 import { ICE_SHOT_INPUTS, idealStartNotes } from './start';
 import { setTalentPoints } from './talentRules';
 import { talentName } from './names';
-import type { Evaluator, Figure, GenCtx, Generator, GuideOut, Move, PriceBook, State, Step } from './types';
+import type { Evaluator, Figure, GenCtx, Generator, GuideOut, Move, NextBuy, PriceBook, State, Step } from './types';
 
 export const SEASON = 1501;
 const etorFile = (f: string) => JSON.parse(readFileSync(fileURLToPath(new URL(`../../../data/etor/${f}_${SEASON}.json`, import.meta.url)), 'utf8'));
@@ -154,6 +154,18 @@ async function ideal(ev: Evaluator, K: IdealKnobs, prices: PriceBook | undefined
   return snap(stopped ? { stoppedBy: 'budget' } : {});
 }
 
+/** every legal acquisition at `s`, priced or not, that raises the kill average, with its exact figure (best gain first); the path's first step prices
+ *  the same changes, so the memo answers it */
+export async function nextBuys(s: State, ev: Evaluator, acq: Generator[], ctx: GenCtx, f: Figure): Promise<NextBuy[]> {
+  const seen = new Set<string>();
+  const ms = acq.flatMap((g) => g(s, ctx)).filter((m) => m.minLevel <= s.level && !seen.has(JSON.stringify(m.changes)) && !!seen.add(JSON.stringify(m.changes)));
+  const evs = await Promise.all(ms.map((m) => ev.run(s.loadout, m.changes, { level: s.level, skill: m.skill ?? s.skill })));
+  return ms.map((m, i) => ({ m, e: evs[i].figure })).filter(({ e }) => !e.stop && e.kill > f.kill)
+    .map(({ m, e }): NextBuy => ({ label: m.label, kind: m.kind, gain: e.kill / f.kill, kill: e.kill, costFE: m.costFE,
+      ...(m.market ? { market: m.market } : {}), ...(m.buy ? { buy: m.buy } : {}), ...(e.partial.length ? { partial: e.partial } : {}) }))
+    .sort((a, b) => b.gain - a.gain);
+}
+
 export async function runAdvise(ev: Evaluator, state: State, k: Partial<Knobs> = {}, prices?: PriceBook, onStep?: (out: GuideOut) => void): Promise<GuideOut> {
   const K = { ...DEFAULT_KNOBS, ...k };
   const books = prices ?? snapshotBook(localItems());
@@ -166,8 +178,13 @@ export async function runAdvise(ev: Evaluator, state: State, k: Partial<Knobs> =
     return { ...base, start: first.figure, inputs: first.inputs, steps: [], notSearched: [], unpriced: [],
       notCalculable: [`${state.skill} cannot be priced yet: ${first.figure.stop}`] };
   }
-  const { stoppedBy, ...r } = await path(state, ev, acq, recon, (s) => ({ prices: books, level: s.level,
-    notSearched: new Set(s.skill === 'iceShot' ? ['switch to Hammer of Ash: planned in the ideal guide, not searched for an Ice Shot character'] : []) }), K,
-    onStep && ((p) => onStep({ ...base, knobs: { ...base.knobs, partialRun: true }, inputs: first.inputs, ...p } as GuideOut)));
-  return { ...base, ...(stoppedBy ? { knobs: { ...base.knobs, stoppedBy } } : {}), inputs: first.inputs, ...r } as GuideOut;
+  const ctxOf = (s: State): GenCtx => ({ prices: books, level: s.level,
+    notSearched: new Set(s.skill === 'iceShot' ? ['switch to Hammer of Ash: planned in the ideal guide, not searched for an Ice Shot character'] : []) });
+  const next = await nextBuys(state, ev, acq, ctxOf(state), first.figure);
+  const bought = Object.fromEntries(next.filter((n) => n.buy).map((n) => [n.buy!.name, books.price(n.buy!.name, state.level)]));
+  const withNext = { ...base, next, prices: bought };
+  onStep?.({ ...withNext, knobs: { ...base.knobs, partialRun: true }, inputs: first.inputs, start: first.figure, steps: [], notSearched: [], unpriced: [], notCalculable: [] });
+  const { stoppedBy, ...r } = await path(state, ev, acq, recon, ctxOf, K,
+    onStep && ((p) => onStep({ ...withNext, knobs: { ...base.knobs, partialRun: true }, inputs: first.inputs, ...p } as GuideOut)));
+  return { ...withNext, ...(stoppedBy ? { knobs: { ...base.knobs, stoppedBy } } : {}), inputs: first.inputs, ...r } as GuideOut;
 }

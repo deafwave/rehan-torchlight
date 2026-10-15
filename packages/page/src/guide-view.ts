@@ -6,8 +6,10 @@ export interface Character { level: number; skill: string; fe: number; owned?: n
 export interface GuideOut {
   mode: 'ideal' | 'advise'; pin: string; etor: { season: string; fetchedAt: string }; knobs: Record<string, unknown>;
   start: Figure; inputs?: Record<string, unknown>; startNotes?: string[]; steps: Step[]; notSearched: string[]; unpriced: string[]; notCalculable: string[];
-  character?: Character;
+  character?: Character; next?: NextBuy[]; prices?: Record<string, number | null>;
 }
+/** advise: one upgrade at the start with its exact figure; `buy` = what is bought and how many (cost = qty x its price) */
+export interface NextBuy { label: string; kind: string; gain: number; kill: number; costFE: number | null; market?: string; buy?: { name: string; qty: number }; partial?: string[] }
 
 const ESC: Record<string, string> = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' };
 const esc = (s: unknown) => String(s).replace(/[&<>"]/g, (c) => ESC[c]);
@@ -148,8 +150,31 @@ export function renderCharacter(c: Character): string {
     + `<dl class="char-gear">${c.gear.map((x) => `<dt>${esc(slotName(x.slot))}</dt><dd>${esc(x.label)}</dd>`).join('')}</dl></div>`;
 }
 
-export function renderGuide(g: GuideOut): string {
-  return `<div class="gl-plan">${goalCard(g)}${g.character ? renderCharacter(g.character) : ''}${chart(g)}${stages(g)}${huntingList(g)}${details(g)}</div>`;
+// ---- what to buy next: exact gains on the player's character, ranked by the player's prices (etor's by default)
+/** each upgrade at your prices: cost = qty x your unit price of what it buys (else etor's), else the move's own cost (a drop: 0; unpriced: null);
+ *  ranked by ln(gain) per FE like the guide, free first, unpriced last by gain */
+export function rankNext(next: NextBuy[], etor: Record<string, number | null>, mine: Record<string, number>): { n: NextBuy; unit: number | null; cost: number | null }[] {
+  const score = (gain: number, cost: number | null) => (cost === null ? -Infinity : cost === 0 ? Infinity : Math.log(gain) / cost);
+  return next.map((n) => {
+    const unit = n.buy ? (Object.hasOwn(mine, n.buy.name) ? mine[n.buy.name] : etor[n.buy.name] ?? null) : null;
+    return { n, unit, cost: n.buy && unit !== null ? unit * n.buy.qty : n.costFE };
+  }).sort((a, b) => score(b.n.gain, b.cost) - score(a.n.gain, a.cost) || b.n.gain - a.n.gain);
+}
+const qty = (q: number) => (Number.isInteger(q) ? String(q) : q.toFixed(1));
+export function renderNext(next: NextBuy[], etor: Record<string, number | null>, mine: Record<string, number>): string {
+  const rows = rankNext(next, etor, mine).map(({ n, unit, cost }, i) => `<tr${cost === null ? ' class="unpriced"' : ''}><td class="n">${i + 1}</td>`
+    + `<td class="what"><span class="ico">${ICON[n.kind] ?? '•'}</span>${esc(actionText(n as unknown as Move))}${n.partial?.length ? `<span class="warn" title="partial: ${esc(n.partial.join(', '))}">*</span>` : ''}</td>`
+    + `<td class="gain">${fmtGain(1, n.gain)}<small>${fmtDps(n.kill)}</small></td>`
+    + `<td class="price">${n.buy ? `<input type="number" min="0" step="any" data-name="${esc(n.buy.name)}" value="${unit ?? ''}" placeholder="price" title="${esc(n.buy.name)}">${n.buy.qty !== 1 ? ` × ${qty(n.buy.qty)}` : ''}` : '—'}</td>`
+    + `<td class="cost">${cost === null ? 'unpriced' : cost === 0 ? 'free' : `${fmtFE(cost)} FE`}</td></tr>`).join('');
+  return `<section class="gl-next" id="gl-next"><h3>What to buy next</h3>`
+    + `<p class="muted">Exact gains on your character. Type the price you would actually pay (per item; per ember for a craft) and the list re-sorts. Your prices stay in this browser.</p>`
+    + `<div class="next-scroll"><table><thead><tr><th>#</th><th>Upgrade</th><th>Kill speed</th><th>Price (FE)</th><th>Cost</th></tr></thead><tbody>${rows}</tbody></table></div>`
+    + `<div class="paste-actions"><button data-act="download">Download my prices (prices.json)</button><button data-act="reset" class="quiet">Back to etor prices</button></div></section>`;
+}
+
+export function renderGuide(g: GuideOut, mine: Record<string, number> = {}): string {
+  return `<div class="gl-plan">${goalCard(g)}${g.character ? renderCharacter(g.character) : ''}${g.next?.length ? renderNext(g.next, g.prices ?? {}, mine) : ''}${chart(g)}${stages(g)}${huntingList(g)}${details(g)}</div>`;
 }
 
 // ---- pasted text: the advice from the poorchlight button, or the raw export
@@ -200,6 +225,19 @@ export function parseAdvice(text: string): GuideOut {
   });
   for (const k of ['notSearched', 'unpriced', 'notCalculable']) if (!isStrs(j[k])) throw bad(k, j[k]);
   if (j.character !== undefined) j.character = checkCharacter(j.character, 'character');
+  if (j.next !== undefined) {
+    if (!Array.isArray(j.next)) throw bad('next', j.next);
+    j.next.forEach((n: any, i: number) => {
+      const p = `next[${i}]`;
+      if (!n || typeof n !== 'object') throw bad(p, n);
+      if (typeof n.label !== 'string') throw bad(`${p}.label`, n.label);
+      for (const k of ['gain', 'kill']) if (!isNum(n[k])) throw bad(`${p}.${k}`, n[k]);
+      if (n.costFE !== null && !isNum(n.costFE)) throw bad(`${p}.costFE`, n.costFE);
+      if (n.buy !== undefined && !(n.buy && typeof n.buy.name === 'string' && isNum(n.buy.qty))) throw bad(`${p}.buy`, n.buy);
+      if (n.partial !== undefined && !isStrs(n.partial)) throw bad(`${p}.partial`, n.partial);
+    });
+  }
+  if (j.prices !== undefined && !(j.prices && typeof j.prices === 'object' && Object.values(j.prices).every((v) => v === null || isNum(v)))) throw bad('prices', j.prices);
   return j as GuideOut;
 }
 

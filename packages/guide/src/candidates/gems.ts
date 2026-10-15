@@ -63,7 +63,7 @@ export const gemMoves: Generator = (s, ctx) => {
       if (have.has(c.sid) || !level) continue;
       const gem = { sid: c.sid, level, name: c.name };
       moves.push({
-        kind: 'support', label: `${cur ? 'Replace socket ' + socket : 'Install in socket ' + socket} with ${c.name}`, acquisition: true, ...costOf(ctx.prices, c.name, ctx.level, 'gem'), minLevel: gemRequires(c.sid, 1),
+        kind: 'support', label: `${cur ? 'Replace socket ' + socket : 'Install in socket ' + socket} with ${c.name}`, acquisition: true, ...costOf(ctx.prices, c.name, ctx.level, 'gem'), buy: { name: c.name, qty: 1 }, minLevel: gemRequires(c.sid, 1),
         changes: [{ kind: 'support', action: cur ? 'replace' : 'install', owner, socket, gem }],
       });
     }

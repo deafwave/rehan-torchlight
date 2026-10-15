@@ -697,6 +697,22 @@ a.t-branch:hover,a.t-branch:focus-visible{text-decoration:underline}
 .respecs{grid-column:2/-1;list-style:none;margin:2px 0 0;padding:0}
 .respecs .respec{font-size:12.5px;color:var(--muted);padding:2px 0 2px 12px;border-left:2px solid var(--ice-line)}
 
+.gl-next{margin-top:22px}
+.gl-next h3{font-family:Marcellus,serif;font-weight:400;font-size:20px;color:var(--frost)}
+.gl-next .muted{font-size:13px;margin:4px 0 10px}
+.next-scroll{max-height:520px;overflow:auto;border:1px solid var(--ice-line);border-radius:10px}
+.gl-next table{width:100%;border-collapse:collapse;font-size:13px}
+.gl-next th{position:sticky;top:0;background:var(--night);color:var(--muted);font-weight:500;text-align:left;padding:8px 10px;border-bottom:1px solid var(--ice-line)}
+.gl-next td{padding:7px 10px;border-bottom:1px solid rgba(127,216,232,.08);vertical-align:middle}
+.gl-next td.n{color:var(--faint);width:32px}
+.gl-next td.what .ico{margin-right:8px;color:var(--frost)}
+.gl-next td.gain{white-space:nowrap;color:var(--frost)}
+.gl-next td.gain small{display:block;color:var(--faint);font-size:11px}
+.gl-next td.price{white-space:nowrap;color:var(--muted)}
+.gl-next td.price input{width:90px;background:var(--night);color:var(--text);border:1px solid var(--ice-line);border-radius:6px;padding:4px 6px;font:inherit}
+.gl-next td.price input:focus{outline:none;border-color:var(--frost)}
+.gl-next td.cost{white-space:nowrap}
+.gl-next tr.unpriced td.cost{color:var(--faint)}
 .gl-hunt{margin-top:22px}
 .gl-hunt h3,.gl-details h4{font-family:Marcellus,serif;font-weight:400;letter-spacing:.04em;color:#e9f1f7}
 .gl-hunt h3{font-size:18px}

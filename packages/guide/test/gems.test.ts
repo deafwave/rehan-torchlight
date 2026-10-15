@@ -86,3 +86,11 @@ describe('gemMoves', () => {
     expect([...r.notSearched].join()).toMatch(/is not hoa/);
   });
 });
+
+describe('what you buy (Move.buy)', () => {
+  it('a support gem acquisition buys that gem, one', () => {
+    const { moves } = gen(l100, 'hoa');
+    const m = moves.find(x => x.acquisition)!;
+    expect(m.buy).toEqual({ name: m.label.replace(/^(Replace|Install in) socket \d+ with /, ''), qty: 1 });
+  });
+});

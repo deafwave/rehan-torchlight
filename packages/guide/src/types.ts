@@ -36,6 +36,8 @@ export interface Move {
   /** 'drop' = a white base / normal gem etor does not price (0 FE, ranked); 'not-on-market' = cannot be bought (costFE null, listed under unpriced, never ranked) */
   market?: 'tradeable' | 'drop' | 'not-on-market';
   costNote?: string;
+  /** what is bought and how many (cost = qty x its price): a unique or gem x 1, a craft's ember x the expected embers; absent when the cost has several parts */
+  buy?: { name: string; qty: number };
   /** hero level gate */
   minLevel: number;
   /** dps-debug what-if changes applied in order (dps-debug model/src/core/whatif.ts `Change`; a `LoadoutPatch` is applied by applyPatch, runs of Changes by applyChanges) */
@@ -88,6 +90,7 @@ export interface Step {
   /** plain-language caveats for this step (e.g. assumed talent points) */
   notes?: string[];
 }
+export interface NextBuy { label: string; kind: MoveKind; gain: number; kill: number; costFE: number | null; market?: Move['market']; buy?: Move['buy']; partial?: string[] }
 export interface GuideOut {
   mode: 'ideal' | 'advise';
   pin: string;
@@ -101,6 +104,11 @@ export interface GuideOut {
   steps: Step[];
   /** advise: the character the advice starts from (the export's hero, FE, owned items and worn gear) */
   character?: { level: number; skill: Skill; fe: number; owned: number; gear: { slot: string; label: string }[] };
+  /** advise: every acquisition at the start that raises the kill average, priced or not, with its exact figure (best gain first): the page ranks them by
+   *  the player's prices, exact for the next purchase */
+  next?: NextBuy[];
+  /** advise: the price book's FE for every `next[].buy.name` (null = no price), the page's default */
+  prices?: Record<string, number | null>;
   /** configurations not generated because their resolution rule is not ported, by reason */
   notSearched: string[];
   /** acquisitions with no price */

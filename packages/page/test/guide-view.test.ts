@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { actionText, fmtDps, fmtGain, fmtTime, hunting, parseAdvice, parsePaste, renderGuide, type GuideOut } from '../src/guide-view';
+import { actionText, fmtDps, fmtGain, fmtTime, hunting, parseAdvice, parsePaste, rankNext, renderGuide, renderNext, type GuideOut, type NextBuy } from '../src/guide-view';
 import sample from '../src/data/guide.sample.json';
 
 const g = sample as unknown as GuideOut;
@@ -106,3 +106,38 @@ describe('ideal-mode extras', () => {
     for (const t of ['free (drops)', 'talent points assumed', 'gx', 'gear: stripped']) expect(html).toContain(t);
   });
 });
+
+describe('what to buy next (your prices)', () => {
+  const next: NextBuy[] = [
+    { label: 'Unique Bow of Endless Dusk in mainHand', kind: 'unique', gain: 3, kill: 3e6, costFE: 900, buy: { name: 'Bow of Endless Dusk', qty: 1 } },
+    { label: 'Craft T7 +36 Dexterity (prefix) on chest', kind: 'craft', gain: 1.1, kill: 1.1e6, costFE: 0.6, buy: { name: 'Precious Ember', qty: 10 } },
+    { label: 'Replace socket 2 with Cold Penetration', kind: 'support', gain: 1.05, kill: 1.05e6, costFE: 0, market: 'drop', buy: { name: 'Cold Penetration', qty: 1 } },
+    { label: 'Unique Endless Night - Prototype in boots', kind: 'unique', gain: 4, kill: 4e6, costFE: null, buy: { name: 'Endless Night - Prototype', qty: 1 } },
+  ];
+  const etor = { 'Bow of Endless Dusk': 900, 'Precious Ember': 0.06, 'Cold Penetration': null, 'Endless Night - Prototype': null };
+  const order = (mine: Record<string, number>) => rankNext(next, etor, mine).map((r) => r.n.label.split(' ')[1]);
+  it('ranks by gain per FE at etor prices: free first, unpriced last', () => {
+    expect(order({})).toEqual(['socket', 'T7', 'Bow', 'Endless']);
+    expect(rankNext(next, etor, {}).map((r) => r.cost)).toEqual([0, 0.6, 900, null]);
+  });
+  it('your price re-ranks: a cheap listing moves up, a price on an unpriced item ranks it; cost = your unit price x the quantity', () => {
+    expect(order({ 'Bow of Endless Dusk': 0.5 })).toEqual(['socket', 'Bow', 'T7', 'Endless']);
+    expect(order({ 'Endless Night - Prototype': 1 })[1]).toBe('Endless');
+    expect(rankNext(next, etor, { 'Precious Ember': 1 }).find((r) => r.n.kind === 'craft')!.cost).toBe(10);
+  });
+  it('the table has a price box per bought item (escaped), your price shown, and the download', () => {
+    const h = renderNext([{ ...next[0], buy: { name: 'A "quoted" <b>', qty: 1 } }, next[1]], {}, { 'Precious Ember': 2 });
+    expect(h).toContain('data-name="A &quot;quoted&quot; &lt;b&gt;"');
+    expect(h).toContain('value="2"');
+    expect(h).toContain('× 10');
+    expect(h).toContain('prices.json');
+    expect(h).not.toContain('<b>');
+  });
+  it('advice with a next list renders it first; a malformed row is refused', () => {
+    const adv = { ...g, mode: 'advise', next, prices: etor };
+    expect(renderGuide(parseAdvice(JSON.stringify(adv)))).toContain('What to buy next');
+    expect(() => parseAdvice(JSON.stringify({ ...adv, next: [{ label: 'x', gain: 'big' }] }))).toThrow(/next\[0\]\.gain/);
+    expect(() => parseAdvice(JSON.stringify({ ...adv, next: [{ ...next[0], buy: { name: 1, qty: 1 } }] }))).toThrow(/next\[0\]\.buy/);
+  });
+});
+

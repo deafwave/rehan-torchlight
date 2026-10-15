@@ -146,7 +146,8 @@ describe('long-run safety', () => {
     expect(out.knobs.partialRun).toBeUndefined();
     const adv: string[] = [];
     const a = await runAdvise(stubEv(), fromExport(exportOf()), { maxRounds: 1, topK: 2, maxSteps: 3 }, undefined, (o) => adv.push(JSON.stringify(o)));
-    expect(adv).toHaveLength(a.steps.length);
+    expect(adv).toHaveLength(a.steps.length + 1);   // the next-buys list is written first, before any step
+    expect(JSON.parse(adv[0])).toMatchObject({ steps: [], next: a.next });
     expect(adv.every((t) => JSON.parse(t).knobs.partialRun === true)).toBe(true);
     expect(a.knobs.partialRun).toBeUndefined();
   });
@@ -275,6 +276,15 @@ describe('fix round 1', () => {
     expect(sw.move.label).toMatch(new RegExp(`on the target build's talent page trimmed to ${pointsAtLevel(60)} of \\d+ points`));
     const set = (sw.move.changes as { kind: string; points?: number }[]).filter((c) => c.kind === 'talent' && c.points! > 0);
     expect(set.reduce((a, c) => a + c.points!, 0)).toBe(pointsAtLevel(60));
+  });
+  it('advice lists every next upgrade with its exact gain, priced or not, best first, and the etor price of what each buys', async () => {
+    const out = await runAdvise(stubEv(), fromExport(exportOf()), { maxRounds: 1, topK: 2, maxSteps: 1 });
+    const next = out.next!;
+    expect(next.length).toBeGreaterThan(10);
+    expect(next.every((n) => n.gain > 1 && n.kill > out.start.kill)).toBe(true);
+    expect(next.some((n) => n.costFE === null)).toBe(true);
+    expect(next.map((n) => n.gain)).toEqual([...next.map((n) => n.gain)].sort((a, b) => b - a));
+    for (const n of next) if (n.buy) expect(Object.hasOwn(out.prices!, n.buy.name), n.buy.name).toBe(true);
   });
   it('the advice carries the character it starts from: level, skill, FE, owned items and worn gear by slot', async () => {
     const st = fromExport(exportOf());

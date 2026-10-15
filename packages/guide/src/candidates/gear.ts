@@ -167,7 +167,7 @@ export const gearMoves: Generator = (s: State, ctx: GenCtx): Move[] => {
       const price = ctx.prices.price(o.ember, ctx.level);
       moves.push({
         kind: 'craft', label: `Craft ${o.tier} ${o.text.replace(/\n/g, ' / ')} (${side}) on ${slot}`, acquisition: true,
-        costFE: price === null ? null : o.expectedEmbers * price, minLevel: o.requiredLevel,
+        costFE: price === null ? null : o.expectedEmbers * price, buy: { name: o.ember, qty: o.expectedEmbers }, minLevel: o.requiredLevel,
         changes: swap(slot, withMods(dump, { [side]: [...(dump.modifiers[side] ?? []), { id: Number(o.tierAffixId), dynArgs }] }, `guide-craft-${slot}-${o.tierAffixId}`)),
         enabler: ENABLER.test(o.text) || undefined,
       });
@@ -183,7 +183,7 @@ export const gearMoves: Generator = (s: State, ctx: GenCtx): Move[] => {
       moves.push({
         kind: 'gear', label: `Rare base ${best.name} (item level ${best.level}) on ${slot}${crafted ? `, ${crafted} affix(es) crafted again` : ''}${r.dropped ? `, ${r.dropped} the base cannot take left off` : ''}`,
         acquisition: true, ...cost, costFE: cost.costFE === null || r.recraft === null ? null : cost.costFE + r.recraft, minLevel: best.level,
-        ...(crafted ? { costNote: `${cost.costNote ?? 'base'} + re-craft ${r.recraft === null ? '(an ember unpriced)' : `${r.recraft.toFixed(2)} FE`}` } : {}),
+        ...(crafted ? { costNote: `${cost.costNote ?? 'base'} + re-craft ${r.recraft === null ? '(an ember unpriced)' : `${r.recraft.toFixed(2)} FE`}` } : { buy: { name: best.name, qty: 1 } }),
         changes: [{ kind: 'gear', slot, item: { ...r.item, baseId: best.baseId, baseName: best.name } }],
       });
     }
@@ -213,10 +213,10 @@ export const gearMoves: Generator = (s: State, ctx: GenCtx): Move[] => {
     if (pooled.length) ctx.notSearched.add(`unique ${name}: random affix slots (${pooled.join(', ')}) not priced; offered with its fixed affixes only`);
     if (lost.length) { ctx.notSearched.add(`unique ${name}: modifier group(s) ${lost.join(', ')} not in the catalog; not offered`); continue; }
     if (!mods.length) continue;
-    const price = priceOfGold(ctx.prices, Number(gid), ctx.level).fe;
+    const { fe: price, etorName } = priceOfGold(ctx.prices, Number(gid), ctx.level);
     for (const slot of here) {
       const item: Dump = { baseId: g.i8, baseName, itemId: `guide-unique-${gid}`, level: ctx.level, modifiers: { baseAttr: attrMods(nb), prefix: mods } };
-      moves.push({ kind: 'unique', label: `Unique ${name} in ${slot}`, acquisition: true, costFE: price, minLevel: nb.level, changes: swap(slot, item) });
+      moves.push({ kind: 'unique', label: `Unique ${name} in ${slot}`, acquisition: true, costFE: price, buy: { name: etorName ?? name, qty: 1 }, minLevel: nb.level, changes: swap(slot, item) });
     }
   }
   if (moves.length) ctx.notSearched.add('rolled base implicit (BAffixInfoList) not modelled: its pool is not decoded; crafted bases are priced without it');

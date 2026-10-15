@@ -232,3 +232,14 @@ describe('whiteBaseMoves', () => {
     expect(it2.modifiers.baseAttr.map((m: { id: number }) => m.id)).toEqual(rows('config_item_base')[chest.baseId].a1b8);
   });
 });
+
+describe('what you buy (Move.buy)', () => {
+  it('a craft buys its ember x the expected count; a unique buys itself by name; the cost is their product', () => {
+    const c = ctx(60), moves = gearMoves(hoa60(), c);
+    const craft = moves.find(m => m.kind === 'craft' && m.costFE !== null)!;
+    expect(craft.buy).toEqual({ name: expect.stringMatching(/Ember$/), qty: expect.any(Number) });
+    expect(craft.costFE).toBeCloseTo(craft.buy!.qty * c.prices.price(craft.buy!.name, 60)!);
+    const u = moves.find(m => m.kind === 'unique')!;
+    expect(u.buy).toEqual({ name: u.label.replace(/^Unique (.+) in \w+$/, '$1'), qty: 1 });
+  });
+});
