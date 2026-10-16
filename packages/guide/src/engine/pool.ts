@@ -40,7 +40,10 @@ export const DEFAULT_ROLL_BUDGET = 1 << 20;
 /** the boss Hammer of Ash is priced against (user, 2026-10-15: kill Cube 3 as fast as possible); Ice Shot, the levelling leg, stays on its dummy */
 export const DEFAULT_TARGET = 'cube3';
 // Old King's Armor's input is stated only when a figure asks (apply.ts ON_ASK), so it moves no other figure's memo key
-export const DEFAULT_FIGHT: Fight = { bombs: 10, inputs: { [STILL_KEY]: 0 } };
+/** dps-debug figure.ts RESOURCE1_KEY: Fighting Will (comp 0x26 resource key 1), which Opening Heart's crit rating reads; its in-fight gains are not ported, so it is stated:
+ *  the middle of 0..100 (0 -> 100 is x1.068 on the owner's build, dps-debug 2026-10-16) */
+export const RESOURCE1_KEY = 'comp 0x26 resource key 1 (counter 0x2d: Fighting Will, buff 390, 0..100)';
+export const DEFAULT_FIGHT: Fight = { bombs: 10, inputs: { [STILL_KEY]: 0, [RESOURCE1_KEY]: 50 } };
 export interface Job { loadout: Loadout; changes: (Change | LoadoutPatch)[]; ctx: EvalCtx; fight: Fight; rollBudget: number; /** a dps-debug BOSSES key (hoa) */ target?: string }
 export interface JobResult { loadout: Loadout; dropped: string[]; fig: { life100: number; life0: number; left: string[]; needs: string[]; stop?: string; inputs?: Record<string, unknown>;
   /** the damage lock's ceiling, the build's cull on the target (CULL1), the boss's max Life */ lock?: number; cull?: { threshold: number; blocked: string[]; stop?: string }; lifeMax?: number } }

@@ -16,6 +16,7 @@ export interface GuideOut {
 }
 export interface HoaRoutes { target: string; at: string; worn?: string[]; start: { label: string; costFE: number; figure: HFig };
   /** the build both routes wear (skills, talent page, memories, pactspirits; the gear of the first route's end) */ build?: { section: string; lines: string[]; trees?: TreeView[] }[]; buildNote?: string;
+  /** your character fitted: the free changes (owned gems and pactspirits, talent points) and the paid ones ranked by gain per FE */ changes?: { free: string[]; buys: { label: string; gain: number; costFE: number | null; buy: string[] }[]; before: HFig; after: HFig };
   routes: { name: string; steps: { label: string; slot: string; costFE: number; totalFE: number; figure: HFig }[] }[] }
 type HFig = { kill: number; life100: number; lifeMax?: number };
 export interface HoaPath { target: string; goal: number; at: string; start: { label: string; figure: HFig }; skillsFE: number | null;
@@ -340,21 +341,20 @@ function hoaPathCard(g: GuideOut): string {
     + `${p.skillsFE !== null ? `The build's skill gems you do not hold cost about ${fmtFE(p.skillsFE)} FE on top. ` : ''}Model numbers (season patch notes applied), ${esc(p.at.slice(0, 16).replace('T', ' '))} UTC.</p>`
     + `<table><tr><th>#</th><th>Buy</th><th>Cost</th><th>Total</th><th>Damage/s</th><th>${esc(bossName(p.target))} dies in</th></tr>${rows}</table>${alt}</div>`;
 }
-/** the Hammer of Ash routes in columns: the switch, then each route's buys with the boss's kill time after each */
+/** your Hammer of Ash plan: the free changes, the buys, the path to the next boss, the build as it should be */
 function routesCard(g: GuideOut): string {
   const r = g.hoaRoutes;
   if (!r) return '';
-  const boss = esc(bossName(r.target)), t = (f: HFig) => (f.lifeMax && f.kill > 0 ? fmtTime(f.lifeMax / f.kill) : '—');
-  if (!r.routes.length) return `<div class="gl-final"><b>Your Hammer of Ash build</b>${r.build?.length ? `<details class="gl-build" open><summary>Skills, talent trees, pactspirits and gear${r.buildNote ? ` (${esc(r.buildNote)})` : ''}</summary>${r.build.map(sectionView).join('')}</details>` : ''}</div>`;
-  const col = (x: HoaRoutes['routes'][number]) => `<div class="gl-route"><h3>${esc(x.name)}</h3><table><tr><th>#</th><th>Buy</th><th>FE</th><th>Total</th><th>${boss}</th></tr>`
-    + `<tr class="start"><td>0</td><td>Switch (see above)</td><td>${fmtFE(r.start.costFE)}</td><td>${fmtFE(r.start.costFE)}</td><td>${t(r.start.figure)}</td></tr>`
-    + x.steps.map((s, i) => `<tr><td>${i + 1}</td><td>${esc(s.label)}</td><td>${fmtFE(s.costFE)}</td><td>${fmtFE(s.totalFE)}</td><td title="${fmtDps(s.figure.kill)} per second">${t(s.figure)}</td></tr>`).join('')
-    + '</table></div>';
-  return `<div class="gl-final"><b>Hammer of Ash: your plan to kill ${boss}</b><p class="bnote">Step 0, both routes: ${esc(r.start.label)}. That alone: ${boss} in ${t(r.start.figure)}; its skill gems you do not hold cost about ${fmtFE(r.start.costFE)} FE. `
-    + `Then each route buys its first legendary and after that whatever adds the most damage per FE${r.worn?.length ? ` (never one you already wear: ${esc(r.worn.join(', '))})` : ''}. `
-    + `Live etor prices; Formation Breaker at the 900 FE you found. Model numbers with the season patch notes, not yet checked against your game (${esc(r.at.slice(0, 16).replace('T', ' '))} UTC).</p>`
-    + `<div class="gl-routes${r.routes.length === 1 ? ' one' : ''}">${r.routes.map(col).join('')}</div>`
-    + (r.build?.length ? `<details class="gl-build" open><summary>The build: skills, talent trees, pactspirits and gear${r.buildNote ? ` (${esc(r.buildNote)})` : ''}</summary>${r.build.map(sectionView).join('')}</details>` : '') + '</div>';
+  const t = (f: HFig) => (f.lifeMax && f.kill > 0 ? fmtTime(f.lifeMax / f.kill) : '—'), ch = r.changes;
+  const changes = ch ? `<h4>1. Do now (free: gems and pactspirits you own, talent points)</h4><p class="bnote">Cube 1: ${t(ch.before)} now, ${t(ch.after)} after these (model).</p>`
+    + (ch.free.length ? `<ol class="gl-todo">${ch.free.map((x) => `<li>${esc(actionText({ label: x } as Move))}</li>`).join('')}</ol>` : '<p>Nothing free left to change.</p>')
+    + (ch.buys.length ? `<h4>2. Cheap buys for the build's skills</h4><table><tr><th>Change</th><th>Gain</th><th>Cost</th><th>Gems to get</th></tr>${ch.buys.map((b) => `<tr><td>${esc(actionText({ label: b.label } as Move))}</td><td>${fmtGain(1, b.gain)}</td><td>${b.costFE === null ? 'not listed' : `${fmtFE(b.costFE)} FE`}</td><td>${esc(b.buy.join(', '))}</td></tr>`).join('')}</table>` : '') : '';
+  const boss = esc(bossName(r.target));
+  const path = r.routes.map((x) => `<h4>3. ${esc(x.name)}</h4><p class="bnote">Start: ${esc(r.start.label)}: ${boss} in ${t(r.start.figure)}. Each step is priced on top of the ones before (most damage per FE first; farmed pieces count as free FE but take farming).</p>`
+    + `<table><tr><th>#</th><th>Get</th><th>Cost</th><th>Total FE</th><th>${boss} dies in</th></tr>`
+    + x.steps.map((s, k) => `<tr><td>${k + 1}</td><td>${esc(s.label)}</td><td>${s.costFE === null ? 'not listed' : s.costFE === 0 ? 'farm' : `${fmtFE(s.costFE)} FE`}</td><td>${fmtFE(s.totalFE)}</td><td title="${fmtDps(s.figure.kill)} per second">${t(s.figure)}</td></tr>`).join('') + '</table>').join('');
+  const build = r.build?.length ? `<details class="gl-build" open><summary>The build as it should be: skills, talent trees, pactspirits, gear${r.buildNote ? ` (${esc(r.buildNote)})` : ''}</summary>${r.build.map(sectionView).join('')}</details>` : '';
+  return `<div class="gl-final"><b>Hammer of Ash: your plan</b><p class="bnote">Model numbers on your live character (Ruinous Star, Formation Breaker on), ${esc(r.at.slice(0, 16).replace('T', ' '))} UTC.</p>${changes}${path}${build}</div>`;
 }
 function finalCard(g: GuideOut): string {
   if (!g.final?.length) return '';
@@ -363,7 +363,7 @@ function finalCard(g: GuideOut): string {
     + '</table></div>';
 }
 export function renderGuide(g: GuideOut, mine: Record<string, number> = {}): string {
-  if (g.hoaRoutes) return `<div class="gl-plan">${respecCard(g)}${routesCard(g)}${slateCard(g)}</div>`;   // the Hammer of Ash plan alone (user, 2026-10-16: no Ice Shot)
+  if (g.hoaRoutes) return `<div class="gl-plan">${routesCard(g)}${respecCard(g)}${slateCard(g)}</div>`;   // the Hammer of Ash plan alone (user, 2026-10-16: no Ice Shot)
   const plan = g.legs?.length ? legTabs(g) : chart(g.start, entries(g.steps)) + stages(entries(g.steps), g.mode);
   return `<div class="gl-plan">${goalCard(g)}${hoaPathCard(g)}${g.character ? renderCharacter(g.character) : ''}${g.character?.skill === 'hoa' && g.switch ? switchCard(g) + respecCard(g) : respecCard(g) + switchCard(g)}${g.next?.length ? renderNext(g.next, g.prices ?? {}, mine, g.character?.fe ?? Infinity) : ''}${slateCard(g)}${finalCard(g)}${plan}${huntingList(g)}${details(g)}</div>`;
 }
