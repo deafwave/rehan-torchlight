@@ -1,9 +1,9 @@
 {
  "mode": "advise",
- "pin": "792dd9876aa466628dc179c0ab0d721edc7d883e",
+ "pin": "4b1b533fdc34cea1fac4941fd803f4a33b460d2c",
  "etor": {
   "season": "1601",
-  "fetchedAt": "2026-10-16T12:13:20.899Z"
+  "fetchedAt": "2026-10-16T12:26:20.668Z"
  },
  "knobs": {
   "churn": 0.05,
@@ -13,7 +13,7 @@
   "maxSteps": 0,
   "continueSteps": 10,
   "enablerFloor": 0.25,
-  "budgetMinutes": 15,
+  "budgetMinutes": 20,
   "focusHoa": false,
   "fight": {
    "bombs": 10,
@@ -24,15 +24,15 @@
   "fightNote": "training dummy stands still (dps-debug STILL / e2e1-lib.ts)",
   "rollBudget": 1048576,
   "target": "cube3",
-  "fe": 175,
+  "fe": 174,
   "level": 90,
   "skill": "iceShot"
  },
  "character": {
   "level": 90,
   "skill": "iceShot",
-  "fe": 175,
-  "owned": 228,
+  "fe": 174,
+  "owned": 231,
   "gear": [
    {
     "slot": "belt",
@@ -84,6 +84,7 @@
     "partial": [
      "support: Restrain (on passive 0, socket 1)",
      "support: Seal Conversion (on passive 0, socket 2)",
+     "support: Deepened Curse (on active 4, socket 2)",
      "a row's condition cannot be evaluated, its buff adds are unknown: affix class 651295 row 1 (support 7514 (skill 10003110) on gem 7160): not ported: condition 184 with bUseBuffCfgId true, by-tag true, only-by-self false (support 7514 (skill 10003110) on gem 7160)",
      "not calculable without a capture: the Ice Lances that reach the target (1) and the returning passes that hit it (1) per cast (stated by the caller)",
      "not calculable without a capture: Flame Core posts of event 1000074 per throw (1, stated by the caller; 1 or 2 unverified)",
@@ -122,23 +123,22 @@
   }
  ],
  "startNotes": [
-  "left out of every figure: your active skill Biting Cold with its supports: the model stops on it (skill id 10003888: config_item_base rows with p5c[0] = 10003888: [])",
-  "Talent pages tried for the free respec (before re-fitting the points): Raise Ranger to 24 points and take core talent Fluke x1.00; Swap talent tree Ranger for Onslaughter (24 points, core talent Well Matched) x0.99; Swap talent tree Ranger for Ronin (24 points, core talent Tradeoff) x0.88; Swap talent tree Ranger for Ronin (24 points, core talent Falling Leaves) x0.87; Swap talent tree Ranger for Alchemist (24 points, core talent Source) x0.80; Swap talent tree Ranger for Warlock (24 points, core talent Dirty Tricks) x0.79; Swap talent tree Ranger for Shadowmaster (24 points, core talent Dirt) x0.78; Swap talent tree Ranger for Lich (24 points, core talent Off The Beaten Track) x0.75",
-  "Each re-fitted (your page first): your page x1.44; Raise Ranger to 24 points and take core talent Fluke x1.30; Swap talent tree Ranger for Onslaughter (24 points, core talent Well Matched) x1.28; Swap talent tree Ranger for Ronin (24 points, core talent Tradeoff) x1.13; Swap talent tree Ranger for Ronin (24 points, core talent Falling Leaves) x1.13",
+  "Talent pages tried for the free respec (before re-fitting the points): Raise Ranger to 24 points and take core talent Fluke x0.93; Swap talent tree Ranger for Onslaughter (24 points, core talent Well Matched) x0.92; Swap talent tree Ranger for Ronin (24 points, core talent Tradeoff) x0.82; Swap talent tree Ranger for Ronin (24 points, core talent Falling Leaves) x0.80; Swap talent tree Ranger for Alchemist (24 points, core talent Source) x0.74; Swap talent tree Ranger for Warlock (24 points, core talent Dirty Tricks) x0.73; Swap talent tree Ranger for Shadowmaster (24 points, core talent Dirt) x0.72; Swap talent tree Ranger for Lich (24 points, core talent Off The Beaten Track) x0.70",
+  "Each re-fitted (your page first): your page x1.36; Raise Ranger to 24 points and take core talent Fluke x1.24; Swap talent tree Ranger for Onslaughter (24 points, core talent Well Matched) x1.28; Swap talent tree Ranger for Ronin (24 points, core talent Tradeoff) x1.13; Swap talent tree Ranger for Ronin (24 points, core talent Falling Leaves) x1.13",
   "you have Unholy Prayer in your inventory: wear it rather than buy one",
   "you have Kaleidoscope in your inventory: wear it rather than buy one",
   "you have Restless Glacier in your inventory: wear it rather than buy one",
+  "you have Genius Battlegear in your inventory: wear it rather than buy one",
   "you have Frozen Lightning in your inventory: wear it rather than buy one",
   "you have Gauze of Phantom Sin in your inventory: wear it rather than buy one",
-  "you have Genius Battlegear in your inventory: wear it rather than buy one",
   "you have Wind Chasers in your inventory: wear it rather than buy one"
  ],
  "next": [
   {
    "label": "Unique Wriggling Tango in boots",
    "kind": "unique",
-   "gain": 2.513013980740114,
-   "kill": 1210757061.1309268,
+   "gain": 2.513436490739761,
+   "kill": 1150964527.132072,
    "costFE": null,
    "buy": {
     "name": "Wriggling Tango",
@@ -151,8 +151,8 @@
   {
    "label": "Unique Endless Night - Prototype in boots",
    "kind": "unique",
-   "gain": 1.4992903701286082,
-   "kill": 722350299.771986,
+   "gain": 1.499317071331361,
+   "kill": 686574246.2098346,
    "costFE": null,
    "buy": {
     "name": "Endless Night - Prototype",
@@ -160,21 +160,10 @@
    }
   },
   {
-   "label": "Unique Dawn Break in belt",
-   "kind": "unique",
-   "gain": 1.4860079425355361,
-   "kill": 715950895.2638838,
-   "costFE": 969.904,
-   "buy": {
-    "name": "Dawn Break",
-    "qty": 1
-   }
-  },
-  {
    "label": "Unique Stray Bird's Return in gloves",
    "kind": "unique",
-   "gain": 1.467042332446992,
-   "kill": 706813362.9981071,
+   "gain": 1.488169401932977,
+   "kill": 681469453.5942235,
    "costFE": null,
    "buy": {
     "name": "Stray Bird's Return",
@@ -182,32 +171,32 @@
    }
   },
   {
+   "label": "Unique Dawn Break in belt",
+   "kind": "unique",
+   "gain": 1.4796585466358476,
+   "kill": 677572123.1549463,
+   "costFE": 950.134,
+   "buy": {
+    "name": "Dawn Break",
+    "qty": 1
+   }
+  },
+  {
    "label": "Unique Blind Vision in helmet",
    "kind": "unique",
-   "gain": 1.381628430798943,
-   "kill": 665661389.5782614,
-   "costFE": 170.8,
+   "gain": 1.386605984031466,
+   "kill": 634961060.9256167,
+   "costFE": 171.69,
    "buy": {
     "name": "Blind Vision",
     "qty": 1
    }
   },
   {
-   "label": "Unique Witchdoctor's Herb Bag in belt",
-   "kind": "unique",
-   "gain": 1.3641891313053656,
-   "kill": 657259225.8160019,
-   "costFE": null,
-   "buy": {
-    "name": "Witchdoctor's Herb Bag",
-    "qty": 1
-   }
-  },
-  {
    "label": "Unique Israfel's Laws in gloves",
    "kind": "unique",
-   "gain": 1.3631156893035232,
-   "kill": 656742047.0444528,
+   "gain": 1.3862088138886164,
+   "kill": 634779186.9266754,
    "costFE": null,
    "buy": {
     "name": "Israfel's Laws",
@@ -215,10 +204,21 @@
    }
   },
   {
+   "label": "Unique Witchdoctor's Herb Bag in belt",
+   "kind": "unique",
+   "gain": 1.364549505930447,
+   "kill": 624860855.8950666,
+   "costFE": null,
+   "buy": {
+    "name": "Witchdoctor's Herb Bag",
+    "qty": 1
+   }
+  },
+  {
    "label": "Unique Death's Touch in gloves",
    "kind": "unique",
-   "gain": 1.3272740472478533,
-   "kill": 639473730.3800746,
+   "gain": 1.3431032695231864,
+   "kill": 615040095.5789862,
    "costFE": null,
    "buy": {
     "name": "Death's Touch",
@@ -228,8 +228,8 @@
   {
    "label": "Unique Fool's Crown in helmet",
    "kind": "unique",
-   "gain": 1.2937461135118056,
-   "kill": 623320146.3462548,
+   "gain": 1.2961308040149984,
+   "kill": 593530245.7176328,
    "costFE": null,
    "buy": {
     "name": "Fool's Crown",
@@ -239,8 +239,8 @@
   {
    "label": "Unique Lightning Striker's Sacrum in chest",
    "kind": "unique",
-   "gain": 1.2884080480576274,
-   "kill": 620748294.1834898,
+   "gain": 1.2884080124398438,
+   "kill": 589993789.0829871,
    "costFE": 500,
    "buy": {
     "name": "Lightning Striker's Sacrum",
@@ -254,16 +254,16 @@
   {
    "label": "Equip Hell Cavalry - Crushed Ice (level 3, owned) in battle slot 2 instead of Flower Whisperer",
    "kind": "pact",
-   "gain": 1.2028932428811103,
-   "kill": 579547705.9686122,
+   "gain": 1.2076462351566224,
+   "kill": 553010980.4289398,
    "costFE": 0,
    "market": "drop"
   },
   {
    "label": "Unique Legless Bird's Lament in helmet",
    "kind": "unique",
-   "gain": 1.1700159690383665,
-   "kill": 563707606.486112,
+   "gain": 1.1722110948952706,
+   "kill": 536784356.2015015,
    "costFE": null,
    "buy": {
     "name": "Legless Bird's Lament",
@@ -273,8 +273,8 @@
   {
    "label": "Replace socket 5 with Critical Strike Damage Increase",
    "kind": "support",
-   "gain": 1.1668441085813173,
-   "kill": 562179420.6205629,
+   "gain": 1.165147308198464,
+   "kill": 533549674.1455968,
    "costFE": 0,
    "market": "drop",
    "buy": {
@@ -285,8 +285,8 @@
   {
    "label": "Unique Hekate's Vision in helmet",
    "kind": "unique",
-   "gain": 1.1203947420384894,
-   "kill": 539800357.488481,
+   "gain": 1.1224967525275613,
+   "kill": 514018933.3369311,
    "costFE": 50,
    "buy": {
     "name": "Hekate's Vision",
@@ -296,16 +296,16 @@
   {
    "label": "Raise Red Umbrella (slot 3) from rank 2 to 5",
    "kind": "pact",
-   "gain": 1.1164968595807383,
-   "kill": 537922378.0003643,
+   "gain": 1.1164968453061972,
+   "kill": 511271427.918228,
    "costFE": null,
    "market": "not-on-market"
   },
   {
    "label": "Unique Howling Ring in ring2",
    "kind": "unique",
-   "gain": 1.1125163736492274,
-   "kill": 536004600.5883621,
+   "gain": 1.1114013698229894,
+   "kill": 508938084.08732134,
    "costFE": null,
    "buy": {
     "name": "Howling Ring",
@@ -315,8 +315,8 @@
   {
    "label": "Unique Howling Ring in ring1",
    "kind": "unique",
-   "gain": 1.0963274692270337,
-   "kill": 528204870.6658998,
+   "gain": 1.0952292312667677,
+   "kill": 501532463.1875477,
    "costFE": null,
    "buy": {
     "name": "Howling Ring",
@@ -326,9 +326,9 @@
   {
    "label": "Unique Howling Wind in necklace",
    "kind": "unique",
-   "gain": 1.0836566933240495,
-   "kill": 522100156.75976086,
-   "costFE": 92,
+   "gain": 1.0812223927667197,
+   "kill": 495118386.55970407,
+   "costFE": 90,
    "buy": {
     "name": "Howling Wind",
     "qty": 1
@@ -337,24 +337,35 @@
   {
    "label": "Raise Red Umbrella (slot 3) from rank 2 to 4",
    "kind": "pact",
-   "gain": 1.0773215169658235,
-   "kill": 519047901.7512261,
+   "gain": 1.077321513288554,
+   "kill": 493332077.6871594,
    "costFE": null,
    "market": "not-on-market"
   },
   {
    "label": "Rare base Lonely Hunter's Bow (item level 86) on mainHand, 6 affix(es) crafted again",
    "kind": "gear",
-   "gain": 1.0740002300498255,
-   "kill": 517447722.99519634,
-   "costFE": 1617.706666666667,
+   "gain": 1.0739929491582914,
+   "kill": 491807846.12040555,
+   "costFE": 1585.226666666667,
    "market": "drop"
+  },
+  {
+   "label": "Unique Tyrant's Smoldering Hold in gloves",
+   "kind": "unique",
+   "gain": 1.0685297839002021,
+   "kill": 489306128.0777625,
+   "costFE": 37,
+   "buy": {
+    "name": "Tyrant's Smoldering Hold",
+    "qty": 1
+   }
   },
   {
    "label": "Replace socket 5 with Ice Shot: Ice Blast (Magnificent)",
    "kind": "support",
-   "gain": 1.064302091689811,
-   "kill": 512775210.39112633,
+   "gain": 1.0641974136933376,
+   "kill": 487322228.9639889,
    "costFE": 70.88,
    "market": "tradeable",
    "buy": {
@@ -365,8 +376,8 @@
   {
    "label": "Replace socket 5 with Ice Shot: Batter (Noble)",
    "kind": "support",
-   "gain": 1.064302091689811,
-   "kill": 512775210.39112633,
+   "gain": 1.0641974136933376,
+   "kill": 487322228.9639889,
    "costFE": 37.32,
    "market": "tradeable",
    "buy": {
@@ -375,21 +386,10 @@
    }
   },
   {
-   "label": "Unique Tyrant's Smoldering Hold in gloves",
-   "kind": "unique",
-   "gain": 1.063053855176862,
-   "kill": 512173816.53355247,
-   "costFE": 38.349,
-   "buy": {
-    "name": "Tyrant's Smoldering Hold",
-    "qty": 1
-   }
-  },
-  {
    "label": "Replace socket 5 with Increased Area",
    "kind": "support",
-   "gain": 1.0625282610518774,
-   "kill": 511920588.0187128,
+   "gain": 1.0624237632064233,
+   "kill": 486510030.684267,
    "costFE": 0,
    "market": "drop",
    "buy": {
@@ -400,8 +400,8 @@
   {
    "label": "Unique Everlasting Cloud in chest",
    "kind": "unique",
-   "gain": 1.0622222689050145,
-   "kill": 511773162.59438,
+   "gain": 1.062222230547013,
+   "kill": 486417743.9115976,
    "costFE": null,
    "buy": {
     "name": "Everlasting Cloud",
@@ -411,9 +411,9 @@
   {
    "label": "Unique Heavyware in chest",
    "kind": "unique",
-   "gain": 1.0600000024271528,
-   "kill": 510702486.16742545,
-   "costFE": 15,
+   "gain": 1.0600000018254483,
+   "kill": 485400130.60045236,
+   "costFE": 14,
    "buy": {
     "name": "Heavyware",
     "qty": 1
@@ -422,9 +422,9 @@
   {
    "label": "Unique Hunting the Eye of the Kraken in helmet",
    "kind": "unique",
-   "gain": 1.0592105410098045,
-   "kill": 510322127.7639822,
-   "costFE": 10,
+   "gain": 1.05851754952443,
+   "kill": 484721279.1482976,
+   "costFE": 9.76,
    "buy": {
     "name": "Hunting the Eye of the Kraken",
     "qty": 1
@@ -437,45 +437,45 @@
    ]
   },
   {
-   "label": "Socket Kismet: Hunter on contract point 107",
-   "kind": "kismet",
-   "gain": 1.0515264967882663,
-   "kill": 506619995.23683655,
-   "costFE": 999
-  },
-  {
-   "label": "Socket Kismet: Hunter on contract point 307",
-   "kind": "kismet",
-   "gain": 1.0515264967882663,
-   "kill": 506619995.23683655,
-   "costFE": 999
-  },
-  {
-   "label": "Socket Kismet: Hunter on contract point 207",
-   "kind": "kismet",
-   "gain": 1.046026648234732,
-   "kill": 503970196.81853205,
-   "costFE": 999
-  },
-  {
    "label": "Socket Medium Fate: Critical Strike Damage on contract point 107",
    "kind": "kismet",
-   "gain": 1.0452347346103426,
-   "kill": 503588656.95449483,
+   "gain": 1.0512051908028845,
+   "kill": 481372769.8347854,
    "costFE": null
   },
   {
    "label": "Socket Medium Fate: Critical Strike Damage on contract point 307",
    "kind": "kismet",
-   "gain": 1.0452347346103426,
-   "kill": 503588656.95449483,
+   "gain": 1.0512051908028845,
+   "kill": 481372769.8347854,
+   "costFE": null
+  },
+  {
+   "label": "Socket Kismet: Hunter on contract point 107",
+   "kind": "kismet",
+   "gain": 1.049581699657449,
+   "kill": 480629333.21906275,
+   "costFE": 999
+  },
+  {
+   "label": "Socket Kismet: Hunter on contract point 307",
+   "kind": "kismet",
+   "gain": 1.049581699657449,
+   "kill": 480629333.21906275,
+   "costFE": 999
+  },
+  {
+   "label": "Socket Medium Fate: Critical Strike Damage on contract point 207",
+   "kind": "kismet",
+   "gain": 1.0455034730349557,
+   "kill": 478761812.71739537,
    "costFE": null
   },
   {
    "label": "Replace socket 5 with Mark",
    "kind": "support",
-   "gain": 1.0447898586986255,
-   "kill": 503374318.05484414,
+   "gain": 1.0446871370908564,
+   "kill": 478387992.3653225,
    "costFE": 0,
    "market": "drop",
    "buy": {
@@ -484,10 +484,17 @@
    }
   },
   {
+   "label": "Socket Kismet: Hunter on contract point 207",
+   "kind": "kismet",
+   "gain": 1.044134730236974,
+   "kill": 478135031.6497023,
+   "costFE": 999
+  },
+  {
    "label": "Unique Howling in belt",
    "kind": "unique",
-   "gain": 1.0421941745933372,
-   "kill": 502123730.9578247,
+   "gain": 1.0424694372413739,
+   "kill": 477372452.9363436,
    "costFE": null,
    "buy": {
     "name": "Howling",
@@ -495,17 +502,26 @@
    }
   },
   {
-   "label": "Socket Medium Fate: Critical Strike Damage on contract point 207",
-   "kind": "kismet",
-   "gain": 1.0395188972483995,
-   "kill": 500834796.2520524,
-   "costFE": null
+   "label": "Unique Tide of the Styx in helmet",
+   "kind": "unique",
+   "gain": 1.0409770214593446,
+   "kill": 476689038.96062696,
+   "costFE": null,
+   "buy": {
+    "name": "Tide of the Styx",
+    "qty": 1
+   },
+   "partial": [
+    "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 662739904 row 1 (gear 3610 modifier 51421730) - ticked at the grant",
+    "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 850123584 row 1 (gear 3610 modifier 51421740) - ticked at the grant",
+    "not in this figure: node 238 (E2E1: taunt (buff 280 chaofeng; data vt 0x14524bf00, runtime vt 0x1452629d0 ctor FUN_141a93380, execute FUN_141aa12a0): for each filter target it looks up the entity (FUN_141bc02f0), takes its comp 0x86 and registers the owner under the node key (FUN_1412cfff0, FUN_141ca2b10); no call into comp 0xc / 0x25 / 0x43 [code: the call list of the function]) - affix class 523"
+   ]
   },
   {
    "label": "Replace socket 5 with Tendonslicer",
    "kind": "support",
-   "gain": 1.0376945474346884,
-   "kill": 499955834.0035921,
+   "gain": 1.037592482525902,
+   "kill": 475139175.1516778,
    "costFE": 0,
    "market": "drop",
    "buy": {
@@ -519,8 +535,8 @@
   {
    "label": "Unique Trickster's Tread in boots",
    "kind": "unique",
-   "gain": 1.0352966747079875,
-   "kill": 498800551.3995966,
+   "gain": 1.0359550702406333,
+   "kill": 474389363.70285934,
    "costFE": null,
    "buy": {
     "name": "Trickster's Tread",
@@ -533,9 +549,9 @@
   {
    "label": "Re-craft T4 +22% Critical Strike Damage (suffix) on boots, replacing its lower tier",
    "kind": "craft",
-   "gain": 1.0327880084000483,
-   "kill": 497591889.0246009,
-   "costFE": 9.75386046511628,
+   "gain": 1.0356354930017717,
+   "kill": 474243021.4073752,
+   "costFE": 9.54079069767442,
    "buy": {
     "name": "Matchless Ember",
     "qty": 23.674418604651166
@@ -544,22 +560,22 @@
   {
    "label": "Socket Medium Fate: Dexterity on contract point 107",
    "kind": "kismet",
-   "gain": 1.0319721435094649,
-   "kill": 497198809.5651259,
+   "gain": 1.0321518785218458,
+   "kill": 472647788.46340764,
    "costFE": 47.036
   },
   {
    "label": "Socket Medium Fate: Dexterity on contract point 307",
    "kind": "kismet",
-   "gain": 1.0319721435094649,
-   "kill": 497198809.5651259,
+   "gain": 1.0321518785218458,
+   "kill": 472647788.46340764,
    "costFE": 47.036
   },
   {
    "label": "Replace socket 5 with Glacial Freeze",
    "kind": "support",
-   "gain": 1.0288253647439412,
-   "kill": 495682707.92805797,
+   "gain": 1.028724179346182,
+   "kill": 471078160.5156143,
    "costFE": 0,
    "market": "drop",
    "buy": {
@@ -570,9 +586,9 @@
   {
    "label": "Unique Blight in chest",
    "kind": "unique",
-   "gain": 1.0285714309762228,
-   "kill": 495560363.959946,
-   "costFE": null,
+   "gain": 1.0285714345611847,
+   "kill": 471008214.9132949,
+   "costFE": 888,
    "buy": {
     "name": "Blight",
     "qty": 1
@@ -581,29 +597,22 @@
   {
    "label": "Socket Medium Fate: Double Damage Chance on contract point 107",
    "kind": "kismet",
-   "gain": 1.0275239784203023,
-   "kill": 495055706.7682232,
+   "gain": 1.027702935847963,
+   "kill": 470610507.94339097,
    "costFE": null
   },
   {
    "label": "Socket Medium Fate: Double Damage Chance on contract point 307",
    "kind": "kismet",
-   "gain": 1.0275239784203023,
-   "kill": 495055706.7682232,
+   "gain": 1.027702935847963,
+   "kill": 470610507.94339097,
    "costFE": null
-  },
-  {
-   "label": "Socket Medium Fate: Dexterity on contract point 207",
-   "kind": "kismet",
-   "gain": 1.0263287688769553,
-   "kill": 494479861.0287131,
-   "costFE": 47.036
   },
   {
    "label": "Unique Hanging Two-Tone Mask in helmet",
    "kind": "unique",
-   "gain": 1.0257535856505209,
-   "kill": 494202740.7427987,
+   "gain": 1.0275593200525495,
+   "kill": 470544742.7304381,
    "costFE": 300,
    "buy": {
     "name": "Hanging Two-Tone Mask",
@@ -611,47 +620,38 @@
    }
   },
   {
-   "label": "Unique Tide of the Styx in helmet",
-   "kind": "unique",
-   "gain": 1.0248695045775336,
-   "kill": 493776795.08155876,
-   "costFE": null,
-   "buy": {
-    "name": "Tide of the Styx",
-    "qty": 1
-   },
-   "partial": [
-    "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 662739904 row 1 (gear 3610 modifier 51421730) - ticked at the grant",
-    "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 850123584 row 1 (gear 3610 modifier 51421740) - ticked at the grant",
-    "not in this figure: node 238 (E2E1: taunt (buff 280 chaofeng; data vt 0x14524bf00, runtime vt 0x1452629d0 ctor FUN_141a93380, execute FUN_141aa12a0): for each filter target it looks up the entity (FUN_141bc02f0), takes its comp 0x86 and registers the owner under the node key (FUN_1412cfff0, FUN_141ca2b10); no call into comp 0xc / 0x25 / 0x43 [code: the call list of the function]) - affix class 523"
-   ]
+   "label": "Socket Medium Fate: Dexterity on contract point 207",
+   "kind": "kismet",
+   "gain": 1.0265534802013527,
+   "kill": 470084143.8678974,
+   "costFE": 47.036
   },
   {
    "label": "Socket Micro Fate: Critical Strike Damage on contract point 101",
    "kind": "kismet",
-   "gain": 1.0229817872178406,
-   "kill": 492867302.679135,
+   "gain": 1.0259955328060086,
+   "kill": 469828646.0017636,
    "costFE": null
   },
   {
    "label": "Socket Micro Fate: Critical Strike Damage on contract point 301",
    "kind": "kismet",
-   "gain": 1.0229817872178406,
-   "kill": 492867302.679135,
+   "gain": 1.0259955328060086,
+   "kill": 469828646.0017636,
    "costFE": null
   },
   {
-   "label": "Socket Medium Fate: Double Damage Chance on contract point 207",
+   "label": "Socket Micro Fate: Critical Strike Damage on contract point 201",
    "kind": "kismet",
-   "gain": 1.0219049890849854,
-   "kill": 492348506.9411253,
+   "gain": 1.0241604367340833,
+   "kill": 468988310.27398723,
    "costFE": null
   },
   {
    "label": "Unique Endless Night in boots",
    "kind": "unique",
-   "gain": 1.0217250938546534,
-   "kill": 492261834.35511595,
+   "gain": 1.02237484725769,
+   "kill": 468170644.8366782,
    "costFE": null,
    "buy": {
     "name": "Endless Night",
@@ -662,17 +662,17 @@
    ]
   },
   {
-   "label": "Socket Micro Fate: Critical Strike Damage on contract point 201",
+   "label": "Socket Medium Fate: Double Damage Chance on contract point 207",
    "kind": "kismet",
-   "gain": 1.0211372377716665,
-   "kill": 491978608.35284936,
+   "gain": 1.0221286881159002,
+   "kill": 468057922.4976523,
    "costFE": null
   },
   {
    "label": "Replace socket 5 with Projectile Penetration",
    "kind": "support",
-   "gain": 1.019956185761274,
-   "kill": 491409583.63905746,
+   "gain": 1.0198558977947376,
+   "kill": 467017155.78367126,
    "costFE": 0,
    "market": "drop",
    "buy": {
@@ -683,41 +683,41 @@
   {
    "label": "Raise Flower Whisperer (slot 2) from rank 2 to 3",
    "kind": "pact",
-   "gain": 1.0196078358787966,
-   "kill": 491241750.47808576,
+   "gain": 1.019607852943929,
+   "kill": 466903569.9320016,
    "costFE": null,
    "market": "not-on-market"
   },
   {
    "label": "Raise Flower Whisperer (slot 2) from rank 2 to 4",
    "kind": "pact",
-   "gain": 1.0196078358787966,
-   "kill": 491241750.47808576,
+   "gain": 1.019607852943929,
+   "kill": 466903569.9320016,
    "costFE": null,
    "market": "not-on-market"
   },
   {
    "label": "Raise Flower Whisperer (slot 2) from rank 2 to 5",
    "kind": "pact",
-   "gain": 1.0196078358787966,
-   "kill": 491241750.47808576,
+   "gain": 1.019607852943929,
+   "kill": 466903569.9320016,
    "costFE": null,
    "market": "not-on-market"
   },
   {
    "label": "Raise Red Umbrella (slot 3) from rank 2 to 3",
    "kind": "pact",
-   "gain": 1.0196078358787966,
-   "kill": 491241750.47808576,
+   "gain": 1.019607852943929,
+   "kill": 466903569.9320016,
    "costFE": null,
    "market": "not-on-market"
   },
   {
    "label": "Re-craft T5 +15% Critical Strike Damage (suffix) on boots, replacing its lower tier",
    "kind": "craft",
-   "gain": 1.0176550794495216,
-   "kill": 490300922.5903249,
-   "costFE": 5.592213333333334,
+   "gain": 1.019188343601331,
+   "kill": 466711466.262818,
+   "costFE": 5.470053333333334,
    "buy": {
     "name": "Matchless Ember",
     "qty": 13.573333333333336
@@ -726,87 +726,87 @@
   {
    "label": "Socket Micro Fate: Dexterity on contract point 101",
    "kind": "kismet",
-   "gain": 1.0162779641556121,
-   "kill": 489637435.6066188,
+   "gain": 1.0163655052264404,
+   "kill": 465418818.9859537,
    "costFE": 14
   },
   {
    "label": "Socket Micro Fate: Dexterity on contract point 301",
    "kind": "kismet",
-   "gain": 1.0162779641556121,
-   "kill": 489637435.6066188,
+   "gain": 1.0163655052264404,
+   "kill": 465418818.9859537,
    "costFE": 14
+  },
+  {
+   "label": "Equip Fog Scorpion (level 5, owned) in battle slot 3 instead of Red Umbrella",
+   "kind": "pact",
+   "gain": 1.0153201439718984,
+   "kill": 464940122.29859006,
+   "costFE": 0,
+   "market": "drop"
   },
   {
    "label": "Socket Micro Fate: Dexterity on contract point 201",
    "kind": "kismet",
-   "gain": 1.0144454835105476,
-   "kill": 488754555.9659158,
+   "gain": 1.0145476609513944,
+   "kill": 464586383.2812376,
    "costFE": 14
   },
   {
    "kind": "craft",
    "label": "Craft on boots with Matchless Ember (1 per craft): keep any of 4 results - T4 +22% Critical Strike Damage (suffix) in place of your T7 +6% Critical Strike Damage; T5 +15% Critical Strike Damage (suffix) in place of your T7 +6% Critical Strike Damage; T6 +10% Critical Strike Damage (suffix) in place of your T7 +6% Critical Strike Damage; T4 +16% Projectile Speed (prefix) in place of your T4 +16% Projectile Speed - about 7 crafts",
-   "gain": 1.0130689204197434,
-   "kill": 488091335.03079283,
-   "costFE": 2.500619053627761,
+   "gain": 1.0141646246650835,
+   "kill": 464410981.5236151,
+   "costFE": 2.4459938801261836,
    "buy": {
     "name": "Matchless Ember",
     "qty": 6.069463722397478
    }
   },
   {
-   "label": "Equip Fog Scorpion (level 5, owned) in battle slot 3 instead of Red Umbrella",
-   "kind": "pact",
-   "gain": 1.011926867997533,
-   "kill": 487541100.1156788,
-   "costFE": 0,
-   "market": "drop"
-  },
-  {
    "label": "Re-craft T3 +30 Dexterity (prefix) on belt, replacing its lower tier",
    "kind": "craft",
-   "gain": 1.0111111324256028,
-   "kill": 487148082.961258,
-   "costFE": 41.12509090909091,
+   "gain": 1.0111111300889242,
+   "kill": 463012711.0863482,
+   "costFE": 40.22672727272728,
    "buy": {
     "name": "Matchless Ember",
     "qty": 99.81818181818183
    }
   },
   {
-   "label": "Socket Micro Fate: Double Damage Chance on contract point 101",
-   "kind": "kismet",
-   "gain": 1.0090830744178285,
-   "kill": 486170975.1647575,
-   "costFE": null
-  },
-  {
-   "label": "Socket Micro Fate: Double Damage Chance on contract point 301",
-   "kind": "kismet",
-   "gain": 1.0090830744178285,
-   "kill": 486170975.1647575,
-   "costFE": null
-  },
-  {
    "label": "Socket Medium Fate: Aura Effect on contract point 107",
    "kind": "kismet",
-   "gain": 1.0090673999562285,
-   "kill": 486163423.2907102,
+   "gain": 1.0092277147965214,
+   "kill": 462150248.7964115,
    "costFE": null
   },
   {
    "label": "Socket Medium Fate: Aura Effect on contract point 307",
    "kind": "kismet",
-   "gain": 1.0090673999562285,
-   "kill": 486163423.2907102,
+   "gain": 1.0092277147965214,
+   "kill": 462150248.7964115,
+   "costFE": null
+  },
+  {
+   "label": "Socket Micro Fate: Double Damage Chance on contract point 101",
+   "kind": "kismet",
+   "gain": 1.0091700116991973,
+   "kill": 462123825.12572384,
+   "costFE": null
+  },
+  {
+   "label": "Socket Micro Fate: Double Damage Chance on contract point 301",
+   "kind": "kismet",
+   "gain": 1.0091700116991973,
+   "kill": 462123825.12572384,
    "costFE": null
   },
   {
    "label": "Unique Everburn Thunderfire in belt",
    "kind": "unique",
-   "gain": 1.0079757667514648,
-   "kill": 485637480.0922393,
+   "gain": 1.0082420646886563,
+   "kill": 461698895.315034,
    "costFE": null,
    "buy": {
     "name": "Everburn Thunderfire",
@@ -817,59 +817,17 @@
    ]
   },
   {
-   "label": "Socket Medium Fate: Critical Strike Rating on contract point 107",
-   "kind": "kismet",
-   "gain": 1.0079706259956385,
-   "kill": 485635003.30282867,
-   "costFE": 100
-  },
-  {
-   "label": "Socket Medium Fate: Critical Strike Rating on contract point 307",
-   "kind": "kismet",
-   "gain": 1.0079706259956385,
-   "kill": 485635003.30282867,
-   "costFE": 100
-  },
-  {
-   "label": "Socket Medium Fate: Minion Critical Strike Rating on contract point 107",
-   "kind": "kismet",
-   "gain": 1.0079706259956385,
-   "kill": 485635003.30282867,
-   "costFE": null
-  },
-  {
-   "label": "Socket Medium Fate: Minion Critical Strike Rating on contract point 307",
-   "kind": "kismet",
-   "gain": 1.0079706259956385,
-   "kill": 485635003.30282867,
-   "costFE": null
-  },
-  {
    "label": "Socket Micro Fate: Double Damage Chance on contract point 201",
    "kind": "kismet",
-   "gain": 1.007263583240239,
-   "kill": 485294353.78190196,
+   "gain": 1.0073650109839105,
+   "kill": 461297270.8036245,
    "costFE": null
-  },
-  {
-   "label": "Socket Medium Fate: Attack Damage on contract point 107",
-   "kind": "kismet",
-   "gain": 1.0071353016897795,
-   "kill": 485232548.39831793,
-   "costFE": 6.04
-  },
-  {
-   "label": "Socket Medium Fate: Attack Damage on contract point 307",
-   "kind": "kismet",
-   "gain": 1.0071353016897795,
-   "kill": 485232548.39831793,
-   "costFE": 6.04
   },
   {
    "label": "Unique Two-faced Belt in belt",
    "kind": "unique",
-   "gain": 1.0069981110931792,
-   "kill": 485166450.6826555,
+   "gain": 1.007264117429301,
+   "kill": 461251069.15786994,
    "costFE": null,
    "buy": {
     "name": "Two-faced Belt",
@@ -877,78 +835,106 @@
    }
   },
   {
-   "kind": "craft",
-   "label": "Craft on mainHand with Precious Ember (2 per craft): keep any of 2 results - T2 +151% Physical Damage (suffix) in place of your T2 +151% Physical Damage; T2 Adds 44 - 54 Physical Damage to the gear (prefix) in place of your T2 Adds 44 - 54 Physical Damage to the gear - about 597 crafts",
-   "gain": 1.0066752278333728,
-   "kill": 485010887.20798814,
-   "costFE": 133.728,
-   "buy": {
-    "name": "Precious Ember",
-    "qty": 1194
-   }
+   "label": "Socket Medium Fate: Attack Damage on contract point 107",
+   "kind": "kismet",
+   "gain": 1.0070784479911454,
+   "kill": 461166046.5452529,
+   "costFE": 6.04
+  },
+  {
+   "label": "Socket Medium Fate: Attack Damage on contract point 307",
+   "kind": "kismet",
+   "gain": 1.0070784479911454,
+   "kill": 461166046.5452529,
+   "costFE": 6.04
   },
   {
    "label": "Re-craft T6 +10% Critical Strike Damage (suffix) on boots, replacing its lower tier",
    "kind": "craft",
-   "gain": 1.0063053892257658,
-   "kill": 484832700.8910513,
-   "costFE": 3.050298181818182,
+   "gain": 1.0068529815510006,
+   "kill": 461062799.90440017,
+   "costFE": 2.983665454545455,
    "buy": {
     "name": "Matchless Ember",
     "qty": 7.403636363636364
    }
   },
   {
+   "kind": "craft",
+   "label": "Craft on mainHand with Precious Ember (2 per craft): keep any of 2 results - T2 +151% Physical Damage (suffix) in place of your T2 +151% Physical Damage; T2 Adds 44 - 54 Physical Damage to the gear (prefix) in place of your T2 Adds 44 - 54 Physical Damage to the gear - about 597 crafts",
+   "gain": 1.0066223169559865,
+   "kill": 460957172.90029466,
+   "costFE": 131.34,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 1194
+   }
+  },
+  {
+   "label": "Socket Medium Fate: Critical Strike Rating on contract point 107",
+   "kind": "kismet",
+   "gain": 1.0063277429323763,
+   "kill": 460822280.19342136,
+   "costFE": 100
+  },
+  {
+   "label": "Socket Medium Fate: Critical Strike Rating on contract point 307",
+   "kind": "kismet",
+   "gain": 1.0063277429323763,
+   "kill": 460822280.19342136,
+   "costFE": 100
+  },
+  {
+   "label": "Socket Medium Fate: Minion Critical Strike Rating on contract point 107",
+   "kind": "kismet",
+   "gain": 1.0063277429323763,
+   "kill": 460822280.19342136,
+   "costFE": null
+  },
+  {
+   "label": "Socket Medium Fate: Minion Critical Strike Rating on contract point 307",
+   "kind": "kismet",
+   "gain": 1.0063277429323763,
+   "kill": 460822280.19342136,
+   "costFE": null
+  },
+  {
    "label": "Re-craft T4 +29% damage (prefix) on boots, replacing its lower tier",
    "kind": "craft",
-   "gain": 1.0057974406236039,
-   "kill": 484587973.89730084,
-   "costFE": 5.870883720930232,
+   "gain": 1.0057512243315188,
+   "kill": 460558278.1144894,
+   "costFE": 5.7660465116279065,
    "buy": {
     "name": "Precious Ember",
     "qty": 52.41860465116279
    }
   },
   {
-   "label": "Socket Micro Fate: Critical Strike Rating on contract point 101",
+   "label": "Socket Medium Fate: Aura Effect on contract point 207",
    "kind": "kismet",
-   "gain": 1.004324619105647,
-   "kill": 483878376.1527923,
-   "costFE": 12.547
-  },
-  {
-   "label": "Socket Micro Fate: Critical Strike Rating on contract point 301",
-   "kind": "kismet",
-   "gain": 1.004324619105647,
-   "kill": 483878376.1527923,
-   "costFE": 12.547
+   "gain": 1.0037546618768922,
+   "kill": 459644002.94981134,
+   "costFE": null
   },
   {
    "label": "Socket Micro Fate: Attack Damage on contract point 101",
    "kind": "kismet",
-   "gain": 1.0035676369804805,
-   "kill": 483513666.1033379,
+   "gain": 1.0035392269072598,
+   "kill": 459545349.96658933,
    "costFE": 3
   },
   {
    "label": "Socket Micro Fate: Attack Damage on contract point 301",
    "kind": "kismet",
-   "gain": 1.0035676369804805,
-   "kill": 483513666.1033379,
+   "gain": 1.0035392269072598,
+   "kill": 459545349.96658933,
    "costFE": 3
-  },
-  {
-   "label": "Socket Medium Fate: Aura Effect on contract point 207",
-   "kind": "kismet",
-   "gain": 1.0035503063099784,
-   "kill": 483505316.27645856,
-   "costFE": null
   },
   {
    "label": "Unique Silver Frost in ring2",
    "kind": "unique",
-   "gain": 1.0035000347089835,
-   "kill": 483481095.6806539,
+   "gain": 1.0035000195578105,
+   "kill": 459527395.954787,
    "costFE": null,
    "buy": {
     "name": "Silver Frost",
@@ -956,70 +942,84 @@
    }
   },
   {
-   "label": "Socket Micro Fate: Critical Strike Rating on contract point 201",
+   "label": "Socket Micro Fate: Critical Strike Rating on contract point 101",
    "kind": "kismet",
-   "gain": 1.002513707858585,
-   "kill": 483005888.5358249,
+   "gain": 1.003483278153948,
+   "kill": 459519729.6532707,
    "costFE": 12.547
   },
   {
-   "label": "Socket Medium Fate: Critical Strike Rating on contract point 207",
+   "label": "Socket Micro Fate: Critical Strike Rating on contract point 301",
    "kind": "kismet",
-   "gain": 1.0024585635345595,
-   "kill": 482979320.28741604,
-   "costFE": 100
-  },
-  {
-   "label": "Socket Medium Fate: Minion Critical Strike Rating on contract point 207",
-   "kind": "kismet",
-   "gain": 1.0024585635345595,
-   "kill": 482979320.28741604,
-   "costFE": null
+   "gain": 1.003483278153948,
+   "kill": 459519729.6532707,
+   "costFE": 12.547
   },
   {
    "label": "Socket Micro Fate: Aura Effect on contract point 101",
    "kind": "kismet",
-   "gain": 1.0020707567450438,
-   "kill": 482792476.9939209,
+   "gain": 1.002150727349477,
+   "kill": 458909521.79156494,
    "costFE": null
   },
   {
    "label": "Socket Micro Fate: Aura Effect on contract point 301",
    "kind": "kismet",
-   "gain": 1.0020707567450438,
-   "kill": 482792476.9939209,
+   "gain": 1.002150727349477,
+   "kill": 458909521.79156494,
    "costFE": null
   },
   {
    "label": "Socket Micro Fate: Attack Damage on contract point 201",
    "kind": "kismet",
-   "gain": 1.00178382034428,
-   "kill": 482654232.5289148,
+   "gain": 1.0017696105419427,
+   "kill": 458734999.01059085,
    "costFE": 3
   },
   {
    "label": "Socket Medium Fate: Attack Damage on contract point 207",
    "kind": "kismet",
-   "gain": 1.00178382034428,
-   "kill": 482654232.5289148,
+   "gain": 1.0017696105419427,
+   "kill": 458734999.01059085,
    "costFE": 6.04
+  },
+  {
+   "label": "Socket Micro Fate: Critical Strike Rating on contract point 201",
+   "kind": "kismet",
+   "gain": 1.0016884489158613,
+   "kill": 458697833.1013155,
+   "costFE": 12.547
+  },
+  {
+   "label": "Socket Medium Fate: Critical Strike Rating on contract point 207",
+   "kind": "kismet",
+   "gain": 1.0008694335531971,
+   "kill": 458322785.7774322,
+   "costFE": 100
+  },
+  {
+   "label": "Socket Medium Fate: Minion Critical Strike Rating on contract point 207",
+   "kind": "kismet",
+   "gain": 1.0008694335531971,
+   "kill": 458322785.7774322,
+   "costFE": null
   },
   {
    "label": "Socket Micro Fate: Aura Effect on contract point 201",
    "kind": "kismet",
-   "gain": 1.0002641009205349,
-   "kill": 481922039.61739933,
+   "gain": 1.0003583986154077,
+   "kill": 458088770.2820386,
    "costFE": null
   }
  ],
  "prices": {
   "Wriggling Tango": null,
   "Endless Night - Prototype": null,
-  "Dawn Break": 969.904,
   "Stray Bird's Return": null,
-  "Blind Vision": 170.8,
-  "Witchdoctor's Herb Bag": null,
+  "Dawn Break": 950.134,
+  "Blind Vision": 171.69,
   "Israfel's Laws": null,
+  "Witchdoctor's Herb Bag": null,
   "Death's Touch": null,
   "Fool's Crown": null,
   "Lightning Striker's Sacrum": 500,
@@ -1027,215 +1027,215 @@
   "Critical Strike Damage Increase": null,
   "Hekate's Vision": 50,
   "Howling Ring": null,
-  "Howling Wind": 92,
+  "Howling Wind": 90,
+  "Tyrant's Smoldering Hold": 37,
   "Ice Shot: Ice Blast (Magnificent)": 70.88,
   "Ice Shot: Batter (Noble)": 37.32,
-  "Tyrant's Smoldering Hold": 38.349,
   "Increased Area": null,
   "Everlasting Cloud": null,
-  "Heavyware": 15,
-  "Hunting the Eye of the Kraken": 10,
+  "Heavyware": 14,
+  "Hunting the Eye of the Kraken": 9.76,
   "Mark": null,
   "Howling": null,
+  "Tide of the Styx": null,
   "Tendonslicer": null,
   "Trickster's Tread": null,
-  "Matchless Ember": 0.412,
+  "Matchless Ember": 0.403,
   "Glacial Freeze": null,
-  "Blight": null,
+  "Blight": 888,
   "Hanging Two-Tone Mask": 300,
-  "Tide of the Styx": null,
   "Endless Night": null,
   "Projectile Penetration": null,
   "Everburn Thunderfire": null,
   "Two-faced Belt": null,
-  "Precious Ember": 0.112,
+  "Precious Ember": 0.11,
   "Silver Frost": null
  },
  "slates": [
   {
    "id": 12001400,
    "name": "Well Matched",
-   "gain": 1.399999994486948,
+   "gain": 1.4000000181342511,
    "core": true
   },
   {
    "id": 24001300,
    "name": "Queer Angle",
-   "gain": 1.3002594744106712,
+   "gain": 1.30024602568926,
    "core": true
   },
   {
    "id": 14001400,
    "name": "Survival Will",
-   "gain": 1.3000000491075219,
+   "gain": 1.3000000166158392,
    "core": true
   },
   {
    "id": 34001300,
    "name": "Mind Blade",
-   "gain": 1.2660755613733343,
+   "gain": 1.2660493588821349,
    "core": true
   },
   {
    "id": 40001200,
    "name": "Blunt",
-   "gain": 1.2660755613733343,
+   "gain": 1.2660493588821349,
    "core": true
   },
   {
    "id": 34001400,
    "name": "Frozen Lotus",
-   "gain": 1.2500000328887624,
+   "gain": 1.2499999961005064,
    "core": true
   },
   {
    "id": 40002300,
    "name": "Shooting Arrows",
-   "gain": 1.2500000328887624,
+   "gain": 1.2499999961005064,
    "core": true
   },
   {
    "id": 42001100,
    "name": "Falling Leaves",
-   "gain": 1.232378913890673,
+   "gain": 1.232395387969724,
    "core": true
   },
   {
    "id": 10002100,
    "name": "Great Strength",
-   "gain": 1.1700000441967695,
+   "gain": 1.1700000149542553,
    "core": true
   },
   {
    "id": 43070400,
    "name": "Ranger: additional damage taken by enemies in Proximity",
-   "gain": 1.1500000005057625,
+   "gain": 1.1500000024845451,
    "core": false
   },
   {
    "id": 34001100,
    "name": "Frostbitten",
-   "gain": 1.1431348302212472,
+   "gain": 1.1431348359765934,
    "core": true
   },
   {
    "id": 54070100,
    "name": "Lich: All Skills' Levels",
-   "gain": 1.1393337056637842,
+   "gain": 1.1393325960826852,
    "core": false
   },
   {
    "id": 42001200,
    "name": "Tradeoff",
-   "gain": 1.125,
+   "gain": 1.1249999999999998,
    "core": true
   },
   {
    "id": 53001300,
    "name": "Dirty Tricks",
-   "gain": 1.1199999919032866,
+   "gain": 1.120000015297646,
    "core": true
   },
   {
    "id": 41070200,
    "name": "Shadowdancer: Armor DMG Mitigation Penetration",
-   "gain": 1.1142830206165344,
+   "gain": 1.1142830263082326,
    "core": false
   },
   {
    "id": 24070500,
    "name": "Assassin: additional Max Damage",
-   "gain": 1.114046723241233,
+   "gain": 1.1140442979131877,
    "core": false
   },
   {
    "id": 33070500,
    "name": "Elementalist: Cold Skill Level",
-   "gain": 1.1011234857480705,
+   "gain": 1.101124347811429,
    "core": false
   },
   {
    "id": 10070100,
    "name": "God of Might: Attack Skill Level",
-   "gain": 1.1000000083622612,
+   "gain": 1.1000000035974884,
    "core": false
   },
   {
    "id": 20002200,
    "name": "Three Birds with One Stone",
-   "gain": 1.1000000083622612,
+   "gain": 1.1000000035974884,
    "core": true
   },
   {
    "id": 51001100,
    "name": "Dirt",
-   "gain": 1.1000000046541816,
+   "gain": 1.1000000035974884,
    "core": true
-  },
-  {
-   "id": 53050200,
-   "name": "Warlock: additional damage against Cursed enemies",
-   "gain": 1.0800000155782963,
-   "core": false
   },
   {
    "id": 50070500,
    "name": "Goddess of Deception: additional damage applied to Life",
-   "gain": 1.0799999989191973,
+   "gain": 1.0800000016719302,
    "core": false
   },
   {
    "id": 62070200,
    "name": "Steel Vanguard: additional damage applied to Life",
-   "gain": 1.0799999989191973,
+   "gain": 1.0800000016719302,
+   "core": false
+  },
+  {
+   "id": 53050200,
+   "name": "Warlock: additional damage against Cursed enemies",
+   "gain": 1.0799999997997813,
    "core": false
   },
   {
    "id": 34070200,
    "name": "Prophet: Frostbite Effect",
-   "gain": 1.0715674169646634,
+   "gain": 1.0715674169487581,
    "core": false
   },
   {
    "id": 24050500,
    "name": "Assassin: Dexterity",
-   "gain": 1.0715151694772955,
+   "gain": 1.0715151355751604,
    "core": false
   },
   {
    "id": 40070500,
    "name": "God of War: additional Physical Damage while having Fervor",
-   "gain": 1.0709534890912367,
+   "gain": 1.0709465394025133,
    "core": false
   },
   {
    "id": 54001300,
    "name": "Off The Beaten Track",
-   "gain": 1.0682881416512848,
+   "gain": 1.068288119102192,
    "core": true
   },
   {
    "id": 33001300,
    "name": "Focus",
-   "gain": 1.0600000302104906,
+   "gain": 1.0600000253258735,
    "core": true
   },
   {
    "id": 12070100,
    "name": "Onslaughter: additional Base Damage for Two-Handed Weapons",
-   "gain": 1.0598646702334595,
+   "gain": 1.0598587911242536,
    "core": false
   },
   {
    "id": 21050200,
    "name": "Marksman: Projectile Damage against enemies in proximity",
-   "gain": 1.053514435776062,
+   "gain": 1.0530882544969733,
    "core": false
   }
  ],
  "switch": {
-  "label": "Switch to Hammer of Ash with Sierra Reverberation Maul (level 86; or Earthrending Axe, Sky Severing Sword, Last Man's Cudgel: the same figure, a plain base) and Slow Projectile, Critical Strike Damage Increase, Hammer of Ash: Upheaval (Magnificent), Passivation, Steamroll, on the target build's talent page (103 points; Onslaughter, Goddess of Deception, Shadowmaster, Lich; cores Well Matched, Dirt, Off The Beaten Track, Mixture, Forbidden Power); with the target build's skills (Blink, Flame Core, Fixate, Timid, Precise: Weapon Amplification, Precise: Erosion Amplification, Precise: Cruelty, Precise: Domain Expansion; not on etor, not priced: Flame Core, Grudge; not on etor, not priced: Fixate; not on etor, not priced: Increased Area; not on etor, not priced: Increased Area; not on etor, not priced: Increased Area)",
-  "costFE": 535.981,
+  "label": "Switch to Hammer of Ash with Sierra Reverberation Maul (level 86; or Earthrending Axe, Sky Severing Sword, Last Man's Cudgel: the same figure, a plain base) and Slow Projectile, Critical Strike Damage Increase, Hammer of Ash: Upheaval (Magnificent), Passivation, Steamroll, on the target build's talent page (103 points; Onslaughter, Goddess of Deception, Shadowmaster, Lich; cores Well Matched, Dirt, Off The Beaten Track, Mixture, Forbidden Power); with the target build's skills (Blink, Flame Core, Fixate, Timid, Precise: Weapon Amplification, Precise: Erosion Amplification, Precise: Cruelty, Precise: Domain Expansion; not on etor, not priced: Flame Core, Grudge; not on etor, not priced: Fixate)",
+  "costFE": 537.481,
   "target": "cube1",
   "figure": {
    "life100": 19122083.043764867,
@@ -1274,7 +1274,7 @@
    {
     "tree": 20,
     "name": "Goddess of Hunting",
-    "points": 24,
+    "points": 25,
     "nodes": [
      {
       "id": 20010300,
@@ -1412,7 +1412,7 @@
       "col": 1,
       "kind": 1,
       "max": 3,
-      "pts": 0,
+      "pts": 1,
       "name": "Attack and Cast Speed",
       "prereq": []
      },
@@ -1976,7 +1976,7 @@
    {
     "tree": 34,
     "name": "Prophet",
-    "points": 32,
+    "points": 33,
     "nodes": [
      {
       "id": 34010100,
@@ -2070,7 +2070,7 @@
       "col": 1,
       "kind": 1,
       "max": 3,
-      "pts": 1,
+      "pts": 2,
       "name": "Critical Strike Rating",
       "prereq": []
      },
@@ -2353,7 +2353,7 @@
    {
     "tree": 43,
     "name": "Ranger",
-    "points": 24,
+    "points": 22,
     "nodes": [
      {
       "id": 43010100,
@@ -2459,7 +2459,7 @@
       "col": 2,
       "kind": 3,
       "max": 3,
-      "pts": 3,
+      "pts": 1,
       "name": "Critical Strike Damage",
       "prereq": [
        43020200
@@ -2501,7 +2501,7 @@
       "col": 1,
       "kind": 3,
       "max": 3,
-      "pts": 3,
+      "pts": 2,
       "name": "Attack and Cast Speed",
       "prereq": [
        43030100
@@ -2549,7 +2549,7 @@
       "col": 5,
       "kind": 3,
       "max": 3,
-      "pts": 2,
+      "pts": 3,
       "name": "Projectile Damage",
       "prereq": [
        43030500
@@ -2772,6 +2772,7 @@
    "34060100": 3,
    "34060200": 3,
    "34060400": 3,
+   "34070100": 1,
    "34070200": 1,
    "43010100": 3,
    "43020100": 3,
@@ -2779,7 +2780,7 @@
    "43030100": 3,
    "43030400": 1,
    "43030500": 3,
-   "43040100": 3,
+   "43040100": 2,
    "43040500": 3
   }
  },
@@ -2876,6 +2877,7 @@
   "partial": [
    "support: Restrain (on passive 0, socket 1)",
    "support: Seal Conversion (on passive 0, socket 2)",
+   "support: Deepened Curse (on active 4, socket 2)",
    "a row's condition cannot be evaluated, its buff adds are unknown: affix class 651295 row 1 (support 7514 (skill 10003110) on gem 7160): not ported: condition 184 with bUseBuffCfgId true, by-tag true, only-by-self false (support 7514 (skill 10003110) on gem 7160)",
    "not calculable without a capture: the Ice Lances that reach the target (1) and the returning passes that hit it (1) per cast (stated by the caller)",
    "not calculable without a capture: Flame Core posts of event 1000074 per throw (1, stated by the caller; 1 or 2 unverified)",
@@ -2945,14 +2947,14 @@
     },
     {
      "kind": "talent",
-     "label": "+1 point: Ranger: Critical Strike Damage",
+     "label": "+1 point: Goddess of Hunting: Attack and Cast Speed",
      "acquisition": false,
      "costFE": 0,
      "minLevel": 1,
      "changes": [
       {
        "kind": "talent",
-       "node": 43030200,
+       "node": 20050100,
        "points": 1
       }
      ]
@@ -2967,26 +2969,26 @@
       {
        "kind": "talent",
        "node": 43030200,
-       "points": 2
+       "points": 1
       }
      ]
     },
     {
      "kind": "talent",
-     "label": "Move a point: Ranger: Projectile Damage -> Ranger: Critical Strike Damage",
+     "label": "Move a point: Prophet: additional damage against Frozen enemies -> Prophet: Critical Strike Rating",
      "acquisition": false,
      "costFE": 0,
      "minLevel": 1,
      "changes": [
       {
        "kind": "talent",
-       "node": 43040500,
-       "points": 2
+       "node": 34070100,
+       "points": 0
       },
       {
        "kind": "talent",
-       "node": 43030200,
-       "points": 3
+       "node": 34030100,
+       "points": 1
       }
      ]
     },
@@ -3005,7 +3007,7 @@
       {
        "kind": "talent",
        "node": 34030100,
-       "points": 1
+       "points": 2
       }
      ]
     }
@@ -3017,6 +3019,7 @@
     "partial": [
      "support: Restrain (on passive 0, socket 1)",
      "support: Seal Conversion (on passive 0, socket 2)",
+     "support: Deepened Curse (on active 4, socket 2)",
      "a row's condition cannot be evaluated, its buff adds are unknown: affix class 651295 row 1 (support 7514 (skill 10003110) on gem 7160): not ported: condition 184 with bUseBuffCfgId true, by-tag true, only-by-self false (support 7514 (skill 10003110) on gem 7160)",
      "not calculable without a capture: the Ice Lances that reach the target (1) and the returning passes that hit it (1) per cast (stated by the caller)",
      "not calculable without a capture: Flame Core posts of event 1000074 per throw (1, stated by the caller; 1 or 2 unverified)",
@@ -3053,12 +3056,13 @@
     "lock": 15000000000000
    },
    "after": {
-    "life100": 481794797.1679584,
-    "life0": 481794797.1679584,
-    "kill": 481794797.1679584,
+    "life100": 457924650.721259,
+    "life0": 457924650.721259,
+    "kill": 457924650.72125906,
     "partial": [
      "support: Restrain (on passive 0, socket 1)",
      "support: Seal Conversion (on passive 0, socket 2)",
+     "support: Deepened Curse (on active 4, socket 2)",
      "a row's condition cannot be evaluated, its buff adds are unknown: affix class 651295 row 1 (support 7514 (skill 10003110) on gem 7160): not ported: condition 184 with bUseBuffCfgId true, by-tag true, only-by-self false (support 7514 (skill 10003110) on gem 7160)",
      "not calculable without a capture: the Ice Lances that reach the target (1) and the returning passes that hit it (1) per cast (stated by the caller)",
      "not calculable without a capture: Flame Core posts of event 1000074 per throw (1, stated by the caller; 1 or 2 unverified)",
