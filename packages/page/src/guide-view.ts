@@ -15,6 +15,7 @@ export interface GuideOut {
   /** Hammer of Ash routes side by side (each forces its first legendary, then the best damage per FE) */ hoaRoutes?: HoaRoutes;
 }
 export interface HoaRoutes { target: string; at: string; worn?: string[]; start: { label: string; costFE: number; figure: HFig };
+  /** the build both routes wear (skills, talent page, memories, pactspirits; the gear of the first route's end) */ build?: { section: string; lines: string[]; trees?: TreeView[] }[];
   routes: { name: string; steps: { label: string; slot: string; costFE: number; totalFE: number; figure: HFig }[] }[] }
 type HFig = { kill: number; life100: number; lifeMax?: number };
 export interface HoaPath { target: string; goal: number; at: string; start: { label: string; figure: HFig }; skillsFE: number | null;
@@ -325,7 +326,7 @@ function slateCard(g: GuideOut): string {
   if (!g.slates?.length) return '';
   const row = (x: NonNullable<GuideOut['slates']>[number]) => `<tr><td>${esc(x.name)}</td><td>+${((x.gain - 1) * 100).toFixed(1)} %</td></tr>`;
   return `<div class="gl-final"><b>Slate talents to look for</b><p class="bnote">Each line priced as one more talent on a slate, on your character as it is (a core you already hold adds nothing). Which slate can roll a line is not known here.</p>`
-    + [['Core talents', true], ['Other talents', false]].map(([h, core]) => ((xs) => xs.length ? `<table><tr><th>${h}</th><th>Damage</th></tr>${xs.map(row).join('')}</table>` : '')(g.slates!.filter((x) => x.core === core))).join('') + '</div>';
+    + [[g.hoaRoutes ? 'Core talents: a Pedigree of Gods with this core' : 'Core talents', true], [g.hoaRoutes ? 'Slate lines to snipe' : 'Other talents', false]].map(([h, core]) => ((xs) => xs.length ? `<table><tr><th>${h}</th><th>Damage</th></tr>${xs.map(row).join('')}</table>` : '')(g.slates!.filter((x) => x.core === core))).join('') + '</div>';
 }
 /** the cheapest Hammer of Ash path to a boss kill, step by step with the kill time after each */
 function hoaPathCard(g: GuideOut): string {
@@ -351,7 +352,8 @@ function routesCard(g: GuideOut): string {
   return `<div class="gl-final"><b>Hammer of Ash: your plan to kill ${boss}</b><p class="bnote">Step 0, both routes: ${esc(r.start.label)}. That alone: ${boss} in ${t(r.start.figure)}; its skill gems you do not hold cost about ${fmtFE(r.start.costFE)} FE. `
     + `Then each route buys its first legendary and after that whatever adds the most damage per FE${r.worn?.length ? ` (never one you already wear: ${esc(r.worn.join(', '))})` : ''}. `
     + `Live etor prices; Formation Breaker at the 900 FE you found. Model numbers with the season patch notes, not yet checked against your game (${esc(r.at.slice(0, 16).replace('T', ' '))} UTC).</p>`
-    + `<div class="gl-routes">${r.routes.map(col).join('')}</div></div>`;
+    + `<div class="gl-routes${r.routes.length === 1 ? ' one' : ''}">${r.routes.map(col).join('')}</div>`
+    + (r.build?.length ? `<details class="gl-build" open><summary>The build: skills, talent trees and gear (the gear at the end of ${esc(r.routes[0]?.name ?? 'the first route')})</summary>${r.build.map(sectionView).join('')}</details>` : '') + '</div>';
 }
 function finalCard(g: GuideOut): string {
   if (!g.final?.length) return '';
@@ -360,7 +362,7 @@ function finalCard(g: GuideOut): string {
     + '</table></div>';
 }
 export function renderGuide(g: GuideOut, mine: Record<string, number> = {}): string {
-  if (g.hoaRoutes) return `<div class="gl-plan">${routesCard(g)}</div>`;   // the Hammer of Ash plan alone (user, 2026-10-16: no Ice Shot)
+  if (g.hoaRoutes) return `<div class="gl-plan">${routesCard(g)}${slateCard(g)}</div>`;   // the Hammer of Ash plan alone (user, 2026-10-16: no Ice Shot)
   const plan = g.legs?.length ? legTabs(g) : chart(g.start, entries(g.steps)) + stages(entries(g.steps), g.mode);
   return `<div class="gl-plan">${goalCard(g)}${hoaPathCard(g)}${g.character ? renderCharacter(g.character) : ''}${g.character?.skill === 'hoa' && g.switch ? switchCard(g) + respecCard(g) : respecCard(g) + switchCard(g)}${g.next?.length ? renderNext(g.next, g.prices ?? {}, mine, g.character?.fe ?? Infinity) : ''}${slateCard(g)}${finalCard(g)}${plan}${huntingList(g)}${details(g)}</div>`;
 }

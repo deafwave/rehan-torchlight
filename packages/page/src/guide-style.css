@@ -818,3 +818,4 @@ a.t-branch:hover,a.t-branch:focus-visible{text-decoration:underline}
 .gl-route td,.gl-route th{padding:4px 6px;border-bottom:1px solid var(--ice-line);text-align:left;vertical-align:top}
 .gl-route tr.start td{opacity:.75}
 @media (max-width:900px){.gl-routes{grid-template-columns:1fr}}
+.gl-routes.one{grid-template-columns:1fr}
