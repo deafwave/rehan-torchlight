@@ -4357,6 +4357,227 @@
    "move": {
     "acquisition": true,
     "enabler": true,
+    "minLevel": 0,
+    "kind": "memory",
+    "label": "Target hero memories (4)",
+    "costFE": 0,
+    "market": "drop",
+    "costNote": "farmed: hero memories drop (their making is not priced)",
+    "changes": [
+     {
+      "kind": "patch",
+      "op": "memories",
+      "items": [
+       {
+        "label": "Memory of Origin",
+        "affixes": [
+         {
+          "id": 402152101,
+          "dyn": [
+           80
+          ],
+          "text": "+80% Critical Strike Rating"
+         },
+         {
+          "id": 402151901,
+          "dyn": [
+           41
+          ],
+          "text": "+41% Critical Strike Damage"
+         },
+         {
+          "id": 403101411,
+          "dyn": [
+           90
+          ],
+          "text": "+90 Strength"
+         },
+         {
+          "id": 402165301,
+          "dyn": [
+           49
+          ],
+          "text": "+49% Fire Skill Critical Strike Damage"
+         },
+         {
+          "id": 402165001,
+          "dyn": [
+           37
+          ],
+          "text": "+37% attack Critical Strike Damage"
+         }
+        ],
+        "awakenBaseAttrBoost": 0,
+        "defaultSlotAffixBoost": 0
+       },
+       {
+        "label": "Memory of Discipline",
+        "affixes": [
+         {
+          "id": 402153101,
+          "dyn": [],
+          "text": "+2 to Hero Trait Level"
+         },
+         {
+          "id": 402154002,
+          "dyn": [
+           60
+          ],
+          "text": "+60% Critical Strike Rating"
+         },
+         {
+          "id": 403109411,
+          "dyn": [
+           4320
+          ],
+          "text": "+4320 Evasion"
+         },
+         {
+          "id": 402167601,
+          "dyn": [
+           44
+          ],
+          "text": "+44% attack Critical Strike Damage"
+         },
+         {
+          "id": 402168401,
+          "dyn": [
+           80
+          ],
+          "text": "+80% Attack Critical Strike Rating"
+         }
+        ],
+        "awakenBaseAttrBoost": 0,
+        "defaultSlotAffixBoost": 0
+       },
+       {
+        "label": "Memory of Progress",
+        "affixes": [
+         {
+          "id": 402155001,
+          "dyn": [],
+          "text": "+2 to Hero Trait Level"
+         },
+         {
+          "id": 402155803,
+          "dyn": [
+           16
+          ],
+          "text": "+16% Projectile Speed"
+         },
+         {
+          "id": 403111411,
+          "dyn": [
+           36
+          ],
+          "text": "+36% Attack Speed"
+         },
+         {
+          "id": 402170201,
+          "dyn": [
+           39
+          ],
+          "text": "+39% attack Critical Strike Damage"
+         },
+         {
+          "id": 402170501,
+          "dyn": [
+           49
+          ],
+          "text": "+49% Fire Skill Critical Strike Damage"
+         }
+        ],
+        "awakenBaseAttrBoost": 0,
+        "defaultSlotAffixBoost": 0
+       },
+       {
+        "label": "awaken",
+        "affixes": [
+         {
+          "id": 500101500,
+          "text": "awaken",
+          "dyn": [
+           20,
+           40
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "triggered": [],
+   "before": {
+    "life100": 3909232464.234397,
+    "life0": 2753087586.512157,
+    "kill": 3297448600.554782,
+    "partial": [
+     "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
+     "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
+     "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
+     "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
+     "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
+     "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
+     "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
+     "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
+     "not in this figure: node 343 (queues an inflict request on each task-filter target's comp 0xf: FUN_141bacd50(comp 0xf, kind +0x78, id +0x7c, probability +0x80 (f64), count +0x88, tag lists +0x90 / +0xa0) - no attribute / char-field record (T3d: data vt 0x14524cb20, build FUN_141ad1060, execute FUN_141aad500 once per target, abort FUN_141ab5450; t3d_a.ann.c). The EffectNote carries the task: its ch",
+     "not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 2446 row 1 (pactspirit 8530 point 110) - fires on event 0xf4285",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 2)) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 72818 row 1 (gem 7006 (skill 1110)) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7031 modifier 771009001) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7130 modifier 771009001) - ticked at the grant",
+     "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a"
+    ],
+    "lock": 15000000000000,
+    "cullNote": "HP lock (label 3001400, fields 2007110 / 2007100): Life is held at 715826101765.4501 = 0.05 of max Life while the label holds; every kill hit is clamped to it",
+    "target": "keegan2",
+    "lifeMax": 14316522035309
+   },
+   "after": {
+    "life100": 4703326890.929946,
+    "life0": 3312330738.8953104,
+    "kill": 3967269484.2166557,
+    "partial": [
+     "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
+     "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
+     "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
+     "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
+     "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
+     "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
+     "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
+     "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
+     "not in this figure: node 343 (queues an inflict request on each task-filter target's comp 0xf: FUN_141bacd50(comp 0xf, kind +0x78, id +0x7c, probability +0x80 (f64), count +0x88, tag lists +0x90 / +0xa0) - no attribute / char-field record (T3d: data vt 0x14524cb20, build FUN_141ad1060, execute FUN_141aad500 once per target, abort FUN_141ab5450; t3d_a.ann.c). The EffectNote carries the task: its ch",
+     "not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 2446 row 1 (pactspirit 8530 point 110) - fires on event 0xf4285",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 2)) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 72818 row 1 (gem 7006 (skill 1110)) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7031 modifier 771009001) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7130 modifier 771009001) - ticked at the grant",
+     "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a"
+    ],
+    "lock": 15000000000000,
+    "cullNote": "HP lock (label 3001400, fields 2007110 / 2007100): Life is held at 715826101765.4501 = 0.05 of max Life while the label holds; every kill hit is clamped to it",
+    "target": "keegan2",
+    "lifeMax": 14316522035309
+   },
+   "cumFE": 1661.2174,
+   "notes": [
+    "talent points assumed"
+   ]
+  },
+  {
+   "level": 85,
+   "move": {
+    "acquisition": true,
+    "enabler": true,
     "minLevel": 76,
     "kind": "gear",
     "label": "Target: Old King's Sabatons in boots",
@@ -4412,9 +4633,9 @@
    },
    "triggered": [],
    "before": {
-    "life100": 3909232464.234397,
-    "life0": 2753087586.512157,
-    "kill": 3297448600.554782,
+    "life100": 4703326890.929946,
+    "life0": 3312330738.8953104,
+    "kill": 3967269484.2166557,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
@@ -4442,9 +4663,9 @@
     "lifeMax": 14316522035309
    },
    "after": {
-    "life100": 5206513765.010562,
-    "life0": 3666701490.111651,
-    "kill": 4391709046.205175,
+    "life100": 6172578229.100134,
+    "life0": 4347055000.265828,
+    "kill": 5206587136.315129,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
@@ -4472,123 +4693,6 @@
     "lifeMax": 14316522035309
    },
    "cumFE": 1665.3689,
-   "notes": [
-    "talent points assumed"
-   ]
-  },
-  {
-   "level": 85,
-   "move": {
-    "acquisition": true,
-    "enabler": true,
-    "minLevel": 24,
-    "kind": "gear",
-    "label": "Target: Agony Darkness Ring in ring1",
-    "costFE": 6.4875,
-    "changes": [
-     {
-      "kind": "gear",
-      "slot": "ring1",
-      "item": {
-       "baseId": 4639,
-       "baseName": "Agony Darkness Ring",
-       "itemId": "guide-target-4639",
-       "level": 24,
-       "modifiers": {
-        "fixed": [
-         {
-          "id": 710001,
-          "dynArgs": [
-           4
-          ]
-         },
-         {
-          "id": 51512811,
-          "dynArgs": [
-           66
-          ]
-         },
-         {
-          "id": 51512821,
-          "dynArgs": [
-           7
-          ]
-         },
-         {
-          "id": 51512840,
-          "dynArgs": [
-           63,
-           8
-          ]
-         }
-        ]
-       }
-      }
-     }
-    ]
-   },
-   "triggered": [],
-   "before": {
-    "life100": 5206513765.010562,
-    "life0": 3666701490.111651,
-    "kill": 4391709046.205175,
-    "partial": [
-     "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
-     "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
-     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
-     "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
-     "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
-     "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
-     "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
-     "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
-     "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
-     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
-     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
-     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
-     "not in this figure: node 343 (queues an inflict request on each task-filter target's comp 0xf: FUN_141bacd50(comp 0xf, kind +0x78, id +0x7c, probability +0x80 (f64), count +0x88, tag lists +0x90 / +0xa0) - no attribute / char-field record (T3d: data vt 0x14524cb20, build FUN_141ad1060, execute FUN_141aad500 once per target, abort FUN_141ab5450; t3d_a.ann.c). The EffectNote carries the task: its ch",
-     "not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 2446 row 1 (pactspirit 8530 point 110) - fires on event 0xf4285",
-     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 2)) - ticked at the grant",
-     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 72818 row 1 (gem 7006 (skill 1110)) - ticked at the grant",
-     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7031 modifier 771009001) - ticked at the grant",
-     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7130 modifier 771009001) - ticked at the grant",
-     "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a"
-    ],
-    "lock": 15000000000000,
-    "cullNote": "HP lock (label 3001400, fields 2007110 / 2007100): Life is held at 715826101765.4501 = 0.05 of max Life while the label holds; every kill hit is clamped to it",
-    "target": "keegan2",
-    "lifeMax": 14316522035309
-   },
-   "after": {
-    "life100": 5428194920.598647,
-    "life0": 3822821050.1841416,
-    "kill": 4578697727.837026,
-    "partial": [
-     "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
-     "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
-     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
-     "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
-     "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
-     "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
-     "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
-     "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
-     "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
-     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
-     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
-     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
-     "not in this figure: node 343 (queues an inflict request on each task-filter target's comp 0xf: FUN_141bacd50(comp 0xf, kind +0x78, id +0x7c, probability +0x80 (f64), count +0x88, tag lists +0x90 / +0xa0) - no attribute / char-field record (T3d: data vt 0x14524cb20, build FUN_141ad1060, execute FUN_141aad500 once per target, abort FUN_141ab5450; t3d_a.ann.c). The EffectNote carries the task: its ch",
-     "not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 2446 row 1 (pactspirit 8530 point 110) - fires on event 0xf4285",
-     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 2)) - ticked at the grant",
-     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 72818 row 1 (gem 7006 (skill 1110)) - ticked at the grant",
-     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7031 modifier 771009001) - ticked at the grant",
-     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7130 modifier 771009001) - ticked at the grant",
-     "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a"
-    ],
-    "lock": 15000000000000,
-    "cullNote": "HP lock (label 3001400, fields 2007110 / 2007100): Life is held at 715826101765.4501 = 0.05 of max Life while the label holds; every kill hit is clamped to it",
-    "target": "keegan2",
-    "lifeMax": 14316522035309
-   },
-   "cumFE": 1671.8564,
    "notes": [
     "talent points assumed"
    ]
@@ -4660,9 +4764,9 @@
    },
    "triggered": [],
    "before": {
-    "life100": 5428194920.598647,
-    "life0": 3822821050.1841416,
-    "kill": 4578697727.837026,
+    "life100": 6172578229.100134,
+    "life0": 4347055000.265828,
+    "kill": 5206587136.315129,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
@@ -4690,9 +4794,9 @@
     "lifeMax": 14316522035309
    },
    "after": {
-    "life100": 11493962671.157242,
-    "life0": 8094654505.172161,
-    "kill": 9695189938.305737,
+    "life100": 13068020750.309412,
+    "life0": 9203189161.159805,
+    "kill": 11022912350.61896,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
@@ -4719,7 +4823,124 @@
     "target": "keegan2",
     "lifeMax": 14316522035309
    },
-   "cumFE": 2130.7938999999997,
+   "cumFE": 2124.3064,
+   "notes": [
+    "talent points assumed"
+   ]
+  },
+  {
+   "level": 85,
+   "move": {
+    "acquisition": true,
+    "enabler": true,
+    "minLevel": 24,
+    "kind": "gear",
+    "label": "Target: Agony Darkness Ring in ring1",
+    "costFE": 6.4875,
+    "changes": [
+     {
+      "kind": "gear",
+      "slot": "ring1",
+      "item": {
+       "baseId": 4639,
+       "baseName": "Agony Darkness Ring",
+       "itemId": "guide-target-4639",
+       "level": 24,
+       "modifiers": {
+        "fixed": [
+         {
+          "id": 710001,
+          "dynArgs": [
+           4
+          ]
+         },
+         {
+          "id": 51512811,
+          "dynArgs": [
+           66
+          ]
+         },
+         {
+          "id": 51512821,
+          "dynArgs": [
+           7
+          ]
+         },
+         {
+          "id": 51512840,
+          "dynArgs": [
+           63,
+           8
+          ]
+         }
+        ]
+       }
+      }
+     }
+    ]
+   },
+   "triggered": [],
+   "before": {
+    "life100": 13068020750.309412,
+    "life0": 9203189161.159805,
+    "kill": 11022912350.61896,
+    "partial": [
+     "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
+     "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
+     "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
+     "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
+     "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
+     "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
+     "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
+     "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
+     "not in this figure: node 343 (queues an inflict request on each task-filter target's comp 0xf: FUN_141bacd50(comp 0xf, kind +0x78, id +0x7c, probability +0x80 (f64), count +0x88, tag lists +0x90 / +0xa0) - no attribute / char-field record (T3d: data vt 0x14524cb20, build FUN_141ad1060, execute FUN_141aad500 once per target, abort FUN_141ab5450; t3d_a.ann.c). The EffectNote carries the task: its ch",
+     "not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 2446 row 1 (pactspirit 8530 point 110) - fires on event 0xf4285",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 2)) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 72818 row 1 (gem 7006 (skill 1110)) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7031 modifier 771009001) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7130 modifier 771009001) - ticked at the grant",
+     "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a"
+    ],
+    "lock": 15000000000000,
+    "cullNote": "HP lock (label 3001400, fields 2007110 / 2007100): Life is held at 715826101765.4501 = 0.05 of max Life while the label holds; every kill hit is clamped to it",
+    "target": "keegan2",
+    "lifeMax": 14316522035309
+   },
+   "after": {
+    "life100": 13169885938.790224,
+    "life0": 9274927999.134367,
+    "kill": 11108835925.397654,
+    "partial": [
+     "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
+     "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
+     "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
+     "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
+     "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
+     "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
+     "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
+     "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
+     "not in this figure: node 343 (queues an inflict request on each task-filter target's comp 0xf: FUN_141bacd50(comp 0xf, kind +0x78, id +0x7c, probability +0x80 (f64), count +0x88, tag lists +0x90 / +0xa0) - no attribute / char-field record (T3d: data vt 0x14524cb20, build FUN_141ad1060, execute FUN_141aad500 once per target, abort FUN_141ab5450; t3d_a.ann.c). The EffectNote carries the task: its ch",
+     "not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 2446 row 1 (pactspirit 8530 point 110) - fires on event 0xf4285",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 2)) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 72818 row 1 (gem 7006 (skill 1110)) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7031 modifier 771009001) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7130 modifier 771009001) - ticked at the grant",
+     "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a"
+    ],
+    "lock": 15000000000000,
+    "cullNote": "HP lock (label 3001400, fields 2007110 / 2007100): Life is held at 715826101765.4501 = 0.05 of max Life while the label holds; every kill hit is clamped to it",
+    "target": "keegan2",
+    "lifeMax": 14316522035309
+   },
+   "cumFE": 2130.7939,
    "notes": [
     "talent points assumed"
    ]
@@ -4747,9 +4968,9 @@
    },
    "triggered": [],
    "before": {
-    "life100": 11493962671.157242,
-    "life0": 8094654505.172161,
-    "kill": 9695189938.305737,
+    "life100": 13169885938.790224,
+    "life0": 9274927999.134367,
+    "kill": 11108835925.397654,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
@@ -4777,9 +4998,9 @@
     "lifeMax": 14316522035309
    },
    "after": {
-    "life100": 11890446091.931065,
-    "life0": 8373879006.651587,
-    "kill": 10029624806.958477,
+    "life100": 13624180209.950966,
+    "life0": 9594865989.317831,
+    "kill": 11492034431.952518,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
@@ -4806,7 +5027,7 @@
     "target": "keegan2",
     "lifeMax": 14316522035309
    },
-   "cumFE": 2175.4818999999998,
+   "cumFE": 2175.4819,
    "notes": [
     "talent points assumed"
    ]
@@ -4834,9 +5055,9 @@
    },
    "triggered": [],
    "before": {
-    "life100": 11890446091.931065,
-    "life0": 8373879006.651587,
-    "kill": 10029624806.958477,
+    "life100": 13624180209.950966,
+    "life0": 9594865989.317831,
+    "kill": 11492034431.952518,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
@@ -4864,9 +5085,9 @@
     "lifeMax": 14316522035309
    },
    "after": {
-    "life100": 12286929478.68269,
-    "life0": 8653103545.14395,
-    "kill": 10364059681.298595,
+    "life100": 14078474466.235857,
+    "life0": 9914803923.48757,
+    "kill": 11875232900.279222,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
@@ -4893,7 +5114,7 @@
     "target": "keegan2",
     "lifeMax": 14316522035309
    },
-   "cumFE": 2220.1699,
+   "cumFE": 2220.1699000000003,
    "notes": [
     "talent points assumed"
    ]
@@ -4947,9 +5168,9 @@
    },
    "triggered": [],
    "before": {
-    "life100": 19334714596.35704,
-    "life0": 13493733535.858923,
-    "kill": 16239528284.58913,
+    "life100": 22155431825.223045,
+    "life0": 15462317321.496256,
+    "kill": 18608692640.244247,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
@@ -4977,9 +5198,9 @@
     "lifeMax": 14316522035309
    },
    "after": {
-    "life100": 20669483684.46279,
-    "life0": 14425271382.767988,
-    "kill": 17360621655.325794,
+    "life100": 23684582647.054596,
+    "life0": 16529514544.501797,
+    "kill": 19893050260.221428,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
@@ -5006,7 +5227,7 @@
     "target": "keegan2",
     "lifeMax": 14316522035309
    },
-   "cumFE": 2220.1699,
+   "cumFE": 2220.1699000000003,
    "notes": [
     "talent points assumed"
    ]
@@ -5072,9 +5293,9 @@
    },
    "triggered": [],
    "before": {
-    "life100": 20669483684.46279,
-    "life0": 14425271382.767988,
-    "kill": 17360621655.325794,
+    "life100": 23684582647.054596,
+    "life0": 16529514544.501797,
+    "kill": 19893050260.221428,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
@@ -5102,9 +5323,9 @@
     "lifeMax": 14316522035309
    },
    "after": {
-    "life100": 23733440159.228134,
-    "life0": 16563612367.899733,
-    "kill": 19934086488.49201,
+    "life100": 26831247088.43604,
+    "life0": 18725577585.950005,
+    "kill": 22535982810.747314,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
@@ -5131,7 +5352,7 @@
     "target": "keegan2",
     "lifeMax": 14316522035309
    },
-   "cumFE": 2222.1583,
+   "cumFE": 2222.1583000000005,
    "notes": [
     "talent points assumed"
    ]
@@ -5205,9 +5426,9 @@
    },
    "triggered": [],
    "before": {
-    "life100": 23733440159.228134,
-    "life0": 16563612367.899733,
-    "kill": 19934086488.49201,
+    "life100": 26831247088.43604,
+    "life0": 18725577585.950005,
+    "kill": 22535982810.747314,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
@@ -5235,9 +5456,9 @@
     "lifeMax": 14316522035309
    },
    "after": {
-    "life100": 36996433484.922386,
-    "life0": 25819880207.296307,
-    "kill": 31073881371.708855,
+    "life100": 41822218994.09374,
+    "life0": 29187804970.016953,
+    "kill": 35127133880.5478,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
@@ -5264,7 +5485,7 @@
     "target": "keegan2",
     "lifeMax": 14316522035309
    },
-   "cumFE": 2422.8923,
+   "cumFE": 2422.8923000000004,
    "notes": [
     "talent points assumed"
    ]
@@ -5276,13 +5497,13 @@
     "enabler": true,
     "minLevel": 0,
     "kind": "kismet",
-    "label": "Target: Micro Fate: Deterioration Duration on contract point 301",
+    "label": "Target: Micro Fate: Deterioration Duration on contract point 306",
     "costFE": 185.5814,
     "changes": [
      {
       "kind": "kismet",
       "action": "socket",
-      "point": 301,
+      "point": 306,
       "modifierId": 100350119,
       "rolls": [
        5
@@ -5292,9 +5513,9 @@
    },
    "triggered": [],
    "before": {
-    "life100": 36996433484.922386,
-    "life0": 25819880207.296307,
-    "kill": 31073881371.708855,
+    "life100": 41822218994.09374,
+    "life0": 29187804970.016953,
+    "kill": 35127133880.5478,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
@@ -5322,9 +5543,9 @@
     "lifeMax": 14316522035309
    },
    "after": {
-    "life100": 50014261263.738594,
-    "life0": 34905046584.74974,
-    "kill": 42007757907.50093,
+    "life100": 57362371909.5614,
+    "life0": 40033306796.80811,
+    "kill": 48179550636.887405,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
@@ -5351,7 +5572,7 @@
     "target": "keegan2",
     "lifeMax": 14316522035309
    },
-   "cumFE": 2608.4737,
+   "cumFE": 2608.4737000000005,
    "notes": [
     "talent points assumed"
    ]
@@ -5431,9 +5652,9 @@
    },
    "triggered": [],
    "before": {
-    "life100": 50014261263.738594,
-    "life0": 34905046584.74974,
-    "kill": 42007757907.50093,
+    "life100": 57362371909.5614,
+    "life0": 40033306796.80811,
+    "kill": 48179550636.887405,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
@@ -5461,9 +5682,9 @@
     "lifeMax": 14316522035309
    },
    "after": {
-    "life100": 66190708512.85939,
-    "life0": 46194619407.174706,
-    "kill": 55594608190.046875,
+    "life100": 70853150190.99292,
+    "life0": 49448546227.01766,
+    "kill": 59510665680.99497,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
@@ -5490,7 +5711,7 @@
     "target": "keegan2",
     "lifeMax": 14316522035309
    },
-   "cumFE": 2809.2077,
+   "cumFE": 2809.2077000000004,
    "notes": [
     "talent points assumed"
    ]
@@ -5576,9 +5797,9 @@
    },
    "triggered": [],
    "before": {
-    "life100": 66190708512.85939,
-    "life0": 46194619407.174706,
-    "kill": 55594608190.046875,
+    "life100": 70853150190.99292,
+    "life0": 49448546227.01766,
+    "kill": 59510665680.99497,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
@@ -5606,9 +5827,9 @@
     "lifeMax": 14316522035309
    },
    "after": {
-    "life100": 81628611237.67311,
-    "life0": 56968760710.86433,
-    "kill": 68561143460.10034,
+    "life100": 90637552051.87048,
+    "life0": 63256117357.387405,
+    "kill": 76127893317.0164,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
@@ -5635,7 +5856,7 @@
     "target": "keegan2",
     "lifeMax": 14316522035309
    },
-   "cumFE": 3206.8876999999998,
+   "cumFE": 3206.8877,
    "notes": [
     "talent points assumed"
    ]
@@ -5728,9 +5949,9 @@
    },
    "triggered": [],
    "before": {
-    "life100": 81628611237.67311,
-    "life0": 56968760710.86433,
-    "kill": 68561143460.10034,
+    "life100": 90637552051.87048,
+    "life0": 63256117357.387405,
+    "kill": 76127893317.0164,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
@@ -5758,9 +5979,9 @@
     "lifeMax": 14316522035309
    },
    "after": {
-    "life100": 147799572987.9938,
-    "life0": 103149598884.81676,
-    "kill": 124139166075.6021,
+    "life100": 164104267735.88495,
+    "life0": 114528675870.7165,
+    "kill": 137833733428.70328,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
@@ -5787,7 +6008,7 @@
     "target": "keegan2",
     "lifeMax": 14316522035309
    },
-   "cumFE": 10933.930699999999,
+   "cumFE": 10933.9307,
    "notes": [
     "talent points assumed"
    ]
@@ -5886,9 +6107,9 @@
    },
    "triggered": [],
    "before": {
-    "life100": 147799572987.9938,
-    "life0": 103149598884.81676,
-    "kill": 124139166075.6021,
+    "life100": 164104267735.88495,
+    "life0": 114528675870.7165,
+    "kill": 137833733428.70328,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
@@ -5916,9 +6137,9 @@
     "lifeMax": 14316522035309
    },
    "after": {
-    "life100": 258172956049.48813,
-    "life0": 180179389688.14957,
-    "kill": 216843491615.35022,
+    "life100": 286653633977.9914,
+    "life0": 200056108133.82086,
+    "kill": 240764857101.43265,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
@@ -5945,7 +6166,7 @@
     "target": "keegan2",
     "lifeMax": 14316522035309
    },
-   "cumFE": 18660.9737,
+   "cumFE": 18660.973700000002,
    "notes": [
     "talent points assumed"
    ]
@@ -6186,8 +6407,6 @@
   "switch: Ruinous Star needs hero level 82; the switch at level 80 goes without it",
   "planned switch waits for Ruinous Star (hero level 82)",
   "single slates: board adjacency is resolved server-side",
-  "target hero memories: dps-debug has no what-if change for them; not offered",
-  "target vorax limbs: dps-debug has no what-if change for them; not offered",
   "target kismets appear once their pact is equipped in that slot",
   "target Dragon Scale Waistguard: 7 of its mods are outside the craft library (blended, corroded or rolled): not offered",
   "target Sierra Reverberation Maul: 2 of its mods are outside the craft library (blended, corroded or rolled): not offered"
@@ -6376,7 +6595,8 @@
   "Unique Passing of Time in ring2: dropped not in this figure: node 500 (event payload into the tree context: walks the payload entries (types 3 / 5 / 0xc / 0xf) and hands entity ids / values to the tree (execute FUN_141af14e0, t3b_exec.ann.c 1-75)) - affix class 386333824 row 1 (gear 4630 modifier 80617010) - fires when its run-time conditions hold (cond 206: its 0.1 s cooldown has elapsed), not in this figure: node 122 (comp 0x6f resource change, FUN_141c5d060 (execute FUN_141a61780, t3b_exec.ann.c 153-226)) - affix class 386333824 row 1 (gear 4630 modifier 80617010) - fires when its run-time conditions hold (cond 206: its 0.1 s cooldown has elapsed), not in this figure: node 104 (Q2b: a comp 0x6f resource change on each task-filter target: mode +0x78 1 / 2 / 3 picks the max at comp 0x6f +0x50 / +0xb8 / +0x120, times the value +0x80, FUN_141c55700 (execute FUN_141a5a5b0, build FUN_141a7d6e0, data vt 0x14524ae40; q2b_nodes.ann.c 1055-)) - affix class 386333824 row 1 (gear 4630 modifier 80617010) - fires when its run-time conditions hold (cond 20, not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 236213264 row 1 (gear 4630 modifier 80617030) - fires on event 0xf42e0, not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 236213264 row 2 (gear 4630 modifier 80617030) - fires on event 0xf42e0, not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 236213264 row 3 (gear 4630 modifier 80617030) - fires on event 0xf42e0, not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 236213264 row 4 (gear 4630 modifier 80617030) - fires on event 0xf42e0, not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 236213264 row 5 (gear 4630 modifier 80617030) - fires on event 0xf42e0, not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 236213264 row 6 (gear 4630 modifier 80617030) - fires on event 0xf42e0, not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 236213264 row 7 (gear 4630 modifier 80617030) - fires on event 0xf42e0, not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 236213264 row 8 (gear 4630 modifier 80617030) - fires on event 0xf42e0, not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 236213264 row 9 (gear 4630 modifier 80617030) - fires on event 0xf42e0, not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 236213264 row 10 (gear 4630 modifier 80617030) - fires on event 0xf42e0, not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 236213264 row 11 (gear 4630 modifier 80617030) - fires on event 0xf42e0, not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 236213264 row 12 (gear 4630 modifier 80617030) - fires on event 0xf42e0",
   "Unique Time of Vow in ring1: stopped: not ported: node 346 counts the held buffs whose config tags hold [5100101] (config_char_buff +0x88 -> +0x90 not in the catalog; held 15183,15181,15103,15101) (affix class 785515904 row 1 (gear 4636 modifier 80618030) (row 2 started on the enemies))",
   "Unique Time of Vow in ring2: stopped: not ported: node 346 counts the held buffs whose config tags hold [5100101] (config_char_buff +0x88 -> +0x90 not in the catalog; held 15183,15181,15103,15101) (affix class 785515904 row 1 (gear 4636 modifier 80618030) (row 2 started on the enemies))",
-  "Unique Elegy of Immortality in necklace: dropped not in this figure: node 613 (comp 0x15 of each task-filter target with at least one instance of the class's row +0x80 in its comp 3 (FUN_141ba8c90 > 0): FUN_141bfbe90(comp 0x15, entry {type 3, +0x78, +0x7c, +0x88 f64, four tag lists}) like node 612 (T3d: data vt 0x14524d6c0, build FUN_141b14600, execute FUN_141af24a0, abort FUN_141afe980 -> FUN_141c2b610, returns 1; t3d_b.ann.c) - no attribute / , not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 144600752 row 1 (gear 4536 modifier 51526460) - fires on event 0xf4285"
+  "Unique Elegy of Immortality in necklace: dropped not in this figure: node 613 (comp 0x15 of each task-filter target with at least one instance of the class's row +0x80 in its comp 3 (FUN_141ba8c90 > 0): FUN_141bfbe90(comp 0x15, entry {type 3, +0x78, +0x7c, +0x88 f64, four tag lists}) like node 612 (T3d: data vt 0x14524d6c0, build FUN_141b14600, execute FUN_141af24a0, abort FUN_141afe980 -> FUN_141c2b610, returns 1; t3d_b.ann.c) - no attribute / , not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 144600752 row 1 (gear 4536 modifier 51526460) - fires on event 0xf4285",
+  "Target vorax limb (1): dropped not in this figure: node 2230 (skill stones' energy: FUN_141cc6b90(comp 0x83, value) on each skill of the target's comp 0x82 whose tags pass filterTags (FUN_141d153a0) - no attribute / char-field record (execute FUN_141a9b410, c14_n2230b.ann.c); the stone's charge change is the energy model's (stone.ts), not read from the store) - affix class 168890 row 1 (gear 380009 modifier 51533041) - fires on"
  ],
  "start": {
   "life100": 81901.04911237008,
@@ -6617,11 +6837,11 @@
   {
    "skill": "hoa",
    "target": "cube2",
-   "firstStep": 39,
+   "firstStep": 40,
    "start": {
-    "life100": 300899580736.0459,
-    "life0": 180179389688.14957,
-    "kill": 283634446712.43066,
+    "life100": 334093700550.4155,
+    "life0": 200056108133.82086,
+    "kill": 314923941310.8398,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
      "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
@@ -6648,16 +6868,16 @@
     "lifeMax": 16098976434407
    },
    "reached": false,
-   "end": "not reached: the plan ends on Keegan 2; with its last build Cube 2 dies in 56.8 s"
+   "end": "not reached: the plan ends on Keegan 2; with its last build Cube 2 dies in 51.1 s"
   },
   {
    "skill": "hoa",
    "target": "cube3",
-   "firstStep": 39,
+   "firstStep": 40,
    "start": {
-    "life100": 30089958073.598625,
-    "life0": 18017938968.812523,
-    "kill": 28363444671.2381,
+    "life100": 33409370055.057842,
+    "life0": 20005610813.382885,
+    "kill": 31492394131.09416,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
      "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
@@ -6684,7 +6904,7 @@
     "lifeMax": 53469896141586
    },
    "reached": false,
-   "end": "not reached: the plan ends on Keegan 2; with its last build Cube 3 dies in 31.4 min"
+   "end": "not reached: the plan ends on Keegan 2; with its last build Cube 3 dies in 28.3 min"
   }
  ]
 }
