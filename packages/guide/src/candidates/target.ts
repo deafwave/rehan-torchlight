@@ -10,7 +10,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { applyChanges, openCatalog } from '@dps/guide/figure';
 import { pinRoot, table } from '../pin';
-import { priceOfBase, priceOfGold } from '../priceOf';
+import { priceOfBase, priceOfGold, priceOfName } from '../priceOf';
 import { craftGroupStep, craftStep, slotsOfBase } from './gear';
 import { costOf } from '../priceOf';
 import type { LoadoutPatch } from '../patches';
@@ -19,7 +19,8 @@ import type { Change, Generator, Move } from '../types';
 type Aff = { id: number; dyn: number[] };
 export interface TGear { label: string; affixes: Aff[] }
 interface Target { gear: TGear[]; pacts: { servantId: number; rank: number; promotionLevels: number[][]; slot: number }[];
-  kismets: { modifierId: number | null; servantId: number; node: number; rolls: number[] }[]; contractKeys: number[]; heroMemories: unknown[]; vorax: unknown[]; slates: number[] }
+  kismets: { modifierId: number | null; servantId: number; node: number; rolls: number[] }[]; contractKeys: number[]; heroMemories: unknown[]; vorax: unknown[]; slates: number[];
+  skills: { name: string; level: number; place: { kind: string; slot: number; ownerKind?: string; ownerSlot?: number } }[] }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const rows = (f: string): Record<string, any> => table<{ rows: Record<string, any> }>(f).rows;
@@ -70,16 +71,16 @@ function applyError(l: Record<string, unknown>, changes: Move["changes"], level:
 const GOLD_KEYS = ['m88', 'ma8', 'mc8', 'me8', 'm108', 'm128', 'm148', 'm168'];
 const sig = (a: Aff[]) => JSON.stringify(a.map(x => [x.id, x.dyn]).sort());
 
-/** the gold item a target item is, else undefined: it carries ALL of a gold row's modifier groups on that base AND at least half of its own non-base-attribute
+/** the gold item a target item is, else undefined: it carries a modifier group of every one of a gold row's keys on that base (a pooled key: one of its choices) AND at least half of its own non-base-attribute
  *  groups belong to that row (a rare sharing 1-3 craftable groups with a short gold row is not a legendary). Its label is the base's name, not the legendary's. */
 export function goldOf(it: TGear, baseId: number): string | undefined {
   const gold = rows('config_item_gold'), attrs = new Set<number>(rows('config_item_base')[baseId].a1b8 ?? []);
   const own = new Set(it.affixes.filter(a => !attrs.has(a.id)).map(a => Math.floor(a.id / 10)));
   return Object.keys(gold).find(g => {
     if (gold[g].i8 !== baseId) return false;
-    const row = new Set(GOLD_KEYS.flatMap(k => Object.keys(gold[g][k] ?? {})).map(Number));
+    const keys = GOLD_KEYS.map(k => Object.keys(gold[g][k] ?? {}).map(Number)).filter(ks => ks.length), row = new Set(keys.flat());
     const groups = new Set(it.affixes.map(a => Math.floor(a.id / 10)));
-    return row.size > 0 && [...row].every(x => groups.has(x)) && [...own].filter(x => row.has(x)).length * 2 >= own.size;
+    return keys.length > 0 && keys.every(ks => ks.some(x => groups.has(x))) && [...own].filter(x => row.has(x)).length * 2 >= own.size;
   });
 }
 
@@ -98,12 +99,14 @@ export const targetMoves: Generator = (s, ctx) => {
 
   // gear: the slot the state already wears an item of that type in
   const held = new Map<string, Aff[]>((l.gear ?? []).map((g: { slot: string; affixes: Aff[] }) => [g.slot, g.affixes]));
+  // the target's vorax limb takes a ring slot (the game's export: Digits in ring1); the target file names no slots
+  const limbs = t.vorax.map((v) => ({ ...(v as object), slot: (v as { slot?: string }).slot ?? 'ring1' })), limbSlots = new Set(limbs.map((v) => v.slot));
   const gold = rows('config_item_gold'), lang = rows('lang_en'), base = rows('config_item_base');
   for (const it of t.gear) {
     const baseId = baseOf(it);
     if (baseId === null) { ns.add(`target gear "${it.label}": no single catalog base matches its name and base attributes; not offered`); continue; }
     const { slots, level } = slotsOfBase(baseId, s.skill);
-    const slot = slots.find(x => held.has(x)) ?? slots[0];
+    const free = slots.filter(x => !limbSlots.has(x)), slot = free.find(x => held.has(x)) ?? free[0];
     if (!slot) { ns.add(`target gear "${it.label}": base ${baseId} fits no hoa slot; not offered`); continue; }
     if (held.has(slot) && sig(held.get(slot)!) === sig(it.affixes)) continue;
     const attrs = new Set<number>(base[baseId].a1b8 ?? []), modifiers: Record<string, { id: number; dynArgs: number[] }[]> = {};
@@ -112,32 +115,44 @@ export const targetMoves: Generator = (s, ctx) => {
     // a rare is made one step at a time (user, 2026-10-16: "one at a time"): its bare base first, then each of its mods as one craft at its expected embers;
     // a mod the craft library does not hold (blended, corroded, rolled) is named, not offered
     if (!gid) {
-      const cur = (l.gear ?? []).find((g: { slot?: string }) => g.slot === slot) as { baseId?: number; affixes: (Aff & { list?: string })[] } | undefined;
-      if (cur?.baseId !== baseId) {
-        keep(mk({ kind: 'gear', label: `Rare base ${it.label} (item level ${level}) on ${slot}`, ...costOf(ctx.prices, it.label, ctx.level, 'bare'), minLevel: level,
-          changes: [{ kind: 'gear', slot, item: { baseId, baseName: it.label, itemId: `guide-target-base-${baseId}`, level, modifiers: { baseAttr: modifiers.baseAttr ?? [] } } }] }), it.label);
-        continue;
-      }
+      const cur = (l.gear ?? []).find((g: { slot?: string }) => g.slot === slot) as { baseId?: number; label: string; affixes: (Aff & { list?: string })[] } | undefined;
+      // on the base already: a rare there (a unique on the same base is replaced by the bare base, not crafted on)
+      const onBase = !!cur && cur.baseId === baseId && !goldOf({ label: it.label, affixes: cur.affixes }, baseId);
       const LIST: Record<string, string> = { BAffixInfoList: 'baseAffix', BaseAttrInfoList: 'baseAttr', PrefixInfoList: 'prefix', SuffixInfoList: 'suffix', FixedBaseAffix: 'fixed' };
-      const mods: Record<string, { id: number; dynArgs: number[] }[]> = {};
-      for (const a of cur.affixes) (mods[LIST[a.list ?? ''] ?? 'fixed'] ??= []).push({ id: a.id, dynArgs: [...a.dyn] });
-      const have = new Set(cur.affixes.map(a => Math.floor(a.id / 100)));   // by modifier group: one tier of a group per item
+      const mods: Record<string, { id: number; dynArgs: number[] }[]> = onBase ? {} : { baseAttr: modifiers.baseAttr ?? [] };
+      if (onBase) for (const a of cur!.affixes) (mods[LIST[a.list ?? ''] ?? 'fixed'] ??= []).push({ id: a.id, dynArgs: [...a.dyn] });
+      const have = new Set((onBase ? cur!.affixes : []).map(a => Math.floor(a.id / 100)));   // by modifier group: one tier of a group per item
+      const plan: { c: NonNullable<ReturnType<typeof craftGroupStep>> & { id: number; dynArgs: number[] }; own: boolean }[] = [], per: Record<string, number> = {};
       let outside = 0;
       for (const a of it.affixes.filter(x => !attrs.has(x.id) && !have.has(Math.floor(x.id / 100)))) {
         // its own tier when the library makes it, else the best tier the library makes of that group (a known build's tier 0 is not craftable)
         const own = craftStep(baseId, a.id, ctx), c = own ? { ...own, id: a.id, dynArgs: [...a.dyn] } : craftGroupStep(baseId, Math.floor(a.id / 100), ctx);
         if (!c) { outside++; continue; }
-        if ((mods[c.side]?.length ?? 0) >= 3) continue;
-        keep(mk({ kind: 'craft', label: `Craft ${c.tier} ${c.text} (${c.side}) on ${slot}`, costFE: c.costFE, buy: { name: c.ember, qty: c.qty }, minLevel: level,
-          ...(own ? {} : { costNote: "the known build's tier of this mod is not craftable: its best craftable tier" }),
-          changes: [{ kind: 'gear', slot, item: { baseId, baseName: it.label, itemId: `guide-target-${baseId}-${c.id}`, level, modifiers: { ...mods, [c.side]: [...(mods[c.side] ?? []), { id: c.id, dynArgs: c.dynArgs }] } } }] }), it.label);
+        if ((mods[c.side]?.length ?? 0) + (per[c.side] ?? 0) >= 3) continue;
+        per[c.side] = (per[c.side] ?? 0) + 1; plan.push({ c, own: !!own });
       }
       if (outside) ns.add(`target ${it.label}: ${outside} of its mods are outside the craft library (blended, corroded or rolled): not offered`);
+      const gear = (id: string, ms: typeof mods): Change => ({ kind: 'gear', slot, item: { baseId, baseName: it.label, itemId: id, level, modifiers: ms } } as Change);
+      const plus = (ms: typeof mods, c: (typeof plan)[number]['c']) => ({ ...ms, [c.side]: [...(ms[c.side] ?? []), { id: c.id, dynArgs: c.dynArgs }] });
+      if (!onBase) {
+        // the bare base alone is worse than what it replaces: it is chosen by its finished item (base + every craft below), and taken as the base
+        const bare = costOf(ctx.prices, it.label, ctx.level, 'bare'), craftFE = plan.reduce((a, { c }) => a + (c.costFE ?? NaN), 0);
+        const then = plan.length && bare.costFE !== null && Number.isFinite(craftFE)
+          ? { changes: [gear(`guide-target-${baseId}-full`, plan.reduce((ms, { c }) => plus(ms, c), mods))], costFE: bare.costFE + craftFE,
+            note: `chosen for the finished item: then ${plan.map(({ c }) => `${c.tier} ${c.text} (${c.side})`).join(', ')}` } : undefined;
+        keep(mk({ kind: 'gear', label: `Rare base ${it.label} (item level ${level}) on ${slot}`, ...bare, minLevel: level, ...(then ? { then } : {}),
+          changes: [gear(`guide-target-base-${baseId}`, mods)] }), it.label);
+        continue;
+      }
+      for (const { c, own } of plan)
+        keep(mk({ kind: 'craft', label: `Craft ${c.tier} ${c.text} (${c.side}) on ${slot}`, costFE: c.costFE, buy: { name: c.ember, qty: c.qty }, minLevel: level,
+          ...(own ? {} : { costNote: "the known build's tier of this mod is not craftable: its best craftable tier" }),
+          changes: [gear(`guide-target-${baseId}-${c.id}`, plus(mods, c))] }), it.label);
       continue;
     }
     const cost = { costFE: priceOfGold(ctx.prices, Number(gid), ctx.level).fe };
-    keep(mk({ kind: 'gear', label: `Target: ${it.label} in ${slot}`, ...cost, minLevel: level,
-      changes: [{ kind: 'gear', slot, item: { baseId, baseName: it.label, itemId: `guide-target-${baseId}`, level, modifiers } }] }), it.label);
+    keep(mk({ kind: 'gear', label: `Target: ${rows('lang_en')[`item_gold|name|${gid}`] ?? it.label} (${it.label}) in ${slot}`, ...cost, minLevel: level,
+      changes: [{ kind: 'gear', slot, item: { baseId, baseName: it.label, itemId: `guide-target-${baseId}-u${gid}`, level, modifiers } }] }), it.label);
   }
 
   // the slate board: one acquisition, the resolved arrays written into the loadout. Slates drop and etor has no row for these (the target data gives no item name
@@ -153,9 +168,27 @@ export const targetMoves: Generator = (s, ctx) => {
   if (t.heroMemories.length && !same(l.heroMemories, t.heroMemories))
     out.push(mk({ kind: 'memory', label: `Target hero memories (${t.heroMemories.length})`, costFE: 0, market: 'drop', costNote: 'farmed: hero memories drop (their making is not priced)',
       changes: [{ kind: 'patch', op: 'memories', items: t.heroMemories }] }));
-  if (t.vorax.length && !same(l.vorax, t.vorax))
+  if (limbs.length && !same(l.vorax, limbs))
     out.push(mk({ kind: 'memory', label: `Target vorax limb${t.vorax.length > 1 ? 's' : ''} (${t.vorax.length})`, costFE: 0, market: 'drop', costNote: 'farmed: a vorax limb devours a legendary (its making is not priced)',
-      changes: [{ kind: 'patch', op: 'vorax', items: t.vorax }] }));
+      changes: [{ kind: 'patch', op: 'vorax', items: limbs }] }));
+
+  // skills: each of the known build's skills with its supports, one move per group, the gems priced by name (a gem etor does not list is named, not priced)
+  type G = Target['skills'][number];
+  const groupOf = (xs: G[], kind: string, slot: number) => xs.filter((g) => (g.place.kind === kind && g.place.slot === slot) || (g.place.kind === 'support' && g.place.ownerKind === kind && g.place.ownerSlot === slot));
+  const gsig = (xs: G[]) => JSON.stringify(xs.map((g) => [g.name, g.level, g.place.kind === 'support']).sort());
+  for (const owner of t.skills.filter((g) => g.place.kind !== 'support')) {
+    const want = groupOf(t.skills, owner.place.kind, owner.place.slot), have = groupOf((l.skills ?? []) as G[], owner.place.kind, owner.place.slot);
+    if (gsig(want) === gsig(have)) continue;
+    const held = new Set(have.map((g) => g.name)), buy = want.filter((g) => !held.has(g.name)), priced = buy.map((g) => [g.name, priceOfName(ctx.prices, g.name, ctx.level).fe] as const);
+    const missing = priced.filter(([, fe]) => fe === null).map(([n]) => n);
+    out.push(mk({ kind: 'skill', label: `Target skill: ${owner.name} with ${want.length - 1} support${want.length === 2 ? '' : 's'} (${want.filter((g) => g !== owner).map((g) => g.name).join(', ')}) in ${owner.place.kind} ${owner.place.slot}`,
+      costFE: priced.reduce((a, [, fe]) => a + (fe ?? 0), 0), ...(missing.length ? { costNote: `not on etor, not priced: ${missing.join(', ')}` } : {}),
+      changes: [{ kind: 'patch', op: 'skill-group', place: { kind: owner.place.kind, slot: owner.place.slot }, items: want }] }));
+  }
+  // groups that only work together (a gem moving between slots: Fixate and Timid) are also offered as one move
+  const groups = out.filter((m) => m.kind === 'skill' && m.label.startsWith('Target skill: '));
+  if (groups.length > 1) out.push(mk({ kind: 'skill', label: `Target skills: all ${groups.length} remaining groups (${groups.map((m) => m.label.replace(/^Target skill: (.*?) with .*$/, '$1')).join(', ')})`,
+    costFE: groups.reduce((a, m) => a + (m.costFE ?? 0), 0), costNote: groups.map((m) => m.costNote).filter(Boolean).join('; ') || undefined, changes: groups.flatMap((m) => m.changes) }));
 
   // pacts: not on the market - a pactspirit rank is levelled, not bought: farmed, 0 FE
   const pacts = (l.pacts ?? []) as { servantId: number; slot?: number; rank: number }[];

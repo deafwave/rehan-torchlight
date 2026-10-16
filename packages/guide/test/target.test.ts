@@ -26,7 +26,10 @@ describe("the known build's hero memories and vorax limb", () => {
     const mem = ms.find(m => /^Target hero memories/.test(m.label))!, vor = ms.find(m => /^Target vorax limb/.test(m.label))!;
     for (const m of [mem, vor]) expect(m).toMatchObject({ costFE: 0, market: 'drop', acquisition: true });
     expect((applyPatch({ ...l100, heroMemories: [] }, mem.changes[0] as never) as { heroMemories: unknown[] }).heroMemories).toEqual(t.heroMemories);
-    expect((applyPatch({ ...l100, vorax: [] }, vor.changes[0] as never) as { vorax: unknown[] }).vorax).toEqual(t.vorax);
+    // the limb takes ring1 (the game's export: Digits in ring1, no ring1 gear)
+    const withLimb = applyPatch({ ...l100, vorax: [] }, vor.changes[0] as never) as { vorax: unknown[]; gear: { slot: string }[] };
+    expect(withLimb.vorax).toEqual(t.vorax.map(v => ({ ...(v as object), slot: 'ring1' })));
+    expect(withLimb.gear.some(g => g.slot === 'ring1')).toBe(false);
   });
 });
 
@@ -73,11 +76,20 @@ describe('targetMoves', () => {
     expect(of('gear').some(m => (gearItem(m).item.modifiers.fixed?.length ?? 0) > 0)).toBe(true);
   });
   it('a legendary is priced by its gold item; a rare comes one step at a time: its bare base first (then one craft per mod, test below)', () => {
-    const priced = targetMoves({ loadout: l100, owned: [], fe: 0, level: 100, skill: 'hoa' }, { prices: { season: 't', fetchedAt: 't', price: k => (typeof k === 'string' ? 5 : null) }, level: 100, notSearched: new Set() });
+    const off = { ...l100, gear: (l100.gear as { slot: string }[]).map(g => (g.slot === 'mainHand' ? { ...g, baseId: -1 } : g)) };   // mainHand off the maul's base
+    const priced = targetMoves({ loadout: off, owned: [], fe: 0, level: 100, skill: 'hoa' }, { prices: { season: 't', fetchedAt: 't', price: k => (typeof k === 'string' ? 5 : null) }, level: 100, notSearched: new Set() });
+    // legendaries with a pooled key (one of several groups) are legendaries: Death's Touch, Dawn Break, Broken Sun Ring
+    expect(priced.filter(m => /^Target: (Death's Touch|Dawn Break|Broken Sun Ring) /.test(m.label)).length).toBe(3);
     expect(priced.filter(m => /^Target: /.test(m.label) && m.kind === 'gear').every(m => m.costFE === 5)).toBe(true);
     const bases = priced.filter(m => /^Rare base /.test(m.label));
     expect(bases.length).toBeGreaterThan(0);
     for (const m of bases) expect(Object.keys((m.changes[0] as { item: { modifiers: object } }).item.modifiers)).toEqual(['baseAttr']);
+    // ranked by its finished item: the base plus one craft per craftable mod, at the base's price plus every craft's embers
+    const maul = bases.find(m => m.then)!;
+    const done = (maul.then!.changes[0] as unknown as { item: { modifiers: { prefix?: unknown[]; suffix?: unknown[] } } }).item.modifiers;
+    expect((done.prefix?.length ?? 0) + (done.suffix?.length ?? 0)).toBeGreaterThan(1);
+    expect(maul.then!.costFE).toBeGreaterThan(maul.costFE!);
+    expect(maul.then!.note).toMatch(/^chosen for the finished item: then T\d /);
   });
   it("on the target rare's own base the next steps are one craft each of its craftable mods, at the expected embers", () => {
     const maul = tg.gear.find(g => /Maul/.test(g.label))!;

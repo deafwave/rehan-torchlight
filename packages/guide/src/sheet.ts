@@ -23,7 +23,7 @@ const L = () => (lang ??= ((t) => t.rows ?? t)(table<any>('lang_en')));   // esl
 
 type Gear = { label: string; slot?: string | number; itemId?: string; affixes?: { id: number; list?: string }[] };
 function item(g: Gear): string {
-  const gid = /guide-unique-(\d+)/.exec(g.itemId ?? '')?.[1], name = (gid && L()[`item_gold|name|${gid}`]) || g.label;
+  const gid = /guide-(?:unique-|target-\d+-u)(\d+)/.exec(g.itemId ?? '')?.[1], name = (gid && L()[`item_gold|name|${gid}`]) || g.label;
   const mods = (g.affixes ?? []).filter((a) => a.list !== 'BaseAttrInfoList'), known = mods.map((a) => modText(a.id)).filter(Boolean);
   const rest = mods.length - known.length;
   return `${g.slot}: ${name}${known.length ? ` - ${known.join('; ')}` : ''}${rest && known.length ? ` (+${rest} more mods)` : ''}`;

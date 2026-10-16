@@ -113,11 +113,11 @@ async function stepOnce(s: State, f: Figure, rawEv: Evaluator, acq: Generator[],
       .sort((a, b) => stale(b) - stale(a)).slice(0, Math.max(k.topK, ev.parallelism ?? 1, cands.filter((m) => m.enabler && !fresh.has(key(m))).length, sweep ? unseen : 0));
     sweep = false;
     if (!todo.length) break;
-    const evs = await Promise.all(todo.map((m) => evalMove(s, m, ev)));
+    const evs = await Promise.all(todo.map((m) => evalMove(s, m.then ? { ...m, changes: m.then.changes } : m, ev)));
     todo.forEach((m, i) => {
       const e = evs[i];
       if (!rankableMove(m, f, e.figure)) { mem.notCalculable.add(`${m.label}: ${why(f, e.figure)}`); mem.scores.set(key(m), -Infinity); fresh.set(key(m), { m, e, gain: -Infinity, score: -Infinity }); return; }
-      const gain = lnGain(f.kill, e.figure.kill), score = scoreOf(gain, m.costFE!);
+      const gain = lnGain(f.kill, e.figure.kill), score = scoreOf(gain, m.then?.costFE ?? m.costFE!);
       mem.scores.set(key(m), score); fresh.set(key(m), { m, e, gain, score });
     });
   }
@@ -128,17 +128,19 @@ async function stepOnce(s: State, f: Figure, rawEv: Evaluator, acq: Generator[],
   const enabler = all.filter((r) => r.m.enabler && r.e.figure.kill >= f.kill * k.enablerFloor).sort((a, b) => b.e.figure.kill - a.e.figure.kill)[0];
   const picks = new Set([...all.sort(byScore).slice(0, k.topK), ...(enabler ? [enabler] : [])]);
   const solved = await Promise.all([...picks].map(async (r) => {
-    const s1 = apply(s, r.m, r.e);
-    let res = await resolve(s1, ev, recon, ctx, k, r.e.figure, mem);
+    const e0 = r.m.then ? await evalMove(s, r.m, ev) : r.e;   // a lookahead move is taken as its first part
+    if (r.m.then && !rankable(f, e0.figure)) return { r, res: { state: s, figure: f, taken: [] }, gain: -Infinity, score: -Infinity };
+    const s1 = apply(s, r.m, e0);
+    let res = await resolve(s1, ev, recon, ctx, k, e0.figure, mem);
     if (spend) { const sp = await spendFree(res.state, ev, spend, ctx, k, res.figure, mem); res = { ...sp, taken: [...res.taken, ...sp.taken] }; }   // e.g. a tree swap that left points unplaced
-    const gain = lnGain(f.kill, res.figure.kill);
-    return { r, res, gain, score: scoreOf(gain, r.m.costFE!) };
+    const gain = r.m.then ? r.gain : lnGain(f.kill, res.figure.kill);
+    return { r, res, gain, score: r.m.then ? r.score : scoreOf(gain, r.m.costFE!) };
   }));
   const win = solved.filter((x) => x.gain > 0).sort(byScore)[0];
   if (!win) return null;
   const cost = win.r.m.costFE!;
   mem.cumFE += cost; mem.scores.delete(key(win.r.m));
-  const notes = win.r.m.kind === 'switch' ? switchNote(f, win.res.figure) : [];
+  const notes = win.r.m.kind === 'switch' ? switchNote(f, win.res.figure) : win.r.m.then ? [win.r.m.then.note] : [];
   return { state: win.res.state, step: { level: s.level, move: win.r.m, triggered: win.res.taken, before: f, after: win.res.figure, cumFE: mem.cumFE, ...(notes.length ? { notes } : {}) } };
 }
 

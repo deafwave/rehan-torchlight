@@ -39,6 +39,8 @@ export interface Move {
   costNote?: string;
   /** what is bought and how many (cost = qty x its price): a unique or gem x 1, a craft's ember x the expected embers; absent when the cost has several parts */
   buy?: { name: string; qty: number };
+  /** a step worse alone that leads somewhere (a rare's bare base): ranked by these changes (the finished item) at this total cost, taken as `changes` */
+  then?: { changes: Move['changes']; costFE: number; note: string };
   /** hero level gate */
   minLevel: number;
   /** dps-debug what-if changes applied in order (dps-debug model/src/core/whatif.ts `Change`; a `LoadoutPatch` is applied by applyPatch, runs of Changes by applyChanges) */
