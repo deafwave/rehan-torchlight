@@ -68,6 +68,15 @@ describe('guide view', () => {
     expect(h).toContain('<line class="" x1="17" y1="33" x2="51" y2="33"/>');   // Frost requires Cold Damage: drawn, not lit (Frost untaken)
     expect(h).toContain('<span class="tc on" title="unlocks at 24 points">Steady Accumulation</span>');
   });
+  it('a free talent respec is drawn as the page after it: points added green, points taken out red with what they had', () => {
+    const tree = { tree: 12, name: 'Prophet', points: 3, nodes: [{ id: 1, row: 1, col: 1, kind: 1, max: 3, pts: 3, name: 'Cold Damage', prereq: [] }, { id: 2, row: 1, col: 2, kind: 1, max: 3, pts: 0, name: 'Focus Blessing Duration', prereq: [] }],
+      cores: [] };
+    const h = renderGuide({ ...g, mode: 'advise', respec: { trees: [tree], before: { 1: 0, 2: 3 } } });
+    expect(h).toContain('<b>Free talent respec');
+    expect(h).toContain('<g class="tn k1 on up"><title>Cold Damage: 0 -&gt; 3 of 3</title>');
+    expect(h).toContain('<g class="tn k1 down"><title>Focus Blessing Duration: 3 -&gt; 0 of 3</title>');
+    expect(h).toContain('>-3</text>');
+  });
   it('advice at the switch level shows the Hammer of Ash switch on the character, with its cost and its first-boss figure', () => {
     const h = renderGuide({ ...g, mode: 'advise', switch: { label: "Switch to Hammer of Ash with Forger's Maul", costFE: 120, target: 'cube1', figure: { ...g.start, life100: 2e12, kill: 2e3, lifeMax: 1e4 } } });
     expect(h).toContain('<b>Switch to Hammer of Ash</b>');

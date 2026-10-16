@@ -57,3 +57,10 @@ function treeView(tree: number, talents: Record<string, number>, cores: number[]
   return { tree, name: treeName(tree), points: nodes.reduce((a, n) => a + n.pts, 0), nodes,
     cores: treeCores(tree).map((c) => ({ id: c.id, need: c.need, name: talentName(c.id), taken: cores.includes(c.id) })) };
 }
+
+/** the trees a loadout has points in, plus `also` (a respec's trees before it), drawn as the game lays them out */
+export function talentTrees(l: Loadout, also: number[] = []): TreeView[] {
+  const x = l as { talents?: Record<string, number>; coreTalents?: number[] };
+  const trees = [...new Set([...Object.entries(x.talents ?? {}).filter(([, p]) => p > 0).map(([n]) => treeOf(+n)), ...also])];
+  return trees.map((t) => treeView(t, x.talents ?? {}, x.coreTalents ?? []));
+}

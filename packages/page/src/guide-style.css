@@ -806,3 +806,7 @@ a.t-branch:hover,a.t-branch:focus-visible{text-decoration:underline}
 .tsvg .tn, .tsvg .tn.k1 { transform: none; width: auto; height: auto; border: 0; background: none; display: inline; }
 .gl-next tr.over td { opacity: .5; }
 .gl-next tr.over small { color: #e0a060; }
+.tsvg .tn.up circle { fill: #2e9e5b; stroke: #7ef0a8; stroke-width: 2.5; }
+.tsvg .tn.down circle { fill: #3a1a1a; stroke: #e06060; stroke-width: 2.5; stroke-dasharray: 3 2; }
+.tsvg .tn.down text { fill: #f0a0a0; }
+.leg-up { color: #7ef0a8; font-weight: 600; } .leg-down { color: #e06060; font-weight: 600; }

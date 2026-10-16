@@ -8,6 +8,7 @@ export interface GuideOut {
   start: Figure; inputs?: Record<string, unknown>; startNotes?: string[]; steps: Step[]; notSearched: string[]; unpriced: string[]; notCalculable: string[];
   character?: Character; next?: NextBuy[]; prices?: Record<string, number | null>; legs?: Leg[];
   /** the plan's last build priced on every boss (life100: damage per second at full Life, before the damage lock) */ final?: { target: string; figure: Figure }[];
+  /** advise: the free talent respec drawn (the page after it, every node's points before it) */ respec?: { trees: TreeView[]; before: Record<string, number> };
   /** advise, an Ice Shot character at the switch's level: the planned switch to Hammer of Ash on this character, on the first boss */ switch?: { label: string; costFE: number | null; target: string; figure: Figure };
 }
 /** one tab: a skill against one yardstick (target null = the training dummy), from step `firstStep` on; `end` = why it ended */
@@ -200,14 +201,17 @@ const legName = (l: Leg) => (l.skill === 'iceShot' ? 'Ice Shot' : l.target ? bos
 const yardstick = (l: Leg) => (l.target ? `on ${bossName(l.target)}` : 'on the training dummy');
 /** a tree as the game lays it out: columns left to right by the points the tree needs (shown on top), five rows; links drawn from each node to the one it
  *  requires (gold when the required node is maxed and this one taken); taken nodes lit with their points; every node named on hover; its core talents below */
-export function treeGrid(t: TreeView): string {
+export function treeGrid(t: TreeView, before?: Record<string, number>): string {
   const S = 34, TOP = 16, depth = Math.max(1, ...t.nodes.map((n) => n.row)), at = new Map(t.nodes.map((n) => [n.id, n]));
   const x = (n: { row: number }) => (n.row - 0.5) * S, y = (n: { col: number }) => TOP + (n.col - 0.5) * S;
   const heads = Array.from({ length: depth }, (_, i) => `<text class="th" x="${x({ row: i + 1 })}" y="11">${i * 3}</text>`).join('');   // a column opens at 3 points per column before it
   const links = t.nodes.flatMap((n) => n.prereq.map((q) => at.get(q)).filter((p): p is TreeView['nodes'][number] => !!p)
     .map((p) => `<line class="${p.pts >= p.max && n.pts > 0 ? 'on' : ''}" x1="${x(p)}" y1="${y(p)}" x2="${x(n)}" y2="${y(n)}"/>`)).join('');
-  const dots = t.nodes.map((n) => `<g class="tn k${n.kind}${n.pts ? ' on' : ''}"><title>${esc(`${n.name} (${n.pts}/${n.max})`)}</title>`
-    + `<circle cx="${x(n)}" cy="${y(n)}" r="${n.kind === 1 ? 8 : 12}"/>${n.pts ? `<text x="${x(n)}" y="${y(n) + 3.5}">${n.pts}</text>` : ''}</g>`).join('');
+  // a respec: points added green, points removed red (the count shown is the page after it; a node emptied shows the points it had)
+  const was = (n: { id: number }) => before?.[n.id] ?? 0;
+  const dots = t.nodes.map((n) => { const d = before ? n.pts - was(n) : 0, cls = d > 0 ? ' up' : d < 0 ? ' down' : '';
+    return `<g class="tn k${n.kind}${n.pts ? ' on' : ''}${cls}"><title>${esc(before && d ? `${n.name}: ${was(n)} -> ${n.pts} of ${n.max}` : `${n.name} (${n.pts}/${n.max})`)}</title>`
+      + `<circle cx="${x(n)}" cy="${y(n)}" r="${n.kind === 1 ? 8 : 12}"/>${n.pts || d < 0 ? `<text x="${x(n)}" y="${y(n) + 3.5}">${d < 0 && !n.pts ? `-${-d}` : n.pts}</text>` : ''}</g>`; }).join('');
   const twice = new Set(t.cores.map((c) => c.name).filter((n, i, a) => a.indexOf(n) !== i));   // a core in both sets (24 and 32 points): say which
   const cores = t.cores.map((c) => `<span class="tc${c.taken ? ' on' : ''}" title="unlocks at ${c.need} points">${esc(c.name)}${twice.has(c.name) ? ` · ${c.need}` : ''}</span>`).join('');
   const w = depth * S, h = TOP + 5 * S;
@@ -238,7 +242,7 @@ function skillCards(lines: string[]): string {
 /** cores as badges, every tree drawn (taken nodes lit, names on hover); the old text lines folded below */
 function talentView(b: Section): string {
   const cores = b.lines.filter((x) => x.startsWith('core: ')).map((x) => `<span class="tc on">${esc(x.slice(6))}</span>`).join('');
-  return `<div class="tcs">${cores}</div><div class="trees">${(b.trees ?? []).map(treeGrid).join('')}</div>`
+  return `<div class="tcs">${cores}</div><div class="trees">${(b.trees ?? []).map((t) => treeGrid(t)).join('')}</div>`
     + `<details class="gl-tx"><summary>as text</summary><ul>${b.lines.filter((x) => !x.startsWith('core: ')).map((x) => `<li>${esc(x)}</li>`).join('')}</ul></details>`;
 }
 /** memories and pactspirits as cards; no pactspirit in the plan yet said so */
@@ -284,6 +288,14 @@ function legTabs(g: GuideOut): string {
     + `<div class="gl-tab-panels">${legs.map((l, i) => legPanel(g, l, i)).join('')}</div></div>`;
 }
 
+/** advise: the free talent respec as your page after it - points added green, removed red */
+function respecCard(g: GuideOut): string {
+  const r = g.respec;
+  if (!r?.trees.length) return '';
+  const step = g.steps.find((st) => st.move.label.startsWith('Free talent respec')), gain = step ? fmtGain(step.before.kill, step.after.kill) : '';
+  return `<div class="gl-final"><b>Free talent respec ${gain}</b><p class="bnote">Your page after the respec (free at level 90 and below). <span class="leg-up">Green</span>: points added. <span class="leg-down">Red</span>: points taken out (the number is what it had). Hover a node for its name.</p>`
+    + `<div class="trees">${r.trees.map((t) => treeGrid(t, r.before)).join('')}</div></div>`;
+}
 /** advise: the planned Hammer of Ash switch on the character, with its figure on the first boss */
 function switchCard(g: GuideOut): string {
   const w = g.switch;
@@ -302,7 +314,7 @@ function finalCard(g: GuideOut): string {
 }
 export function renderGuide(g: GuideOut, mine: Record<string, number> = {}): string {
   const plan = g.legs?.length ? legTabs(g) : chart(g.start, entries(g.steps)) + stages(entries(g.steps), g.mode);
-  return `<div class="gl-plan">${goalCard(g)}${g.character ? renderCharacter(g.character) : ''}${switchCard(g)}${g.next?.length ? renderNext(g.next, g.prices ?? {}, mine, g.character?.fe ?? Infinity) : ''}${finalCard(g)}${plan}${huntingList(g)}${details(g)}</div>`;
+  return `<div class="gl-plan">${goalCard(g)}${g.character ? renderCharacter(g.character) : ''}${respecCard(g)}${switchCard(g)}${g.next?.length ? renderNext(g.next, g.prices ?? {}, mine, g.character?.fe ?? Infinity) : ''}${finalCard(g)}${plan}${huntingList(g)}${details(g)}</div>`;
 }
 
 // ---- pasted text: the advice from the poorchlight button, or the raw export
@@ -379,6 +391,7 @@ export function parseAdvice(text: string): GuideOut {
       checkFigure(l.start, `${p}.start`);
     });
   }
+  if (j.respec !== undefined && !(j.respec && Array.isArray(j.respec.trees) && j.respec.before && typeof j.respec.before === 'object')) throw bad('respec', j.respec);
   if (j.switch !== undefined) {
     if (!j.switch || typeof j.switch.label !== 'string' || typeof j.switch.target !== 'string' || !(j.switch.costFE === null || isNum(j.switch.costFE))) throw bad('switch', j.switch);
     checkFigure(j.switch.figure, 'switch.figure');

@@ -117,6 +117,8 @@ export interface GuideOut {
   next?: NextBuy[];
   /** advise, an Ice Shot character at the switch's level: the planned switch to Hammer of Ash on this character (its buys, page) and its figure on the first boss */
   switch?: { label: string; costFE: number | null; buy?: { name: string; qty: number }[]; target: string; figure: Figure };
+  /** advise: the free talent respec drawn - the page after it, and every node's points before it */
+  respec?: { trees: import('./sheet').TreeView[]; before: Record<string, number> };
   /** the legs in order (Ice Shot on the dummy, then Hammer of Ash boss by boss): each moves on when the boss is lock-bound */
   legs?: Leg[];
   /** ideal: the plan's last build priced on every boss (life100: its damage per second to that boss at full Life, before the damage lock) */

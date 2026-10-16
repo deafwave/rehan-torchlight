@@ -17,10 +17,10 @@ import { type EtorHistory, type EtorItems, legBooks, LEG_WINDOWS, snapshotBook }
 import { CULL_NOT_COUNTED } from './kill';
 import { ctxOfState, pieceKey, DEFAULT_KNOBS, type Knobs, newMem, overBudget, path, rankable, rankableMove, resolve, spendFree, step, switchNote } from './search';
 import { ICE_SHOT_INPUTS, idealStartNotes } from './start';
-import { setTalentPoints } from './talentRules';
+import { setTalentPoints, treeOf } from './talentRules';
 import { talentName } from './names';
 import { table } from './pin';
-import { buildSheet } from './sheet';
+import { buildSheet, talentTrees } from './sheet';
 import { prismOf } from './patches';
 import type { Evaluator, Figure, GenCtx, Generator, GuideOut, Leg, Move, NextBuy, PriceBook, Skill, State, Step } from './types';
 
@@ -337,12 +337,14 @@ export async function runAdvise(ev: Evaluator, state: State, k: Partial<Knobs> =
     notSearched: new Set(s.skill === 'iceShot' ? ['switch to Hammer of Ash: planned in the ideal guide, not searched for an Ice Shot character'] : CULL_NOT_COUNTED) });
   // a talent respec is free at level 90 and below (user, 2026-10-16): the character's own page is re-fitted to its own gear first (point moves while they
   // help, no churn gate), shown as the first step; the next buys are priced on it
-  let respec: Step | undefined;
+  let respec: Step | undefined, respecView: GuideOut['respec'];
   if (state.level <= FREE_RESPEC_LEVEL) {
     const r = await resolve(state, ev, [talentMoves], ctxOf(state), { ...K, churn: 0 }, first.figure, newMem());
     if (r.taken.length && r.figure.kill > first.figure.kill) {
       respec = { level: state.level, move: { kind: 'talent', label: `Free talent respec (level ${FREE_RESPEC_LEVEL} and below): ${r.taken.length} point move${r.taken.length === 1 ? '' : 's'} on your own page`,
         acquisition: false, costFE: 0, minLevel: 0, changes: [] }, triggered: r.taken, before: first.figure, after: r.figure, cumFE: 0 };
+      const before = { ...((state.loadout.talents ?? {}) as Record<string, number>) };
+      respecView = { trees: talentTrees(r.state.loadout, [...new Set(Object.keys(before).filter((n) => before[n] > 0).map((n) => treeOf(+n)))]), before };
       state = r.state; first = { ...first, figure: r.figure };
     }
   }
@@ -381,7 +383,7 @@ export async function runAdvise(ev: Evaluator, state: State, k: Partial<Knobs> =
     if (g) seenGem.add(g);
     return !sl || n.gain === best.get(sl); }), ...await rollAdvice(ev, state, ctxOf(state), first.figure, books)].sort((a, b) => b.gain - a.gain);
   const bought = Object.fromEntries(next.filter((n) => n.buy).map((n) => [n.buy!.name, books.price(n.buy!.name, state.level)]));
-  const withNext = { ...base, legs, startNotes, next, prices: bought, ...(sw ? { switch: sw } : {}) };
+  const withNext = { ...base, legs, startNotes, next, prices: bought, ...(sw ? { switch: sw } : {}), ...(respecView ? { respec: respecView } : {}) };
   onStep?.({ ...withNext, knobs: { ...base.knobs, partialRun: true }, inputs: first.inputs, start: first.figure, steps: [], notSearched: [], unpriced: [], notCalculable: [] });
   const { stoppedBy, ...r } = await path(state, ev, acq, recon, ctxOf, K,
     onStep && ((p) => onStep({ ...withNext, knobs: { ...base.knobs, partialRun: true }, inputs: first.inputs, ...p } as GuideOut)));

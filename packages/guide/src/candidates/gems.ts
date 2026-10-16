@@ -43,11 +43,12 @@ export interface Support { sid: number; name: string }
 /** supports the client catalog still holds but the season does not (absent from tlidb's index, 2026-10-16; Cold Penetration confirmed missing in game by the user) */
 export const NOT_THIS_SEASON = new Set(['Fire Penetration', 'Cold Penetration', 'Lightning Penetration', 'Erosion Penetration', 'Greater Multiple Projectiles', 'Devastator']);
 /** supports that break the skill's own build, with why (user, 2026-10-16: Elemental Fusion stops Ice Shot inflicting Frostbite, which its Frostbite talents pay through) */
+const COVERAGE: Partial<Record<Skill, Set<string>>> = { iceShot: new Set(['Multiple Projectiles', 'Greater Multiple Projectiles', 'Projectile Penetration']) };
 export const NOT_FOR: Partial<Record<Skill, Record<string, string>>> = { iceShot: { 'Elemental Fusion': 'it stops inflicting Frostbite, which a Frostbite build pays through' } };
 export const supportsFor = (skill: Skill): Support[] => (sup1 as unknown as Record<Skill, Support[]>)[skill].filter((x) => !NOT_THIS_SEASON.has(x.name) && !NOT_FOR[skill]?.[x.name]);
 const SOCKETS = [1, 2, 3, 4, 5];   // a six-stone group = the skill + five supports (loadout sockets 1..5)
 export const GEM_LEVEL = 20;
-type Gem = { sid: number; level: number; place: { kind: string; slot: number; ownerKind?: string; ownerSlot?: number } };
+type Gem = { sid: number; level: number; name?: string; place: { kind: string; slot: number; ownerKind?: string; ownerSlot?: number } };
 
 export const gemMoves: Generator = (s, ctx) => {
   const ns = ctx.notSearched;
@@ -64,6 +65,8 @@ export const gemMoves: Generator = (s, ctx) => {
   const moves: Move[] = [];
   for (const socket of SOCKETS) {
     const cur = sockets.find(g => g.place.slot === socket);
+    // coverage is Ice Shot's job (it clears maps; the figure is one target): a coverage support is kept, never replaced or removed (the owner, 2026-10-16)
+    if (cur && COVERAGE[s.skill]?.has(cur.name ?? '')) { ns.add(`support: ${cur.name} (socket ${socket}) is kept: coverage, which the one-target figure does not price`); continue; }
     for (const c of supportsFor(s.skill)) {
       const level = gemLevelAt(c.sid, ctx.level, cur?.level ?? GEM_LEVEL, ns);
       if (have.has(c.sid) || !level) continue;
