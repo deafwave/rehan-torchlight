@@ -279,16 +279,19 @@ async function rollAdvice(ev: Evaluator, state: State, ctx: GenCtx, base: Figure
   return out;
 }
 
-/** the uniques among your owned (not worn) items: an item whose modifier groups hold one of every key of a config_item_gold row on its base */
-function ownedUniques(state: State): Set<string> {
+/** the uniques among your items: an item whose modifier groups hold one of every key of a config_item_gold row on its base; `worn`: the gear you have on
+ *  (slot -> name), else the bag and stash */
+function ownedUniques(state: State, worn = false): Map<string, string> {
   const gold = table<{ rows: Record<string, Record<string, unknown> & { i8: number }> }>('config_item_gold').rows, lang = table<{ rows: Record<string, string> }>('lang_en').rows;
-  const KEYS = ['m88', 'ma8', 'mc8', 'me8', 'm108', 'm128', 'm148', 'm168'], out = new Set<string>();
-  for (const o of state.owned) {
-    const groups = new Set(Object.values((o.modifiers ?? {}) as Record<string, { id: number }[]>).flat().map((m) => Math.floor(m.id / 10)));
+  const KEYS = ['m88', 'ma8', 'mc8', 'me8', 'm108', 'm128', 'm148', 'm168'], out = new Map<string, string>();
+  const items = worn ? ((state.loadout.gear ?? []) as { slot: string; baseId: number; affixes?: { id: number }[] }[]).map((g) => ({ key: g.slot, baseId: g.baseId, ids: (g.affixes ?? []).map((a) => a.id) }))
+    : state.owned.map((o) => ({ key: o.itemId, baseId: o.baseId, ids: Object.values((o.modifiers ?? {}) as Record<string, { id: number }[]>).flat().map((m) => m.id) }));
+  for (const o of items) {
+    const groups = new Set(o.ids.map((id) => Math.floor(id / 10)));
     const hit = Object.entries(gold).find(([, r]) => r.i8 === o.baseId && (() => { const ks = KEYS.map((k) => Object.keys((r[k] ?? {}) as object).map(Number)).filter((x) => x.length);
       return ks.length > 0 && ks.every((x) => x.some((y) => groups.has(y))); })());
     const name = hit && lang[`item_gold|name|${hit[0]}`];
-    if (name) out.add(name);
+    if (name) out.set(o.key, name);
   }
   return out;
 }
@@ -425,18 +428,22 @@ export async function runAdvise(ev: Evaluator, state: State, k: Partial<Knobs> =
   const best = new Map<string, number>();
   const all = await nextBuys(state, ev, acq, ctxOf(state), first.figure);
   for (const n of all) { const sl = n.kind === 'pact' && /in battle slot (\d)/.exec(n.label)?.[1]; if (sl && n.gain > (best.get(sl) ?? -Infinity)) best.set(sl, n.gain); }
-  // one row per support gem: a gem goes in one socket of a skill (the sockets it could take are alternatives, not steps)
-  const gem = (n: NextBuy) => (n.kind === 'support' ? / with (.+?)$/.exec(n.label)?.[1] : undefined), bestGem = new Map<string, number>();
+  // one row per socket (its supports are alternatives, the others listed under it), and a gem in one socket only (its best)
+  const gem = (n: NextBuy) => (n.kind === 'support' ? /: (?:.* -> |add )(.+)$/.exec(n.label)?.[1] : undefined), bestGem = new Map<string, number>();
   for (const n of all) { const g = gem(n); if (g && n.gain > (bestGem.get(g) ?? -Infinity)) bestGem.set(g, n.gain); }
+  const sock = (n: NextBuy) => (n.kind === 'support' ? /^(.* socket \d+):/.exec(n.label)?.[1] : undefined);
+  const inSocket = (k: string) => all.filter((n) => sock(n) === k && n.gain > 1.005 && n.gain === bestGem.get(gem(n)!)).sort((a, b) => b.gain - a.gain);
   // a unique you already own is never a buy (yours may price lower only where the model cannot read its roll: it is named instead)
-  const own = ownedUniques(state);
+  const own = new Set(ownedUniques(state).values()), wearing = ownedUniques(state, true);
   const seenGem = new Set<string>();   // ties (the same gain in two sockets): the first
   const next = [...all.filter((n) => { const sl = n.kind === 'pact' && /in battle slot (\d)/.exec(n.label)?.[1], g = gem(n);
     if (g && (n.gain !== bestGem.get(g) || seenGem.has(g))) return false;
+    if (g && inSocket(sock(n)!)[0] !== n) return false;
     if (g) seenGem.add(g);
     const u = /^Unique (.+) in \w+$/.exec(n.label)?.[1];
+    if (u && [...wearing.values()].includes(u)) return false;   // you wear it: a row would read as buy one (its gain is your roll against a middle roll)
     if (u && own.has(u)) { if (!startNotes.some((x) => x.includes(`have ${u} `))) startNotes.push(`you have ${u} in your inventory: wear it rather than buy one`); return false; }
-    return !sl || n.gain === best.get(sl); }), ...await rollAdvice(ev, state, ctxOf(state), first.figure, books)].sort((a, b) => b.gain - a.gain);
+    return !sl || n.gain === best.get(sl); }).map((n) => (sock(n) ? { ...n, alts: inSocket(sock(n)!).slice(1).map((a) => ({ label: gem(a)!, gain: a.gain, costFE: a.costFE })) } : n)), ...await rollAdvice(ev, state, ctxOf(state), first.figure, books)].sort((a, b) => b.gain - a.gain);
   const bought = Object.fromEntries(next.filter((n) => n.buy).map((n) => [n.buy!.name, books.price(n.buy!.name, state.level)]));
   const withNext = { ...base, legs, startNotes, next, prices: bought, ...(slates.length ? { slates } : {}), ...(sw ? { switch: sw } : {}), ...(respecView ? { respec: respecView } : {}) };
   onStep?.({ ...withNext, knobs: { ...base.knobs, partialRun: true }, inputs: first.inputs, start: first.figure, steps: [], notSearched: [], unpriced: [], notCalculable: [] });

@@ -18,7 +18,8 @@ export interface Leg { skill: string; target: string | null; firstStep: number; 
 export interface TreeView { tree: number; name: string; points: number; nodes: { id: number; row: number; col: number; kind: number; max: number; pts: number; name: string; prereq: number[] }[];
   cores: { id: number; need: number; name: string; taken: boolean }[] }
 /** advise: one upgrade at the start with its exact figure; `buy` = what is bought and how many (cost = qty x its price) */
-export interface NextBuy { label: string; kind: string; gain: number; kill: number; costFE: number | null; market?: string; buy?: { name: string; qty: number }; partial?: string[] }
+export interface NextBuy { label: string; kind: string; gain: number; kill: number; costFE: number | null; market?: string; buy?: { name: string; qty: number }; partial?: string[];
+  /** the other choices for the same socket, best first */ alts?: { label: string; gain: number; costFE: number | null }[] }
 
 const ESC: Record<string, string> = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' };
 const esc = (s: unknown) => String(s).replace(/[&<>"]/g, (c) => ESC[c]);
@@ -57,8 +58,9 @@ export function actionText(m: Move): string {
   let x: RegExpExecArray | null;
   if ((x = /^Unique (.+) in (\w+)$/.exec(l))) return `Buy ${x[1]} (${slotName(x[2])})`;
   if ((x = /^Craft (T\d+) (.+) \((prefix|suffix)\) on (\w+)$/.exec(l))) return `Craft ${x[1]} “${x[2]}” on your ${slotName(x[4])}`;
-  if ((x = /^Replace socket (\d+) with (.+)$/.exec(l))) return `Swap in the ${x[2]} support (socket ${x[1]})`;
-  if ((x = /^Install in socket (\d+) with (.+)$/.exec(l))) return `Add the ${x[2]} support (socket ${x[1]})`;
+  if ((x = /^(.+) socket (\d+): (.+) -> (.+)$/.exec(l))) return `${x[1]}, support socket ${x[2]}: take out ${x[3]}, put in ${x[4]}`;
+  if ((x = /^(.+) socket (\d+): add (.+)$/.exec(l))) return `${x[1]}, empty support socket ${x[2]}: put in ${x[3]}`;
+  if ((x = /^(.+) socket (\d+): remove (.+)$/.exec(l))) return `${x[1]}, support socket ${x[2]}: take out ${x[3]}`;
   if ((x = /^Rare base (.+?) \(item level (\d+)\) on (\w+)(.*)$/.exec(l))) return `New ${slotName(x[3])} base: ${x[1]} (item level ${x[2]})${x[4]}`;
   if ((x = /^Target: (.+) in (\w+)$/.exec(l))) return `Get ${x[1]} (${slotName(x[2])}, as in the 40T build)`;
   return l;
@@ -187,7 +189,8 @@ const qty = (q: number) => (Number.isInteger(q) ? String(q) : q.toFixed(1));
 export function renderNext(next: NextBuy[], etor: Record<string, number | null>, mine: Record<string, number>, fe = Infinity): string {
   const ranked = rankNext(next, etor, mine), over = (c: number | null) => c !== null && c > fe;
   const rows = [...ranked.filter((r) => !over(r.cost)), ...ranked.filter((r) => over(r.cost))].map(({ n, unit, cost }, i) => `<tr${cost === null ? ' class="unpriced"' : over(cost) ? ' class="over"' : ''}><td class="n">${i + 1}</td>`
-    + `<td class="what"><span class="ico">${ICON[n.kind] ?? '•'}</span>${esc(actionText(n as unknown as Move))}${n.partial?.length ? `<span class="warn" title="partial: ${esc(n.partial.join(', '))}">*</span>` : ''}</td>`
+    + `<td class="what"><span class="ico">${ICON[n.kind] ?? '•'}</span>${esc(actionText(n as unknown as Move))}${n.partial?.length ? `<span class="warn" title="partial: ${esc(n.partial.join(', '))}">*</span>` : ''}`
+    + `${n.alts?.length ? `<small class="alts">or, in the same socket: ${n.alts.map((a) => `${esc(a.label)} ${fmtGain(1, a.gain)}${a.costFE ? ` (${fmtFE(a.costFE)} FE)` : ''}`).join(' · ')}</small>` : ''}</td>`
     + `<td class="gain">${fmtGain(1, n.gain)}<small>${fmtDps(n.kill)}</small></td>`
     + `<td class="price">${n.buy ? `<input type="number" min="0" step="any" data-name="${esc(n.buy.name)}" value="${unit ?? ''}" placeholder="price" title="${esc(n.buy.name)}">${n.buy.qty !== 1 ? ` × ${qty(n.buy.qty)}` : ''}` : '—'}</td>`
     + `<td class="cost">${cost === null ? 'not on the market' : cost === 0 ? 'free' : `${fmtFE(cost)} FE${over(cost) ? ' <small>over your FE</small>' : ''}`}</td></tr>`).join('');
@@ -313,9 +316,9 @@ function switchCard(g: GuideOut): string {
 /** advise: slate talents to look for, each priced as one more slate talent on your character */
 function slateCard(g: GuideOut): string {
   if (!g.slates?.length) return '';
-  const row = (x: NonNullable<GuideOut['slates']>[number]) => `<tr><td>${esc(x.name)}${x.core ? ' <span class="lv">core</span>' : ''}</td><td>+${((x.gain - 1) * 100).toFixed(1)} %</td></tr>`;
+  const row = (x: NonNullable<GuideOut['slates']>[number]) => `<tr><td>${esc(x.name)}</td><td>+${((x.gain - 1) * 100).toFixed(1)} %</td></tr>`;
   return `<div class="gl-final"><b>Slate talents to look for</b><p class="bnote">Each line priced as one more talent on a slate, on your character as it is (a core you already hold adds nothing). Which slate can roll a line is not known here.</p>`
-    + `<table><tr><th>Talent</th><th>Damage</th></tr>${g.slates.map(row).join('')}</table></div>`;
+    + [['Core talents', true], ['Other talents', false]].map(([h, core]) => ((xs) => xs.length ? `<table><tr><th>${h}</th><th>Damage</th></tr>${xs.map(row).join('')}</table>` : '')(g.slates!.filter((x) => x.core === core))).join('') + '</div>';
 }
 function finalCard(g: GuideOut): string {
   if (!g.final?.length) return '';
