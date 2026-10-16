@@ -1,0 +1,3679 @@
+{
+ "mode": "advise",
+ "pin": "cf7d97f9dbdd4168640dad900cdc0b570cf23e34",
+ "etor": {
+  "season": "1601",
+  "fetchedAt": "2026-10-16T06:24:02.843Z"
+ },
+ "knobs": {
+  "churn": 0.05,
+  "topK": 5,
+  "maxRounds": 10,
+  "refreshEvery": 10,
+  "maxSteps": 0,
+  "continueSteps": 10,
+  "enablerFloor": 0.25,
+  "budgetMinutes": 20,
+  "fight": {
+   "bombs": 10,
+   "inputs": {
+    "castLogSum id=10000000 window=4s tags=[[],[],[],[]]": 0
+   }
+  },
+  "fightNote": "training dummy stands still (dps-debug STILL / e2e1-lib.ts)",
+  "rollBudget": 1048576,
+  "target": "cube3",
+  "fe": 13,
+  "level": 85,
+  "skill": "iceShot"
+ },
+ "character": {
+  "level": 85,
+  "skill": "iceShot",
+  "fe": 13,
+  "owned": 169,
+  "gear": [
+   {
+    "slot": "belt",
+    "label": "Fearless Waistguard"
+   },
+   {
+    "slot": "boots",
+    "label": "Boots of Calamity"
+   },
+   {
+    "slot": "chest",
+    "label": "Sanctuary of Calamity"
+   },
+   {
+    "slot": "gloves",
+    "label": "Hunter's Gloves"
+   },
+   {
+    "slot": "helmet",
+    "label": "Witchdoctor's Mask"
+   },
+   {
+    "slot": "mainHand",
+    "label": "Starfall Long Bow"
+   },
+   {
+    "slot": "necklace",
+    "label": "Shaman's Necklace"
+   },
+   {
+    "slot": "ring1",
+    "label": "Blight Ice Ring"
+   },
+   {
+    "slot": "ring2",
+    "label": "Evernight Darkness Ring"
+   }
+  ]
+ },
+ "legs": [
+  {
+   "skill": "iceShot",
+   "target": null,
+   "firstStep": 0,
+   "start": {
+    "life100": 13017214.863815073,
+    "life0": 13017214.863815073,
+    "kill": 13017214.863815073,
+    "partial": [
+     "a row's condition cannot be evaluated, its buff adds are unknown: affix class 651295 row 1 (support 7514 (skill 10003110) on gem 7160): not ported: condition 184 with bUseBuffCfgId true, by-tag true, only-by-self false (support 7514 (skill 10003110) on gem 7160)",
+     "not calculable without a capture: the Ice Lances that reach the target (1) and the returning passes that hit it (1) per cast (stated by the caller)",
+     "not calculable without a capture: Flame Core posts of event 1000074 per throw (1, stated by the caller; 1 or 2 unverified)",
+     "the explosion (damage id 22) skips the victims the lance hit: it adds nothing on one target without the Batter support (label 3100051 not held)",
+     "an Ice Shot cast per bomb, a bomb per auto-throw repeat; the throw period is the cooldown in whole logic frames (autothrow.ts)",
+     "the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located): taken",
+     "the throw's trait class 7999301 (the node 2320 class of the hero trait): taken",
+     "no control effect on the hero (controlled: false): the gate flags are comp 6's: scenario",
+     "logic dt = 1 / 30 (SetFramePerSecond argument): scenario",
+     "the hero's comp 0x40 (absent: the entity composition is untraced): scenario",
+     "the hand mode (the weapon hand state; the training ground): taken",
+     "the target's Life, its geometry and the hero's (the training ground's pre/ reads): scenario",
+     "the owner state tags, labels and the buffs derived from the pieces (owner.ts); training-ground values of L13b: calculated",
+     "the embers per bomb: the landing box around the target, circle tests on the calculated bullet ends (B1, D9, C40b): calculated",
+     "held buffs left off: 11210 (carried: 10, 380, 3411, 3471, 11360, 15101)",
+     "the bomb's position for a distance-gated record: the landing box's far corner (hoa.ts), the bomb's radius 0",
+     "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
+     "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
+     "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 6927701 row 2 (talent 20001200 x1) - ticked at the grant",
+     "not in this figure: node 302 (SUP1: buff component 0x12 only: FUN_141bcd450(comp, +0x78) removes buffs (execute FUN_141aa5010, t3b_exec.ann.c 227-253); the Exit (runtime vt 0x145263118 slot 19) is the no-op 0x1407d0580 (`mov al, 1`), so an idle deferred row holding it is as safe as 306 / 301) - affix class 6927701 row 3 (talent 20001200 x1) - fires on event 0xf42b8",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 1)) - ticked at the grant",
+     "not in this figure: node 0 (no description) - affix class 651295 row 1 (support 7514 (skill 10003110) on gem 7160): not ported: condition 184 with bUseBuffCfgId true, by-tag true, only-by-self false (support 7514 (skill 10003110) on gem 7160) - deferred row, its conditions false at the grant"
+    ],
+    "lock": 15000000000000
+   }
+  }
+ ],
+ "startNotes": [
+  "left out of every figure: your passive skill Summon Thunder Magus with its supports: the model stops on it (not ported: node 325 buff id is an expression where an integer literal was expected)",
+  "left out of every figure: your pactspirit Preserver of Eternity (slot 2): the model stops on it (the scenario did not supply the fight input castLogCount id=1000037 window=4s tags=[[],[],[],[]])"
+ ],
+ "next": [
+  {
+   "label": "Unique Wriggling Tango in boots",
+   "kind": "unique",
+   "gain": 2.4836067640543296,
+   "kill": 38397561.76548253,
+   "costFE": 159.428,
+   "buy": {
+    "name": "Wriggling Tango",
+    "qty": 1
+   },
+   "partial": [
+    "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 271919904 row 1 (gear 4011 modifier 51443430) - deferred row, its conditions false at the grant"
+   ]
+  },
+  {
+   "label": "Unique Howling Wind in necklace",
+   "kind": "unique",
+   "gain": 2.4597186622082186,
+   "kill": 38028242.08115423,
+   "costFE": 3,
+   "buy": {
+    "name": "Howling Wind",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Truth in necklace",
+   "kind": "unique",
+   "gain": 2.4394332372108405,
+   "kill": 37714621.23322081,
+   "costFE": 1580.556,
+   "buy": {
+    "name": "Truth",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Exquisite Box - Unique in necklace",
+   "kind": "unique",
+   "gain": 2.0917520698345213,
+   "kill": 32339330.2281206,
+   "costFE": null,
+   "buy": {
+    "name": "Exquisite Box - Unique",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Vortex Heart in necklace",
+   "kind": "unique",
+   "gain": 1.9868765130079435,
+   "kill": 30717911.84207782,
+   "costFE": 37.859,
+   "buy": {
+    "name": "Vortex Heart",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Meteorite in mainHand",
+   "kind": "unique",
+   "gain": 1.8709564252282087,
+   "kill": 28925740.555220608,
+   "costFE": null,
+   "buy": {
+    "name": "Meteorite",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Bow of Endless Dusk in mainHand",
+   "kind": "unique",
+   "gain": 1.8181687154250952,
+   "kill": 28109621.281847958,
+   "costFE": 39,
+   "buy": {
+    "name": "Bow of Endless Dusk",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Endless Night - Prototype in boots",
+   "kind": "unique",
+   "gain": 1.7074598470168916,
+   "kill": 26398017.54722482,
+   "costFE": null,
+   "buy": {
+    "name": "Endless Night - Prototype",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Heart of the Storm in necklace",
+   "kind": "unique",
+   "gain": 1.691538772801861,
+   "kill": 26151871.321746472,
+   "costFE": 6.081,
+   "buy": {
+    "name": "Heart of the Storm",
+    "qty": 1
+   },
+   "partial": [
+    "a row's condition cannot be evaluated, its buff adds are unknown: affix class 420087264 row 1 (gear 4528 modifier 51527520): not ported: condition 251 (gear 4528 modifier 51527520)",
+    "held buffs the pieces do not derive, taken from the capture: 35095 x1 (tasks W8 / uptime rules): taken",
+    "not in this figure: node 0 (no description) - affix class 420087264 row 1 (gear 4528 modifier 51527520): not ported: condition 251 (gear 4528 modifier 51527520) - deferred row, its conditions false at the grant",
+    "not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 657368704 row 1 (gear 4528 modifier 51527530) - fires on event 0xf428a"
+   ]
+  },
+  {
+   "label": "Unique Startled Birds in mainHand",
+   "kind": "unique",
+   "gain": 1.6377000290151174,
+   "kill": 25319502.639293384,
+   "costFE": null,
+   "buy": {
+    "name": "Startled Birds",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Lightning Striker's Sacrum in chest",
+   "kind": "unique",
+   "gain": 1.6373277872614505,
+   "kill": 25313747.63172335,
+   "costFE": 5.857,
+   "buy": {
+    "name": "Lightning Striker's Sacrum",
+    "qty": 1
+   },
+   "partial": [
+    "a row's condition cannot be evaluated, its buff adds are unknown: affix class 414133 row 1 (gear 3111 modifier 51416140 node 1017 talent 21001400): not ported: condition 611 (gear 3111 modifier 51416140 node 1017 talent 21001400)",
+    "not in this figure: node 0 (no description) - affix class 414133 row 1 (gear 3111 modifier 51416140 node 1017 talent 21001400): not ported: condition 611 (gear 3111 modifier 51416140 node 1017 talent 21001400) - deferred row, its conditions false at the grant"
+   ]
+  },
+  {
+   "label": "Unique Gravel in mainHand",
+   "kind": "unique",
+   "gain": 1.6048249410284146,
+   "kill": 24811240.52639173,
+   "costFE": 11.204,
+   "buy": {
+    "name": "Gravel",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Trinity in chest",
+   "kind": "unique",
+   "gain": 1.5264067852823202,
+   "kill": 23598864.226578265,
+   "costFE": 99.863,
+   "buy": {
+    "name": "Trinity",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Blind Vision in helmet",
+   "kind": "unique",
+   "gain": 1.4952817750815361,
+   "kill": 23117659.02173943,
+   "costFE": 105.493,
+   "buy": {
+    "name": "Blind Vision",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Stray Bird's Return in gloves",
+   "kind": "unique",
+   "gain": 1.4906373481697646,
+   "kill": 23045854.30941899,
+   "costFE": 8,
+   "buy": {
+    "name": "Stray Bird's Return",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Fool's Crown in helmet",
+   "kind": "unique",
+   "gain": 1.4777581139147928,
+   "kill": 22846736.15595169,
+   "costFE": 57.265,
+   "buy": {
+    "name": "Fool's Crown",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Startled Birds in mainHand",
+   "kind": "unique",
+   "gain": 1.4687800367123582,
+   "kill": 22707931.463153627,
+   "costFE": null,
+   "buy": {
+    "name": "Startled Birds",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Dawn Break in belt",
+   "kind": "unique",
+   "gain": 1.461058580799653,
+   "kill": 22588554.642064784,
+   "costFE": 45.418,
+   "buy": {
+    "name": "Dawn Break",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Frostbolt in necklace",
+   "kind": "unique",
+   "gain": 1.4509141546224904,
+   "kill": 22431717.723938055,
+   "costFE": 1.161,
+   "buy": {
+    "name": "Frostbolt",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Equip Hell Cavalry - Crushed Ice (level 3, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.4414966403880871,
+   "kill": 22286119.15747961,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Unique Arminius' Confession in mainHand",
+   "kind": "unique",
+   "gain": 1.4288320528089584,
+   "kill": 22090319.52814935,
+   "costFE": null,
+   "buy": {
+    "name": "Arminius' Confession",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Equip Awooawoo - White Mist (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.410586365282169,
+   "kill": 21808233.84377156,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Unique Caesar's Resentment in mainHand",
+   "kind": "unique",
+   "gain": 1.4049300137649392,
+   "kill": 21720784.369123016,
+   "costFE": null,
+   "buy": {
+    "name": "Caesar's Resentment",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Legless Bird's Lament in helmet",
+   "kind": "unique",
+   "gain": 1.4018192233227462,
+   "kill": 21672690.29486281,
+   "costFE": 783.872,
+   "buy": {
+    "name": "Legless Bird's Lament",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Death's Touch in gloves",
+   "kind": "unique",
+   "gain": 1.3849483004281857,
+   "kill": 21411859.0258953,
+   "costFE": 54.619,
+   "buy": {
+    "name": "Death's Touch",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Witchdoctor's Herb Bag in belt",
+   "kind": "unique",
+   "gain": 1.3711499649965275,
+   "kill": 21198531.197727755,
+   "costFE": 5.524,
+   "buy": {
+    "name": "Witchdoctor's Herb Bag",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Rat King's Megagon Dice in necklace",
+   "kind": "unique",
+   "gain": 1.3627139393842171,
+   "kill": 21068106.841025207,
+   "costFE": null,
+   "buy": {
+    "name": "Rat King's Megagon Dice",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Equip Traveling Lizard - Violet (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.3069756962525727,
+   "kill": 20206371.13297252,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Cloudgatherer - Violet (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.299164512419735,
+   "kill": 20085607.08206725,
+   "costFE": 0,
+   "market": "drop",
+   "partial": [
+    "not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 371288 row 1 (pactspirit 2320 point 210) - fires on event 0xf425e"
+   ]
+  },
+  {
+   "label": "Equip Awooawoo - Drizzle (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.2941347669638572,
+   "kill": 20007845.189725064,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Idling Weasel - Sprouts (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.292730966892858,
+   "kill": 19986141.8747266,
+   "costFE": 0,
+   "market": "drop",
+   "partial": [
+    "not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 371288 row 1 (pactspirit 2310 point 210) - fires on event 0xf425e"
+   ]
+  },
+  {
+   "label": "Equip Traveling Lizard - Green Leaf (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.2848691107856716,
+   "kill": 19864594.41003286,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Awooawoo - Violet (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.2844105946268585,
+   "kill": 19857505.565380275,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Luluri - Amethyst (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.279929620280304,
+   "kill": 19788227.8956092,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Unique Kaleidoscope in ring1",
+   "kind": "unique",
+   "gain": 1.2728839501666436,
+   "kill": 19679298.995396808,
+   "costFE": 6.615,
+   "buy": {
+    "name": "Kaleidoscope",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Equip Hell Cavalry - Glow (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.2717067599063498,
+   "kill": 19661099.15942295,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Spiny Snail - Flame (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.2712816982961057,
+   "kill": 19654527.535577457,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Unique Thousand-Day's Victory in mainHand",
+   "kind": "unique",
+   "gain": 1.2661113169464167,
+   "kill": 19574591.355623715,
+   "costFE": null,
+   "buy": {
+    "name": "Thousand-Day's Victory",
+    "qty": 1
+   },
+   "partial": [
+    "not in this figure: node 381 (N2: registers an ailment-base-damage entry {percent, percentMax, tags} under the byte `ailmentType` in comp 5 of each task-filter target: FUN_141baf1c0(comp 5, type, percent, percentMax, tag lists) bumps the id counter +0x78 and adds the entry to the byte-keyed map +0x80; once per target (set +0xb8), the abort FUN_141bd0b00 removes it (data vt 0x14524cf60, runtime vt "
+   ]
+  },
+  {
+   "label": "Equip Sprouting Grass - Black Porcelain (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.262912532692574,
+   "kill": 19525136.86156328,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Lumidrake - Fluorescence (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.262912532692574,
+   "kill": 19525136.86156328,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Lumidrake - Candlelight (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.262912532692574,
+   "kill": 19525136.86156328,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Winter Darer - Sky (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.2573780809402177,
+   "kill": 19439572.006419998,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Unique Blight in chest",
+   "kind": "unique",
+   "gain": 1.2527512190350047,
+   "kill": 19368038.85618177,
+   "costFE": 6.442,
+   "buy": {
+    "name": "Blight",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Gauze of Phantom Sin in chest",
+   "kind": "unique",
+   "gain": 1.2505582339737271,
+   "kill": 19334134.423096832,
+   "costFE": null,
+   "buy": {
+    "name": "Gauze of Phantom Sin",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Kaleidoscope in ring2",
+   "kind": "unique",
+   "gain": 1.247989546943732,
+   "kill": 19294421.48612229,
+   "costFE": 6.615,
+   "buy": {
+    "name": "Kaleidoscope",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Hekate's Vision in helmet",
+   "kind": "unique",
+   "gain": 1.245974470709804,
+   "kill": 19263267.5952269,
+   "costFE": null,
+   "buy": {
+    "name": "Hekate's Vision",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Heavyware in chest",
+   "kind": "unique",
+   "gain": 1.2449216556525662,
+   "kill": 19246990.650030497,
+   "costFE": 9.099,
+   "buy": {
+    "name": "Heavyware",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Equip Shro-Shroom - Boletus (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.2440410462275509,
+   "kill": 19233376.073327906,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Unique Howling in belt",
+   "kind": "unique",
+   "gain": 1.2379941488655113,
+   "kill": 19139888.60248151,
+   "costFE": null,
+   "buy": {
+    "name": "Howling",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Hunting the Eye of the Kraken in helmet",
+   "kind": "unique",
+   "gain": 1.2302310681837125,
+   "kill": 19019868.24568268,
+   "costFE": 1.109,
+   "buy": {
+    "name": "Hunting the Eye of the Kraken",
+    "qty": 1
+   },
+   "partial": [
+    "not in this figure: node 500 (event payload into the tree context: walks the payload entries (types 3 / 5 / 0xc / 0xf) and hands entity ids / values to the tree (execute FUN_141af14e0, t3b_exec.ann.c 1-75)) - affix class 495742688 row 1 (gear 3711 modifier 51423140) - fires on event 0xf424a",
+    "not in this figure: node 1035 (casts a skill: comps 0x82 / 0x83 / 0x1e (execute FUN_141a59940, t3b_exec.ann.c 1024-1347)) - affix class 495742688 row 1 (gear 3711 modifier 51423140) - fires on event 0xf424a",
+    "not in this figure: node 500 (event payload into the tree context: walks the payload entries (types 3 / 5 / 0xc / 0xf) and hands entity ids / values to the tree (execute FUN_141af14e0, t3b_exec.ann.c 1-75)) - affix class 495742688 row 2 (gear 3711 modifier 51423140) - fires on event 0xf424a",
+    "not in this figure: node 1035 (casts a skill: comps 0x82 / 0x83 / 0x1e (execute FUN_141a59940, t3b_exec.ann.c 1024-1347)) - affix class 495742688 row 2 (gear 3711 modifier 51423140) - fires on event 0xf424a"
+   ]
+  },
+  {
+   "label": "Unique Imperial General in mainHand",
+   "kind": "unique",
+   "gain": 1.2290430239414625,
+   "kill": 19001500.60277231,
+   "costFE": null,
+   "buy": {
+    "name": "Imperial General",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Equip Dragon Plant - Truffle (level 2, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.2094756548229466,
+   "kill": 18698981.188189264,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip The Bone worm's Daughter (level 4, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.2059283091065969,
+   "kill": 18644137.793406144,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Benign Bug - Tolerant Green (level 4, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.2049216164361078,
+   "kill": 18628573.918901768,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Shro-Shroom - Gloom Shroom (level 4, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.2049216164361078,
+   "kill": 18628573.918901768,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Unique Mercurial Torment in necklace",
+   "kind": "unique",
+   "gain": 1.2018395541800357,
+   "kill": 18580923.993979916,
+   "costFE": null,
+   "buy": {
+    "name": "Mercurial Torment",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Equip Luluri - Maple (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.2000227702246888,
+   "kill": 18552835.781647105,
+   "costFE": 0,
+   "market": "drop",
+   "partial": [
+    "not in this figure: node 302 (SUP1: buff component 0x12 only: FUN_141bcd450(comp, +0x78) removes buffs (execute FUN_141aa5010, t3b_exec.ann.c 227-253); the Exit (runtime vt 0x145263118 slot 19) is the no-op 0x1407d0580 (`mov al, 1`), so an idle deferred row holding it is as safe as 306 / 301) - affix class 577990 row 2 (pactspirit 2210 point 210) - ticked at the grant"
+   ]
+  },
+  {
+   "label": "Equip Awooawoo - Amber (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.2000227702246888,
+   "kill": 18552835.781647105,
+   "costFE": 0,
+   "market": "drop",
+   "partial": [
+    "not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 706259 row 1 (pactspirit 3110 point 210) - fires on event 0xf4260"
+   ]
+  },
+  {
+   "label": "Equip Idling Weasel - Abyss (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.2000227702246888,
+   "kill": 18552835.781647105,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Luluri - Golden Leaf (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.2000227702246888,
+   "kill": 18552835.781647105,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Happy Chonky - Ember (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.2000227702246888,
+   "kill": 18552835.781647105,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Happy Chonky - Electrify (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.2000227702246888,
+   "kill": 18552835.781647105,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Shocket - Violet (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.2000227702246888,
+   "kill": 18552835.781647105,
+   "costFE": 0,
+   "market": "drop",
+   "partial": [
+    "not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 118504 row 1 (pactspirit 9210 point 210) - fires on event 0xf4260"
+   ]
+  },
+  {
+   "label": "Equip Idling Weasel - Sandstone (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.2000227702246888,
+   "kill": 18552835.781647105,
+   "costFE": 0,
+   "market": "drop",
+   "partial": [
+    "not in this figure: node 500 (event payload into the tree context: walks the payload entries (types 3 / 5 / 0xc / 0xf) and hands entity ids / values to the tree (execute FUN_141af14e0, t3b_exec.ann.c 1-75)) - affix class 791863744 row 1 (pactspirit 11310 point 210) - fires on event 0xf42d6 (x2)",
+    "not in this figure: node 102 (comp 0x6f resource change, modes 1 / 2 / 3, FUN_141c55700 (execute FUN_141a58270, t3b_exec.ann.c 76-152)) - affix class 791863744 row 1 (pactspirit 11310 point 210) - fires on event 0xf42d6 (x2)",
+    "not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 712332544 row 1 (pactspirit 11310 point 210) - fires on event 0xf42d6"
+   ]
+  },
+  {
+   "label": "Equip Luluri - Shallow Sea (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.2000227702246888,
+   "kill": 18552835.781647105,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Feasting Samurai - Orange (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.2000227702246888,
+   "kill": 18552835.781647105,
+   "costFE": 0,
+   "market": "drop",
+   "partial": [
+    "a row's condition cannot be evaluated, its buff adds are unknown: affix class 798394752 row 1 (pactspirit 13210 point 210): not ported: condition 228 (pactspirit 13210 point 210)",
+    "not in this figure: node 0 (no description) - affix class 798394752 row 1 (pactspirit 13210 point 210): not ported: condition 228 (pactspirit 13210 point 210) - deferred row, its conditions false at the grant",
+    "not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 798394752 row 1 (pactspirit 13210 point 210) - deferred row, its conditions false at the grant"
+   ]
+  },
+  {
+   "label": "Equip Sprouting Grass - Green Porcelain (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.2000227702246888,
+   "kill": 18552835.781647105,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Lumidrake - Aurora (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.2000227702246888,
+   "kill": 18552835.781647105,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Meowth - Jade (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.2000227702246888,
+   "kill": 18552835.781647105,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Flower Whisperer (level 3, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.1979832193095208,
+   "kill": 18521303.50231349,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Unique Genius Battlegear in chest",
+   "kind": "unique",
+   "gain": 1.1929763138375291,
+   "kill": 18443894.72532945,
+   "costFE": null,
+   "buy": {
+    "name": "Genius Battlegear",
+    "qty": 1
+   },
+   "partial": [
+    "buff 35101 (461165184 row 2): an uptime add on event 1000076: the fight states no rate for it (461165184 row 2)",
+    "not calculable without buff 35101's instance count over the fight (added by 461165184 row 2 on event 1000076, deferred false): an uptime rule that is not ported",
+    "not in this figure: node 625 (buff component 0x12 of each task-filter target (FUN_141bc4eb0): FUN_141bacb60(comp 0x12, buff +0x78, count +0x7c) - registers the source in the buff's map +0x48 and raises the buff slot's +0x7c (FUN_141bd4f00) when below it, i.e. the buff's stack limit (T3d: data vt 0x14524d780, build FUN_141b15f00, execute FUN_141af3470, abort FUN_141aff1b0 -> FUN_141bcf640, returns "
+   ]
+  },
+  {
+   "label": "Equip Dreamweaver (level 3, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.190822880362344,
+   "kill": 18410601.775709562,
+   "costFE": 0,
+   "market": "drop",
+   "partial": [
+    "not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 747307 row 2 (pactspirit 2330 point 210) - fires on event 0xf425e",
+    "not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 371288 row 1 (pactspirit 2330 point 210) - fires on event 0xf425e"
+   ]
+  },
+  {
+   "label": "Unique Glacial Abyss Arrow in mainHand",
+   "kind": "unique",
+   "gain": 1.183668469862676,
+   "kill": 18299991.705293998,
+   "costFE": 3.298,
+   "buy": {
+    "name": "Glacial Abyss Arrow",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Manella's Mist in necklace",
+   "kind": "unique",
+   "gain": 1.1777888057971193,
+   "kill": 18209089.728626423,
+   "costFE": null,
+   "buy": {
+    "name": "Manella's Mist",
+    "qty": 1
+   },
+   "partial": [
+    "not in this figure: node 631 (N2: 'Reap': for each task-filter target FUN_141e0bcd0(world service +0x1a8, the executor, the target, a hit descriptor FUN_141a4b8d0, reapTime +0x78 (f64, FUN_141980a40), tags +0x80, reapFromSelf +0x90, 0, 1.0, b38 flag +0x91 == 0, the id of the type-4 payload entry or -1) - the damage pipeline's reap of the target's damage-over-time; no attribute / char-field record "
+   ]
+  },
+  {
+   "label": "Equip Shocket - Pale (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.175371708295082,
+   "kill": 18171720.42686298,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Replace socket 2 with Elemental Fusion",
+   "kind": "support",
+   "gain": 1.1746732146282215,
+   "kill": 18160921.433196086,
+   "costFE": 0,
+   "market": "drop",
+   "buy": {
+    "name": "Elemental Fusion",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Replace socket 1 with Elemental Fusion",
+   "kind": "support",
+   "gain": 1.1736476929572188,
+   "kill": 18145066.45475341,
+   "costFE": 0,
+   "market": "drop",
+   "buy": {
+    "name": "Elemental Fusion",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Everlasting Cloud in chest",
+   "kind": "unique",
+   "gain": 1.1731666626108177,
+   "kill": 18137629.53168478,
+   "costFE": null,
+   "buy": {
+    "name": "Everlasting Cloud",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Nomad Long Bow in mainHand",
+   "kind": "unique",
+   "gain": 1.1620825107180213,
+   "kill": 17966264.075171497,
+   "costFE": null,
+   "buy": {
+    "name": "Nomad Long Bow",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Illusory Ocean Silk - Iron Rain in necklace",
+   "kind": "unique",
+   "gain": 1.1604763934884217,
+   "kill": 17941432.855342846,
+   "costFE": 1.103,
+   "buy": {
+    "name": "Illusory Ocean Silk - Iron Rain",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Tide of the Styx in helmet",
+   "kind": "unique",
+   "gain": 1.1578815936143467,
+   "kill": 17901316.203272205,
+   "costFE": 94.35,
+   "buy": {
+    "name": "Tide of the Styx",
+    "qty": 1
+   },
+   "partial": [
+    "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 662739904 row 1 (gear 3610 modifier 51421730) - ticked at the grant",
+    "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 850123584 row 1 (gear 3610 modifier 51421740) - ticked at the grant",
+    "not in this figure: node 238 (E2E1: taunt (buff 280 chaofeng; data vt 0x14524bf00, runtime vt 0x1452629d0 ctor FUN_141a93380, execute FUN_141aa12a0): for each filter target it looks up the entity (FUN_141bc02f0), takes its comp 0x86 and registers the owner under the node key (FUN_1412cfff0, FUN_141ca2b10); no call into comp 0xc / 0x25 / 0x43 [code: the call list of the function]) - affix class 523"
+   ]
+  },
+  {
+   "label": "Equip Spiny Snail - Flower (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.1538677425391661,
+   "kill": 17839260.447583612,
+   "costFE": 0,
+   "market": "drop",
+   "partial": [
+    "not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 789300 row 2 (pactspirit 4110 point 210) - fires on event 0xf425e (x2)"
+   ]
+  },
+  {
+   "label": "Equip Explorer Otter - Olive (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.1538677425391661,
+   "kill": 17839260.447583612,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Spiny Snail - Iris (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.1538677425391661,
+   "kill": 17839260.447583612,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Unique Silent Avowal in chest",
+   "kind": "unique",
+   "gain": 1.150965332620333,
+   "kill": 17794388.020217046,
+   "costFE": 2071.592,
+   "buy": {
+    "name": "Silent Avowal",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Replace socket 2 with Wind Projectiles",
+   "kind": "support",
+   "gain": 1.1490043617457357,
+   "kill": 17764070.619987894,
+   "costFE": 0,
+   "market": "drop",
+   "buy": {
+    "name": "Wind Projectiles",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Replace socket 1 with Wind Projectiles",
+   "kind": "support",
+   "gain": 1.1480014594105619,
+   "kill": 17748565.345595453,
+   "costFE": 0,
+   "market": "drop",
+   "buy": {
+    "name": "Wind Projectiles",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Broken Dream in necklace",
+   "kind": "unique",
+   "gain": 1.1477871182652668,
+   "kill": 17745251.545083847,
+   "costFE": null,
+   "buy": {
+    "name": "Broken Dream",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Equip Iron Lion (level 1, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.1292953429949062,
+   "kill": 17459361.244987383,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Unique The Three Saints in chest",
+   "kind": "unique",
+   "gain": 1.1227778747677373,
+   "kill": 17358598.558869246,
+   "costFE": 89.557,
+   "buy": {
+    "name": "The Three Saints",
+    "qty": 1
+   },
+   "partial": [
+    "51416990"
+   ]
+  },
+  {
+   "label": "Equip Winter Darer - Shallow Sea (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.1195094460712776,
+   "kill": 17308067.333650842,
+   "costFE": 0,
+   "market": "drop",
+   "partial": [
+    "a row's condition cannot be evaluated, its buff adds are unknown: affix class 387555 row 1 (pactspirit 2220 point 210): not ported: a count over the enemies (filter [1,[8]], GrantCtx.worldLists.enemies): the scenario's list is not given (pactspirit 2220 point 210)",
+    "not in this figure: node 0 (no description) - affix class 387555 row 1 (pactspirit 2220 point 210): not ported: a count over the enemies (filter [1,[8]], GrantCtx.worldLists.enemies): the scenario's list is not given (pactspirit 2220 point 210) - deferred row, its conditions false at the grant",
+    "not in this figure: node 302 (SUP1: buff component 0x12 only: FUN_141bcd450(comp, +0x78) removes buffs (execute FUN_141aa5010, t3b_exec.ann.c 227-253); the Exit (runtime vt 0x145263118 slot 19) is the no-op 0x1407d0580 (`mov al, 1`), so an idle deferred row holding it is as safe as 306 / 301) - affix class 387555 row 2 (pactspirit 2220 point 210) - ticked at the grant"
+   ]
+  },
+  {
+   "label": "Equip Greedy Chestnut - Lotus Leaf (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.1195094460712776,
+   "kill": 17308067.333650842,
+   "costFE": 0,
+   "market": "drop",
+   "partial": [
+    "not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 706259 row 1 (pactspirit 3120 point 210) - fires on event 0xf4260"
+   ]
+  },
+  {
+   "label": "Equip Greedy Chestnut - Emerald (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.1195094460712776,
+   "kill": 17308067.333650842,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Greedy Chestnut - Radiance (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.1195094460712776,
+   "kill": 17308067.333650842,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Winter Darer - Lava (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.1195094460712776,
+   "kill": 17308067.333650842,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Hell Cavalry - Muffled Thunder (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.1195094460712776,
+   "kill": 17308067.333650842,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip First Mate of the Furious Sea - Sky (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.1195094460712776,
+   "kill": 17308067.333650842,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Benign Bug - Ghost Light Yellow (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.1195094460712776,
+   "kill": 17308067.333650842,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Shro-Shroom - Oyster Mushroom (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.1195094460712776,
+   "kill": 17308067.333650842,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Letice - Amethyst (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.1194607425470988,
+   "kill": 17307314.35753364,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Wear your Disciple's Coat (stash) in chest",
+   "kind": "gear",
+   "gain": 1.1175080530397696,
+   "kill": 17277124.990580846,
+   "costFE": 0,
+   "partial": [
+    "buff 35101 (510238944 row 1): an uptime add on event 1000076: the fight states no rate for it (510238944 row 1)",
+    "not calculable without buff 35101's instance count over the fight (added by 510238944 row 1 on event 1000076, deferred false): an uptime rule that is not ported"
+   ]
+  },
+  {
+   "label": "Raise Red Umbrella (slot 3) from rank 2 to 5",
+   "kind": "pact",
+   "gain": 1.1164972555857224,
+   "kill": 17261497.654467937,
+   "costFE": null,
+   "market": "not-on-market"
+  },
+  {
+   "label": "Unique Traveler's Glance in mainHand",
+   "kind": "unique",
+   "gain": 1.1163796570753124,
+   "kill": 17259679.53409061,
+   "costFE": null,
+   "buy": {
+    "name": "Traveler's Glance",
+    "qty": 1
+   },
+   "partial": [
+    "not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 675527 row 1 (gear 1714 modifier 51330230) - fires on event 0xf4261",
+    "not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 89359 row 1 (gear 1714 modifier 51330250) - fires on event 0xf424a"
+   ]
+  },
+  {
+   "label": "Unique Scarlet Decree in helmet",
+   "kind": "unique",
+   "gain": 1.1131249952613638,
+   "kill": 17209361.15042554,
+   "costFE": null,
+   "buy": {
+    "name": "Scarlet Decree",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Replace socket 5 with Elemental Fusion",
+   "kind": "support",
+   "gain": 1.1093752663255454,
+   "kill": 17151388.829484574,
+   "costFE": 0,
+   "market": "drop",
+   "buy": {
+    "name": "Elemental Fusion",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Royal Cycle in chest",
+   "kind": "unique",
+   "gain": 1.1083783249214803,
+   "kill": 17135975.71349005,
+   "costFE": 2500.009,
+   "buy": {
+    "name": "Royal Cycle",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Craft T2 +43% Critical Strike Damage (suffix) on helmet",
+   "kind": "craft",
+   "gain": 1.1040433230878532,
+   "kill": 17068954.837613367,
+   "costFE": 209.01268499999998,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 1066.39125
+   }
+  },
+  {
+   "label": "Unique Lens of the Mage's Assistant in helmet",
+   "kind": "unique",
+   "gain": 1.1029098339148473,
+   "kill": 17051430.63806579,
+   "costFE": null,
+   "buy": {
+    "name": "Lens of the Mage's Assistant",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Trickster's Tread in boots",
+   "kind": "unique",
+   "gain": 1.1012465557260975,
+   "kill": 17025715.686765913,
+   "costFE": null,
+   "buy": {
+    "name": "Trickster's Tread",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Frozen River in mainHand",
+   "kind": "unique",
+   "gain": 1.1009967978619832,
+   "kill": 17021854.32950415,
+   "costFE": null,
+   "buy": {
+    "name": "Frozen River",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Equip Letice - Flame (level 5, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.098584147851306,
+   "kill": 16984553.787750013,
+   "costFE": 0,
+   "market": "drop",
+   "partial": [
+    "not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 118504 row 1 (pactspirit 9220 point 210) - fires on event 0xf4260"
+   ]
+  },
+  {
+   "label": "Equip Dragon Plant - Kale (level 5, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.098584147851306,
+   "kill": 16984553.787750013,
+   "costFE": 0,
+   "market": "drop",
+   "partial": [
+    "a row's condition cannot be evaluated, its buff adds are unknown: affix class 798394752 row 1 (pactspirit 13220 point 210): not ported: condition 228 (pactspirit 13220 point 210)",
+    "not in this figure: node 0 (no description) - affix class 798394752 row 1 (pactspirit 13220 point 210): not ported: condition 228 (pactspirit 13220 point 210) - deferred row, its conditions false at the grant",
+    "not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 798394752 row 1 (pactspirit 13220 point 210) - deferred row, its conditions false at the grant"
+   ]
+  },
+  {
+   "label": "Craft T2 Adds 28 - 34 Physical Damage to Attacks and Spells (prefix) on ring2",
+   "kind": "craft",
+   "gain": 1.0900562762746875,
+   "kill": 16852709.455414254,
+   "costFE": 202.72329000000002,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 1034.3025
+   }
+  },
+  {
+   "label": "Rare base Godseeker Long Bow (item level 84) on mainHand, 6 affix(es) crafted again",
+   "kind": "gear",
+   "gain": 1.0900555032028751,
+   "kill": 16852697.503412396,
+   "costFE": 17.398285714285716,
+   "market": "drop"
+  },
+  {
+   "label": "Unique Fiend Crown in helmet",
+   "kind": "unique",
+   "gain": 1.089060331585825,
+   "kill": 16837311.74903856,
+   "costFE": 88,
+   "buy": {
+    "name": "Fiend Crown",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Equip Valkyrie's Night Patrol (level 2, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.0888783571601608,
+   "kill": 16834498.35106014,
+   "costFE": 0,
+   "market": "drop",
+   "partial": [
+    "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 180883200 row 1 (pactspirit 16230 point 210) - ticked at the grant"
+   ]
+  },
+  {
+   "label": "Equip Azure Gunslinger (level 1, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.0888783571601608,
+   "kill": 16834498.35106014,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Unique Frozen Lightning in ring1",
+   "kind": "unique",
+   "gain": 1.0888678273907904,
+   "kill": 16834335.556580905,
+   "costFE": null,
+   "buy": {
+    "name": "Frozen Lightning",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Illusory Ocean Silk - Chilly in necklace",
+   "kind": "unique",
+   "gain": 1.087611157247891,
+   "kill": 16814906.92958198,
+   "costFE": 3.021,
+   "buy": {
+    "name": "Illusory Ocean Silk - Chilly",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Replace socket 5 with Wind Projectiles",
+   "kind": "support",
+   "gain": 1.0851339510840035,
+   "kill": 16776608.323675292,
+   "costFE": 0,
+   "market": "drop",
+   "buy": {
+    "name": "Wind Projectiles",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Wind Chasers in boots",
+   "kind": "unique",
+   "gain": 1.0824535440614247,
+   "kill": 16735168.15057877,
+   "costFE": null,
+   "buy": {
+    "name": "Wind Chasers",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Eternal Undercurrent in chest",
+   "kind": "unique",
+   "gain": 1.0804226232858172,
+   "kill": 16703769.296681752,
+   "costFE": null,
+   "buy": {
+    "name": "Eternal Undercurrent",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Craft T2 +32% Projectile Speed (prefix) on boots",
+   "kind": "craft",
+   "gain": 1.0794004453676116,
+   "kill": 16687966.014005253,
+   "costFE": 99.26518000000002,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 506.45500000000004
+   }
+  },
+  {
+   "label": "Craft T2 +32% Projectile Speed (prefix) on helmet",
+   "kind": "craft",
+   "gain": 1.0794004453676116,
+   "kill": 16687966.014005253,
+   "costFE": 209.01268499999998,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 1066.39125
+   }
+  },
+  {
+   "label": "Equip First Mate of the Furious Sea - Rock (level 2, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.0774580325858776,
+   "kill": 16657935.529372921,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Raise Red Umbrella (slot 3) from rank 2 to 4",
+   "kind": "pact",
+   "gain": 1.0773215807541174,
+   "kill": 16655825.929047355,
+   "costFE": null,
+   "market": "not-on-market"
+  },
+  {
+   "label": "Equip Winter Darer (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.0764522289029685,
+   "kill": 16642385.3989749,
+   "costFE": 0,
+   "market": "drop",
+   "partial": [
+    "not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 789300 row 2 (pactspirit 4120 point 210) - fires on event 0xf425e (x2)"
+   ]
+  },
+  {
+   "label": "Equip Greedy Chestnut - Lotus Root (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.0764522289029685,
+   "kill": 16642385.3989749,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Cloudgatherer - Sparkle (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.0764522289029685,
+   "kill": 16642385.3989749,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Craft T3 +31% Critical Strike Damage (suffix) on helmet",
+   "kind": "craft",
+   "gain": 1.0749112995493821,
+   "kill": 16618562.009987995,
+   "costFE": 41.802537,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 213.27824999999999
+   }
+  },
+  {
+   "label": "Unique Mere Eternity in chest",
+   "kind": "unique",
+   "gain": 1.0737867591728611,
+   "kill": 16601176.162441516,
+   "costFE": 453.784,
+   "buy": {
+    "name": "Mere Eternity",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Howling Ring in ring1",
+   "kind": "unique",
+   "gain": 1.0732262794044165,
+   "kill": 16592510.91928039,
+   "costFE": null,
+   "buy": {
+    "name": "Howling Ring",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Ownerless in necklace",
+   "kind": "unique",
+   "gain": 1.0731570848203318,
+   "kill": 16591441.143116673,
+   "costFE": 50,
+   "buy": {
+    "name": "Ownerless",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Restless Glacier in ring1",
+   "kind": "unique",
+   "gain": 1.068181417674595,
+   "kill": 16514515.323249348,
+   "costFE": 28.779,
+   "buy": {
+    "name": "Restless Glacier",
+    "qty": 1
+   },
+   "partial": [
+    "not in this figure: node 500 (event payload into the tree context: walks the payload entries (types 3 / 5 / 0xc / 0xf) and hands entity ids / values to the tree (execute FUN_141af14e0, t3b_exec.ann.c 1-75)) - affix class 543504 row 1 (gear 4601 modifier 51510950) - fires on event 0xf424a",
+    "not in this figure: node 1035 (casts a skill: comps 0x82 / 0x83 / 0x1e (execute FUN_141a59940, t3b_exec.ann.c 1024-1347)) - affix class 543504 row 1 (gear 4601 modifier 51510950) - fires on event 0xf424a"
+   ]
+  },
+  {
+   "label": "Unique Frozen Lightning in ring2",
+   "kind": "unique",
+   "gain": 1.066529729952144,
+   "kill": 16488979.565230805,
+   "costFE": null,
+   "buy": {
+    "name": "Frozen Lightning",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Exquisite Box in necklace",
+   "kind": "unique",
+   "gain": 1.0642252692511196,
+   "kill": 16453351.673817247,
+   "costFE": null,
+   "buy": {
+    "name": "Exquisite Box",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Craft T2 Adds 27 - 35 Cold Damage to Attacks and Spells (prefix) on ring2",
+   "kind": "craft",
+   "gain": 1.061830982024425,
+   "kill": 16416335.028105898,
+   "costFE": 202.72329000000002,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 1034.3025
+   }
+  },
+  {
+   "label": "Unique King Lionheart's Ambition in mainHand",
+   "kind": "unique",
+   "gain": 1.061468010837886,
+   "kill": 16410723.347240819,
+   "costFE": null,
+   "buy": {
+    "name": "King Lionheart's Ambition",
+    "qty": 1
+   },
+   "partial": [
+    "not in this figure: node 381 (N2: registers an ailment-base-damage entry {percent, percentMax, tags} under the byte `ailmentType` in comp 5 of each task-filter target: FUN_141baf1c0(comp 5, type, percent, percentMax, tag lists) bumps the id counter +0x78 and adds the entry to the byte-keyed map +0x80; once per target (set +0xb8), the abort FUN_141bd0b00 removes it (data vt 0x14524cf60, runtime vt "
+   ]
+  },
+  {
+   "label": "Craft T3 Adds 19 - 23 Physical Damage to Attacks and Spells (prefix) on ring2",
+   "kind": "craft",
+   "gain": 1.0600381632952613,
+   "kill": 16388617.327830754,
+   "costFE": 40.544658000000005,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 206.8605
+   }
+  },
+  {
+   "label": "Unique Providential Grace in gloves",
+   "kind": "unique",
+   "gain": 1.0581710537047038,
+   "kill": 16359751.06089028,
+   "costFE": 1.975,
+   "buy": {
+    "name": "Providential Grace",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Craft T3 +23% Projectile Speed (prefix) on boots",
+   "kind": "craft",
+   "gain": 1.0567153795668938,
+   "kill": 16337245.751907418,
+   "costFE": 19.853036000000003,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 101.29100000000001
+   }
+  },
+  {
+   "label": "Craft T3 +23% Projectile Speed (prefix) on helmet",
+   "kind": "craft",
+   "gain": 1.0567153795668938,
+   "kill": 16337245.751907418,
+   "costFE": 41.802537,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 213.27824999999999
+   }
+  },
+  {
+   "label": "Equip Miss Melancholy - Bone (level 1, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.056330953309123,
+   "kill": 16331302.366992112,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Unique Tyrant's Smoldering Hold in gloves",
+   "kind": "unique",
+   "gain": 1.0552490665917138,
+   "kill": 16314575.962210078,
+   "costFE": 26.4,
+   "buy": {
+    "name": "Tyrant's Smoldering Hold",
+    "qty": 1
+   },
+   "partial": [
+    "not in this figure: node 243 (M2 (L30): the 'cannot use skills with this tag' block (execute FUN_141aa2570, re/evidence/c17_r.ann.c): for each task-filter target entity (FUN_1419622b0) not yet handled, find-or-create the target's comp 0x82 entry keyed by the node key +0x78 (FUN_141c6a830 / FUN_141c54040) and add that key to the target's comp 4 (FUN_141bd5a30, m2_comp4.ann.c: a count-sorted id list"
+   ]
+  },
+  {
+   "label": "Craft T4 +22% Critical Strike Damage (suffix) on helmet",
+   "kind": "craft",
+   "gain": 1.0527153447984903,
+   "kill": 16275403.601891236,
+   "costFE": 9.952985,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 50.78053571428571
+   }
+  },
+  {
+   "label": "Unique Twilight Vestment in chest",
+   "kind": "unique",
+   "gain": 1.0516065160130645,
+   "kill": 16258260.66187676,
+   "costFE": 53.752,
+   "buy": {
+    "name": "Twilight Vestment",
+    "qty": 1
+   },
+   "partial": [
+    "not in this figure: node 123 (comp 0x6f field +0x230 = max(value, current) (execute FUN_141a61930, t3b_exec.ann.c 254-305)) - affix class 67874 row 1 (gear 3210 modifier 51413930) - fires on event 0xf4260",
+    "not in this figure: node 124 (comp 0x6f of each task-filter target (energy-shield recharge state +0x218..+0x240; execute FUN_141a61a70, abort the no-op 0x1407d0580; t3e_ex.ann.c 1-68)) - affix class 67874 row 1 (gear 3210 modifier 51413930) - fires on event 0xf4260"
+   ]
+  },
+  {
+   "label": "Unique Howling Ring in ring2",
+   "kind": "unique",
+   "gain": 1.049813360904229,
+   "kill": 16230537.761036288,
+   "costFE": null,
+   "buy": {
+    "name": "Howling Ring",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Glacier Traveler in ring1",
+   "kind": "unique",
+   "gain": 1.0494870882756389,
+   "kill": 16225493.454671046,
+   "costFE": null,
+   "buy": {
+    "name": "Glacier Traveler",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Endless Night in boots",
+   "kind": "unique",
+   "gain": 1.0492491832796704,
+   "kill": 16221815.347528953,
+   "costFE": null,
+   "buy": {
+    "name": "Endless Night",
+    "qty": 1
+   },
+   "partial": [
+    "not in this figure: node 320 (skill components 0x82 / 0x83 only (execute FUN_141aa8c40: GetComponent(0x82 / 0x83), FUN_141e36280; u1_x623.c)) - affix class 614765 row 1 (gear 4010 modifier 51440660) - fires on event 0xf42ae"
+   ]
+  },
+  {
+   "label": "Socket Medium Fate: Critical Strike Damage on contract point 107",
+   "kind": "kismet",
+   "gain": 1.0489881703804222,
+   "kill": 16217779.982886886,
+   "costFE": 13.962
+  },
+  {
+   "label": "Socket Medium Fate: Critical Strike Damage on contract point 307",
+   "kind": "kismet",
+   "gain": 1.0489881703804222,
+   "kill": 16217779.982886886,
+   "costFE": 13.962
+  },
+  {
+   "label": "Unique Martyr's Staff in chest",
+   "kind": "unique",
+   "gain": 1.0489645337954001,
+   "kill": 16217414.551754046,
+   "costFE": 2.999,
+   "buy": {
+    "name": "Martyr's Staff",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Corrupted Bulwark in chest",
+   "kind": "unique",
+   "gain": 1.0489645337954001,
+   "kill": 16217414.551754046,
+   "costFE": 1.001,
+   "buy": {
+    "name": "Corrupted Bulwark",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Replace socket 2 with Ice Shot: Ice Blast (Magnificent)",
+   "kind": "support",
+   "gain": 1.0480350125899698,
+   "kill": 16203043.77920889,
+   "costFE": 28.975,
+   "market": "tradeable",
+   "buy": {
+    "name": "Ice Shot: Ice Blast (Magnificent)",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Replace socket 2 with Ice Shot: Batter (Noble)",
+   "kind": "support",
+   "gain": 1.0480350125899698,
+   "kill": 16203043.77920889,
+   "costFE": 123.948,
+   "market": "tradeable",
+   "buy": {
+    "name": "Ice Shot: Batter (Noble)",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Restless Glacier in ring2",
+   "kind": "unique",
+   "gain": 1.047370435387031,
+   "kill": 16192769.147746654,
+   "costFE": 28.779,
+   "buy": {
+    "name": "Restless Glacier",
+    "qty": 1
+   },
+   "partial": [
+    "not in this figure: node 500 (event payload into the tree context: walks the payload entries (types 3 / 5 / 0xc / 0xf) and hands entity ids / values to the tree (execute FUN_141af14e0, t3b_exec.ann.c 1-75)) - affix class 543504 row 1 (gear 4601 modifier 51510950) - fires on event 0xf424a",
+    "not in this figure: node 1035 (casts a skill: comps 0x82 / 0x83 / 0x1e (execute FUN_141a59940, t3b_exec.ann.c 1024-1347)) - affix class 543504 row 1 (gear 4601 modifier 51510950) - fires on event 0xf424a"
+   ]
+  },
+  {
+   "label": "Replace socket 1 with Ice Shot: Ice Blast (Magnificent)",
+   "kind": "support",
+   "gain": 1.0471206316341892,
+   "kill": 16188907.081026668,
+   "costFE": 28.975,
+   "market": "tradeable",
+   "buy": {
+    "name": "Ice Shot: Ice Blast (Magnificent)",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Replace socket 1 with Ice Shot: Batter (Noble)",
+   "kind": "support",
+   "gain": 1.0471206316341892,
+   "kill": 16188907.081026668,
+   "costFE": 123.948,
+   "market": "tradeable",
+   "buy": {
+    "name": "Ice Shot: Batter (Noble)",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Replace socket 4 with Elemental Fusion",
+   "kind": "support",
+   "gain": 1.0466923312226277,
+   "kill": 16182285.384007182,
+   "costFE": 0,
+   "market": "drop",
+   "buy": {
+    "name": "Elemental Fusion",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Chaotic Ending in ring1",
+   "kind": "unique",
+   "gain": 1.04643779034309,
+   "kill": 16178350.079398839,
+   "costFE": 3,
+   "buy": {
+    "name": "Chaotic Ending",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Equip Poisoned Omen (level 1, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.0462242222696077,
+   "kill": 16175048.230889099,
+   "costFE": 0,
+   "market": "drop",
+   "partial": [
+    "not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 2446 row 1 (pactspirit 8530 point 210) - fires on event 0xf4285"
+   ]
+  },
+  {
+   "label": "Equip Scale of Original Sin (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.0462242222696077,
+   "kill": 16175048.230889099,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Socket Kismet: Hunter on contract point 107",
+   "kind": "kismet",
+   "gain": 1.0451455796629523,
+   "kill": 16158371.981367087,
+   "costFE": 117.099
+  },
+  {
+   "label": "Socket Kismet: Hunter on contract point 307",
+   "kind": "kismet",
+   "gain": 1.0451455796629523,
+   "kill": 16158371.981367087,
+   "costFE": 117.099
+  },
+  {
+   "label": "Replace socket 2 with Increased Area",
+   "kind": "support",
+   "gain": 1.044541761870098,
+   "kill": 16149036.71487813,
+   "costFE": 0,
+   "market": "drop",
+   "buy": {
+    "name": "Increased Area",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Wear your Elder Sage's Regalia (bag) in chest",
+   "kind": "gear",
+   "gain": 1.0444583181027438,
+   "kill": 16147746.640596926,
+   "costFE": 0
+  },
+  {
+   "label": "Socket Medium Fate: Dexterity on contract point 107",
+   "kind": "kismet",
+   "gain": 1.0443214270898182,
+   "kill": 16145630.250353502,
+   "costFE": 8.874
+  },
+  {
+   "label": "Socket Medium Fate: Dexterity on contract point 307",
+   "kind": "kismet",
+   "gain": 1.0443214270898182,
+   "kill": 16145630.250353502,
+   "costFE": 8.874
+  },
+  {
+   "label": "Unique Gemma's Desire in ring1",
+   "kind": "unique",
+   "gain": 1.0440738438565917,
+   "kill": 16141802.513761904,
+   "costFE": null,
+   "buy": {
+    "name": "Gemma's Desire",
+    "qty": 1
+   },
+   "partial": [
+    "51511430",
+    "51511440"
+   ]
+  },
+  {
+   "label": "Unique Silver Frost in ring1",
+   "kind": "unique",
+   "gain": 1.04395981110739,
+   "kill": 16140039.521490287,
+   "costFE": null,
+   "buy": {
+    "name": "Silver Frost",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Craft T2 +50% damage (prefix) on helmet",
+   "kind": "craft",
+   "gain": 1.0437130009459759,
+   "kill": 16136223.73690055,
+   "costFE": 60.183569999999996,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 1180.07
+   }
+  },
+  {
+   "label": "Craft T2 +50% damage (prefix) on ring2",
+   "kind": "craft",
+   "gain": 1.0437130009459759,
+   "kill": 16136223.73690055,
+   "costFE": 54.233718749999994,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 1063.40625
+   }
+  },
+  {
+   "label": "Replace socket 1 with Increased Area",
+   "kind": "support",
+   "gain": 1.0436300820087827,
+   "kill": 16134941.776705207,
+   "costFE": 0,
+   "market": "drop",
+   "buy": {
+    "name": "Increased Area",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Elemental Cleric in ring1",
+   "kind": "unique",
+   "gain": 1.0412249717767152,
+   "kill": 16097757.802967817,
+   "costFE": null,
+   "buy": {
+    "name": "Elemental Cleric",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Craft T3 Adds 18 - 24 Cold Damage to Attacks and Spells (prefix) on ring2",
+   "kind": "craft",
+   "gain": 1.0412205242853552,
+   "kill": 16097689.042958513,
+   "costFE": 40.544658000000005,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 206.8605
+   }
+  },
+  {
+   "label": "Craft T4 +16% Projectile Speed (prefix) on boots",
+   "kind": "craft",
+   "gain": 1.0397004182801979,
+   "kill": 16074187.591332642,
+   "costFE": 4.726913333333335,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 24.116904761904767
+   }
+  },
+  {
+   "label": "Craft T4 +16% Projectile Speed (prefix) on helmet",
+   "kind": "craft",
+   "gain": 1.0397004182801979,
+   "kill": 16074187.591332642,
+   "costFE": 9.952985,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 50.78053571428571
+   }
+  },
+  {
+   "label": "Craft T4 Adds 13 - 15 Physical Damage to Attacks and Spells (prefix) on ring2",
+   "kind": "craft",
+   "gain": 1.0390239525031117,
+   "kill": 16063729.157721557,
+   "costFE": 9.65349,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 49.2525
+   }
+  },
+  {
+   "label": "Unique Sky Devourer - Strength Armor in chest",
+   "kind": "unique",
+   "gain": 1.038698533707169,
+   "kill": 16058698.051953245,
+   "costFE": null,
+   "buy": {
+    "name": "Sky Devourer - Strength Armor",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Sky Devourer - Agile Armor in chest",
+   "kind": "unique",
+   "gain": 1.038698533707169,
+   "kill": 16058698.051953245,
+   "costFE": null,
+   "buy": {
+    "name": "Sky Devourer - Agile Armor",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Sky Devourer - Insight Armor in chest",
+   "kind": "unique",
+   "gain": 1.038698533707169,
+   "kill": 16058698.051953245,
+   "costFE": null,
+   "buy": {
+    "name": "Sky Devourer - Insight Armor",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Everburn Thunderfire in belt",
+   "kind": "unique",
+   "gain": 1.0384302147237043,
+   "kill": 16054549.732303953,
+   "costFE": null,
+   "buy": {
+    "name": "Everburn Thunderfire",
+    "qty": 1
+   },
+   "partial": [
+    "not in this figure: node 343 (queues an inflict request on each task-filter target's comp 0xf: FUN_141bacd50(comp 0xf, kind +0x78, id +0x7c, probability +0x80 (f64), count +0x88, tag lists +0x90 / +0xa0) - no attribute / char-field record (T3d: data vt 0x14524cb20, build FUN_141ad1060, execute FUN_141aad500 once per target, abort FUN_141ab5450; t3d_a.ann.c). The EffectNote carries the task: its ch"
+   ]
+  },
+  {
+   "label": "Unique Two-faced Belt in belt",
+   "kind": "unique",
+   "gain": 1.0371489972223236,
+   "kill": 16034741.593247358,
+   "costFE": null,
+   "buy": {
+    "name": "Two-faced Belt",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Craft T5 +15% Critical Strike Damage (suffix) on helmet",
+   "kind": "craft",
+   "gain": 1.036068283265564,
+   "kill": 16018033.319817733,
+   "costFE": 5.648991486486486,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 28.82138513513513
+   }
+  },
+  {
+   "label": "Craft T3 +36% damage (prefix) on helmet",
+   "kind": "craft",
+   "gain": 1.0331613437940552,
+   "kill": 15973090.863740843,
+   "costFE": 12.036713999999998,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 236.01399999999998
+   }
+  },
+  {
+   "label": "Craft T3 +36% damage (prefix) on ring2",
+   "kind": "craft",
+   "gain": 1.0331613437940552,
+   "kill": 15973090.863740843,
+   "costFE": 10.84674375,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 212.68125
+   }
+  },
+  {
+   "label": "Craft T2 Adds 4 - 58 Lightning Damage to Attacks and Spells (prefix) on ring2",
+   "kind": "craft",
+   "gain": 1.0309158775481186,
+   "kill": 15938375.050384821,
+   "costFE": 202.72329000000002,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 1034.3025
+   }
+  },
+  {
+   "label": "Unique Unholy Prayer in ring1",
+   "kind": "unique",
+   "gain": 1.029915294428382,
+   "kill": 15922905.631997963,
+   "costFE": null,
+   "buy": {
+    "name": "Unholy Prayer",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Unholy Prayer in ring1",
+   "kind": "unique",
+   "gain": 1.029915294428382,
+   "kill": 15922905.631997963,
+   "costFE": null,
+   "buy": {
+    "name": "Unholy Prayer",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Unholy Prayer in ring1",
+   "kind": "unique",
+   "gain": 1.029915294428382,
+   "kill": 15922905.631997963,
+   "costFE": null,
+   "buy": {
+    "name": "Unholy Prayer",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Pierced Curse Armor in chest",
+   "kind": "unique",
+   "gain": 1.0296583926536835,
+   "kill": 15918933.826998714,
+   "costFE": null,
+   "buy": {
+    "name": "Pierced Curse Armor",
+    "qty": 1
+   },
+   "partial": [
+    "buff 16120 (359722 row 1): added by a row with no trigger event (a deferred row under its own conditions): not an event-rate uptime rule, not ported",
+    "not calculable without buff 16120's instance count over the fight (added by 359722 row 1 on event undefined, deferred false): an uptime rule that is not ported"
+   ]
+  },
+  {
+   "label": "Unique Arctic Ring in ring1",
+   "kind": "unique",
+   "gain": 1.0291563009068867,
+   "kill": 15911171.286189675,
+   "costFE": null,
+   "buy": {
+    "name": "Arctic Ring",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Chaotic Ending in ring2",
+   "kind": "unique",
+   "gain": 1.029018253395402,
+   "kill": 15909037.016012318,
+   "costFE": 3,
+   "buy": {
+    "name": "Chaotic Ending",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Sage's Shackle in necklace",
+   "kind": "unique",
+   "gain": 1.0290150197047383,
+   "kill": 15908987.02185109,
+   "costFE": null,
+   "buy": {
+    "name": "Sage's Shackle",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Necklace of Inverse in necklace",
+   "kind": "unique",
+   "gain": 1.0290150197047383,
+   "kill": 15908987.02185109,
+   "costFE": 3,
+   "buy": {
+    "name": "Necklace of Inverse",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Glacier Traveler in ring2",
+   "kind": "unique",
+   "gain": 1.0289685858606297,
+   "kill": 15908269.135902729,
+   "costFE": null,
+   "buy": {
+    "name": "Glacier Traveler",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Craft T2 +86% Critical Strike Rating (suffix) on boots",
+   "kind": "craft",
+   "gain": 1.0276089607409131,
+   "kill": 15887248.783458933,
+   "costFE": 57.189614999999996,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 1121.365
+   }
+  },
+  {
+   "label": "Craft T2 +86% Critical Strike Rating (suffix) on helmet",
+   "kind": "craft",
+   "gain": 1.0276089607409131,
+   "kill": 15887248.783458933,
+   "costFE": 60.04610181818181,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 1177.3745454545453
+   }
+  },
+  {
+   "label": "Replace socket 2 with Mark",
+   "kind": "support",
+   "gain": 1.027074153066629,
+   "kill": 15878980.441222478,
+   "costFE": 0,
+   "market": "drop",
+   "buy": {
+    "name": "Mark",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Craft T5 +11% Projectile Speed (prefix) on boots",
+   "kind": "craft",
+   "gain": 1.0269394383180077,
+   "kill": 15876897.696902493,
+   "costFE": 2.682842702702703,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 13.687972972972975
+   }
+  },
+  {
+   "label": "Craft T5 +11% Projectile Speed (prefix) on helmet",
+   "kind": "craft",
+   "gain": 1.0269394383180077,
+   "kill": 15876897.696902493,
+   "costFE": 5.648991486486486,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 28.82138513513513
+   }
+  },
+  {
+   "label": "Craft T4 Adds 12 - 16 Cold Damage to Attacks and Spells (prefix) on ring2",
+   "kind": "craft",
+   "gain": 1.026793709624499,
+   "kill": 15874644.672554601,
+   "costFE": 9.65349,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 49.2525
+   }
+  },
+  {
+   "label": "Craft T4 +29% damage (prefix) on helmet",
+   "kind": "craft",
+   "gain": 1.0266294272074936,
+   "kill": 15872104.800162062,
+   "costFE": 2.865884285714286,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 56.19380952380953
+   }
+  },
+  {
+   "label": "Craft T4 +29% damage (prefix) on ring2",
+   "kind": "craft",
+   "gain": 1.0266294272074936,
+   "kill": 15872104.800162062,
+   "costFE": 2.582558035714286,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 50.63839285714286
+   }
+  },
+  {
+   "label": "Wear your Wild Dominator Long Boots (stash) in boots",
+   "kind": "gear",
+   "gain": 1.0264378228767777,
+   "kill": 15869142.519969529,
+   "costFE": 0
+  },
+  {
+   "label": "Replace socket 1 with Mark",
+   "kind": "support",
+   "gain": 1.0261785167738595,
+   "kill": 15865133.543086767,
+   "costFE": 0,
+   "market": "drop",
+   "buy": {
+    "name": "Mark",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Equip Fire Swordsman (level 2, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.026149521924018,
+   "kill": 15864685.271019794,
+   "costFE": 0,
+   "market": "drop",
+   "partial": [
+    "not in this figure: node 631 (N2: 'Reap': for each task-filter target FUN_141e0bcd0(world service +0x1a8, the executor, the target, a hit descriptor FUN_141a4b8d0, reapTime +0x78 (f64, FUN_141980a40), tags +0x80, reapFromSelf +0x90, 0, 1.0, b38 flag +0x91 == 0, the id of the type-4 payload entry or -1) - the damage pipeline's reap of the target's damage-over-time; no attribute / char-field record ",
+    "not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 476089 row 2 (pactspirit 3130 point 210) - fires on event 0xf4260"
+   ]
+  },
+  {
+   "label": "Equip Crossroad Walker (level 2, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.026149521924018,
+   "kill": 15864685.271019794,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Socket Micro Fate: Critical Strike Damage on contract point 101",
+   "kind": "kismet",
+   "gain": 1.0249458480804665,
+   "kill": 15846075.98817269,
+   "costFE": 50.986
+  },
+  {
+   "label": "Socket Micro Fate: Critical Strike Damage on contract point 301",
+   "kind": "kismet",
+   "gain": 1.0249458480804665,
+   "kill": 15846075.98817269,
+   "costFE": 50.986
+  },
+  {
+   "label": "Socket Medium Fate: Double Damage Chance on contract point 107",
+   "kind": "kismet",
+   "gain": 1.02467772708566,
+   "kill": 15841930.72950787,
+   "costFE": 15.186
+  },
+  {
+   "label": "Socket Medium Fate: Double Damage Chance on contract point 307",
+   "kind": "kismet",
+   "gain": 1.02467772708566,
+   "kill": 15841930.72950787,
+   "costFE": 15.186
+  },
+  {
+   "label": "Craft T5 Adds 8 - 10 Physical Damage to Attacks and Spells (prefix) on ring2",
+   "kind": "craft",
+   "gain": 1.0240149961400338,
+   "kill": 15831684.641927948,
+   "costFE": 5.4790078378378375,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 27.95412162162162
+   }
+  },
+  {
+   "label": "Unique Gemma's Desire in ring2",
+   "kind": "unique",
+   "gain": 1.0240026392320987,
+   "kill": 15831493.599149948,
+   "costFE": null,
+   "buy": {
+    "name": "Gemma's Desire",
+    "qty": 1
+   },
+   "partial": [
+    "51511430",
+    "51511440"
+   ]
+  },
+  {
+   "label": "Replace socket 2 with Critical Strike Damage Increase",
+   "kind": "support",
+   "gain": 1.0239004388657327,
+   "kill": 15829913.540286852,
+   "costFE": 0,
+   "market": "drop",
+   "buy": {
+    "name": "Critical Strike Damage Increase",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Replace socket 4 with Wind Projectiles",
+   "kind": "support",
+   "gain": 1.0238209458013743,
+   "kill": 15828684.545466572,
+   "costFE": 0,
+   "market": "drop",
+   "buy": {
+    "name": "Wind Projectiles",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Silver Frost in ring2",
+   "kind": "unique",
+   "gain": 1.0236212132901137,
+   "kill": 15825596.60032618,
+   "costFE": null,
+   "buy": {
+    "name": "Silver Frost",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Craft T6 +10% Critical Strike Damage (suffix) on helmet",
+   "kind": "craft",
+   "gain": 1.0235831303205052,
+   "kill": 15825007.822264003,
+   "costFE": 3.0624569230769234,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 15.62478021978022
+   }
+  },
+  {
+   "label": "Replace socket 1 with Critical Strike Damage Increase",
+   "kind": "support",
+   "gain": 1.023006986671318,
+   "kill": 15816100.40919216,
+   "costFE": 0,
+   "market": "drop",
+   "buy": {
+    "name": "Critical Strike Damage Increase",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Socket Micro Fate: Dexterity on contract point 101",
+   "kind": "kismet",
+   "gain": 1.0225843755255966,
+   "kill": 15809566.670516022,
+   "costFE": 50
+  },
+  {
+   "label": "Socket Micro Fate: Dexterity on contract point 301",
+   "kind": "kismet",
+   "gain": 1.0225843755255966,
+   "kill": 15809566.670516022,
+   "costFE": 50
+  },
+  {
+   "label": "Craft T5 +23% damage (prefix) on helmet",
+   "kind": "craft",
+   "gain": 1.021605438416606,
+   "kill": 15794431.908181252,
+   "costFE": 1.6265829729729728,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 31.893783783783782
+   }
+  },
+  {
+   "label": "Craft T5 +23% damage (prefix) on ring2",
+   "kind": "craft",
+   "gain": 1.021605438416606,
+   "kill": 15794431.908181252,
+   "costFE": 1.4657761824324325,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 28.740709459459463
+   }
+  },
+  {
+   "label": "Craft T3 Adds 3 - 39 Lightning Damage to Attacks and Spells (prefix) on ring2",
+   "kind": "craft",
+   "gain": 1.0206104577390698,
+   "kill": 15779049.105809273,
+   "costFE": 40.544658000000005,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 206.8605
+   }
+  },
+  {
+   "label": "Craft T3 +61% Critical Strike Rating (suffix) on boots",
+   "kind": "craft",
+   "gain": 1.0197739853955188,
+   "kill": 15766116.90617869,
+   "costFE": 11.437923,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 224.273
+   }
+  },
+  {
+   "label": "Craft T3 +61% Critical Strike Rating (suffix) on helmet",
+   "kind": "craft",
+   "gain": 1.0197739853955188,
+   "kill": 15766116.90617869,
+   "costFE": 12.009220363636363,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 235.47490909090908
+   }
+  },
+  {
+   "label": "Raise Red Umbrella (slot 3) from rank 2 to 3",
+   "kind": "pact",
+   "gain": 1.01960774634341,
+   "kill": 15763546.783418689,
+   "costFE": null,
+   "market": "not-on-market"
+  },
+  {
+   "label": "Unique Phantasm in chest",
+   "kind": "unique",
+   "gain": 1.0194940980788418,
+   "kill": 15761789.735434504,
+   "costFE": null,
+   "buy": {
+    "name": "Phantasm",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Craft T6 +7% Projectile Speed (prefix) on boots",
+   "kind": "craft",
+   "gain": 1.018432439680323,
+   "kill": 15745376.068616966,
+   "costFE": 1.4544348717948719,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 7.420586080586081
+   }
+  },
+  {
+   "label": "Craft T6 +7% Projectile Speed (prefix) on helmet",
+   "kind": "craft",
+   "gain": 1.018432439680323,
+   "kill": 15745376.068616966,
+   "costFE": 3.0624569230769234,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 15.62478021978022
+   }
+  },
+  {
+   "label": "Craft T6 Adds 6 - 8 Physical Damage to Attacks and Spells (prefix) on ring2",
+   "kind": "craft",
+   "gain": 1.0180109059755587,
+   "kill": 15738858.987612363,
+   "costFE": 2.9703046153846153,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 15.154615384615383
+   }
+  },
+  {
+   "label": "Unique Elemental Cleric in ring2",
+   "kind": "unique",
+   "gain": 1.0172168117299312,
+   "kill": 15726581.970459163,
+   "costFE": null,
+   "buy": {
+    "name": "Elemental Cleric",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Craft T6 +19% damage (prefix) on helmet",
+   "kind": "craft",
+   "gain": 1.0170835737384822,
+   "kill": 15724522.057400376,
+   "costFE": 0.8818105494505492,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 17.290402930402927
+   }
+  },
+  {
+   "label": "Craft T6 +19% damage (prefix) on ring2",
+   "kind": "craft",
+   "gain": 1.0170835737384822,
+   "kill": 15724522.057400376,
+   "costFE": 0.7946332417582417,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 15.581043956043956
+   }
+  },
+  {
+   "label": "Craft T5 Adds 8 - 10 Cold Damage to Attacks and Spells (prefix) on ring2",
+   "kind": "craft",
+   "gain": 1.0164882898154504,
+   "kill": 15715318.727979055,
+   "costFE": 5.4790078378378375,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 27.95412162162162
+   }
+  },
+  {
+   "label": "Craft T7 +6% Critical Strike Damage (suffix) on helmet",
+   "kind": "craft",
+   "gain": 1.015259695023799,
+   "kill": 15696324.15722818,
+   "costFE": 2.1006299999999998,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 10.7175
+   }
+  },
+  {
+   "label": "Craft T4 +44% Critical Strike Rating (suffix) on boots",
+   "kind": "craft",
+   "gain": 1.0138044803704567,
+   "kill": 15673825.952060413,
+   "costFE": 2.723315,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 53.39833333333333
+   }
+  },
+  {
+   "label": "Craft T4 +44% Critical Strike Rating (suffix) on helmet",
+   "kind": "craft",
+   "gain": 1.0138044803704567,
+   "kill": 15673825.952060413,
+   "costFE": 2.859338181818181,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 56.065454545454536
+   }
+  },
+  {
+   "label": "Craft T4 Adds 2 - 26 Lightning Damage to Attacks and Spells (prefix) on ring2",
+   "kind": "craft",
+   "gain": 1.0136548791718212,
+   "kill": 15671513.057222173,
+   "costFE": 9.65349,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 49.2525
+   }
+  },
+  {
+   "label": "Craft T7 +14% damage (prefix) on helmet",
+   "kind": "craft",
+   "gain": 1.013064033426393,
+   "kill": 15662378.343815725,
+   "costFE": 0.60486,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 11.86
+   }
+  },
+  {
+   "label": "Craft T7 +14% damage (prefix) on ring2",
+   "kind": "craft",
+   "gain": 1.013064033426393,
+   "kill": 15662378.343815725,
+   "costFE": 0.5450625,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 10.6875
+   }
+  },
+  {
+   "label": "Unique Corrosion of Manifolds in belt",
+   "kind": "unique",
+   "gain": 1.0128212795635545,
+   "kill": 15658625.271237146,
+   "costFE": null,
+   "buy": {
+    "name": "Corrosion of Manifolds",
+    "qty": 1
+   },
+   "partial": [
+    "buff 340 (383282 row 1): an uptime add on event 1000040: the fight states no rate for it (383282 row 1)",
+    "not calculable without buff 340's instance count over the fight (added by 383282 row 1 on event 1000040, deferred false): an uptime rule that is not ported",
+    "not in this figure: node 103 (comp 0x6f FUN_141c55700 (execute FUN_141a5a330, c9b_nodes2.c 194-288)) - affix class 654683 row 1 (gear 4727 modifier 51532350) - deferred row, its conditions false at the grant (x2)"
+   ]
+  },
+  {
+   "label": "Craft T7 +5% Projectile Speed (prefix) on boots",
+   "kind": "craft",
+   "gain": 1.0127609799621904,
+   "kill": 15657693.015092041,
+   "costFE": 0.9976400000000002,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 5.090000000000001
+   }
+  },
+  {
+   "label": "Craft T7 +5% Projectile Speed (prefix) on helmet",
+   "kind": "craft",
+   "gain": 1.0127609799621904,
+   "kill": 15657693.015092041,
+   "costFE": 2.1006299999999998,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 10.7175
+   }
+  },
+  {
+   "label": "Craft T6 Adds 6 - 8 Cold Damage to Attacks and Spells (prefix) on ring2",
+   "kind": "craft",
+   "gain": 1.0123663128313447,
+   "kill": 15651591.30215069,
+   "costFE": 2.9703046153846153,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 15.154615384615383
+   }
+  },
+  {
+   "label": "Craft T7 Adds 3 - 6 Physical Damage to Attacks and Spells (prefix) on ring2",
+   "kind": "craft",
+   "gain": 1.012007789136166,
+   "kill": 15646048.38129492,
+   "costFE": 2.03742,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 10.395
+   }
+  },
+  {
+   "label": "Replace socket 2 with Glacial Freeze",
+   "kind": "support",
+   "gain": 1.0104803342919133,
+   "kill": 15622433.313654166,
+   "costFE": 0,
+   "market": "drop",
+   "buy": {
+    "name": "Glacial Freeze",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Unholy Prayer in ring2",
+   "kind": "unique",
+   "gain": 1.0098500987755288,
+   "kill": 15612689.618509902,
+   "costFE": null,
+   "buy": {
+    "name": "Unholy Prayer",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Unholy Prayer in ring2",
+   "kind": "unique",
+   "gain": 1.0098500987755288,
+   "kill": 15612689.618509902,
+   "costFE": null,
+   "buy": {
+    "name": "Unholy Prayer",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Unholy Prayer in ring2",
+   "kind": "unique",
+   "gain": 1.0098500987755288,
+   "kill": 15612689.618509902,
+   "costFE": null,
+   "buy": {
+    "name": "Unholy Prayer",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Replace socket 1 with Glacial Freeze",
+   "kind": "support",
+   "gain": 1.0095990044845506,
+   "kill": 15608807.599550083,
+   "costFE": 0,
+   "market": "drop",
+   "buy": {
+    "name": "Glacial Freeze",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Arctic Ring in ring2",
+   "kind": "unique",
+   "gain": 1.0093394918369345,
+   "kill": 15604795.429403026,
+   "costFE": null,
+   "buy": {
+    "name": "Arctic Ring",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Craft T5 +29% Critical Strike Rating (suffix) on boots",
+   "kind": "craft",
+   "gain": 1.0091034951632203,
+   "kill": 15601146.825692268,
+   "costFE": 1.54566527027027,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 30.30716216216216
+   }
+  },
+  {
+   "label": "Craft T5 +29% Critical Strike Rating (suffix) on helmet",
+   "kind": "craft",
+   "gain": 1.0091034951632203,
+   "kill": 15601146.825692268,
+   "costFE": 1.6228676167076166,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 31.82093366093366
+   }
+  },
+  {
+   "label": "Unique Glorious Journey in chest",
+   "kind": "unique",
+   "gain": 1.0090648913551368,
+   "kill": 15600549.995257307,
+   "costFE": null,
+   "buy": {
+    "name": "Glorious Journey",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Berserker Bracer in gloves",
+   "kind": "unique",
+   "gain": 1.008657198484044,
+   "kill": 15594246.89912079,
+   "costFE": null,
+   "buy": {
+    "name": "Berserker Bracer",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Craft T5 Adds 2 - 16 Lightning Damage to Attacks and Spells (prefix) on ring2",
+   "kind": "craft",
+   "gain": 1.0085017780745122,
+   "kill": 15591844.036936253,
+   "costFE": 5.4790078378378375,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 27.95412162162162
+   }
+  },
+  {
+   "label": "Craft T7 Adds 3 - 6 Cold Damage to Attacks and Spells (prefix) on ring2",
+   "kind": "craft",
+   "gain": 1.0082443358472395,
+   "kill": 15587863.876322333,
+   "costFE": 2.03742,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 10.395
+   }
+  },
+  {
+   "label": "Socket Medium Fate: Attack Damage on contract point 107",
+   "kind": "kismet",
+   "gain": 1.0080390806241786,
+   "kill": 15584690.54783119,
+   "costFE": 5.763
+  },
+  {
+   "label": "Socket Medium Fate: Attack Damage on contract point 307",
+   "kind": "kismet",
+   "gain": 1.0080390806241786,
+   "kill": 15584690.54783119,
+   "costFE": 5.763
+  },
+  {
+   "label": "Socket Micro Fate: Double Damage Chance on contract point 101",
+   "kind": "kismet",
+   "gain": 1.0077006056616469,
+   "kill": 15579457.588464199,
+   "costFE": 66.353
+  },
+  {
+   "label": "Socket Micro Fate: Double Damage Chance on contract point 301",
+   "kind": "kismet",
+   "gain": 1.0077006056616469,
+   "kill": 15579457.588464199,
+   "costFE": 66.353
+  },
+  {
+   "label": "Craft T6 Adds 2 - 12 Lightning Damage to Attacks and Spells (prefix) on ring2",
+   "kind": "craft",
+   "gain": 1.0064406941127026,
+   "kill": 15559978.848021144,
+   "costFE": 2.9703046153846153,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 15.154615384615383
+   }
+  },
+  {
+   "label": "Unique Last Words of Chaos in helmet",
+   "kind": "unique",
+   "gain": 1.006364536992209,
+   "kill": 15558801.428237805,
+   "costFE": 2.306,
+   "buy": {
+    "name": "Last Words of Chaos",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Craft T6 +19% Critical Strike Rating (suffix) on boots",
+   "kind": "craft",
+   "gain": 1.006118742650689,
+   "kill": 15555001.348633127,
+   "costFE": 0.8379430769230768,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 16.43025641025641
+   }
+  },
+  {
+   "label": "Craft T6 +19% Critical Strike Rating (suffix) on helmet",
+   "kind": "craft",
+   "gain": 1.006118742650689,
+   "kill": 15555001.348633127,
+   "costFE": 0.8797963636363635,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 17.25090909090909
+   }
+  },
+  {
+   "label": "Equip Starcatcher (level 1, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.006029792473797,
+   "kill": 15553626.143040726,
+   "costFE": 0,
+   "market": "drop",
+   "partial": [
+    "not in this figure: node 302 (SUP1: buff component 0x12 only: FUN_141bcd450(comp, +0x78) removes buffs (execute FUN_141aa5010, t3b_exec.ann.c 227-253); the Exit (runtime vt 0x145263118 slot 19) is the no-op 0x1407d0580 (`mov al, 1`), so an idle deferred row holding it is as safe as 306 / 301) - affix class 555742 row 2 (pactspirit 2230 point 210) - ticked at the grant",
+    "not in this figure: node 302 (SUP1: buff component 0x12 only: FUN_141bcd450(comp, +0x78) removes buffs (execute FUN_141aa5010, t3b_exec.ann.c 227-253); the Exit (runtime vt 0x145263118 slot 19) is the no-op 0x1407d0580 (`mov al, 1`), so an idle deferred row holding it is as safe as 306 / 301) - affix class 555742 row 4 (pactspirit 2230 point 210) - ticked at the grant"
+   ]
+  },
+  {
+   "label": "Equip Mechanical Throne (level 2, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.006029792473797,
+   "kill": 15553626.143040726,
+   "costFE": 0,
+   "market": "drop",
+   "partial": [
+    "not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 552477 row 3 (pactspirit 4130 point 210) - fires on event 0xf425e (x2)"
+   ]
+  },
+  {
+   "label": "Equip Drapion Lady (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.006029792473797,
+   "kill": 15553626.143040726,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Whisperwind Leaves (level 1, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.006029792473797,
+   "kill": 15553626.143040726,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Explorer Otter - Mudstone (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.006029792473797,
+   "kill": 15553626.143040726,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Plaintive Ball of Thread (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.006029792473797,
+   "kill": 15553626.143040726,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Anthem (level 1, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.006029792473797,
+   "kill": 15553626.143040726,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Explorer Otter - Rock (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.006029792473797,
+   "kill": 15553626.143040726,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Traveling Lizard - Ocean (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.006029792473797,
+   "kill": 15553626.143040726,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Explorer Otter - Quicksand (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.006029792473797,
+   "kill": 15553626.143040726,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Traveling Lizard - Flower (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.006029792473797,
+   "kill": 15553626.143040726,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Spiny Snail - Cloudless Sky (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.006029792473797,
+   "kill": 15553626.143040726,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Hell Cavalry (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.006029792473797,
+   "kill": 15553626.143040726,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Spiny Snail - Green (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.006029792473797,
+   "kill": 15553626.143040726,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Winter Darer - Rock (level 6, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.006029792473797,
+   "kill": 15553626.143040726,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Warbler of Plum Blossoms (level 1, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.006029792473797,
+   "kill": 15553626.143040726,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Abyssal King Soul (level 1, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.006029792473797,
+   "kill": 15553626.143040726,
+   "costFE": 0,
+   "market": "drop",
+   "partial": [
+    "not in this figure: node 349 (comp 0xf of each task-filter target: FUN_141bad130(comp 0xf, five ints +0x78..+0x84 and a byte +0x88) - no attribute / char-field record (T3d: data vt 0x14524cbe0, build FUN_141ad2200, execute FUN_141aae740 once per target, abort FUN_141ab5740; t3d_a.ann.c); the catalog carries no fields for it (the node schema is not extracted)) - affix class 103490003 row 1 (pactspi"
+   ]
+  },
+  {
+   "label": "Equip Captain Kitty of the Furious Sea (level 1, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.006029792473797,
+   "kill": 15553626.143040726,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Swaying Bonnie (level 1, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.006029792473797,
+   "kill": 15553626.143040726,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Equip Portrait of a Fallen Saintess (level 4, owned) in battle slot 2",
+   "kind": "pact",
+   "gain": 1.006029792473797,
+   "kill": 15553626.143040726,
+   "costFE": 0,
+   "market": "drop"
+  },
+  {
+   "label": "Unique Sigh of the Giant in belt",
+   "kind": "unique",
+   "gain": 1.0049551853995875,
+   "kill": 15537012.28447713,
+   "costFE": null,
+   "buy": {
+    "name": "Sigh of the Giant",
+    "qty": 1
+   },
+   "partial": [
+    "a row's condition cannot be evaluated, its buff adds are unknown: affix class 4304 row 1 (gear 4721 modifier 51530250): not ported: condition 251 (gear 4721 modifier 51530250)",
+    "not in this figure: node 0 (no description) - affix class 4304 row 1 (gear 4721 modifier 51530250): not ported: condition 251 (gear 4721 modifier 51530250) - deferred row, its conditions false at the grant"
+   ]
+  },
+  {
+   "label": "Craft T7 Adds 1 - 9 Lightning Damage to Attacks and Spells (prefix) on ring2",
+   "kind": "craft",
+   "gain": 1.0046384075822765,
+   "kill": 15532114.77172182,
+   "costFE": 2.03742,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 10.395
+   }
+  },
+  {
+   "label": "Socket Medium Fate: Aura Effect on contract point 107",
+   "kind": "kismet",
+   "gain": 1.0041088347632954,
+   "kill": 15523927.362458626,
+   "costFE": 48.348
+  },
+  {
+   "label": "Socket Medium Fate: Aura Effect on contract point 307",
+   "kind": "kismet",
+   "gain": 1.0041088347632954,
+   "kill": 15523927.362458626,
+   "costFE": 48.348
+  },
+  {
+   "label": "Craft T7 +13% Critical Strike Rating (suffix) on boots",
+   "kind": "craft",
+   "gain": 1.0041040347047303,
+   "kill": 15523853.151618207,
+   "costFE": 0.5747699999999999,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 11.27
+   }
+  },
+  {
+   "label": "Socket Micro Fate: Attack Damage on contract point 101",
+   "kind": "kismet",
+   "gain": 1.0040195403120895,
+   "kill": 15522546.834246542,
+   "costFE": 2
+  },
+  {
+   "label": "Socket Micro Fate: Attack Damage on contract point 301",
+   "kind": "kismet",
+   "gain": 1.0040195403120895,
+   "kill": 15522546.834246542,
+   "costFE": 2
+  },
+  {
+   "label": "Unique Vestment of Song in chest",
+   "kind": "unique",
+   "gain": 1.0039169526297238,
+   "kill": 15520960.787321955,
+   "costFE": null,
+   "buy": {
+    "name": "Vestment of Song",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Replace socket 3 with Elemental Fusion",
+   "kind": "support",
+   "gain": 1.0018142738003957,
+   "kill": 15488452.524987262,
+   "costFE": 0,
+   "market": "drop",
+   "buy": {
+    "name": "Elemental Fusion",
+    "qty": 1
+   }
+  }
+ ],
+ "prices": {
+  "Wriggling Tango": 159.428,
+  "Howling Wind": 3,
+  "Truth": 1580.556,
+  "Exquisite Box - Unique": null,
+  "Vortex Heart": 37.859,
+  "Meteorite": null,
+  "Bow of Endless Dusk": 39,
+  "Endless Night - Prototype": null,
+  "Heart of the Storm": 6.081,
+  "Startled Birds": null,
+  "Lightning Striker's Sacrum": 5.857,
+  "Gravel": 11.204,
+  "Trinity": 99.863,
+  "Blind Vision": 105.493,
+  "Stray Bird's Return": 8,
+  "Fool's Crown": 57.265,
+  "Dawn Break": 45.418,
+  "Frostbolt": 1.161,
+  "Arminius' Confession": null,
+  "Caesar's Resentment": null,
+  "Legless Bird's Lament": 783.872,
+  "Death's Touch": 54.619,
+  "Witchdoctor's Herb Bag": 5.524,
+  "Rat King's Megagon Dice": null,
+  "Kaleidoscope": 6.615,
+  "Thousand-Day's Victory": null,
+  "Blight": 6.442,
+  "Gauze of Phantom Sin": null,
+  "Hekate's Vision": null,
+  "Heavyware": 9.099,
+  "Howling": null,
+  "Hunting the Eye of the Kraken": 1.109,
+  "Imperial General": null,
+  "Mercurial Torment": null,
+  "Genius Battlegear": null,
+  "Glacial Abyss Arrow": 3.298,
+  "Manella's Mist": null,
+  "Elemental Fusion": null,
+  "Everlasting Cloud": null,
+  "Nomad Long Bow": null,
+  "Illusory Ocean Silk - Iron Rain": 1.103,
+  "Tide of the Styx": 94.35,
+  "Silent Avowal": 2071.592,
+  "Wind Projectiles": null,
+  "Broken Dream": null,
+  "The Three Saints": 89.557,
+  "Traveler's Glance": null,
+  "Scarlet Decree": null,
+  "Royal Cycle": 2500.009,
+  "Matchless Ember": 0.196,
+  "Lens of the Mage's Assistant": null,
+  "Trickster's Tread": null,
+  "Frozen River": null,
+  "Fiend Crown": 88,
+  "Frozen Lightning": null,
+  "Illusory Ocean Silk - Chilly": 3.021,
+  "Wind Chasers": null,
+  "Eternal Undercurrent": null,
+  "Mere Eternity": 453.784,
+  "Howling Ring": null,
+  "Ownerless": 50,
+  "Restless Glacier": 28.779,
+  "Exquisite Box": null,
+  "King Lionheart's Ambition": null,
+  "Providential Grace": 1.975,
+  "Tyrant's Smoldering Hold": 26.4,
+  "Twilight Vestment": 53.752,
+  "Glacier Traveler": null,
+  "Endless Night": null,
+  "Martyr's Staff": 2.999,
+  "Corrupted Bulwark": 1.001,
+  "Ice Shot: Ice Blast (Magnificent)": 28.975,
+  "Ice Shot: Batter (Noble)": 123.948,
+  "Chaotic Ending": 3,
+  "Increased Area": null,
+  "Gemma's Desire": null,
+  "Silver Frost": null,
+  "Precious Ember": 0.051,
+  "Elemental Cleric": null,
+  "Sky Devourer - Strength Armor": null,
+  "Sky Devourer - Agile Armor": null,
+  "Sky Devourer - Insight Armor": null,
+  "Everburn Thunderfire": null,
+  "Two-faced Belt": null,
+  "Unholy Prayer": null,
+  "Pierced Curse Armor": null,
+  "Arctic Ring": null,
+  "Sage's Shackle": null,
+  "Necklace of Inverse": 3,
+  "Mark": null,
+  "Critical Strike Damage Increase": null,
+  "Phantasm": null,
+  "Corrosion of Manifolds": null,
+  "Glacial Freeze": null,
+  "Glorious Journey": null,
+  "Berserker Bracer": null,
+  "Last Words of Chaos": 2.306,
+  "Sigh of the Giant": null,
+  "Vestment of Song": null
+ },
+ "inputs": {
+  "ground": "L94.state-20261013-160318",
+  "elites": 0,
+  "worldLists": null,
+  "u2": true,
+  "tags2Held": [
+   4000010,
+   4000112,
+   4000411,
+   4000413,
+   4000414,
+   4000417,
+   4000560,
+   4000570,
+   4000580,
+   4000700,
+   4000860,
+   4010010,
+   5001980,
+   5001990,
+   5002000,
+   5002040
+  ],
+  "eventPeriods": {
+   "1000060": 0.8
+  },
+  "eventTags": {
+   "1000060": [
+    6020000
+   ]
+  },
+  "cruelty": 40,
+  "stillFor": {
+   "seconds": 10,
+   "dt": 0.03333333333333333
+  },
+  "heroLevel": 85,
+  "rollBudget": 4096,
+  "carry": {
+   "taken": []
+  },
+  "iceShot": {
+   "hitting": 1,
+   "returns": 1,
+   "sentryPostsPerThrow": 1,
+   "notCarried": [
+    11210
+   ],
+   "victimStateTags": [
+    4000010,
+    4000112,
+    4000411,
+    4000413,
+    4000414,
+    4000417,
+    4000560,
+    4000570,
+    4000580,
+    4000700,
+    4000860,
+    4010010,
+    5001980,
+    5001990,
+    5002000,
+    5002040
+   ],
+   "heldBuffs": [
+    10,
+    380,
+    3411,
+    3471,
+    11360,
+    15101
+   ],
+   "droppedBuffs": [
+    320,
+    390,
+    10770,
+    15103,
+    15181,
+    15183,
+    15184,
+    35095
+   ]
+  }
+ },
+ "start": {
+  "life100": 13017214.863815073,
+  "life0": 13017214.863815073,
+  "kill": 13017214.863815073,
+  "partial": [
+   "a row's condition cannot be evaluated, its buff adds are unknown: affix class 651295 row 1 (support 7514 (skill 10003110) on gem 7160): not ported: condition 184 with bUseBuffCfgId true, by-tag true, only-by-self false (support 7514 (skill 10003110) on gem 7160)",
+   "not calculable without a capture: the Ice Lances that reach the target (1) and the returning passes that hit it (1) per cast (stated by the caller)",
+   "not calculable without a capture: Flame Core posts of event 1000074 per throw (1, stated by the caller; 1 or 2 unverified)",
+   "the explosion (damage id 22) skips the victims the lance hit: it adds nothing on one target without the Batter support (label 3100051 not held)",
+   "an Ice Shot cast per bomb, a bomb per auto-throw repeat; the throw period is the cooldown in whole logic frames (autothrow.ts)",
+   "the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located): taken",
+   "the throw's trait class 7999301 (the node 2320 class of the hero trait): taken",
+   "no control effect on the hero (controlled: false): the gate flags are comp 6's: scenario",
+   "logic dt = 1 / 30 (SetFramePerSecond argument): scenario",
+   "the hero's comp 0x40 (absent: the entity composition is untraced): scenario",
+   "the hand mode (the weapon hand state; the training ground): taken",
+   "the target's Life, its geometry and the hero's (the training ground's pre/ reads): scenario",
+   "the owner state tags, labels and the buffs derived from the pieces (owner.ts); training-ground values of L13b: calculated",
+   "the embers per bomb: the landing box around the target, circle tests on the calculated bullet ends (B1, D9, C40b): calculated",
+   "held buffs left off: 11210 (carried: 10, 380, 3411, 3471, 11360, 15101)",
+   "the bomb's position for a distance-gated record: the landing box's far corner (hoa.ts), the bomb's radius 0",
+   "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
+   "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
+   "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
+   "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
+   "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
+   "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
+   "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 6927701 row 2 (talent 20001200 x1) - ticked at the grant",
+   "not in this figure: node 302 (SUP1: buff component 0x12 only: FUN_141bcd450(comp, +0x78) removes buffs (execute FUN_141aa5010, t3b_exec.ann.c 227-253); the Exit (runtime vt 0x145263118 slot 19) is the no-op 0x1407d0580 (`mov al, 1`), so an idle deferred row holding it is as safe as 306 / 301) - affix class 6927701 row 3 (talent 20001200 x1) - fires on event 0xf42b8",
+   "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 1)) - ticked at the grant",
+   "not in this figure: node 0 (no description) - affix class 651295 row 1 (support 7514 (skill 10003110) on gem 7160): not ported: condition 184 with bUseBuffCfgId true, by-tag true, only-by-self false (support 7514 (skill 10003110) on gem 7160) - deferred row, its conditions false at the grant"
+  ],
+  "lock": 15000000000000
+ },
+ "steps": [
+  {
+   "level": 85,
+   "move": {
+    "kind": "talent",
+    "label": "Free talent respec (level 90 and below): 10 point moves on your own page",
+    "acquisition": false,
+    "costFE": 0,
+    "minLevel": 0,
+    "changes": []
+   },
+   "triggered": [
+    {
+     "kind": "talent",
+     "label": "+1 point: Marksman: +12% Projectile Speed",
+     "acquisition": false,
+     "costFE": 0,
+     "minLevel": 1,
+     "changes": [
+      {
+       "kind": "talent",
+       "node": 21060100,
+       "points": 1
+      }
+     ]
+    },
+    {
+     "kind": "talent",
+     "label": "+1 point: Marksman: +12% Projectile Speed",
+     "acquisition": false,
+     "costFE": 0,
+     "minLevel": 1,
+     "changes": [
+      {
+       "kind": "talent",
+       "node": 21060100,
+       "points": 2
+      }
+     ]
+    },
+    {
+     "kind": "talent",
+     "label": "+1 point: Marksman: +12% Projectile Speed",
+     "acquisition": false,
+     "costFE": 0,
+     "minLevel": 1,
+     "changes": [
+      {
+       "kind": "talent",
+       "node": 21060100,
+       "points": 3
+      }
+     ]
+    },
+    {
+     "kind": "talent",
+     "label": "Move a point: Prophet: additional damage against Frozen enemies -> Prophet: Cold Damage",
+     "acquisition": false,
+     "costFE": 0,
+     "minLevel": 1,
+     "changes": [
+      {
+       "kind": "talent",
+       "node": 34070100,
+       "points": 0
+      },
+      {
+       "kind": "talent",
+       "node": 34010500,
+       "points": 1
+      }
+     ]
+    },
+    {
+     "kind": "talent",
+     "label": "Move a point: Prophet: chance to gain a stack of Focus Blessing upon inflicting damage to a Frostbitten enemy. Interval: 0.1s -> Prophet: Cold Damage",
+     "acquisition": false,
+     "costFE": 0,
+     "minLevel": 1,
+     "changes": [
+      {
+       "kind": "talent",
+       "node": 34070400,
+       "points": 0
+      },
+      {
+       "kind": "talent",
+       "node": 34010500,
+       "points": 2
+      }
+     ]
+    },
+    {
+     "kind": "talent",
+     "label": "Move a point: Prophet: Inflicts Cold Infiltration when dealing damage to Frozen enemies -> Prophet: Cold Damage",
+     "acquisition": false,
+     "costFE": 0,
+     "minLevel": 1,
+     "changes": [
+      {
+       "kind": "talent",
+       "node": 34050500,
+       "points": 0
+      },
+      {
+       "kind": "talent",
+       "node": 34010500,
+       "points": 3
+      }
+     ]
+    },
+    {
+     "kind": "talent",
+     "label": "Move a point: Ranger: Attack and Cast Speed -> Ranger: damage",
+     "acquisition": false,
+     "costFE": 0,
+     "minLevel": 1,
+     "changes": [
+      {
+       "kind": "talent",
+       "node": 43040100,
+       "points": 2
+      },
+      {
+       "kind": "talent",
+       "node": 43010500,
+       "points": 1
+      }
+     ]
+    },
+    {
+     "kind": "talent",
+     "label": "Move a point: Ranger: Attack and Cast Speed -> Ranger: damage",
+     "acquisition": false,
+     "costFE": 0,
+     "minLevel": 1,
+     "changes": [
+      {
+       "kind": "talent",
+       "node": 43040100,
+       "points": 1
+      },
+      {
+       "kind": "talent",
+       "node": 43010500,
+       "points": 2
+      }
+     ]
+    },
+    {
+     "kind": "talent",
+     "label": "Move a point: Ranger: Attack and Cast Speed -> Ranger: damage",
+     "acquisition": false,
+     "costFE": 0,
+     "minLevel": 1,
+     "changes": [
+      {
+       "kind": "talent",
+       "node": 43040100,
+       "points": 0
+      },
+      {
+       "kind": "talent",
+       "node": 43010500,
+       "points": 3
+      }
+     ]
+    },
+    {
+     "kind": "talent",
+     "label": "Move a point: Prophet: Focus Blessing Duration -> Prophet: Cold Damage",
+     "acquisition": false,
+     "costFE": 0,
+     "minLevel": 1,
+     "changes": [
+      {
+       "kind": "talent",
+       "node": 34060400,
+       "points": 2
+      },
+      {
+       "kind": "talent",
+       "node": 34020500,
+       "points": 1
+      }
+     ]
+    }
+   ],
+   "before": {
+    "life100": 13017214.863815073,
+    "life0": 13017214.863815073,
+    "kill": 13017214.863815073,
+    "partial": [
+     "a row's condition cannot be evaluated, its buff adds are unknown: affix class 651295 row 1 (support 7514 (skill 10003110) on gem 7160): not ported: condition 184 with bUseBuffCfgId true, by-tag true, only-by-self false (support 7514 (skill 10003110) on gem 7160)",
+     "not calculable without a capture: the Ice Lances that reach the target (1) and the returning passes that hit it (1) per cast (stated by the caller)",
+     "not calculable without a capture: Flame Core posts of event 1000074 per throw (1, stated by the caller; 1 or 2 unverified)",
+     "the explosion (damage id 22) skips the victims the lance hit: it adds nothing on one target without the Batter support (label 3100051 not held)",
+     "an Ice Shot cast per bomb, a bomb per auto-throw repeat; the throw period is the cooldown in whole logic frames (autothrow.ts)",
+     "the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located): taken",
+     "the throw's trait class 7999301 (the node 2320 class of the hero trait): taken",
+     "no control effect on the hero (controlled: false): the gate flags are comp 6's: scenario",
+     "logic dt = 1 / 30 (SetFramePerSecond argument): scenario",
+     "the hero's comp 0x40 (absent: the entity composition is untraced): scenario",
+     "the hand mode (the weapon hand state; the training ground): taken",
+     "the target's Life, its geometry and the hero's (the training ground's pre/ reads): scenario",
+     "the owner state tags, labels and the buffs derived from the pieces (owner.ts); training-ground values of L13b: calculated",
+     "the embers per bomb: the landing box around the target, circle tests on the calculated bullet ends (B1, D9, C40b): calculated",
+     "held buffs left off: 11210 (carried: 10, 380, 3411, 3471, 11360, 15101)",
+     "the bomb's position for a distance-gated record: the landing box's far corner (hoa.ts), the bomb's radius 0",
+     "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
+     "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
+     "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 6927701 row 2 (talent 20001200 x1) - ticked at the grant",
+     "not in this figure: node 302 (SUP1: buff component 0x12 only: FUN_141bcd450(comp, +0x78) removes buffs (execute FUN_141aa5010, t3b_exec.ann.c 227-253); the Exit (runtime vt 0x145263118 slot 19) is the no-op 0x1407d0580 (`mov al, 1`), so an idle deferred row holding it is as safe as 306 / 301) - affix class 6927701 row 3 (talent 20001200 x1) - fires on event 0xf42b8",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 1)) - ticked at the grant",
+     "not in this figure: node 0 (no description) - affix class 651295 row 1 (support 7514 (skill 10003110) on gem 7160): not ported: condition 184 with bUseBuffCfgId true, by-tag true, only-by-self false (support 7514 (skill 10003110) on gem 7160) - deferred row, its conditions false at the grant"
+    ],
+    "lock": 15000000000000
+   },
+   "after": {
+    "life100": 15460403.12066189,
+    "life0": 15460403.12066189,
+    "kill": 15460403.120661888,
+    "partial": [
+     "a row's condition cannot be evaluated, its buff adds are unknown: affix class 651295 row 1 (support 7514 (skill 10003110) on gem 7160): not ported: condition 184 with bUseBuffCfgId true, by-tag true, only-by-self false (support 7514 (skill 10003110) on gem 7160)",
+     "not calculable without a capture: the Ice Lances that reach the target (1) and the returning passes that hit it (1) per cast (stated by the caller)",
+     "not calculable without a capture: Flame Core posts of event 1000074 per throw (1, stated by the caller; 1 or 2 unverified)",
+     "the explosion (damage id 22) skips the victims the lance hit: it adds nothing on one target without the Batter support (label 3100051 not held)",
+     "an Ice Shot cast per bomb, a bomb per auto-throw repeat; the throw period is the cooldown in whole logic frames (autothrow.ts)",
+     "the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located): taken",
+     "the throw's trait class 7999301 (the node 2320 class of the hero trait): taken",
+     "no control effect on the hero (controlled: false): the gate flags are comp 6's: scenario",
+     "logic dt = 1 / 30 (SetFramePerSecond argument): scenario",
+     "the hero's comp 0x40 (absent: the entity composition is untraced): scenario",
+     "the hand mode (the weapon hand state; the training ground): taken",
+     "the target's Life, its geometry and the hero's (the training ground's pre/ reads): scenario",
+     "the owner state tags, labels and the buffs derived from the pieces (owner.ts); training-ground values of L13b: calculated",
+     "the embers per bomb: the landing box around the target, circle tests on the calculated bullet ends (B1, D9, C40b): calculated",
+     "held buffs left off: 11210 (carried: 10, 3411, 3471, 11360, 15101)",
+     "the bomb's position for a distance-gated record: the landing box's far corner (hoa.ts), the bomb's radius 0",
+     "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
+     "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
+     "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 6927701 row 2 (talent 20001200 x1) - ticked at the grant",
+     "not in this figure: node 302 (SUP1: buff component 0x12 only: FUN_141bcd450(comp, +0x78) removes buffs (execute FUN_141aa5010, t3b_exec.ann.c 227-253); the Exit (runtime vt 0x145263118 slot 19) is the no-op 0x1407d0580 (`mov al, 1`), so an idle deferred row holding it is as safe as 306 / 301) - affix class 6927701 row 3 (talent 20001200 x1) - fires on event 0xf42b8",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 1)) - ticked at the grant",
+     "not in this figure: node 0 (no description) - affix class 651295 row 1 (support 7514 (skill 10003110) on gem 7160): not ported: condition 184 with bUseBuffCfgId true, by-tag true, only-by-self false (support 7514 (skill 10003110) on gem 7160) - deferred row, its conditions false at the grant"
+    ],
+    "lock": 15000000000000
+   },
+   "cumFE": 0
+  }
+ ],
+ "notCalculable": [],
+ "unpriced": [],
+ "notSearched": []
+}

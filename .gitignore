@@ -18,4 +18,4 @@ Torchlight Sanity Retention.xlsx
 .cache/
 
 # guide advise output (pnpm guide advise writes it in packages/guide)
-advice.json
+packages/guide/advice.json
