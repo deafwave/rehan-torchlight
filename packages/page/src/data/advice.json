@@ -3,7 +3,7 @@
  "pin": "e5e767cb4de1730b9702d6045c3164b1186aef5a",
  "etor": {
   "season": "1601",
-  "fetchedAt": "2026-10-16T08:20:43.227Z"
+  "fetchedAt": "2026-10-16T08:34:13.092Z"
  },
  "knobs": {
   "churn": 0.05,
@@ -13,7 +13,7 @@
   "maxSteps": 0,
   "continueSteps": 10,
   "enablerFloor": 0.25,
-  "budgetMinutes": 20,
+  "budgetMinutes": 15,
   "fight": {
    "bombs": 10,
    "inputs": {
@@ -31,7 +31,7 @@
   "level": 90,
   "skill": "iceShot",
   "fe": 3,
-  "owned": 162,
+  "owned": 167,
   "gear": [
    {
     "slot": "belt",
@@ -77,9 +77,9 @@
    "target": null,
    "firstStep": 0,
    "start": {
-    "life100": 69017462.3279652,
-    "life0": 69017462.3279652,
-    "kill": 69017462.3279652,
+    "life100": 79704945.43219313,
+    "life0": 79704945.43219313,
+    "kill": 79704945.43219313,
     "partial": [
      "support: Restrain (on passive 0, socket 1)",
      "support: Seal Conversion (on passive 0, socket 2)",
@@ -119,9 +119,9 @@
   {
    "label": "Unique Howling Wind in necklace",
    "kind": "unique",
-   "gain": 2.468242093123646,
-   "kill": 195711575.7308558,
-   "costFE": 65.026,
+   "gain": 2.5329831506533216,
+   "kill": 229391468.55913565,
+   "costFE": 65.286,
    "buy": {
     "name": "Howling Wind",
     "qty": 1
@@ -130,8 +130,8 @@
   {
    "label": "Unique Wriggling Tango in boots",
    "kind": "unique",
-   "gain": 2.3407932369560682,
-   "kill": 185605915.29538152,
+   "gain": 2.523937688697242,
+   "kill": 228572295.40302297,
    "costFE": null,
    "buy": {
     "name": "Wriggling Tango",
@@ -144,8 +144,8 @@
   {
    "label": "Unique Truth in necklace",
    "kind": "unique",
-   "gain": 2.166416747024722,
-   "kill": 171779274.1770097,
+   "gain": 2.1694663774371343,
+   "kill": 196470741.69506958,
    "costFE": null,
    "buy": {
     "name": "Truth",
@@ -155,8 +155,8 @@
   {
    "label": "Unique Exquisite Box - Unique in necklace",
    "kind": "unique",
-   "gain": 1.8598518171812155,
-   "kill": 147471162.0794796,
+   "gain": 1.8625043334092684,
+   "kill": 168671711.9015613,
    "costFE": null,
    "buy": {
     "name": "Exquisite Box - Unique",
@@ -166,8 +166,8 @@
   {
    "label": "Unique Lightning Striker's Sacrum in chest",
    "kind": "unique",
-   "gain": 1.7553718524076134,
-   "kill": 139186748.40907323,
+   "gain": 1.7139543650523827,
+   "kill": 155218762.0124118,
    "costFE": null,
    "buy": {
     "name": "Lightning Striker's Sacrum",
@@ -181,8 +181,8 @@
   {
    "label": "Unique Vortex Heart in necklace",
    "kind": "unique",
-   "gain": 1.6713423869689932,
-   "kill": 132523893.44252436,
+   "gain": 1.6747990635084218,
+   "kill": 151672788.119641,
    "costFE": 37.859,
    "buy": {
     "name": "Vortex Heart",
@@ -192,8 +192,8 @@
   {
    "label": "Unique Stray Bird's Return in gloves",
    "kind": "unique",
-   "gain": 1.5592275054547582,
-   "kill": 123634092.80864063,
+   "gain": 1.5654671080244635,
+   "kill": 141771491.37298143,
    "costFE": null,
    "buy": {
     "name": "Stray Bird's Return",
@@ -203,8 +203,8 @@
   {
    "label": "Unique Dawn Break in belt",
    "kind": "unique",
-   "gain": 1.545679492835774,
-   "kill": 122559845.30874188,
+   "gain": 1.5118416551217597,
+   "kill": 136915074.7835828,
    "costFE": null,
    "buy": {
     "name": "Dawn Break",
@@ -214,9 +214,9 @@
   {
    "label": "Unique Blind Vision in helmet",
    "kind": "unique",
-   "gain": 1.5294460198434812,
-   "kill": 121272662.58555722,
-   "costFE": 110.746,
+   "gain": 1.5108197203721938,
+   "kill": 136822526.55130813,
+   "costFE": 98.06,
    "buy": {
     "name": "Blind Vision",
     "qty": 1
@@ -225,8 +225,8 @@
   {
    "label": "Unique Heart of the Storm in necklace",
    "kind": "unique",
-   "gain": 1.4936230055727915,
-   "kill": 118432188.14835443,
+   "gain": 1.491899707701687,
+   "kill": 135109096.4834746,
    "costFE": null,
    "buy": {
     "name": "Heart of the Storm",
@@ -240,54 +240,10 @@
    ]
   },
   {
-   "label": "Unique Witchdoctor's Herb Bag in belt",
-   "kind": "unique",
-   "gain": 1.3973166932250614,
-   "kill": 110795878.81106852,
-   "costFE": null,
-   "buy": {
-    "name": "Witchdoctor's Herb Bag",
-    "qty": 1
-   }
-  },
-  {
-   "label": "Unique Fool's Crown in helmet",
-   "kind": "unique",
-   "gain": 1.3897785663098372,
-   "kill": 110198166.49559192,
-   "costFE": null,
-   "buy": {
-    "name": "Fool's Crown",
-    "qty": 1
-   }
-  },
-  {
-   "label": "Unique Trinity in chest",
-   "kind": "unique",
-   "gain": 1.3797179956986618,
-   "kill": 109400444.85696091,
-   "costFE": null,
-   "buy": {
-    "name": "Trinity",
-    "qty": 1
-   }
-  },
-  {
-   "label": "Unique Death's Touch in gloves",
-   "kind": "unique",
-   "gain": 1.3681700576779408,
-   "kill": 108484787.0482014,
-   "costFE": null,
-   "buy": {
-    "name": "Death's Touch",
-    "qty": 1
-   }
-  },
-  {
    "label": "Unique Endless Night - Prototype in boots",
    "kind": "unique",
-   "gain": 1.350895240167423,
-   "kill": 107115034.15205507,
+   "gain": 1.4483500691940603,
+   "kill": 131165163.60342081,
    "costFE": null,
    "buy": {
     "name": "Endless Night - Prototype",
@@ -295,10 +251,65 @@
    }
   },
   {
+   "label": "Unique Fool's Crown in helmet",
+   "kind": "unique",
+   "gain": 1.3776149195884069,
+   "kill": 124759262.38666542,
+   "costFE": null,
+   "buy": {
+    "name": "Fool's Crown",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Death's Touch in gloves",
+   "kind": "unique",
+   "gain": 1.3762816787200205,
+   "kill": 124638521.71744174,
+   "costFE": null,
+   "buy": {
+    "name": "Death's Touch",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Witchdoctor's Herb Bag in belt",
+   "kind": "unique",
+   "gain": 1.370660632500845,
+   "kill": 124129469.75366421,
+   "costFE": null,
+   "buy": {
+    "name": "Witchdoctor's Herb Bag",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Trinity in chest",
+   "kind": "unique",
+   "gain": 1.3471642581466916,
+   "kill": 122001596.21549074,
+   "costFE": null,
+   "buy": {
+    "name": "Trinity",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Kaleidoscope in ring1",
+   "kind": "unique",
+   "gain": 1.2930487795004981,
+   "kill": 117100802.02140814,
+   "costFE": 7.122,
+   "buy": {
+    "name": "Kaleidoscope",
+    "qty": 1
+   }
+  },
+  {
    "label": "Unique Legless Bird's Lament in helmet",
    "kind": "unique",
-   "gain": 1.2953805169312214,
-   "kill": 102713166.932025,
+   "gain": 1.2840433107853086,
+   "kill": 116285250.72446886,
    "costFE": null,
    "buy": {
     "name": "Legless Bird's Lament",
@@ -306,32 +317,21 @@
    }
   },
   {
-   "label": "Unique Kaleidoscope in ring1",
+   "label": "Unique Hekate's Vision in helmet",
    "kind": "unique",
-   "gain": 1.2901816362910632,
-   "kill": 102300937.87031479,
-   "costFE": 7.122,
+   "gain": 1.2512711828154517,
+   "kill": 113317348.40704742,
+   "costFE": 47.971,
    "buy": {
-    "name": "Kaleidoscope",
-    "qty": 1
-   }
-  },
-  {
-   "label": "Unique Kaleidoscope in ring2",
-   "kind": "unique",
-   "gain": 1.276073166959617,
-   "kill": 101182250.69951405,
-   "costFE": 7.122,
-   "buy": {
-    "name": "Kaleidoscope",
+    "name": "Hekate's Vision",
     "qty": 1
    }
   },
   {
    "label": "Unique Everlasting Cloud in chest",
    "kind": "unique",
-   "gain": 1.2744505182769668,
-   "kill": 101053587.82182315,
+   "gain": 1.2443804410517412,
+   "kill": 112693310.55182852,
    "costFE": null,
    "buy": {
     "name": "Everlasting Cloud",
@@ -339,10 +339,21 @@
    }
   },
   {
+   "label": "Unique Kaleidoscope in ring2",
+   "kind": "unique",
+   "gain": 1.2412709674541416,
+   "kill": 112411711.08093774,
+   "costFE": 7.122,
+   "buy": {
+    "name": "Kaleidoscope",
+    "qty": 1
+   }
+  },
+  {
    "label": "Unique Gauze of Phantom Sin in chest",
    "kind": "unique",
-   "gain": 1.262843711917406,
-   "kill": 100133262.23133062,
+   "gain": 1.2330474344441158,
+   "kill": 111666973.27507126,
    "costFE": null,
    "buy": {
     "name": "Gauze of Phantom Sin",
@@ -350,32 +361,32 @@
    }
   },
   {
-   "label": "Unique Hekate's Vision in helmet",
-   "kind": "unique",
-   "gain": 1.2623191147909438,
-   "kill": 100091665.93470728,
-   "costFE": 45.981,
-   "buy": {
-    "name": "Hekate's Vision",
-    "qty": 1
-   }
-  },
-  {
    "label": "Unique Heavyware in chest",
    "kind": "unique",
-   "gain": 1.2571511898338235,
-   "kill": 99681891.40755105,
-   "costFE": 18.033,
+   "gain": 1.2274890630688546,
+   "kill": 111163597.25686152,
+   "costFE": 18.524,
    "buy": {
     "name": "Heavyware",
     "qty": 1
    }
   },
   {
+   "label": "Unique Frostbolt in necklace",
+   "kind": "unique",
+   "gain": 1.2228383317059974,
+   "kill": 110742418.73582609,
+   "costFE": null,
+   "buy": {
+    "name": "Frostbolt",
+    "qty": 1
+   }
+  },
+  {
    "label": "Unique Hunting the Eye of the Kraken in helmet",
    "kind": "unique",
-   "gain": 1.2241025804657324,
-   "kill": 97061404.7732934,
+   "gain": 1.2051672194155307,
+   "kill": 109142091.31227492,
    "costFE": null,
    "buy": {
     "name": "Hunting the Eye of the Kraken",
@@ -389,21 +400,10 @@
    ]
   },
   {
-   "label": "Unique Frostbolt in necklace",
-   "kind": "unique",
-   "gain": 1.2210969318964842,
-   "kill": 96823081.22341977,
-   "costFE": null,
-   "buy": {
-    "name": "Frostbolt",
-    "qty": 1
-   }
-  },
-  {
    "label": "Unique Royal Cycle in chest",
    "kind": "unique",
-   "gain": 1.2048783222544435,
-   "kill": 95537077.04333936,
+   "gain": 1.1729786818803092,
+   "kill": 106227039.98472428,
    "costFE": null,
    "buy": {
     "name": "Royal Cycle",
@@ -411,10 +411,56 @@
    }
   },
   {
+   "label": "Unique Rat King's Megagon Dice in necklace",
+   "kind": "unique",
+   "gain": 1.1522142569625113,
+   "kill": 104346576.65655291,
+   "costFE": null,
+   "buy": {
+    "name": "Rat King's Megagon Dice",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Replace socket 1 with Wind Projectiles",
+   "kind": "support",
+   "gain": 1.1417614557445444,
+   "kill": 103399952.34863846,
+   "costFE": 0,
+   "market": "drop",
+   "buy": {
+    "name": "Wind Projectiles",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Replace socket 2 with Wind Projectiles",
+   "kind": "support",
+   "gain": 1.1417614557445444,
+   "kill": 103399952.34863846,
+   "costFE": 0,
+   "market": "drop",
+   "buy": {
+    "name": "Wind Projectiles",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Double Rainbow - Unique in chest",
+   "kind": "unique",
+   "gain": 1.138487577622322,
+   "kill": 103103464.11098614,
+   "costFE": null,
+   "buy": {
+    "name": "Double Rainbow - Unique",
+    "qty": 1
+   }
+  },
+  {
    "label": "Unique Silent Avowal in chest",
    "kind": "unique",
-   "gain": 1.1622716282835408,
-   "kill": 92158711.8347731,
+   "gain": 1.1348483311599322,
+   "kill": 102773887.46526669,
    "costFE": null,
    "buy": {
     "name": "Silent Avowal",
@@ -424,8 +470,8 @@
   {
    "label": "Unique Genius Battlegear in chest",
    "kind": "unique",
-   "gain": 1.1501211877323514,
-   "kill": 91195280.4628172,
+   "gain": 1.1306753191100303,
+   "kill": 102395972.05663277,
    "costFE": null,
    "buy": {
     "name": "Genius Battlegear",
@@ -438,85 +484,24 @@
    ]
   },
   {
-   "label": "Unique Twilight Vestment in chest",
+   "label": "Unique Tyrant's Smoldering Hold in gloves",
    "kind": "unique",
-   "gain": 1.1480397895051901,
-   "kill": 91030242.46759948,
-   "costFE": 27.215,
+   "gain": 1.1237961705653174,
+   "kill": 101772984.10398844,
+   "costFE": 33.008,
    "buy": {
-    "name": "Twilight Vestment",
+    "name": "Tyrant's Smoldering Hold",
     "qty": 1
    },
    "partial": [
-    "not in this figure: node 123 (comp 0x6f field +0x230 = max(value, current) (execute FUN_141a61930, t3b_exec.ann.c 254-305)) - affix class 67874 row 1 (gear 3210 modifier 51413930) - fires on event 0xf4260",
-    "not in this figure: node 124 (comp 0x6f of each task-filter target (energy-shield recharge state +0x218..+0x240; execute FUN_141a61a70, abort the no-op 0x1407d0580; t3e_ex.ann.c 1-68)) - affix class 67874 row 1 (gear 3210 modifier 51413930) - fires on event 0xf4260"
+    "not in this figure: node 243 (M2 (L30): the 'cannot use skills with this tag' block (execute FUN_141aa2570, re/evidence/c17_r.ann.c): for each task-filter target entity (FUN_1419622b0) not yet handled, find-or-create the target's comp 0x82 entry keyed by the node key +0x78 (FUN_141c6a830 / FUN_141c54040) and add that key to the target's comp 4 (FUN_141bd5a30, m2_comp4.ann.c: a count-sorted id list"
    ]
-  },
-  {
-   "label": "Replace socket 1 with Wind Projectiles",
-   "kind": "support",
-   "gain": 1.1436183448553883,
-   "kill": 90679657.77340347,
-   "costFE": 0,
-   "market": "drop",
-   "buy": {
-    "name": "Wind Projectiles",
-    "qty": 1
-   }
-  },
-  {
-   "label": "Replace socket 2 with Wind Projectiles",
-   "kind": "support",
-   "gain": 1.1436183448553883,
-   "kill": 90679657.77340347,
-   "costFE": 0,
-   "market": "drop",
-   "buy": {
-    "name": "Wind Projectiles",
-    "qty": 1
-   }
-  },
-  {
-   "label": "Unique Rat King's Megagon Dice in necklace",
-   "kind": "unique",
-   "gain": 1.1412473561609824,
-   "kill": 90491657.60327633,
-   "costFE": null,
-   "buy": {
-    "name": "Rat King's Megagon Dice",
-    "qty": 1
-   }
-  },
-  {
-   "label": "Unique The Three Saints in chest",
-   "kind": "unique",
-   "gain": 1.1338078210072107,
-   "kill": 89901762.81471159,
-   "costFE": null,
-   "buy": {
-    "name": "The Three Saints",
-    "qty": 1
-   },
-   "partial": [
-    "51416990"
-   ]
-  },
-  {
-   "label": "Unique Scarlet Decree in helmet",
-   "kind": "unique",
-   "gain": 1.1314529844844057,
-   "kill": 89715043.3807668,
-   "costFE": null,
-   "buy": {
-    "name": "Scarlet Decree",
-    "qty": 1
-   }
   },
   {
    "label": "Unique Tide of the Styx in helmet",
    "kind": "unique",
-   "gain": 1.1282384025579275,
-   "kill": 89460153.11052155,
+   "gain": 1.1227337769350136,
+   "kill": 101676771.84336585,
    "costFE": null,
    "buy": {
     "name": "Tide of the Styx",
@@ -529,76 +514,80 @@
    ]
   },
   {
-   "label": "Craft T1 Adds 46 - 56 Physical Damage to Attacks and Spells (prefix) on ring2",
-   "kind": "craft",
-   "gain": 1.1194639715809813,
-   "kill": 88764411.91178586,
-   "costFE": 569.6460000000001,
+   "label": "Unique Scarlet Decree in helmet",
+   "kind": "unique",
+   "gain": 1.1215498969898938,
+   "kill": 101569557.56555326,
+   "costFE": null,
    "buy": {
-    "name": "Matchless Ember",
-    "qty": 2079
+    "name": "Scarlet Decree",
+    "qty": 1
    }
   },
   {
-   "label": "Unique Tyrant's Smoldering Hold in gloves",
+   "label": "Unique Twilight Vestment in chest",
    "kind": "unique",
-   "gain": 1.1176400053915045,
-   "kill": 88619786.18888095,
-   "costFE": 31.629,
+   "gain": 1.120952196466208,
+   "kill": 101515428.74087021,
+   "costFE": 28.55,
    "buy": {
-    "name": "Tyrant's Smoldering Hold",
+    "name": "Twilight Vestment",
     "qty": 1
    },
    "partial": [
-    "not in this figure: node 243 (M2 (L30): the 'cannot use skills with this tag' block (execute FUN_141aa2570, re/evidence/c17_r.ann.c): for each task-filter target entity (FUN_1419622b0) not yet handled, find-or-create the target's comp 0x82 entry keyed by the node key +0x78 (FUN_141c6a830 / FUN_141c54040) and add that key to the target's comp 4 (FUN_141bd5a30, m2_comp4.ann.c: a count-sorted id list"
+    "not in this figure: node 123 (comp 0x6f field +0x230 = max(value, current) (execute FUN_141a61930, t3b_exec.ann.c 254-305)) - affix class 67874 row 1 (gear 3210 modifier 51413930) - fires on event 0xf4260",
+    "not in this figure: node 124 (comp 0x6f of each task-filter target (energy-shield recharge state +0x218..+0x240; execute FUN_141a61a70, abort the no-op 0x1407d0580; t3e_ex.ann.c 1-68)) - affix class 67874 row 1 (gear 3210 modifier 51413930) - fires on event 0xf4260"
    ]
   },
   {
    "label": "Raise Red Umbrella (slot 3) from rank 2 to 5",
    "kind": "pact",
-   "gain": 1.116497154740276,
-   "kill": 88529167.40298466,
+   "gain": 1.1164968474668857,
+   "kill": 101111944.39489879,
    "costFE": null,
    "market": "not-on-market"
   },
   {
    "label": "Craft T1 +60% Critical Strike Damage (suffix) on helmet",
    "kind": "craft",
-   "gain": 1.1122622017931718,
-   "kill": 88193369.9880014,
-   "costFE": 587.3190000000001,
+   "gain": 1.1164482670663851,
+   "kill": 101107544.86724651,
+   "costFE": 598.0365,
    "buy": {
     "name": "Matchless Ember",
     "qty": 2143.5
    }
   },
   {
-   "label": "Unique Lens of the Mage's Assistant in helmet",
+   "label": "Unique The Three Saints in chest",
    "kind": "unique",
-   "gain": 1.1098357051876504,
-   "kill": 88000968.49080014,
+   "gain": 1.1070561056131425,
+   "kill": 100256973.98676193,
    "costFE": null,
    "buy": {
-    "name": "Lens of the Mage's Assistant",
+    "name": "The Three Saints",
     "qty": 1
-   }
+   },
+   "partial": [
+    "51416990"
+   ]
   },
   {
-   "label": "Unique Blight in chest",
-   "kind": "unique",
-   "gain": 1.1069255453537683,
-   "kill": 87770216.4230413,
-   "costFE": null,
+   "label": "Craft T1 +45% Projectile Speed (prefix) on helmet",
+   "kind": "craft",
+   "gain": 1.0983194722236929,
+   "kill": 99465768.89605623,
+   "costFE": 598.0365,
    "buy": {
-    "name": "Blight",
-    "qty": 1
+    "name": "Matchless Ember",
+    "qty": 2143.5
    }
   },
   {
    "label": "Unique Fiend Crown in helmet",
    "kind": "unique",
-   "gain": 1.1067841719990767,
-   "kill": 87759006.66282769,
+   "gain": 1.0968414064561318,
+   "kill": 99331912.6258476,
    "costFE": 118.393,
    "buy": {
     "name": "Fiend Crown",
@@ -606,73 +595,21 @@
    }
   },
   {
-   "label": "Craft T1 +1 Cold Skill Level (prefix) on boots",
-   "kind": "craft",
-   "gain": 1.1019470265008517,
-   "kill": 87375460.26349577,
-   "costFE": 278.9320000000001,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 1018.0000000000001
-   }
-  },
-  {
-   "label": "Craft T1 +45% Projectile Speed (prefix) on boots",
-   "kind": "craft",
-   "gain": 1.1016508027531482,
-   "kill": 87351972.1232548,
-   "costFE": 278.9320000000001,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 1018.0000000000001
-   }
-  },
-  {
-   "label": "Craft T1 +45% Projectile Speed (prefix) on helmet",
-   "kind": "craft",
-   "gain": 1.1016508027531482,
-   "kill": 87351972.1232548,
-   "costFE": 587.3190000000001,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 2143.5
-   }
-  },
-  {
-   "label": "Craft T1 Adds 44 - 58 Cold Damage to Attacks and Spells (prefix) on ring2",
-   "kind": "craft",
-   "gain": 1.0884919352707028,
-   "kill": 86308580.67595811,
-   "costFE": 569.6460000000001,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 2079
-   }
-  },
-  {
-   "label": "Craft T2 +43% Critical Strike Damage (suffix) on helmet",
-   "kind": "craft",
-   "gain": 1.08095833893441,
-   "kill": 85711227.59863895,
-   "costFE": 195.77300000000002,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 714.5
-   }
-  },
-  {
-   "label": "Raise Red Umbrella (slot 3) from rank 2 to 4",
-   "kind": "pact",
-   "gain": 1.077321869613163,
-   "kill": 85422885.08031756,
+   "label": "Unique Lens of the Mage's Assistant in helmet",
+   "kind": "unique",
+   "gain": 1.091515711342613,
+   "kill": 98849608.18459097,
    "costFE": null,
-   "market": "not-on-market"
+   "buy": {
+    "name": "Lens of the Mage's Assistant",
+    "qty": 1
+   }
   },
   {
    "label": "Replace socket 1 with Critical Strike Damage Increase",
    "kind": "support",
-   "gain": 1.0771611703179027,
-   "kill": 85410142.9297879,
+   "gain": 1.0849021981147327,
+   "kill": 98250676.63967033,
    "costFE": 0,
    "market": "drop",
    "buy": {
@@ -683,8 +620,8 @@
   {
    "label": "Replace socket 2 with Critical Strike Damage Increase",
    "kind": "support",
-   "gain": 1.0771611703179027,
-   "kill": 85410142.9297879,
+   "gain": 1.0849021981147327,
+   "kill": 98250676.63967033,
    "costFE": 0,
    "market": "drop",
    "buy": {
@@ -693,10 +630,74 @@
    }
   },
   {
+   "label": "Craft T2 +43% Critical Strike Damage (suffix) on helmet",
+   "kind": "craft",
+   "gain": 1.0839771334935164,
+   "kill": 98166901.13886678,
+   "costFE": 199.34550000000002,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 714.5
+   }
+  },
+  {
+   "label": "Unique Blight in chest",
+   "kind": "unique",
+   "gain": 1.0808080669497027,
+   "kill": 97879904.82455671,
+   "costFE": null,
+   "buy": {
+    "name": "Blight",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Raise Red Umbrella (slot 3) from rank 2 to 4",
+   "kind": "pact",
+   "gain": 1.0773218596262089,
+   "kill": 97564187.67601128,
+   "costFE": null,
+   "market": "not-on-market"
+  },
+  {
+   "label": "Unique Double Rainbow in chest",
+   "kind": "unique",
+   "gain": 1.0747278450450195,
+   "kill": 97329269.09232889,
+   "costFE": null,
+   "buy": {
+    "name": "Double Rainbow",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Restless Glacier in ring1",
+   "kind": "unique",
+   "gain": 1.0717553874724006,
+   "kill": 97060078.03685863,
+   "costFE": 31.48,
+   "buy": {
+    "name": "Restless Glacier",
+    "qty": 1
+   },
+   "partial": [
+    "not in this figure: node 500 (event payload into the tree context: walks the payload entries (types 3 / 5 / 0xc / 0xf) and hands entity ids / values to the tree (execute FUN_141af14e0, t3b_exec.ann.c 1-75)) - affix class 543504 row 1 (gear 4601 modifier 51510950) - fires on event 0xf424a",
+    "not in this figure: node 1035 (casts a skill: comps 0x82 / 0x83 / 0x1e (execute FUN_141a59940, t3b_exec.ann.c 1024-1347)) - affix class 543504 row 1 (gear 4601 modifier 51510950) - fires on event 0xf424a"
+   ]
+  },
+  {
+   "label": "Rare base Lonely Hunter's Bow (item level 86) on mainHand, 6 affix(es) crafted again",
+   "kind": "gear",
+   "gain": 1.0716782347515543,
+   "kill": 97053090.94895254,
+   "costFE": 1141.2800000000002,
+   "market": "drop"
+  },
+  {
    "label": "Unique Howling Ring in ring1",
    "kind": "unique",
-   "gain": 1.0752766927231492,
-   "kill": 85260719.14330998,
+   "gain": 1.0711645620900465,
+   "kill": 97006571.83722787,
    "costFE": null,
    "buy": {
     "name": "Howling Ring",
@@ -706,8 +707,8 @@
   {
    "label": "Unique Frozen Lightning in ring1",
    "kind": "unique",
-   "gain": 1.0736436804257952,
-   "kill": 85131234.5150422,
+   "gain": 1.0707938203807554,
+   "kill": 96972996.80727613,
    "costFE": null,
    "buy": {
     "name": "Frozen Lightning",
@@ -715,74 +716,21 @@
    }
   },
   {
-   "label": "Craft T2 +32% Projectile Speed (prefix) on boots",
-   "kind": "craft",
-   "gain": 1.072980461381965,
-   "kill": 85078646.62486549,
-   "costFE": 92.97733333333335,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 339.33333333333337
-   }
-  },
-  {
    "label": "Craft T2 +32% Projectile Speed (prefix) on helmet",
    "kind": "craft",
-   "gain": 1.072980461381965,
-   "kill": 85078646.62486549,
-   "costFE": 195.77300000000002,
+   "gain": 1.0705883286007993,
+   "kill": 96954387.10544342,
+   "costFE": 199.34550000000002,
    "buy": {
     "name": "Matchless Ember",
     "qty": 714.5
    }
   },
   {
-   "label": "Craft T2 Adds 28 - 34 Physical Damage to Attacks and Spells (prefix) on ring2",
-   "kind": "craft",
-   "gain": 1.0716783666168936,
-   "kill": 84975401.0725216,
-   "costFE": 189.882,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 693
-   }
-  },
-  {
-   "label": "Rare base Lonely Hunter's Bow (item level 86) on mainHand, 6 affix(es) crafted again",
-   "kind": "gear",
-   "gain": 1.071678188836112,
-   "kill": 84975386.97594775,
-   "costFE": 1028.5284848484848,
-   "market": "drop"
-  },
-  {
-   "label": "Unique Restless Glacier in ring1",
-   "kind": "unique",
-   "gain": 1.0693792184640576,
-   "kill": 84793097.27457413,
-   "costFE": 31.48,
-   "buy": {
-    "name": "Restless Glacier",
-    "qty": 1
-   },
-   "partial": [
-    "not in this figure: node 500 (event payload into the tree context: walks the payload entries (types 3 / 5 / 0xc / 0xf) and hands entity ids / values to the tree (execute FUN_141af14e0, t3b_exec.ann.c 1-75)) - affix class 543504 row 1 (gear 4601 modifier 51510950) - fires on event 0xf424a",
-    "not in this figure: node 1035 (casts a skill: comps 0x82 / 0x83 / 0x1e (execute FUN_141a59940, t3b_exec.ann.c 1024-1347)) - affix class 543504 row 1 (gear 4601 modifier 51510950) - fires on event 0xf424a"
-   ]
-  },
-  {
-   "label": "Raise Hell Cavalry - Crushed Ice (slot 2) from rank 2 to 5",
-   "kind": "pact",
-   "gain": 1.0692920514522357,
-   "kill": 84786185.637631,
-   "costFE": null,
-   "market": "not-on-market"
-  },
-  {
    "label": "Unique Mercurial Torment in necklace",
    "kind": "unique",
-   "gain": 1.0685989666357352,
-   "kill": 84731229.63395116,
+   "gain": 1.0701230237273178,
+   "kill": 96912248.26680641,
    "costFE": null,
    "buy": {
     "name": "Mercurial Torment",
@@ -790,127 +738,40 @@
    }
   },
   {
-   "label": "Craft T1 +120% Critical Strike Rating (suffix) on boots",
-   "kind": "craft",
-   "gain": 1.0669429111466062,
-   "kill": 84599917.86750081,
-   "costFE": 184.828,
-   "buy": {
-    "name": "Precious Ember",
-    "qty": 2254
-   }
-  },
-  {
-   "label": "Craft T1 +120% Critical Strike Rating (suffix) on helmet",
-   "kind": "craft",
-   "gain": 1.0669429111466062,
-   "kill": 84599917.86750081,
-   "costFE": 194.50400000000002,
-   "buy": {
-    "name": "Precious Ember",
-    "qty": 2372
-   }
-  },
-  {
-   "label": "Unique Howling Ring in ring2",
-   "kind": "unique",
-   "gain": 1.0612387502006397,
-   "kill": 84147624.17634806,
+   "label": "Raise Hell Cavalry - Crushed Ice (slot 2) from rank 2 to 5",
+   "kind": "pact",
+   "gain": 1.069292024327216,
+   "kill": 96836991.48007572,
    "costFE": null,
-   "buy": {
-    "name": "Howling Ring",
-    "qty": 1
-   }
-  },
-  {
-   "label": "Unique Frozen Lightning in ring2",
-   "kind": "unique",
-   "gain": 1.0600906681702547,
-   "kill": 84056590.58452134,
-   "costFE": null,
-   "buy": {
-    "name": "Frozen Lightning",
-    "qty": 1
-   }
-  },
-  {
-   "label": "Wear your Disciple's Coat (stash) in chest",
-   "kind": "gear",
-   "gain": 1.0596459833814693,
-   "kill": 84021330.68803096,
-   "costFE": 0,
-   "partial": [
-    "buff 35101 (510238944 row 1): an uptime add on event 1000076: the fight states no rate for it (510238944 row 1)",
-    "not calculable without buff 35101's instance count over the fight (added by 510238944 row 1 on event 1000076, deferred false): an uptime rule that is not ported"
-   ]
-  },
-  {
-   "label": "Craft T1 +72% damage (prefix) on helmet",
-   "kind": "craft",
-   "gain": 1.0586158057401132,
-   "kill": 83939645.95781985,
-   "costFE": 194.50400000000002,
-   "buy": {
-    "name": "Precious Ember",
-    "qty": 2372
-   }
-  },
-  {
-   "label": "Craft T1 +72% damage (prefix) on ring2",
-   "kind": "craft",
-   "gain": 1.0586158057401132,
-   "kill": 83939645.95781985,
-   "costFE": 175.275,
-   "buy": {
-    "name": "Precious Ember",
-    "qty": 2137.5
-   }
+   "market": "not-on-market"
   },
   {
    "label": "Craft T3 +31% Critical Strike Damage (suffix) on helmet",
    "kind": "craft",
-   "gain": 1.0582900078776674,
-   "kill": 83913812.83018352,
-   "costFE": 53.39263636363637,
+   "gain": 1.0604635415397612,
+   "kill": 96037468.34418714,
+   "costFE": 54.366954545454554,
    "buy": {
     "name": "Matchless Ember",
     "qty": 194.86363636363637
    }
   },
   {
-   "label": "Socket Kismet: Hunter on contract point 107",
-   "kind": "kismet",
-   "gain": 1.0577759237795503,
-   "kill": 83873050.13142681,
-   "costFE": null
-  },
-  {
-   "label": "Socket Kismet: Hunter on contract point 307",
-   "kind": "kismet",
-   "gain": 1.0577759237795503,
-   "kill": 83873050.13142681,
-   "costFE": null
-  },
-  {
-   "label": "Unique Restless Glacier in ring2",
+   "label": "Unique Silver Frost in ring1",
    "kind": "unique",
-   "gain": 1.0576850769441495,
-   "kill": 83865846.71432441,
-   "costFE": 31.48,
+   "gain": 1.0576311782292585,
+   "kill": 95780964.47477858,
+   "costFE": null,
    "buy": {
-    "name": "Restless Glacier",
+    "name": "Silver Frost",
     "qty": 1
-   },
-   "partial": [
-    "not in this figure: node 500 (event payload into the tree context: walks the payload entries (types 3 / 5 / 0xc / 0xf) and hands entity ids / values to the tree (execute FUN_141af14e0, t3b_exec.ann.c 1-75)) - affix class 543504 row 1 (gear 4601 modifier 51510950) - fires on event 0xf424a",
-    "not in this figure: node 1035 (casts a skill: comps 0x82 / 0x83 / 0x1e (execute FUN_141a59940, t3b_exec.ann.c 1024-1347)) - affix class 543504 row 1 (gear 4601 modifier 51510950) - fires on event 0xf424a"
-   ]
+   }
   },
   {
    "label": "Unique Ownerless in necklace",
    "kind": "unique",
-   "gain": 1.055989593831707,
-   "kill": 83731408.65718018,
+   "gain": 1.0552825810340887,
+   "kill": 95568271.32697186,
    "costFE": null,
    "buy": {
     "name": "Ownerless",
@@ -918,190 +779,83 @@
    }
   },
   {
-   "label": "Unique Silver Frost in ring1",
-   "kind": "unique",
-   "gain": 1.055286169344234,
-   "kill": 83675632.80146708,
-   "costFE": null,
-   "buy": {
-    "name": "Silver Frost",
-    "qty": 1
-   }
+   "label": "Socket Kismet: Hunter on contract point 107",
+   "kind": "kismet",
+   "gain": 1.055044362485929,
+   "kill": 95546697.83068298,
+   "costFE": null
   },
   {
-   "label": "Unique Howling in belt",
-   "kind": "unique",
-   "gain": 1.0545786171769609,
-   "kill": 83619529.65422939,
-   "costFE": null,
+   "label": "Socket Kismet: Hunter on contract point 307",
+   "kind": "kismet",
+   "gain": 1.055044362485929,
+   "kill": 95546697.83068298,
+   "costFE": null
+  },
+  {
+   "label": "Craft T1 +72% damage (prefix) on helmet",
+   "kind": "craft",
+   "gain": 1.054949679707497,
+   "kill": 95538123.18951881,
+   "costFE": 196.876,
    "buy": {
-    "name": "Howling",
-    "qty": 1
+    "name": "Precious Ember",
+    "qty": 2372
    }
   },
   {
    "label": "Socket Kismet: Hunter on contract point 207",
    "kind": "kismet",
-   "gain": 1.0538402630243766,
-   "kill": 83560984.15942065,
+   "gain": 1.0513592319995586,
+   "kill": 95212965.84597455,
    "costFE": null
-  },
-  {
-   "label": "Craft T2 Adds 27 - 35 Cold Damage to Attacks and Spells (prefix) on ring2",
-   "kind": "craft",
-   "gain": 1.0530949997133352,
-   "kill": 83501890.824393,
-   "costFE": 189.882,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 693
-   }
-  },
-  {
-   "label": "Craft T3 +23% Projectile Speed (prefix) on boots",
-   "kind": "craft",
-   "gain": 1.0521285604915027,
-   "kill": 83425260.03380731,
-   "costFE": 25.357454545454548,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 92.54545454545455
-   }
   },
   {
    "label": "Craft T3 +23% Projectile Speed (prefix) on helmet",
    "kind": "craft",
-   "gain": 1.0521285604915027,
-   "kill": 83425260.03380731,
-   "costFE": 53.39263636363637,
+   "gain": 1.0504202734607833,
+   "kill": 95127932.08723429,
+   "costFE": 54.366954545454554,
    "buy": {
     "name": "Matchless Ember",
     "qty": 194.86363636363637
    }
   },
   {
-   "label": "Unique Eternal Undercurrent in chest",
-   "kind": "unique",
-   "gain": 1.0510026131162664,
-   "kill": 83335981.5405787,
-   "costFE": null,
-   "buy": {
-    "name": "Eternal Undercurrent",
-    "qty": 1
-   }
-  },
-  {
    "label": "Raise Hell Cavalry - Crushed Ice (slot 2) from rank 2 to 4",
    "kind": "pact",
-   "gain": 1.0493054299111857,
-   "kill": 83201408.67987931,
+   "gain": 1.049305148489971,
+   "kill": 95026944.38243428,
    "costFE": null,
    "market": "not-on-market"
   },
   {
-   "label": "Craft T2 +86% Critical Strike Rating (suffix) on boots",
-   "kind": "craft",
-   "gain": 1.0479088532383836,
-   "kill": 83090671.47868477,
-   "costFE": 61.60933333333334,
-   "buy": {
-    "name": "Precious Ember",
-    "qty": 751.3333333333334
-   }
+   "label": "Wear your Disciple's Coat (stash) in chest",
+   "kind": "gear",
+   "gain": 1.0454185826339244,
+   "kill": 94674970.05163765,
+   "costFE": 0,
+   "partial": [
+    "buff 35101 (510238944 row 1): an uptime add on event 1000076: the fight states no rate for it (510238944 row 1)",
+    "not calculable without buff 35101's instance count over the fight (added by 510238944 row 1 on event 1000076, deferred false): an uptime rule that is not ported"
+   ]
   },
   {
-   "label": "Craft T2 +86% Critical Strike Rating (suffix) on helmet",
-   "kind": "craft",
-   "gain": 1.0479088532383836,
-   "kill": 83090671.47868477,
-   "costFE": 64.83466666666666,
-   "buy": {
-    "name": "Precious Ember",
-    "qty": 790.6666666666666
-   }
-  },
-  {
-   "label": "Craft T3 Adds 19 - 23 Physical Damage to Attacks and Spells (prefix) on ring2",
-   "kind": "craft",
-   "gain": 1.047785523305612,
-   "kill": 83080892.41546209,
-   "costFE": 51.785999999999994,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 188.99999999999997
-   }
-  },
-  {
-   "label": "Unique Elemental Cleric in ring1",
+   "label": "Unique Providential Grace in gloves",
    "kind": "unique",
-   "gain": 1.0468610962628966,
-   "kill": 83007592.84987976,
+   "gain": 1.0442608859854892,
+   "kill": 94570126.97983828,
    "costFE": null,
    "buy": {
-    "name": "Elemental Cleric",
-    "qty": 1
-   }
-  },
-  {
-   "label": "Craft T1 Adds 6 - 96 Lightning Damage to Attacks and Spells (prefix) on ring2",
-   "kind": "craft",
-   "gain": 1.0442459268061135,
-   "kill": 82800231.12607796,
-   "costFE": 569.6460000000001,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 2079
-   }
-  },
-  {
-   "label": "Unique Silver Frost in ring2",
-   "kind": "unique",
-   "gain": 1.043746081925522,
-   "kill": 82760597.48176321,
-   "costFE": null,
-   "buy": {
-    "name": "Silver Frost",
-    "qty": 1
-   }
-  },
-  {
-   "label": "Unique Sky Devourer - Strength Armor in chest",
-   "kind": "unique",
-   "gain": 1.0437441275968111,
-   "kill": 82760442.51934986,
-   "costFE": null,
-   "buy": {
-    "name": "Sky Devourer - Strength Armor",
-    "qty": 1
-   }
-  },
-  {
-   "label": "Unique Sky Devourer - Agile Armor in chest",
-   "kind": "unique",
-   "gain": 1.0437441275968111,
-   "kill": 82760442.51934986,
-   "costFE": null,
-   "buy": {
-    "name": "Sky Devourer - Agile Armor",
-    "qty": 1
-   }
-  },
-  {
-   "label": "Unique Sky Devourer - Insight Armor in chest",
-   "kind": "unique",
-   "gain": 1.0437441275968111,
-   "kill": 82760442.51934986,
-   "costFE": null,
-   "buy": {
-    "name": "Sky Devourer - Insight Armor",
+    "name": "Providential Grace",
     "qty": 1
    }
   },
   {
    "label": "Replace socket 1 with Ice Shot: Ice Blast (Magnificent)",
    "kind": "support",
-   "gain": 1.0434786310782111,
-   "kill": 82739390.79911909,
+   "gain": 1.043478282439294,
+   "kill": 94499253.00789142,
    "costFE": null,
    "market": "tradeable",
    "buy": {
@@ -1112,8 +866,8 @@
   {
    "label": "Replace socket 1 with Ice Shot: Batter (Noble)",
    "kind": "support",
-   "gain": 1.0434786310782111,
-   "kill": 82739390.79911909,
+   "gain": 1.043478282439294,
+   "kill": 94499253.00789142,
    "costFE": null,
    "market": "tradeable",
    "buy": {
@@ -1124,8 +878,8 @@
   {
    "label": "Replace socket 2 with Ice Shot: Ice Blast (Magnificent)",
    "kind": "support",
-   "gain": 1.0434786310782111,
-   "kill": 82739390.79911909,
+   "gain": 1.043478282439294,
+   "kill": 94499253.00789142,
    "costFE": null,
    "market": "tradeable",
    "buy": {
@@ -1136,8 +890,8 @@
   {
    "label": "Replace socket 2 with Ice Shot: Batter (Noble)",
    "kind": "support",
-   "gain": 1.0434786310782111,
-   "kill": 82739390.79911909,
+   "gain": 1.043478282439294,
+   "kill": 94499253.00789142,
    "costFE": null,
    "market": "tradeable",
    "buy": {
@@ -1146,10 +900,80 @@
    }
   },
   {
+   "label": "Unique Unholy Prayer in ring1",
+   "kind": "unique",
+   "gain": 1.0434028972006102,
+   "kill": 94492425.98632006,
+   "costFE": null,
+   "buy": {
+    "name": "Unholy Prayer",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Unholy Prayer in ring1",
+   "kind": "unique",
+   "gain": 1.0434028972006102,
+   "kill": 94492425.98632006,
+   "costFE": null,
+   "buy": {
+    "name": "Unholy Prayer",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Unholy Prayer in ring1",
+   "kind": "unique",
+   "gain": 1.0434028972006102,
+   "kill": 94492425.98632006,
+   "costFE": null,
+   "buy": {
+    "name": "Unholy Prayer",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Elemental Cleric in ring1",
+   "kind": "unique",
+   "gain": 1.0426840723538164,
+   "kill": 94427327.92706124,
+   "costFE": null,
+   "buy": {
+    "name": "Elemental Cleric",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Gemma's Desire in ring1",
+   "kind": "unique",
+   "gain": 1.0425592230554492,
+   "kill": 94416021.35208714,
+   "costFE": null,
+   "buy": {
+    "name": "Gemma's Desire",
+    "qty": 1
+   },
+   "partial": [
+    "51511430",
+    "51511440"
+   ]
+  },
+  {
+   "label": "Craft T4 +22% Critical Strike Damage (suffix) on helmet",
+   "kind": "craft",
+   "gain": 1.0425484130979528,
+   "kill": 94415042.3830701,
+   "costFE": 13.90782558139535,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 49.848837209302324
+   }
+  },
+  {
    "label": "Replace socket 1 with Increased Area",
    "kind": "support",
-   "gain": 1.0417393653359177,
-   "kill": 82601481.13459013,
+   "gain": 1.0417393861820599,
+   "kill": 94341775.46367007,
    "costFE": 0,
    "market": "drop",
    "buy": {
@@ -1160,8 +984,8 @@
   {
    "label": "Replace socket 2 with Increased Area",
    "kind": "support",
-   "gain": 1.0417393653359177,
-   "kill": 82601481.13459013,
+   "gain": 1.0417393861820599,
+   "kill": 94341775.46367007,
    "costFE": 0,
    "market": "drop",
    "buy": {
@@ -1170,102 +994,21 @@
    }
   },
   {
-   "label": "Craft T2 +50% damage (prefix) on helmet",
    "kind": "craft",
-   "gain": 1.0414599887354823,
-   "kill": 82579328.83646432,
-   "costFE": 64.83466666666666,
+   "label": "Craft on mainHand with Precious Ember (2 per craft): keep any of 8 results - T2 +151% Physical Damage (suffix) in place of your T2 +22% gear Attack Speed; T3 +108% Physical Damage (suffix) in place of your T2 +22% gear Attack Speed; T4 +86% Physical Damage (suffix) in place of your T2 +22% gear Attack Speed; T5 +69% Physical Damage (suffix) in place of your T2 +22% gear Attack Speed; or another of the list - about 12 crafts",
+   "gain": 1.0398051328165878,
+   "kill": 94166606.03154944,
+   "costFE": 1.9527487684729068,
    "buy": {
     "name": "Precious Ember",
-    "qty": 790.6666666666666
-   }
-  },
-  {
-   "label": "Craft T2 +50% damage (prefix) on ring2",
-   "kind": "craft",
-   "gain": 1.0414599887354823,
-   "kill": 82579328.83646432,
-   "costFE": 58.425000000000004,
-   "buy": {
-    "name": "Precious Ember",
-    "qty": 712.5
-   }
-  },
-  {
-   "label": "Unique Unholy Prayer in ring1",
-   "kind": "unique",
-   "gain": 1.0410893174434248,
-   "kill": 82549937.60987076,
-   "costFE": null,
-   "buy": {
-    "name": "Unholy Prayer",
-    "qty": 1
-   }
-  },
-  {
-   "label": "Unique Unholy Prayer in ring1",
-   "kind": "unique",
-   "gain": 1.0410893174434248,
-   "kill": 82549937.60987076,
-   "costFE": null,
-   "buy": {
-    "name": "Unholy Prayer",
-    "qty": 1
-   }
-  },
-  {
-   "label": "Unique Unholy Prayer in ring1",
-   "kind": "unique",
-   "gain": 1.0410893174434248,
-   "kill": 82549937.60987076,
-   "costFE": null,
-   "buy": {
-    "name": "Unholy Prayer",
-    "qty": 1
-   }
-  },
-  {
-   "label": "Craft T4 +22% Critical Strike Damage (suffix) on helmet",
-   "kind": "craft",
-   "gain": 1.0410188962124751,
-   "kill": 82544353.77750988,
-   "costFE": 13.658581395348838,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 49.848837209302324
-   }
-  },
-  {
-   "label": "Unique Gemma's Desire in ring1",
-   "kind": "unique",
-   "gain": 1.0402477519519506,
-   "kill": 82483208.29313315,
-   "costFE": null,
-   "buy": {
-    "name": "Gemma's Desire",
-    "qty": 1
-   },
-   "partial": [
-    "51511430",
-    "51511440"
-   ]
-  },
-  {
-   "label": "Unique Providential Grace in gloves",
-   "kind": "unique",
-   "gain": 1.0400989173197788,
-   "kill": 82471406.91414087,
-   "costFE": null,
-   "buy": {
-    "name": "Providential Grace",
-    "qty": 1
+    "qty": 23.527093596059117
    }
   },
   {
    "label": "Unique Glacier Traveler in ring1",
    "kind": "unique",
-   "gain": 1.0374630056159733,
-   "kill": 82262400.49841025,
+   "gain": 1.0397684870480643,
+   "kill": 94163287.32543963,
    "costFE": null,
    "buy": {
     "name": "Glacier Traveler",
@@ -1273,198 +1016,95 @@
    }
   },
   {
-   "label": "Craft T4 +16% Projectile Speed (prefix) on boots",
+   "label": "Craft T2 +50% damage (prefix) on helmet",
    "kind": "craft",
-   "gain": 1.0364901658311683,
-   "kill": 82185262.19510189,
-   "costFE": 6.48679069767442,
+   "gain": 1.038866806959125,
+   "kill": 94081629.56955643,
+   "costFE": 65.62533333333333,
    "buy": {
-    "name": "Matchless Ember",
-    "qty": 23.674418604651166
+    "name": "Precious Ember",
+    "qty": 790.6666666666666
    }
+  },
+  {
+   "label": "Socket Medium Fate: Critical Strike Damage on contract point 107",
+   "kind": "kismet",
+   "gain": 1.0377236124775508,
+   "kill": 93978099.83983465,
+   "costFE": null
+  },
+  {
+   "label": "Socket Medium Fate: Critical Strike Damage on contract point 307",
+   "kind": "kismet",
+   "gain": 1.0377236124775508,
+   "kill": 93978099.83983465,
+   "costFE": null
   },
   {
    "label": "Craft T4 +16% Projectile Speed (prefix) on helmet",
    "kind": "craft",
-   "gain": 1.0364901658311683,
-   "kill": 82185262.19510189,
-   "costFE": 13.658581395348838,
+   "gain": 1.03529418690219,
+   "kill": 93758086.72986059,
+   "costFE": 13.90782558139535,
    "buy": {
     "name": "Matchless Ember",
     "qty": 49.848837209302324
    }
   },
   {
-   "label": "Craft T3 Adds 18 - 24 Cold Damage to Attacks and Spells (prefix) on ring2",
-   "kind": "craft",
-   "gain": 1.0353968538988914,
-   "kill": 82098571.42776291,
-   "costFE": 51.785999999999994,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 188.99999999999997
-   }
-  },
-  {
-   "label": "Craft T3 +61% Critical Strike Rating (suffix) on boots",
-   "kind": "craft",
-   "gain": 1.034313097589653,
-   "kill": 82012638.34381618,
-   "costFE": 16.802545454545456,
-   "buy": {
-    "name": "Precious Ember",
-    "qty": 204.9090909090909
-   }
-  },
-  {
-   "label": "Craft T3 +61% Critical Strike Rating (suffix) on helmet",
-   "kind": "craft",
-   "gain": 1.034313097589653,
-   "kill": 82012638.34381618,
-   "costFE": 17.682181818181817,
-   "buy": {
-    "name": "Precious Ember",
-    "qty": 215.63636363636363
-   }
-  },
-  {
-   "label": "Socket Medium Fate: Critical Strike Damage on contract point 107",
-   "kind": "kismet",
-   "gain": 1.0340826203326896,
-   "kill": 81994363.36695871,
-   "costFE": null
-  },
-  {
-   "label": "Socket Medium Fate: Critical Strike Damage on contract point 307",
-   "kind": "kismet",
-   "gain": 1.0340826203326896,
-   "kill": 81994363.36695871,
-   "costFE": null
-  },
-  {
-   "label": "Unique Elemental Cleric in ring2",
+   "label": "Unique Howling in belt",
    "kind": "unique",
-   "gain": 1.032005452716519,
-   "kill": 81829660.82487404,
+   "gain": 1.034461004073236,
+   "kill": 93682632.20792161,
    "costFE": null,
    "buy": {
-    "name": "Elemental Cleric",
+    "name": "Howling",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Socket Medium Fate: Critical Strike Damage on contract point 207",
+   "kind": "kismet",
+   "gain": 1.0339332201942615,
+   "kill": 93634835.15919328,
+   "costFE": null
+  },
+  {
+   "label": "Unique Arctic Ring in ring1",
+   "kind": "unique",
+   "gain": 1.0295487340652305,
+   "kill": 93237768.28105153,
+   "costFE": null,
+   "buy": {
+    "name": "Arctic Ring",
     "qty": 1
    }
   },
   {
    "label": "Craft T3 +36% damage (prefix) on helmet",
    "kind": "craft",
-   "gain": 1.0314523776039488,
-   "kill": 81785806.4549643,
-   "costFE": 17.682181818181817,
+   "gain": 1.029485470878547,
+   "kill": 93232039.05411398,
+   "costFE": 17.89781818181818,
    "buy": {
     "name": "Precious Ember",
     "qty": 215.63636363636363
    }
   },
   {
-   "label": "Craft T3 +36% damage (prefix) on ring2",
-   "kind": "craft",
-   "gain": 1.0314523776039488,
-   "kill": 81785806.4549643,
-   "costFE": 15.934090909090912,
-   "buy": {
-    "name": "Precious Ember",
-    "qty": 194.31818181818184
-   }
-  },
-  {
-   "label": "Craft T4 Adds 13 - 15 Physical Damage to Attacks and Spells (prefix) on ring2",
-   "kind": "craft",
-   "gain": 1.0310606208986886,
-   "kill": 81754743.32614756,
-   "costFE": 13.24758139534884,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 48.34883720930233
-   }
-  },
-  {
-   "label": "Socket Medium Fate: Critical Strike Damage on contract point 207",
-   "kind": "kismet",
-   "gain": 1.030047683305829,
-   "kill": 81674425.59193183,
-   "costFE": null
-  },
-  {
-   "label": "Unique Unholy Prayer in ring2",
-   "kind": "unique",
-   "gain": 1.0297045071239113,
-   "kill": 81647214.50453342,
-   "costFE": null,
-   "buy": {
-    "name": "Unholy Prayer",
-    "qty": 1
-   }
-  },
-  {
-   "label": "Unique Unholy Prayer in ring2",
-   "kind": "unique",
-   "gain": 1.0297045071239113,
-   "kill": 81647214.50453342,
-   "costFE": null,
-   "buy": {
-    "name": "Unholy Prayer",
-    "qty": 1
-   }
-  },
-  {
-   "label": "Unique Unholy Prayer in ring2",
-   "kind": "unique",
-   "gain": 1.0297045071239113,
-   "kill": 81647214.50453342,
-   "costFE": null,
-   "buy": {
-    "name": "Unholy Prayer",
-    "qty": 1
-   }
-  },
-  {
    "label": "Raise Hell Cavalry - Crushed Ice (slot 2) from rank 2 to 3",
    "kind": "pact",
-   "gain": 1.0291264690618935,
-   "kill": 81601380.77523066,
+   "gain": 1.029126511626586,
+   "kill": 93199531.06449747,
    "costFE": null,
    "market": "not-on-market"
   },
   {
-   "label": "Unique Gemma's Desire in ring2",
-   "kind": "unique",
-   "gain": 1.0288722750998192,
-   "kill": 81581225.25604661,
-   "costFE": null,
-   "buy": {
-    "name": "Gemma's Desire",
-    "qty": 1
-   },
-   "partial": [
-    "51511430",
-    "51511440"
-   ]
-  },
-  {
-   "label": "Unique Skin of Malice in chest",
-   "kind": "unique",
-   "gain": 1.028727492225056,
-   "kill": 81569745.14854917,
-   "costFE": null,
-   "buy": {
-    "name": "Skin of Malice",
-    "qty": 1
-   }
-  },
-  {
    "label": "Re-craft T4 +22% Critical Strike Damage (suffix) on boots, replacing its lower tier",
    "kind": "craft",
-   "gain": 1.028065550448293,
-   "kill": 81517258.53528976,
-   "costFE": 6.48679069767442,
+   "gain": 1.0291120554657012,
+   "kill": 93198221.8888031,
+   "costFE": 6.605162790697676,
    "buy": {
     "name": "Matchless Ember",
     "qty": 23.674418604651166
@@ -1473,157 +1113,117 @@
   {
    "label": "Craft T5 +15% Critical Strike Damage (suffix) on helmet",
    "kind": "craft",
-   "gain": 1.028065550448293,
-   "kill": 81517258.53528976,
-   "costFE": 7.83092,
+   "gain": 1.0291120554657012,
+   "kill": 93198221.8888031,
+   "costFE": 7.97382,
    "buy": {
     "name": "Matchless Ember",
     "qty": 28.58
    }
   },
   {
-   "label": "Unique Arctic Ring in ring1",
+   "label": "Unique Restless Glacier in ring2",
    "kind": "unique",
-   "gain": 1.0272661833659542,
-   "kill": 81453875.21008527,
+   "gain": 1.0288390913836771,
+   "kill": 93173501.77504188,
+   "costFE": 31.48,
+   "buy": {
+    "name": "Restless Glacier",
+    "qty": 1
+   },
+   "partial": [
+    "not in this figure: node 500 (event payload into the tree context: walks the payload entries (types 3 / 5 / 0xc / 0xf) and hands entity ids / values to the tree (execute FUN_141af14e0, t3b_exec.ann.c 1-75)) - affix class 543504 row 1 (gear 4601 modifier 51510950) - fires on event 0xf424a",
+    "not in this figure: node 1035 (casts a skill: comps 0x82 / 0x83 / 0x1e (execute FUN_141a59940, t3b_exec.ann.c 1024-1347)) - affix class 543504 row 1 (gear 4601 modifier 51510950) - fires on event 0xf424a"
+   ]
+  },
+  {
+   "label": "Unique Frozen Lightning in ring2",
+   "kind": "unique",
+   "gain": 1.0284184865095596,
+   "kill": 93135411.04801433,
    "costFE": null,
    "buy": {
-    "name": "Arctic Ring",
+    "name": "Frozen Lightning",
     "qty": 1
    }
   },
   {
-   "label": "Craft T2 Adds 4 - 58 Lightning Damage to Attacks and Spells (prefix) on ring2",
-   "kind": "craft",
-   "gain": 1.0265478626501454,
-   "kill": 81396918.20430261,
-   "costFE": 189.882,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 693
-   }
-  },
-  {
-   "label": "Re-craft T3 +61% Critical Strike Rating (suffix) on ring2, replacing its lower tier",
-   "kind": "craft",
-   "gain": 1.026544094361807,
-   "kill": 81396619.40960553,
-   "costFE": 15.934090909090912,
-   "buy": {
-    "name": "Precious Ember",
-    "qty": 194.31818181818184
-   }
-  },
-  {
-   "label": "Unique Glacier Traveler in ring2",
+   "label": "Unique Howling Ring in ring2",
    "kind": "unique",
-   "gain": 1.026117553508563,
-   "kill": 81362798.1800209,
+   "gain": 1.0279393096254241,
+   "kill": 93092015.93536896,
    "costFE": null,
    "buy": {
-    "name": "Glacier Traveler",
+    "name": "Howling Ring",
     "qty": 1
    }
   },
   {
    "label": "Socket Medium Fate: Double Damage Chance on contract point 107",
    "kind": "kismet",
-   "gain": 1.0259822276880337,
-   "kill": 81352067.94020909,
+   "gain": 1.027484430051672,
+   "kill": 93050821.23045602,
    "costFE": null
   },
   {
    "label": "Socket Medium Fate: Double Damage Chance on contract point 307",
    "kind": "kismet",
-   "gain": 1.0259822276880337,
-   "kill": 81352067.94020909,
+   "gain": 1.027484430051672,
+   "kill": 93050821.23045602,
    "costFE": null
-  },
-  {
-   "label": "Craft T4 +29% damage (prefix) on helmet",
-   "kind": "craft",
-   "gain": 1.0252575359236527,
-   "kill": 81294605.76195626,
-   "costFE": 4.523348837209302,
-   "buy": {
-    "name": "Precious Ember",
-    "qty": 55.16279069767442
-   }
-  },
-  {
-   "label": "Craft T4 +29% damage (prefix) on ring2",
-   "kind": "craft",
-   "gain": 1.0252575359236527,
-   "kill": 81294605.76195626,
-   "costFE": 4.0761627906976745,
-   "buy": {
-    "name": "Precious Ember",
-    "qty": 49.7093023255814
-   }
   },
   {
    "label": "Socket Medium Fate: Dexterity on contract point 107",
    "kind": "kismet",
-   "gain": 1.024919929461481,
-   "kill": 81267836.30815244,
+   "gain": 1.0264207458312207,
+   "kill": 92954492.09168953,
    "costFE": null
   },
   {
    "label": "Socket Medium Fate: Dexterity on contract point 307",
    "kind": "kismet",
-   "gain": 1.024919929461481,
-   "kill": 81267836.30815244,
+   "gain": 1.0264207458312207,
+   "kill": 92954492.09168953,
    "costFE": null
   },
   {
-   "label": "Craft T5 +11% Projectile Speed (prefix) on boots",
-   "kind": "craft",
-   "gain": 1.0247611211308227,
-   "kill": 81255244.0957763,
-   "costFE": 3.7190933333333343,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 13.573333333333336
-   }
-  },
-  {
-   "label": "Craft T5 +11% Projectile Speed (prefix) on helmet",
-   "kind": "craft",
-   "gain": 1.0247611211308227,
-   "kill": 81255244.0957763,
-   "costFE": 7.83092,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 28.58
-   }
-  },
-  {
-   "label": "Unique Martyr's Staff in chest",
+   "label": "Unique Eternal Undercurrent in chest",
    "kind": "unique",
-   "gain": 1.024589850977637,
-   "kill": 81241663.76196341,
+   "gain": 1.026204485206723,
+   "kill": 92934907.14410223,
    "costFE": null,
    "buy": {
-    "name": "Martyr's Staff",
+    "name": "Eternal Undercurrent",
     "qty": 1
    }
   },
   {
-   "label": "Unique Corrupted Bulwark in chest",
+   "label": "Unique Chaotic Ending in ring1",
    "kind": "unique",
-   "gain": 1.024589850977637,
-   "kill": 81241663.76196341,
+   "gain": 1.0256943758503652,
+   "kill": 92888710.73164268,
    "costFE": null,
    "buy": {
-    "name": "Corrupted Bulwark",
+    "name": "Chaotic Ending",
     "qty": 1
+   }
+  },
+  {
+   "label": "Re-craft T3 +61% Critical Strike Rating (suffix) on ring2, replacing its lower tier",
+   "kind": "craft",
+   "gain": 1.0256314140257372,
+   "kill": 92883008.79659,
+   "costFE": 16.128409090909095,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 194.31818181818184
    }
   },
   {
    "label": "Replace socket 1 with Mark",
    "kind": "support",
-   "gain": 1.0243478417923209,
-   "kill": 81222474.396734,
+   "gain": 1.024348063938501,
+   "kill": 92766786.32542564,
    "costFE": 0,
    "market": "drop",
    "buy": {
@@ -1634,8 +1234,8 @@
   {
    "label": "Replace socket 2 with Mark",
    "kind": "support",
-   "gain": 1.0243478417923209,
-   "kill": 81222474.396734,
+   "gain": 1.024348063938501,
+   "kill": 92766786.32542564,
    "costFE": 0,
    "market": "drop",
    "buy": {
@@ -1644,434 +1244,291 @@
    }
   },
   {
-   "label": "Craft T4 +44% Critical Strike Rating (suffix) on boots",
+   "label": "Craft T5 +11% Projectile Speed (prefix) on helmet",
    "kind": "craft",
-   "gain": 1.023954426619192,
-   "kill": 81191279.76486868,
-   "costFE": 4.298325581395349,
+   "gain": 1.02394976917879,
+   "kill": 92730716.04212117,
+   "costFE": 7.97382,
    "buy": {
-    "name": "Precious Ember",
-    "qty": 52.41860465116279
+    "name": "Matchless Ember",
+    "qty": 28.58
    }
   },
   {
-   "label": "Craft T4 +44% Critical Strike Rating (suffix) on helmet",
+   "label": "Socket Medium Fate: Double Damage Chance on contract point 207",
+   "kind": "kismet",
+   "gain": 1.023731445809883,
+   "kill": 92710944.28872383,
+   "costFE": null
+  },
+  {
+   "label": "Craft T4 +29% damage (prefix) on helmet",
    "kind": "craft",
-   "gain": 1.023954426619192,
-   "kill": 81191279.76486868,
-   "costFE": 4.523348837209302,
+   "gain": 1.0236775024174294,
+   "kill": 92706059.07896204,
+   "costFE": 4.578511627906977,
    "buy": {
     "name": "Precious Ember",
     "qty": 55.16279069767442
    }
   },
   {
-   "label": "Unique Chaotic Ending in ring1",
-   "kind": "unique",
-   "gain": 1.0234200607179145,
-   "kill": 81148908.88364628,
-   "costFE": null,
-   "buy": {
-    "name": "Chaotic Ending",
-    "qty": 1
-   }
-  },
-  {
-   "label": "Unique Everburn Thunderfire in belt",
-   "kind": "unique",
-   "gain": 1.0232990888254214,
-   "kill": 81139316.7938894,
-   "costFE": 7.5,
-   "buy": {
-    "name": "Everburn Thunderfire",
-    "qty": 1
-   },
-   "partial": [
-    "not in this figure: node 343 (queues an inflict request on each task-filter target's comp 0xf: FUN_141bacd50(comp 0xf, kind +0x78, id +0x7c, probability +0x80 (f64), count +0x88, tag lists +0x90 / +0xa0) - no attribute / char-field record (T3d: data vt 0x14524cb20, build FUN_141ad1060, execute FUN_141aad500 once per target, abort FUN_141ab5450; t3d_a.ann.c). The EffectNote carries the task: its ch"
-   ]
-  },
-  {
-   "label": "Craft T4 Adds 12 - 16 Cold Damage to Attacks and Spells (prefix) on ring2",
-   "kind": "craft",
-   "gain": 1.0230078144667785,
-   "kill": 81116221.10005175,
-   "costFE": 13.24758139534884,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 48.34883720930233
-   }
-  },
-  {
-   "label": "Unique Phantasm in chest",
-   "kind": "unique",
-   "gain": 1.0229823400186489,
-   "kill": 81114201.18296249,
-   "costFE": null,
-   "buy": {
-    "name": "Phantasm",
-    "qty": 1
-   }
-  },
-  {
-   "label": "Unique Everlasting Flame in chest",
-   "kind": "unique",
-   "gain": 1.0228062739788186,
-   "kill": 81100240.57424268,
-   "costFE": null,
-   "buy": {
-    "name": "Everlasting Flame",
-    "qty": 1
-   }
-  },
-  {
-   "label": "Unique Winter is Near in chest",
-   "kind": "unique",
-   "gain": 1.0228062739788186,
-   "kill": 81100240.57424268,
-   "costFE": null,
-   "buy": {
-    "name": "Winter is Near",
-    "qty": 1
-   }
-  },
-  {
-   "label": "Unique Double Rainbow - Unique in chest",
-   "kind": "unique",
-   "gain": 1.0228062739788186,
-   "kill": 81100240.57424268,
-   "costFE": null,
-   "buy": {
-    "name": "Double Rainbow - Unique",
-    "qty": 1
-   }
-  },
-  {
-   "label": "Unique Two-faced Belt in belt",
-   "kind": "unique",
-   "gain": 1.0224051462290096,
-   "kill": 81068434.39761065,
-   "costFE": null,
-   "buy": {
-    "name": "Two-faced Belt",
-    "qty": 1
-   }
-  },
-  {
-   "label": "Socket Medium Fate: Double Damage Chance on contract point 207",
+   "label": "Socket Medium Fate: Dexterity on contract point 207",
    "kind": "kismet",
-   "gain": 1.0219789342968428,
-   "kill": 81034639.24879925,
+   "gain": 1.0226719997304923,
+   "kill": 92614998.96356525,
    "costFE": null
   },
   {
    "label": "Re-craft T4 +22% Critical Strike Damage (suffix) on ring2, replacing its lower tier",
    "kind": "craft",
-   "gain": 1.0215888775662019,
-   "kill": 81003710.91417971,
-   "costFE": 16.2756,
+   "gain": 1.0223938992513657,
+   "kill": 92589813.68852802,
+   "costFE": 16.5726,
    "buy": {
     "name": "Matchless Ember",
     "qty": 59.4
    }
   },
   {
-   "label": "Socket Medium Fate: Dexterity on contract point 207",
-   "kind": "kismet",
-   "gain": 1.0209213509846025,
-   "kill": 80950781.47120044,
-   "costFE": null
+   "label": "Unique Endless Night in boots",
+   "kind": "unique",
+   "gain": 1.0212534684772476,
+   "kill": 92486534.24507909,
+   "costFE": null,
+   "buy": {
+    "name": "Endless Night",
+    "qty": 1
+   },
+   "partial": [
+    "not in this figure: node 320 (skill components 0x82 / 0x83 only (execute FUN_141aa8c40: GetComponent(0x82 / 0x83), FUN_141e36280; u1_x623.c)) - affix class 614765 row 1 (gear 4010 modifier 51440660) - fires on event 0xf42ae"
+   ]
   },
   {
-   "label": "Craft T5 +23% damage (prefix) on helmet",
    "kind": "craft",
-   "gain": 1.0204918539634826,
-   "kill": 80916725.84148353,
-   "costFE": 2.5933866666666665,
+   "label": "Craft on ring2 with Matchless Ember (1 per craft): keep any of 5 results - T3 +10 to Max Frostbite Rating (suffix) in place of your mod 110210007; T4 +7 to Max Frostbite Rating (suffix) in place of your mod 110210007; T3 +30 Dexterity (prefix) in place of your T4 +24 Dexterity; T3 Adds 19 - 23 Physical Damage to Attacks and Spells (prefix) in place of your T4 +24 Dexterity; or another of the list - about 23 crafts",
+   "gain": 1.020020059173432,
+   "kill": 92374834.5002688,
+   "costFE": 6.323284654972055,
    "buy": {
-    "name": "Precious Ember",
-    "qty": 31.626666666666665
-   }
-  },
-  {
-   "label": "Craft T5 +23% damage (prefix) on ring2",
-   "kind": "craft",
-   "gain": 1.0204918539634826,
-   "kill": 80916725.84148353,
-   "costFE": 2.337,
-   "buy": {
-    "name": "Precious Ember",
-    "qty": 28.5
+    "name": "Matchless Ember",
+    "qty": 22.664102705993027
    }
   },
   {
    "label": "Raise Red Umbrella (slot 3) from rank 2 to 3",
    "kind": "pact",
-   "gain": 1.0196081801705852,
-   "kill": 80846657.67802346,
+   "gain": 1.019608045415294,
+   "kill": 92337521.80001596,
    "costFE": null,
    "market": "not-on-market"
   },
   {
-   "label": "Unique Last Words of Chaos in helmet",
-   "kind": "unique",
-   "gain": 1.0195656434699363,
-   "kill": 80843284.86271755,
-   "costFE": null,
-   "buy": {
-    "name": "Last Words of Chaos",
-    "qty": 1
-   }
-  },
-  {
-   "label": "Craft T5 Adds 8 - 10 Physical Damage to Attacks and Spells (prefix) on ring2",
+   "label": "Craft T5 +23% damage (prefix) on helmet",
    "kind": "craft",
-   "gain": 1.0191142160417095,
-   "kill": 80807490.32961541,
-   "costFE": 7.595279999999999,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 27.719999999999995
-   }
-  },
-  {
-   "label": "Craft T6 +10% Critical Strike Damage (suffix) on helmet",
-   "kind": "craft",
-   "gain": 1.0183505651557327,
-   "kill": 80746939.00905447,
-   "costFE": 4.27141090909091,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 15.58909090909091
-   }
-  },
-  {
-   "label": "Re-craft T3 +36% damage (prefix) on belt, replacing its lower tier",
-   "kind": "craft",
-   "gain": 1.0181092628559083,
-   "kill": 80727805.69411032,
-   "costFE": 19.381818181818183,
-   "buy": {
-    "name": "Precious Ember",
-    "qty": 236.36363636363637
-   }
-  },
-  {
-   "label": "Craft T3 Adds 3 - 39 Lightning Damage to Attacks and Spells (prefix) on ring2",
-   "kind": "craft",
-   "gain": 1.0176985639009892,
-   "kill": 80695240.5985542,
-   "costFE": 51.785999999999994,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 188.99999999999997
-   }
-  },
-  {
-   "label": "Socket Micro Fate: Critical Strike Damage on contract point 101",
-   "kind": "kismet",
-   "gain": 1.0173749289929217,
-   "kill": 80669578.97565429,
-   "costFE": null
-  },
-  {
-   "label": "Socket Micro Fate: Critical Strike Damage on contract point 301",
-   "kind": "kismet",
-   "gain": 1.0173749289929217,
-   "kill": 80669578.97565429,
-   "costFE": null
-  },
-  {
-   "label": "Craft T6 +7% Projectile Speed (prefix) on boots",
-   "kind": "craft",
-   "gain": 1.0169422145024043,
-   "kill": 80635268.22671412,
-   "costFE": 2.028596363636364,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 7.403636363636364
-   }
-  },
-  {
-   "label": "Craft T6 +7% Projectile Speed (prefix) on helmet",
-   "kind": "craft",
-   "gain": 1.0169422145024043,
-   "kill": 80635268.22671412,
-   "costFE": 4.27141090909091,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 15.58909090909091
-   }
-  },
-  {
-   "label": "Craft T6 +19% damage (prefix) on helmet",
-   "kind": "craft",
-   "gain": 1.016202870898375,
-   "kill": 80576644.27643217,
-   "costFE": 1.4145745454545455,
-   "buy": {
-    "name": "Precious Ember",
-    "qty": 17.25090909090909
-   }
-  },
-  {
-   "label": "Craft T6 +19% damage (prefix) on ring2",
-   "kind": "craft",
-   "gain": 1.016202870898375,
-   "kill": 80576644.27643217,
-   "costFE": 1.274727272727273,
-   "buy": {
-    "name": "Precious Ember",
-    "qty": 15.545454545454547
-   }
-  },
-  {
-   "label": "Re-craft T4 +44% Critical Strike Rating (suffix) on ring2, replacing its lower tier",
-   "kind": "craft",
-   "gain": 1.0161854233913457,
-   "kill": 80575260.83065802,
-   "costFE": 4.0761627906976745,
-   "buy": {
-    "name": "Precious Ember",
-    "qty": 49.7093023255814
-   }
-  },
-  {
-   "label": "Unique Arctic Ring in ring2",
-   "kind": "unique",
-   "gain": 1.0160325102688383,
-   "kill": 80563136.06046663,
-   "costFE": null,
-   "buy": {
-    "name": "Arctic Ring",
-    "qty": 1
-   }
-  },
-  {
-   "label": "Craft T5 +29% Critical Strike Rating (suffix) on boots",
-   "kind": "craft",
-   "gain": 1.0157969732299537,
-   "kill": 80544459.8839475,
-   "costFE": 2.464373333333333,
-   "buy": {
-    "name": "Precious Ember",
-    "qty": 30.05333333333333
-   }
-  },
-  {
-   "label": "Craft T5 +29% Critical Strike Rating (suffix) on helmet",
-   "kind": "craft",
-   "gain": 1.0157969732299537,
-   "kill": 80544459.8839475,
-   "costFE": 2.5933866666666665,
+   "gain": 1.019210158623438,
+   "kill": 92301488.46300752,
+   "costFE": 2.6250133333333334,
    "buy": {
     "name": "Precious Ember",
     "qty": 31.626666666666665
    }
   },
   {
+   "label": "Socket Micro Fate: Critical Strike Damage on contract point 101",
+   "kind": "kismet",
+   "gain": 1.0191857461175051,
+   "kill": 92299277.6229608,
+   "costFE": null
+  },
+  {
+   "label": "Socket Micro Fate: Critical Strike Damage on contract point 301",
+   "kind": "kismet",
+   "gain": 1.0191857461175051,
+   "kill": 92299277.6229608,
+   "costFE": null
+  },
+  {
+   "label": "Craft T6 +10% Critical Strike Damage (suffix) on helmet",
+   "kind": "craft",
+   "gain": 1.0190348211441977,
+   "kill": 92285609.58839045,
+   "costFE": 4.349356363636364,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 15.58909090909091
+   }
+  },
+  {
    "label": "Socket Micro Fate: Critical Strike Damage on contract point 201",
    "kind": "kismet",
-   "gain": 1.0154129783428212,
-   "kill": 80514012.20434482,
+   "gain": 1.0173450214266404,
+   "kill": 92132578.31430507,
    "costFE": null
+  },
+  {
+   "label": "Unique Wind Chasers in boots",
+   "kind": "unique",
+   "gain": 1.017059299316901,
+   "kill": 92106702.81081583,
+   "costFE": null,
+   "buy": {
+    "name": "Wind Chasers",
+    "qty": 1
+   }
+  },
+  {
+   "kind": "craft",
+   "label": "Craft on chest with Matchless Ember (1 per craft): keep any of 11 results - T4 +16% Projectile Speed (prefix) in place of your T4 +88 Max Life; T4 +7% Dexterity (suffix) in place of your T5 +29% Critical Strike Rating; T4 +22% Critical Strike Damage (suffix) in place of your T5 +29% Critical Strike Rating; T5 +11% Projectile Speed (prefix) in place of your T4 +88 Max Life; or another of the list - about 3 crafts",
+   "gain": 1.016688345679435,
+   "kill": 92073108.58827086,
+   "costFE": 0.8155275074331023,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 2.9230376610505457
+   }
+  },
+  {
+   "label": "Craft T6 +7% Projectile Speed (prefix) on helmet",
+   "kind": "craft",
+   "gain": 1.0163867258994934,
+   "kill": 92045793.36343431,
+   "costFE": 4.349356363636364,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 15.58909090909091
+   }
   },
   {
    "label": "Re-craft T5 +15% Critical Strike Damage (suffix) on boots, replacing its lower tier",
    "kind": "craft",
-   "gain": 1.0151122046841108,
-   "kill": 80490163.29306966,
-   "costFE": 3.7190933333333343,
+   "gain": 1.0156757430370302,
+   "kill": 91981405.48825294,
+   "costFE": 3.786960000000001,
    "buy": {
     "name": "Matchless Ember",
     "qty": 13.573333333333336
    }
   },
   {
-   "label": "Craft T6 Adds 6 - 8 Physical Damage to Attacks and Spells (prefix) on ring2",
+   "label": "Re-craft T4 +44% Critical Strike Rating (suffix) on ring2, replacing its lower tier",
    "kind": "craft",
-   "gain": 1.0143357184917656,
-   "kill": 80428594.23683304,
-   "costFE": 4.142880000000001,
+   "gain": 1.0156289109913033,
+   "kill": 91977164.29472499,
+   "costFE": 4.125872093023256,
    "buy": {
-    "name": "Matchless Ember",
-    "qty": 15.120000000000001
+    "name": "Precious Ember",
+    "qty": 49.7093023255814
    }
   },
   {
-   "label": "Craft T5 Adds 8 - 10 Cold Damage to Attacks and Spells (prefix) on ring2",
-   "kind": "craft",
-   "gain": 1.014158919340338,
-   "kill": 80414575.49831052,
-   "costFE": 7.595279999999999,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 27.719999999999995
-   }
-  },
-  {
-   "label": "Unique Chaotic Ending in ring2",
+   "label": "Unique Sky Devourer - Strength Armor in chest",
    "kind": "unique",
-   "gain": 1.0136622652521063,
-   "kill": 80375194.85794635,
+   "gain": 1.015467432652589,
+   "kill": 91962540.52857456,
    "costFE": null,
    "buy": {
-    "name": "Chaotic Ending",
+    "name": "Sky Devourer - Strength Armor",
     "qty": 1
+   }
+  },
+  {
+   "label": "Unique Sky Devourer - Agile Armor in chest",
+   "kind": "unique",
+   "gain": 1.015467432652589,
+   "kill": 91962540.52857456,
+   "costFE": null,
+   "buy": {
+    "name": "Sky Devourer - Agile Armor",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Sky Devourer - Insight Armor in chest",
+   "kind": "unique",
+   "gain": 1.015467432652589,
+   "kill": 91962540.52857456,
+   "costFE": null,
+   "buy": {
+    "name": "Sky Devourer - Insight Armor",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Silver Frost in ring2",
+   "kind": "unique",
+   "gain": 1.015280174897227,
+   "kill": 91945582.13250686,
+   "costFE": null,
+   "buy": {
+    "name": "Silver Frost",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Craft T6 +19% damage (prefix) on helmet",
+   "kind": "craft",
+   "gain": 1.0151893045416955,
+   "kill": 91937352.75115527,
+   "costFE": 1.4318254545454545,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 17.25090909090909
+   }
+  },
+  {
+   "kind": "craft",
+   "label": "Craft on helmet with Matchless Ember (1 per craft): keep any of 4 results - T6 +10% Critical Strike Damage (suffix); T6 +7% Projectile Speed (prefix); T7 +6% Critical Strike Damage (suffix); T7 +5% Projectile Speed (prefix) - about 6 crafts",
+   "gain": 1.0147707481153068,
+   "kill": 91899447.5352049,
+   "costFE": 1.49509125,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 5.35875
    }
   },
   {
    "label": "Socket Micro Fate: Dexterity on contract point 101",
    "kind": "kismet",
-   "gain": 1.01273994676525,
-   "kill": 80302062.48373914,
-   "costFE": 48.592
+   "gain": 1.013472749295557,
+   "kill": 91781898.44871627,
+   "costFE": 47.119
   },
   {
    "label": "Socket Micro Fate: Dexterity on contract point 301",
    "kind": "kismet",
-   "gain": 1.01273994676525,
-   "kill": 80302062.48373914,
-   "costFE": 48.592
+   "gain": 1.013472749295557,
+   "kill": 91781898.44871627,
+   "costFE": 47.119
   },
   {
-   "label": "Craft T7 +14% damage (prefix) on helmet",
    "kind": "craft",
-   "gain": 1.0123906683868058,
-   "kill": 80274367.54165688,
-   "costFE": 0.9725199999999999,
+   "label": "Craft on helmet with Precious Ember (1 per craft): keep any of 2 results - T6 +19% damage (prefix); T7 +14% damage (prefix) - about 12 crafts",
+   "gain": 1.0134023941462476,
+   "kill": 91775526.96100359,
+   "costFE": 0.98438,
    "buy": {
     "name": "Precious Ember",
     "qty": 11.86
    }
   },
   {
-   "label": "Craft T7 +14% damage (prefix) on ring2",
-   "kind": "craft",
-   "gain": 1.0123906683868058,
-   "kill": 80274367.54165688,
-   "costFE": 0.876375,
+   "label": "Unique Broken Dream in necklace",
+   "kind": "unique",
+   "gain": 1.0123755725542862,
+   "kill": 91682536.16757195,
+   "costFE": null,
    "buy": {
-    "name": "Precious Ember",
-    "qty": 10.6875
-   }
-  },
-  {
-   "label": "Re-craft T4 +29% damage (prefix) on belt, replacing its lower tier",
-   "kind": "craft",
-   "gain": 1.0119139694917434,
-   "kill": 80236569.18623553,
-   "costFE": 4.9581395348837205,
-   "buy": {
-    "name": "Precious Ember",
-    "qty": 60.46511627906976
+    "name": "Broken Dream",
+    "qty": 1
    }
   },
   {
    "label": "Craft T7 +6% Critical Strike Damage (suffix) on helmet",
    "kind": "craft",
-   "gain": 1.0118738922736417,
-   "kill": 80233391.3879444,
-   "costFE": 2.936595,
+   "gain": 1.0123166197262814,
+   "kill": 91677197.29439853,
+   "costFE": 2.9901825,
    "buy": {
     "name": "Matchless Ember",
     "qty": 10.7175
@@ -2080,146 +1537,109 @@
   {
    "label": "Re-craft T3 +30 Dexterity (prefix) on ring2, replacing its lower tier",
    "kind": "craft",
-   "gain": 1.0117756026458082,
-   "kill": 80225597.81777766,
-   "costFE": 51.785999999999994,
+   "gain": 1.0117754996068327,
+   "kill": 91628192.4919642,
+   "costFE": 52.730999999999995,
    "buy": {
     "name": "Matchless Ember",
     "qty": 188.99999999999997
    }
   },
   {
-   "label": "Craft T7 +5% Projectile Speed (prefix) on boots",
    "kind": "craft",
-   "gain": 1.0117290447003455,
-   "kill": 80221906.15037814,
-   "costFE": 1.3946600000000002,
+   "label": "Craft on boots with Matchless Ember (1 per craft): keep any of 4 results - T4 +22% Critical Strike Damage (suffix) in place of your T7 +6% Critical Strike Damage; T5 +15% Critical Strike Damage (suffix) in place of your T7 +6% Critical Strike Damage; T6 +10% Critical Strike Damage (suffix) in place of your T7 +6% Critical Strike Damage; T4 +16% Projectile Speed (prefix) in place of your T4 +16% Projectile Speed - about 7 crafts",
+   "gain": 1.0117589372010882,
+   "kill": 91626692.57098146,
+   "costFE": 1.6933803785488963,
    "buy": {
     "name": "Matchless Ember",
-    "qty": 5.090000000000001
+    "qty": 6.069463722397478
    }
+  },
+  {
+   "label": "Socket Micro Fate: Dexterity on contract point 201",
+   "kind": "kismet",
+   "gain": 1.0116419716780019,
+   "kill": 91616099.96474771,
+   "costFE": 47.119
+  },
+  {
+   "label": "Craft T7 +14% damage (prefix) on helmet",
+   "kind": "craft",
+   "gain": 1.0116154837507998,
+   "kill": 91613701.17085192,
+   "costFE": 0.98438,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 11.86
+   }
+  },
+  {
+   "label": "Socket Medium Fate: Critical Strike Rating on contract point 107",
+   "kind": "kismet",
+   "gain": 1.0115911521919454,
+   "kill": 91611497.66151688,
+   "costFE": 100
+  },
+  {
+   "label": "Socket Medium Fate: Critical Strike Rating on contract point 307",
+   "kind": "kismet",
+   "gain": 1.0115911521919454,
+   "kill": 91611497.66151688,
+   "costFE": 100
+  },
+  {
+   "label": "Socket Medium Fate: Minion Critical Strike Rating on contract point 107",
+   "kind": "kismet",
+   "gain": 1.0115911521919454,
+   "kill": 91611497.66151688,
+   "costFE": null
+  },
+  {
+   "label": "Socket Medium Fate: Minion Critical Strike Rating on contract point 307",
+   "kind": "kismet",
+   "gain": 1.0115911521919454,
+   "kill": 91611497.66151688,
+   "costFE": null
   },
   {
    "label": "Craft T7 +5% Projectile Speed (prefix) on helmet",
    "kind": "craft",
-   "gain": 1.0117290447003455,
-   "kill": 80221906.15037814,
-   "costFE": 2.936595,
+   "gain": 1.011344825691255,
+   "kill": 91589189.89459634,
+   "costFE": 2.9901825,
    "buy": {
     "name": "Matchless Ember",
     "qty": 10.7175
    }
   },
   {
-   "label": "Craft T4 Adds 2 - 26 Lightning Damage to Attacks and Spells (prefix) on ring2",
-   "kind": "craft",
-   "gain": 1.0117250467401746,
-   "kill": 80221589.14456783,
-   "costFE": 13.24758139534884,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 48.34883720930233
-   }
-  },
-  {
-   "label": "Socket Medium Fate: Critical Strike Rating on contract point 107",
-   "kind": "kismet",
-   "gain": 1.0112867536562131,
-   "kill": 80186836.05842082,
-   "costFE": 100
-  },
-  {
-   "label": "Socket Medium Fate: Critical Strike Rating on contract point 307",
-   "kind": "kismet",
-   "gain": 1.0112867536562131,
-   "kill": 80186836.05842082,
-   "costFE": 100
-  },
-  {
-   "label": "Socket Medium Fate: Minion Critical Strike Rating on contract point 107",
-   "kind": "kismet",
-   "gain": 1.0112867536562131,
-   "kill": 80186836.05842082,
-   "costFE": null
-  },
-  {
-   "label": "Socket Medium Fate: Minion Critical Strike Rating on contract point 307",
-   "kind": "kismet",
-   "gain": 1.0112867536562131,
-   "kill": 80186836.05842082,
-   "costFE": null
-  },
-  {
-   "label": "Unique Pierced Curse Armor in chest",
+   "label": "Unique Last Words of Chaos in helmet",
    "kind": "unique",
-   "gain": 1.0112140037457584,
-   "kill": 80181067.58066532,
+   "gain": 1.0106418626227431,
+   "kill": 91525528.30624858,
    "costFE": null,
    "buy": {
-    "name": "Pierced Curse Armor",
-    "qty": 1
-   },
-   "partial": [
-    "buff 16120 (359722 row 1): added by a row with no trigger event (a deferred row under its own conditions): not an event-rate uptime rule, not ported",
-    "not calculable without buff 16120's instance count over the fight (added by 359722 row 1 on event undefined, deferred false): an uptime rule that is not ported"
-   ]
-  },
-  {
-   "label": "Unique Broken Dream in necklace",
-   "kind": "unique",
-   "gain": 1.0109338894117728,
-   "kill": 80158856.78625342,
-   "costFE": null,
-   "buy": {
-    "name": "Broken Dream",
+    "name": "Last Words of Chaos",
     "qty": 1
    }
   },
   {
-   "label": "Socket Micro Fate: Dexterity on contract point 201",
-   "kind": "kismet",
-   "gain": 1.0107868190814724,
-   "kill": 80147195.30208762,
-   "costFE": 48.592
-  },
-  {
-   "label": "Craft T6 Adds 6 - 8 Cold Damage to Attacks and Spells (prefix) on ring2",
+   "label": "Re-craft T3 +30 Dexterity (prefix) on belt, replacing its lower tier",
    "kind": "craft",
-   "gain": 1.010619193121211,
-   "kill": 80133903.92321213,
-   "costFE": 4.142880000000001,
+   "gain": 1.0099638455967417,
+   "kill": 91464125.87597087,
+   "costFE": 27.849272727272734,
    "buy": {
     "name": "Matchless Ember",
-    "qty": 15.120000000000001
-   }
-  },
-  {
-   "label": "Craft T6 +19% Critical Strike Rating (suffix) on boots",
-   "kind": "craft",
-   "gain": 1.010617637744723,
-   "kill": 80133780.59447375,
-   "costFE": 1.3442036363636365,
-   "buy": {
-    "name": "Precious Ember",
-    "qty": 16.392727272727274
-   }
-  },
-  {
-   "label": "Craft T6 +19% Critical Strike Rating (suffix) on helmet",
-   "kind": "craft",
-   "gain": 1.010617637744723,
-   "kill": 80133780.59447375,
-   "costFE": 1.4145745454545455,
-   "buy": {
-    "name": "Precious Ember",
-    "qty": 17.25090909090909
+    "qty": 99.81818181818183
    }
   },
   {
    "label": "Unique Berserker Bracer in gloves",
    "kind": "unique",
-   "gain": 1.0102764297845,
-   "kill": 80106725.57108963,
+   "gain": 1.0097605354285164,
+   "kill": 91445713.74478468,
    "costFE": null,
    "buy": {
     "name": "Berserker Bracer",
@@ -2227,59 +1647,35 @@
    }
   },
   {
-   "label": "Re-craft T3 +30 Dexterity (prefix) on belt, replacing its lower tier",
-   "kind": "craft",
-   "gain": 1.0099638738754173,
-   "kill": 80081942.42293695,
-   "costFE": 27.350181818181824,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 99.81818181818183
-   }
+   "label": "Socket Micro Fate: Double Damage Chance on contract point 101",
+   "kind": "kismet",
+   "gain": 1.0090636684105256,
+   "kill": 91382604.22563685,
+   "costFE": null
   },
   {
-   "label": "Craft T1 +1 Physical Skill Level (prefix) on boots",
-   "kind": "craft",
-   "gain": 1.0096548009406163,
-   "kill": 80057435.4463911,
-   "costFE": 278.9320000000001,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 1018.0000000000001
-   }
+   "label": "Socket Micro Fate: Double Damage Chance on contract point 301",
+   "kind": "kismet",
+   "gain": 1.0090636684105256,
+   "kill": 91382604.22563685,
+   "costFE": null
   },
   {
-   "label": "Craft T7 Adds 3 - 6 Physical Damage to Attacks and Spells (prefix) on ring2",
+   "label": "Re-craft T5 +15% Critical Strike Damage (suffix) on ring2, replacing its lower tier",
    "kind": "craft",
-   "gain": 1.00955736512528,
-   "kill": 80049709.5766293,
-   "costFE": 2.84823,
+   "gain": 1.0089575416191139,
+   "kill": 91372993.194261,
+   "costFE": 8.657328358208956,
    "buy": {
     "name": "Matchless Ember",
-    "qty": 10.395
+    "qty": 31.029850746268654
    }
-  },
-  {
-   "label": "Unique Confusion Elemental Belt in belt",
-   "kind": "unique",
-   "gain": 1.0092674938793957,
-   "kill": 80026725.13825142,
-   "costFE": 3,
-   "buy": {
-    "name": "Confusion Elemental Belt",
-    "qty": 1
-   },
-   "partial": [
-    "not in this figure: node 381 (N2: registers an ailment-base-damage entry {percent, percentMax, tags} under the byte `ailmentType` in comp 5 of each task-filter target: FUN_141baf1c0(comp 5, type, percent, percentMax, tag lists) bumps the id counter +0x78 and adds the entry to the byte-keyed map +0x80; once per target (set +0xb8), the abort FUN_141bd0b00 removes it (data vt 0x14524cf60, runtime vt ",
-    "not in this figure: node 381 (N2: registers an ailment-base-damage entry {percent, percentMax, tags} under the byte `ailmentType` in comp 5 of each task-filter target: FUN_141baf1c0(comp 5, type, percent, percentMax, tag lists) bumps the id counter +0x78 and adds the entry to the byte-keyed map +0x80; once per target (set +0xb8), the abort FUN_141bd0b00 removes it (data vt 0x14524cf60, runtime vt ",
-    "not in this figure: node 381 (N2: registers an ailment-base-damage entry {percent, percentMax, tags} under the byte `ailmentType` in comp 5 of each task-filter target: FUN_141baf1c0(comp 5, type, percent, percentMax, tag lists) bumps the id counter +0x78 and adds the entry to the byte-keyed map +0x80; once per target (set +0xb8), the abort FUN_141bd0b00 removes it (data vt 0x14524cf60, runtime vt "
-   ]
   },
   {
    "label": "Replace socket 1 with Glacial Freeze",
    "kind": "support",
-   "gain": 1.0086960356748855,
-   "kill": 79981413.13827354,
+   "gain": 1.0086956611217794,
+   "kill": 91349276.82968311,
    "costFE": 0,
    "market": "drop",
    "buy": {
@@ -2290,8 +1686,8 @@
   {
    "label": "Replace socket 2 with Glacial Freeze",
    "kind": "support",
-   "gain": 1.0086960356748855,
-   "kill": 79981413.13827354,
+   "gain": 1.0086956611217794,
+   "kill": 91349276.82968311,
    "costFE": 0,
    "market": "drop",
    "buy": {
@@ -2300,289 +1696,139 @@
    }
   },
   {
-   "label": "Re-craft T5 +15% Critical Strike Damage (suffix) on ring2, replacing its lower tier",
    "kind": "craft",
-   "gain": 1.0086355318020197,
-   "kill": 79976615.67195961,
-   "costFE": 8.502179104477612,
+   "label": "Craft on ring2 with Precious Ember (1 per craft): keep any of 4 results - T3 +61% Critical Strike Rating (suffix) in place of your mod 110210007; T4 +44% Critical Strike Rating (suffix) in place of your mod 110210007; T5 +29% Critical Strike Rating (suffix) in place of your mod 110210007; T6 +19% Critical Strike Rating (suffix) in place of your mod 110210007 - about 16 crafts",
+   "gain": 1.0083654762831664,
+   "kill": 91319374.7022229,
+   "costFE": 1.2902727272727275,
    "buy": {
-    "name": "Matchless Ember",
-    "qty": 31.029850746268654
+    "name": "Precious Ember",
+    "qty": 15.545454545454547
    }
-  },
-  {
-   "label": "Unique Sigh of the Giant in belt",
-   "kind": "unique",
-   "gain": 1.008446192091863,
-   "kill": 79961602.56885825,
-   "costFE": null,
-   "buy": {
-    "name": "Sigh of the Giant",
-    "qty": 1
-   },
-   "partial": [
-    "a row's condition cannot be evaluated, its buff adds are unknown: affix class 4304 row 1 (gear 4721 modifier 51530250): not ported: condition 251 (gear 4721 modifier 51530250)",
-    "not in this figure: node 0 (no description) - affix class 4304 row 1 (gear 4721 modifier 51530250): not ported: condition 251 (gear 4721 modifier 51530250) - deferred row, its conditions false at the grant"
-   ]
   },
   {
    "label": "Re-craft T4 +44% Critical Strike Rating (suffix) on chest, replacing its lower tier",
    "kind": "craft",
-   "gain": 1.0084164201635,
-   "kill": 79959241.89644742,
-   "costFE": 4.581511627906976,
+   "gain": 1.0081270337154777,
+   "kill": 91297780.91832623,
+   "costFE": 4.637383720930233,
    "buy": {
     "name": "Precious Ember",
     "qty": 55.87209302325581
    }
   },
   {
-   "label": "Socket Micro Fate: Double Damage Chance on contract point 101",
-   "kind": "kismet",
-   "gain": 1.0083345401592902,
-   "kill": 79952749.47632,
-   "costFE": null
-  },
-  {
-   "label": "Socket Micro Fate: Double Damage Chance on contract point 301",
-   "kind": "kismet",
-   "gain": 1.0083345401592902,
-   "kill": 79952749.47632,
-   "costFE": null
-  },
-  {
-   "label": "Unique Siren Faceguard in helmet",
-   "kind": "unique",
-   "gain": 1.0080336383403168,
-   "kill": 79928890.40297559,
-   "costFE": null,
+   "kind": "craft",
+   "label": "Craft on chest with Precious Ember (1 per craft): keep any of 1 result - T4 +44% Critical Strike Rating (suffix) in place of your T5 +29% Critical Strike Rating - about 70 crafts",
+   "gain": 1.0081270337154777,
+   "kill": 91297780.91832623,
+   "costFE": 5.732965625000001,
    "buy": {
-    "name": "Siren Faceguard",
-    "qty": 1
+    "name": "Precious Ember",
+    "qty": 69.071875
    }
+  },
+  {
+   "label": "Socket Medium Fate: Critical Strike Rating on contract point 207",
+   "kind": "kismet",
+   "gain": 1.0078962177190935,
+   "kill": 91276877.81031942,
+   "costFE": 100
+  },
+  {
+   "label": "Socket Medium Fate: Minion Critical Strike Rating on contract point 207",
+   "kind": "kismet",
+   "gain": 1.0078962177190935,
+   "kill": 91276877.81031942,
+   "costFE": null
   },
   {
    "label": "Re-craft T5 +29% Critical Strike Rating (suffix) on ring2, replacing its lower tier",
    "kind": "craft",
-   "gain": 1.0080279700021073,
-   "kill": 79928440.94973686,
-   "costFE": 2.337,
+   "gain": 1.0077519398516863,
+   "kill": 91263811.74950628,
+   "costFE": 2.3655,
    "buy": {
     "name": "Precious Ember",
     "qty": 28.5
    }
   },
   {
+   "label": "Socket Medium Fate: Aura Effect on contract point 107",
+   "kind": "kismet",
+   "gain": 1.0075241609429824,
+   "kill": 91243183.68557268,
+   "costFE": null
+  },
+  {
+   "label": "Socket Medium Fate: Aura Effect on contract point 307",
+   "kind": "kismet",
+   "gain": 1.0075241609429824,
+   "kill": 91243183.68557268,
+   "costFE": null
+  },
+  {
+   "label": "Socket Micro Fate: Double Damage Chance on contract point 201",
+   "kind": "kismet",
+   "gain": 1.0072412287748465,
+   "kill": 91217560.84416746,
+   "costFE": null
+  },
+  {
    "label": "Socket Medium Fate: Attack Damage on contract point 107",
    "kind": "kismet",
-   "gain": 1.0076249383654832,
-   "kill": 79896483.81032462,
+   "gain": 1.0071480947532274,
+   "kill": 91209126.46118054,
    "costFE": null
   },
   {
    "label": "Socket Medium Fate: Attack Damage on contract point 307",
    "kind": "kismet",
-   "gain": 1.0076249383654832,
-   "kill": 79896483.81032462,
+   "gain": 1.0071480947532274,
+   "kill": 91209126.46118054,
    "costFE": null
   },
   {
-   "label": "Socket Medium Fate: Critical Strike Rating on contract point 207",
+   "label": "Socket Micro Fate: Critical Strike Rating on contract point 101",
    "kind": "kismet",
-   "gain": 1.0073408038967364,
-   "kill": 79873954.25183731,
-   "costFE": 100
+   "gain": 1.0059763529966053,
+   "kill": 91103011.43935172,
+   "costFE": 43.309
   },
   {
-   "label": "Socket Medium Fate: Minion Critical Strike Rating on contract point 207",
+   "label": "Socket Micro Fate: Critical Strike Rating on contract point 301",
    "kind": "kismet",
-   "gain": 1.0073408038967364,
-   "kill": 79873954.25183731,
-   "costFE": null
-  },
-  {
-   "label": "Craft T5 Adds 2 - 16 Lightning Damage to Attacks and Spells (prefix) on ring2",
-   "kind": "craft",
-   "gain": 1.0073008730800412,
-   "kill": 79870788.06199013,
-   "costFE": 7.595279999999999,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 27.719999999999995
-   }
-  },
-  {
-   "label": "Re-craft T5 +23% damage (prefix) on belt, replacing its lower tier",
-   "kind": "craft",
-   "gain": 1.0071482394704208,
-   "kill": 79858685.45490327,
-   "costFE": 2.8426666666666667,
-   "buy": {
-    "name": "Precious Ember",
-    "qty": 34.666666666666664
-   }
-  },
-  {
-   "label": "Craft T7 +13% Critical Strike Rating (suffix) on boots",
-   "kind": "craft",
-   "gain": 1.007121586292192,
-   "kill": 79856572.07407896,
-   "costFE": 0.92414,
-   "buy": {
-    "name": "Precious Ember",
-    "qty": 11.27
-   }
-  },
-  {
-   "label": "Craft T7 Adds 3 - 6 Cold Damage to Attacks and Spells (prefix) on ring2",
-   "kind": "craft",
-   "gain": 1.0070796446828654,
-   "kill": 79853246.44468755,
-   "costFE": 2.84823,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 10.395
-   }
-  },
-  {
-   "label": "Socket Micro Fate: Double Damage Chance on contract point 201",
-   "kind": "kismet",
-   "gain": 1.0063900213238293,
-   "kill": 79798564.90650547,
-   "costFE": null
+   "gain": 1.0059763529966053,
+   "kill": 91103011.43935172,
+   "costFE": 43.309
   },
   {
    "label": "Re-craft T4 +29% damage (prefix) on boots, replacing its lower tier",
    "kind": "craft",
-   "gain": 1.006195293364165,
-   "kill": 79783124.55892734,
-   "costFE": 4.298325581395349,
+   "gain": 1.0058079684611179,
+   "kill": 91087762.23571286,
+   "costFE": 4.350744186046511,
    "buy": {
     "name": "Precious Ember",
     "qty": 52.41860465116279
    }
   },
   {
-   "label": "Socket Medium Fate: Aura Effect on contract point 107",
-   "kind": "kismet",
-   "gain": 1.0061026627544314,
-   "kill": 79775779.70299025,
-   "costFE": null
-  },
-  {
-   "label": "Socket Medium Fate: Aura Effect on contract point 307",
-   "kind": "kismet",
-   "gain": 1.0061026627544314,
-   "kill": 79775779.70299025,
-   "costFE": null
-  },
-  {
-   "label": "Unique Insulation in belt",
-   "kind": "unique",
-   "gain": 1.0060152699006748,
-   "kill": 79768850.15861373,
-   "costFE": null,
-   "buy": {
-    "name": "Insulation",
-    "qty": 1
-   }
-  },
-  {
-   "label": "Socket Micro Fate: Critical Strike Rating on contract point 101",
-   "kind": "kismet",
-   "gain": 1.0058436173943295,
-   "kill": 79755239.5072969,
-   "costFE": 44
-  },
-  {
-   "label": "Socket Micro Fate: Critical Strike Rating on contract point 301",
-   "kind": "kismet",
-   "gain": 1.0058436173943295,
-   "kill": 79755239.5072969,
-   "costFE": 44
-  },
-  {
-   "label": "Craft T6 Adds 2 - 12 Lightning Damage to Attacks and Spells (prefix) on ring2",
-   "kind": "craft",
-   "gain": 1.005530800927205,
-   "kill": 79730435.69900516,
-   "costFE": 4.142880000000001,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 15.120000000000001
-   }
-  },
-  {
-   "label": "Unique Corrosion of Manifolds in belt",
-   "kind": "unique",
-   "gain": 1.0054247252630473,
-   "kill": 79722024.75931782,
-   "costFE": null,
-   "buy": {
-    "name": "Corrosion of Manifolds",
-    "qty": 1
-   },
-   "partial": [
-    "buff 340 (383282 row 1): an uptime add on event 1000040: the fight states no rate for it (383282 row 1)",
-    "not calculable without buff 340's instance count over the fight (added by 383282 row 1 on event 1000040, deferred false): an uptime rule that is not ported",
-    "not in this figure: node 103 (comp 0x6f FUN_141c55700 (execute FUN_141a5a330, c9b_nodes2.c 194-288)) - affix class 654683 row 1 (gear 4727 modifier 51532350) - deferred row, its conditions false at the grant (x2)"
-   ]
-  },
-  {
    "label": "Re-craft T6 +10% Critical Strike Damage (suffix) on boots, replacing its lower tier",
    "kind": "craft",
-   "gain": 1.0053972193915506,
-   "kill": 79719843.76683435,
-   "costFE": 2.028596363636364,
+   "gain": 1.0055984635119462,
+   "kill": 91068789.09412345,
+   "costFE": 2.0656145454545456,
    "buy": {
     "name": "Matchless Ember",
     "qty": 7.403636363636364
    }
   },
   {
-   "label": "Craft T7 Adds 1 - 9 Lightning Damage to Attacks and Spells (prefix) on ring2",
-   "kind": "craft",
-   "gain": 1.0039825049777191,
-   "kill": 79607668.38990861,
-   "costFE": 2.84823,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 10.395
-   }
-  },
-  {
-   "label": "Socket Micro Fate: Critical Strike Rating on contract point 201",
-   "kind": "kismet",
-   "gain": 1.0039039015457862,
-   "kill": 79601435.77538337,
-   "costFE": 44
-  },
-  {
-   "label": "Socket Micro Fate: Attack Damage on contract point 101",
-   "kind": "kismet",
-   "gain": 1.0038127022565906,
-   "kill": 79594204.41155413,
-   "costFE": null
-  },
-  {
-   "label": "Socket Micro Fate: Attack Damage on contract point 301",
-   "kind": "kismet",
-   "gain": 1.0038127022565906,
-   "kill": 79594204.41155413,
-   "costFE": null
-  },
-  {
-   "label": "Socket Medium Fate: Attack Damage on contract point 207",
-   "kind": "kismet",
-   "gain": 1.0038127022565906,
-   "kill": 79594204.41155413,
-   "costFE": null
-  },
-  {
    "label": "Unique Revered Light in ring1",
    "kind": "unique",
-   "gain": 1.003231652774369,
-   "kill": 79548131.90105769,
+   "gain": 1.005460950446833,
+   "kill": 91056335.66586271,
    "costFE": null,
    "buy": {
     "name": "Revered Light",
@@ -2590,68 +1836,28 @@
    }
   },
   {
-   "label": "Re-craft T6 +19% damage (prefix) on belt, replacing its lower tier",
-   "kind": "craft",
-   "gain": 1.0028593380637894,
-   "kill": 79518610.36470665,
-   "costFE": 1.5505454545454544,
+   "label": "Unique Skin of Malice in chest",
+   "kind": "unique",
+   "gain": 1.004455057668166,
+   "kill": 90965240.22306357,
+   "costFE": null,
    "buy": {
-    "name": "Precious Ember",
-    "qty": 18.909090909090907
+    "name": "Skin of Malice",
+    "qty": 1
    }
   },
   {
-   "label": "Re-craft T6 +19% Critical Strike Rating (suffix) on ring2, replacing its lower tier",
-   "kind": "craft",
-   "gain": 1.0028486345168768,
-   "kill": 79517761.66026312,
-   "costFE": 1.274727272727273,
-   "buy": {
-    "name": "Precious Ember",
-    "qty": 15.545454545454547
-   }
-  },
-  {
-   "label": "Craft T1 +1 Lightning Skill Level (prefix) on boots",
-   "kind": "craft",
-   "gain": 1.0023313096149848,
-   "kill": 79476741.99205628,
-   "costFE": 278.9320000000001,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 1018.0000000000001
-   }
-  },
-  {
-   "label": "Craft T1 +1 Minion Skill Level (prefix) on boots",
-   "kind": "craft",
-   "gain": 1.0023313096149848,
-   "kill": 79476741.99205628,
-   "costFE": 278.9320000000001,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 1018.0000000000001
-   }
-  },
-  {
-   "label": "Socket Medium Fate: Aura Effect on contract point 207",
+   "label": "Socket Micro Fate: Critical Strike Rating on contract point 201",
    "kind": "kismet",
-   "gain": 1.002176950928366,
-   "kill": 79464502.60035719,
-   "costFE": null
-  },
-  {
-   "label": "Socket Micro Fate: Attack Damage on contract point 201",
-   "kind": "kismet",
-   "gain": 1.0019063919575333,
-   "kill": 79443049.4687307,
-   "costFE": null
+   "gain": 1.0041594883572476,
+   "kill": 90938472.93948528,
+   "costFE": 43.309
   },
   {
    "label": "Unique Burning Ice in ring1",
    "kind": "unique",
-   "gain": 1.001765300544557,
-   "kill": 79431862.06420803,
+   "gain": 1.0039912391580712,
+   "kill": 90923235.99214396,
    "costFE": null,
    "buy": {
     "name": "Burning Ice",
@@ -2659,139 +1865,192 @@
    }
   },
   {
+   "label": "Socket Medium Fate: Aura Effect on contract point 207",
+   "kind": "kismet",
+   "gain": 1.003844070882586,
+   "kill": 90909908.17082381,
+   "costFE": null
+  },
+  {
+   "label": "Unique Everburn Thunderfire in belt",
+   "kind": "unique",
+   "gain": 1.0037777942761983,
+   "kill": 90903906.04322717,
+   "costFE": 7.5,
+   "buy": {
+    "name": "Everburn Thunderfire",
+    "qty": 1
+   },
+   "partial": [
+    "not in this figure: node 343 (queues an inflict request on each task-filter target's comp 0xf: FUN_141bacd50(comp 0xf, kind +0x78, id +0x7c, probability +0x80 (f64), count +0x88, tag lists +0x90 / +0xa0) - no attribute / char-field record (T3d: data vt 0x14524cb20, build FUN_141ad1060, execute FUN_141aad500 once per target, abort FUN_141ab5450; t3d_a.ann.c). The EffectNote carries the task: its ch"
+   ]
+  },
+  {
+   "label": "Socket Micro Fate: Attack Damage on contract point 101",
+   "kind": "kismet",
+   "gain": 1.0035742739623315,
+   "kill": 90885474.88087715,
+   "costFE": 3.25
+  },
+  {
+   "label": "Socket Micro Fate: Attack Damage on contract point 301",
+   "kind": "kismet",
+   "gain": 1.0035742739623315,
+   "kill": 90885474.88087715,
+   "costFE": 3.25
+  },
+  {
+   "label": "Socket Medium Fate: Attack Damage on contract point 207",
+   "kind": "kismet",
+   "gain": 1.0035742739623315,
+   "kill": 90885474.88087715,
+   "costFE": null
+  },
+  {
+   "label": "Unique Frozen Path in chest",
+   "kind": "unique",
+   "gain": 1.0030783310726206,
+   "kill": 90840561.40888548,
+   "costFE": null,
+   "buy": {
+    "name": "Frozen Path",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Two-faced Belt in belt",
+   "kind": "unique",
+   "gain": 1.0029008798358798,
+   "kill": 90824491.10862191,
+   "costFE": null,
+   "buy": {
+    "name": "Two-faced Belt",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Re-craft T6 +19% Critical Strike Rating (suffix) on ring2, replacing its lower tier",
+   "kind": "craft",
+   "gain": 1.0027506883344695,
+   "kill": 90810889.49857378,
+   "costFE": 1.2902727272727275,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 15.545454545454547
+   }
+  },
+  {
+   "label": "Socket Micro Fate: Attack Damage on contract point 201",
+   "kind": "kismet",
+   "gain": 1.0017871143793753,
+   "kill": 90723626.5238606,
+   "costFE": 3.25
+  },
+  {
+   "label": "Unique Unholy Prayer in ring2",
+   "kind": "unique",
+   "gain": 1.0016215016358823,
+   "kill": 90708628.33864482,
+   "costFE": null,
+   "buy": {
+    "name": "Unholy Prayer",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Unholy Prayer in ring2",
+   "kind": "unique",
+   "gain": 1.0016215016358823,
+   "kill": 90708628.33864482,
+   "costFE": null,
+   "buy": {
+    "name": "Unholy Prayer",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Unholy Prayer in ring2",
+   "kind": "unique",
+   "gain": 1.0016215016358823,
+   "kill": 90708628.33864482,
+   "costFE": null,
+   "buy": {
+    "name": "Unholy Prayer",
+    "qty": 1
+   }
+  },
+  {
    "label": "Socket Micro Fate: Aura Effect on contract point 101",
    "kind": "kismet",
-   "gain": 1.000720915563221,
-   "kill": 79349050.80718574,
+   "gain": 1.00142398617733,
+   "kill": 90690740.9866943,
    "costFE": null
   },
   {
    "label": "Socket Micro Fate: Aura Effect on contract point 301",
    "kind": "kismet",
-   "gain": 1.000720915563221,
-   "kill": 79349050.80718574,
+   "gain": 1.00142398617733,
+   "kill": 90690740.9866943,
    "costFE": null
+  },
+  {
+   "label": "Unique Gemma's Desire in ring2",
+   "kind": "unique",
+   "gain": 1.0008116263637699,
+   "kill": 90635284.59059355,
+   "costFE": null,
+   "buy": {
+    "name": "Gemma's Desire",
+    "qty": 1
+   },
+   "partial": [
+    "51511430",
+    "51511440"
+   ]
+  },
+  {
+   "label": "Unique Elemental Cleric in ring2",
+   "kind": "unique",
+   "gain": 1.0004339162668117,
+   "kill": 90601078.49103522,
+   "costFE": null,
+   "buy": {
+    "name": "Elemental Cleric",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Martyr's Staff in chest",
+   "kind": "unique",
+   "gain": 1.000414853299185,
+   "kill": 90599352.11471176,
+   "costFE": null,
+   "buy": {
+    "name": "Martyr's Staff",
+    "qty": 1
+   }
+  },
+  {
+   "label": "Unique Corrupted Bulwark in chest",
+   "kind": "unique",
+   "gain": 1.000414853299185,
+   "kill": 90599352.11471176,
+   "costFE": null,
+   "buy": {
+    "name": "Corrupted Bulwark",
+    "qty": 1
+   }
   },
   {
    "label": "Wear your Hunter's Gloves (stash) in gloves",
    "kind": "gear",
-   "gain": 1.0003406538711654,
-   "kill": 79318899.13966917,
+   "gain": 1.00035601278342,
+   "kill": 90594023.41273494,
    "costFE": 0
-  },
-  {
-   "kind": "craft",
-   "label": "Craft on boots with Precious Ember (1 per craft): keep any of 4 results - T4 +44% Critical Strike Rating (suffix); T5 +29% Critical Strike Rating (suffix); T6 +19% Critical Strike Rating (suffix); T7 +13% Critical Strike Rating (suffix) - about 12 crafts",
-   "gain": 1.0125965412565072,
-   "kill": 80290691.59019399,
-   "costFE": 0.92414,
-   "buy": {
-    "name": "Precious Ember",
-    "qty": 11.27
-   }
-  },
-  {
-   "kind": "craft",
-   "label": "Craft on boots with Matchless Ember (1 per craft): keep any of 4 results - T4 +16% Projectile Speed (prefix); T5 +11% Projectile Speed (prefix); T6 +7% Projectile Speed (prefix); T7 +5% Projectile Speed (prefix) - about 6 crafts",
-   "gain": 1.0198518247775428,
-   "kill": 80865976.71892259,
-   "costFE": 1.3946600000000002,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 5.090000000000001
-   }
-  },
-  {
-   "kind": "craft",
-   "label": "Craft on chest with Precious Ember (1 per craft): keep any of 6 results - T4 +29% damage (prefix) replacing your lowest-tier prefix; T5 +23% damage (prefix) replacing your lowest-tier prefix; T6 +19% damage (prefix) replacing your lowest-tier prefix; T7 +14% damage (prefix) replacing your lowest-tier prefix; or another of the list - about 9 crafts",
-   "gain": 1.0138817812262035,
-   "kill": 80392600.69398989,
-   "costFE": 0.730825,
-   "buy": {
-    "name": "Precious Ember",
-    "qty": 8.9125
-   }
-  },
-  {
-   "kind": "craft",
-   "label": "Craft on chest with Matchless Ember (1 per craft): keep any of 11 results - T4 +16% Projectile Speed (prefix) replacing your lowest-tier prefix; T4 +7% Dexterity (suffix) replacing your lowest-tier suffix; T5 +11% Projectile Speed (prefix) replacing your lowest-tier prefix; T4 +22% Critical Strike Damage (suffix) replacing your lowest-tier suffix; or another of the list - about 3 crafts",
-   "gain": 1.016335800778091,
-   "kill": 80587184.53757323,
-   "costFE": 0.8009123191278495,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 2.9230376610505457
-   }
-  },
-  {
-   "kind": "craft",
-   "label": "Craft on helmet with Precious Ember (1 per craft): keep any of 3 results - T6 +19% damage (prefix); T7 +14% damage (prefix); T6 +19% Critical Strike Rating (suffix) - about 8 crafts",
-   "gain": 1.0127978640545703,
-   "kill": 80306654.85496013,
-   "costFE": 0.5763081481481481,
-   "buy": {
-    "name": "Precious Ember",
-    "qty": 7.028148148148148
-   }
-  },
-  {
-   "kind": "craft",
-   "label": "Craft on helmet with Matchless Ember (1 per craft): keep any of 4 results - T6 +10% Critical Strike Damage (suffix); T6 +7% Projectile Speed (prefix); T7 +6% Critical Strike Damage (suffix); T7 +5% Projectile Speed (prefix) - about 6 crafts",
-   "gain": 1.0147239291580312,
-   "kill": 80459376.1935228,
-   "costFE": 1.4682975,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 5.35875
-   }
-  },
-  {
-   "kind": "craft",
-   "label": "Craft on mainHand with Precious Ember (2 per craft): keep any of 8 results - T2 +151% Physical Damage (suffix) replacing your lowest-tier suffix; T3 +108% Physical Damage (suffix) replacing your lowest-tier suffix; T4 +86% Physical Damage (suffix) replacing your lowest-tier suffix; T5 +69% Physical Damage (suffix) replacing your lowest-tier suffix; or another of the list - about 12 crafts",
-   "gain": 1.042453145050196,
-   "kill": 82658078.07578778,
-   "costFE": 1.9292216748768478,
-   "buy": {
-    "name": "Precious Ember",
-    "qty": 23.527093596059117
-   }
-  },
-  {
-   "kind": "craft",
-   "label": "Craft on mainHand with Matchless Ember (2 per craft): keep any of 13 results - T2 +252% Critical Strike Rating (suffix) replacing your lowest-tier suffix; T2 +35% Attack Critical Strike Rating for this gear (suffix) replacing your lowest-tier suffix; T3 +25% Attack Critical Strike Rating for this gear (suffix) replacing your lowest-tier suffix; T3 +180% Critical Strike Rating (suffix) replacing your lowest-tier suffix; or another of the list - about 5 crafts",
-   "gain": 1.0651959315739663,
-   "kill": 84461396.55879958,
-   "costFE": 2.5858706669076454,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 9.437484185794325
-   }
-  },
-  {
-   "kind": "craft",
-   "label": "Craft on ring2 with Precious Ember (1 per craft): keep any of 9 results - T3 +36% damage (prefix); T3 +61% Critical Strike Rating (suffix) replacing your lowest-tier suffix; T4 +29% damage (prefix); T5 +23% damage (prefix); or another of the list - about 7 crafts",
-   "gain": 1.014065917945257,
-   "kill": 80407201.24210316,
-   "costFE": 0.5193333333333334,
-   "buy": {
-    "name": "Precious Ember",
-    "qty": 6.333333333333334
-   }
-  },
-  {
-   "kind": "craft",
-   "label": "Craft on ring2 with Matchless Ember (1 per craft): keep any of 17 results - T3 +10 to Max Frostbite Rating (suffix) replacing your lowest-tier suffix; T3 Adds 19 - 23 Physical Damage to Attacks and Spells (prefix); T3 Adds 18 - 24 Cold Damage to Attacks and Spells (prefix); T4 +7 to Max Frostbite Rating (suffix) replacing your lowest-tier suffix; or another of the list - about 4 crafts",
-   "gain": 1.0141885696467898,
-   "kill": 80416926.52709037,
-   "costFE": 0.8859191290824262,
-   "buy": {
-    "name": "Matchless Ember",
-    "qty": 3.2332814930015554
-   }
   }
  ],
  "prices": {
-  "Howling Wind": 65.026,
+  "Howling Wind": 65.286,
   "Wriggling Tango": null,
   "Truth": null,
   "Exquisite Box - Unique": null,
@@ -2799,89 +2058,84 @@
   "Vortex Heart": 37.859,
   "Stray Bird's Return": null,
   "Dawn Break": null,
-  "Blind Vision": 110.746,
+  "Blind Vision": 98.06,
   "Heart of the Storm": null,
-  "Witchdoctor's Herb Bag": null,
-  "Fool's Crown": null,
-  "Trinity": null,
-  "Death's Touch": null,
   "Endless Night - Prototype": null,
-  "Legless Bird's Lament": null,
+  "Fool's Crown": null,
+  "Death's Touch": null,
+  "Witchdoctor's Herb Bag": null,
+  "Trinity": null,
   "Kaleidoscope": 7.122,
+  "Legless Bird's Lament": null,
+  "Hekate's Vision": 47.971,
   "Everlasting Cloud": null,
   "Gauze of Phantom Sin": null,
-  "Hekate's Vision": 45.981,
-  "Heavyware": 18.033,
-  "Hunting the Eye of the Kraken": null,
+  "Heavyware": 18.524,
   "Frostbolt": null,
+  "Hunting the Eye of the Kraken": null,
   "Royal Cycle": null,
+  "Rat King's Megagon Dice": null,
+  "Wind Projectiles": null,
+  "Double Rainbow - Unique": null,
   "Silent Avowal": null,
   "Genius Battlegear": null,
-  "Twilight Vestment": 27.215,
-  "Wind Projectiles": null,
-  "Rat King's Megagon Dice": null,
-  "The Three Saints": null,
-  "Scarlet Decree": null,
+  "Tyrant's Smoldering Hold": 33.008,
   "Tide of the Styx": null,
-  "Matchless Ember": 0.274,
-  "Tyrant's Smoldering Hold": 31.629,
-  "Lens of the Mage's Assistant": null,
-  "Blight": null,
+  "Scarlet Decree": null,
+  "Twilight Vestment": 28.55,
+  "Matchless Ember": 0.279,
+  "The Three Saints": null,
   "Fiend Crown": 118.393,
+  "Lens of the Mage's Assistant": null,
   "Critical Strike Damage Increase": null,
+  "Blight": null,
+  "Double Rainbow": null,
+  "Restless Glacier": 31.48,
   "Howling Ring": null,
   "Frozen Lightning": null,
-  "Restless Glacier": 31.48,
   "Mercurial Torment": null,
-  "Precious Ember": 0.082,
-  "Ownerless": null,
   "Silver Frost": null,
-  "Howling": null,
-  "Eternal Undercurrent": null,
+  "Ownerless": null,
+  "Precious Ember": 0.083,
+  "Providential Grace": null,
+  "Ice Shot: Ice Blast (Magnificent)": null,
+  "Ice Shot: Batter (Noble)": null,
+  "Unholy Prayer": null,
   "Elemental Cleric": null,
+  "Gemma's Desire": null,
+  "Increased Area": null,
+  "Glacier Traveler": null,
+  "Howling": null,
+  "Arctic Ring": null,
+  "Eternal Undercurrent": null,
+  "Chaotic Ending": null,
+  "Mark": null,
+  "Endless Night": null,
+  "Wind Chasers": null,
   "Sky Devourer - Strength Armor": null,
   "Sky Devourer - Agile Armor": null,
   "Sky Devourer - Insight Armor": null,
-  "Ice Shot: Ice Blast (Magnificent)": null,
-  "Ice Shot: Batter (Noble)": null,
-  "Increased Area": null,
-  "Unholy Prayer": null,
-  "Gemma's Desire": null,
-  "Providential Grace": null,
-  "Glacier Traveler": null,
-  "Skin of Malice": null,
-  "Arctic Ring": null,
-  "Martyr's Staff": null,
-  "Corrupted Bulwark": null,
-  "Mark": null,
-  "Chaotic Ending": null,
-  "Everburn Thunderfire": 7.5,
-  "Phantasm": null,
-  "Everlasting Flame": null,
-  "Winter is Near": null,
-  "Double Rainbow - Unique": null,
-  "Two-faced Belt": null,
-  "Last Words of Chaos": null,
-  "Pierced Curse Armor": null,
   "Broken Dream": null,
+  "Last Words of Chaos": null,
   "Berserker Bracer": null,
-  "Confusion Elemental Belt": 3,
   "Glacial Freeze": null,
-  "Sigh of the Giant": null,
-  "Siren Faceguard": null,
-  "Insulation": null,
-  "Corrosion of Manifolds": null,
   "Revered Light": null,
-  "Burning Ice": null
+  "Skin of Malice": null,
+  "Burning Ice": null,
+  "Everburn Thunderfire": 7.5,
+  "Frozen Path": null,
+  "Two-faced Belt": null,
+  "Martyr's Staff": null,
+  "Corrupted Bulwark": null
  },
  "switch": {
   "label": "Switch to Hammer of Ash with Sierra Reverberation Maul (level 86), Ruinous Star and Slow Projectile, Critical Strike Damage Increase, Hammer of Ash: Upheaval (Magnificent), Passivation, Steamroll, on the target build's talent page (103 points; Onslaughter, Goddess of Deception, Shadowmaster, Lich; cores Well Matched, Dirt, Off The Beaten Track, Mixture, Forbidden Power); with the target build's skills (Blink, Flame Core, Fixate, Timid, Precise: Weapon Amplification, Precise: Erosion Amplification, Precise: Cruelty, Precise: Domain Expansion)",
   "costFE": null,
   "target": "cube1",
   "figure": {
-   "life100": 121818207.47174291,
-   "life0": 73829216.64954458,
-   "kill": 95829390.90754192,
+   "life100": 137232568.2529108,
+   "life0": 83171253.48662595,
+   "kill": 107955236.75231639,
    "partial": [
     "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
     "the target's buff not derived (IN1): buff 230 (165258 row 2, 369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110)",
@@ -2992,9 +2246,9 @@
   }
  },
  "start": {
-  "life100": 69017462.3279652,
-  "life0": 69017462.3279652,
-  "kill": 69017462.3279652,
+  "life100": 79704945.43219313,
+  "life0": 79704945.43219313,
+  "kill": 79704945.43219313,
   "partial": [
    "support: Restrain (on passive 0, socket 1)",
    "support: Seal Conversion (on passive 0, socket 2)",
@@ -3032,7 +2286,7 @@
    "level": 90,
    "move": {
     "kind": "talent",
-    "label": "Free talent respec (level 90 and below): 10 point moves on your own page",
+    "label": "Free talent respec (level 90 and below): 9 point moves on your own page",
     "acquisition": false,
     "costFE": 0,
     "minLevel": 0,
@@ -3145,25 +2399,6 @@
     },
     {
      "kind": "talent",
-     "label": "Move a point: Ranger: Attack and Cast Speed -> Ranger: damage",
-     "acquisition": false,
-     "costFE": 0,
-     "minLevel": 1,
-     "changes": [
-      {
-       "kind": "talent",
-       "node": 43040100,
-       "points": 1
-      },
-      {
-       "kind": "talent",
-       "node": 43010500,
-       "points": 2
-      }
-     ]
-    },
-    {
-     "kind": "talent",
      "label": "Move a point: Prophet: Focus Blessing Duration -> Prophet: Critical Strike Rating",
      "acquisition": false,
      "costFE": 0,
@@ -3221,9 +2456,9 @@
     }
    ],
    "before": {
-    "life100": 69017462.3279652,
-    "life0": 69017462.3279652,
-    "kill": 69017462.3279652,
+    "life100": 79704945.43219313,
+    "life0": 79704945.43219313,
+    "kill": 79704945.43219313,
     "partial": [
      "support: Restrain (on passive 0, socket 1)",
      "support: Seal Conversion (on passive 0, socket 2)",
@@ -3257,9 +2492,9 @@
     "lock": 15000000000000
    },
    "after": {
-    "life100": 79291888.05105256,
-    "life0": 79291888.05105256,
-    "kill": 79291888.05105256,
+    "life100": 90561782.2605609,
+    "life0": 90561782.2605609,
+    "kill": 90561782.2605609,
     "partial": [
      "support: Restrain (on passive 0, socket 1)",
      "support: Seal Conversion (on passive 0, socket 2)",
