@@ -181,12 +181,14 @@ export function rankNext(next: NextBuy[], etor: Record<string, number | null>, m
   }).sort((a, b) => score(b.n.gain, b.cost) - score(a.n.gain, a.cost) || b.n.gain - a.n.gain);
 }
 const qty = (q: number) => (Number.isInteger(q) ? String(q) : q.toFixed(1));
-export function renderNext(next: NextBuy[], etor: Record<string, number | null>, mine: Record<string, number>): string {
-  const rows = rankNext(next, etor, mine).map(({ n, unit, cost }, i) => `<tr${cost === null ? ' class="unpriced"' : ''}><td class="n">${i + 1}</td>`
+/** `fe`: the character's FE - what it can afford comes first, the rest is marked over it */
+export function renderNext(next: NextBuy[], etor: Record<string, number | null>, mine: Record<string, number>, fe = Infinity): string {
+  const ranked = rankNext(next, etor, mine), over = (c: number | null) => c !== null && c > fe;
+  const rows = [...ranked.filter((r) => !over(r.cost)), ...ranked.filter((r) => over(r.cost))].map(({ n, unit, cost }, i) => `<tr${cost === null ? ' class="unpriced"' : over(cost) ? ' class="over"' : ''}><td class="n">${i + 1}</td>`
     + `<td class="what"><span class="ico">${ICON[n.kind] ?? '•'}</span>${esc(actionText(n as unknown as Move))}${n.partial?.length ? `<span class="warn" title="partial: ${esc(n.partial.join(', '))}">*</span>` : ''}</td>`
     + `<td class="gain">${fmtGain(1, n.gain)}<small>${fmtDps(n.kill)}</small></td>`
     + `<td class="price">${n.buy ? `<input type="number" min="0" step="any" data-name="${esc(n.buy.name)}" value="${unit ?? ''}" placeholder="price" title="${esc(n.buy.name)}">${n.buy.qty !== 1 ? ` × ${qty(n.buy.qty)}` : ''}` : '—'}</td>`
-    + `<td class="cost">${cost === null ? 'unpriced' : cost === 0 ? 'free' : `${fmtFE(cost)} FE`}</td></tr>`).join('');
+    + `<td class="cost">${cost === null ? 'not on the market' : cost === 0 ? 'free' : `${fmtFE(cost)} FE${over(cost) ? ' <small>over your FE</small>' : ''}`}</td></tr>`).join('');
   return `<section class="gl-next" id="gl-next"><h3>What to buy next</h3>`
     + `<p class="muted">Exact gains on your character. Type the price you would actually pay (per item; per ember for a craft) and the list re-sorts. Your prices stay in this browser.</p>`
     + `<div class="next-scroll"><table><thead><tr><th>#</th><th>Upgrade</th><th>Kill speed</th><th>Price (FE)</th><th>Cost</th></tr></thead><tbody>${rows}</tbody></table></div>`
@@ -300,7 +302,7 @@ function finalCard(g: GuideOut): string {
 }
 export function renderGuide(g: GuideOut, mine: Record<string, number> = {}): string {
   const plan = g.legs?.length ? legTabs(g) : chart(g.start, entries(g.steps)) + stages(entries(g.steps), g.mode);
-  return `<div class="gl-plan">${goalCard(g)}${g.character ? renderCharacter(g.character) : ''}${switchCard(g)}${g.next?.length ? renderNext(g.next, g.prices ?? {}, mine) : ''}${finalCard(g)}${plan}${huntingList(g)}${details(g)}</div>`;
+  return `<div class="gl-plan">${goalCard(g)}${g.character ? renderCharacter(g.character) : ''}${switchCard(g)}${g.next?.length ? renderNext(g.next, g.prices ?? {}, mine, g.character?.fe ?? Infinity) : ''}${finalCard(g)}${plan}${huntingList(g)}${details(g)}</div>`;
 }
 
 // ---- pasted text: the advice from the poorchlight button, or the raw export

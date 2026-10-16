@@ -14,7 +14,7 @@ const box = document.getElementById("paste-text") as HTMLTextAreaElement, out = 
 /** the prices you typed (item name -> FE), kept in this browser */
 const mine = (): Record<string, number> => { try { return JSON.parse(localStorage.getItem(PRICES) ?? "{}"); } catch { return {}; } };
 let advice: GuideOut | undefined;
-const redrawNext = () => { const el = document.getElementById("gl-next"); if (advice?.next && el) el.outerHTML = renderNext(advice.next, advice.prices ?? {}, mine()); };
+const redrawNext = () => { const el = document.getElementById("gl-next"); if (advice?.next && el) el.outerHTML = renderNext(advice.next, advice.prices ?? {}, mine(), advice.character?.fe ?? Infinity); };
 out.addEventListener("change", (e) => {
   const t = e.target as HTMLInputElement, name = t.dataset?.name;
   if (name === undefined) return;

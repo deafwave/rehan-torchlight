@@ -239,6 +239,14 @@ export const gearMoves: Generator = (s: State, ctx: GenCtx): Move[] => {
         enabler: ENABLER.test(o.text) || undefined,
       });
     }
+    // a mod re-crafted at a better tier the item's level allows (its old roll replaced): a rare improves a craft at a time, cheap tiers first
+    for (const side of ['prefix', 'suffix'] as const) for (const m of dump.modifiers[side] ?? [])
+      for (const t of craftTiers(baseId, Math.floor(m.id / 100), dump.level, ctx).filter(t => t.id < m.id))
+        moves.push({
+          kind: 'craft', label: `Re-craft ${t.tier} ${t.text} (${side}) on ${slot}, replacing its lower tier`, acquisition: true, costFE: t.costFE,
+          buy: { name: t.ember, qty: t.qty }, minLevel: 0,
+          changes: swap(slot, withMods(dump, { [side]: (dump.modifiers[side] ?? []).map(x => (x === m ? { id: t.id, dynArgs: t.dynArgs } : x)) }, `guide-recraft-${slot}-${t.id}`)),
+        });
     if (skipped.size) ctx.notSearched.add(`craft on ${slot}: ${skipped.size} tiers whose library text ranges differ from the catalog rolls`);
     for (const side of full) ctx.notSearched.add(`craft on ${slot}: ${side} side full (${SIDE_MAX}); replacing an affix is not ported`);
 
@@ -247,11 +255,26 @@ export const gearMoves: Generator = (s: State, ctx: GenCtx): Move[] => {
     if (best && best.level > base.level) {
       const nb = c.rows.get(best.baseId)!, cost = costOf(ctx.prices, best.name, ctx.level, 'bare'), r = rebased(dump, nb, `guide-base-${best.baseId}`, ctx);
       const crafted = (r.item.modifiers.prefix?.length ?? 0) + (r.item.modifiers.suffix?.length ?? 0);
+      // the new base is judged by your mods at the best tier its level opens that you can afford (per mod: your FE over its mods), taken with your tiers
+      // carried over; each re-craft to a better tier is a later step
+      const perMod = Math.min(50, Math.max(1, s.fe / Math.max(1, crafted)));
+      let up: number | null = 0;
+      const better: Mods = { ...r.item.modifiers };
+      for (const side of ['prefix', 'suffix'] as const) better[side] = (r.item.modifiers[side] ?? []).map(m => {
+        const t = craftTiers(best.baseId, Math.floor(m.id / 100), r.item.level, ctx).find(x => x.id < m.id && x.costFE !== null && x.costFE <= perMod);
+        if (!t) return m;
+        up = up === null ? null : up + t.costFE!;
+        return { id: t.id, dynArgs: t.dynArgs };
+      });
+      const lifted = JSON.stringify(better) !== JSON.stringify(r.item.modifiers);
       moves.push({
         kind: 'gear', label: `Rare base ${best.name} (item level ${best.level}) on ${slot}${crafted ? `, ${crafted} affix(es) crafted again` : ''}${r.dropped ? `, ${r.dropped} the base cannot take left off` : ''}`,
         acquisition: true, ...cost, costFE: cost.costFE === null || r.recraft === null ? null : cost.costFE + r.recraft, minLevel: best.level,
         ...(crafted ? { costNote: `${cost.costNote ?? 'base'} + re-craft ${r.recraft === null ? '(an ember unpriced)' : `${r.recraft.toFixed(2)} FE`}` } : { buy: { name: best.name, qty: 1 } }),
         changes: [{ kind: 'gear', slot, item: { ...r.item, baseId: best.baseId, baseName: best.name } }],
+        ...(lifted && cost.costFE !== null && r.recraft !== null && up !== null ? { then: {
+          changes: [{ kind: 'gear', slot, item: { ...r.item, itemId: `guide-base-${best.baseId}-up`, baseId: best.baseId, baseName: best.name, modifiers: better } }] as Change[],
+          costFE: cost.costFE + r.recraft + up, note: `chosen for this base with your mods re-crafted at better tiers (up to ${perMod.toFixed(1)} FE each), one craft per step` } } : {}),
       });
     }
   }
