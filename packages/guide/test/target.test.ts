@@ -19,6 +19,17 @@ const { moves, notSearched } = gen(l100);
 const of = (k: string) => moves.filter(m => m.kind === k);
 const applied = (m: Move) => { try { applyAll(l100, m, GROUND.hoa); return null; } catch (e) { return (e as Error).message; } };
 
+describe("the known build's hero memories and vorax limb", () => {
+  it('are offered as farmed patches that write them into the loadout', () => {
+    const t = loadout('re/evidence/loadout_probuild-hanshansi-bing.json') as { heroMemories: unknown[]; vorax: unknown[] };
+    const ms = gen({ ...l100, heroMemories: [], vorax: [] }).moves;
+    const mem = ms.find(m => /^Target hero memories/.test(m.label))!, vor = ms.find(m => /^Target vorax limb/.test(m.label))!;
+    for (const m of [mem, vor]) expect(m).toMatchObject({ costFE: 0, market: 'drop', acquisition: true });
+    expect((applyPatch({ ...l100, heroMemories: [] }, mem.changes[0] as never) as { heroMemories: unknown[] }).heroMemories).toEqual(t.heroMemories);
+    expect((applyPatch({ ...l100, vorax: [] }, vor.changes[0] as never) as { vorax: unknown[] }).vorax).toEqual(t.vorax);
+  });
+});
+
 describe('targetMoves', () => {
   it('offers gear and pacts as enabler acquisitions', () => {
     expect(of('gear').length).toBeGreaterThan(0);
@@ -43,8 +54,8 @@ describe('targetMoves', () => {
     expect(ks.length).toBeGreaterThan(0);
     for (const m of ks) expect(() => applyAll(after, m, GROUND.hoa), m.label).not.toThrow();
   });
-  it('names slates, memories and vorax as not searched', () => {
-    expect([...notSearched].some(n => /slates/.test(n)) && [...notSearched].some(n => /hero memories/.test(n))).toBe(true);
+  it("names single slates as not searched (board adjacency is the server's)", () => {
+    expect([...notSearched].some(n => /slates/.test(n))).toBe(true);
   });
   it('Ice Shot states get no target moves', () => {
     expect(gen(loadout('game/loadout_l94-20261013-160234.json'), 'iceShot').moves).toEqual([]);

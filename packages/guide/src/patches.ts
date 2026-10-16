@@ -4,7 +4,9 @@ import type { Change, Loadout } from './types';
 export type LoadoutPatch =
   | { kind: 'patch'; op: 'prism-provide'; tree: number; extraAffix: { id: number; dyn: number[] }[] }
   | { kind: 'patch'; op: 'slate-board'; items: { itemId: string; baseId: number; talents: number[]; influence: Record<string, unknown> }[] }
-  | { kind: 'patch'; op: 'inverse'; copies: { node: number; points: number; ee: number }[]; remove?: number[] };
+  | { kind: 'patch'; op: 'inverse'; copies: { node: number; points: number; ee: number }[]; remove?: number[] }
+  /** a known build's hero memories / vorax limbs written into the loadout (dps-debug has no what-if change for them; it prices the loadout's lists) */
+  | { kind: 'patch'; op: 'memories'; items: unknown[] } | { kind: 'patch'; op: 'vorax'; items: unknown[] };
 
 export const isPatch = (c: Change | LoadoutPatch): c is LoadoutPatch => (c as { kind: string }).kind === 'patch';
 
@@ -21,7 +23,9 @@ export function applyPatch(lo: Loadout, p: LoadoutPatch): Loadout {
     slot.ExtraAffix = [...(Array.isArray(slot.ExtraAffix) ? slot.ExtraAffix : []), ...p.extraAffix.map(x => ({ Id: x.id, DynArgs: [...x.dyn] }))];
     return l;
   }
-  if (p.op === 'slate-board') { l.slateItems = structuredClone(p.items); return l; }   // slateItems replaces the flat slates / slateScale lists (dps-debug loadout.ts:211)
+  if (p.op === 'slate-board') { l.slateItems = structuredClone(p.items); return l; }
+  if (p.op === 'memories') { l.heroMemories = structuredClone(p.items); return l; }
+  if (p.op === 'vorax') { l.vorax = structuredClone(p.items); return l; }   // slateItems replaces the flat slates / slateScale lists (dps-debug loadout.ts:211)
   const rt: Rt[] = l.resolvedTalents?.talents ?? Object.entries(l.talents ?? {}).map(([id, pt]) => [Number(id), pt as number, `talent:${id}`] as Rt);
   const gone = new Set(p.remove ?? []);
   l.resolvedTalents = { ...l.resolvedTalents, talents: [

@@ -87,8 +87,6 @@ export const targetMoves: Generator = (s, ctx) => {
   if (s.skill !== 'hoa') return [];
   const ns = ctx.notSearched, t = loadTarget(), l = s.loadout as Record<string, any>;   // eslint-disable-line @typescript-eslint/no-explicit-any
   ns.add("single slates: board adjacency is resolved server-side");
-  if (t.heroMemories.length) ns.add('target hero memories: dps-debug has no what-if change for them; not offered');
-  if (t.vorax.length) ns.add('target vorax limbs: dps-debug has no what-if change for them; not offered');
   ns.add('target kismets appear once their pact is equipped in that slot');
   const mk = (m: Omit<Move, 'acquisition' | 'enabler' | 'minLevel'> & { minLevel?: number }): Move => ({ acquisition: true, enabler: true, minLevel: 0, ...m });
   const out: Move[] = [];
@@ -149,6 +147,15 @@ export const targetMoves: Generator = (s, ctx) => {
     out.push(mk({ kind: 'slate', label: `Target slate board (${items.length} slates)`, costFE: 0, market: 'drop',
       costNote: `farmed: slates drop (no etor row for them): ${items.map(x => x.itemId).join(', ')}`,
       changes: [{ kind: 'patch', op: 'slate-board', items }] }));
+
+  // hero memories and vorax limbs: written into the loadout (patches.ts), farmed at 0 FE (their making is not priced)
+  const same = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b);
+  if (t.heroMemories.length && !same(l.heroMemories, t.heroMemories))
+    out.push(mk({ kind: 'memory', label: `Target hero memories (${t.heroMemories.length})`, costFE: 0, market: 'drop', costNote: 'farmed: hero memories drop (their making is not priced)',
+      changes: [{ kind: 'patch', op: 'memories', items: t.heroMemories }] }));
+  if (t.vorax.length && !same(l.vorax, t.vorax))
+    out.push(mk({ kind: 'memory', label: `Target vorax limb${t.vorax.length > 1 ? 's' : ''} (${t.vorax.length})`, costFE: 0, market: 'drop', costNote: 'farmed: a vorax limb devours a legendary (its making is not priced)',
+      changes: [{ kind: 'patch', op: 'vorax', items: t.vorax }] }));
 
   // pacts: not on the market - a pactspirit rank is levelled, not bought: farmed, 0 FE
   const pacts = (l.pacts ?? []) as { servantId: number; slot?: number; rank: number }[];
