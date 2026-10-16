@@ -53,5 +53,8 @@ if (auto) {
     advice = parseAdvice(JSON.stringify(auto));
     out.innerHTML = `<p class="gl-banner">Your plan, read from your game (prices ${advice.etor.fetchedAt.slice(0, 16).replace("T", " ")} UTC)</p>` + renderGuide(advice, mine());
     document.getElementById("paste")!.removeAttribute("open");
+    // your plan is the page: the ideal path stays as a folded reference below it
+    const ideal = document.getElementById("ideal")!;
+    ideal.innerHTML = `<details class="gl-ref"><summary>Ideal path from level 60 (reference only, not your character)</summary>${ideal.innerHTML}</details>`;
   } catch (e) { out.innerHTML = `<p class="warn"></p>`; out.firstElementChild!.textContent = (e as Error).message; }
 } else if (kept) { box.value = kept; show(kept); }

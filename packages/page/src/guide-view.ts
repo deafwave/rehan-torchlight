@@ -206,7 +206,8 @@ export function treeGrid(t: TreeView): string {
     .map((p) => `<line class="${p.pts >= p.max && n.pts > 0 ? 'on' : ''}" x1="${x(p)}" y1="${y(p)}" x2="${x(n)}" y2="${y(n)}"/>`)).join('');
   const dots = t.nodes.map((n) => `<g class="tn k${n.kind}${n.pts ? ' on' : ''}"><title>${esc(`${n.name} (${n.pts}/${n.max})`)}</title>`
     + `<circle cx="${x(n)}" cy="${y(n)}" r="${n.kind === 1 ? 8 : 12}"/>${n.pts ? `<text x="${x(n)}" y="${y(n) + 3.5}">${n.pts}</text>` : ''}</g>`).join('');
-  const cores = t.cores.map((c) => `<span class="tc${c.taken ? ' on' : ''}" title="unlocks at ${c.need} points">${esc(c.name)}</span>`).join('');
+  const twice = new Set(t.cores.map((c) => c.name).filter((n, i, a) => a.indexOf(n) !== i));   // a core in both sets (24 and 32 points): say which
+  const cores = t.cores.map((c) => `<span class="tc${c.taken ? ' on' : ''}" title="unlocks at ${c.need} points">${esc(c.name)}${twice.has(c.name) ? ` · ${c.need}` : ''}</span>`).join('');
   const w = depth * S, h = TOP + 5 * S;
   return `<div class="gl-tree"><b>${esc(t.name)}: ${t.points} points</b><svg class="tsvg" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}">${heads}${links}${dots}</svg>${cores ? `<div class="tcs">${cores}</div>` : ''}</div>`;
 }

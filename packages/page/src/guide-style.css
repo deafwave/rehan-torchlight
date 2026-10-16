@@ -802,3 +802,5 @@ a.t-branch:hover,a.t-branch:focus-visible{text-decoration:underline}
 .tsvg .tn text { font: 600 10px 'IBM Plex Mono', monospace; fill: #111; text-anchor: middle; pointer-events: none; }
 .tsvg .th { font: 10px 'IBM Plex Mono', monospace; fill: #7d8fa3; text-anchor: middle; }
 .gl-build > .tcs .tc { border: 1px solid #f0c060; color: #f0c060; border-radius: 4px; padding: .1rem .45rem; }
+/* the drawn tree: no rule from the old div grid applies (a scaled small node moved toward the corner) */
+.tsvg .tn, .tsvg .tn.k1 { transform: none; width: auto; height: auto; border: 0; background: none; display: inline; }
