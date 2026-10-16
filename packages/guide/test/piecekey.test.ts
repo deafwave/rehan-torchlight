@@ -12,4 +12,9 @@ describe('pieceKey / rankable (dps-debug coordinator, 2026-10-16)', () => {
     const f = (partial: string[], kill = 1) => ({ life100: kill, life0: kill, kill, partial });
     expect(rankable(f(['held buffs left off: 11210 (carried: 10, 15101)']), f(['held buffs left off: 11210 (carried: 10, 320, 15101)'], 2))).toBe(true);
   });
+  it("a target buff's resolved uptime (IN1) is a statement; one not derived is an omission (dps-debug figure.ts 548 / 550)", () => {
+    expect(isPiece("the target's buff (IN1): buff 330 (103010083 row 1): 5.12863 adds/s x 1 stack(s), life 3 s, cap 1 (policy 1): P(fewer than 1 adds in one life) = 2.08e-7 -> steady at 1")).toBe(false);
+    expect(isPiece("the target's buff (IN1): buff 3441 (885067264 row 1): never added in this fight (event 1000030 0.00000/s x 100 %)")).toBe(false);
+    expect(isPiece("the target's buff not derived (IN1): buff 330 (103010083 row 1)")).toBe(true);
+  });
 });

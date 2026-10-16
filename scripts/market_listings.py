@@ -30,8 +30,11 @@ def listings(L):
         raw = L.path(g, 'GoodData', '_Raw_Data')
         it = L.path(raw, 'ItemData', '_Raw_Data')
         aff = it and L.get(it, 'AffixList')
+        td = it and L.get(it, 'TalentDatas')   # a slate (Pedigree of Gods, divinity slates): its talents and shape
+        tl = td and L.get(td, 'BaseTalentList')
         res.append({'n': i, 'price': val(L.get(raw, 'PriceNum')), 'priceType': val(L.get(raw, 'PriceType')), 'baseId': val(L.get(it, 'ConfigBaseId')),
-                    'level': val(L.get(it, 'Level')), 'prefix': side(aff, 'PrefixInfoList'), 'suffix': side(aff, 'SuffixInfoList')})
+                    'level': val(L.get(it, 'Level')), 'prefix': side(aff, 'PrefixInfoList'), 'suffix': side(aff, 'SuffixInfoList'),
+                    **({'talents': [val(x) for _, x in sorted(L.items(tl), key=lambda kv: kv[0])], 'shapeId': val(L.get(td, 'ShapeId'))} if tl else {})})
     return res
 
 if __name__ == '__main__':

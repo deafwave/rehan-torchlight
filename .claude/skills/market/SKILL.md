@@ -1,6 +1,6 @@
 ---
 name: market
-description: "Rank the auction house search the player has open in Torchlight: Infinite by what each listing costs to finish: price + expected crafting to get every wanted mod to T1 (market-targets.json). Reads the listings from game memory, no screenshots, ~3 s. Use when the user asks which market item is the best deal, the best base to craft on, or says /market."
+description: "Rank the auction house search the player has open in Torchlight: Infinite by what each listing costs to finish: price + expected crafting to get every wanted mod to T1 (market-targets.json); a Divinity Slate search by the model's % damage gain on your character. Reads the listings from game memory, no screenshots, ~3 s (slates ~40 s). Use when the user asks which market item is the best deal, the best base to craft on, or says /market."
 ---
 
 # market
@@ -22,7 +22,13 @@ description: "Rank the auction house search the player has open in Torchlight: I
 
    Say which one to buy and why: usually the one with the most wanted T1 mods per FE.
 
-3. If the base has no entry in `market-targets.json`, ask the user which T1 mods they want. Add them, using T1 ids from `data/affix_library.json` (`tiers[0].tierAffixId` of the item's slot library), then run again.
+   A **Divinity Slate** search (the listings carry talents) is ranked by the model instead. Each listing's talents go on your character as one more slate
+   (`withSlate`), using the newest `dps-debug/game/exports` read (`--export <file>` overrides it). Report `#n`, the price, the % damage gain (kill speed vs
+   the target), the %/100 FE and the two talents. Recommend the best gain per FE, and also the best gain outright if it costs more. A `partial` row is a
+   piece the model cannot price (it names what it dropped). It is never ranked, so say it is unknown, not zero. The gain assumes a free board spot; with
+   a full board the slate replaces one.
+
+3. If a gear base has no entry in `market-targets.json`, ask the user which T1 mods they want. Add them, using T1 ids from `data/affix_library.json` (`tiers[0].tierAffixId` of the item's slot library), then run again.
 
 Notes:
 - Crafting cost is `craftStep`'s expected embers to roll that exact T1, at live etor ember prices.

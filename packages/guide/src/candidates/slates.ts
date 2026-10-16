@@ -36,18 +36,23 @@ const cellsOf = (it: SlateItem, slot = (it.link as { SlotId: number }).SlotId, d
     return [Math.floor(slot / 10) + x, (slot % 10) + y];
   });
 
+/** One more slate carrying `talents` on the character (a copy of its first placed slate, nothing devoured or copied); undefined when it has none placed */
+export function withSlate(s: State, talents: number[]): Change | undefined {
+  const items = (s.loadout.slateItems ?? []) as SlateItem[], tmpl = items[0];
+  if (!tmpl) return undefined;
+  return { kind: 'patch', op: 'slate-board', items: [...items, { ...tmpl, itemId: `guide-slate-${talents.join('-')}`, talents,
+    influence: { ...(tmpl.influence as object), EffectTalentIds: talents, TalentIdDevour: talents.map(() => false), TalentIdInfluence: talents.map(() => 0), TalentIdCopyInfluence: {},
+      TalentIdCopy: {}, DevilProjectionTalentIds: {}, DevilProjectionInfluence: {}, DevilLineBoostInfluence: {}, DevilLineBoostTalentIds: {} } }] } as never;
+}
+
 /** Slate talents to look for (user, 2026-10-16: "we need more buckets"): every talent the game shows (any tree, cores too; one per distinct effect) priced as one
  *  more slate talent on the character, the gains above 0.5 % best first. A core the build already holds adds nothing (CT1). Which slate can roll which talent
  *  is not in the catalog rules read here: the list says what to look for, not where. */
 export async function slateWants(ev: Evaluator, s: State, f: Figure, cores = 10, others = 25): Promise<{ id: number; name: string; gain: number; core: boolean }[]> {
-  const items = (s.loadout.slateItems ?? []) as SlateItem[], tmpl = items[0];
-  if (!tmpl) return [];
+  if (!withSlate(s, [])) return [];
   const t = rows('config_talent'), byId = new Map(Object.values(t).map((r) => [r.i0 as number, r])), seen = new Set<string>(), ids: number[] = [];
   for (const n of allTrees().flatMap((tr) => [...treeNodes(tr), ...treeCores(tr)])) { const k = byId.get(n.id)?.sc0 ?? String(n.id); if (!seen.has(k)) { seen.add(k); ids.push(n.id); } }
-  const one = (id: number): Change => ({ kind: 'patch', op: 'slate-board', items: [...items, { ...tmpl, itemId: `guide-slate-${id}`, talents: [id],
-    influence: { ...(tmpl.influence as object), EffectTalentIds: [id], TalentIdDevour: [false], TalentIdInfluence: [0], TalentIdCopyInfluence: {}, TalentIdCopy: {}, DevilProjectionTalentIds: {},
-      DevilProjectionInfluence: {}, DevilLineBoostInfluence: {}, DevilLineBoostTalentIds: {} } }] } as never);
-  const out = await Promise.all(ids.map(async (id) => { const g = (await ev.run(s.loadout, [one(id)], ctxOfState(s))).figure; return { id, name: talentName(id), gain: g.stop ? 0 : g.kill / f.kill, core: byId.get(id)?.i4 === CORE }; }));
+  const out = await Promise.all(ids.map(async (id) => { const g = (await ev.run(s.loadout, [withSlate(s, [id])!], ctxOfState(s))).figure; return { id, name: talentName(id), gain: g.stop ? 0 : g.kill / f.kill, core: byId.get(id)?.i4 === CORE }; }));
   const ok = out.filter((o) => o.gain > 1.005).sort((a, b) => b.gain - a.gain);   // cores and the other talents each get a list (cores would fill one list)
   return [...ok.filter((o) => o.core).slice(0, cores), ...ok.filter((o) => !o.core).slice(0, others)];
 }
