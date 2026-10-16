@@ -286,3 +286,17 @@ describe('pageVariants (a free respec)', () => {
     }
   });
 });
+
+describe('locked nodes (a respec keeps what the model prices at 0)', () => {
+  const held = Object.entries(l94.talents as Record<string, number>).filter(([, p]) => p > 0).map(([k]) => +k);
+  const lock = held[held.length - 1], locked = new Set([lock]);
+  it('no move takes a point from a locked node, and its tree is never swapped away', () => {
+    const ctx = { prices: {} as any, level: 94, notSearched: new Set<string>() };
+    const moves = [...talentMovesWith({ maxShifts: 1000, locked })(state, ctx), ...talentMovesWith({ maxShifts: 0, pages: true, locked })({ ...state, level: 90 }, { ...ctx, level: 90 })];
+    for (const m of moves) {
+      const lost = m.changes.some((c: any) => c.kind === 'talent' && c.node === lock && c.points < (l94.talents as Record<string, number>)[lock]);
+      expect(lost, m.label).toBe(false);
+    }
+    expect(moves.some((m) => m.label.startsWith(`Swap talent tree ${treeName(treeOf(lock))} `))).toBe(false);
+  });
+});

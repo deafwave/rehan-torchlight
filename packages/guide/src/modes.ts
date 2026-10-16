@@ -11,7 +11,7 @@ import { slateMoves, slateWants } from './candidates/slates';
 import { switchWithPage, targetPage } from './candidates/switch';
 import { rollPlans } from './candidates/gear';
 import { targetMoves } from './candidates/target';
-import { pageVariants, talentMoves, talentPointMoves } from './candidates/talents';
+import { talentMoves, talentMovesWith, talentPointMoves } from './candidates/talents';
 import { traitMoves } from './candidates/traits';
 import { type EtorHistory, type EtorItems, legBooks, LEG_WINDOWS, snapshotBook } from './pricing';
 import { CULL_NOT_COUNTED } from './kill';
@@ -397,8 +397,14 @@ export async function runAdvise(ev: Evaluator, state: State, k: Partial<Knobs> =
   let respec: Step | undefined, respecView: GuideOut['respec'];
   if (state.level <= FREE_RESPEC_LEVEL) {
     const ctx = ctxOf(state), K0 = { ...K, churn: 0, maxRounds: RESPEC_ROUNDS };   // a swapped tree needs many points moved
-    const refit: Generator = (st, c) => talentMoves(st, c).filter((m) => !m.label.startsWith('Swap talent tree'));
-    const pages = pageVariants(state, ctx);
+    // a node whose points price at exactly 0 is one the model cannot see (Prophet's Frozen-target nodes: the dummy is never Frozen in the figure), not a
+    // worthless one: the respec never takes points from it (user, 2026-10-16: "are you undervaluing cold infiltration?")
+    const held = Object.entries((state.loadout.talents ?? {}) as Record<string, number>).filter(([, p]) => p > 0).map(([k]) => +k);
+    const zero = await Promise.all(held.map(async (n) => ((f) => !f.stop && f.kill === first.figure.kill)((await ev.run(state.loadout, [{ kind: 'talent', node: n, points: 0 }], ctxOfState(state))).figure)));
+    const locked = new Set(held.filter((_, i) => zero[i]));
+    if (locked.size) startNotes.push(`Talent nodes the respec keeps as you have them (the model prices them at 0, so it cannot judge them): ${[...locked].map((n) => talentName(n)).join('; ')}`);
+    const refit: Generator = (st, c) => talentMovesWith({ maxShifts: 60, locked })(st, c).filter((m) => !m.label.startsWith('Swap talent tree'));
+    const pages = talentMovesWith({ maxShifts: 0, pages: true, locked })(state, ctx);
     const evs = await Promise.all(pages.map((m) => ev.run(state.loadout, m.changes, ctxOfState(state))));
     const top = pages.map((m, i) => ({ m, e: evs[i] })).filter((x) => rankable(first.figure, x.e.figure)).sort((a, b) => b.e.figure.kill - a.e.figure.kill);
     startNotes.push(`Talent pages tried for the free respec (before re-fitting the points): ${top.slice(0, 8).map((x) => `${x.m.label} x${(x.e.figure.kill / first.figure.kill).toFixed(2)}`).join('; ')}`);
@@ -441,6 +447,7 @@ export async function runAdvise(ev: Evaluator, state: State, k: Partial<Knobs> =
     if (g && inSocket(sock(n)!)[0] !== n) return false;
     if (g) seenGem.add(g);
     const u = /^Unique (.+) in \w+$/.exec(n.label)?.[1];
+    if (u && n.costFE === null) return false;   // a legendary nobody lists this season may not exist in it (user, 2026-10-16: Howling Ring, Endless Night - Prototype)
     if (u && [...wearing.values()].includes(u)) return false;   // you wear it: a row would read as buy one (its gain is your roll against a middle roll)
     if (u && own.has(u)) { if (!startNotes.some((x) => x.includes(`have ${u} `))) startNotes.push(`you have ${u} in your inventory: wear it rather than buy one`); return false; }
     return !sl || n.gain === best.get(sl); }).map((n) => (sock(n) ? { ...n, alts: inSocket(sock(n)!).slice(1).map((a) => ({ label: gem(a)!, gain: a.gain, costFE: a.costFE })) } : n)), ...await rollAdvice(ev, state, ctxOf(state), first.figure, books)].sort((a, b) => b.gain - a.gain);
