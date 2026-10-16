@@ -17,10 +17,13 @@ export const DEFAULT_KNOBS: Knobs = { churn: 0.05, topK: 5, maxRounds: 10, refre
 /** A partial piece's identity: its text with the measured decimals (rates, probabilities) taken out, ids kept. dps-debug writes the live numbers into the
  *  text ("buff 15184 ...: 2.72727 adds/s ... P = 2.24e-4"), so nearly any change moved them and made the same omission look new. */
 export const pieceKey = (p: string) => p.replace(/\d+\.\d+(?:e[-+]?\d+)?|\d+e[-+]?\d+/gi, '#');
-/** A figure is rankable only if it dropped no piece the baseline still had, and it computed. */
+/** omissions that only leave out a buff the build would add, so the figure is a lower bound and still ranks (it is better if it beats the base without
+ *  it): node 306, a timed attribute buff the model does not build (dps-debug's coordinator, 2026-10-16: its parameters are not decoded) */
+const LOWER_BOUND = [/^not in this figure: node 306 \(buff component 0x12 only/];
+/** A figure is rankable only if it dropped no piece the baseline still had (but a lower-bound one), and it computed. */
 export function rankable(before: Figure, after: Figure): boolean {
   const had = new Set(before.partial.map(pieceKey));
-  return !after.stop && after.partial.every((p) => had.has(pieceKey(p)));
+  return !after.stop && after.partial.every((p) => had.has(pieceKey(p)) || LOWER_BOUND.some((r) => r.test(p)));
 }
 
 /** A move's figure is rankable by `rankable`, except a skill switch: a different skill compiles different pieces, so its omissions need not be a subset

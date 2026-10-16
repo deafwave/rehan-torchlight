@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { mkdirSync, mkdtempSync, rmSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -82,9 +83,24 @@ describe('evaluator (stub workers)', () => {
       'priced as the expectation over a mix of states (U2-MIX), on the target: buff 330 (636982 row 1): 2.97255 adds/s x 1 stack(s), life 3 s, cap 1',
       'U2-MIX joint states of buffs 15184,330 (the product of their weights; states under 0.000001 / 8 taken with all at the cap): 5',
       'U2-MIX affine closed form: buff 15184 priced at 40 and 35, the expectation by interpolation',
+      "the target's buff (IN1): buff 260 (103010015 row 1): stated at 5 (POL1 single-slot policy 1, cap 5)",
       "the target's buff (IN1): buff 330 (636982 row 1): stated at 1 of its mix of states (U2-MIX: 1: 9.999e-1, 0: 1.340e-4)"];
     const kept = ["the target's buff not derived (IN1): buff 260 (103010015 row 1, 103010015 row 1): single-slot policy 1 with a cap of 5",
       'buff 11730 (13523221 row 1): 2.6 adds/s over a life of 2 s leave P(below the cap 3) = 2.6e-2: a mix of states, not a point'];
+    const ev = await createEvaluator({ factory: stub(() => ({ life100: 200, life0: 100, left: [], needs: [...notes, ...kept] })).factory, workers: 1, pin: 'p' });
+    expect((await ev.run(lo, [], ctx)).figure.partial).toEqual(kept);
+  });
+  it('a figure from the on-disk memo is filtered by the notes as they are now (a rule added later applies to figures priced before it)', async () => {
+    const dir = mkdtempSync(join(tmpdir(), 'memo-'));
+    const key = memoKey('p', ctx.skill, ctx.level, lo, [], DEFAULT_FIGHT, 1 << 20, 'cube3');
+    writeFileSync(join(dir, `${createHash('sha256').update(key).digest('hex')}.json`), JSON.stringify({ loadout: lo, dropped: [], figure: { life100: 1, life0: 1, kill: 1, partial: ['not in this figure: node 2700 (Q1: inert in the client - x)', 'node 9: real'] } }));
+    const ev = await createEvaluator({ factory: stub(() => ({ life100: 2, life0: 2, left: [], needs: [] })).factory, workers: 1, pin: 'p', memoDir: dir });
+    expect((await ev.run(lo, [], ctx)).figure.partial).toEqual(['node 9: real']);
+  });
+  it("the Corona ring's trigger (node 2320) and a duration-only node 626 are notes (the coordinator, 2026-10-16)", async () => {
+    const notes = ['not in this figure: node 2320 (comp 0x82 / 0x91, triggers a skill (execute FUN_141a9df70, c9b_nodes.c 4093-4466)) - affix class 909512640 row 1',
+      "not in this figure: node 626 ([inf] the owner's comp 0x12 buffs: a value from buff +0xc8 / +0x68)"];
+    const kept = ['not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100)'];
     const ev = await createEvaluator({ factory: stub(() => ({ life100: 200, life0: 100, left: [], needs: [...notes, ...kept] })).factory, workers: 1, pin: 'p' });
     expect((await ev.run(lo, [], ctx)).figure.partial).toEqual(kept);
   });
@@ -93,7 +109,7 @@ describe('evaluator (stub workers)', () => {
       'not in this figure: node 2215 (execute 0x1407d0580 `mov al, 1; ret`) - affix class 1010080264 row 1 (hero 4001 spawn class 1010080264) - ticked at the grant',
       'not in this figure: node 2700 (Q1: inert in the client - runtime vt 0x1452537d0: build FUN_141ac4370 only evaluates its fields and drops them)',
       'not in this figure: node 1003 (a hit that kills the target when its comp 0x6f life is at or below max life x 0.01 x f8: FUN_141e0c8d0 (execute FUN_141a52ea0, t3b_exec.ann.c 306-384)) - affix class 110030008 row 1'];
-    const kept = ['not in this figure: node 2320 (comp 0x82 / 0x91, triggers a skill (execute FUN_141a9df70, c9b_nodes.c 4093-4466)) - affix class 909512640 row 1'];
+    const kept = ['not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator)'];
     const ev = await createEvaluator({ factory: stub(() => ({ life100: 200, life0: 100, left: [], needs: [...notes, ...kept] })).factory, workers: 1, pin: 'p' });
     expect((await ev.run(lo, [], ctx)).figure.partial).toEqual(kept);
   });

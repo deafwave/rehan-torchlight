@@ -53,6 +53,13 @@ test('a partial piece is the same piece when only its measured numbers moved (ra
   expect(rankable(b, { ...b, partial: [p('2.85714', '1.08e-4', 15185)] })).toBe(false);
 });
 
+test('a figure that only misses a buff it would add (node 306: a timed attribute buff not built) is a lower bound: ranked, the omission kept on it', () => {
+  const b = { life100: 1, life0: 1, kill: 1, partial: [] as string[] };
+  const lower = 'not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets) - affix class 1 row 1';
+  expect(rankable(b, { ...b, partial: [lower] })).toBe(true);
+  expect(rankable(b, { ...b, partial: [lower, 'not in this figure: node 627 (comps 5)'] })).toBe(false);
+});
+
 describe('step', () => {
   test('all unseen candidates are in flight at once, not one batch per slow figure', async () => {
     const { ev, peak } = stub(8, 5);
