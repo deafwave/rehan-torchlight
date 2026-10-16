@@ -11,6 +11,10 @@ export interface LibraryAffix {
 
 /** Page price keys: the English ember names. */
 export const EMBER_FOR_GRADE = { Basic: 'Precious Ember', Advanced: 'Matchless Ember', Ultimate: 'Ultimate Ember' } as const;
+/** embers one craft consumes: 2 on a two-handed weapon, 1 on anything else (the owner, in game 2026-10-16: a basic-affix craft on his bow takes 2
+ *  Precious Embers + 10 Flame Sand, "2 embers because it's a 2h weapon"; Flame Sand is worth about nothing) */
+const TWO_HANDED = new Set(['Two-Handed Sword', 'Two-Handed Hammer', 'Two-Handed Axe', 'Tin Staff', 'Cudgel', 'Bow', 'Crossbow', 'Musket', 'Fire Cannon']);
+export const embersPerCraft = (gearType: string) => (TWO_HANDED.has(gearType) ? 2 : 1);
 
 export interface CraftOption {
   affixId: string; tierAffixId: string; gearType: string; grade: LibraryAffix['grade']; side: LibraryAffix['side'];
@@ -37,7 +41,7 @@ export function craftOptions(library: LibraryAffix[], gearType: string, itemLeve
       const atLeast = allowed.filter(x => tierRank(x.tier) <= tierRank(t.tier)).reduce((s, x) => s + x.weight, 0);
       out.push({ affixId: a.affixId, tierAffixId: t.tierAffixId, gearType, grade: a.grade, side: a.side, tier: t.tier,
                  text: topRoll(t.text), requiredLevel: t.requiredLevel,
-                 expectedEmbers: 1 / (pAffix * (atLeast / total)), ember: EMBER_FOR_GRADE[a.grade] });
+                 expectedEmbers: embersPerCraft(gearType) / (pAffix * (atLeast / total)), ember: EMBER_FOR_GRADE[a.grade] });
     }
   }
   return out;

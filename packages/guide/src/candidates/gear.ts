@@ -3,7 +3,7 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { table as catalogTable } from '../pin';
-import { craftOptions, type LibraryAffix } from '../craft';
+import { craftOptions, EMBER_FOR_GRADE, embersPerCraft, topRoll, type LibraryAffix } from '../craft';
 import affixIds from '../data/affix-ids.json';
 import { costOf, priceOfGold } from '../priceOf';
 import type { Change, GenCtx, Generator, Move, Skill, State } from '../types';
@@ -302,3 +302,41 @@ export const gearMoves: Generator = (s: State, ctx: GenCtx): Move[] => {
   if (moves.length) ctx.notSearched.add('rolled base implicit (BAffixInfoList) not modelled: its pool is not decoded; crafted bases are priced without it');
   return moves;
 };
+
+/** One craft rolls a random affix of the ember's grade for the gear type (affix weight) at a random tier the item level allows (tier weight); the owner keeps
+ *  it or not (the owner, 2026-10-16: "Random, but you can keep or replace"). Every outcome on a rare you wear, with its chance per craft: kept, it goes on its
+ *  side (added while the side has room, else in place of that side's lowest-tier mod). An affix family the item already has is not an outcome. */
+export interface RollOutcome { p: number; label: string; changes: Change[] }
+export interface RollPlan { slot: string; ember: string; perCraft: number; outcomes: RollOutcome[] }
+export function rollPlans(s: State, ctx: GenCtx): RollPlan[] {
+  const out: RollPlan[] = [];
+  for (const it of s.loadout.gear as GearItem[]) {
+    const slot = it.slot;
+    if (!slot || isUnique(it)) continue;
+    const baseId = currentBase(it), base = baseId === null ? undefined : cat().rows.get(baseId);
+    if (baseId === null || !base?.lib) continue;
+    const dump = toDump(it, baseId, base.name, ctx.level);
+    if (!dump) continue;
+    const have = new Set(Object.values(dump.modifiers).flat().map(m => Math.floor(m.id / 100)));
+    const pool = library.filter(a => a.slot === base.lib);
+    for (const grade of ['Basic', 'Advanced', 'Ultimate'] as const) {
+      const g = pool.filter(a => a.grade === grade), gw = g.reduce((t, a) => t + a.weight, 0), outcomes: RollOutcome[] = [];
+      if (!gw) continue;
+      for (const a of g) {
+        const tiers = a.tiers.filter(t => t.requiredLevel <= dump.level), tw = tiers.reduce((t, x) => t + x.weight, 0);
+        if (!tw) continue;
+        const side = a.side.toLowerCase(), list = dump.modifiers[side] ?? [];
+        const victim = list.length >= SIDE_MAX ? [...list].sort((x, y) => (y.id % 100) - (x.id % 100))[0] : undefined;   // the lowest tier: the highest tier digit
+        for (const t of tiers) {
+          const id = Number(t.tierAffixId), dyn = mids(id);
+          if (UNVERIFIED.has(t.tierAffixId) || !dyn || (have.has(Math.floor(id / 100)) && Math.floor((victim?.id ?? -1) / 100) !== Math.floor(id / 100))) continue;
+          const next = victim ? list.map(m => (m === victim ? { id, dynArgs: dyn } : m)) : [...list, { id, dynArgs: dyn }];
+          outcomes.push({ p: (a.weight / gw) * (t.weight / tw), label: `${t.tier} ${topRoll(t.text).replace(/\n/g, ' / ')} (${side})${victim ? ' replacing your lowest-tier ' + side : ''}`,
+            changes: swap(slot, withMods(dump, { [side]: next }, `guide-roll-${slot}-${id}`)) });
+        }
+      }
+      if (outcomes.length) out.push({ slot, ember: EMBER_FOR_GRADE[grade], perCraft: embersPerCraft(base.lib), outcomes });
+    }
+  }
+  return out;
+}

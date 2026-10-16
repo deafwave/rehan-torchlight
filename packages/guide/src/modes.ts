@@ -9,12 +9,13 @@ import { pactMoves } from './candidates/pacts';
 import { prismMoves } from './candidates/prisms';
 import { slateMoves } from './candidates/slates';
 import { switchWithPage, targetPage } from './candidates/switch';
+import { rollPlans } from './candidates/gear';
 import { targetMoves } from './candidates/target';
 import { talentMoves, talentPointMoves } from './candidates/talents';
 import { traitMoves } from './candidates/traits';
 import { type EtorHistory, type EtorItems, legBooks, LEG_WINDOWS, snapshotBook } from './pricing';
 import { CULL_NOT_COUNTED } from './kill';
-import { ctxOfState, pieceKey, DEFAULT_KNOBS, type Knobs, newMem, overBudget, path, rankableMove, resolve, spendFree, step, switchNote } from './search';
+import { ctxOfState, pieceKey, DEFAULT_KNOBS, type Knobs, newMem, overBudget, path, rankable, rankableMove, resolve, spendFree, step, switchNote } from './search';
 import { ICE_SHOT_INPUTS, idealStartNotes } from './start';
 import { setTalentPoints } from './talentRules';
 import { talentName } from './names';
@@ -251,6 +252,29 @@ export async function nextBuys(s: State, ev: Evaluator, acq: Generator[], ctx: G
 /** A real build the model stops on is priced without the pieces that stop it: up to four rounds, each leaves out the first piece (a non-main skill with its
  *  supports, a pactspirit with its contract points, a non-weapon gear item, a slate, a kismet, the hero memories) whose removal clears the stop or moves it on;
  *  each one is named in `out`. The main skill, the weapon and the traits are never left out. */
+/** Crafting a rare you wear, as it is done: roll, keep a result worth it (rollPlans). Per item and ember: every outcome priced on the build, then the keep-list
+ *  (the best outcomes first) that buys the most damage per FE - expected crafts 1 / P(any kept), expected gain the outcomes' chance-weighted mean. */
+async function rollAdvice(ev: Evaluator, state: State, ctx: GenCtx, base: Figure, books: PriceBook): Promise<NextBuy[]> {
+  const out: NextBuy[] = [];
+  for (const plan of rollPlans(state, ctx)) {
+    const price = books.price(plan.ember, state.level);
+    if (price === null) continue;
+    const r = await Promise.all(plan.outcomes.map(async (o) => ({ o, g: (await ev.run(state.loadout, o.changes, ctxOfState(state))).figure })));
+    const good = r.filter((x) => !x.g.stop && rankable(base, x.g) && x.g.kill > base.kill).map((x) => ({ ...x, gain: x.g.kill / base.kill })).sort((a, b) => b.gain - a.gain);
+    let best: { k: number; eg: number; cost: number; crafts: number; score: number } | undefined, P = 0, PG = 0;
+    good.forEach((x, i) => {
+      P += x.o.p; PG += x.o.p * x.gain;
+      const eg = PG / P, crafts = 1 / P, cost = crafts * plan.perCraft * price, score = Math.log(eg) / Math.max(cost, 1e-9);
+      if (eg > 1.005 && (!best || score > best.score)) best = { k: i + 1, eg, cost, crafts, score };
+    });
+    if (!best) continue;
+    const b = best as { k: number; eg: number; cost: number; crafts: number }, keep = good.slice(0, b.k);
+    out.push({ kind: 'craft', label: `Craft on ${plan.slot} with ${plan.ember} (${plan.perCraft} per craft): keep any of ${b.k} result${b.k === 1 ? '' : 's'} - ${keep.slice(0, 4).map((x) => x.o.label).join('; ')}${b.k > 4 ? '; or another of the list' : ''} - about ${Math.ceil(b.crafts)} crafts`,
+      gain: b.eg, kill: base.kill * b.eg, costFE: b.cost, buy: { name: plan.ember, qty: b.crafts * plan.perCraft } });
+  }
+  return out;
+}
+
 async function priceable(ev: Evaluator, state: State, out: string[]): Promise<State> {
   type L = Record<string, any>;   // eslint-disable-line @typescript-eslint/no-explicit-any
   const lang = () => table<{ rows: Record<string, string> }>('lang_en').rows;
@@ -351,8 +375,8 @@ export async function runAdvise(ev: Evaluator, state: State, k: Partial<Knobs> =
   // one row per support gem: a gem goes in one socket of a skill (the sockets it could take are alternatives, not steps)
   const gem = (n: NextBuy) => (n.kind === 'support' ? / with (.+?)$/.exec(n.label)?.[1] : undefined), bestGem = new Map<string, number>();
   for (const n of all) { const g = gem(n); if (g && n.gain > (bestGem.get(g) ?? -Infinity)) bestGem.set(g, n.gain); }
-  const next = all.filter((n) => { const sl = n.kind === 'pact' && /in battle slot (\d)/.exec(n.label)?.[1], g = gem(n);
-    return (!sl || n.gain === best.get(sl)) && (!g || n.gain === bestGem.get(g)); });
+  const next = [...all.filter((n) => { const sl = n.kind === 'pact' && /in battle slot (\d)/.exec(n.label)?.[1], g = gem(n);
+    return (!sl || n.gain === best.get(sl)) && (!g || n.gain === bestGem.get(g)); }), ...await rollAdvice(ev, state, ctxOf(state), first.figure, books)];
   const bought = Object.fromEntries(next.filter((n) => n.buy).map((n) => [n.buy!.name, books.price(n.buy!.name, state.level)]));
   const withNext = { ...base, legs, startNotes, next, prices: bought, ...(sw ? { switch: sw } : {}) };
   onStep?.({ ...withNext, knobs: { ...base.knobs, partialRun: true }, inputs: first.inputs, start: first.figure, steps: [], notSearched: [], unpriced: [], notCalculable: [] });
