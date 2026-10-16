@@ -82,7 +82,7 @@ describe('fetchSnapshot', () => {
     expect(f).toHaveBeenCalledWith('https://etor-beta.710421059.xyz/etor-api/api/prices-snapshot/1501', { headers: { 'x-frontend-version': '1.0.6.2' } });
     const b = snapshotBook(out);
     expect(b.price('Arminius Guillotine', 60)).toBe(12.5);   // overlaid
-    expect(b.price(110104, 60)).toBe(snapshotBook(I).price(110104, 60));   // not in the live body: stored price
+    expect(b.price(110104, 60)).toBeNull();   // not in the live body: not on the market this season (unpriced, never ranked)
     expect(out.items).toHaveLength(I.items.length);          // unknown live id 999999 has no name: dropped
     expect(out.fetchedAt).toBe('2026-10-14T00:00:00.000Z');
   });

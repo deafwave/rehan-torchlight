@@ -280,14 +280,21 @@ async function priceable(ev: Evaluator, state: State, out: string[]): Promise<St
 export async function runAdvise(ev: Evaluator, state: State, k: Partial<Knobs> = {}, prices?: PriceBook, onStep?: (out: GuideOut) => void): Promise<GuideOut> {
   const K = { ...DEFAULT_KNOBS, ...k };
   const books = prices ?? snapshotBook(localItems());
-  const acq = [ownedGear, ...ALL.map(only(true))], recon = ALL.map(only(false));
+  const acq0 = [ownedGear, ...ALL.map(only(true))], recon = ALL.map(only(false));
   const base = { mode: 'advise' as const, pin: ev.pin, etor: { season: books.season, fetchedAt: books.fetchedAt }, knobs: { ...K, fight: ev.fight, fightNote: ev.fightNote, rollBudget: ev.rollBudget, target: ev.target, fe: state.fe, level: state.level, skill: state.skill },
     character: { level: state.level, skill: state.skill, fe: state.fe, owned: state.owned.length,
       gear: ((state.loadout.gear ?? []) as { slot?: string; label: string }[]).map((g) => ({ slot: g.slot ?? '', label: g.label })) } };
   // Hammer of Ash: the first boss (in order) the character does not kill within moveOnSeconds; the last boss when it kills them all
   const targets = K.targets ?? BOSS_ORDER, moveOn = K.moveOnSeconds ?? 10, passed: string[] = [];
-  const leftOut: string[] = [];
+  const leftOut: string[] = [], before = state.loadout as { pacts?: { slot?: number }[]; gear?: { slot?: string }[] };
   state = await priceable(ev, state, leftOut);
+  // a piece left out cannot be compared with: no move replaces it (its slot's figure is measured empty, so any swap would look like a gain)
+  const after = state.loadout as typeof before;
+  const outPacts = new Set((before.pacts ?? []).filter((p) => !(after.pacts ?? []).includes(p)).map((p) => p.slot));
+  const outGear = new Set((before.gear ?? []).filter((g) => !(after.gear ?? []).includes(g)).map((g) => g.slot));
+  type Ch = { kind: string; slot?: number | string; changes?: Ch[] };
+  const slotsOf = (cs: Ch[]): Ch[] => cs.flatMap((c) => (c.kind === 'multi' ? slotsOf(c.changes ?? []) : [c]));
+  const touchesOut = (m: Move) => slotsOf(m.changes as Ch[]).some((c) => (c.kind === 'pact' && outPacts.has(c.slot as number)) || (c.kind === 'gear' && outGear.has(c.slot as string)));
   let first = await ev.run(state.loadout, [], ctxOfState(state));
   if (state.skill === 'hoa') for (const t of targets) {
     state = { ...state, target: t };
@@ -300,6 +307,7 @@ export async function runAdvise(ev: Evaluator, state: State, k: Partial<Knobs> =
     return { ...base, legs, start: first.figure, inputs: first.inputs, steps: [], notSearched: [], unpriced: [],
       notCalculable: [`${state.skill}${state.target ? ` on ${bossName(state.target)}` : ''} cannot be priced yet: ${first.figure.stop}`] };
   }
+  const acq = acq0.map((g): Generator => (st, c) => g(st, c).filter((m) => !touchesOut(m)));
   const startNotes = [...leftOut, ...(passed.length ? [`${passed.join(', ')} (under ${moveOn} s): the advice is for ${bossName(state.target!)}`] : [])];
   const ctxOf = (s: State): GenCtx => ({ prices: books, level: s.level,
     notSearched: new Set(s.skill === 'iceShot' ? ['switch to Hammer of Ash: planned in the ideal guide, not searched for an Ice Shot character'] : CULL_NOT_COUNTED) });
@@ -324,7 +332,11 @@ export async function runAdvise(ev: Evaluator, state: State, k: Partial<Knobs> =
       sw = { label: m.label, costFE: m.costFE, target: targets[0], figure: e.figure };
     } else startNotes.push(`Hammer of Ash switch: ${[...ctx.notSearched].find((x) => /switch waits/.test(x)) ?? 'not offered yet'}`);
   }
-  const next = await nextBuys(state, ev, acq, ctxOf(state), first.figure);
+  // one pactspirit per battle slot: the best (every owned one is priced; a list of near-equal swaps is noise)
+  const best = new Map<string, number>();
+  const all = await nextBuys(state, ev, acq, ctxOf(state), first.figure);
+  for (const n of all) { const sl = n.kind === 'pact' && /in battle slot (\d)/.exec(n.label)?.[1]; if (sl && n.gain > (best.get(sl) ?? -Infinity)) best.set(sl, n.gain); }
+  const next = all.filter((n) => { const sl = n.kind === 'pact' && /in battle slot (\d)/.exec(n.label)?.[1]; return !sl || n.gain === best.get(sl); });
   const bought = Object.fromEntries(next.filter((n) => n.buy).map((n) => [n.buy!.name, books.price(n.buy!.name, state.level)]));
   const withNext = { ...base, legs, startNotes, next, prices: bought, ...(sw ? { switch: sw } : {}) };
   onStep?.({ ...withNext, knobs: { ...base.knobs, partialRun: true }, inputs: first.inputs, start: first.figure, steps: [], notSearched: [], unpriced: [], notCalculable: [] });

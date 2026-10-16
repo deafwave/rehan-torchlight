@@ -78,7 +78,8 @@ export async function fetchSeason(fetchImpl: typeof fetch = fetch): Promise<numb
 }
 
 /** Live prices (`/prices-snapshot/{season}` = `{ success, data: [{ id: "110101", price: 10.08, updatedAt }] }`) laid over the local items table,
- *  which supplies the names: a row the live body prices takes the live price, every other row keeps its stored one. */
+ *  which supplies the names: a row the live body prices takes the live price; every other row is not on the market this season (price null: unpriced,
+ *  never ranked; user, 2026-10-16: "you keep recommending things that don't exist on the market", last season's stored price is not a price now). */
 export async function fetchSnapshot(season: number, local: EtorItems, fetchImpl: typeof fetch = fetch, now = () => new Date()): Promise<EtorItems> {
   const res = await fetchImpl(`${API}/prices-snapshot/${season}`, { headers: HEADERS });
   if (!res.ok) throw new Error(`etor snapshot ${season}: HTTP ${res.status}`);
@@ -89,5 +90,5 @@ export async function fetchSnapshot(season: number, local: EtorItems, fetchImpl:
     if (r && (typeof r.id === 'string' || typeof r.id === 'number') && typeof r.price === 'number' && Number.isFinite(r.price)) live.set(String(r.id), r.price);
   if (!live.size) throw new Error(`etor snapshot ${season}: no usable { id, price } rows in the response`);
   // the book names the season it fetched: the local file's name only when it is that season's file, else the id
-  return { ...local, seasonId: season, season: String(local.seasonId) === String(season) ? local.season : String(season), fetchedAt: now().toISOString(), items: local.items.map((i) => (live.has(String(i.id)) ? { ...i, price: live.get(String(i.id))! } : i)) };
+  return { ...local, seasonId: season, season: String(local.seasonId) === String(season) ? local.season : String(season), fetchedAt: now().toISOString(), items: local.items.map((i) => ({ ...i, price: live.has(String(i.id)) ? live.get(String(i.id))! : null })) };
 }
