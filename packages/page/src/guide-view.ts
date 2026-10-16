@@ -200,13 +200,54 @@ export function treeGrid(t: TreeView): string {
   const depth = Math.max(1, ...t.nodes.map((n) => n.row));
   const cells = t.nodes.map((n) => `<div class="tn k${n.kind}${n.pts ? ' on' : ''}" style="grid-column:${n.row};grid-row:${n.col}" title="${esc(`${n.name} (${n.pts}/${n.max})`)}">${n.pts ? `${n.pts}/${n.max}` : ''}</div>`).join('');
   const cores = t.cores.map((c) => `<span class="tc${c.taken ? ' on' : ''}" title="unlocks at ${c.need} points">${esc(c.name)}</span>`).join('');
-  return `<div class="gl-tree"><b>${esc(t.name)}: ${t.points} points</b><div class="tg" style="grid-template-columns:repeat(${depth},2.4rem)">${cells}</div>${cores ? `<div class="tcs">${cores}</div>` : ''}</div>`;
+  return `<div class="gl-tree"><b>${esc(t.name)}: ${t.points} points</b><div class="tg" style="grid-template-columns:repeat(${depth},2rem)">${cells}</div>${cores ? `<div class="tcs">${cores}</div>` : ''}</div>`;
 }
-const sheetLine = (x: string, trees: TreeView[] = []) => {
-  const t = trees.find((v) => x.startsWith(`${v.name}: `));
-  return t ? `<li class="gl-tline" tabindex="0">${esc(x)} <span class="gl-thint">(hover: tree)</span><div class="gl-tpop">${treeGrid(t)}</div></li>` : `<li>${esc(x)}</li>`;
-};
-const buildOf = (l: Leg) => (l.build?.length ? `<details class="gl-build" open><summary>The build at the end of this leg</summary>${l.build.map((b) => `<h4>${esc(b.section)}</h4><ul>${b.lines.map((x) => sheetLine(x, b.trees)).join('')}</ul>`).join('')}</details>` : '');
+const SLOT_NAME: Record<string, string> = { mainHand: 'Weapon', offHand: 'Off-hand', helmet: 'Helmet', chest: 'Chest', gloves: 'Gloves', boots: 'Boots', belt: 'Belt', necklace: 'Necklace', ring1: 'Ring 1', ring2: 'Ring 2' };
+const SLOT_ORDER = ['mainHand', 'offHand', 'helmet', 'chest', 'gloves', 'boots', 'belt', 'necklace', 'ring1', 'ring2'];
+type Section = { section: string; lines: string[]; trees?: TreeView[] };
+/** gear lines "slot: Item - mod; mod (+N more mods)" as slot cards */
+function gearCards(lines: string[]): string {
+  const cards = lines.map((x) => /^(\w+): (.*?)(?: - (.*?))?(?: \(\+(\d+) more mods\))?$/.exec(x)).filter((m): m is RegExpExecArray => !!m)
+    .sort((a, b) => SLOT_ORDER.indexOf(a[1]) - SLOT_ORDER.indexOf(b[1]))
+    .map(([, slot, name, mods, more]) => `<div class="bc"><div class="bc-k">${esc(SLOT_NAME[slot] ?? slot)}</div><div class="bc-n">${esc(name)}</div>`
+      + (mods ? `<ul class="bc-m">${mods.split('; ').map((m) => `<li>${esc(m)}</li>`).join('')}${more ? `<li class="bc-x">+${more} more mods (uncraftable)</li>` : ''}</ul>` : '') + '</div>');
+  return `<div class="bgrid">${cards.join('')}</div>`;
+}
+/** skill lines "active 0: Name (level N)" each followed by "  + Support (level N)" as cards with support chips */
+function skillCards(lines: string[]): string {
+  const groups: { head: string; kind: string; supports: string[] }[] = [];
+  for (const x of lines) {
+    const sup = /^\s+\+ (.*) \(level (\d+)\)$/.exec(x), own = /^(active|passive) (\d+): (.*) \(level (\d+)\)$/.exec(x);
+    if (sup && groups.length) groups[groups.length - 1].supports.push(`${sup[1]} <span class="lv">${sup[2]}</span>`);
+    else if (own) groups.push({ head: `${esc(own[3])} <span class="lv">lv ${own[4]}</span>`, kind: own[1] === 'active' ? (own[2] === '0' ? 'Main skill' : 'Active') : 'Passive', supports: [] });
+  }
+  return `<div class="bgrid">${groups.map((g) => `<div class="bc${g.kind === 'Main skill' ? ' main' : ''}"><div class="bc-k">${g.kind}</div><div class="bc-n">${g.head}</div>`
+    + `<div class="chips">${g.supports.map((x) => `<span class="chip">${x.replace(/^([^<]*)/, (t) => esc(t))}</span>`).join('')}</div></div>`).join('')}</div>`;
+}
+/** cores as badges, every tree drawn (taken nodes lit, names on hover); the old text lines folded below */
+function talentView(b: Section): string {
+  const cores = b.lines.filter((x) => x.startsWith('core: ')).map((x) => `<span class="tc on">${esc(x.slice(6))}</span>`).join('');
+  return `<div class="tcs">${cores}</div><div class="trees">${(b.trees ?? []).map(treeGrid).join('')}</div>`
+    + `<details class="gl-tx"><summary>as text</summary><ul>${b.lines.filter((x) => !x.startsWith('core: ')).map((x) => `<li>${esc(x)}</li>`).join('')}</ul></details>`;
+}
+/** memories and pactspirits as cards; no pactspirit in the plan yet said so */
+function companionCards(lines: string[]): string {
+  const pacts = lines.map((x) => /^pactspirit(?: slot (\d+))?: (.*) \(rank (\d+)\)$/.exec(x)).filter((m): m is RegExpExecArray => !!m);
+  const mems = lines.map((x) => /^memory (\S+): (.*)$/.exec(x)).filter((m): m is RegExpExecArray => !!m);
+  return `<h5>Pactspirits (battle slots)</h5>` + (pacts.length
+    ? `<div class="bgrid">${pacts.sort((a, b) => Number(a[1]) - Number(b[1])).map(([, slot, name, rank]) => `<div class="bc pact"><div class="bc-k">Slot ${slot ?? '?'}</div><div class="bc-n">${esc(name)}</div><div class="lv">level ${Number(rank) + 1}</div></div>`).join('')}</div>`
+    : '<p class="bnote">None in the plan at this point: the model prices no pactspirit for this leg.</p>')
+    + `<h5>Hero memories</h5><div class="bgrid">${mems.map(([, slot, name]) => `<div class="bc"><div class="bc-k">Memory ${esc(slot)}</div><div class="bc-n">${esc(name)}</div></div>`).join('')}</div>`;
+}
+function sectionView(b: Section): string {
+  if (b.section === 'Gear') return `<h4>Gear</h4>${gearCards(b.lines)}`;
+  if (b.section === 'Skills') return `<h4>Skills</h4>${skillCards(b.lines)}`;
+  if (b.section.startsWith('Talents')) return `<h4>${esc(b.section)}</h4>${talentView(b)}`;
+  if (b.section.startsWith('Hero memories')) return companionCards(b.lines);
+  return `<h4>${esc(b.section)}</h4><ul>${b.lines.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>`;
+}
+const buildOf = (l: Leg) => (l.build?.length ? `<details class="gl-build" open><summary>The build at the end of this leg</summary>${l.build.map(sectionView).join('')}`
+  + (l.build.some((b) => b.section.startsWith('Hero memories')) ? '' : companionCards([])) + '</details>' : '');
 function legPanel(g: GuideOut, l: Leg, i: number): string {
   if (l.reached === false) {   // a boss the plan did not reach: the plan's last build there
     const t = killTime(l.start);

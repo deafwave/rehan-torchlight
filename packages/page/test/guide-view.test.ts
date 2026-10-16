@@ -52,11 +52,17 @@ describe('guide view', () => {
     expect(h).toContain('kill <b>Cube 3</b> as fast as possible');
     expect(h).toContain('5.00 s');
   });
-  it('a talent tree line opens its tree: taken nodes lit with points, every node named, its cores', () => {
+  it('the build shows every talent tree drawn (taken nodes lit with points, every node named), gear and pactspirits as cards', () => {
     const tree = { tree: 12, name: 'Prophet', points: 3, nodes: [{ id: 12010100, row: 1, col: 1, kind: 1, max: 3, pts: 3, name: 'Cold Damage', prereq: [] }, { id: 12020100, row: 2, col: 1, kind: 3, max: 3, pts: 0, name: 'Frost', prereq: [12010100] }],
       cores: [{ id: 12001400, need: 24, name: 'Steady Accumulation', taken: true }] };
-    const h = renderGuide({ ...g, legs: [{ skill: 'hoa', target: 'cube1', firstStep: 0, start: g.start, build: [{ section: 'Talents (3 points)', lines: ['Prophet: Cold Damage x3'], trees: [tree] }] }] });
-    expect(h).toContain('class="gl-tline"');
+    const build = [{ section: 'Gear', lines: ['mainHand: Sierra Reverberation Maul - T1 +6 to Attack Skill Level (prefix) (+2 more mods)'] },
+      { section: 'Talents (3 points)', lines: ['core: Steady Accumulation', 'Prophet: Cold Damage x3'], trees: [tree] },
+      { section: 'Hero memories, pactspirits', lines: ['memory 1: Memory of Origin', 'pactspirit slot 3: Kitty Express (rank 5)'] }];
+    const h = renderGuide({ ...g, legs: [{ skill: 'hoa', target: 'cube1', firstStep: 0, start: g.start, build }] });
+    expect(h).toContain('<div class="trees"><div class="gl-tree">');
+    expect(h).toContain('<div class="bc-k">Weapon</div><div class="bc-n">Sierra Reverberation Maul</div>');
+    expect(h).toContain('<div class="bc pact"><div class="bc-k">Slot 3</div><div class="bc-n">Kitty Express</div><div class="lv">level 6</div></div>');
+    expect(renderGuide({ ...g, legs: [{ skill: 'iceShot', target: null, firstStep: 0, start: g.start, build: [build[0]] }] })).toContain('None in the plan at this point');
     expect(h).toContain('<div class="tn k1 on" style="grid-column:1;grid-row:1" title="Cold Damage (3/3)">3/3</div>');
     expect(h).toContain('title="Frost (0/3)"');
     expect(h).toContain('<span class="tc on" title="unlocks at 24 points">Steady Accumulation</span>');

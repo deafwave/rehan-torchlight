@@ -769,3 +769,27 @@ a.t-branch:hover,a.t-branch:focus-visible{text-decoration:underline}
 .gl-tree .tcs { display: flex; flex-wrap: wrap; gap: .3rem; max-width: 24rem; }
 .gl-tree .tc { font-size: .75em; padding: .1rem .4rem; border: 1px solid #3a3f4b; border-radius: 4px; opacity: .55; }
 .gl-tree .tc.on { opacity: 1; border-color: #f0c060; color: #f0c060; }
+/* build panel: cards */
+.gl-build h4 { margin: 1rem 0 .4rem; font-size: 1rem; letter-spacing: .02em; }
+.gl-build h5 { margin: .8rem 0 .35rem; font-size: .9rem; opacity: .85; }
+.bgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: .5rem; }
+.bc { background: #131c27; border: 1px solid #2a3646; border-radius: 8px; padding: .5rem .65rem; }
+.bc.main { border-color: #6fb7d6; }
+.bc.pact { border-color: #b5852e; }
+.bc-k { font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; opacity: .65; }
+.bc-n { font-weight: 600; margin: .1rem 0 .25rem; }
+.bc-m { margin: 0; padding-left: 1rem; font-size: .78rem; opacity: .9; }
+.bc-x { opacity: .6; list-style: none; margin-left: -1rem; }
+.lv { font-size: .72rem; opacity: .7; font-weight: 400; }
+.chips { display: flex; flex-wrap: wrap; gap: .25rem; }
+.chip { font-size: .75rem; background: #1d2a3a; border: 1px solid #2f4258; border-radius: 999px; padding: .1rem .5rem; }
+.bnote { font-size: .85rem; opacity: .75; margin: .2rem 0; }
+.trees { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: .5rem; }
+.trees .gl-tree { background: #131c27; border: 1px solid #2a3646; border-radius: 8px; padding: .5rem .6rem; }
+.trees .gl-tree .tg { grid-template-rows: repeat(5, 2rem); gap: .25rem; }
+.trees .gl-tree .tn { width: 2rem; height: 2rem; cursor: help; }
+.gl-tx { margin-top: .4rem; font-size: .8rem; opacity: .8; }
+.gl-build > .tcs { display: flex; flex-wrap: wrap; gap: .35rem; margin: .2rem 0 .3rem; }
+.gl-build > .tcs .tc { font-size: .85rem; opacity: 1; }
+.chip { color: #d8e4ef; }
+.chip .lv { color: #9fb3c6; opacity: 1; }
