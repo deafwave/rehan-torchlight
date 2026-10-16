@@ -8,7 +8,7 @@ import { kismetMoves } from './candidates/kismets';
 import { pactMoves } from './candidates/pacts';
 import { prismMoves } from './candidates/prisms';
 import { slateMoves, slateWants } from './candidates/slates';
-import { talentMoves } from './candidates/talents';
+import { talentMovesWith } from './candidates/talents';
 import { targetMoves } from './candidates/target';
 import { bossName, ownedGear, ownedUniques } from './modes';
 import { ctxOfState, pieceKey, rankable } from './search';
@@ -18,8 +18,9 @@ import type { Evaluator, Figure, GenCtx, GuideOut, Move, PriceBook, State } from
 
 export interface PlanOpts { target: string; goal: number; maxSteps: number;
   /** FE of a slate carrying one wanted line, by line (the owner's prices); others `slateFE` */ slatePrices: [RegExp, number][]; slateFE: number;
-  /** FE of the talent prism like the example build's (the owner's price) */ prismFE: number }
-export const DEFAULT_PLAN: PlanOpts = { target: 'traveler', goal: 2e11, maxSteps: 30, slatePrices: [[/Agility Blessing on Critical Strike/, 100], [/All Skills' Levels/, 270]], slateFE: 100, prismFE: 555 };
+  /** FE of the talent prism like the example build's (the owner's price) */ prismFE: number;
+  /** talent nodes whose points never move (set by runPlan) */ locked?: Set<number> }
+export const DEFAULT_PLAN: PlanOpts = { target: 'traveler', goal: 2e11, maxSteps: 60, slatePrices: [[/Agility Blessing on Critical Strike/, 100], [/All Skills' Levels/, 270]], slateFE: 100, prismFE: 555 };
 
 /** the owner's rules the candidates must keep (2026-10-16) */
 const RULES = [
@@ -27,24 +28,27 @@ const RULES = [
   'A Magnificent or Noble support is never levelled (max level 5, levelled by consuming copies).',
   'A legendary you wear or own is never bought.',
   'A change that unseals an aura (Sealed Mana over your Mana, MANA2) is refused.',
+  'Your Paralysis and Sealed Mana Compensation talent points stay, and so do points on a node the model prices at exactly 0 (it cannot judge them).',
 ];
+const KEPT = /Paralysis|Sealed Mana Compensation/;
 const CONVERSION = /Converts? .*Physical Damage to (Cold|Lightning|Fire)|Physical .*->.*(Cold|Lightning|Fire)/i;
 
+/** the legendaries you wear or own: never bought, also after a step takes one off (a new one is priced at the middle of its rolls; yours is the roll there is) */
+const heldUniques = (s: State) => new Set([...ownedUniques(s, true).values(), ...ownedUniques(s).values()]);
 type Cand = { key: string; label: string; costFE: number; kind: string; note?: string; changes: Move['changes'] };
 const fits = (f: Figure) => !f.mana || 'stop' in f.mana || f.mana.fits;
 
-export function candidates(s: State, ctx: GenCtx, o: PlanOpts, lines: { id: number; name: string }[]): Cand[] {
+export function candidates(s: State, ctx: GenCtx, o: PlanOpts, lines: { id: number; name: string }[], held = heldUniques(s)): Cand[] {
   const L = s.loadout as { skills: { name: string; level: number; sid: number; place: { kind: string; slot?: number; ownerKind?: string; ownerSlot?: number } }[]; slateItems?: Record<string, unknown>[] };
-  const worn = new Set(ownedUniques(s, true).values()), own = new Set(ownedUniques(s).values());
   const out: Cand[] = [];
   const add = (m: Move, label = m.label) => {
     const t = m.then, cost = t ? t.costFE : m.costFE;
     if (cost === null || m.minLevel > s.level) return;
     const u = /^Unique (.+) in \w+$/.exec(m.label)?.[1];
-    if (u && (worn.has(u) || own.has(u))) return;
+    if (u && held.has(u)) return;
     out.push({ key: `${m.kind}|${label}`, label: t ? `${label} (${t.note})` : label, costFE: cost, kind: m.kind, changes: t ? t.changes : m.changes });
   };
-  for (const g of [ownedGear, gearMoves, gemMoves, kismetMoves, pactMoves, prismMoves, slateMoves, talentMoves, whiteBaseMoves]) for (const m of g(s, ctx)) add(m);
+  for (const g of [ownedGear, gearMoves, gemMoves, kismetMoves, pactMoves, prismMoves, slateMoves, talentMovesWith({ maxShifts: 60, locked: o.locked }), whiteBaseMoves]) for (const m of g(s, ctx)) add(m);
   for (const m of targetMoves(s, ctx)) {
     // the example build's skill groups are not offered: they replace a whole group at a cost they do not carry (a socket's gem is gemMoves', priced)
     if (/talent prism/.test(m.label)) add({ ...m, costFE: o.prismFE }, 'A talent prism like the example build (Onslaughter crit and two-handed mirrors) at your price');
@@ -82,6 +86,11 @@ export async function runPlan(ev: Evaluator, s0: State, books: PriceBook, k: Par
   const C = ctxOfState(s), first = (await ev.run(s.loadout, [], C)).figure;
   if (first.stop) throw new Error(`your character cannot be priced on ${bossName(o.target)}: ${first.stop}`);
   const lines = (await slateWants(ev, s, first, 0, 25)).filter((x) => !CONVERSION.test(x.name));
+  // talent points that stay where they are: the owner's (Paralysis is applied in game, Sealed Mana Compensation keeps the auras on) and a node the model prices
+  // at exactly 0 (a state it does not evaluate, so it cannot judge the node)
+  const held = Object.entries((s.loadout.talents ?? {}) as Record<string, number>).filter(([, p]) => p > 0).map(([n]) => +n);
+  const zero = await Promise.all(held.map(async (n) => ((g) => !g.stop && g.kill === first.kill)((await ev.run(s.loadout, [{ kind: 'talent', node: n, points: 0 } as never], C)).figure)));
+  o.locked = new Set(held.filter((n, i) => zero[i] || KEPT.test(talentName(n))));
   const notes = [...RULES, ...(first.mana && !('stop' in first.mana) ? [`Sealed Mana now: ${first.mana.reserved} of ${first.mana.capacity} (${first.mana.margin} free); Life sealed ${first.mana.life.reserved} of ${first.mana.life.capacity}.`] : [`Sealed Mana: not calculated (${first.mana && 'stop' in first.mana ? first.mana.stop : 'no figure'}); changes are not checked against it.`])];
   const steps: NonNullable<GuideOut['plan']>['steps'] = [], refused = new Map<string, string>(), score = new Map<string, number>(), taken = new Set<string>();
   let f = first, spent = 0;
@@ -102,7 +111,8 @@ export async function runPlan(ev: Evaluator, s0: State, books: PriceBook, k: Par
     start: first, startNotes: notes, steps: [], notSearched: [...ctx.notSearched], unpriced: [], notCalculable: [...refused].map(([l, w]) => `${l}: ${w}`),
     slates: lines.slice(0, 25), plan: { target: o.target, goal: o.goal, at: new Date().toISOString(), start: { label: 'your character as read from the game', figure: first }, steps,
       build: buildSheet(s.loadout) } });
-  let cands = candidates(s, ctx, o, lines);
+  const keep = heldUniques(s0);
+  let cands = candidates(s, ctx, o, lines, keep);
   console.log(`start: ${first.kill.toExponential(3)}/s on ${o.target}; ${cands.length} candidates; ${lines.length} slate lines`);
   await Promise.all(cands.map(rate));
   while (steps.length < o.maxSteps && f.kill < o.goal) {
@@ -117,7 +127,7 @@ export async function runPlan(ev: Evaluator, s0: State, books: PriceBook, k: Par
     console.log(`step ${steps.length}: ${w.c.label.slice(0, 120)} | ${w.c.costFE} FE (total ${spent}) -> ${f.kill.toExponential(3)}/s`);
     onStep?.(out(true));
     // the build changed: new moves (a socket's new neighbours, a slot's new item) are priced, the rest keep their stale score
-    const seen = new Set(cands.map((c) => c.key)), next = candidates(s, ctx, o, lines);
+    const seen = new Set(cands.map((c) => c.key)), next = candidates(s, ctx, o, lines, keep);
     await Promise.all(next.filter((c) => !seen.has(c.key)).map(rate));
     cands = next;
   }

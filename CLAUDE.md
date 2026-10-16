@@ -6,10 +6,11 @@ the Vite page (`packages/page`) renders it. Nothing on the page is typed in by h
 
 ## The pin
 
-`@dps/*` resolves to `<tli>/dps-debug/.worktrees/tli-lens-pin/model/*` (a detached, locked worktree of dps-debug; now
-dps-debug main 69706aaa (SEA1: the season client's rows, effect rows and pak tables (catalog/0x6ac8071f season_* / overlay_*) applied by openCatalog, the SS14 notes retired; KAL4: every Kaleidoscope adds its roll; SHOT1: model/guide/shotgun.ts; NC4: season supports; DUP1: one copy of a support per skill; SK1: a season skill the catalog lacks (Deepened Curse) is left out by name instead of stopping the figure; CT1: a core talent an item grants adds nothing when the page already holds it (Howling Wind's Gale); DE1: an Ice Shot figure carries the world's target lists, so counts of enemies around (Precise: Domain Expansion) evaluate; KAL3: a Kaleidoscope of any tier keeps its turning-ring modifier at its own roll; MEM1: hero memory upgrade tables in catalog/0x6ac8071f; PRE1: nothing on the training dummy hits the owner, so a when-hit count is 0 (Preserver of Eternity); STM1: an expression buff id evaluates under its grant (Summon Thunder Magus); NC1 / NC2: the reader on the 2026-10-16 client (export.py); KAL2: a new item keeps its Kaleidoscope modifier; POL1: a single-slot buff above cap 1; U2-MIX-AFF: a mixed buff by the affine closed form; U2-IS: the Ice Shot uptime pass; RAR1: an item's rarity tags from the item itself - merged ungated at the owner's word before the 2026-10-16 league, checked
-here by tli-lens 274 with GUIDE_REAL=1; U2-MIX: a buff in a mix of states priced as the expectation over its stack states; GL1 bosses, CULL1 culls, GE1, PERF1, PS2, BA1, RC1 / AQ1 / EX1, SS14 opt-in (not used), PF2 / PF3: the session's
-whole-figure and per-piece caches, 2.5-3x on one-change variants; pin only a main commit with a recorded green gate); tsconfig paths + vitest alias; env `DPS_DEBUG_PIN` overrides, see `packages/guide/src/pin.ts`). Every output
+`@dps/*` resolves to `<tli>/dps-debug/.worktrees/tli-lens-pin/model/*` (a detached, locked worktree of dps-debug), now dps-debug main a0938487
+(MANA2: every Hammer of Ash figure carries the auras' Sealed Mana fit; on top of TANGO1, SHOT2, MANA1, SLP-B, IGN0, OH1, SEA1). Checked by tli-lens 285 / 285 with
+GUIDE_REAL=1. dps-debug's own guide gates (`GUIDE_GATES=1`, model/guide/) are red on main since the ungated SEA1 merges (10 failures: figure.test (a) / (b), cull-figure,
+iceshot-figure, perf; the season catalog moved the figures off last season's captures): re-baseline them before trusting a bit-equal claim. tsconfig paths + vitest
+alias; env `DPS_DEBUG_PIN` overrides, see `packages/guide/src/pin.ts`). Every output
 records the pin commit and the memo key includes it. Never edit dps-debug from here. Refresh:
 `git -C <pin> checkout --detach main`, `npm ci` in `model/` if its lockfile moved, then rerun dps-debug's guide gates
 (`GUIDE_GATES=1`, tests in `model/guide/`).
@@ -18,18 +19,32 @@ records the pin commit and the memo key includes it. Never edit dps-debug from h
 
 | Path | What |
 |---|---|
-| `packages/guide/src` | `types.ts` shared interfaces, `pin`, `pricing` + `priceOf` (etor), `candidates/*` (gear gems kismets memories pacts prisms slates switch talents target traits), `craft`, `patches`, `search`, `kill`, `engine/{pool,worker,apply,memo}`, `modes` (ideal/advise), `start` (start state, export import), `cli`, `atomic` |
-| `packages/page` | Vite shell, single entry `index.html`, `src/main.ts` renders `src/data/guide.json` |
+| `packages/guide/src` | `types.ts` shared interfaces, `pin`, `pricing` + `priceOf` (etor), `candidates/*` (gear gems kismets memories pacts prisms slates switch talents target traits), `craft`, `patches`, `search`, `kill`, `engine/{pool,worker,apply,memo}`, `modes` (ideal/advise), `plan` (your character to a damage goal, cheapest first), `start` (start state, export import), `cli`, `atomic` |
+| `packages/page` | Vite shell, single entry `index.html`, `src/main.ts` renders `src/data/advice.json` (your plan) |
 | `data/`, `scripts/` | etor price history, affix library, craft pools; fetch/build helpers |
 | `.claude/skills/` | `tli-game`, `tlidb-lookup`, `tli-build` |
 
 ## Commands
 
-`pnpm guide ideal [--live] | live [--every M] | advise <export.json> [--fe N] [--season N] | figure <loadout.json> [--skill hoa|iceShot] [--level N]`;
+`pnpm guide plan [export.json] [--target traveler] [--goal 2e11] [--slate-fe N] [--prism-fe N]` (your character, read fresh from the running game, to a
+damage goal at the least FE; writes `packages/page/src/data/advice.json`, the page's plan card) | `ideal [--live] | live [--every M] | advise <export.json> [--fe N] [--season N] | figure <loadout.json> [--skill hoa|iceShot] [--level N]`;
 shared flags `--workers --bombs --roll-budget --budget-minutes --out` (advise: `--budget-minutes` defaults to 30); ideal / advise read your prices
 (`prices.json` at the repository root when it exists, or `--prices <file>`: `{ "<item name>": FE }` over etor, `withPrices`). `pnpm dev` / `pnpm build` / `pnpm test`
 (guide: `tsc --noEmit && vitest run`). `GUIDE_REAL=1` also runs real-figure tests; they and the pool pause while
 the `game.busy` file exists (`DEFAULT_BUSY_FILE` in `engine/pool.ts`, env `GUIDE_BUSY_FILE`).
+
+## Working rules (learned 2026-10-16)
+
+- One session works in tli-lens at a time, and one in dps-debug. On 2026-10-16 three tli-lens sessions shared one working tree: one left uncommitted edits
+  the others had to tiptoe around, and one moved the pin to an ungated commit that stopped two real-figure tests.
+- The owner's plan comes from `pnpm guide plan` (or advise), never from a one-off `.cache` script writing advice.json. Those scripts made plans nobody could
+  rerun, and they carried hand-typed assumptions: twelve 1-line slates on a board with room for none, a gem levelled that cannot level, Fixate added when it was
+  already socketed.
+- Read the character fresh before every plan (`plan` does). A plan from an old read is wrong advice.
+- A rule of the game the owner states becomes code with a test (plan.ts RULES, test/plan.test.ts), not a chat promise.
+- Stopping a background shell on Windows can leave its node process running (a stopped plan kept writing advice.json): check for `cli.ts` processes
+  before a new run and kill the tree (`taskkill //F //T //PID n`).
+- Pin only a commit whose tli-lens GUIDE_REAL gate is green. Write files with the repository's LF line endings: Python on Windows writes CRLF in text mode.
 
 ## Policies the code applies
 

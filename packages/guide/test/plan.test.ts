@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { pinRoot } from '../src/pin';
 import { candidates, DEFAULT_PLAN } from '../src/plan';
-import { snapshotBook } from '../src/pricing';
+import { snapshotBook, withPrices } from '../src/pricing';
 import { localItems } from '../src/modes';
 import type { State } from '../src/types';
 
@@ -22,6 +22,11 @@ describe('plan candidates keep the rules of the game (owner, 2026-10-16)', () =>
   it("no example-build skill group, no copy of a worn legendary", () => {
     expect(cs.filter((c) => /^Add the skill|Target skill/.test(c.label))).toEqual([]);
     expect(cs.filter((c) => /^Unique (Ruinous Star|Formation Breaker|Kaleidoscope) in /.test(c.label))).toEqual([]);
+  });
+  it('a legendary held at the start stays out after a step takes it off (a new one is priced mid-roll; yours is the roll there is)', () => {
+    const priced = { ...ctx, prices: withPrices(ctx.prices, { 'Last Words of Chaos': 39 }).book }, lwc = (c: { label: string }) => c.label === 'Unique Last Words of Chaos in helmet';
+    expect(candidates(s, priced, DEFAULT_PLAN, lines, new Set()).some(lwc)).toBe(true);
+    expect(candidates(s, priced, DEFAULT_PLAN, lines, new Set(['Last Words of Chaos'])).some(lwc)).toBe(false);
   });
   it('a slate takes the place of one of yours (same shape and cell, so it fits the board), priced at your price', () => {
     const sl = cs.filter((c) => c.label.startsWith('Replace your slate'));
