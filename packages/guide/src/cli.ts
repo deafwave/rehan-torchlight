@@ -72,6 +72,28 @@ async function main() {
         if (wait > 0) await new Promise((r) => setTimeout(r, wait));
       }
     } finally { await ev.close(); }
+  } else if (cmd === 'auto') {
+    // your own plan with no pasting: every M minutes dps-debug's reader/export.py reads the running game (elevated shell), advise prices the next buys on
+    // it, and packages/page/src/data/advice.json is committed and pushed (the page shows it first); a failed read is logged and tried again next round
+    const every = num('every') ?? 30, repo = fileURLToPath(new URL('../../../', import.meta.url)), out = resolve(repo, 'packages/page/src/data/advice.json');
+    const dd = flag('dps-debug') ?? fileURLToPath(new URL('../../../../dps-debug/', import.meta.url)), mine = yours();
+    const git = (...a: string[]) => execFileSync('git', ['-C', repo, ...a], { stdio: 'inherit' });
+    const ev = await evaluator();
+    try {
+      for (;;) {
+        const t = Date.now();
+        try {
+          const line = execFileSync('python', ['-I', resolve(dd, 'reader/export.py'), '--no-clipboard'], { cwd: dd, encoding: 'utf8' }).trim().split(/\r?\n/).at(-1)!;
+          const path = line.split(' items=')[0].trim();
+          const state = fromExport(readJson(path)), book = mine.wrap(await liveBook());
+          final(out, dump(await runAdvise(ev, state, { budgetMinutes: budgetMinutes ?? 20, maxSteps: num('steps') ?? 0, ...mine.knobs }, book, (o) => writeAtomic(out, dump(o)))));
+          try { git('commit', '-m', `data: your plan from the live game (L${state.level}, etor ${book.fetchedAt})`, '--', out); git('push'); }
+          catch { console.log(new Date().toISOString(), 'auto: nothing new to push'); }
+        } catch (e) { console.log(new Date().toISOString(), `auto: no plan this round: ${(e as Error).message.split(/\r?\n/).filter(Boolean).slice(-1)[0]}`); }
+        const wait = every * 60_000 - (Date.now() - t);
+        if (wait > 0) await new Promise((r) => setTimeout(r, wait));
+      }
+    } finally { await ev.close(); }
   } else if (cmd === 'advise') {
     if (!positional) throw new Error('usage: guide advise <export.json> [--fe N] [--out path]');
     const state = fromExport(readJson(positional), num('fe'));
