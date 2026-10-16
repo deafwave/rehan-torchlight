@@ -7,6 +7,7 @@ export interface GuideOut {
   mode: 'ideal' | 'advise'; pin: string; etor: { season: string; fetchedAt: string }; knobs: Record<string, unknown>;
   start: Figure; inputs?: Record<string, unknown>; startNotes?: string[]; steps: Step[]; notSearched: string[]; unpriced: string[]; notCalculable: string[];
   character?: Character; next?: NextBuy[]; prices?: Record<string, number | null>; legs?: Leg[];
+  /** the plan's last build priced on every boss (life100: damage per second at full Life, before the damage lock) */ final?: { target: string; figure: Figure }[];
 }
 /** one tab: a skill against one yardstick (target null = the training dummy), from step `firstStep` on; `end` = why it ended */
 export interface Leg { skill: string; target: string | null; firstStep: number; end?: string; start: Figure; reached?: false; build?: { section: string; lines: string[] }[] }
@@ -217,9 +218,16 @@ function legTabs(g: GuideOut): string {
     + `<div class="gl-tab-panels">${legs.map((l, i) => legPanel(g, l, i)).join('')}</div></div>`;
 }
 
+/** the plan's last build on every boss, as the model states it */
+function finalCard(g: GuideOut): string {
+  if (!g.final?.length) return '';
+  return `<div class="gl-final"><b>The final build, boss by boss</b><table><tr><th>Boss</th><th>Damage per second at full Life</th><th>Time to kill</th></tr>`
+    + g.final.map(({ target, figure: f }) => `<tr><td>${esc(bossName(target))}</td><td>${f.stop ? 'not priced' : fmtDps(f.life100)}</td><td>${killTime(f) || '—'}</td></tr>`).join('')
+    + '</table></div>';
+}
 export function renderGuide(g: GuideOut, mine: Record<string, number> = {}): string {
   const plan = g.legs?.length ? legTabs(g) : chart(g.start, entries(g.steps)) + stages(entries(g.steps), g.mode);
-  return `<div class="gl-plan">${goalCard(g)}${g.character ? renderCharacter(g.character) : ''}${g.next?.length ? renderNext(g.next, g.prices ?? {}, mine) : ''}${plan}${huntingList(g)}${details(g)}</div>`;
+  return `<div class="gl-plan">${goalCard(g)}${g.character ? renderCharacter(g.character) : ''}${g.next?.length ? renderNext(g.next, g.prices ?? {}, mine) : ''}${finalCard(g)}${plan}${huntingList(g)}${details(g)}</div>`;
 }
 
 // ---- pasted text: the advice from the poorchlight button, or the raw export
@@ -295,6 +303,10 @@ export function parseAdvice(text: string): GuideOut {
       if (l.build !== undefined && !(Array.isArray(l.build) && l.build.every((b: { section?: unknown; lines?: unknown }) => typeof b?.section === 'string' && Array.isArray(b.lines) && (b.lines as unknown[]).every((x) => typeof x === 'string')))) throw bad(`${p}.build`, l.build);
       checkFigure(l.start, `${p}.start`);
     });
+  }
+  if (j.final !== undefined) {
+    if (!Array.isArray(j.final)) throw bad('final', j.final);
+    j.final.forEach((x: any, i: number) => { if (typeof x?.target !== 'string') throw bad(`final[${i}].target`, x?.target); checkFigure(x.figure, `final[${i}].figure`); });
   }
   if (j.prices !== undefined && !(j.prices && typeof j.prices === 'object' && Object.values(j.prices).every((v) => v === null || isNum(v)))) throw bad('prices', j.prices);
   return j as GuideOut;

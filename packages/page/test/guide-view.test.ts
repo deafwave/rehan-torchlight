@@ -52,6 +52,11 @@ describe('guide view', () => {
     expect(h).toContain('kill <b>Cube 3</b> as fast as possible');
     expect(h).toContain('5.00 s');
   });
+  it("the final build's damage per second on each boss is stated, with its time to kill", () => {
+    const h = renderGuide({ ...g, final: [{ target: 'cube1', figure: { ...g.start, life100: 1.43e14, kill: 2e3, lifeMax: 1e4 } }] });
+    expect(h).toContain('<td>Cube 1</td><td>143 T</td><td>5.00 s</td>');
+    expect(() => parseAdvice(JSON.stringify({ ...g, mode: 'advise', final: [{ target: 1 }] }))).toThrow(/final\[0\]\.target/);
+  });
   it('a plan priced with your prices file says so; one on etor alone does not', () => {
     expect(renderGuide({ ...g, knobs: { ...g.knobs, prices: { file: 'prices.json', overrides: 3 } } })).toContain('Priced with your prices file: 3 items at your price, the rest at etor');
     expect(renderGuide(g)).not.toContain('your prices file');

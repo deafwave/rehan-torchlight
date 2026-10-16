@@ -117,6 +117,8 @@ export interface GuideOut {
   next?: NextBuy[];
   /** the legs in order (Ice Shot on the dummy, then Hammer of Ash boss by boss): each moves on when the boss is lock-bound */
   legs?: Leg[];
+  /** ideal: the plan's last build priced on every boss (life100: its damage per second to that boss at full Life, before the damage lock) */
+  final?: { target: string; figure: Figure }[];
   /** advise: the price book's FE for every `next[].buy.name` (null = no price), the page's default */
   prices?: Record<string, number | null>;
   /** configurations not generated because their resolution rule is not ported, by reason */

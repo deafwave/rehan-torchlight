@@ -217,7 +217,7 @@ async function ideal(ev: Evaluator, K: IdealKnobs, prices: PriceBook | Record<Sk
     const count = new Map<string, number>();
     for (const r of [...mem.notCalculable].slice(stageReasons)) { const k = pieceKey(/: (?:dropped|stopped:) (.*)$/.exec(r)?.[1] ?? r).slice(0, 140); count.set(k, (count.get(k) ?? 0) + 1); }
     const top = [...count].sort((a, b) => b[1] - a[1])[0]?.[0];
-    endLeg(`the plan ends here at L${lastLevel}: no upgrade the model can price fully raises the kill speed${top ? ` (most often: ${top})` : ''}`);
+    endLeg(`the plan ends here at L${lastLevel}${s.skill === 'hoa' ? ` with ${bossName(targets[ti])} dying in ${secs(killTime(f))}` : ''}: no upgrade the model can price fully raises the kill speed${top ? ` (most often: ${top})` : ''}`);
   }
   // the bosses after the one the plan ended on: a tab each, the plan's last build priced on it
   if (s.skill === 'hoa' && !halted) for (let j = ti + 1; j < targets.length; j++) {
@@ -225,7 +225,10 @@ async function ideal(ev: Evaluator, K: IdealKnobs, prices: PriceBook | Record<Sk
     legs.push({ skill: 'hoa', target: targets[j], firstStep: steps.length, start: g, reached: false, build: buildSheet(s.loadout),
       end: `not reached: the ${stopped ? 'run stopped' : 'plan ends'} on ${bossName(targets[ti])}; ${g.stop ? `the last build cannot be priced on ${bossName(targets[j])}: ${g.stop}` : `with its last build ${bossName(targets[j])} dies in ${secs(killTime(g))}`}` });
   }
-  return snap(stopped ? { stoppedBy: 'budget' } : {});
+  // the last build on every boss: what it does to each, stated (no figure here is inferred)
+  const final = s.skill === 'hoa' && !halted
+    ? await Promise.all(targets.map(async (t) => ({ target: t, figure: (await ev.run(s.loadout, [], ctxOfState({ ...s, target: t }))).figure }))) : undefined;
+  return { ...snap(stopped ? { stoppedBy: 'budget' } : {}), ...(final ? { final } : {}) };
 }
 
 /** every legal acquisition at `s`, priced or not, that raises the kill average, with its exact figure (best gain first); the path's first step prices

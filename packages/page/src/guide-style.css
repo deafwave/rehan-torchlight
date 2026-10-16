@@ -755,3 +755,6 @@ a.t-branch:hover,a.t-branch:focus-visible{text-decoration:underline}
 .gl-build summary { cursor: pointer; font-weight: 600; }
 .gl-build h4 { margin: .6rem 0 .2rem; }
 .gl-build ul { margin: 0; padding-left: 1.2rem; font-size: .9em; }
+.gl-final { margin: .75rem 0; padding: .5rem .75rem; border: 1px solid #3a3f4b; border-radius: 6px; }
+.gl-final table { border-collapse: collapse; margin-top: .4rem; }
+.gl-final th, .gl-final td { padding: .15rem .8rem .15rem 0; text-align: left; }
