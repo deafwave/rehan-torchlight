@@ -3,7 +3,7 @@
  "pin": "4b1b533fdc34cea1fac4941fd803f4a33b460d2c",
  "etor": {
   "season": "1601",
-  "fetchedAt": "2026-10-16T13:08:17.076Z"
+  "fetchedAt": "2026-10-16T13:09:21.216Z"
  },
  "knobs": {
   "churn": 0.05,
@@ -13,7 +13,7 @@
   "maxSteps": 0,
   "continueSteps": 10,
   "enablerFloor": 0.25,
-  "budgetMinutes": 15,
+  "budgetMinutes": 20,
   "focusHoa": false,
   "fight": {
    "bombs": 10,
@@ -24,15 +24,15 @@
   "fightNote": "training dummy stands still (dps-debug STILL / e2e1-lib.ts)",
   "rollBudget": 1048576,
   "target": "cube3",
-  "fe": 267,
+  "fe": 264,
   "level": 90,
   "skill": "iceShot"
  },
  "character": {
   "level": 90,
   "skill": "iceShot",
-  "fe": 267,
-  "owned": 237,
+  "fe": 264,
+  "owned": 238,
   "gear": [
    {
     "slot": "belt",
