@@ -94,6 +94,8 @@ export function fromExport(json: unknown, fe?: number): State {
   // against the observed full budget, not the scaled estimate below 93: a real low-level export may hold more than the estimate
   if (points > pointsAtLevel(93)) throw new Error(`export talents hold ${points} points, more than the ${pointsAtLevel(93)} a hero can have (two talent pages read); re-export`);
   const loadout = j.loadout as Dict, active = (loadout?.skills as Dict[] | undefined)?.find(g => g.place?.kind === 'active' && g.place.slot === 0);
+  // the 2026-10-16 client pads a slate's talent list with empty 0 entries (32030100,34040100,0,0,0); dps-debug checks the list against EffectTalentIds
+  for (const sl of (loadout.slateItems ?? []) as { talents?: number[] }[]) if (Array.isArray(sl.talents)) sl.talents = sl.talents.filter(t => t !== 0);
   const skill = (['iceShot', 'hoa'] as Skill[]).find(sk => mainSid(sk) === active?.sid);
   if (!skill) throw new Error(`export main skill (sid ${active?.sid}) is neither Ice Shot nor Hammer of Ash`);
   const owned: OwnedItem[] = (j.items as Dict[]).filter(i => i.where !== 'equipped' && !FE_BASES.has(i.baseId)).map(i => ({

@@ -16,6 +16,8 @@ export const INFO: (string | RegExp)[] = ['price:', /^held buff \d+ \(.*\) not c
   'priced as the expectation over a mix of states (U2-MIX)', 'U2-MIX joint states ', 'U2-MIX affine closed form',
   // statements, not omissions: a battlecry's enemy-map buff and its derived uptime (IN1); a held buff at the count the character's capture measured
   /^the target's buff \d+ \(\w+\) from the battlecry's enemy map \(IN1\): /, /^not calculable without a capture: held buffs the pieces do not derive, taken from the capture: /,
+  // U2-IS states the cast rate its uptime rules ran on: its text changes whenever attack speed does (dps-debug coordinator, 2026-10-16: a statement)
+  /^U2-IS: the uptime rules over the figure's own hit rates /,
   // Kaleidoscope's modifier is set aside from the compile and priced over its three phase states (dps-debug KAL2 / ringW, coordinator 2026-10-16)
   /^not in this figure as compiled: gear \d+: modifier \d+ \(Kaleidoscope: /,
   // nodes that move no figure: the no-op execute 0x1407d0580 (`mov al, 1; ret`), a node inert in the client (Q1), a cull (node 1003: CULL1 counts it in the cull)

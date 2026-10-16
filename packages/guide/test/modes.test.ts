@@ -147,7 +147,8 @@ describe('long-run safety', () => {
     expect(out.knobs.partialRun).toBeUndefined();
     const adv: string[] = [];
     const a = await runAdvise(stubEv(), fromExport(exportOf()), { maxRounds: 1, topK: 2, maxSteps: 3 }, undefined, (o) => adv.push(JSON.stringify(o)));
-    expect(adv).toHaveLength(a.steps.length + 1);   // the next-buys list is written first, before any step
+    const planned = (o: { steps: { move: { label: string } }[] }) => o.steps.filter((x) => !/^Free talent respec/.test(x.move.label));   // the free respec leads, unwritten
+    expect(adv).toHaveLength(planned(a).length + 1);   // the next-buys list is written first, before any step
     expect(JSON.parse(adv[0])).toMatchObject({ steps: [], next: a.next });
     expect(adv.every((t) => JSON.parse(t).knobs.partialRun === true)).toBe(true);
     expect(a.knobs.partialRun).toBeUndefined();
@@ -163,7 +164,7 @@ describe('long-run safety', () => {
       clock = 0;
       const adv = await runAdvise(stubEv(), fromExport(exportOf()), { maxRounds: 1, topK: 2, maxSteps: 50, budgetMinutes: 0.5 }, undefined, tick);
       expect(adv.knobs.stoppedBy).toBe('budget');
-      expect(adv.steps).toHaveLength(1);
+      expect(adv.steps.filter((x) => !/^Free talent respec/.test(x.move.label))).toHaveLength(1);
     } finally { spy.mockRestore(); }
   });
 });
@@ -325,7 +326,7 @@ describe('fix round 1', () => {
   it('advice with maxSteps 0 is the next-buys list alone: no plan steps, not stopped', async () => {
     const out = await runAdvise(stubEv(), fromExport(exportOf()), { maxRounds: 1, topK: 2, maxSteps: 0 });
     expect(out.next!.length).toBeGreaterThan(0);
-    expect(out.steps).toEqual([]);
+    expect(out.steps.filter((x) => !/^Free talent respec/.test(x.move.label))).toEqual([]);   // only the free respec (level 90 and below), when it helps
     expect(out.knobs.stoppedBy).toBeUndefined();
     expect(out.knobs.partialRun).toBeUndefined();
   });

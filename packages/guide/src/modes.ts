@@ -18,6 +18,7 @@ import { ctxOfState, pieceKey, DEFAULT_KNOBS, type Knobs, newMem, overBudget, pa
 import { ICE_SHOT_INPUTS, idealStartNotes } from './start';
 import { setTalentPoints } from './talentRules';
 import { talentName } from './names';
+import { table } from './pin';
 import { buildSheet } from './sheet';
 import { prismOf } from './patches';
 import type { Evaluator, Figure, GenCtx, Generator, GuideOut, Leg, Move, NextBuy, PriceBook, Skill, State, Step } from './types';
@@ -54,6 +55,8 @@ const lockBound = (f: Figure) => f.lock !== undefined && f.life0 >= f.lock;
 // the Ice Shot -> Hammer of Ash switch is planned (`switchWithPage`), never a greedy step: its figure is against the boss, the Ice Shot leg's the dummy
 /** stages in a row with no Ice Shot step before the switch is taken short of switchAt (one is a lull: L75 had none, L80's uniques took the leg on) */
 const STALL_STAGES = 2;
+/** a talent respec is free at this hero level and below (user, 2026-10-16) */
+const FREE_RESPEC_LEVEL = 90;
 const ALL: Generator[] = [gearMoves, gemMoves, kismetMoves, memoryMoves, pactMoves, prismMoves, slateMoves, talentMoves, traitMoves, targetMoves, whiteBaseMoves];
 const only = (acquisition: boolean) => (g: Generator): Generator => (s, c) => g(s, c).filter((m) => m.acquisition === acquisition);
 
@@ -245,6 +248,35 @@ export async function nextBuys(s: State, ev: Evaluator, acq: Generator[], ctx: G
     .sort((a, b) => b.gain - a.gain);
 }
 
+/** A real build the model stops on is priced without the pieces that stop it: up to four rounds, each leaves out the first piece (a non-main skill with its
+ *  supports, a pactspirit with its contract points, a non-weapon gear item, a slate, a kismet, the hero memories) whose removal clears the stop or moves it on;
+ *  each one is named in `out`. The main skill, the weapon and the traits are never left out. */
+async function priceable(ev: Evaluator, state: State, out: string[]): Promise<State> {
+  type L = Record<string, any>;   // eslint-disable-line @typescript-eslint/no-explicit-any
+  const lang = () => table<{ rows: Record<string, string> }>('lang_en').rows;
+  for (let round = 0; round < 4; round++) {
+    const l = state.loadout as L, f = (await ev.run(l, [], ctxOfState(state))).figure;
+    if (!f.stop) break;
+    const own = (k: string, sl: number) => (x: L) => (x.place.kind === k && x.place.slot === sl) || (x.place.ownerKind === k && x.place.ownerSlot === sl);
+    const cands: { label: string; loadout: L }[] = [
+      ...(l.skills ?? []).filter((x: L) => x.place.kind !== 'support' && !(x.place.kind === 'active' && x.place.slot === 0))
+        .map((x: L) => ({ label: `your ${x.place.kind} skill ${x.name ?? x.sid} with its supports`, loadout: { ...l, skills: l.skills.filter((y: L) => !own(x.place.kind, x.place.slot)(y)) } })),
+      ...(l.pacts ?? []).map((p: L) => ({ label: `your pactspirit ${lang()[`servant|name|${p.servantId}`] ?? p.servantId} (slot ${p.slot})`,
+        loadout: { ...l, pacts: l.pacts.filter((q: L) => q !== p), contractKeys: (l.contractKeys ?? []).filter((k: number) => Math.floor(k / 100) !== p.slot) } })),
+      ...(l.gear ?? []).filter((g: L) => g.slot !== 'mainHand').map((g: L) => ({ label: `your ${g.slot} ${g.label}`, loadout: { ...l, gear: l.gear.filter((h: L) => h !== g) } })),
+      ...(l.slateItems ?? []).map((x: L, i: number) => ({ label: `your slate ${i + 1}`, loadout: { ...l, slateItems: l.slateItems.filter((y: L) => y !== x) } })),
+      ...(l.kismets ?? []).map((x: L, i: number) => ({ label: `your kismet ${i + 1}`, loadout: { ...l, kismets: l.kismets.filter((y: L) => y !== x) } })),
+      ...((l.heroMemories ?? []).length ? [{ label: 'your hero memories', loadout: { ...l, heroMemories: [] } }] : []),
+    ];
+    const tried = await Promise.all(cands.map(async (c) => ({ c, g: (await ev.run(c.loadout, [], ctxOfState(state))).figure })));
+    const hit = tried.find((t) => !t.g.stop) ?? tried.find((t) => t.g.stop !== f.stop);
+    if (!hit) break;
+    out.push(`left out of every figure: ${hit.c.label}: the model stops on it (${f.stop})`);
+    state = { ...state, loadout: hit.c.loadout };
+  }
+  return state;
+}
+
 export async function runAdvise(ev: Evaluator, state: State, k: Partial<Knobs> = {}, prices?: PriceBook, onStep?: (out: GuideOut) => void): Promise<GuideOut> {
   const K = { ...DEFAULT_KNOBS, ...k };
   const books = prices ?? snapshotBook(localItems());
@@ -254,6 +286,8 @@ export async function runAdvise(ev: Evaluator, state: State, k: Partial<Knobs> =
       gear: ((state.loadout.gear ?? []) as { slot?: string; label: string }[]).map((g) => ({ slot: g.slot ?? '', label: g.label })) } };
   // Hammer of Ash: the first boss (in order) the character does not kill within moveOnSeconds; the last boss when it kills them all
   const targets = K.targets ?? BOSS_ORDER, moveOn = K.moveOnSeconds ?? 10, passed: string[] = [];
+  const leftOut: string[] = [];
+  state = await priceable(ev, state, leftOut);
   let first = await ev.run(state.loadout, [], ctxOfState(state));
   if (state.skill === 'hoa') for (const t of targets) {
     state = { ...state, target: t };
@@ -266,14 +300,25 @@ export async function runAdvise(ev: Evaluator, state: State, k: Partial<Knobs> =
     return { ...base, legs, start: first.figure, inputs: first.inputs, steps: [], notSearched: [], unpriced: [],
       notCalculable: [`${state.skill}${state.target ? ` on ${bossName(state.target)}` : ''} cannot be priced yet: ${first.figure.stop}`] };
   }
-  const startNotes = passed.length ? [`${passed.join(', ')} (under ${moveOn} s): the advice is for ${bossName(state.target!)}`] : [];
+  const startNotes = [...leftOut, ...(passed.length ? [`${passed.join(', ')} (under ${moveOn} s): the advice is for ${bossName(state.target!)}`] : [])];
   const ctxOf = (s: State): GenCtx => ({ prices: books, level: s.level,
     notSearched: new Set(s.skill === 'iceShot' ? ['switch to Hammer of Ash: planned in the ideal guide, not searched for an Ice Shot character'] : CULL_NOT_COUNTED) });
+  // a talent respec is free at level 90 and below (user, 2026-10-16): the character's own page is re-fitted to its own gear first (point moves while they
+  // help, no churn gate), shown as the first step; the next buys are priced on it
+  let respec: Step | undefined;
+  if (state.level <= FREE_RESPEC_LEVEL) {
+    const r = await resolve(state, ev, [talentMoves], ctxOf(state), { ...K, churn: 0 }, first.figure, newMem());
+    if (r.taken.length && r.figure.kill > first.figure.kill) {
+      respec = { level: state.level, move: { kind: 'talent', label: `Free talent respec (level ${FREE_RESPEC_LEVEL} and below): ${r.taken.length} point move${r.taken.length === 1 ? '' : 's'} on your own page`,
+        acquisition: false, costFE: 0, minLevel: 0, changes: [] }, triggered: r.taken, before: first.figure, after: r.figure, cumFE: 0 };
+      state = r.state; first = { ...first, figure: r.figure };
+    }
+  }
   const next = await nextBuys(state, ev, acq, ctxOf(state), first.figure);
   const bought = Object.fromEntries(next.filter((n) => n.buy).map((n) => [n.buy!.name, books.price(n.buy!.name, state.level)]));
   const withNext = { ...base, legs, startNotes, next, prices: bought };
   onStep?.({ ...withNext, knobs: { ...base.knobs, partialRun: true }, inputs: first.inputs, start: first.figure, steps: [], notSearched: [], unpriced: [], notCalculable: [] });
   const { stoppedBy, ...r } = await path(state, ev, acq, recon, ctxOf, K,
     onStep && ((p) => onStep({ ...withNext, knobs: { ...base.knobs, partialRun: true }, inputs: first.inputs, ...p } as GuideOut)));
-  return { ...withNext, ...(stoppedBy ? { knobs: { ...base.knobs, stoppedBy } } : {}), inputs: first.inputs, ...r } as GuideOut;
+  return { ...withNext, ...(stoppedBy ? { knobs: { ...base.knobs, stoppedBy } } : {}), inputs: first.inputs, ...r, start: legs[0].start, steps: [...(respec ? [respec] : []), ...r.steps] } as GuideOut;
 }

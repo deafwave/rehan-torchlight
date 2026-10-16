@@ -16,7 +16,9 @@ export const DEFAULT_KNOBS: Knobs = { churn: 0.05, topK: 5, maxRounds: 10, refre
 
 /** A partial piece's identity: its text with the measured decimals (rates, probabilities) taken out, ids kept. dps-debug writes the live numbers into the
  *  text ("buff 15184 ...: 2.72727 adds/s ... P = 2.24e-4"), so nearly any change moved them and made the same omission look new. */
-export const pieceKey = (p: string) => p.replace(/\d+\.\d+(?:e[-+]?\d+)?|\d+e[-+]?\d+/gi, '#');
+/** a line's identity across figures: decimals masked; "held buffs left off: X (carried: ...)" keyed on X alone (the carried list names every buff a piece
+ *  adds, so it changes with the build; a derived count replaces the capture's: dps-debug coordinator, 2026-10-16) */
+export const pieceKey = (p: string) => p.replace(/^(held buffs left off: [^(]*?) \(carried: [^)]*\)/, '$1').replace(/\d+\.\d+(?:e[-+]?\d+)?|\d+e[-+]?\d+/gi, '#');
 /** omissions that only leave out a buff the build would add, so the figure is a lower bound and still ranks (it is better if it beats the base without
  *  it): node 306, a timed attribute buff the model does not build (dps-debug's coordinator, 2026-10-16: its parameters are not decoded); node 2230, energy
  *  granted to skill stones (a grant: leaving it out only understates; the known >= 110T build's vorax limb carries it) */

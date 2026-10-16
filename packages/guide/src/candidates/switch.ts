@@ -30,14 +30,18 @@ const sum = (p: Record<string, number>) => Object.values(p).reduce((a, b) => a +
  *  target's set; `points` = what the page holds, `need` = the whole page */
 export function targetPage(s: { loadout: Record<string, unknown> }, level: number): { changes: Change[]; page: { talents: Record<number, number>; cores: number[] }; points: number; need: number } {
   const t = targetFile(), page = trimPage(t.talents, t.coreTalents, pointsAtLevel(level));
-  const l = s.loadout as { talents?: Record<string, number>; coreTalents?: number[] };
-  const changes: Change[] = [
+  return { changes: pageChanges(s.loadout, page), page, points: sum(page.talents), need: sum(t.talents) };
+}
+
+/** the changes that replace a loadout's whole talent page (every node and core off, then the page's on) */
+export function pageChanges(loadout: Record<string, unknown>, page: { talents: Record<number, number>; cores: number[] }): Change[] {
+  const l = loadout as { talents?: Record<string, number>; coreTalents?: number[] };
+  return [
     ...Object.entries(l.talents ?? {}).filter(([, p]) => p > 0).map(([k]) => ({ kind: 'talent', node: +k, points: 0 }) as Change),
     ...(l.coreTalents ?? []).map(c => ({ kind: 'core', node: c, action: 'remove' }) as Change),
     ...Object.entries(page.talents).map(([k, p]) => ({ kind: 'talent', node: +k, points: p }) as Change),
     ...page.cores.map(c => ({ kind: 'core', node: c, action: 'add' }) as Change),
   ];
-  return { changes, page, points: sum(page.talents), need: sum(t.talents) };
 }
 
 export const switchWithPage: (s: Parameters<Generator>[0], ctx: Parameters<Generator>[1]) => Move | null = (s, ctx) => {
