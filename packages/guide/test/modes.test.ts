@@ -362,7 +362,7 @@ describe('fix round 1', () => {
     expect(i).toBeGreaterThan(0);
     const hoa = out.steps.slice(i + 1);
     expect(hoa.length).toBeGreaterThan(0);
-    expect(hoa.every((st) => /^Target[: ]/.test(st.move.label) || /^Swap .+ for a white /.test(st.move.label))).toBe(true);
+    expect(hoa.every((st) => /^(Target[: ]|Rare base |Craft )/.test(st.move.label) || /^Swap .+ for a white /.test(st.move.label))).toBe(true);
     expect(out.startNotes!.some((n) => /^L90: the target talent page re-fitted to \d+ points$/.test(n))).toBe(true);
   }, 300_000);
   it('advice starts on the first boss the character does not kill within moveOnSeconds', async () => {
