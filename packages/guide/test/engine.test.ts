@@ -398,7 +398,7 @@ describe('evaluator (real workers, pinned dps-debug)', () => {
         ev.run(l, [], ctx), ev.run(l, [patch], ctx), ev.run(l, [], { level: 94, skill: 'iceShot' })]);
       // the evaluator prices Hammer of Ash against DEFAULT_TARGET (Cube 3): the reference is the same ground with that target
       const ground = { ...fx.GROUNDS.hoa, target: (fx.BOSSES as Record<string, string>)[DEFAULT_TARGET], carry: { ...fx.GROUNDS.hoa.carry, fight: DEFAULT_FIGHT } };
-      const ref = fx.guideFigure(fx.openCatalog(), structuredClone(l), 'hoa', { heroLevel: 100, ground });
+      const ref = fx.guideFigure(fx.openCatalog(), structuredClone(l), 'hoa', { heroLevel: 100, ground, rollBudget: FIRST_ROLL_BUDGET });   // the evaluator's first budget; the default enumerates for minutes on the main thread (vitest's RPC times out)
       expect(r.figure.stop).toBeUndefined();
       expect(r.figure.life100).toBe(ref.life100);
       expect(r.figure.life0).toBe(ref.life0);
