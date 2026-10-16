@@ -11,7 +11,11 @@ export interface GuideOut {
   /** advise: the free talent respec drawn (the page after it, every node's points before it) */ respec?: { trees: TreeView[]; before: Record<string, number>; title?: string; note?: string };
   /** advise, an Ice Shot character at the switch's level: the planned switch to Hammer of Ash on this character, on the first boss */ switch?: { label: string; costFE: number | null; target: string; figure: Figure };
   /** advise: talents worth finding on a slate, each priced as one more slate talent */ slates?: { id: number; name: string; gain: number; core: boolean }[];
+  /** the cheapest Hammer of Ash path to a boss kill: the switch, then buys best damage per FE first */ hoaPath?: HoaPath;
 }
+type HFig = { kill: number; life100: number; lifeMax?: number };
+export interface HoaPath { target: string; goal: number; at: string; start: { label: string; figure: HFig }; skillsFE: number | null;
+  steps: { label: string; costFE: number | null; totalFE: number; figure: HFig; note?: string }[]; alternatives?: { label: string; costFE: number | null; figure: HFig }[] }
 /** one tab: a skill against one yardstick (target null = the training dummy), from step `firstStep` on; `end` = why it ended */
 export interface Leg { skill: string; target: string | null; firstStep: number; end?: string; start: Figure; reached?: false; build?: { section: string; lines: string[]; trees?: TreeView[] }[] }
 /** a talent tree (guide sheet.ts): `row` = depth (unlocked by points in the tree), `col` = place across; kind 1 small, 3 medium */
@@ -320,6 +324,18 @@ function slateCard(g: GuideOut): string {
   return `<div class="gl-final"><b>Slate talents to look for</b><p class="bnote">Each line priced as one more talent on a slate, on your character as it is (a core you already hold adds nothing). Which slate can roll a line is not known here.</p>`
     + [['Core talents', true], ['Other talents', false]].map(([h, core]) => ((xs) => xs.length ? `<table><tr><th>${h}</th><th>Damage</th></tr>${xs.map(row).join('')}</table>` : '')(g.slates!.filter((x) => x.core === core))).join('') + '</div>';
 }
+/** the cheapest Hammer of Ash path to a boss kill, step by step with the kill time after each */
+function hoaPathCard(g: GuideOut): string {
+  const p = g.hoaPath;
+  if (!p) return '';
+  const t = (f: HFig) => (f.lifeMax && f.kill > 0 ? fmtTime(f.lifeMax / f.kill) : '—');
+  const rows = p.steps.map((x, i) => `<tr><td>${i + 1}</td><td>${esc(x.label)}${x.note ? ` <small>(${esc(x.note)})</small>` : ''}</td><td>${x.costFE === null ? 'not listed' : `${fmtFE(x.costFE)} FE`}</td><td>${fmtFE(x.totalFE)} FE</td><td>${fmtDps(x.figure.kill)}</td><td>${t(x.figure)}</td></tr>`).join('');
+  const alt = (p.alternatives ?? []).map((a) => `<p class="bnote">For comparison: ${esc(a.label)} (${a.costFE === null ? 'not listed' : `${fmtFE(a.costFE)} FE`}): ${esc(bossName(p.target))} in ${t(a.figure)}.</p>`).join('');
+  return `<div class="gl-final"><b>Hammer of Ash: the cheapest way to kill ${esc(bossName(p.target))} within ${p.goal} s</b>`
+    + `<p class="bnote">Start: ${esc(p.start.label)}: ${esc(bossName(p.target))} in ${t(p.start.figure)}. Then each step buys the most damage per FE (live etor prices; a crafted item at its crafting cost). `
+    + `${p.skillsFE !== null ? `The build's skill gems you do not hold cost about ${fmtFE(p.skillsFE)} FE on top. ` : ''}Model numbers (season patch notes applied), ${esc(p.at.slice(0, 16).replace('T', ' '))} UTC.</p>`
+    + `<table><tr><th>#</th><th>Buy</th><th>Cost</th><th>Total</th><th>Damage/s</th><th>${esc(bossName(p.target))} dies in</th></tr>${rows}</table>${alt}</div>`;
+}
 function finalCard(g: GuideOut): string {
   if (!g.final?.length) return '';
   return `<div class="gl-final"><b>The final build, boss by boss</b><table><tr><th>Boss</th><th>Damage per second at full Life</th><th>Time to kill</th></tr>`
@@ -328,7 +344,7 @@ function finalCard(g: GuideOut): string {
 }
 export function renderGuide(g: GuideOut, mine: Record<string, number> = {}): string {
   const plan = g.legs?.length ? legTabs(g) : chart(g.start, entries(g.steps)) + stages(entries(g.steps), g.mode);
-  return `<div class="gl-plan">${goalCard(g)}${g.character ? renderCharacter(g.character) : ''}${g.character?.skill === 'hoa' && g.switch ? switchCard(g) + respecCard(g) : respecCard(g) + switchCard(g)}${g.next?.length ? renderNext(g.next, g.prices ?? {}, mine, g.character?.fe ?? Infinity) : ''}${slateCard(g)}${finalCard(g)}${plan}${huntingList(g)}${details(g)}</div>`;
+  return `<div class="gl-plan">${goalCard(g)}${hoaPathCard(g)}${g.character ? renderCharacter(g.character) : ''}${g.character?.skill === 'hoa' && g.switch ? switchCard(g) + respecCard(g) : respecCard(g) + switchCard(g)}${g.next?.length ? renderNext(g.next, g.prices ?? {}, mine, g.character?.fe ?? Infinity) : ''}${slateCard(g)}${finalCard(g)}${plan}${huntingList(g)}${details(g)}</div>`;
 }
 
 // ---- pasted text: the advice from the poorchlight button, or the raw export
@@ -405,6 +421,7 @@ export function parseAdvice(text: string): GuideOut {
       checkFigure(l.start, `${p}.start`);
     });
   }
+  if (j.hoaPath !== undefined && !(j.hoaPath && Array.isArray(j.hoaPath.steps) && j.hoaPath.start)) throw bad('hoaPath', j.hoaPath);
   if (j.slates !== undefined && !(Array.isArray(j.slates) && j.slates.every((x: any) => typeof x?.name === 'string' && typeof x?.gain === 'number'))) throw bad('slates', j.slates);   // eslint-disable-line @typescript-eslint/no-explicit-any
   if (j.respec !== undefined && !(j.respec && Array.isArray(j.respec.trees) && j.respec.before && typeof j.respec.before === 'object')) throw bad('respec', j.respec);
   if (j.switch !== undefined) {
