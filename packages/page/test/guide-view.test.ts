@@ -63,8 +63,9 @@ describe('guide view', () => {
     expect(h).toContain('<div class="bc-k">Weapon</div><div class="bc-n">Sierra Reverberation Maul</div>');
     expect(h).toContain('<div class="bc pact"><div class="bc-k">Slot 3</div><div class="bc-n">Kitty Express</div><div class="lv">level 6</div></div>');
     expect(renderGuide({ ...g, legs: [{ skill: 'iceShot', target: null, firstStep: 0, start: g.start, build: [build[0]] }] })).toContain('None in the plan at this point');
-    expect(h).toContain('<div class="tn k1 on" style="grid-column:1;grid-row:1" title="Cold Damage (3/3)">3/3</div>');
-    expect(h).toContain('title="Frost (0/3)"');
+    expect(h).toContain('<g class="tn k1 on"><title>Cold Damage (3/3)</title><circle cx="17" cy="33" r="8"/><text x="17" y="36.5">3</text></g>');
+    expect(h).toContain('<title>Frost (0/3)</title>');
+    expect(h).toContain('<line class="" x1="17" y1="33" x2="51" y2="33"/>');   // Frost requires Cold Damage: drawn, not lit (Frost untaken)
     expect(h).toContain('<span class="tc on" title="unlocks at 24 points">Steady Accumulation</span>');
   });
   it("the final build's damage per second on each boss is stated, with its time to kill", () => {

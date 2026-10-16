@@ -793,3 +793,12 @@ a.t-branch:hover,a.t-branch:focus-visible{text-decoration:underline}
 .gl-build > .tcs .tc { font-size: .85rem; opacity: 1; }
 .chip { color: #d8e4ef; }
 .chip .lv { color: #9fb3c6; opacity: 1; }
+.tsvg { display: block; margin: .3rem 0; }
+.tsvg line { stroke: #2f3c4d; stroke-width: 2; }
+.tsvg line.on { stroke: #c99a3e; stroke-width: 3; }
+.tsvg .tn circle { fill: #1a222d; stroke: #3d4a5c; stroke-width: 1.5; cursor: help; }
+.tsvg .tn.k3 circle { stroke-width: 2; }
+.tsvg .tn.on circle { fill: #b5852e; stroke: #f0c060; }
+.tsvg .tn text { font: 600 10px 'IBM Plex Mono', monospace; fill: #111; text-anchor: middle; pointer-events: none; }
+.tsvg .th { font: 10px 'IBM Plex Mono', monospace; fill: #7d8fa3; text-anchor: middle; }
+.gl-build > .tcs .tc { border: 1px solid #f0c060; color: #f0c060; border-radius: 4px; padding: .1rem .45rem; }

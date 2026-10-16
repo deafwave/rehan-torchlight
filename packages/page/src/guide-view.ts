@@ -195,12 +195,19 @@ export function renderNext(next: NextBuy[], etor: Record<string, number | null>,
 // ---- one tab per leg: each leg is one yardstick (Ice Shot on the training dummy, then Hammer of Ash boss by boss), so no chart mixes two
 const legName = (l: Leg) => (l.skill === 'iceShot' ? 'Ice Shot' : l.target ? bossName(l.target) : SKILL[l.skill] ?? l.skill) + (l.reached === false ? ' · not reached' : '');
 const yardstick = (l: Leg) => (l.target ? `on ${bossName(l.target)}` : 'on the training dummy');
-/** a tree as the game lays it out, depth left to right: taken nodes lit with their points, every node named on hover; its core talents below */
+/** a tree as the game lays it out: columns left to right by the points the tree needs (shown on top), five rows; links drawn from each node to the one it
+ *  requires (gold when the required node is maxed and this one taken); taken nodes lit with their points; every node named on hover; its core talents below */
 export function treeGrid(t: TreeView): string {
-  const depth = Math.max(1, ...t.nodes.map((n) => n.row));
-  const cells = t.nodes.map((n) => `<div class="tn k${n.kind}${n.pts ? ' on' : ''}" style="grid-column:${n.row};grid-row:${n.col}" title="${esc(`${n.name} (${n.pts}/${n.max})`)}">${n.pts ? `${n.pts}/${n.max}` : ''}</div>`).join('');
+  const S = 34, TOP = 16, depth = Math.max(1, ...t.nodes.map((n) => n.row)), at = new Map(t.nodes.map((n) => [n.id, n]));
+  const x = (n: { row: number }) => (n.row - 0.5) * S, y = (n: { col: number }) => TOP + (n.col - 0.5) * S;
+  const heads = Array.from({ length: depth }, (_, i) => `<text class="th" x="${x({ row: i + 1 })}" y="11">${i * 3}</text>`).join('');   // a column opens at 3 points per column before it
+  const links = t.nodes.flatMap((n) => n.prereq.map((q) => at.get(q)).filter((p): p is TreeView['nodes'][number] => !!p)
+    .map((p) => `<line class="${p.pts >= p.max && n.pts > 0 ? 'on' : ''}" x1="${x(p)}" y1="${y(p)}" x2="${x(n)}" y2="${y(n)}"/>`)).join('');
+  const dots = t.nodes.map((n) => `<g class="tn k${n.kind}${n.pts ? ' on' : ''}"><title>${esc(`${n.name} (${n.pts}/${n.max})`)}</title>`
+    + `<circle cx="${x(n)}" cy="${y(n)}" r="${n.kind === 1 ? 8 : 12}"/>${n.pts ? `<text x="${x(n)}" y="${y(n) + 3.5}">${n.pts}</text>` : ''}</g>`).join('');
   const cores = t.cores.map((c) => `<span class="tc${c.taken ? ' on' : ''}" title="unlocks at ${c.need} points">${esc(c.name)}</span>`).join('');
-  return `<div class="gl-tree"><b>${esc(t.name)}: ${t.points} points</b><div class="tg" style="grid-template-columns:repeat(${depth},2rem)">${cells}</div>${cores ? `<div class="tcs">${cores}</div>` : ''}</div>`;
+  const w = depth * S, h = TOP + 5 * S;
+  return `<div class="gl-tree"><b>${esc(t.name)}: ${t.points} points</b><svg class="tsvg" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}">${heads}${links}${dots}</svg>${cores ? `<div class="tcs">${cores}</div>` : ''}</div>`;
 }
 const SLOT_NAME: Record<string, string> = { mainHand: 'Weapon', offHand: 'Off-hand', helmet: 'Helmet', chest: 'Chest', gloves: 'Gloves', boots: 'Boots', belt: 'Belt', necklace: 'Necklace', ring1: 'Ring 1', ring2: 'Ring 2' };
 const SLOT_ORDER = ['mainHand', 'offHand', 'helmet', 'chest', 'gloves', 'boots', 'belt', 'necklace', 'ring1', 'ring2'];
