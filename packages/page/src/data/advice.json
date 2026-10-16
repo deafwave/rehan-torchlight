@@ -3,7 +3,7 @@
  "pin": "e5e767cb4de1730b9702d6045c3164b1186aef5a",
  "etor": {
   "season": "1601",
-  "fetchedAt": "2026-10-16T07:18:24.438Z"
+  "fetchedAt": "2026-10-16T07:29:23.951Z"
  },
  "knobs": {
   "churn": 0.05,
@@ -13,7 +13,7 @@
   "maxSteps": 0,
   "continueSteps": 10,
   "enablerFloor": 0.25,
-  "budgetMinutes": 15,
+  "budgetMinutes": 20,
   "fight": {
    "bombs": 10,
    "inputs": {
@@ -31,7 +31,7 @@
   "level": 88,
   "skill": "iceShot",
   "fe": 10,
-  "owned": 153,
+  "owned": 156,
   "gear": [
    {
     "slot": "belt",
@@ -122,7 +122,7 @@
    "kind": "unique",
    "gain": 2.247619388078514,
    "kill": 45674419.7083249,
-   "costFE": 77.5,
+   "costFE": 71.798,
    "buy": {
     "name": "Howling Wind",
     "qty": 1
@@ -396,7 +396,7 @@
    "kind": "unique",
    "gain": 1.3594017022195115,
    "kill": 27624732.296185527,
-   "costFE": null,
+   "costFE": 12,
    "buy": {
     "name": "Kaleidoscope",
     "qty": 1
@@ -407,7 +407,7 @@
    "kind": "unique",
    "gain": 1.274663386072302,
    "kill": 25902744.384169362,
-   "costFE": null,
+   "costFE": 12,
    "buy": {
     "name": "Kaleidoscope",
     "qty": 1
@@ -454,7 +454,7 @@
    "kind": "unique",
    "gain": 1.249137178877639,
    "kill": 25384020.12544715,
-   "costFE": 11.931,
+   "costFE": 12.704,
    "buy": {
     "name": "Heavyware",
     "qty": 1
@@ -1199,7 +1199,7 @@
    "kind": "unique",
    "gain": 1.0551671026198612,
    "kill": 21442307.075255197,
-   "costFE": 31.91,
+   "costFE": 25.405,
    "buy": {
     "name": "Twilight Vestment",
     "qty": 1
@@ -1682,7 +1682,7 @@
    "kind": "unique",
    "gain": 1.0301568190290717,
    "kill": 20934067.025445636,
-   "costFE": 26.768,
+   "costFE": 27.411,
    "buy": {
     "name": "Tyrant's Smoldering Hold",
     "qty": 1
@@ -2399,7 +2399,7 @@
   }
  ],
  "prices": {
-  "Howling Wind": 77.5,
+  "Howling Wind": 71.798,
   "Truth": null,
   "Wriggling Tango": null,
   "Meteorite": null,
@@ -2421,11 +2421,11 @@
   "Legless Bird's Lament": null,
   "Witchdoctor's Herb Bag": null,
   "Death's Touch": null,
-  "Kaleidoscope": null,
+  "Kaleidoscope": 12,
   "Frostbolt": null,
   "Thousand-Day's Victory": null,
   "Gauze of Phantom Sin": null,
-  "Heavyware": 11.931,
+  "Heavyware": 12.704,
   "Hekate's Vision": 40.408,
   "Hunting the Eye of the Kraken": null,
   "Imperial General": null,
@@ -2466,7 +2466,7 @@
   "Providential Grace": null,
   "Revered Light": null,
   "Mercurial Torment": null,
-  "Twilight Vestment": 31.91,
+  "Twilight Vestment": 25.405,
   "Ice Shot: Ice Blast (Magnificent)": null,
   "Ice Shot: Batter (Noble)": null,
   "Martyr's Staff": null,
@@ -2478,7 +2478,7 @@
   "Everburn Thunderfire": 7.5,
   "Two-faced Belt": null,
   "Lonesome": null,
-  "Tyrant's Smoldering Hold": 26.768,
+  "Tyrant's Smoldering Hold": 27.411,
   "Pierced Curse Armor": null,
   "Flaming Evil": null,
   "Mark": null,
