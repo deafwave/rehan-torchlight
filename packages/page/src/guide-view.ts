@@ -293,7 +293,8 @@ function respecCard(g: GuideOut): string {
   const r = g.respec;
   if (!r?.trees.length) return '';
   const step = g.steps.find((st) => st.move.label.startsWith('Free talent respec')), gain = step ? fmtGain(step.before.kill, step.after.kill) : '';
-  return `<div class="gl-final"><b>Free talent respec ${gain}</b><p class="bnote">Your page after the respec (free at level 90 and below). <span class="leg-up">Green</span>: points added. <span class="leg-down">Red</span>: points taken out (the number is what it had). Hover a node for its name.</p>`
+  const what = step?.triggered.filter((m) => m.kind === 'core' || m.enabler).map((m) => `<p>${esc(m.label)}</p>`).join('') ?? '';   // a core taken or swapped, a tree raised or swapped
+  return `<div class="gl-final"><b>Free talent respec ${gain}</b>${what}<p class="bnote">Your page after the respec (free at level 90 and below). <span class="leg-up">Green</span>: points added. <span class="leg-down">Red</span>: points taken out (the number is what it had). Hover a node for its name.</p>`
     + `<div class="trees">${r.trees.map((t) => treeGrid(t, r.before)).join('')}</div></div>`;
 }
 /** advise: the planned Hammer of Ash switch on the character, with its figure on the first boss */

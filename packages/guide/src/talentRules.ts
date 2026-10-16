@@ -11,8 +11,9 @@ function load() {
   const nodes = new Map<number, TalentRow>(), trees = new Set<number>();
   for (const r of Object.values(raw)) {
     const tree = Math.floor(r.i0 / 1e6);
-    // 8-digit ids of the 30 hero trees (10..64); 6-digit rows are legacy, 80/90/92 are not hero trees
-    if (String(r.i0).length !== 8 || tree < 10 || tree > 64) continue;
+    // 8-digit ids of the 30 hero trees (10..64); 6-digit rows are legacy, 80/90/92 are not hero trees; i2c 0 is a node the game does not show (Marksman's
+    // rows 8-9 and its need-32 cores: the in-game tree has rows 1-7 and four cores at 24, user 2026-10-16 and tlidb.com/en/Marksman)
+    if (String(r.i0).length !== 8 || tree < 10 || tree > 64 || r.i2c === 0) continue;
     nodes.set(r.i0, { id: r.i0, kind: r.i4, max: r.ic, need: r.i10, prereq: (r.a30 as number[]).filter(x => x), row: r.a40[1], col: r.a40[0] });
     trees.add(tree);
   }
@@ -28,7 +29,7 @@ export const treeOf = (node: number) => Math.floor(node / 1e6);
 export const treeNodes = (tree: number) => load().plain.get(tree) ?? [];
 /** Core talents of a tree: id `{tree}00{set}{n}00`; `need` = points in the tree. */
 export const treeCores = (tree: number) => load().cores.get(tree) ?? [];
-export const coreSet = (core: number) => Math.floor(core / 1e4) % 10;
+export const coreSet = (core: number) => Math.floor(core / 1e3) % 10;
 export const nodeRow = (id: number) => load().nodes.get(id);
 
 /** Observed (player level, talent points spent) pairs: captures/<id>/pre/player.json cfg.level + pre/talents.json (sum of Point, copies excluded).

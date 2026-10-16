@@ -1,11 +1,12 @@
 /** Talent, core-talent and inverse-image candidates. All reconfigurations (acquisition false, 0 FE). Rules: docs/talent-rules.md. */
 import type { Change, Generator, Move, MoveKind } from '../types';
 import { talentName, treeName } from '../names';
-import { type Copy, coreSet, copiesOf, nodeRow, pointsAtLevel, pointsOutsideObserved, treeCores, treeNodes, treeOf, treeSlotsAllowed, violations } from '../talentRules';
+import { type Copy, type TalentRow, coreSet, copiesOf, nodeRow, pointsAtLevel, pointsOutsideObserved, treeCores, treeNodes, treeOf, treeSlotsAllowed, violations } from '../talentRules';
 
 type Pts = Record<number, number>;
 export interface TalentOpts { /** cap on "move a point" candidates (docs/talent-rules.md, Shift selection) */ maxShifts: number;
-  /** only the "+1 point" moves (spending points a level-up made available) */ pointsOnly?: boolean }
+  /** only the "+1 point" moves (spending points a level-up made available) */ pointsOnly?: boolean;
+  /** only whole-page variants (a free respec): one tree raised to a core's need with that core, or swapped for a tree of its role at a core's need */ pages?: boolean }
 
 const sum = (t: Pts) => Object.values(t).reduce((a, b) => a + b, 0);
 const ofTree = (t: Pts, tr: number): Pts => Object.fromEntries(Object.entries(t).filter(([k, p]) => p > 0 && treeOf(+k) === tr));
@@ -15,10 +16,10 @@ const broken = (tr: number, t: Pts, cores: number[], copies: Copy[]) => {
   const own = ofTree(t, tr), total = sum(own) + copies.reduce((a, c) => a + (c.tree === tr ? c.point : 0), 0);
   return new Set([...violations(tr, own, copies).map(n => `n${n}`), ...cores.filter(c => treeOf(c) === tr && total < (nodeRow(c)?.need ?? Infinity)).map(c => `c${c}`)]);
 };
-/** fill `tree` with `total` points in node order (rows ascend with id), legal at every step */
-export function fill(tree: number, total: number): Pts {
-  const pts: Pts = {};
-  for (let left = total, moved = true; left > 0 && moved;) {
+/** fill `tree` up to `total` points in node order (rows ascend with id) from `start`, legal at every step */
+export function fill(tree: number, total: number, start: Pts = {}): Pts {
+  const pts: Pts = { ...start };
+  for (let left = total - sum(start), moved = true; left > 0 && moved;) {
     moved = false;
     for (const n of treeNodes(tree)) {
       const give = Math.min(n.max - (pts[n.id] ?? 0), left);
@@ -46,6 +47,45 @@ export const talentMovesWith = (opts: TalentOpts): Generator => (s, ctx) => {
   };
   const used = [...new Set(Object.entries(talents).filter(([, p]) => p > 0).map(([k]) => treeOf(+k)))];
   const inc = (id: number, d: number) => ({ ...talents, [id]: (talents[id] ?? 0) + d });
+
+  if (opts.pages) {
+    // the points come from the unspent budget first, then off the other trees: the tree with the most points above its cores' need, deepest row first
+    const total = (t: Pts, tr: number) => sum(ofTree(t, tr));
+    const need = (tr: number, cs: number[]) => Math.max(0, ...cs.filter(c => treeOf(c) === tr).map(c => nodeRow(c)?.need ?? 0));
+    const take = (t0: Pts, cs: number[], n: number, keep: number): Pts | undefined => {
+      const t = { ...t0 };
+      for (; n > 0; n--) {
+        const k = Object.keys(t).map(Number).filter(k => t[k] > 0 && treeOf(k) !== keep && total(t, treeOf(k)) > need(treeOf(k), cs)
+          && [...broken(treeOf(k), { ...t, [k]: t[k] - 1 }, cs, copies)].every(v => was(treeOf(k)).has(v)))
+          .sort((a, b) => (total(t, treeOf(b)) - need(treeOf(b), cs)) - (total(t, treeOf(a)) - need(treeOf(a), cs)) || nodeRow(b)!.row - nodeRow(a)!.row || b - a)[0];
+        if (k === undefined) return undefined;
+        t[k]--;
+      }
+      return t;
+    };
+    const page = (label: string, from: number, to: number, core: TalentRow) => {
+      const gone = from === to ? cores.filter(c => treeOf(c) === to && coreSet(c) === coreSet(core.id)) : cores.filter(c => treeOf(c) === from);
+      const nextCores = [...cores.filter(c => !gone.includes(c)), core.id];
+      const start = from === to ? ofTree(talents, from) : {}, n = Math.max(total(talents, from), core.need);
+      const rest = from === to ? talents : Object.fromEntries(Object.entries(talents).filter(([k]) => treeOf(+k) !== from)) as Pts;
+      const short = n - sum(start) - Math.max(0, budget - sum(rest));
+      const t = short > 0 ? take(rest, nextCores, short, to) : rest;
+      const grown = t && fill(to, n, start);
+      if (!t || !grown || sum(grown) !== n) return;
+      const next = { ...t, ...grown };
+      const changes: Change[] = [...new Set([...Object.keys(talents), ...Object.keys(next)].map(Number))].filter(k => (talents[k] ?? 0) !== (next[k] ?? 0))
+        .map(k => setPts(k, next[k] ?? 0));
+      push('talent', label, [...changes, ...gone.map(c => ({ kind: 'core', node: c, action: 'remove' }) as Change), { kind: 'core', node: core.id, action: 'add' }], next, nextCores, true);
+    };
+    const [gods, profs] = treeSlotsAllowed(0);
+    for (const t of used) {
+      for (const c of treeCores(t)) if (!cores.includes(c.id) && c.need > total(talents, t))
+        page(`Raise ${treeName(t)} to ${c.need} points and take core talent ${talentName(c.id)}`, t, t, c);
+      for (const u of gods.includes(t) ? gods : profs) if (!used.includes(u)) for (const c of treeCores(u))
+        page(`Swap talent tree ${treeName(t)} for ${treeName(u)} (${Math.max(total(talents, t), c.need)} points, core talent ${talentName(c.id)})`, t, u, c);
+    }
+    return out;
+  }
 
   // points: +1 (budget left), -1
   const nodes = used.flatMap(treeNodes);
@@ -108,3 +148,5 @@ export const talentMovesWith = (opts: TalentOpts): Generator => (s, ctx) => {
 export const talentMoves: Generator = talentMovesWith({ maxShifts: 60 });
 /** the free "+1 point" moves alone: what the search spends new talent points with (no churn gate) */
 export const talentPointMoves: Generator = talentMovesWith({ maxShifts: 0, pointsOnly: true });
+/** whole-page variants for a free respec (each then re-fitted by talentMoves) */
+export const pageVariants: Generator = talentMovesWith({ maxShifts: 0, pages: true });

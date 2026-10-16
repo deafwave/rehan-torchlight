@@ -11,7 +11,7 @@ import { slateMoves } from './candidates/slates';
 import { switchWithPage, targetPage } from './candidates/switch';
 import { rollPlans } from './candidates/gear';
 import { targetMoves } from './candidates/target';
-import { talentMoves, talentPointMoves } from './candidates/talents';
+import { pageVariants, talentMoves, talentPointMoves } from './candidates/talents';
 import { traitMoves } from './candidates/traits';
 import { type EtorHistory, type EtorItems, legBooks, LEG_WINDOWS, snapshotBook } from './pricing';
 import { CULL_NOT_COUNTED } from './kill';
@@ -58,6 +58,10 @@ const lockBound = (f: Figure) => f.lock !== undefined && f.life0 >= f.lock;
 const STALL_STAGES = 2;
 /** a talent respec is free at this hero level and below (user, 2026-10-16) */
 const FREE_RESPEC_LEVEL = 90;
+/** whole-page talent variants re-fitted per free respec (the best by their own figure) */
+const RESPEC_PAGES = 4;
+/** point or core moves per re-fit (a tree filled in node order has many to move) */
+const RESPEC_ROUNDS = 40;
 const ALL: Generator[] = [gearMoves, gemMoves, kismetMoves, memoryMoves, pactMoves, prismMoves, slateMoves, talentMoves, traitMoves, targetMoves, whiteBaseMoves];
 const only = (acquisition: boolean) => (g: Generator): Generator => (s, c) => g(s, c).filter((m) => m.acquisition === acquisition);
 
@@ -349,13 +353,24 @@ export async function runAdvise(ev: Evaluator, state: State, k: Partial<Knobs> =
   const startNotes = [...leftOut, ...(passed.length ? [`${passed.join(', ')} (under ${moveOn} s): the advice is for ${bossName(state.target!)}`] : [])];
   const ctxOf = (s: State): GenCtx => ({ prices: books, level: s.level,
     notSearched: new Set(s.skill === 'iceShot' ? ['switch to Hammer of Ash: planned in the ideal guide, not searched for an Ice Shot character'] : CULL_NOT_COUNTED) });
-  // a talent respec is free at level 90 and below (user, 2026-10-16): the character's own page is re-fitted to its own gear first (point moves while they
-  // help, no churn gate), shown as the first step; the next buys are priced on it
+  // a talent respec is free at level 90 and below (user, 2026-10-16): the character's own page and its best whole-page variants (a tree raised to a core's
+  // need with that core, or swapped for a tree of its role) are each re-fitted by point and core moves while they help (no churn gate); the best is shown
+  // as the first step and the next buys are priced on it. A core an item already grants counts once (CT1: Howling Wind's Gale)
   let respec: Step | undefined, respecView: GuideOut['respec'];
   if (state.level <= FREE_RESPEC_LEVEL) {
-    const r = await resolve(state, ev, [talentMoves], ctxOf(state), { ...K, churn: 0 }, first.figure, newMem());
+    const ctx = ctxOf(state), K0 = { ...K, churn: 0, maxRounds: RESPEC_ROUNDS };   // a swapped tree needs many points moved
+    const refit: Generator = (st, c) => talentMoves(st, c).filter((m) => !m.label.startsWith('Swap talent tree'));
+    const pages = pageVariants(state, ctx);
+    const evs = await Promise.all(pages.map((m) => ev.run(state.loadout, m.changes, ctxOfState(state))));
+    const top = pages.map((m, i) => ({ m, e: evs[i] })).filter((x) => rankable(first.figure, x.e.figure)).sort((a, b) => b.e.figure.kill - a.e.figure.kill);
+    startNotes.push(`Talent pages tried for the free respec (before re-fitting the points): ${top.slice(0, 8).map((x) => `${x.m.label} x${(x.e.figure.kill / first.figure.kill).toFixed(2)}`).join('; ')}`);
+    const tries = await Promise.all([resolve(state, ev, [refit], ctx, K0, first.figure, newMem()),
+      ...top.slice(0, RESPEC_PAGES).map(async ({ m, e }) => { const r = await resolve({ ...state, loadout: e.loadout }, ev, [refit], ctx, K0, e.figure, newMem()); return { ...r, taken: [m, ...r.taken] }; })]);
+    startNotes.push(`Each re-fitted (your page first): ${tries.map((t, i) => `${i ? top[i - 1].m.label : 'your page'} x${(t.figure.kill / first.figure.kill).toFixed(2)}`).join('; ')}`);
+    const r = tries.sort((a, b) => b.figure.kill - a.figure.kill)[0], page = pages.includes(r.taken[0]) ? r.taken[0] : undefined;
     if (r.taken.length && r.figure.kill > first.figure.kill) {
-      respec = { level: state.level, move: { kind: 'talent', label: `Free talent respec (level ${FREE_RESPEC_LEVEL} and below): ${r.taken.length} point move${r.taken.length === 1 ? '' : 's'} on your own page`,
+      const moves = r.taken.length - (page ? 1 : 0);
+      respec = { level: state.level, move: { kind: 'talent', label: `Free talent respec (level ${FREE_RESPEC_LEVEL} and below): ${page ? `${page.label}, then ` : ''}${moves} point or core move${moves === 1 ? '' : 's'}`,
         acquisition: false, costFE: 0, minLevel: 0, changes: [] }, triggered: r.taken, before: first.figure, after: r.figure, cumFE: 0 };
       const before = { ...((state.loadout.talents ?? {}) as Record<string, number>) };
       respecView = { trees: talentTrees(r.state.loadout, [...new Set(Object.keys(before).filter((n) => before[n] > 0).map((n) => treeOf(+n)))]), before };

@@ -1,9 +1,9 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { talentMoves, talentMovesWith } from '../src/candidates/talents';
+import { pageVariants, talentMoves, talentMovesWith } from '../src/candidates/talents';
 import { pinRoot } from '../src/pin';
 import { talentName, treeName } from '../src/names';
-import { POINT_OBSERVATIONS, copiesOf, legalAllocation, nodeRow, pointsAtLevel, treeCores, treeOf, treeSlotsAllowed, trimPage, violations } from '../src/talentRules';
+import { POINT_OBSERVATIONS, copiesOf, coreSet, treeNodes, legalAllocation, nodeRow, pointsAtLevel, treeCores, treeOf, treeSlotsAllowed, trimPage, violations } from '../src/talentRules';
 
 const pin = pinRoot();
 const l94 = JSON.parse(readFileSync(`${pin}/game/loadout_l94-20261013-160234.json`, 'utf8'));
@@ -230,6 +230,59 @@ describe('trimPage', () => {
       const low = Math.min(...cut.filter((k) => treeOf(+k) === tree).map((k) => nodeRow(+k)!.row));
       const deeperKept = kept.filter((k) => treeOf(+k) === tree && nodeRow(+k)!.row > low);
       expect(deeperKept, `tree ${tree}`).toEqual([]);
+    }
+  });
+});
+
+describe('the trees the game shows', () => {
+  it('Marksman: rows 1-7, no +12% Projectile Speed at row 6, four cores at 24 (tlidb.com/en/Marksman); every profession core at 24, god cores at 12 or 24', () => {
+    expect(Math.max(...treeNodes(21).map((n) => n.row))).toBe(7);
+    expect(treeNodes(21).map((n) => n.id)).not.toContain(21060100);
+    expect(treeCores(21).map((c) => [talentName(c.id), c.need])).toEqual([['Gale', 24], ['Euphoria', 24], ['Close Range Fire', 24], ['Master Escapist', 24]]);
+    for (const tree of treeSlotsAllowed(0).flat()) for (const c of treeCores(tree)) expect([12, 24], `${talentName(c.id)} (${tree})`).toContain(c.need);
+    for (const tree of treeSlotsAllowed(0)[1]) for (const c of treeCores(tree)) expect(c.need, `${talentName(c.id)} (${tree})`).toBe(24);
+  });
+});
+
+describe('core sets', () => {
+  it('the cores of one (tree, set) share one need: the set digit of {tree}00{set}{n}00', () => {
+    for (const tree of treeSlotsAllowed(0).flat()) {
+      const needs = new Map<number, Set<number>>();
+      for (const c of treeCores(tree)) needs.set(coreSet(c.id), new Set([...(needs.get(coreSet(c.id)) ?? []), c.need]));
+      for (const [set, n] of needs) expect([...n], `tree ${tree} set ${set}`).toHaveLength(1);
+      if (treeCores(tree).length) expect(needs.size, `tree ${tree}`).toBeGreaterThan(0);
+    }
+    expect(coreSet(21001100)).not.toBe(coreSet(21002100));   // Marksman: Gale (24) and Master Escapist (32) are two sets
+  });
+});
+
+describe('pageVariants (a free respec)', () => {
+  // the L94 capture at L90 (104 points): Ranger (43) cut to 20 points without its core, so a tree sits below a core's need
+  const ranger = Object.fromEntries(Object.entries(l94.talents as Record<string, number>).filter(([k]) => treeOf(+k) === 43));
+  const page = { ...Object.fromEntries(Object.entries(l94.talents as Record<string, number>).filter(([k]) => treeOf(+k) !== 43)), ...trimPage(ranger, [], 20).talents };
+  const cores0 = (l94.coreTalents as number[]).filter((c) => treeOf(c) !== 43);
+  const s90 = { ...state, level: 90, loadout: { ...l94, talents: page, coreTalents: cores0 } };
+  const moves = pageVariants(s90, { prices: {} as any, level: 90, notSearched: new Set<string>() });
+  const sumOf = (t: Record<string, number>, tree?: number) => Object.entries(t).reduce((a, [k, p]) => a + (tree === undefined || treeOf(+k) === tree ? p : 0), 0);
+  it("raises a tree below a core's need to it with that core, and swaps a tree for one of its role with a core of that tree", () => {
+    expect(sumOf(page, 43)).toBe(20);
+    expect(moves.filter((m) => m.label.startsWith('Raise Ranger to 24 points and take core talent ')).length).toBe(treeCores(43).length);
+    expect(moves.some((m) => m.label.startsWith('Swap talent tree '))).toBe(true);
+    expect(moves.every((m) => m.enabler && m.costFE === 0)).toBe(true);
+  });
+  it("every variant stays in the level budget, its new core has its need, and no tree it touches gains a rule break or loses a held core's need", () => {
+    const before = tr(page);
+    for (const m of moves) {
+      const { t, c } = apply(page, cores0, m.changes);
+      expect(sumOf(t), m.label).toBeLessThanOrEqual(pointsAtLevel(90));
+      const added = m.changes.find((x: any) => x.kind === 'core' && x.action === 'add') as any;
+      expect(sumOf(t, treeOf(added.node)), m.label).toBeGreaterThanOrEqual(nodeRow(added.node)!.need);
+      for (const [tree, pts] of tr(t)) {
+        const was = new Set(violations(tree, before.get(tree) ?? {}));
+        expect(violations(tree, pts).filter((v) => !was.has(v)), `${m.label}: tree ${tree}`).toEqual([]);
+      }
+      for (const core of c) expect(sumOf(t, treeOf(core)), `${m.label}: ${core}`).toBeGreaterThanOrEqual(nodeRow(core)!.need);
+      expect(new Set(c.map((x) => `${treeOf(x)}/${coreSet(x)}`)).size, m.label).toBe(c.length);
     }
   });
 });
