@@ -333,7 +333,8 @@ export async function runAdvise(ev: Evaluator, state: State, k: Partial<Knobs> =
       const skills = e.figure.stop ? targetMoves({ ...hoa, loadout: e.loadout }, ctx).find((x) => x.label.startsWith('Target skills: all')) : undefined;
       if (skills) {
         const e2 = await ev.run(e.loadout, skills.changes, ctxOfState(hoa));
-        if (!e2.figure.stop) { e = e2; label = `${label}; with the target build's skills (${skills.label.replace(/^Target skills: all \d+ remaining groups \((.*)\)$/, '$1')})`; cost = cost === null || skills.costFE === null ? null : cost + skills.costFE; }
+        // the skills clear the page's need; what still stops is a piece that stops only on the boss (left out below)
+        if (!e2.figure.stop || !/no Timid|has no/.test(e2.figure.stop)) { e = e2; label = `${label}; with the target build's skills (${skills.label.replace(/^Target skills: all \d+ remaining groups \((.*)\)$/, '$1')})`; cost = cost === null || skills.costFE === null ? null : cost + skills.costFE; }
       }
       // a piece that prices on the dummy can stop on the boss (Preserver of Eternity's when-hit count): left out of the switch's figure, named
       if (e.figure.stop) {
@@ -347,7 +348,11 @@ export async function runAdvise(ev: Evaluator, state: State, k: Partial<Knobs> =
   const best = new Map<string, number>();
   const all = await nextBuys(state, ev, acq, ctxOf(state), first.figure);
   for (const n of all) { const sl = n.kind === 'pact' && /in battle slot (\d)/.exec(n.label)?.[1]; if (sl && n.gain > (best.get(sl) ?? -Infinity)) best.set(sl, n.gain); }
-  const next = all.filter((n) => { const sl = n.kind === 'pact' && /in battle slot (\d)/.exec(n.label)?.[1]; return !sl || n.gain === best.get(sl); });
+  // one row per support gem: a gem goes in one socket of a skill (the sockets it could take are alternatives, not steps)
+  const gem = (n: NextBuy) => (n.kind === 'support' ? / with (.+?)$/.exec(n.label)?.[1] : undefined), bestGem = new Map<string, number>();
+  for (const n of all) { const g = gem(n); if (g && n.gain > (bestGem.get(g) ?? -Infinity)) bestGem.set(g, n.gain); }
+  const next = all.filter((n) => { const sl = n.kind === 'pact' && /in battle slot (\d)/.exec(n.label)?.[1], g = gem(n);
+    return (!sl || n.gain === best.get(sl)) && (!g || n.gain === bestGem.get(g)); });
   const bought = Object.fromEntries(next.filter((n) => n.buy).map((n) => [n.buy!.name, books.price(n.buy!.name, state.level)]));
   const withNext = { ...base, legs, startNotes, next, prices: bought, ...(sw ? { switch: sw } : {}) };
   onStep?.({ ...withNext, knobs: { ...base.knobs, partialRun: true }, inputs: first.inputs, start: first.figure, steps: [], notSearched: [], unpriced: [], notCalculable: [] });

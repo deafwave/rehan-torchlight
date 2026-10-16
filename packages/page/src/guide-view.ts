@@ -288,7 +288,7 @@ function switchCard(g: GuideOut): string {
   if (!w) return '';
   const t = killTime(w.figure);
   return `<div class="gl-final"><b>Switch to Hammer of Ash</b><p>${esc(w.label)}</p><table><tr><th>Cost</th><th>${esc(bossName(w.target))}: damage per second at full Life</th><th>Time to kill</th></tr>`
-    + `<tr><td>${w.costFE === null ? 'not priced' : `${fmtFE(w.costFE)} FE`}</td><td>${w.figure.stop ? 'not priced' : fmtDps(w.figure.life100)}</td><td>${t || '—'}</td></tr></table>`
+    + `<tr><td>${w.costFE === null ? 'not on the market yet' : `${fmtFE(w.costFE)} FE`}</td><td>${w.figure.stop ? 'not priced' : fmtDps(w.figure.life100)}</td><td>${t || '—'}</td></tr></table>`
     + `<p class="bnote">Then follow the ${esc(bossName(w.target))} tab of the ideal path below.</p></div>`;
 }
 /** the plan's last build on every boss, as the model states it */
