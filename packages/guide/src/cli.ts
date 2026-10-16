@@ -1,4 +1,4 @@
-/** guide ideal [--live] [--out path] | live [--every M, default 60]: ideal --live every M minutes, each committed and pushed | advise <export.json> [--fe N] [--season N] [--out path] [--steps N, default 0: the next-buys list only] [--budget-minutes N, default 30] | figure <loadout.json> [--skill hoa|iceShot] [--level N]   (ideal / advise: [--prices <file>, default prices.json at the repository root when it exists: { "<item name>": FE }]; all: [--workers N] [--bombs N, default 10] [--budget-minutes N] [--roll-budget N, default 1<<20] [--target <dps-debug BOSSES key | dummy>, default cube3: what Hammer of Ash is priced against]) */
+/** guide ideal [--live] [--out path] | live [--every M, default 60]: ideal --live every M minutes, each committed and pushed | advise <export.json> [--fe N] [--season N] [--out path] [--hoa: an Ice Shot character planned as switched to Hammer of Ash now] [--steps N, default 0: the next-buys list only] [--budget-minutes N, default 30] | figure <loadout.json> [--skill hoa|iceShot] [--level N]   (ideal / advise: [--prices <file>, default prices.json at the repository root when it exists: { "<item name>": FE }]; all: [--workers N] [--bombs N, default 10] [--budget-minutes N] [--roll-budget N, default 1<<20] [--target <dps-debug BOSSES key | dummy>, default cube3: what Hammer of Ash is priced against]) */
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { writeAtomic } from './atomic';
@@ -86,7 +86,7 @@ async function main() {
           const line = execFileSync('python', ['-I', resolve(dd, 'reader/export.py'), '--no-clipboard'], { cwd: dd, encoding: 'utf8' }).trim().split(/\r?\n/).at(-1)!;
           const path = line.split(' items=')[0].trim();
           const state = fromExport(readJson(path), num('fe')), book = mine.wrap(await liveBook());   // --fe N: plan on N FE instead of the read FE
-          final(out, dump(await runAdvise(ev, state, { budgetMinutes: budgetMinutes ?? 20, maxSteps: num('steps') ?? 0, ...mine.knobs }, book, (o) => writeAtomic(out, dump(o)))));
+          final(out, dump(await runAdvise(ev, state, { budgetMinutes: budgetMinutes ?? 20, maxSteps: num('steps') ?? 0, focusHoa: args.includes('--hoa'), ...mine.knobs }, book, (o) => writeAtomic(out, dump(o)))));
           try { git('add', out); git('commit', '-m', `data: your plan from the live game (L${state.level}, etor ${book.fetchedAt})`, '--', out); git('push'); }
           catch { console.log(new Date().toISOString(), 'auto: nothing new to push'); }
         } catch (e) { console.log(new Date().toISOString(), `auto: no plan this round: ${(e as Error).message.split(/\r?\n/).filter(Boolean).slice(-1)[0]}`); }
@@ -102,7 +102,7 @@ async function main() {
     const out = flag('out') ?? 'advice.json';
     // the export button waits on this: by default the next-buys list only (every upgrade's exact gain, ranked on the page by your prices); --steps N adds a
     // multi-step plan at etor prices, stopped after --budget-minutes (default 30; the page shows a partial run)
-    try { final(out, dump(await runAdvise(ev, state, { budgetMinutes: budgetMinutes ?? 30, maxSteps: num('steps') ?? 0, ...prices.knobs }, prices.book, (o) => writeAtomic(out, dump(o))))); } finally { await ev.close(); }
+    try { final(out, dump(await runAdvise(ev, state, { budgetMinutes: budgetMinutes ?? 30, maxSteps: num('steps') ?? 0, focusHoa: args.includes('--hoa'), ...prices.knobs }, prices.book, (o) => writeAtomic(out, dump(o))))); } finally { await ev.close(); }
     // UTF-8 through an env-named file, as reader/export.py does, so non-ASCII names survive
     execFileSync('powershell', ['-NoProfile', '-Command', 'Set-Clipboard -Value ([IO.File]::ReadAllText($env:ADVICE_FILE, [Text.Encoding]::UTF8))'], { env: { ...process.env, ADVICE_FILE: out } });
     console.log(`wrote ${out} and copied it to the clipboard`);

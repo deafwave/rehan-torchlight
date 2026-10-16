@@ -15,6 +15,9 @@ const MAIN_SOURCE: Record<Skill, () => string> = {
   hoa: () => join(pinRoot(), 're', 'evidence', 'loadout_probuild-hanshansi-bing.json'),
 };
 const mainSids = new Map<Skill, number>();
+/** gem names the character holds (bag, stash or socketed): a plan that uses one does not buy it */
+export const gemsHeld = (s: { owned: { baseName?: string | null }[]; loadout: Record<string, unknown> }) =>
+  new Set([...s.owned.map((o) => o.baseName ?? ''), ...((s.loadout.skills ?? []) as { name?: string }[]).map((g) => g.name ?? '')].filter(Boolean));
 export function mainSid(skill: Skill): number {
   if (!mainSids.has(skill)) {
     const g = (JSON.parse(readFileSync(MAIN_SOURCE[skill](), 'utf8')).skills as Gem[]).find(x => x.place.kind === 'active' && x.place.slot === 0);

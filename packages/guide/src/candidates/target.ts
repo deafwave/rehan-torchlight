@@ -12,6 +12,7 @@ import { applyChanges, openCatalog } from '@dps/guide/figure';
 import { pinRoot, table } from '../pin';
 import { priceOfBase, priceOfGold, priceOfName } from '../priceOf';
 import { craftGroupStep, craftStep, craftTiers, slotsOfBase } from './gear';
+import { gemsHeld } from './gems';
 import { costOf } from '../priceOf';
 import { prismOf, type LoadoutPatch } from '../patches';
 import type { Change, Generator, Move } from '../types';
@@ -200,11 +201,12 @@ export const targetMoves: Generator = (s, ctx) => {
   // skills: each of the known build's skills with its supports, one move per group, the gems priced by name (a gem etor does not list is named, not priced)
   type G = Target['skills'][number];
   const groupOf = (xs: G[], kind: string, slot: number) => xs.filter((g) => (g.place.kind === kind && g.place.slot === slot) || (g.place.kind === 'support' && g.place.ownerKind === kind && g.place.ownerSlot === slot));
+  const mine = gemsHeld(s);   // a gem you hold is moved, not bought
   const gsig = (xs: G[]) => JSON.stringify(xs.map((g) => [g.name, g.level, g.place.kind === 'support']).sort());
   for (const owner of t.skills.filter((g) => g.place.kind !== 'support')) {
     const want = groupOf(t.skills, owner.place.kind, owner.place.slot), have = groupOf((l.skills ?? []) as G[], owner.place.kind, owner.place.slot);
     if (gsig(want) === gsig(have)) continue;
-    const held = new Set(have.map((g) => g.name)), buy = want.filter((g) => !held.has(g.name)), priced = buy.map((g) => [g.name, priceOfName(ctx.prices, g.name, ctx.level).fe] as const);
+    const held = new Set(have.map((g) => g.name)), buy = want.filter((g) => !held.has(g.name)), priced = buy.map((g) => [g.name, mine.has(g.name) ? 0 : priceOfName(ctx.prices, g.name, ctx.level).fe] as const);
     const missing = priced.filter(([, fe]) => fe === null).map(([n]) => n);
     out.push(mk({ kind: 'skill', label: `Target skill: ${owner.name} with ${want.length - 1} support${want.length === 2 ? '' : 's'} (${want.filter((g) => g !== owner).map((g) => g.name).join(', ')}) in ${owner.place.kind} ${owner.place.slot}`,
       costFE: priced.reduce((a, [, fe]) => a + (fe ?? 0), 0), ...(missing.length ? { costNote: `not on etor, not priced: ${missing.join(', ')}` } : {}),

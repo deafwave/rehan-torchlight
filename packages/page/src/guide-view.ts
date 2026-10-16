@@ -8,8 +8,9 @@ export interface GuideOut {
   start: Figure; inputs?: Record<string, unknown>; startNotes?: string[]; steps: Step[]; notSearched: string[]; unpriced: string[]; notCalculable: string[];
   character?: Character; next?: NextBuy[]; prices?: Record<string, number | null>; legs?: Leg[];
   /** the plan's last build priced on every boss (life100: damage per second at full Life, before the damage lock) */ final?: { target: string; figure: Figure }[];
-  /** advise: the free talent respec drawn (the page after it, every node's points before it) */ respec?: { trees: TreeView[]; before: Record<string, number> };
+  /** advise: the free talent respec drawn (the page after it, every node's points before it) */ respec?: { trees: TreeView[]; before: Record<string, number>; title?: string; note?: string };
   /** advise, an Ice Shot character at the switch's level: the planned switch to Hammer of Ash on this character, on the first boss */ switch?: { label: string; costFE: number | null; target: string; figure: Figure };
+  /** advise: talents worth finding on a slate, each priced as one more slate talent */ slates?: { id: number; name: string; gain: number; core: boolean }[];
 }
 /** one tab: a skill against one yardstick (target null = the training dummy), from step `firstStep` on; `end` = why it ended */
 export interface Leg { skill: string; target: string | null; firstStep: number; end?: string; start: Figure; reached?: false; build?: { section: string; lines: string[]; trees?: TreeView[] }[] }
@@ -294,6 +295,8 @@ function respecCard(g: GuideOut): string {
   if (!r?.trees.length) return '';
   const step = g.steps.find((st) => st.move.label.startsWith('Free talent respec')), gain = step ? fmtGain(step.before.kill, step.after.kill) : '';
   const what = step?.triggered.filter((m) => m.kind === 'core' || m.enabler).map((m) => `<p>${esc(m.label)}</p>`).join('') ?? '';   // a core taken or swapped, a tree raised or swapped
+  if (r.title) return `<div class="gl-final"><b>${esc(r.title)} ${gain}</b>${what}<p class="bnote">${esc(r.note ?? '')} <span class="leg-up">Green</span>: points you add. Hover a node for its name.</p>`
+    + `<div class="trees">${r.trees.map((t) => treeGrid(t, r.before)).join('')}</div></div>`;
   return `<div class="gl-final"><b>Free talent respec ${gain}</b>${what}<p class="bnote">Your page after the respec (free at level 90 and below). <span class="leg-up">Green</span>: points added. <span class="leg-down">Red</span>: points taken out (the number is what it had). Hover a node for its name.</p>`
     + `<div class="trees">${r.trees.map((t) => treeGrid(t, r.before)).join('')}</div></div>`;
 }
@@ -307,6 +310,13 @@ function switchCard(g: GuideOut): string {
     + `<p class="bnote">Then follow the ${esc(bossName(w.target))} tab of the ideal path below.</p></div>`;
 }
 /** the plan's last build on every boss, as the model states it */
+/** advise: slate talents to look for, each priced as one more slate talent on your character */
+function slateCard(g: GuideOut): string {
+  if (!g.slates?.length) return '';
+  const row = (x: NonNullable<GuideOut['slates']>[number]) => `<tr><td>${esc(x.name)}${x.core ? ' <span class="lv">core</span>' : ''}</td><td>+${((x.gain - 1) * 100).toFixed(1)} %</td></tr>`;
+  return `<div class="gl-final"><b>Slate talents to look for</b><p class="bnote">Each line priced as one more talent on a slate, on your character as it is (a core you already hold adds nothing). Which slate can roll a line is not known here.</p>`
+    + `<table><tr><th>Talent</th><th>Damage</th></tr>${g.slates.map(row).join('')}</table></div>`;
+}
 function finalCard(g: GuideOut): string {
   if (!g.final?.length) return '';
   return `<div class="gl-final"><b>The final build, boss by boss</b><table><tr><th>Boss</th><th>Damage per second at full Life</th><th>Time to kill</th></tr>`
@@ -315,7 +325,7 @@ function finalCard(g: GuideOut): string {
 }
 export function renderGuide(g: GuideOut, mine: Record<string, number> = {}): string {
   const plan = g.legs?.length ? legTabs(g) : chart(g.start, entries(g.steps)) + stages(entries(g.steps), g.mode);
-  return `<div class="gl-plan">${goalCard(g)}${g.character ? renderCharacter(g.character) : ''}${respecCard(g)}${switchCard(g)}${g.next?.length ? renderNext(g.next, g.prices ?? {}, mine, g.character?.fe ?? Infinity) : ''}${finalCard(g)}${plan}${huntingList(g)}${details(g)}</div>`;
+  return `<div class="gl-plan">${goalCard(g)}${g.character ? renderCharacter(g.character) : ''}${g.character?.skill === 'hoa' && g.switch ? switchCard(g) + respecCard(g) : respecCard(g) + switchCard(g)}${g.next?.length ? renderNext(g.next, g.prices ?? {}, mine, g.character?.fe ?? Infinity) : ''}${slateCard(g)}${finalCard(g)}${plan}${huntingList(g)}${details(g)}</div>`;
 }
 
 // ---- pasted text: the advice from the poorchlight button, or the raw export
@@ -392,6 +402,7 @@ export function parseAdvice(text: string): GuideOut {
       checkFigure(l.start, `${p}.start`);
     });
   }
+  if (j.slates !== undefined && !(Array.isArray(j.slates) && j.slates.every((x: any) => typeof x?.name === 'string' && typeof x?.gain === 'number'))) throw bad('slates', j.slates);   // eslint-disable-line @typescript-eslint/no-explicit-any
   if (j.respec !== undefined && !(j.respec && Array.isArray(j.respec.trees) && j.respec.before && typeof j.respec.before === 'object')) throw bad('respec', j.respec);
   if (j.switch !== undefined) {
     if (!j.switch || typeof j.switch.label !== 'string' || typeof j.switch.target !== 'string' || !(j.switch.costFE === null || isNum(j.switch.costFE))) throw bad('switch', j.switch);

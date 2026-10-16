@@ -6,9 +6,9 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { pinRoot, table } from '../pin';
-import { basesFor, goldItem } from './gear';
+import { basesFor, goldItem, twoHandedTwins } from './gear';
 import { costOf, priceOfGold } from '../priceOf';
-import { gemLevelAt, gemRequires, mainSid, supportsFor } from './gems';
+import { gemLevelAt, gemRequires, gemsHeld, mainSid, supportsFor } from './gems';
 import { pointsAtLevel, treeOf, trimPage } from '../talentRules';
 import { talentName, treeName } from '../names';
 import type { Change, Generator, Move } from '../types';
@@ -56,6 +56,9 @@ export const switchWithPage: (s: Parameters<Generator>[0], ctx: Parameters<Gener
     changes: [...m.changes, ...changes] };
 };
 
+/** a plain two-handed sword, axe or cudgel of the maul's level prices the same (2026-10-16, Cube 1: Earthrending Axe, Sky Severing Sword, Last Man's Cudgel and
+ *  Sierra Reverberation Maul at 86 all 3.35e8 at full Life) */
+const twins = twoHandedTwins;
 export const switchMoves: Generator = (s, ctx) => {
   if (s.skill !== 'iceShot') return [];
   const ns = ctx.notSearched;
@@ -89,16 +92,19 @@ export const switchMoves: Generator = (s, ctx) => {
   }
   const maulName = table<{ rows: Record<string, string> }>('lang_en').rows[`item_base|name|${maul.baseId}`];
   // Ruinous Star, a chest unique, is the >= 110T build's core (user, 2026-10-15: "it requires a ruinous star, go down that path"): the switch puts it on
-  const star = goldItem(RUINOUS_STAR, ctx.level), withStar = !!star && star.minLevel <= ctx.level;
-  if (star && !withStar) ns.add(`switch: Ruinous Star needs hero level ${star.minLevel}; the switch at level ${ctx.level} goes without it`);
-  const parts = [costOf(ctx.prices, 'Hammer of Ash', ctx.level, 'gem'), ...gems.map(g => costOf(ctx.prices, g.name, ctx.level, 'gem')), costOf(ctx.prices, maulName, ctx.level, 'bare'),
-    ...(withStar ? [{ costFE: priceOfGold(ctx.prices, RUINOUS_STAR, ctx.level).fe, market: 'tradeable' as const }] : [])];
+  // ... when it can be had: not in this season's game yet (user, 2026-10-16: "Ruinous doesn't exist yet"), so without a live price the switch goes without it
+  const star = goldItem(RUINOUS_STAR, ctx.level), starFE = priceOfGold(ctx.prices, RUINOUS_STAR, ctx.level).fe, withStar = !!star && star.minLevel <= ctx.level && starFE !== null;
+  if (star && star.minLevel > ctx.level) ns.add(`switch: Ruinous Star needs hero level ${star.minLevel}; the switch at level ${ctx.level} goes without it`);
+  else if (star && starFE === null) ns.add('switch: Ruinous Star is not on the market (no live price): the switch goes without it');
+  const mine = gemsHeld(s), gemCost = (n: string) => (mine.has(n) ? { costFE: 0, market: 'drop' as const } : costOf(ctx.prices, n, ctx.level, 'gem'));   // a gem you hold is moved, not bought
+  const parts = [gemCost('Hammer of Ash'), ...gems.map(g => gemCost(g.name)), costOf(ctx.prices, maulName, ctx.level, 'bare'),
+    ...(withStar ? [{ costFE: starFE, market: 'tradeable' as const }] : [])];
   const names = ['Hammer of Ash', ...gems.map(g => g.name), maulName, ...(withStar ? [star!.name] : [])], unpriced = names.filter((_, i) => parts[i].costFE === null);
   if (unpriced.length) ns.add(`switch unpriced (${unpriced.join(', ')}): no etor price and not a white base / normal gem`);
   const allDrop = parts.every(p => p.market === 'drop');
   return [{
     kind: 'switch', skill: 'hoa', acquisition: true, minLevel: Math.max(maul.level, need), enabler: true,
-    label: `Switch to Hammer of Ash with ${maul.name} (level ${maul.level})${withStar ? ', Ruinous Star' : ''} and ${gems.map(g => g.name).join(', ')}`,
+    label: `Switch to Hammer of Ash with ${maul.name} (level ${maul.level}; ${twins(maul.level).length ? `or ${twins(maul.level).join(', ')}: the same figure` : 'its level'}, a plain base)${withStar ? ', Ruinous Star' : ''} and ${gems.map(g => g.name).join(', ')}`,
     costFE: unpriced.length ? null : parts.reduce((a, p) => a + p.costFE!, 0), market: allDrop ? 'drop' : 'tradeable', ...(allDrop ? { costNote: 'drop' } : {}),
     changes: [weapon, { kind: 'multi', changes: [{ kind: 'skill', action: 'replace', owner, gem: { sid: hoa.sid, level: hoaLevel, name: hoa.name } }, ...sockets] as never },
       ...(withStar ? [{ kind: 'gear', slot: 'chest', item: star!.item } as Change] : [])],

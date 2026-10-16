@@ -7,7 +7,7 @@ import { kismetMoves } from './candidates/kismets';
 import { memoryMoves } from './candidates/memories';
 import { pactMoves } from './candidates/pacts';
 import { prismMoves } from './candidates/prisms';
-import { slateMoves } from './candidates/slates';
+import { slateMoves, slateWants } from './candidates/slates';
 import { switchWithPage, targetPage } from './candidates/switch';
 import { rollPlans } from './candidates/gear';
 import { targetMoves } from './candidates/target';
@@ -18,7 +18,7 @@ import { CULL_NOT_COUNTED } from './kill';
 import { ctxOfState, pieceKey, DEFAULT_KNOBS, type Knobs, newMem, overBudget, path, rankable, rankableMove, resolve, spendFree, step, switchNote } from './search';
 import { ICE_SHOT_INPUTS, idealStartNotes } from './start';
 import { setTalentPoints, treeOf } from './talentRules';
-import { talentName } from './names';
+import { talentName, treeName } from './names';
 import { table } from './pin';
 import { buildSheet, talentTrees } from './sheet';
 import { prismOf } from './patches';
@@ -319,6 +319,27 @@ async function priceable(ev: Evaluator, state: State, out: string[]): Promise<St
   return state;
 }
 
+/** The planned switch on an Ice Shot character, on `target`: the switch move (weapon, Hammer of Ash and its supports, Ruinous Star, the target page), the target
+ *  build's skills when the page needs them (Fixate needs Timid), a piece that stops only on the boss left out and named; the Hammer of Ash state it leaves. */
+async function switchOn(ev: Evaluator, state: State, ctx: GenCtx, target: string): Promise<{ state: State; label: string; costFE: number | null; figure: Figure } | undefined> {
+  const hoa: State = { ...state, skill: 'hoa', target }, m = switchWithPage(state, ctx);
+  if (!m) return undefined;
+  let e = await ev.run(state.loadout, m.changes, ctxOfState(hoa)), label = m.label, cost = m.costFE;
+  const skills = e.figure.stop ? targetMoves({ ...hoa, loadout: e.loadout }, ctx).find((x) => x.label.startsWith('Target skills: all')) : undefined;
+  if (skills) {
+    const e2 = await ev.run(e.loadout, skills.changes, ctxOfState(hoa));
+    // the skills clear the page's need; what still stops is a piece that stops only on the boss (left out below)
+    if (!e2.figure.stop || !/no Timid|has no/.test(e2.figure.stop)) { e = e2; label = `${label}; with the target build's skills (${skills.label.replace(/^Target skills: all \d+ remaining groups \((.*)\)$/, '$1')}${skills.costNote ? `; ${skills.costNote}` : ''})`; cost = cost === null || skills.costFE === null ? null : cost + skills.costFE; }
+  }
+  let loadout = e.loadout;
+  // a piece that prices on the dummy can stop on the boss (Preserver of Eternity's when-hit count): left out of the switch's figure, named
+  if (e.figure.stop) {
+    const out: string[] = [], s2 = await priceable(ev, { ...hoa, loadout: e.loadout }, out);
+    if (out.length) { e = await ev.run(s2.loadout, [], ctxOfState(hoa)); loadout = s2.loadout; label = `${label} (on ${bossName(target)}, ${out.map((x) => x.replace(/^left out of every figure: /, '').replace(/: the model stops on it .*$/, '')).join(', ')} left out: the model cannot price ${out.length === 1 ? 'it' : 'them'} there)`; }
+  }
+  return { state: { ...hoa, loadout }, label, costFE: cost, figure: e.figure };
+}
+
 export async function runAdvise(ev: Evaluator, state: State, k: Partial<Knobs> = {}, prices?: PriceBook, onStep?: (out: GuideOut) => void): Promise<GuideOut> {
   const K = { ...DEFAULT_KNOBS, ...k };
   const books = prices ?? snapshotBook(localItems());
@@ -330,6 +351,20 @@ export async function runAdvise(ev: Evaluator, state: State, k: Partial<Knobs> =
   const targets = K.targets ?? BOSS_ORDER, moveOn = K.moveOnSeconds ?? 10, passed: string[] = [];
   const leftOut: string[] = [], before = state.loadout as { pacts?: { slot?: number }[]; gear?: { slot?: string }[] };
   state = await priceable(ev, state, leftOut);
+  // (after the pieces that stop the figure are left out: a stopped figure applies no change)
+  // Hammer of Ash focus (user, 2026-10-16: "focus completely on switching to hammer of ash"): an Ice Shot character is planned as if switched now; the
+  // switch is the plan's own card and everything after it (respec, next buys) is Hammer of Ash on the first boss
+  if (K.focusHoa && state.skill === 'iceShot') {
+    const ctx = { prices: books, level: state.level, notSearched: new Set<string>() }, r = await switchOn(ev, state, ctx, targets[0]);
+    if (r) {
+      const sw = { label: r.label, costFE: r.costFE, target: targets[0], figure: r.figure };
+      const ice = { ...((state.loadout.talents ?? {}) as Record<string, number>) }, iceTrees = [...new Set(Object.keys(ice).filter((n) => ice[n] > 0).map((n) => treeName(treeOf(+n))))];
+      const page = (o: GuideOut): GuideOut['respec'] => ({ trees: (o.respec?.trees ?? talentTrees(r.state.loadout)).filter((t) => t.points > 0), before: ice, title: 'Your Hammer of Ash talent page',
+        note: `Reset ${iceTrees.join(', ')} and take this page (a respec is free at level ${FREE_RESPEC_LEVEL} and below)${o.respec ? ': the target build’s page fitted to your gear' : ': the target build’s page'}.` });
+      const tag = (o: GuideOut): GuideOut => ({ ...o, switch: sw, respec: page(o), startNotes: [`The plan below is after your Hammer of Ash switch (the card above): your Ice Shot gear stays on, the bow is replaced.`, ...leftOut, ...(o.startNotes ?? [])] });
+      return tag(await runAdvise(ev, { ...r.state, fe: state.fe }, { ...k, focusHoa: false }, prices, onStep && ((o) => onStep(tag(o)))));
+    }
+  }
   // a piece left out cannot be compared with: no move replaces it (its slot's figure is measured empty, so any swap would look like a gain)
   const after = state.loadout as typeof before;
   const outPacts = new Set((before.pacts ?? []).filter((p) => !(after.pacts ?? []).includes(p)).map((p) => p.slot));
@@ -377,27 +412,14 @@ export async function runAdvise(ev: Evaluator, state: State, k: Partial<Knobs> =
       state = r.state; first = { ...first, figure: r.figure };
     }
   }
+  const slates = await slateWants(ev, state, first.figure);
   // an Ice Shot character at the planned switch's level: the switch on this character, priced on the first boss (its own card: a boss figure does not rank
   // against the dummy's)
   let sw: GuideOut['switch'];
   if (state.skill === 'iceShot') {
-    const hoa: State = { ...state, skill: 'hoa', target: targets[0] }, ctx = ctxOf(hoa), m = switchWithPage(state, ctx);
-    if (m) {
-      let e = await ev.run(state.loadout, m.changes, ctxOfState(hoa)), label = m.label, cost = m.costFE;
-      // the target page reads the target build's skills (Fixate needs Timid): a character without them takes the target skill set with the switch
-      const skills = e.figure.stop ? targetMoves({ ...hoa, loadout: e.loadout }, ctx).find((x) => x.label.startsWith('Target skills: all')) : undefined;
-      if (skills) {
-        const e2 = await ev.run(e.loadout, skills.changes, ctxOfState(hoa));
-        // the skills clear the page's need; what still stops is a piece that stops only on the boss (left out below)
-        if (!e2.figure.stop || !/no Timid|has no/.test(e2.figure.stop)) { e = e2; label = `${label}; with the target build's skills (${skills.label.replace(/^Target skills: all \d+ remaining groups \((.*)\)$/, '$1')})`; cost = cost === null || skills.costFE === null ? null : cost + skills.costFE; }
-      }
-      // a piece that prices on the dummy can stop on the boss (Preserver of Eternity's when-hit count): left out of the switch's figure, named
-      if (e.figure.stop) {
-        const out: string[] = [], s2 = await priceable(ev, { ...hoa, loadout: e.loadout }, out);
-        if (out.length) { e = await ev.run(s2.loadout, [], ctxOfState(hoa)); label = `${label} (on ${bossName(targets[0])}, ${out.map((x) => x.replace(/^left out of every figure: /, '').replace(/: the model stops on it .*$/, '')).join(', ')} left out: the model cannot price ${out.length === 1 ? 'it' : 'them'} there)`; }
-      }
-      sw = { label, costFE: cost, target: targets[0], figure: e.figure };
-    } else startNotes.push(`Hammer of Ash switch: ${[...ctx.notSearched].find((x) => /switch waits/.test(x)) ?? 'not offered yet'}`);
+    const ctx = ctxOf(state), r = await switchOn(ev, state, ctx, targets[0]);
+    if (r) sw = { label: r.label, costFE: r.costFE, target: targets[0], figure: r.figure };
+    else startNotes.push(`Hammer of Ash switch: ${[...ctx.notSearched].find((x) => /switch waits/.test(x)) ?? 'not offered yet'}`);
   }
   // one pactspirit per battle slot: the best (every owned one is priced; a list of near-equal swaps is noise)
   const best = new Map<string, number>();
@@ -416,7 +438,7 @@ export async function runAdvise(ev: Evaluator, state: State, k: Partial<Knobs> =
     if (u && own.has(u)) { if (!startNotes.some((x) => x.includes(`have ${u} `))) startNotes.push(`you have ${u} in your inventory: wear it rather than buy one`); return false; }
     return !sl || n.gain === best.get(sl); }), ...await rollAdvice(ev, state, ctxOf(state), first.figure, books)].sort((a, b) => b.gain - a.gain);
   const bought = Object.fromEntries(next.filter((n) => n.buy).map((n) => [n.buy!.name, books.price(n.buy!.name, state.level)]));
-  const withNext = { ...base, legs, startNotes, next, prices: bought, ...(sw ? { switch: sw } : {}), ...(respecView ? { respec: respecView } : {}) };
+  const withNext = { ...base, legs, startNotes, next, prices: bought, ...(slates.length ? { slates } : {}), ...(sw ? { switch: sw } : {}), ...(respecView ? { respec: respecView } : {}) };
   onStep?.({ ...withNext, knobs: { ...base.knobs, partialRun: true }, inputs: first.inputs, start: first.figure, steps: [], notSearched: [], unpriced: [], notCalculable: [] });
   const { stoppedBy, ...r } = await path(state, ev, acq, recon, ctxOf, K,
     onStep && ((p) => onStep({ ...withNext, knobs: { ...base.knobs, partialRun: true }, inputs: first.inputs, ...p } as GuideOut)));

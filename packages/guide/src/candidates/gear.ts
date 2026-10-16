@@ -62,6 +62,9 @@ export function basesFor(slot: string, level: number, skill: Skill, family?: num
   return out.sort((a, b) => a.level - b.level || a.baseId - b.baseId);
 }
 
+/** two-handed sword (10), axe (13) and cudgel (14) bases of exactly `level`: Hammer of Ash takes them (the model's weapon rows), a plain one prices as the maul */
+export const twoHandedTwins = (level: number) => [...cat().rows.values()].filter((r) => [10, 13, 14].includes(r.family) && r.level === level && r.slotType >= 1 && r.slotType <= 10 && r.attrs.length).map((r) => r.name);
+
 /** the catalog line (config_item_base i24: STR/DEX/INT armor, weapon group) of a base */
 export const familyOf = (baseId: number): number | undefined => cat().rows.get(baseId)?.family;
 
