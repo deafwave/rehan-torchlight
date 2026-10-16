@@ -10,7 +10,10 @@ export interface GuideOut {
   /** the plan's last build priced on every boss (life100: damage per second at full Life, before the damage lock) */ final?: { target: string; figure: Figure }[];
 }
 /** one tab: a skill against one yardstick (target null = the training dummy), from step `firstStep` on; `end` = why it ended */
-export interface Leg { skill: string; target: string | null; firstStep: number; end?: string; start: Figure; reached?: false; build?: { section: string; lines: string[] }[] }
+export interface Leg { skill: string; target: string | null; firstStep: number; end?: string; start: Figure; reached?: false; build?: { section: string; lines: string[]; trees?: TreeView[] }[] }
+/** a talent tree (guide sheet.ts): `row` = depth (unlocked by points in the tree), `col` = place across; kind 1 small, 3 medium */
+export interface TreeView { tree: number; name: string; points: number; nodes: { id: number; row: number; col: number; kind: number; max: number; pts: number; name: string; prereq: number[] }[];
+  cores: { id: number; need: number; name: string; taken: boolean }[] }
 /** advise: one upgrade at the start with its exact figure; `buy` = what is bought and how many (cost = qty x its price) */
 export interface NextBuy { label: string; kind: string; gain: number; kill: number; costFE: number | null; market?: string; buy?: { name: string; qty: number }; partial?: string[] }
 
@@ -192,7 +195,18 @@ export function renderNext(next: NextBuy[], etor: Record<string, number | null>,
 // ---- one tab per leg: each leg is one yardstick (Ice Shot on the training dummy, then Hammer of Ash boss by boss), so no chart mixes two
 const legName = (l: Leg) => (l.skill === 'iceShot' ? 'Ice Shot' : l.target ? bossName(l.target) : SKILL[l.skill] ?? l.skill) + (l.reached === false ? ' · not reached' : '');
 const yardstick = (l: Leg) => (l.target ? `on ${bossName(l.target)}` : 'on the training dummy');
-const buildOf = (l: Leg) => (l.build?.length ? `<details class="gl-build" open><summary>The build at the end of this leg</summary>${l.build.map((b) => `<h4>${esc(b.section)}</h4><ul>${b.lines.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>`).join('')}</details>` : '');
+/** a tree as the game lays it out, depth left to right: taken nodes lit with their points, every node named on hover; its core talents below */
+export function treeGrid(t: TreeView): string {
+  const depth = Math.max(1, ...t.nodes.map((n) => n.row));
+  const cells = t.nodes.map((n) => `<div class="tn k${n.kind}${n.pts ? ' on' : ''}" style="grid-column:${n.row};grid-row:${n.col}" title="${esc(`${n.name} (${n.pts}/${n.max})`)}">${n.pts ? `${n.pts}/${n.max}` : ''}</div>`).join('');
+  const cores = t.cores.map((c) => `<span class="tc${c.taken ? ' on' : ''}" title="unlocks at ${c.need} points">${esc(c.name)}</span>`).join('');
+  return `<div class="gl-tree"><b>${esc(t.name)}: ${t.points} points</b><div class="tg" style="grid-template-columns:repeat(${depth},2.4rem)">${cells}</div>${cores ? `<div class="tcs">${cores}</div>` : ''}</div>`;
+}
+const sheetLine = (x: string, trees: TreeView[] = []) => {
+  const t = trees.find((v) => x.startsWith(`${v.name}: `));
+  return t ? `<li class="gl-tline" tabindex="0">${esc(x)} <span class="gl-thint">(hover: tree)</span><div class="gl-tpop">${treeGrid(t)}</div></li>` : `<li>${esc(x)}</li>`;
+};
+const buildOf = (l: Leg) => (l.build?.length ? `<details class="gl-build" open><summary>The build at the end of this leg</summary>${l.build.map((b) => `<h4>${esc(b.section)}</h4><ul>${b.lines.map((x) => sheetLine(x, b.trees)).join('')}</ul>`).join('')}</details>` : '');
 function legPanel(g: GuideOut, l: Leg, i: number): string {
   if (l.reached === false) {   // a boss the plan did not reach: the plan's last build there
     const t = killTime(l.start);
@@ -300,7 +314,7 @@ export function parseAdvice(text: string): GuideOut {
       if (!Number.isInteger(l.firstStep) || l.firstStep < 0 || l.firstStep > j.steps.length) throw bad(`${p}.firstStep`, l.firstStep);
       if (l.end !== undefined && typeof l.end !== 'string') throw bad(`${p}.end`, l.end);
       if (l.reached !== undefined && l.reached !== false) throw bad(`${p}.reached`, l.reached);
-      if (l.build !== undefined && !(Array.isArray(l.build) && l.build.every((b: { section?: unknown; lines?: unknown }) => typeof b?.section === 'string' && Array.isArray(b.lines) && (b.lines as unknown[]).every((x) => typeof x === 'string')))) throw bad(`${p}.build`, l.build);
+      if (l.build !== undefined && !(Array.isArray(l.build) && l.build.every((b: { section?: unknown; lines?: unknown; trees?: unknown }) => typeof b?.section === 'string' && Array.isArray(b.lines) && (b.lines as unknown[]).every((x) => typeof x === 'string') && (b.trees === undefined || Array.isArray(b.trees))))) throw bad(`${p}.build`, l.build);
       checkFigure(l.start, `${p}.start`);
     });
   }

@@ -52,6 +52,15 @@ describe('guide view', () => {
     expect(h).toContain('kill <b>Cube 3</b> as fast as possible');
     expect(h).toContain('5.00 s');
   });
+  it('a talent tree line opens its tree: taken nodes lit with points, every node named, its cores', () => {
+    const tree = { tree: 12, name: 'Prophet', points: 3, nodes: [{ id: 12010100, row: 1, col: 1, kind: 1, max: 3, pts: 3, name: 'Cold Damage', prereq: [] }, { id: 12020100, row: 2, col: 1, kind: 3, max: 3, pts: 0, name: 'Frost', prereq: [12010100] }],
+      cores: [{ id: 12001400, need: 24, name: 'Steady Accumulation', taken: true }] };
+    const h = renderGuide({ ...g, legs: [{ skill: 'hoa', target: 'cube1', firstStep: 0, start: g.start, build: [{ section: 'Talents (3 points)', lines: ['Prophet: Cold Damage x3'], trees: [tree] }] }] });
+    expect(h).toContain('class="gl-tline"');
+    expect(h).toContain('<div class="tn k1 on" style="grid-column:1;grid-row:1" title="Cold Damage (3/3)">3/3</div>');
+    expect(h).toContain('title="Frost (0/3)"');
+    expect(h).toContain('<span class="tc on" title="unlocks at 24 points">Steady Accumulation</span>');
+  });
   it("the final build's damage per second on each boss is stated, with its time to kill", () => {
     const h = renderGuide({ ...g, final: [{ target: 'cube1', figure: { ...g.start, life100: 1.43e14, kill: 2e3, lifeMax: 1e4 } }] });
     expect(h).toContain('<td>Cube 1</td><td>143 T</td><td>5.00 s</td>');

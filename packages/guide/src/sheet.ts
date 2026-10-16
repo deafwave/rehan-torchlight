@@ -3,10 +3,13 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { table } from './pin';
 import { talentName, treeName } from './names';
-import { treeOf } from './talentRules';
+import { treeCores, treeNodes, treeOf } from './talentRules';
 import type { Loadout } from './types';
 
-export interface Sheet { section: string; lines: string[] }
+/** a talent tree as the game lays it out: `row` = depth (unlocked by points in the tree), `col` = place across; `pts` = points taken; kind 1 small, 3 medium */
+export interface TreeView { tree: number; name: string; points: number; nodes: { id: number; row: number; col: number; kind: number; max: number; pts: number; name: string; prereq: number[] }[];
+  cores: { id: number; need: number; name: string; taken: boolean }[] }
+export interface Sheet { section: string; lines: string[]; /** Talents: one view per tree with points */ trees?: TreeView[] }
 
 let texts: Map<number, string> | undefined;
 /** a crafted tier's text from the craft library; undefined for a mod the library does not hold (a unique's, a base attribute) */
@@ -43,8 +46,14 @@ export function buildSheet(l: Loadout): Sheet[] {
       return s.place.kind === 'support' ? `  + ${name} (level ${s.level})` : `${s.place.kind} ${s.place.slot}: ${name} (level ${s.level})`;
     }) },
     { section: `Talents (${points} points)`, lines: [...(x.coreTalents ?? []).map((c: number) => `core: ${talentName(c)}`),
-      ...[...byTree].map(([t, ns]) => `${treeName(t)}: ${ns.join(', ')}`)] },
-    { section: 'Hero memories, pacts', lines: [...(x.heroMemories ?? []).map((m: Gear, i: number) => `memory ${m.slot ?? i + 1}: ${m.label}`),
-      ...(x.pacts ?? []).map((p: { name: string; rank: number }) => `pact: ${p.name} rank ${p.rank}`)] },
+      ...[...byTree].map(([t, ns]) => `${treeName(t)}: ${ns.join(', ')}`)], trees: [...byTree.keys()].map((t) => treeView(t, x.talents ?? {}, x.coreTalents ?? [])) },
+    { section: 'Hero memories, pactspirits', lines: [...(x.heroMemories ?? []).map((m: Gear, i: number) => `memory ${m.slot ?? i + 1}: ${m.label}`),
+      ...(x.pacts ?? []).map((p: { name?: string; servantId: number; rank: number; slot?: number }) => `pactspirit${p.slot !== undefined ? ` slot ${p.slot}` : ''}: ${p.name ?? L()[`servant|name|${p.servantId}`] ?? `pactspirit ${p.servantId}`} (rank ${p.rank})`)] },
   ].filter((s) => s.lines.length);
+}
+
+function treeView(tree: number, talents: Record<string, number>, cores: number[]): TreeView {
+  const nodes = treeNodes(tree).map((n) => ({ id: n.id, row: n.row, col: n.col, kind: n.kind, max: n.max, pts: talents[n.id] ?? 0, name: talentName(n.id).replace(/^[^:]*: /, ''), prereq: n.prereq }));
+  return { tree, name: treeName(tree), points: nodes.reduce((a, n) => a + n.pts, 0), nodes,
+    cores: treeCores(tree).map((c) => ({ id: c.id, need: c.need, name: talentName(c.id), taken: cores.includes(c.id) })) };
 }

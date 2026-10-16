@@ -1,7 +1,7 @@
 /** Talent rules from the pinned dps-debug catalog (config_talent.r2). Sources and confidence: docs/talent-rules.md. */
 import { table } from './pin';
 
-export interface TalentRow { id: number; kind: number; max: number; need: number; prereq: number[]; row: number }
+export interface TalentRow { id: number; kind: number; max: number; need: number; prereq: number[]; row: number; /** the node's place across the tree (1..5) */ col: number }
 
 let cache: { nodes: Map<number, TalentRow>; trees: number[]; plain: Map<number, TalentRow[]>; cores: Map<number, TalentRow[]> } | undefined;
 
@@ -13,7 +13,7 @@ function load() {
     const tree = Math.floor(r.i0 / 1e6);
     // 8-digit ids of the 30 hero trees (10..64); 6-digit rows are legacy, 80/90/92 are not hero trees
     if (String(r.i0).length !== 8 || tree < 10 || tree > 64) continue;
-    nodes.set(r.i0, { id: r.i0, kind: r.i4, max: r.ic, need: r.i10, prereq: (r.a30 as number[]).filter(x => x), row: r.a40[1] });
+    nodes.set(r.i0, { id: r.i0, kind: r.i4, max: r.ic, need: r.i10, prereq: (r.a30 as number[]).filter(x => x), row: r.a40[1], col: r.a40[0] });
     trees.add(tree);
   }
   const plain = new Map<number, TalentRow[]>(), cores = new Map<number, TalentRow[]>();

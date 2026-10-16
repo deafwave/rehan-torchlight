@@ -758,3 +758,14 @@ a.t-branch:hover,a.t-branch:focus-visible{text-decoration:underline}
 .gl-final { margin: .75rem 0; padding: .5rem .75rem; border: 1px solid #3a3f4b; border-radius: 6px; }
 .gl-final table { border-collapse: collapse; margin-top: .4rem; }
 .gl-final th, .gl-final td { padding: .15rem .8rem .15rem 0; text-align: left; }
+.gl-tline { position: relative; cursor: help; }
+.gl-thint { opacity: .6; font-size: .85em; }
+.gl-tpop { display: none; position: absolute; left: 0; top: 1.4em; z-index: 20; background: #15181f; border: 1px solid #3a3f4b; border-radius: 6px; padding: .6rem; box-shadow: 0 6px 24px #0008; }
+.gl-tline:hover .gl-tpop, .gl-tline:focus-within .gl-tpop { display: block; }
+.gl-tree .tg { display: grid; grid-template-rows: repeat(5, 2.4rem); gap: .3rem; margin: .4rem 0; }
+.gl-tree .tn { border: 1px solid #3a3f4b; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .7em; color: #ddd; background: #1d2129; }
+.gl-tree .tn.k1 { transform: scale(.7); }
+.gl-tree .tn.on { background: #b5852e; border-color: #f0c060; color: #111; font-weight: 600; }
+.gl-tree .tcs { display: flex; flex-wrap: wrap; gap: .3rem; max-width: 24rem; }
+.gl-tree .tc { font-size: .75em; padding: .1rem .4rem; border: 1px solid #3a3f4b; border-radius: 4px; opacity: .55; }
+.gl-tree .tc.on { opacity: 1; border-color: #f0c060; color: #f0c060; }
