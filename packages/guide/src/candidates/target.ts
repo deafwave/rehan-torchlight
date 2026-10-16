@@ -69,6 +69,7 @@ function applyError(l: Record<string, unknown>, changes: Move["changes"], level:
   return applied.get(key)!;
 }
 
+const DROP_SLOT = 4;
 const GOLD_KEYS = ['m88', 'ma8', 'mc8', 'me8', 'm108', 'm128', 'm148', 'm168'];
 const sig = (a: Aff[]) => JSON.stringify(a.map(x => [x.id, x.dyn]).sort());
 
@@ -205,7 +206,9 @@ export const targetMoves: Generator = (s, ctx) => {
 
   // pacts: not on the market - a pactspirit rank is levelled, not bought: farmed, 0 FE
   const pacts = (l.pacts ?? []) as { servantId: number; slot?: number; rank: number }[];
-  for (const p of t.pacts) {
+  // slots 4-6 hold drop pactspirits (the live client's PetMgr.ServantEquipSlotDataList: InstallServantType 2): they change loot, not damage
+  if (t.pacts.some(p => p.slot >= DROP_SLOT)) ns.add('target drop pactspirits (slots 4-6) change loot, not damage: not offered');
+  for (const p of t.pacts.filter(x => x.slot < DROP_SLOT)) {
     if (pacts.some(x => x.servantId === p.servantId && x.slot === p.slot && x.rank === p.rank)) continue;
     if (pacts.some(x => x.servantId === p.servantId && x.slot !== p.slot)) continue;   // already held in another slot: no duplicate servant
     const occupant = pacts.find(x => x.slot === p.slot);

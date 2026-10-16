@@ -48,7 +48,8 @@ describe("the known build's talent prism", () => {
 describe('targetMoves', () => {
   it('offers gear and pacts as enabler acquisitions', () => {
     expect(of('gear').length).toBeGreaterThan(0);
-    expect(of('pact').length).toBe(5);   // 19330 is already held in another slot
+    expect(of('pact').length).toBe(3);   // the battle slots 1-3; drop pactspirits (slots 4-6) change loot, not damage
+    expect([...notSearched].some(n => /drop pactspirits \(slots 4-6\)/.test(n))).toBe(true);
     expect(moves.every(m => m.acquisition && m.enabler && /^(Target[: ]|Rare base |Craft )/.test(m.label))).toBe(true);
   });
   it('pacts are farmed, not bought: 0 FE, ranked like a drop, said so', () => {
@@ -63,8 +64,8 @@ describe('targetMoves', () => {
     const after = [g, ...p].reduce((l, m) => applyAll(l, m, GROUND.hoa), l100);
     const again = gen(after).moves;
     expect(again.find(m => m.label === g.label)).toBeUndefined();
-    expect(again.filter(m => m.kind === 'pact').map(m => m.label.replace(/ \(.*/, ''))).toEqual(['Target: Twilight Sparks']);   // freed once slot 6 holds another servant
-    expect(of('pact').some(m => /Twilight Sparks/.test(m.label))).toBe(false);
+    expect(again.filter(m => m.kind === 'pact')).toEqual([]);
+    expect(of('pact').some(m => /Twilight Sparks|Starfish Chanter|Plaintive Ball/.test(m.label))).toBe(false);
     const ks = again.filter(m => m.kind === 'kismet');
     expect(ks.length).toBeGreaterThan(0);
     for (const m of ks) expect(() => applyAll(after, m, GROUND.hoa), m.label).not.toThrow();
