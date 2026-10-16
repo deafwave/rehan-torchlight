@@ -1,0 +1,128 @@
+/** `guide plan`: your character to a damage goal on a boss at the least FE, one step at a time, from the live read (user, 2026-10-16: "200 billion in the
+ *  cheapest manner possible"). Each round every candidate is priced on the build as it stands after the steps before it; the step taken is the one with the
+ *  most damage per FE (a free one first). A candidate is refused when the model cannot price it whole (a new omission), when it unseals an aura (MANA2:
+ *  the auras' Sealed Mana no longer fits), or when it breaks a rule of the game the generators do not know (listed in GuideOut.startNotes). */
+import { gearMoves, whiteBaseMoves } from './candidates/gear';
+import { gemMoves } from './candidates/gems';
+import { kismetMoves } from './candidates/kismets';
+import { pactMoves } from './candidates/pacts';
+import { prismMoves } from './candidates/prisms';
+import { slateMoves, slateWants } from './candidates/slates';
+import { talentMoves } from './candidates/talents';
+import { targetMoves } from './candidates/target';
+import { bossName, ownedGear, ownedUniques } from './modes';
+import { ctxOfState, pieceKey, rankable } from './search';
+import { talentName } from './names';
+import { buildSheet } from './sheet';
+import type { Evaluator, Figure, GenCtx, GuideOut, Move, PriceBook, State } from './types';
+
+export interface PlanOpts { target: string; goal: number; maxSteps: number;
+  /** FE of a slate carrying one wanted line, by line (the owner's prices); others `slateFE` */ slatePrices: [RegExp, number][]; slateFE: number;
+  /** FE of the talent prism like the example build's (the owner's price) */ prismFE: number }
+export const DEFAULT_PLAN: PlanOpts = { target: 'traveler', goal: 2e11, maxSteps: 30, slatePrices: [[/Agility Blessing on Critical Strike/, 100], [/All Skills' Levels/, 270]], slateFE: 100, prismFE: 555 };
+
+/** the owner's rules the candidates must keep (2026-10-16) */
+const RULES = [
+  'Physical -> Cold / Lightning / Fire conversion lines are left out (owner: they do nothing for an Erosion build).',
+  'A Magnificent or Noble support is never levelled (max level 5, levelled by consuming copies).',
+  'A legendary you wear or own is never bought.',
+  'A change that unseals an aura (Sealed Mana over your Mana, MANA2) is refused.',
+];
+const CONVERSION = /Converts? .*Physical Damage to (Cold|Lightning|Fire)|Physical .*->.*(Cold|Lightning|Fire)/i;
+
+type Cand = { key: string; label: string; costFE: number; kind: string; note?: string; changes: Move['changes'] };
+const fits = (f: Figure) => !f.mana || 'stop' in f.mana || f.mana.fits;
+
+export function candidates(s: State, ctx: GenCtx, o: PlanOpts, lines: { id: number; name: string }[]): Cand[] {
+  const L = s.loadout as { skills: { name: string; level: number; sid: number; place: { kind: string; slot?: number; ownerKind?: string; ownerSlot?: number } }[]; slateItems?: Record<string, unknown>[] };
+  const worn = new Set(ownedUniques(s, true).values()), own = new Set(ownedUniques(s).values());
+  const out: Cand[] = [];
+  const add = (m: Move, label = m.label) => {
+    const t = m.then, cost = t ? t.costFE : m.costFE;
+    if (cost === null || m.minLevel > s.level) return;
+    const u = /^Unique (.+) in \w+$/.exec(m.label)?.[1];
+    if (u && (worn.has(u) || own.has(u))) return;
+    out.push({ key: `${m.kind}|${label}`, label: t ? `${label} (${t.note})` : label, costFE: cost, kind: m.kind, changes: t ? t.changes : m.changes });
+  };
+  for (const g of [ownedGear, gearMoves, gemMoves, kismetMoves, pactMoves, prismMoves, slateMoves, talentMoves, whiteBaseMoves]) for (const m of g(s, ctx)) add(m);
+  for (const m of targetMoves(s, ctx)) {
+    // the example build's skill groups are not offered: they replace a whole group at a cost they do not carry (a socket's gem is gemMoves', priced)
+    if (/talent prism/.test(m.label)) add({ ...m, costFE: o.prismFE }, 'A talent prism like the example build (Onslaughter crit and two-handed mirrors) at your price');
+  }
+  // a gem to level 20 (time, no FE); a Magnificent / Noble support is levelled by consuming copies (max 5): never a time step
+  for (const g of L.skills.filter((x) => x.level < 20 && !/\((Magnificent|Noble)\)/.test(x.name))) {
+    const at = (x: typeof g) => JSON.stringify(x.place) === JSON.stringify(g.place) && x.sid === g.sid;
+    const p = g.place.kind === 'support' || g.place.ownerKind ? { kind: g.place.ownerKind!, slot: g.place.ownerSlot! } : { kind: g.place.kind, slot: g.place.slot! };
+    const group = L.skills.filter((x) => (x.place.kind === p.kind && x.place.slot === p.slot) || (x.place.ownerKind === p.kind && x.place.ownerSlot === p.slot));
+    out.push({ key: `level|${g.name}|${JSON.stringify(g.place)}`, label: `Level ${g.name} ${g.level} -> 20 (time)`, costFE: 0, kind: 'level',
+      changes: [{ kind: 'patch', op: 'skill-group', place: p, items: group.map((x) => (at(x) ? { ...x, level: 20 } : x)) } as never] });
+  }
+  // a slate in place of one of yours, same shape (so it fits the board), carrying one or two wanted lines (its other lines priced as nothing)
+  const slates = L.slateItems ?? [], price = (n: string) => o.slatePrices.find(([r]) => r.test(n))?.[1] ?? o.slateFE;
+  const sets = [...lines.slice(0, 10).map((a) => [a]), ...lines.slice(0, 6).flatMap((a, i) => lines.slice(i + 1, 6).map((b) => [a, b]))];
+  slates.forEach((it, i) => {
+    const was = (it.talents as number[]).map(talentName).join(', ');
+    for (const set of sets) {
+      const ids = set.map((x) => x.id), names = set.map((x) => x.name);
+      const items = slates.map((x, j) => (j !== i ? x : { ...x, itemId: `guide-slate-${i}-${ids.join('-')}`, talents: ids,
+        influence: { ...(x.influence as object), EffectTalentIds: ids, TalentIdDevour: ids.map(() => false), TalentIdInfluence: ids.map(() => 0), TalentIdCopyInfluence: {}, TalentIdCopy: {},
+          DevilProjectionTalentIds: {}, DevilProjectionInfluence: {}, DevilLineBoostInfluence: {}, DevilLineBoostTalentIds: {} } }));
+      out.push({ key: `slate|${i}|${ids.join('-')}`, kind: 'slate', costFE: names.reduce((t, n) => t + price(n), 0), note: 'slate price assumed: check /market',
+        label: `Replace your slate ${i + 1} (${was}) with a slate of the same shape with ${names.join(' + ')}`, changes: [{ kind: 'patch', op: 'slate-board', items } as never] });
+    }
+  });
+  return out;
+}
+
+/** your character to `o.goal` damage per second on `o.target`: the steps, cheapest damage per FE first */
+export async function runPlan(ev: Evaluator, s0: State, books: PriceBook, k: Partial<PlanOpts> = {}, onStep?: (o: GuideOut) => void): Promise<GuideOut> {
+  const o = { ...DEFAULT_PLAN, ...k };
+  let s: State = { ...s0, skill: 'hoa', target: o.target };
+  const ctx: GenCtx = { prices: books, level: s.level, notSearched: new Set() };
+  const C = ctxOfState(s), first = (await ev.run(s.loadout, [], C)).figure;
+  if (first.stop) throw new Error(`your character cannot be priced on ${bossName(o.target)}: ${first.stop}`);
+  const lines = (await slateWants(ev, s, first, 0, 25)).filter((x) => !CONVERSION.test(x.name));
+  const notes = [...RULES, ...(first.mana && !('stop' in first.mana) ? [`Sealed Mana now: ${first.mana.reserved} of ${first.mana.capacity} (${first.mana.margin} free); Life sealed ${first.mana.life.reserved} of ${first.mana.life.capacity}.`] : [`Sealed Mana: not calculated (${first.mana && 'stop' in first.mana ? first.mana.stop : 'no figure'}); changes are not checked against it.`])];
+  const steps: NonNullable<GuideOut['plan']>['steps'] = [], refused = new Map<string, string>(), score = new Map<string, number>(), taken = new Set<string>();
+  let f = first, spent = 0;
+  const rate = async (c: Cand) => {
+    const e = await ev.run(s.loadout, c.changes, C), g = e.figure;
+    // both ways: a change that takes out a piece the model does not price (an omission gone) would read as a gain it cannot judge
+    const now = new Set(g.partial.map(pieceKey)), lost = f.partial.filter((p) => !now.has(pieceKey(p)));
+    const why = g.stop ? undefined : !rankable(f, g) ? `not priced whole: ${g.partial.filter((p) => !f.partial.includes(p))[0]?.slice(0, 160)}`
+      : lost.length ? `takes out a piece the model does not price: ${lost[0].slice(0, 160)}` : !fits(g) ? `unseals an aura (Sealed Mana ${(g.mana as { reserved: number }).reserved} over ${(g.mana as { capacity: number }).capacity})` : undefined;
+    if (why && g.kill > f.kill * 1.01) refused.set(c.label, `${why} (+${((g.kill / f.kill - 1) * 100).toFixed(0)} % if it were)`);
+    const v = g.stop || why || !(g.kill > f.kill * 1.005) ? -Infinity : Math.log(g.kill / f.kill) / Math.max(c.costFE, 1);
+    score.set(c.key, v);
+    return { c, e, v };
+  };
+  const out = (partialRun: boolean): GuideOut => ({ mode: 'advise', pin: ev.pin, etor: { season: books.season, fetchedAt: books.fetchedAt },
+    knobs: { plan: { ...o, slatePrices: o.slatePrices.map(([r, v]) => `${r.source}: ${v}`) }, fight: ev.fight, rollBudget: ev.rollBudget, target: o.target, partialRun },
+    character: { level: s0.level, skill: 'hoa', fe: s0.fe, owned: s0.owned.length, gear: ((s0.loadout.gear ?? []) as { slot?: string; label: string }[]).map((g) => ({ slot: g.slot ?? '', label: g.label })) },
+    start: first, startNotes: notes, steps: [], notSearched: [...ctx.notSearched], unpriced: [], notCalculable: [...refused].map(([l, w]) => `${l}: ${w}`),
+    slates: lines.slice(0, 25), plan: { target: o.target, goal: o.goal, at: new Date().toISOString(), start: { label: 'your character as read from the game', figure: first }, steps,
+      build: buildSheet(s.loadout) } });
+  let cands = candidates(s, ctx, o, lines);
+  console.log(`start: ${first.kill.toExponential(3)}/s on ${o.target}; ${cands.length} candidates; ${lines.length} slate lines`);
+  await Promise.all(cands.map(rate));
+  while (steps.length < o.maxSteps && f.kill < o.goal) {
+    const open = cands.filter((c) => !taken.has(c.key) && (score.get(c.key) ?? 0) > -Infinity).sort((a, b) => score.get(b.key)! - score.get(a.key)!);
+    if (!open.length) break;
+    // lazy greedy: the stale best are re-priced on the build as it is now, the best of them is taken
+    const w = (await Promise.all(open.slice(0, Math.max(16, ev.parallelism ?? 16)).map(rate))).filter((x) => x.v > -Infinity).sort((a, b) => b.v - a.v)[0];
+    if (!w) continue;
+    s = { ...s, loadout: w.e.loadout }; spent += w.c.costFE; taken.add(w.c.key);
+    steps.push({ label: w.c.label, costFE: w.c.costFE, totalFE: spent, figure: w.e.figure, ...(w.c.note ? { note: w.c.note } : {}) });
+    f = w.e.figure;
+    console.log(`step ${steps.length}: ${w.c.label.slice(0, 120)} | ${w.c.costFE} FE (total ${spent}) -> ${f.kill.toExponential(3)}/s`);
+    onStep?.(out(true));
+    // the build changed: new moves (a socket's new neighbours, a slot's new item) are priced, the rest keep their stale score
+    const seen = new Set(cands.map((c) => c.key)), next = candidates(s, ctx, o, lines);
+    await Promise.all(next.filter((c) => !seen.has(c.key)).map(rate));
+    cands = next;
+  }
+  const r = out(false);
+  r.plan!.build = buildSheet(s.loadout);
+  if (f.kill < o.goal) r.startNotes!.push(`The goal is not reached: the plan ends at ${f.kill.toExponential(2)} per second; nothing left that the model can price raises it.`);
+  return r;
+}

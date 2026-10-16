@@ -23,13 +23,18 @@ export function applyInOrder(lo: Loadout, changes: (Change | LoadoutPatch)[], a:
 
 /** Fight inputs stated only when a figure names them in its stop, so every other figure keeps its memo key. Old King's Armor's movement-speed bonus (chest
  *  3010, modifier 51416041; dps-debug GF1: 100 at a consume, -5 per 0.1 s) only writes movement speed: the l100 capture is bit-equal at 0 and 100 (2026-10-15). */
-export const ON_ASK: Record<string, number> = { 'affix class 782097792 var 1': 0 };
-const ASKED = /the scenario did not supply the fight input (.+?)(?: \(|$)/;
+/** dps-debug figure.ts RESOURCE1_KEY: Fighting Will (comp 0x26 resource key 1), which Opening Heart's crit rating reads; its in-fight gains are not ported, so it is stated:
+ *  the middle of 0..100 (0 -> 100 is x1.068 on the owner's build, dps-debug 2026-10-16) */
+export const RESOURCE1_KEY = 'comp 0x26 resource key 1 (counter 0x2d: Fighting Will, buff 390, 0..100)';
+/** Fighting Will (OH1, RESOURCE1_KEY) too: stated on a build with a fixed rating (the probuild belt's 67) it stops the figure ("how a fight value and a fixed
+ *  rating combine is not traced"), so only a build with no rating gets it */
+export const ON_ASK: Record<string, number> = { 'affix class 782097792 var 1': 0, [RESOURCE1_KEY]: 50 };
+const ASKED = /the scenario did not supply the fight input (.+?)(?: \(|$)|the fight input '(.+?)' is not given/;
 /** price with no extra input; while the figure stops naming an ON_ASK input not yet given, price again with it */
 export function withAsked<R extends { stop?: string }>(figure: (extra: Record<string, number>) => R): R {
   let extra: Record<string, number> = {}, r = figure(extra);
-  for (let m = r.stop ? ASKED.exec(r.stop) : null; m && m[1] in ON_ASK && !(m[1] in extra); m = r.stop ? ASKED.exec(r.stop) : null) {
-    extra = { ...extra, [m[1]]: ON_ASK[m[1]] };
+  for (let m = r.stop ? ASKED.exec(r.stop) : null, k = m && (m[1] ?? m[2]); k && k in ON_ASK && !(k in extra); m = r.stop ? ASKED.exec(r.stop) : null, k = m && (m[1] ?? m[2])) {
+    extra = { ...extra, [k]: ON_ASK[k] };
     r = figure(extra);
   }
   return r;

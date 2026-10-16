@@ -281,7 +281,7 @@ async function rollAdvice(ev: Evaluator, state: State, ctx: GenCtx, base: Figure
 
 /** the uniques among your items: an item whose modifier groups hold one of every key of a config_item_gold row on its base; `worn`: the gear you have on
  *  (slot -> name), else the bag and stash */
-function ownedUniques(state: State, worn = false): Map<string, string> {
+export function ownedUniques(state: State, worn = false): Map<string, string> {
   const gold = table<{ rows: Record<string, Record<string, unknown> & { i8: number }> }>('config_item_gold').rows, lang = table<{ rows: Record<string, string> }>('lang_en').rows;
   const KEYS = ['m88', 'ma8', 'mc8', 'me8', 'm108', 'm128', 'm148', 'm168'], out = new Map<string, string>();
   const items = worn ? ((state.loadout.gear ?? []) as { slot: string; baseId: number; affixes?: { id: number }[] }[]).map((g) => ({ key: g.slot, baseId: g.baseId, ids: (g.affixes ?? []).map((a) => a.id) }))

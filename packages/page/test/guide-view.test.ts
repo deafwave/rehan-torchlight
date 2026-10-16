@@ -26,7 +26,7 @@ describe('guide view', () => {
     const m = (label: string) => ({ kind: 'x', label, acquisition: true, costFE: 1, minLevel: 1, changes: [] });
     expect(actionText(m('Unique Berserker Bracer in gloves'))).toBe('Buy Berserker Bracer (gloves)');
     expect(actionText(m('Craft T7 +36 Dexterity (prefix) on mainHand'))).toBe('Craft T7 “+36 Dexterity” on your weapon');
-    expect(actionText(m('Replace socket 2 with Cold Penetration'))).toBe('Swap in the Cold Penetration support (socket 2)');
+    expect(actionText(m('Ice Shot socket 2: Wind Projectiles -> Cold Penetration'))).toBe('Ice Shot, support socket 2: take out Wind Projectiles, put in Cold Penetration');
     expect(actionText(m('Add core talent Close Range Fire'))).toBe('Add core talent Close Range Fire');
   });
   const html = renderGuide(g);
@@ -62,7 +62,6 @@ describe('guide view', () => {
     expect(h).toContain('<div class="trees"><div class="gl-tree">');
     expect(h).toContain('<div class="bc-k">Weapon</div><div class="bc-n">Sierra Reverberation Maul</div>');
     expect(h).toContain('<div class="bc pact"><div class="bc-k">Slot 3</div><div class="bc-n">Kitty Express</div><div class="lv">level 6</div></div>');
-    expect(renderGuide({ ...g, legs: [{ skill: 'iceShot', target: null, firstStep: 0, start: g.start, build: [build[0]] }] })).toContain('None in the plan at this point');
     expect(h).toContain('<g class="tn k1 on"><title>Cold Damage (3/3)</title><circle cx="17" cy="33" r="8"/><text x="17" y="36.5">3</text></g>');
     expect(h).toContain('<title>Frost (0/3)</title>');
     expect(h).toContain('<line class="" x1="17" y1="33" x2="51" y2="33"/>');   // Frost requires Cold Damage: drawn, not lit (Frost untaken)
@@ -187,22 +186,20 @@ describe('one tab per leg (one yardstick each)', () => {
   ];
   const guide = { ...g, steps, legs } as unknown as GuideOut;
   const html = renderGuide(guide), panels = html.split('<section class="gl-leg"').slice(1);
-  it('a tab per leg, labelled by skill and boss, each panel holding only its own steps on its own yardstick', () => {
-    for (const t of ['Ice Shot', 'Cube 1', 'Keegan 2']) expect(html).toContain(`>${t}</label>`);
-    expect(panels).toHaveLength(3);
-    expect(panels[0]).toContain('training dummy');
-    expect(panels[0]).toContain('value="3"');
-    expect(panels[0]).not.toContain('value="4"');
-    expect(panels[1]).toContain('value="4"');
-    expect(panels[1]).toContain('value="5"');
-    expect(panels[1]).toContain('on Cube 1');
-    expect(panels[1]).toContain('500 K');
+  it('a tab per Hammer of Ash leg (Ice Shot hidden, user 2026-10-16), labelled by boss, each panel holding only its own steps on its own yardstick', () => {
+    for (const t of ['Cube 1', 'Keegan 2']) expect(html).toContain(`>${t}</label>`);
+    expect(html).not.toContain('>Ice Shot</label>');
+    expect(panels).toHaveLength(2);
+    expect(panels[0]).toContain('value="4"');
+    expect(panels[0]).toContain('value="5"');
+    expect(panels[0]).not.toContain('value="3"');
+    expect(panels[0]).toContain('on Cube 1');
+    expect(panels[0]).toContain('500 K');
   });
   it('a leg says why it ended; a leg with no step yet says so', () => {
-    expect(panels[0]).toContain('switch to Hammer of Ash');
-    expect(panels[1]).toContain('move on to Keegan 2');
-    expect(panels[2]).toContain('No upgrade');
-    expect(panels[2]).toContain('9.00 M');
+    expect(panels[0]).toContain('move on to Keegan 2');
+    expect(panels[1]).toContain('No upgrade');
+    expect(panels[1]).toContain('9.00 M');
   });
   it('advice legs are validated', () => {
     const adv = { ...guide, mode: 'advise' };
@@ -218,7 +215,7 @@ describe('a step reads like a plan, not a model dump', () => {
   const legs = [{ skill: 'iceShot', target: null, firstStep: 0, start: g.start, end: 'the Ice Shot leg reached 2.56e+8 (switchAt 2e+8): switch to Hammer of Ash' },
     { skill: 'hoa', target: 'cube1', firstStep: 1, start: hoa(1.02e7) }];
   const html = renderGuide({ ...g, steps: [g.steps[0], sw], legs, knobs: { ...g.knobs, partialRun: true } } as unknown as GuideOut);
-  const cube1 = html.split('<section class="gl-leg"')[2];
+  const cube1 = html.split('<section class="gl-leg"')[1];
   it('the switch shows no gain across two yardsticks', () => {
     expect(cube1).not.toMatch(/−9\d %/);
     expect(cube1).toContain('new yardstick');
@@ -248,7 +245,7 @@ describe('a boss the plan does not reach', () => {
     const legs = [{ skill: 'iceShot', target: null, firstStep: 0, start: g.start, end: 'switch to Hammer of Ash' },
       { skill: 'hoa', target: 'cube1', firstStep: 3, start: boss(1e7, 'cube1', 3.16e10), end: 'the plan ends here at L100: no upgrade the model can price fully raises the kill speed' },
       { skill: 'hoa', target: 'cube3', firstStep: 5, start: boss(6.75e7, 'cube3', 5.35e13), reached: false, end: 'not reached: the plan ends on Cube 1; with its last build Cube 3 dies in 9.17 d' }];
-    const html = renderGuide({ ...g, legs } as unknown as GuideOut), cube3 = html.split('<section class="gl-leg"')[3];
+    const html = renderGuide({ ...g, legs } as unknown as GuideOut), cube3 = html.split('<section class="gl-leg"')[2];
     expect(html).toContain('>Cube 3 · not reached</label>');
     expect(cube3).toContain('not reached yet');
     expect(cube3).toContain('67.5 M');
@@ -258,3 +255,19 @@ describe('a boss the plan does not reach', () => {
   });
 });
 
+
+describe('your plan to a goal (guide plan)', () => {
+  const f = (kill: number) => ({ life100: kill, life0: kill, kill, partial: [], target: 'traveler', lifeMax: 1.6e12 });
+  const plan: GuideOut = { ...g, mode: 'advise', steps: [], notCalculable: ['Unique Wriggling Tango in boots: unseals an aura (Sealed Mana 525 over 504) (+41 % if it were)'], startNotes: ['A legendary you wear or own is never bought.'],
+    plan: { target: 'traveler', goal: 2e11, at: '2026-10-16T21:00:00Z', start: { label: 'now', figure: f(2e10) },
+      steps: [{ label: 'Level Hammer of Ash 17 -> 20 (time)', costFE: 0, totalFE: 0, figure: f(2.8e10) }, { label: 'Unique Last Words of Chaos in helmet', costFE: 39, totalFE: 39, figure: f(2.1e11) }] } };
+  it('one row per step in the player words, its cost, the gain and the damage after; the goal reached with its total FE; what was refused and why', () => {
+    const h = parseAdvice(JSON.stringify(plan)) && renderGuide(plan);
+    expect(h).toContain('Your path to 200 B per second on the Traveler');
+    expect(h).toContain('Buy Last Words of Chaos (helmet)');
+    expect(h).toContain('<td>time</td>');
+    expect(h).toContain('Goal reached after 2 steps for <b>39 FE</b>');
+    expect(h).toContain('unseals an aura');
+    expect(h).not.toContain('Ideal path');
+  });
+});

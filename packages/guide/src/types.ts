@@ -21,7 +21,9 @@ export interface State { loadout: Loadout; owned: OwnedItem[]; fe: number; level
  *  (kill.ts killSpeed) under the model's damage lock `lock` and its cull `cull` (0 when none counts or `cullNote` says why not); `target` = the boss priced against
  *  (dps-debug BOSSES key; absent = the ground's dummy) and its max Life `lifeMax` (time to kill = lifeMax / kill). */
 export interface Figure { life100: number; life0: number; kill: number; partial: string[]; stop?: string;
-  lock?: number; cull?: number; cullNote?: string; target?: string; lifeMax?: number }
+  lock?: number; cull?: number; cullNote?: string; target?: string; lifeMax?: number;
+  /** Hammer of Ash: the auras' Sealed Mana against the pools (dps-debug MANA2); `fits` false = an aura goes off in game. `stop`: not calculated */ mana?: ManaFit }
+export type ManaFit = { reserved: number; capacity: number; margin: number; fits: boolean; life: { reserved: number; capacity: number; margin: number } } | { stop: string };
 
 export type MoveKind = 'gear' | 'craft' | 'unique' | 'talent' | 'core' | 'prism' | 'inverse' | 'slate' | 'pact'
   | 'kismet' | 'memory' | 'support' | 'skill' | 'trait' | 'switch';
@@ -126,6 +128,9 @@ export interface GuideOut {
   legs?: Leg[];
   /** ideal: the plan's last build priced on every boss (life100: its damage per second to that boss at full Life, before the damage lock) */
   final?: { target: string; figure: Figure }[];
+  /** plan (plan.ts): your character to `goal` damage per second on `target`, the most damage per FE first; `build` = the build at the end */
+  plan?: { target: string; goal: number; at: string; start: { label: string; figure: Figure }; steps: { label: string; costFE: number; totalFE: number; figure: Figure; note?: string }[];
+    build?: import('./sheet').Sheet[] };
   /** advise: the price book's FE for every `next[].buy.name` (null = no price), the page's default */
   prices?: Record<string, number | null>;
   /** configurations not generated because their resolution rule is not ported, by reason */

@@ -26,7 +26,7 @@ function price({ loadout, changes, ctx, fight, rollBudget, target }: Job): JobRe
   const g = withAsked(extra => figureDefaultFirst(o => session.figure(lo as never, ctx.skill, { heroLevel: ctx.level, ground: ground(extra), ...o }), rollBudget));
   const cull = g.cull ? { threshold: g.cull.threshold, blocked: g.cull.blocked, ...(g.cull.stop ? { stop: g.cull.stop } : {}) } : undefined;
   return { loadout: lo, dropped, fig: { life100: g.life100, life0: g.life0, left: g.left.map(x => x.name), needs: g.needs, stop: g.stop, inputs: g.inputs as never,
-    lock: g.lock?.ceiling, ...(cull ? { cull } : {}), ...(boss ? { lifeMax: (g.inputs as { target?: { lifeMax: number } }).target?.lifeMax } : {}) } };
+    lock: g.lock?.ceiling, ...((g as { mana?: unknown }).mana ? { mana: (g as { mana?: never }).mana } : {}), ...(cull ? { cull } : {}), ...(boss ? { lifeMax: (g.inputs as { target?: { lifeMax: number } }).target?.lifeMax } : {}) } };
 }
 
 parentPort!.on('message', (m: { id: number; job: Job }) => {

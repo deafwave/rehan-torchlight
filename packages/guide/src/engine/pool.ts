@@ -6,7 +6,7 @@ import { Worker } from 'node:worker_threads';
 import { killSpeed } from '../kill';
 import { pinRoot as defaultPinRoot } from '../pin';
 import type { LoadoutPatch } from '../patches';
-import type { Change, EvalCtx, Evaluated, Evaluator, Loadout } from '../types';
+import type { Change, EvalCtx, Evaluated, Evaluator, Loadout, ManaFit } from '../types';
 import { createMemo, memoKey } from './memo';
 
 /** dps-debug lines that are notes, not omissions (their numbers vary per build): never part of `partial` */
@@ -14,8 +14,9 @@ export const isPiece = (l: string) => !INFO.some((p) => (typeof p === 'string' ?
 export const INFO: (string | RegExp)[] = ['price:', /^held buff \d+ \(.*\) not carried: no piece of this build adds it/,
   // U2-MIX (dps-debug buffrate.ts): how a buff in a mix of states was priced - the expectation over its stack states - not an omission
   'priced as the expectation over a mix of states (U2-MIX)', 'U2-MIX joint states ', 'U2-MIX affine closed form',
-  // statements, not omissions: a battlecry's enemy-map buff and its derived uptime (IN1); a held buff at the count the character's capture measured
-  /^the target's buff \d+ \(\w+\) from the battlecry's enemy map \(IN1\): /, /^not calculable without a capture: held buffs the pieces do not derive, taken from the capture: /,
+  // statements, not omissions: a battlecry's enemy-map buff and its derived uptime (IN1); a target buff's resolved uptime (IN1: steady, never added, inert;
+  // a real gap is "the target's buff not derived (IN1): ", figure.ts 550); a held buff at the count the character's capture measured
+  /^the target's buff \d+ \(\w+\) from the battlecry's enemy map \(IN1\): /, /^the target's buff \(IN1\): /,/^not calculable without a capture: held buffs the pieces do not derive, taken from the capture: /,
   // U2-IS states the cast rate its uptime rules ran on: its text changes whenever attack speed does (dps-debug coordinator, 2026-10-16: a statement)
   /^U2-IS: the uptime rules over the figure's own hit rates /,
   // Kaleidoscope's modifier is set aside from the compile and priced over its three phase states (dps-debug KAL2 / ringW, coordinator 2026-10-16)
@@ -40,13 +41,11 @@ export const DEFAULT_ROLL_BUDGET = 1 << 20;
 /** the boss Hammer of Ash is priced against (user, 2026-10-15: kill Cube 3 as fast as possible); Ice Shot, the levelling leg, stays on its dummy */
 export const DEFAULT_TARGET = 'cube3';
 // Old King's Armor's input is stated only when a figure asks (apply.ts ON_ASK), so it moves no other figure's memo key
-/** dps-debug figure.ts RESOURCE1_KEY: Fighting Will (comp 0x26 resource key 1), which Opening Heart's crit rating reads; its in-fight gains are not ported, so it is stated:
- *  the middle of 0..100 (0 -> 100 is x1.068 on the owner's build, dps-debug 2026-10-16) */
-export const RESOURCE1_KEY = 'comp 0x26 resource key 1 (counter 0x2d: Fighting Will, buff 390, 0..100)';
-export const DEFAULT_FIGHT: Fight = { bombs: 10, inputs: { [STILL_KEY]: 0, [RESOURCE1_KEY]: 50 } };
+export { RESOURCE1_KEY } from './apply';
+export const DEFAULT_FIGHT: Fight = { bombs: 10, inputs: { [STILL_KEY]: 0 } };   // Fighting Will (RESOURCE1_KEY): apply.ts ON_ASK
 export interface Job { loadout: Loadout; changes: (Change | LoadoutPatch)[]; ctx: EvalCtx; fight: Fight; rollBudget: number; /** a dps-debug BOSSES key (hoa) */ target?: string }
 export interface JobResult { loadout: Loadout; dropped: string[]; fig: { life100: number; life0: number; left: string[]; needs: string[]; stop?: string; inputs?: Record<string, unknown>;
-  /** the damage lock's ceiling, the build's cull on the target (CULL1), the boss's max Life */ lock?: number; cull?: { threshold: number; blocked: string[]; stop?: string }; lifeMax?: number } }
+  /** the damage lock's ceiling, the build's cull on the target (CULL1), the boss's max Life */ lock?: number; cull?: { threshold: number; blocked: string[]; stop?: string }; lifeMax?: number; mana?: ManaFit } }
 /** One worker: runs a job, rejects with the dps-debug error message when pricing throws. */
 export interface WorkerLike {
   /** settles when the worker can take jobs; rejects when its startup failed */
@@ -193,7 +192,7 @@ export async function createEvaluator(o: EvaluatorOpts = {}): Promise<Evaluator>
         return { keep: true, v: { loadout: lo, dropped, ...(fig.inputs ? { inputs: fig.inputs } : {}),
           figure: { life100: fig.life100, life0: fig.life0, kill: killSpeed(fig.life100, fig.life0, fig.lock ?? Infinity, cull),
             partial: [...fig.left, ...fig.needs, ...dropped].filter(l => !INFO.some(p => typeof p === 'string' ? l.startsWith(p) : p.test(l))), ...(fig.stop ? { stop: fig.stop } : {}),
-            ...(fig.lock !== undefined ? { lock: fig.lock } : {}), ...(cull ? { cull } : {}), ...(cullNote ? { cullNote } : {}),
+            ...(fig.lock !== undefined ? { lock: fig.lock } : {}), ...(fig.mana ? { mana: fig.mana } : {}), ...(cull ? { cull } : {}), ...(cullNote ? { cullNote } : {}),
             ...(targetOf(ctx) ? { target: targetOf(ctx), ...(fig.lifeMax !== undefined ? { lifeMax: fig.lifeMax } : {}) } : {}) } } as Evaluated };
       },
       (e: Error) => {

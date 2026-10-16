@@ -166,7 +166,7 @@ describe('evaluator (stub workers)', () => {
     const [d, five, again] = [await mk(), await mk({ bombs: 5 }), await mk({ bombs: 5 })];
     await d.run(lo, [], ctx); await five.run(lo, [], ctx); await again.run(lo, [], ctx);
     expect(s.jobs.map(j => j.fight)).toEqual([DEFAULT_FIGHT, { bombs: 5 }]);
-    expect(d.fight).toEqual({ bombs: 10, inputs: { 'castLogSum id=10000000 window=4s tags=[[],[],[],[]]': 0, [RESOURCE1_KEY]: 50 } });   // Fighting Will stated (Opening Heart, OH1)
+    expect(d.fight).toEqual({ bombs: 10, inputs: { 'castLogSum id=10000000 window=4s tags=[[],[],[],[]]': 0 } });   // Fighting Will only on ask (withAsked)
     expect(d.fightNote).toBe('training dummy stands still (dps-debug STILL / e2e1-lib.ts)');
     // same bombs, different named input: its own entry too
     await (await mk({ bombs: 5, inputs: { x: 1 } })).run(lo, [], ctx);
@@ -460,6 +460,13 @@ describe('withAsked (fight inputs stated only when a figure asks)', () => {
     expect(withAsked((x) => (once.push(x), { stop: ask('affix class 1 var 1') })).stop).toMatch(/affix class 1 var 1/);
     expect(once).toEqual([{}]);
     expect(DEFAULT_FIGHT.inputs).not.toHaveProperty(['affix class 782097792 var 1']);
+  });
+  it("Fighting Will (OH1) is stated only when the figure asks: a build with a fixed rating (the probuild belt's 67) stops when it is stated anyway", () => {
+    const stop = `not ported: attr 4802 dyn_48 counter 45: comp 0x26 resource key 1 has no value: no fixed rating (node 639) or state read reached the owner's store, and the fight input '${RESOURCE1_KEY}' is not given (a resource the fight fills)`;
+    const seen: Record<string, number>[] = [];
+    expect(withAsked((x) => (seen.push(x), x[RESOURCE1_KEY] === 50 ? {} : { stop })).stop).toBeUndefined();
+    expect(seen).toEqual([{}, { [RESOURCE1_KEY]: 50 }]);
+    expect(DEFAULT_FIGHT.inputs).not.toHaveProperty([RESOURCE1_KEY]);
   });
 });
 
