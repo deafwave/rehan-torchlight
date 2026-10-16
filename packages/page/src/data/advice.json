@@ -45,7 +45,7 @@
     "lines": [
      "belt: Radiant Lunar Girdle",
      "boots: Old King's Sabatons",
-     "chest: Old King's Armor",
+     "chest: Ruinous Star",
      "gloves: Demon Slayer's Hands",
      "helmet: Secret Shadow's Mask",
      "mainHand: Sierra Reverberation Maul - T1 +(152-216)% Melee Damage (prefix); T1 +(49-80)% Gear Physical Damage (prefix); T1 +(127-180) Strength (prefix); T1 +(80-100)% additional Attack Damage after standing still for 0.1s. -20% additional Attack Speed (suffix); T1 +(152-216)% Elemental Damage (suffix); T2 +(109-151)% Physical Damage (suffix)",
@@ -86,20 +86,23 @@
     ]
    },
    {
-    "section": "Talents (100 points)",
+    "section": "Talents (104 points)",
     "lines": [
      "core: Well Matched",
+     "core: Forbidden Power",
+     "core: Mixture",
      "core: Off The Beaten Track",
-     "core: Subtle Impact",
-     "Onslaughter: Attack Damage x3, Area Damage x3, Attack Damage x3, Attack Damage x2, Area Damage x3, Attack Critical Strike Rating x3, Skill Area x3, Attack Critical Strike Rating x3, Skill Area x3, Attack Damage when holding a Two-Handed Weapon x3, Area Damage x3, additional Base Damage for Two-Handed Weapons x3, Attack Critical Strike Rating when holding a Two-Handed Weapon x3, Strength x3, Skill Area if Main Skill is not used in the last 2 s x1, additional Base Damage for Two-Handed Weapons x1, inflicted Paralysis Effect when holding a Two-Handed Weapon x1, Strength x1",
-     "Goddess of Deception: damage x3, Movement Speed x3, damage x3, Attack and Cast Speed x3, damage x3, Movement Speed x3, Attack and Cast Speed x1, Critical Strike Rating x3, Critical Strike Rating x3",
-     "Lich: damage x3, damage x3, Critical Strike Rating x3, Critical Strike Rating x3, All Stats x3, damage x3, All Stats x3, Sealed Mana Compensation x3, Attack and Cast Speed x2, Sealed Mana Compensation x3, Sealed Mana Compensation x1"
+     "core: Dirt",
+     "Onslaughter: Attack Damage x3, Area Damage x3, Attack Damage x3, Attack Critical Strike Rating x3, Attack Critical Strike Rating x3, Attack Damage when holding a Two-Handed Weapon x3, additional Base Damage for Two-Handed Weapons x3, Attack Critical Strike Rating when holding a Two-Handed Weapon x2, Strength x3, additional Base Damage for Two-Handed Weapons x1, Strength x1",
+     "Goddess of Deception: damage x3, Movement Speed x3, damage x2, Attack and Cast Speed x1, Movement Speed x3, Critical Strike Rating x3, Critical Strike Rating x3, Deterioration Chance x3, Erosion Damage x3, additional damage applied to Life x1",
+     "Shadowmaster: Erosion Damage x3, Attack and Cast Speed x2, Deterioration Chance x3, Critical Strike Rating x3, Deterioration Damage x3, Critical Strike Rating x3, Erosion Damage x3, Deterioration Chance x3, additional Deterioration Damage x1",
+     "Lich: damage x3, damage x3, Critical Strike Rating x3, Critical Strike Rating x3, All Stats x3, damage x3, All Stats x1, Sealed Mana Compensation x3, Attack and Cast Speed x2, Sealed Mana Compensation x3"
     ],
     "trees": [
      {
       "tree": 12,
       "name": "Onslaughter",
-      "points": 45,
+      "points": 28,
       "nodes": [
        {
         "id": 12010100,
@@ -149,7 +152,7 @@
         "col": 2,
         "kind": 1,
         "max": 3,
-        "pts": 2,
+        "pts": 0,
         "name": "Attack Damage",
         "prereq": []
        },
@@ -181,7 +184,7 @@
         "col": 5,
         "kind": 3,
         "max": 3,
-        "pts": 3,
+        "pts": 0,
         "name": "Area Damage",
         "prereq": [
          12010500
@@ -237,7 +240,7 @@
         "col": 5,
         "kind": 1,
         "max": 3,
-        "pts": 3,
+        "pts": 0,
         "name": "Skill Area",
         "prereq": []
        },
@@ -281,7 +284,7 @@
         "col": 5,
         "kind": 3,
         "max": 3,
-        "pts": 3,
+        "pts": 0,
         "name": "Skill Area",
         "prereq": [
          12030500
@@ -325,7 +328,7 @@
         "col": 5,
         "kind": 1,
         "max": 3,
-        "pts": 3,
+        "pts": 0,
         "name": "Area Damage",
         "prereq": []
        },
@@ -347,7 +350,7 @@
         "col": 2,
         "kind": 3,
         "max": 3,
-        "pts": 3,
+        "pts": 2,
         "name": "Attack Critical Strike Rating when holding a Two-Handed Weapon",
         "prereq": [
          12050100
@@ -381,7 +384,7 @@
         "col": 5,
         "kind": 3,
         "max": 1,
-        "pts": 1,
+        "pts": 0,
         "name": "Skill Area if Main Skill is not used in the last 2 s",
         "prereq": [
          12050500
@@ -405,7 +408,7 @@
         "col": 2,
         "kind": 3,
         "max": 1,
-        "pts": 1,
+        "pts": 0,
         "name": "inflicted Paralysis Effect when holding a Two-Handed Weapon",
         "prereq": [
          12060200
@@ -482,7 +485,7 @@
         "col": 3,
         "kind": 3,
         "max": 3,
-        "pts": 3,
+        "pts": 2,
         "name": "damage",
         "prereq": [
          50010300
@@ -494,7 +497,7 @@
         "col": 4,
         "kind": 1,
         "max": 3,
-        "pts": 3,
+        "pts": 1,
         "name": "Attack and Cast Speed",
         "prereq": []
        },
@@ -504,7 +507,7 @@
         "col": 1,
         "kind": 1,
         "max": 3,
-        "pts": 3,
+        "pts": 0,
         "name": "damage",
         "prereq": []
        },
@@ -536,7 +539,7 @@
         "col": 4,
         "kind": 3,
         "max": 3,
-        "pts": 1,
+        "pts": 0,
         "name": "Attack and Cast Speed",
         "prereq": [
          50020400
@@ -692,7 +695,7 @@
         "col": 4,
         "kind": 1,
         "max": 3,
-        "pts": 0,
+        "pts": 3,
         "name": "Deterioration Chance",
         "prereq": []
        },
@@ -702,7 +705,7 @@
         "col": 5,
         "kind": 1,
         "max": 3,
-        "pts": 0,
+        "pts": 3,
         "name": "Erosion Damage",
         "prereq": []
        },
@@ -748,7 +751,7 @@
         "col": 5,
         "kind": 3,
         "max": 1,
-        "pts": 0,
+        "pts": 1,
         "name": "additional damage applied to Life",
         "prereq": [
          50060500
@@ -766,7 +769,7 @@
         "id": 50001200,
         "need": 12,
         "name": "Mixture",
-        "taken": false
+        "taken": true
        },
        {
         "id": 50001300,
@@ -778,13 +781,13 @@
         "id": 50002100,
         "need": 24,
         "name": "Subtle Impact",
-        "taken": true
+        "taken": false
        },
        {
         "id": 50002200,
         "need": 24,
         "name": "Forbidden Power",
-        "taken": false
+        "taken": true
        },
        {
         "id": 50002300,
@@ -795,9 +798,376 @@
       ]
      },
      {
+      "tree": 51,
+      "name": "Shadowmaster",
+      "points": 24,
+      "nodes": [
+       {
+        "id": 51010100,
+        "row": 1,
+        "col": 1,
+        "kind": 1,
+        "max": 3,
+        "pts": 3,
+        "name": "Erosion Damage",
+        "prereq": []
+       },
+       {
+        "id": 51010300,
+        "row": 1,
+        "col": 3,
+        "kind": 1,
+        "max": 3,
+        "pts": 0,
+        "name": "Max Energy Shield",
+        "prereq": []
+       },
+       {
+        "id": 51010500,
+        "row": 1,
+        "col": 5,
+        "kind": 1,
+        "max": 3,
+        "pts": 0,
+        "name": "Wilt chance",
+        "prereq": []
+       },
+       {
+        "id": 51020100,
+        "row": 2,
+        "col": 1,
+        "kind": 3,
+        "max": 3,
+        "pts": 0,
+        "name": "Erosion Damage",
+        "prereq": [
+         51010100
+        ]
+       },
+       {
+        "id": 51020200,
+        "row": 2,
+        "col": 2,
+        "kind": 1,
+        "max": 3,
+        "pts": 2,
+        "name": "Attack and Cast Speed",
+        "prereq": []
+       },
+       {
+        "id": 51020300,
+        "row": 2,
+        "col": 3,
+        "kind": 3,
+        "max": 3,
+        "pts": 0,
+        "name": "Max Energy Shield",
+        "prereq": [
+         51010300
+        ]
+       },
+       {
+        "id": 51020400,
+        "row": 2,
+        "col": 4,
+        "kind": 1,
+        "max": 3,
+        "pts": 3,
+        "name": "Deterioration Chance",
+        "prereq": []
+       },
+       {
+        "id": 51020500,
+        "row": 2,
+        "col": 5,
+        "kind": 3,
+        "max": 3,
+        "pts": 0,
+        "name": "Wilt chance",
+        "prereq": [
+         51010500
+        ]
+       },
+       {
+        "id": 51030100,
+        "row": 3,
+        "col": 1,
+        "kind": 1,
+        "max": 3,
+        "pts": 3,
+        "name": "Critical Strike Rating",
+        "prereq": []
+       },
+       {
+        "id": 51030200,
+        "row": 3,
+        "col": 2,
+        "kind": 3,
+        "max": 3,
+        "pts": 0,
+        "name": "Attack and Cast Speed",
+        "prereq": [
+         51020200
+        ]
+       },
+       {
+        "id": 51030300,
+        "row": 3,
+        "col": 3,
+        "kind": 1,
+        "max": 3,
+        "pts": 0,
+        "name": "Erosion Resistance",
+        "prereq": []
+       },
+       {
+        "id": 51030400,
+        "row": 3,
+        "col": 4,
+        "kind": 3,
+        "max": 3,
+        "pts": 3,
+        "name": "Deterioration Damage",
+        "prereq": [
+         51020400
+        ]
+       },
+       {
+        "id": 51040100,
+        "row": 4,
+        "col": 1,
+        "kind": 3,
+        "max": 3,
+        "pts": 3,
+        "name": "Critical Strike Rating",
+        "prereq": [
+         51030100
+        ]
+       },
+       {
+        "id": 51040200,
+        "row": 4,
+        "col": 2,
+        "kind": 1,
+        "max": 3,
+        "pts": 0,
+        "name": "Erosion Damage",
+        "prereq": []
+       },
+       {
+        "id": 51040300,
+        "row": 4,
+        "col": 3,
+        "kind": 3,
+        "max": 1,
+        "pts": 0,
+        "name": "Immune to Wilt",
+        "prereq": [
+         51030300
+        ]
+       },
+       {
+        "id": 51040400,
+        "row": 4,
+        "col": 4,
+        "kind": 1,
+        "max": 3,
+        "pts": 0,
+        "name": "Life Regain",
+        "prereq": []
+       },
+       {
+        "id": 51040500,
+        "row": 4,
+        "col": 5,
+        "kind": 1,
+        "max": 3,
+        "pts": 0,
+        "name": "Wilt chance",
+        "prereq": []
+       },
+       {
+        "id": 51050100,
+        "row": 5,
+        "col": 1,
+        "kind": 1,
+        "max": 3,
+        "pts": 3,
+        "name": "Erosion Damage",
+        "prereq": []
+       },
+       {
+        "id": 51050200,
+        "row": 5,
+        "col": 2,
+        "kind": 3,
+        "max": 1,
+        "pts": 0,
+        "name": "Gains Profane when inflicting Wilt or Deterioration",
+        "prereq": [
+         51040200
+        ]
+       },
+       {
+        "id": 51050300,
+        "row": 5,
+        "col": 3,
+        "kind": 1,
+        "max": 3,
+        "pts": 0,
+        "name": "Erosion Damage",
+        "prereq": []
+       },
+       {
+        "id": 51050400,
+        "row": 5,
+        "col": 4,
+        "kind": 3,
+        "max": 3,
+        "pts": 0,
+        "name": "Life Regain",
+        "prereq": [
+         51040400
+        ]
+       },
+       {
+        "id": 51050500,
+        "row": 5,
+        "col": 5,
+        "kind": 3,
+        "max": 1,
+        "pts": 0,
+        "name": "Wilt chance",
+        "prereq": [
+         51040500
+        ]
+       },
+       {
+        "id": 51060100,
+        "row": 6,
+        "col": 1,
+        "kind": 3,
+        "max": 3,
+        "pts": 0,
+        "name": "chance to inflict additional stack(s) of Wilt",
+        "prereq": [
+         51050100
+        ]
+       },
+       {
+        "id": 51060200,
+        "row": 6,
+        "col": 2,
+        "kind": 3,
+        "max": 3,
+        "pts": 3,
+        "name": "Deterioration Chance",
+        "prereq": [
+         51050100
+        ]
+       },
+       {
+        "id": 51060300,
+        "row": 6,
+        "col": 3,
+        "kind": 3,
+        "max": 1,
+        "pts": 0,
+        "name": "Erosion Skill Level",
+        "prereq": [
+         51050300
+        ]
+       },
+       {
+        "id": 51060400,
+        "row": 6,
+        "col": 4,
+        "kind": 1,
+        "max": 3,
+        "pts": 0,
+        "name": "Erosion Damage",
+        "prereq": []
+       },
+       {
+        "id": 51060500,
+        "row": 6,
+        "col": 5,
+        "kind": 3,
+        "max": 1,
+        "pts": 0,
+        "name": "Gains Blur per stacks of Wilt inflicted",
+        "prereq": [
+         51050500
+        ]
+       },
+       {
+        "id": 51070100,
+        "row": 7,
+        "col": 1,
+        "kind": 3,
+        "max": 1,
+        "pts": 0,
+        "name": "Erosion Damage per stack of Wilt inflicted, stacking up to times",
+        "prereq": [
+         51060100
+        ]
+       },
+       {
+        "id": 51070200,
+        "row": 7,
+        "col": 2,
+        "kind": 3,
+        "max": 1,
+        "pts": 1,
+        "name": "additional Deterioration Damage",
+        "prereq": [
+         51060200
+        ]
+       },
+       {
+        "id": 51070400,
+        "row": 7,
+        "col": 4,
+        "kind": 3,
+        "max": 1,
+        "pts": 0,
+        "name": "Converts of Physical Damage to Erosion Damage",
+        "prereq": [
+         51060400
+        ]
+       }
+      ],
+      "cores": [
+       {
+        "id": 51001100,
+        "need": 24,
+        "name": "Dirt",
+        "taken": true
+       },
+       {
+        "id": 51001200,
+        "need": 24,
+        "name": "Stealth Stab",
+        "taken": false
+       },
+       {
+        "id": 51001300,
+        "need": 24,
+        "name": "Beyond Cure",
+        "taken": false
+       },
+       {
+        "id": 51001400,
+        "need": 24,
+        "name": "Twisted Belief",
+        "taken": false
+       }
+      ]
+     },
+     {
       "tree": 54,
       "name": "Lich",
-      "points": 30,
+      "points": 27,
       "nodes": [
        {
         "id": 54010100,
@@ -989,7 +1359,7 @@
         "col": 2,
         "kind": 3,
         "max": 3,
-        "pts": 3,
+        "pts": 1,
         "name": "All Stats",
         "prereq": [
          54040200
@@ -1125,7 +1495,7 @@
         "col": 5,
         "kind": 3,
         "max": 1,
-        "pts": 1,
+        "pts": 0,
         "name": "Sealed Mana Compensation",
         "prereq": [
          54060500
@@ -1389,7 +1759,7 @@
    }
   ],
   "routes": [],
-  "buildNote": "your gear now; talent page rebuilt without Erosion until Ruinous Star (Onslaughter 45, Goddess of Deception 25, Lich 30; cores Well Matched, Off The Beaten Track, Subtle Impact): Cube 1 171 s on your page -> 82 s"
+  "buildNote": "your gear with Ruinous Star; talent page rebuilt (Onslaughter 28, Goddess of Deception 25, Shadowmaster 24, Lich 27; cores Well Matched, Forbidden Power, Mixture, Off The Beaten Track, Dirt): Cube 1 16 s on your page -> 14 s"
  },
  "slates": [
   {
@@ -1602,7 +1972,7 @@
    {
     "tree": 12,
     "name": "Onslaughter",
-    "points": 45,
+    "points": 28,
     "nodes": [
      {
       "id": 12010100,
@@ -1652,7 +2022,7 @@
       "col": 2,
       "kind": 1,
       "max": 3,
-      "pts": 2,
+      "pts": 0,
       "name": "Attack Damage",
       "prereq": []
      },
@@ -1684,7 +2054,7 @@
       "col": 5,
       "kind": 3,
       "max": 3,
-      "pts": 3,
+      "pts": 0,
       "name": "Area Damage",
       "prereq": [
        12010500
@@ -1740,7 +2110,7 @@
       "col": 5,
       "kind": 1,
       "max": 3,
-      "pts": 3,
+      "pts": 0,
       "name": "Skill Area",
       "prereq": []
      },
@@ -1784,7 +2154,7 @@
       "col": 5,
       "kind": 3,
       "max": 3,
-      "pts": 3,
+      "pts": 0,
       "name": "Skill Area",
       "prereq": [
        12030500
@@ -1828,7 +2198,7 @@
       "col": 5,
       "kind": 1,
       "max": 3,
-      "pts": 3,
+      "pts": 0,
       "name": "Area Damage",
       "prereq": []
      },
@@ -1850,7 +2220,7 @@
       "col": 2,
       "kind": 3,
       "max": 3,
-      "pts": 3,
+      "pts": 2,
       "name": "Attack Critical Strike Rating when holding a Two-Handed Weapon",
       "prereq": [
        12050100
@@ -1884,7 +2254,7 @@
       "col": 5,
       "kind": 3,
       "max": 1,
-      "pts": 1,
+      "pts": 0,
       "name": "Skill Area if Main Skill is not used in the last 2 s",
       "prereq": [
        12050500
@@ -1908,7 +2278,7 @@
       "col": 2,
       "kind": 3,
       "max": 1,
-      "pts": 1,
+      "pts": 0,
       "name": "inflicted Paralysis Effect when holding a Two-Handed Weapon",
       "prereq": [
        12060200
@@ -1985,7 +2355,7 @@
       "col": 3,
       "kind": 3,
       "max": 3,
-      "pts": 3,
+      "pts": 2,
       "name": "damage",
       "prereq": [
        50010300
@@ -1997,7 +2367,7 @@
       "col": 4,
       "kind": 1,
       "max": 3,
-      "pts": 3,
+      "pts": 1,
       "name": "Attack and Cast Speed",
       "prereq": []
      },
@@ -2007,7 +2377,7 @@
       "col": 1,
       "kind": 1,
       "max": 3,
-      "pts": 3,
+      "pts": 0,
       "name": "damage",
       "prereq": []
      },
@@ -2039,7 +2409,7 @@
       "col": 4,
       "kind": 3,
       "max": 3,
-      "pts": 1,
+      "pts": 0,
       "name": "Attack and Cast Speed",
       "prereq": [
        50020400
@@ -2195,7 +2565,7 @@
       "col": 4,
       "kind": 1,
       "max": 3,
-      "pts": 0,
+      "pts": 3,
       "name": "Deterioration Chance",
       "prereq": []
      },
@@ -2205,7 +2575,7 @@
       "col": 5,
       "kind": 1,
       "max": 3,
-      "pts": 0,
+      "pts": 3,
       "name": "Erosion Damage",
       "prereq": []
      },
@@ -2251,7 +2621,7 @@
       "col": 5,
       "kind": 3,
       "max": 1,
-      "pts": 0,
+      "pts": 1,
       "name": "additional damage applied to Life",
       "prereq": [
        50060500
@@ -2269,7 +2639,7 @@
       "id": 50001200,
       "need": 12,
       "name": "Mixture",
-      "taken": false
+      "taken": true
      },
      {
       "id": 50001300,
@@ -2281,13 +2651,13 @@
       "id": 50002100,
       "need": 24,
       "name": "Subtle Impact",
-      "taken": true
+      "taken": false
      },
      {
       "id": 50002200,
       "need": 24,
       "name": "Forbidden Power",
-      "taken": false
+      "taken": true
      },
      {
       "id": 50002300,
@@ -2298,9 +2668,376 @@
     ]
    },
    {
+    "tree": 51,
+    "name": "Shadowmaster",
+    "points": 24,
+    "nodes": [
+     {
+      "id": 51010100,
+      "row": 1,
+      "col": 1,
+      "kind": 1,
+      "max": 3,
+      "pts": 3,
+      "name": "Erosion Damage",
+      "prereq": []
+     },
+     {
+      "id": 51010300,
+      "row": 1,
+      "col": 3,
+      "kind": 1,
+      "max": 3,
+      "pts": 0,
+      "name": "Max Energy Shield",
+      "prereq": []
+     },
+     {
+      "id": 51010500,
+      "row": 1,
+      "col": 5,
+      "kind": 1,
+      "max": 3,
+      "pts": 0,
+      "name": "Wilt chance",
+      "prereq": []
+     },
+     {
+      "id": 51020100,
+      "row": 2,
+      "col": 1,
+      "kind": 3,
+      "max": 3,
+      "pts": 0,
+      "name": "Erosion Damage",
+      "prereq": [
+       51010100
+      ]
+     },
+     {
+      "id": 51020200,
+      "row": 2,
+      "col": 2,
+      "kind": 1,
+      "max": 3,
+      "pts": 2,
+      "name": "Attack and Cast Speed",
+      "prereq": []
+     },
+     {
+      "id": 51020300,
+      "row": 2,
+      "col": 3,
+      "kind": 3,
+      "max": 3,
+      "pts": 0,
+      "name": "Max Energy Shield",
+      "prereq": [
+       51010300
+      ]
+     },
+     {
+      "id": 51020400,
+      "row": 2,
+      "col": 4,
+      "kind": 1,
+      "max": 3,
+      "pts": 3,
+      "name": "Deterioration Chance",
+      "prereq": []
+     },
+     {
+      "id": 51020500,
+      "row": 2,
+      "col": 5,
+      "kind": 3,
+      "max": 3,
+      "pts": 0,
+      "name": "Wilt chance",
+      "prereq": [
+       51010500
+      ]
+     },
+     {
+      "id": 51030100,
+      "row": 3,
+      "col": 1,
+      "kind": 1,
+      "max": 3,
+      "pts": 3,
+      "name": "Critical Strike Rating",
+      "prereq": []
+     },
+     {
+      "id": 51030200,
+      "row": 3,
+      "col": 2,
+      "kind": 3,
+      "max": 3,
+      "pts": 0,
+      "name": "Attack and Cast Speed",
+      "prereq": [
+       51020200
+      ]
+     },
+     {
+      "id": 51030300,
+      "row": 3,
+      "col": 3,
+      "kind": 1,
+      "max": 3,
+      "pts": 0,
+      "name": "Erosion Resistance",
+      "prereq": []
+     },
+     {
+      "id": 51030400,
+      "row": 3,
+      "col": 4,
+      "kind": 3,
+      "max": 3,
+      "pts": 3,
+      "name": "Deterioration Damage",
+      "prereq": [
+       51020400
+      ]
+     },
+     {
+      "id": 51040100,
+      "row": 4,
+      "col": 1,
+      "kind": 3,
+      "max": 3,
+      "pts": 3,
+      "name": "Critical Strike Rating",
+      "prereq": [
+       51030100
+      ]
+     },
+     {
+      "id": 51040200,
+      "row": 4,
+      "col": 2,
+      "kind": 1,
+      "max": 3,
+      "pts": 0,
+      "name": "Erosion Damage",
+      "prereq": []
+     },
+     {
+      "id": 51040300,
+      "row": 4,
+      "col": 3,
+      "kind": 3,
+      "max": 1,
+      "pts": 0,
+      "name": "Immune to Wilt",
+      "prereq": [
+       51030300
+      ]
+     },
+     {
+      "id": 51040400,
+      "row": 4,
+      "col": 4,
+      "kind": 1,
+      "max": 3,
+      "pts": 0,
+      "name": "Life Regain",
+      "prereq": []
+     },
+     {
+      "id": 51040500,
+      "row": 4,
+      "col": 5,
+      "kind": 1,
+      "max": 3,
+      "pts": 0,
+      "name": "Wilt chance",
+      "prereq": []
+     },
+     {
+      "id": 51050100,
+      "row": 5,
+      "col": 1,
+      "kind": 1,
+      "max": 3,
+      "pts": 3,
+      "name": "Erosion Damage",
+      "prereq": []
+     },
+     {
+      "id": 51050200,
+      "row": 5,
+      "col": 2,
+      "kind": 3,
+      "max": 1,
+      "pts": 0,
+      "name": "Gains Profane when inflicting Wilt or Deterioration",
+      "prereq": [
+       51040200
+      ]
+     },
+     {
+      "id": 51050300,
+      "row": 5,
+      "col": 3,
+      "kind": 1,
+      "max": 3,
+      "pts": 0,
+      "name": "Erosion Damage",
+      "prereq": []
+     },
+     {
+      "id": 51050400,
+      "row": 5,
+      "col": 4,
+      "kind": 3,
+      "max": 3,
+      "pts": 0,
+      "name": "Life Regain",
+      "prereq": [
+       51040400
+      ]
+     },
+     {
+      "id": 51050500,
+      "row": 5,
+      "col": 5,
+      "kind": 3,
+      "max": 1,
+      "pts": 0,
+      "name": "Wilt chance",
+      "prereq": [
+       51040500
+      ]
+     },
+     {
+      "id": 51060100,
+      "row": 6,
+      "col": 1,
+      "kind": 3,
+      "max": 3,
+      "pts": 0,
+      "name": "chance to inflict additional stack(s) of Wilt",
+      "prereq": [
+       51050100
+      ]
+     },
+     {
+      "id": 51060200,
+      "row": 6,
+      "col": 2,
+      "kind": 3,
+      "max": 3,
+      "pts": 3,
+      "name": "Deterioration Chance",
+      "prereq": [
+       51050100
+      ]
+     },
+     {
+      "id": 51060300,
+      "row": 6,
+      "col": 3,
+      "kind": 3,
+      "max": 1,
+      "pts": 0,
+      "name": "Erosion Skill Level",
+      "prereq": [
+       51050300
+      ]
+     },
+     {
+      "id": 51060400,
+      "row": 6,
+      "col": 4,
+      "kind": 1,
+      "max": 3,
+      "pts": 0,
+      "name": "Erosion Damage",
+      "prereq": []
+     },
+     {
+      "id": 51060500,
+      "row": 6,
+      "col": 5,
+      "kind": 3,
+      "max": 1,
+      "pts": 0,
+      "name": "Gains Blur per stacks of Wilt inflicted",
+      "prereq": [
+       51050500
+      ]
+     },
+     {
+      "id": 51070100,
+      "row": 7,
+      "col": 1,
+      "kind": 3,
+      "max": 1,
+      "pts": 0,
+      "name": "Erosion Damage per stack of Wilt inflicted, stacking up to times",
+      "prereq": [
+       51060100
+      ]
+     },
+     {
+      "id": 51070200,
+      "row": 7,
+      "col": 2,
+      "kind": 3,
+      "max": 1,
+      "pts": 1,
+      "name": "additional Deterioration Damage",
+      "prereq": [
+       51060200
+      ]
+     },
+     {
+      "id": 51070400,
+      "row": 7,
+      "col": 4,
+      "kind": 3,
+      "max": 1,
+      "pts": 0,
+      "name": "Converts of Physical Damage to Erosion Damage",
+      "prereq": [
+       51060400
+      ]
+     }
+    ],
+    "cores": [
+     {
+      "id": 51001100,
+      "need": 24,
+      "name": "Dirt",
+      "taken": true
+     },
+     {
+      "id": 51001200,
+      "need": 24,
+      "name": "Stealth Stab",
+      "taken": false
+     },
+     {
+      "id": 51001300,
+      "need": 24,
+      "name": "Beyond Cure",
+      "taken": false
+     },
+     {
+      "id": 51001400,
+      "need": 24,
+      "name": "Twisted Belief",
+      "taken": false
+     }
+    ]
+   },
+   {
     "tree": 54,
     "name": "Lich",
-    "points": 30,
+    "points": 27,
     "nodes": [
      {
       "id": 54010100,
@@ -2492,7 +3229,7 @@
       "col": 2,
       "kind": 3,
       "max": 3,
-      "pts": 3,
+      "pts": 1,
       "name": "All Stats",
       "prereq": [
        54040200
@@ -2628,7 +3365,7 @@
       "col": 5,
       "kind": 3,
       "max": 1,
-      "pts": 1,
+      "pts": 0,
       "name": "Sealed Mana Compensation",
       "prereq": [
        54060500
@@ -2658,373 +3395,6 @@
       "id": 54001400,
       "need": 24,
       "name": "Stab In The Back",
-      "taken": false
-     }
-    ]
-   },
-   {
-    "tree": 51,
-    "name": "Shadowmaster",
-    "points": 0,
-    "nodes": [
-     {
-      "id": 51010100,
-      "row": 1,
-      "col": 1,
-      "kind": 1,
-      "max": 3,
-      "pts": 0,
-      "name": "Erosion Damage",
-      "prereq": []
-     },
-     {
-      "id": 51010300,
-      "row": 1,
-      "col": 3,
-      "kind": 1,
-      "max": 3,
-      "pts": 0,
-      "name": "Max Energy Shield",
-      "prereq": []
-     },
-     {
-      "id": 51010500,
-      "row": 1,
-      "col": 5,
-      "kind": 1,
-      "max": 3,
-      "pts": 0,
-      "name": "Wilt chance",
-      "prereq": []
-     },
-     {
-      "id": 51020100,
-      "row": 2,
-      "col": 1,
-      "kind": 3,
-      "max": 3,
-      "pts": 0,
-      "name": "Erosion Damage",
-      "prereq": [
-       51010100
-      ]
-     },
-     {
-      "id": 51020200,
-      "row": 2,
-      "col": 2,
-      "kind": 1,
-      "max": 3,
-      "pts": 0,
-      "name": "Attack and Cast Speed",
-      "prereq": []
-     },
-     {
-      "id": 51020300,
-      "row": 2,
-      "col": 3,
-      "kind": 3,
-      "max": 3,
-      "pts": 0,
-      "name": "Max Energy Shield",
-      "prereq": [
-       51010300
-      ]
-     },
-     {
-      "id": 51020400,
-      "row": 2,
-      "col": 4,
-      "kind": 1,
-      "max": 3,
-      "pts": 0,
-      "name": "Deterioration Chance",
-      "prereq": []
-     },
-     {
-      "id": 51020500,
-      "row": 2,
-      "col": 5,
-      "kind": 3,
-      "max": 3,
-      "pts": 0,
-      "name": "Wilt chance",
-      "prereq": [
-       51010500
-      ]
-     },
-     {
-      "id": 51030100,
-      "row": 3,
-      "col": 1,
-      "kind": 1,
-      "max": 3,
-      "pts": 0,
-      "name": "Critical Strike Rating",
-      "prereq": []
-     },
-     {
-      "id": 51030200,
-      "row": 3,
-      "col": 2,
-      "kind": 3,
-      "max": 3,
-      "pts": 0,
-      "name": "Attack and Cast Speed",
-      "prereq": [
-       51020200
-      ]
-     },
-     {
-      "id": 51030300,
-      "row": 3,
-      "col": 3,
-      "kind": 1,
-      "max": 3,
-      "pts": 0,
-      "name": "Erosion Resistance",
-      "prereq": []
-     },
-     {
-      "id": 51030400,
-      "row": 3,
-      "col": 4,
-      "kind": 3,
-      "max": 3,
-      "pts": 0,
-      "name": "Deterioration Damage",
-      "prereq": [
-       51020400
-      ]
-     },
-     {
-      "id": 51040100,
-      "row": 4,
-      "col": 1,
-      "kind": 3,
-      "max": 3,
-      "pts": 0,
-      "name": "Critical Strike Rating",
-      "prereq": [
-       51030100
-      ]
-     },
-     {
-      "id": 51040200,
-      "row": 4,
-      "col": 2,
-      "kind": 1,
-      "max": 3,
-      "pts": 0,
-      "name": "Erosion Damage",
-      "prereq": []
-     },
-     {
-      "id": 51040300,
-      "row": 4,
-      "col": 3,
-      "kind": 3,
-      "max": 1,
-      "pts": 0,
-      "name": "Immune to Wilt",
-      "prereq": [
-       51030300
-      ]
-     },
-     {
-      "id": 51040400,
-      "row": 4,
-      "col": 4,
-      "kind": 1,
-      "max": 3,
-      "pts": 0,
-      "name": "Life Regain",
-      "prereq": []
-     },
-     {
-      "id": 51040500,
-      "row": 4,
-      "col": 5,
-      "kind": 1,
-      "max": 3,
-      "pts": 0,
-      "name": "Wilt chance",
-      "prereq": []
-     },
-     {
-      "id": 51050100,
-      "row": 5,
-      "col": 1,
-      "kind": 1,
-      "max": 3,
-      "pts": 0,
-      "name": "Erosion Damage",
-      "prereq": []
-     },
-     {
-      "id": 51050200,
-      "row": 5,
-      "col": 2,
-      "kind": 3,
-      "max": 1,
-      "pts": 0,
-      "name": "Gains Profane when inflicting Wilt or Deterioration",
-      "prereq": [
-       51040200
-      ]
-     },
-     {
-      "id": 51050300,
-      "row": 5,
-      "col": 3,
-      "kind": 1,
-      "max": 3,
-      "pts": 0,
-      "name": "Erosion Damage",
-      "prereq": []
-     },
-     {
-      "id": 51050400,
-      "row": 5,
-      "col": 4,
-      "kind": 3,
-      "max": 3,
-      "pts": 0,
-      "name": "Life Regain",
-      "prereq": [
-       51040400
-      ]
-     },
-     {
-      "id": 51050500,
-      "row": 5,
-      "col": 5,
-      "kind": 3,
-      "max": 1,
-      "pts": 0,
-      "name": "Wilt chance",
-      "prereq": [
-       51040500
-      ]
-     },
-     {
-      "id": 51060100,
-      "row": 6,
-      "col": 1,
-      "kind": 3,
-      "max": 3,
-      "pts": 0,
-      "name": "chance to inflict additional stack(s) of Wilt",
-      "prereq": [
-       51050100
-      ]
-     },
-     {
-      "id": 51060200,
-      "row": 6,
-      "col": 2,
-      "kind": 3,
-      "max": 3,
-      "pts": 0,
-      "name": "Deterioration Chance",
-      "prereq": [
-       51050100
-      ]
-     },
-     {
-      "id": 51060300,
-      "row": 6,
-      "col": 3,
-      "kind": 3,
-      "max": 1,
-      "pts": 0,
-      "name": "Erosion Skill Level",
-      "prereq": [
-       51050300
-      ]
-     },
-     {
-      "id": 51060400,
-      "row": 6,
-      "col": 4,
-      "kind": 1,
-      "max": 3,
-      "pts": 0,
-      "name": "Erosion Damage",
-      "prereq": []
-     },
-     {
-      "id": 51060500,
-      "row": 6,
-      "col": 5,
-      "kind": 3,
-      "max": 1,
-      "pts": 0,
-      "name": "Gains Blur per stacks of Wilt inflicted",
-      "prereq": [
-       51050500
-      ]
-     },
-     {
-      "id": 51070100,
-      "row": 7,
-      "col": 1,
-      "kind": 3,
-      "max": 1,
-      "pts": 0,
-      "name": "Erosion Damage per stack of Wilt inflicted, stacking up to times",
-      "prereq": [
-       51060100
-      ]
-     },
-     {
-      "id": 51070200,
-      "row": 7,
-      "col": 2,
-      "kind": 3,
-      "max": 1,
-      "pts": 0,
-      "name": "additional Deterioration Damage",
-      "prereq": [
-       51060200
-      ]
-     },
-     {
-      "id": 51070400,
-      "row": 7,
-      "col": 4,
-      "kind": 3,
-      "max": 1,
-      "pts": 0,
-      "name": "Converts of Physical Damage to Erosion Damage",
-      "prereq": [
-       51060400
-      ]
-     }
-    ],
-    "cores": [
-     {
-      "id": 51001100,
-      "need": 24,
-      "name": "Dirt",
-      "taken": false
-     },
-     {
-      "id": 51001200,
-      "need": 24,
-      "name": "Stealth Stab",
-      "taken": false
-     },
-     {
-      "id": 51001300,
-      "need": 24,
-      "name": "Beyond Cure",
-      "taken": false
-     },
-     {
-      "id": 51001400,
-      "need": 24,
-      "name": "Twisted Belief",
       "taken": false
      }
     ]
@@ -3070,7 +3440,7 @@
    "54060500": 3,
    "54070500": 1
   },
-  "title": "Your Hammer of Ash talent page (no Erosion until Ruinous Star)",
-  "note": "Free respec at level 90 and below. Cube 1: 171 s on your page now, 82 s on this one (model)."
+  "title": "Your Hammer of Ash talent page (with Ruinous Star and Formation Breaker)",
+  "note": "Free respec at level 90 and below. Cube 1: 16 s on your page now, 14 s on this one (model)."
  }
 }
