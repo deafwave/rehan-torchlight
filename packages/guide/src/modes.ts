@@ -393,13 +393,12 @@ export async function runAdvise(ev: Evaluator, state: State, k: Partial<Knobs> =
   for (const n of all) { const g = gem(n); if (g && n.gain > (bestGem.get(g) ?? -Infinity)) bestGem.set(g, n.gain); }
   // a unique you already own is never a buy (yours may price lower only where the model cannot read its roll: it is named instead)
   const own = ownedUniques(state);
-  for (const u of own) startNotes.push(`you have ${u} in your inventory: wear it rather than buy one`);
   const seenGem = new Set<string>();   // ties (the same gain in two sockets): the first
   const next = [...all.filter((n) => { const sl = n.kind === 'pact' && /in battle slot (\d)/.exec(n.label)?.[1], g = gem(n);
     if (g && (n.gain !== bestGem.get(g) || seenGem.has(g))) return false;
     if (g) seenGem.add(g);
     const u = /^Unique (.+) in \w+$/.exec(n.label)?.[1];
-    if (u && own.has(u)) return false;
+    if (u && own.has(u)) { if (!startNotes.some((x) => x.includes(`have ${u} `))) startNotes.push(`you have ${u} in your inventory: wear it rather than buy one`); return false; }
     return !sl || n.gain === best.get(sl); }), ...await rollAdvice(ev, state, ctxOf(state), first.figure, books)].sort((a, b) => b.gain - a.gain);
   const bought = Object.fromEntries(next.filter((n) => n.buy).map((n) => [n.buy!.name, books.price(n.buy!.name, state.level)]));
   const withNext = { ...base, legs, startNotes, next, prices: bought, ...(sw ? { switch: sw } : {}), ...(respecView ? { respec: respecView } : {}) };
