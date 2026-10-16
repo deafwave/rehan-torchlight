@@ -115,6 +115,8 @@ export interface GuideOut {
   /** advise: every acquisition at the start that raises the kill average, priced or not, with its exact figure (best gain first): the page ranks them by
    *  the player's prices, exact for the next purchase */
   next?: NextBuy[];
+  /** advise, an Ice Shot character at the switch's level: the planned switch to Hammer of Ash on this character (its buys, page) and its figure on the first boss */
+  switch?: { label: string; costFE: number | null; buy?: { name: string; qty: number }[]; target: string; figure: Figure };
   /** the legs in order (Ice Shot on the dummy, then Hammer of Ash boss by boss): each moves on when the boss is lock-bound */
   legs?: Leg[];
   /** ideal: the plan's last build priced on every boss (life100: its damage per second to that boss at full Life, before the damage lock) */

@@ -68,6 +68,12 @@ describe('guide view', () => {
     expect(h).toContain('<line class="" x1="17" y1="33" x2="51" y2="33"/>');   // Frost requires Cold Damage: drawn, not lit (Frost untaken)
     expect(h).toContain('<span class="tc on" title="unlocks at 24 points">Steady Accumulation</span>');
   });
+  it('advice at the switch level shows the Hammer of Ash switch on the character, with its cost and its first-boss figure', () => {
+    const h = renderGuide({ ...g, mode: 'advise', switch: { label: "Switch to Hammer of Ash with Forger's Maul", costFE: 120, target: 'cube1', figure: { ...g.start, life100: 2e12, kill: 2e3, lifeMax: 1e4 } } });
+    expect(h).toContain('<b>Switch to Hammer of Ash</b>');
+    expect(h).toContain('<td>120 FE</td><td>2.00 T</td><td>5.00 s</td>');
+    expect(() => parseAdvice(JSON.stringify({ ...g, mode: 'advise', switch: { label: 1 } }))).toThrow(/switch/);
+  });
   it("the final build's damage per second on each boss is stated, with its time to kill", () => {
     const h = renderGuide({ ...g, final: [{ target: 'cube1', figure: { ...g.start, life100: 1.43e14, kill: 2e3, lifeMax: 1e4 } }] });
     expect(h).toContain('<td>Cube 1</td><td>143 T</td><td>5.00 s</td>');

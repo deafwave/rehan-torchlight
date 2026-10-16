@@ -314,9 +314,19 @@ export async function runAdvise(ev: Evaluator, state: State, k: Partial<Knobs> =
       state = r.state; first = { ...first, figure: r.figure };
     }
   }
+  // an Ice Shot character at the planned switch's level: the switch on this character, priced on the first boss (its own card: a boss figure does not rank
+  // against the dummy's)
+  let sw: GuideOut['switch'];
+  if (state.skill === 'iceShot') {
+    const hoa: State = { ...state, skill: 'hoa', target: targets[0] }, ctx = ctxOf(hoa), m = switchWithPage(state, ctx);
+    if (m) {
+      const e = await ev.run(state.loadout, m.changes, ctxOfState(hoa));
+      sw = { label: m.label, costFE: m.costFE, target: targets[0], figure: e.figure };
+    } else startNotes.push(`Hammer of Ash switch: ${[...ctx.notSearched].find((x) => /switch waits/.test(x)) ?? 'not offered yet'}`);
+  }
   const next = await nextBuys(state, ev, acq, ctxOf(state), first.figure);
   const bought = Object.fromEntries(next.filter((n) => n.buy).map((n) => [n.buy!.name, books.price(n.buy!.name, state.level)]));
-  const withNext = { ...base, legs, startNotes, next, prices: bought };
+  const withNext = { ...base, legs, startNotes, next, prices: bought, ...(sw ? { switch: sw } : {}) };
   onStep?.({ ...withNext, knobs: { ...base.knobs, partialRun: true }, inputs: first.inputs, start: first.figure, steps: [], notSearched: [], unpriced: [], notCalculable: [] });
   const { stoppedBy, ...r } = await path(state, ev, acq, recon, ctxOf, K,
     onStep && ((p) => onStep({ ...withNext, knobs: { ...base.knobs, partialRun: true }, inputs: first.inputs, ...p } as GuideOut)));

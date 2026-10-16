@@ -8,6 +8,7 @@ export interface GuideOut {
   start: Figure; inputs?: Record<string, unknown>; startNotes?: string[]; steps: Step[]; notSearched: string[]; unpriced: string[]; notCalculable: string[];
   character?: Character; next?: NextBuy[]; prices?: Record<string, number | null>; legs?: Leg[];
   /** the plan's last build priced on every boss (life100: damage per second at full Life, before the damage lock) */ final?: { target: string; figure: Figure }[];
+  /** advise, an Ice Shot character at the switch's level: the planned switch to Hammer of Ash on this character, on the first boss */ switch?: { label: string; costFE: number | null; target: string; figure: Figure };
 }
 /** one tab: a skill against one yardstick (target null = the training dummy), from step `firstStep` on; `end` = why it ended */
 export interface Leg { skill: string; target: string | null; firstStep: number; end?: string; start: Figure; reached?: false; build?: { section: string; lines: string[]; trees?: TreeView[] }[] }
@@ -280,6 +281,15 @@ function legTabs(g: GuideOut): string {
     + `<div class="gl-tab-panels">${legs.map((l, i) => legPanel(g, l, i)).join('')}</div></div>`;
 }
 
+/** advise: the planned Hammer of Ash switch on the character, with its figure on the first boss */
+function switchCard(g: GuideOut): string {
+  const w = g.switch;
+  if (!w) return '';
+  const t = killTime(w.figure);
+  return `<div class="gl-final"><b>Switch to Hammer of Ash</b><p>${esc(w.label)}</p><table><tr><th>Cost</th><th>${esc(bossName(w.target))}: damage per second at full Life</th><th>Time to kill</th></tr>`
+    + `<tr><td>${w.costFE === null ? 'not priced' : `${fmtFE(w.costFE)} FE`}</td><td>${w.figure.stop ? 'not priced' : fmtDps(w.figure.life100)}</td><td>${t || '—'}</td></tr></table>`
+    + `<p class="bnote">Then follow the ${esc(bossName(w.target))} tab of the ideal path below.</p></div>`;
+}
 /** the plan's last build on every boss, as the model states it */
 function finalCard(g: GuideOut): string {
   if (!g.final?.length) return '';
@@ -289,7 +299,7 @@ function finalCard(g: GuideOut): string {
 }
 export function renderGuide(g: GuideOut, mine: Record<string, number> = {}): string {
   const plan = g.legs?.length ? legTabs(g) : chart(g.start, entries(g.steps)) + stages(entries(g.steps), g.mode);
-  return `<div class="gl-plan">${goalCard(g)}${g.character ? renderCharacter(g.character) : ''}${g.next?.length ? renderNext(g.next, g.prices ?? {}, mine) : ''}${finalCard(g)}${plan}${huntingList(g)}${details(g)}</div>`;
+  return `<div class="gl-plan">${goalCard(g)}${g.character ? renderCharacter(g.character) : ''}${switchCard(g)}${g.next?.length ? renderNext(g.next, g.prices ?? {}, mine) : ''}${finalCard(g)}${plan}${huntingList(g)}${details(g)}</div>`;
 }
 
 // ---- pasted text: the advice from the poorchlight button, or the raw export
@@ -365,6 +375,10 @@ export function parseAdvice(text: string): GuideOut {
       if (l.build !== undefined && !(Array.isArray(l.build) && l.build.every((b: { section?: unknown; lines?: unknown; trees?: unknown }) => typeof b?.section === 'string' && Array.isArray(b.lines) && (b.lines as unknown[]).every((x) => typeof x === 'string') && (b.trees === undefined || Array.isArray(b.trees))))) throw bad(`${p}.build`, l.build);
       checkFigure(l.start, `${p}.start`);
     });
+  }
+  if (j.switch !== undefined) {
+    if (!j.switch || typeof j.switch.label !== 'string' || typeof j.switch.target !== 'string' || !(j.switch.costFE === null || isNum(j.switch.costFE))) throw bad('switch', j.switch);
+    checkFigure(j.switch.figure, 'switch.figure');
   }
   if (j.final !== undefined) {
     if (!Array.isArray(j.final)) throw bad('final', j.final);
