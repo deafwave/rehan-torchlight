@@ -6,7 +6,8 @@
   "scripts": {
     "guide": "tsx src/cli.ts",
     "test": "tsc --noEmit && vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "market": "tsx scripts/market.ts"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",

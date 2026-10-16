@@ -1,0 +1,5 @@
+{
+ "_about": "The T1 tier ids you want on an item, by its base name: `pnpm guide:market` ranks a market search by price + the expected crafting left to have all of them at T1. Ids: data/affix_library.json tiers[0].tierAffixId.",
+ "Sierra Reverberation Maul": { "want": [107110001, 111110401, 110110001, 106110001, 140110401, 140111401],
+  "note": "Gear Physical Damage, Critical Strike Damage (the 2 advanced), standing-still Attack Damage, Adds Physical, Melee Damage, Erosion Damage (user and model, 2026-10-16)" }
+}
