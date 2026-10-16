@@ -346,7 +346,7 @@ function routesCard(g: GuideOut): string {
   const r = g.hoaRoutes;
   if (!r) return '';
   const t = (f: HFig) => (f.lifeMax && f.kill > 0 ? fmtTime(f.lifeMax / f.kill) : '—'), ch = r.changes;
-  const changes = ch ? `<h4>1. Do now (free: gems and pactspirits you own, talent points)</h4><p class="bnote">Cube 1: ${t(ch.before)} now, ${t(ch.after)} after these (model).</p>`
+  const changes = ch ? `<h4>1. Do now (free: gems and pactspirits you own, talent points)</h4><p class="bnote">${esc(bossName(r.target))}: ${t(ch.before)} now, ${t(ch.after)} after these (model).</p>`
     + (ch.free.length ? `<ol class="gl-todo">${ch.free.map((x) => `<li>${esc(actionText({ label: x } as Move))}</li>`).join('')}</ol>` : '<p>Nothing free left to change.</p>')
     + (ch.buys.length ? `<h4>2. Cheap buys for the build's skills</h4><table><tr><th>Change</th><th>Gain</th><th>Cost</th><th>Gems to get</th></tr>${ch.buys.map((b) => `<tr><td>${esc(actionText({ label: b.label } as Move))}</td><td>${fmtGain(1, b.gain)}</td><td>${b.costFE === null ? 'not listed' : `${fmtFE(b.costFE)} FE`}</td><td>${esc(b.buy.join(', '))}</td></tr>`).join('')}</table>` : '') : '';
   const boss = esc(bossName(r.target));

@@ -21,13 +21,13 @@
  "notCalculable": [],
  "hoaRoutes": {
   "target": "cube2",
-  "at": "2026-10-16T18:21:59.582366Z",
+  "at": "2026-10-16T18:44:18.479729+00:00",
   "start": {
-   "label": "your character after the free changes",
+   "label": "your character with the talent changes",
    "costFE": 0,
    "figure": {
-    "kill": 26580185216.88744,
-    "life100": 26580185216.88744,
+    "kill": 17846672448.4202,
+    "life100": 17846672448.4202,
     "lifeMax": 16098976434407
    }
   },
@@ -49,15 +49,15 @@
    {
     "section": "Skills",
     "lines": [
-     "active 0: Hammer of Ash (level 16)",
-     "  + Steamroll (level 16)",
-     "  + Multiple Projectiles (level 16)",
+     "active 0: Hammer of Ash (level 17)",
+     "  + Steamroll (level 17)",
+     "  + Elemental Fusion (level 17)",
      "  + Hammer of Ash: Upheaval (Magnificent) (level 1)",
-     "  + Critical Strike Damage Increase (level 17)",
+     "  + Passivation (level 16)",
      "  + Slow Projectile (level 20)",
      "active 1: Timid (level 18)",
      "  + Activation Medium: Demolisher (level 20)",
-     "active 2: Bull's Rage (level 16)",
+     "active 2: Bull's Rage (level 17)",
      "  + Preparation (level 20)",
      "  + Extended Duration (level 20)",
      "active 3: Blink (level 16)",
@@ -72,38 +72,39 @@
      "  + Restrain (level 20)",
      "  + Seal Conversion (level 20)",
      "  + Increased Area (level 16)",
-     "  + Cooldown Reduction (level 12)",
-     "passive 1: Precise Projectiles (level 20)",
+     "  + Aura Amplification (level 16)",
+     "passive 1: Precise: Erosion Amplification (level 16)",
      "  + Aura Amplification (level 20)",
      "  + Restrain (level 18)",
-     "passive 2: Precise: Cruelty (level 20)",
+     "  + Increased Area (level 16)",
+     "passive 2: Precise: Domain Expansion (level 16)",
      "  + Restrain (level 20)",
      "  + Aura Amplification (level 20)",
      "  + Increased Area (level 20)",
-     "passive 3: Precise: Domain Expansion (level 20)",
-     "  + Restrain (level 20)",
-     "  + Aura Amplification (level 20)",
-     "  + Increased Area (level 20)"
+     "passive 3: Precise: Cruelty (level 17)",
+     "  + Restrain (level 17)",
+     "  + Aura Amplification (level 18)",
+     "  + Increased Area (level 16)"
     ]
    },
    {
     "section": "Talents (104 points)",
     "lines": [
      "core: Well Matched",
-     "core: Forbidden Power",
      "core: Mixture",
+     "core: Forbidden Power",
      "core: Off The Beaten Track",
      "core: Dirt",
-     "Onslaughter: Attack Damage x3, Area Damage x3, Attack Damage x3, Area Damage x1, Attack Critical Strike Rating x3, Attack Critical Strike Rating x3, Attack Damage when holding a Two-Handed Weapon x3, additional Base Damage for Two-Handed Weapons x3, Attack Critical Strike Rating when holding a Two-Handed Weapon x3, Strength x3, additional Base Damage for Two-Handed Weapons x1, Strength x1",
+     "Onslaughter: Attack Damage x3, Area Damage x1, Attack Damage x3, Attack Damage x1, Attack Critical Strike Rating x3, Attack Critical Strike Rating x3, Attack Damage when holding a Two-Handed Weapon x3, additional Base Damage for Two-Handed Weapons x3, Attack Critical Strike Rating when holding a Two-Handed Weapon x3, Strength x3, additional Base Damage for Two-Handed Weapons x1, inflicted Paralysis Effect when holding a Two-Handed Weapon x1, Strength x1",
      "Goddess of Deception: damage x3, Movement Speed x3, damage x2, Movement Speed x3, Critical Strike Rating x3, Critical Strike Rating x3, Deterioration Chance x3, Erosion Damage x3, additional damage applied to Life x1",
      "Shadowmaster: Erosion Damage x3, Attack and Cast Speed x2, Deterioration Chance x3, Critical Strike Rating x3, Deterioration Damage x3, Critical Strike Rating x3, Erosion Damage x3, Deterioration Chance x3, additional Deterioration Damage x1",
-     "Lich: damage x3, damage x3, Critical Strike Rating x3, Critical Strike Rating x3, All Stats x3, damage x3, All Stats x1, Sealed Mana Compensation x3, Attack and Cast Speed x3, All Skills' Levels x1"
+     "Lich: damage x3, damage x3, Critical Strike Rating x3, Critical Strike Rating x3, All Stats x1, damage x3, Sealed Mana Compensation x3, Attack and Cast Speed x3, Sealed Mana Compensation x3, All Skills' Levels x1, Sealed Mana Compensation x1"
     ],
     "trees": [
      {
       "tree": 12,
       "name": "Onslaughter",
-      "points": 30,
+      "points": 29,
       "nodes": [
        {
         "id": 12010100,
@@ -131,7 +132,7 @@
         "col": 5,
         "kind": 1,
         "max": 3,
-        "pts": 3,
+        "pts": 1,
         "name": "Area Damage",
         "prereq": []
        },
@@ -153,7 +154,7 @@
         "col": 2,
         "kind": 1,
         "max": 3,
-        "pts": 0,
+        "pts": 1,
         "name": "Attack Damage",
         "prereq": []
        },
@@ -185,7 +186,7 @@
         "col": 5,
         "kind": 3,
         "max": 3,
-        "pts": 1,
+        "pts": 0,
         "name": "Area Damage",
         "prereq": [
          12010500
@@ -409,7 +410,7 @@
         "col": 2,
         "kind": 3,
         "max": 1,
-        "pts": 0,
+        "pts": 1,
         "name": "inflicted Paralysis Effect when holding a Two-Handed Weapon",
         "prereq": [
          12060200
@@ -1168,7 +1169,7 @@
      {
       "tree": 54,
       "name": "Lich",
-      "points": 26,
+      "points": 27,
       "nodes": [
        {
         "id": 54010100,
@@ -1318,7 +1319,7 @@
         "col": 2,
         "kind": 1,
         "max": 3,
-        "pts": 3,
+        "pts": 1,
         "name": "All Stats",
         "prereq": []
        },
@@ -1360,7 +1361,7 @@
         "col": 2,
         "kind": 3,
         "max": 3,
-        "pts": 1,
+        "pts": 0,
         "name": "All Stats",
         "prereq": [
          54040200
@@ -1448,7 +1449,7 @@
         "col": 5,
         "kind": 3,
         "max": 3,
-        "pts": 0,
+        "pts": 3,
         "name": "Sealed Mana Compensation",
         "prereq": [
          54050500
@@ -1496,7 +1497,7 @@
         "col": 5,
         "kind": 3,
         "max": 1,
-        "pts": 0,
+        "pts": 1,
         "name": "Sealed Mana Compensation",
         "prereq": [
          54060500
@@ -1539,67 +1540,33 @@
      "memory 2: Memory of Discipline",
      "memory 3: Memory of Progress",
      "pactspirit slot 1: Kitty Express (rank 5)",
+     "pactspirit slot 2: Portrait of a Fallen Saintess (rank 3)",
+     "pactspirit slot 3: Iron Lion (rank 0)",
      "pactspirit slot 4: Kong (rank 5)",
-     "pactspirit slot 5: Chalk Spirit (rank 2)",
-     "pactspirit slot 6: Twilight Sparks (rank 5)",
-     "pactspirit slot 2: Iron Lion (rank 0)",
-     "pactspirit slot 3: Benign Bug - Ghost Light Yellow (rank 5)"
+     "pactspirit slot 5: Cloudgatherer - Sky's Dome (rank 5)",
+     "pactspirit slot 6: Idling Weasel - Sparkle (rank 5)"
     ]
    }
   ],
-  "buildNote": "your character now (Ruinous Star on), fitted: Cube 1 4.5 s -> 1.2 s in the model with the free changes",
+  "buildNote": "your character now with the talent changes (Paralysis and Sealed Mana Compensation kept)",
   "changes": {
    "free": [
-    "Equip Iron Lion (level 1, owned) in battle slot 2 instead of Hell Cavalry - Crushed Ice",
-    "Equip Benign Bug - Ghost Light Yellow (level 6, owned) in battle slot 3 instead of Azure Gunslinger",
-    "Hammer of Ash socket 2: Fire Explosion -> Multiple Projectiles",
-    "Hammer of Ash socket 4: Honed Edge -> Critical Strike Damage Increase",
-    "Target skill: Precise: Domain Expansion with 3 supports (Increased Area, Restrain, Aura Amplification) in passive 3",
-    "Target skill: Precise: Cruelty with 3 supports (Increased Area, Restrain, Aura Amplification) in passive 2",
     "+1 point: Onslaughter: Attack Damage",
     "+1 point: Onslaughter: Attack Damage",
-    "+1 point: Onslaughter: Attack Damage",
-    "Move a point: Onslaughter: inflicted Paralysis Effect when holding a Two-Handed Weapon -> Onslaughter: Area Damage",
-    "Move a point: Lich: Sealed Mana Compensation -> Lich: All Stats",
-    "Move a point: Lich: Sealed Mana Compensation -> Lich: All Stats",
-    "Move a point: Lich: Sealed Mana Compensation -> Lich: All Stats",
-    "Move a point: Lich: Sealed Mana Compensation -> Lich: All Stats"
+    "Move a point: Lich: Max Life -> Lich: All Stats",
+    "Move a point: Onslaughter: Area Damage -> Onslaughter: Attack Damage",
+    "Move a point: Onslaughter: Area Damage -> Onslaughter: Attack Damage"
    ],
-   "buys": [
-    {
-     "label": "Target skill: Hammer of Ash with 5 supports (Critical Strike Damage Increase, Passivation, Slow Projectile, Steamroll, Hammer of Ash: Upheaval (Magnificent)) in active 0",
-     "gain": 1.3297695321192655,
-     "costFE": 0,
-     "buy": [
-      "Passivation"
-     ]
-    },
-    {
-     "label": "Target skill: Fixate with 3 supports (Extended Duration, Cooldown Reduction, Activation Medium: Boss) in active 2",
-     "gain": 1.2932714017760867,
-     "costFE": 2,
-     "buy": [
-      "Fixate",
-      "Activation Medium: Boss"
-     ]
-    },
-    {
-     "label": "Target skill: Precise: Erosion Amplification with 4 supports (Restrain, Seal Conversion, Aura Amplification, Precise: Malleable) in passive 0",
-     "gain": 1.1832582098601454,
-     "costFE": 217.116,
-     "buy": [
-      "Precise: Erosion Amplification",
-      "Precise: Malleable"
-     ]
-    }
-   ],
+   "buys": [],
    "before": {
-    "kill": 7081573545.355509,
-    "lifeMax": 31633200895
+    "kill": 16792655021.548866,
+    "life100": 16792655021.548866,
+    "lifeMax": 16098976434407
    },
    "after": {
-    "kill": 26580185216.918526,
-    "lifeMax": 31633200895
+    "kill": 17846672448.4202,
+    "life100": 17846672448.4202,
+    "lifeMax": 16098976434407
    }
   },
   "routes": [
@@ -1607,134 +1574,123 @@
     "name": "Path to Cube 2 in 10 s",
     "steps": [
      {
-      "label": "Target slate board (7 slates)",
+      "label": "Slates: see the slate search below",
       "slot": "",
       "costFE": 0,
       "totalFE": 0,
       "figure": {
-       "kill": 102549725719.22885,
-       "life100": 102549725719.22885,
+       "kill": 91909208990.32166,
+       "life100": 91909208990.32166,
        "lifeMax": 16098976434407
       }
      },
      {
-      "label": "Target hero memories (4)",
+      "label": "Hero memories: Origin / Discipline / Progress (lines listed in chat)",
       "slot": "",
       "costFE": 0,
       "totalFE": 0,
       "figure": {
-       "kill": 231817164740.10446,
-       "life100": 231817164740.10446,
+       "kill": 206238051355.73117,
+       "life100": 206238051355.73117,
        "lifeMax": 16098976434407
       }
      },
      {
-      "label": "Hammer of Ash with 5 supports (Critical Strike Damage Increase, Passivation, Slow Projectile, Steamroll, Hammer of Ash: Upheaval (Magnificent)) in active 0",
+      "label": "Hammer of Ash supports: Critical Strike Damage Increase, Passivation, Slow Projectile, Steamroll, Upheaval (Magnificent) at level 20 (replaces Elemental Fusion; the gain is mostly Upheaval levelled) (Critical Strike Damage Increase, Passivation, Slow Projectile, Steamroll, Hammer of Ash: Upheaval (Magnificent)) in active 0",
       "slot": "",
       "costFE": 0,
       "totalFE": 0,
       "figure": {
-       "kill": 358175565439.16626,
-       "life100": 358175565439.16626,
+       "kill": 350624411004.9677,
+       "life100": 350624411004.9677,
        "lifeMax": 16098976434407
       }
      },
      {
-      "label": "Target talent prism: 3 mirrored talents at 102/102/102 % and 3 prism affixes",
+      "label": "Vorax limb: Digits (Strength, +30% damage near Sentries, Deterioration, Adds Physical, Crit Damage)",
       "slot": "",
       "costFE": 0,
       "totalFE": 0,
       "figure": {
-       "kill": 529694568024.5995,
-       "life100": 529694568024.5995,
+       "kill": 425311197226.86566,
+       "life100": 425311197226.86566,
        "lifeMax": 16098976434407
       }
      },
      {
-      "label": "Target vorax limb (1)",
+      "label": "Fixate in active 2 (instead of Bull's Rage) with 3 supports (Extended Duration, Cooldown Reduction, Activation Medium: Boss) in active 2",
+      "slot": "",
+      "costFE": 2,
+      "totalFE": 2,
+      "figure": {
+       "kill": 556675266745.2695,
+       "life100": 556675266745.2695,
+       "lifeMax": 16098976434407
+      }
+     },
+     {
+      "label": "Portrait of a Fallen Saintess (rank 5) in pact slot 2",
       "slot": "",
       "costFE": 0,
-      "totalFE": 0,
+      "totalFE": 2,
       "figure": {
-       "kill": 628326347174.2186,
-       "life100": 628326347174.2186,
+       "kill": 581988744333.616,
+       "life100": 581988744333.616,
        "lifeMax": 16098976434407
       }
      },
      {
-      "label": "Fixate with 3 supports (Extended Duration, Cooldown Reduction, Activation Medium: Boss) in active 2",
+      "label": "Decaying Blessing (necklace)",
       "slot": "",
-      "costFE": 2.288,
-      "totalFE": 2.288,
+      "costFE": 5,
+      "totalFE": 7,
       "figure": {
-       "kill": 823187585889.2533,
-       "life100": 823187585889.2533,
+       "kill": 712990713071.3271,
+       "life100": 712990713071.3271,
        "lifeMax": 16098976434407
       }
      },
      {
-      "label": "Boots of Devastation in boots",
+      "label": "Last Words of Chaos (helmet)",
       "slot": "",
-      "costFE": 3,
-      "totalFE": 5.288,
+      "costFE": 50.603,
+      "totalFE": 57.603,
       "figure": {
-       "kill": 899626433088.5586,
-       "life100": 899626433088.5586,
+       "kill": 763836144144.2499,
+       "life100": 763836144144.2499,
        "lifeMax": 16098976434407
       }
      },
      {
-      "label": "Opening Heart (helmet) (a better roll than yours)",
+      "label": "Wriggling Tango (boots)",
       "slot": "",
-      "costFE": 4.9,
-      "totalFE": 10.188,
+      "costFE": 289.687,
+      "totalFE": 347.29,
       "figure": {
-       "kill": 1023443845500.4612,
-       "life100": 1023443845500.4612,
+       "kill": 1095095461695.3517,
+       "life100": 1095095461695.3517,
        "lifeMax": 16098976434407
       }
      },
      {
-      "label": "Kaleidoscope in ring2 (a better roll than yours)",
+      "label": "Target talent prism: 3 mirrored talents at 102/102/102 % and 3 prism affixes (priced as the Haze prism you found)",
       "slot": "",
-      "costFE": 9,
-      "totalFE": 19.188000000000002,
+      "costFE": 555,
+      "totalFE": 902.29,
       "figure": {
-       "kill": 1148184943731.679,
-       "life100": 1148184943731.679,
+       "kill": 1599680495804.7163,
+       "life100": 1599680495804.7163,
        "lifeMax": 16098976434407
       }
      },
      {
-      "label": "Tyrant's Smoldering Hold (gloves) (a better roll than yours)",
+      "label": "Death's Touch in gloves",
       "slot": "",
-      "costFE": 7,
-      "totalFE": 26.188000000000002,
+      "costFE": 2182.049,
+      "totalFE": 3084.339,
       "figure": {
-       "kill": 1235967921823.291,
-       "life100": 1235967921823.291,
-       "lifeMax": 16098976434407
-      }
-     },
-     {
-      "label": "Precise: Erosion Amplification with 4 supports (Restrain, Seal Conversion, Aura Amplification, Precise: Malleable) in passive 0",
-      "slot": "",
-      "costFE": 162.95799999999997,
-      "totalFE": 189.14599999999996,
-      "figure": {
-       "kill": 1484541016008.362,
-       "life100": 1484541016008.362,
-       "lifeMax": 16098976434407
-      }
-     },
-     {
-      "label": "Broken Sun Ring in necklace",
-      "slot": "",
-      "costFE": 1065.091,
-      "totalFE": 1254.2369999999999,
-      "figure": {
-       "kill": 2581421189432.8667,
-       "life100": 2581421189432.8667,
+       "kill": 2418939638019.363,
+       "life100": 2418939638019.363,
        "lifeMax": 16098976434407
       }
      }
@@ -1742,218 +1698,13 @@
    }
   ]
  },
- "slates": [
-  {
-   "id": 20002300,
-   "name": "Steady Accumulation",
-   "gain": 1.3754856015480434,
-   "core": true
-  },
-  {
-   "id": 34001300,
-   "name": "Mind Blade",
-   "gain": 1.3361869073772041,
-   "core": true
-  },
-  {
-   "id": 21001300,
-   "name": "Close Range Fire",
-   "gain": 1.3338178798937605,
-   "core": true
-  },
-  {
-   "id": 14001400,
-   "name": "Survival Will",
-   "gain": 1.3000000048239588,
-   "core": true
-  },
-  {
-   "id": 10002100,
-   "name": "Great Strength",
-   "gain": 1.289245584446476,
-   "core": true
-  },
-  {
-   "id": 40001200,
-   "name": "Blunt",
-   "gain": 1.271005324040343,
-   "core": true
-  },
-  {
-   "id": 20002200,
-   "name": "Three Birds with One Stone",
-   "gain": 1.2689424298409295,
-   "core": true
-  },
-  {
-   "id": 24001200,
-   "name": "Transition",
-   "gain": 1.2597119983444942,
-   "core": true
-  },
-  {
-   "id": 40002200,
-   "name": "Gravity",
-   "gain": 1.2500000031978353,
-   "core": true
-  },
-  {
-   "id": 40002300,
-   "name": "Shooting Arrows",
-   "gain": 1.2500000031978353,
-   "core": true
-  },
-  {
-   "id": 12060500,
-   "name": "Onslaughter: Skill Area if Main Skill is not used in the last 2 s",
-   "gain": 1.1578374370478928,
-   "core": false
-  },
-  {
-   "id": 43070400,
-   "name": "Ranger: additional damage taken by enemies in Proximity",
-   "gain": 1.150000000000191,
-   "core": false
-  },
-  {
-   "id": 54070100,
-   "name": "Lich: All Skills' Levels",
-   "gain": 1.140095276978003,
-   "core": false
-  },
-  {
-   "id": 41070200,
-   "name": "Shadowdancer: Armor DMG Mitigation Penetration",
-   "gain": 1.114285983672724,
-   "core": false
-  },
-  {
-   "id": 34070500,
-   "name": "Prophet: Converts of Physical Damage to Cold Damage",
-   "gain": 1.10863597222766,
-   "core": false
-  },
-  {
-   "id": 10070100,
-   "name": "God of Might: Attack Skill Level",
-   "gain": 1.1079244310029988,
-   "core": false
-  },
-  {
-   "id": 43040200,
-   "name": "Ranger: chance to gain Agility Blessing on Critical Strike",
-   "gain": 1.1058586469561331,
-   "core": false
-  },
-  {
-   "id": 33070300,
-   "name": "Elementalist: Fire Skill Level",
-   "gain": 1.0999999952460104,
-   "core": false
-  },
-  {
-   "id": 12070100,
-   "name": "Onslaughter: additional Base Damage for Two-Handed Weapons",
-   "gain": 1.0903351080133723,
-   "core": false
-  },
-  {
-   "id": 53050200,
-   "name": "Warlock: additional damage against Cursed enemies",
-   "gain": 1.0799999993796687,
-   "core": false
-  },
-  {
-   "id": 50070500,
-   "name": "Goddess of Deception: additional damage applied to Life",
-   "gain": 1.0677966101696126,
-   "core": false
-  },
-  {
-   "id": 62070200,
-   "name": "Steel Vanguard: additional damage applied to Life",
-   "gain": 1.0677966101696126,
-   "core": false
-  },
-  {
-   "id": 12040500,
-   "name": "Onslaughter: Skill Area",
-   "gain": 1.0605508306864797,
-   "core": false
-  },
-  {
-   "id": 50030200,
-   "name": "Goddess of Deception: Movement Speed",
-   "gain": 1.0605508306864797,
-   "core": false
-  },
-  {
-   "id": 24070500,
-   "name": "Assassin: additional Max Damage",
-   "gain": 1.0605271767845703,
-   "core": false
-  },
-  {
-   "id": 21050200,
-   "name": "Marksman: Projectile Damage against enemies in proximity",
-   "gain": 1.058630204111346,
-   "core": false
-  },
-  {
-   "id": 33050200,
-   "name": "Elementalist: damage while standing still",
-   "gain": 1.058630204111346,
-   "core": false
-  },
-  {
-   "id": 40050200,
-   "name": "God of War: Critical Strike Damage",
-   "gain": 1.056369962064813,
-   "core": false
-  },
-  {
-   "id": 41040100,
-   "name": "Shadowdancer: Critical Strike Damage",
-   "gain": 1.056369962064813,
-   "core": false
-  },
-  {
-   "id": 10050400,
-   "name": "God of Might: Strength",
-   "gain": 1.0553077595237788,
-   "core": false
-  },
-  {
-   "id": 21040300,
-   "name": "Marksman: Projectile Critical Strike Damage",
-   "gain": 1.0528468394359098,
-   "core": false
-  },
-  {
-   "id": 43030200,
-   "name": "Ranger: Critical Strike Damage",
-   "gain": 1.0528468394359098,
-   "core": false
-  },
-  {
-   "id": 42040100,
-   "name": "Ronin: Critical Strike Rating",
-   "gain": 1.0476320226401796,
-   "core": false
-  },
-  {
-   "id": 12070400,
-   "name": "Onslaughter: Strength",
-   "gain": 1.0428189191697006,
-   "core": false
-  }
- ],
+ "slates": [],
  "respec": {
   "trees": [
    {
     "tree": 12,
     "name": "Onslaughter",
-    "points": 30,
+    "points": 29,
     "nodes": [
      {
       "id": 12010100,
@@ -1981,7 +1732,7 @@
       "col": 5,
       "kind": 1,
       "max": 3,
-      "pts": 3,
+      "pts": 1,
       "name": "Area Damage",
       "prereq": []
      },
@@ -2003,7 +1754,7 @@
       "col": 2,
       "kind": 1,
       "max": 3,
-      "pts": 0,
+      "pts": 1,
       "name": "Attack Damage",
       "prereq": []
      },
@@ -2035,7 +1786,7 @@
       "col": 5,
       "kind": 3,
       "max": 3,
-      "pts": 1,
+      "pts": 0,
       "name": "Area Damage",
       "prereq": [
        12010500
@@ -2259,7 +2010,7 @@
       "col": 2,
       "kind": 3,
       "max": 1,
-      "pts": 0,
+      "pts": 1,
       "name": "inflicted Paralysis Effect when holding a Two-Handed Weapon",
       "prereq": [
        12060200
@@ -3018,7 +2769,7 @@
    {
     "tree": 54,
     "name": "Lich",
-    "points": 26,
+    "points": 27,
     "nodes": [
      {
       "id": 54010100,
@@ -3168,7 +2919,7 @@
       "col": 2,
       "kind": 1,
       "max": 3,
-      "pts": 3,
+      "pts": 1,
       "name": "All Stats",
       "prereq": []
      },
@@ -3210,7 +2961,7 @@
       "col": 2,
       "kind": 3,
       "max": 3,
-      "pts": 1,
+      "pts": 0,
       "name": "All Stats",
       "prereq": [
        54040200
@@ -3298,7 +3049,7 @@
       "col": 5,
       "kind": 3,
       "max": 3,
-      "pts": 0,
+      "pts": 3,
       "name": "Sealed Mana Compensation",
       "prereq": [
        54050500
@@ -3346,7 +3097,7 @@
       "col": 5,
       "kind": 3,
       "max": 1,
-      "pts": 0,
+      "pts": 1,
       "name": "Sealed Mana Compensation",
       "prereq": [
        54060500
@@ -3418,11 +3169,12 @@
    "54050100": 3,
    "54050500": 3,
    "54060100": 3,
+   "54060400": 1,
    "54060500": 3,
    "54070100": 1,
    "54070500": 1
   },
-  "title": "Your Hammer of Ash talent page (Ruinous Star and Formation Breaker on)",
-  "note": "Green: points to add, red: points to take out. Free respec at level 90 and below."
+  "title": "Your talent page: 5 point changes (Paralysis and Sealed Mana Compensation kept)",
+  "note": "Green: points to add, red: points to take out."
  }
 }

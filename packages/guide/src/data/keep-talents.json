@@ -1,0 +1,7 @@
+{
+ "_about": "Talent nodes a fit never takes points from: the owner's rules for what the model cannot see (2026-10-16). Matched by talent name.",
+ "keep": [
+  { "name": "Onslaughter: inflicted Paralysis Effect when holding a Two-Handed Weapon", "why": "the owner applies Paralysis; the figure does not count it" },
+  { "name": "Lich: Sealed Mana Compensation", "why": "it carries the auras' mana reservation; the figure does not check mana" }
+ ]
+}
