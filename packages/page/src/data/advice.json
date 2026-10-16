@@ -3,7 +3,7 @@
  "pin": "e5e767cb4de1730b9702d6045c3164b1186aef5a",
  "etor": {
   "season": "1601",
-  "fetchedAt": "2026-10-16T07:39:33.381Z"
+  "fetchedAt": "2026-10-16T07:45:52.243Z"
  },
  "knobs": {
   "churn": 0.05,
@@ -31,7 +31,7 @@
   "level": 88,
   "skill": "iceShot",
   "fe": 10,
-  "owned": 158,
+  "owned": 160,
   "gear": [
    {
     "slot": "belt",
@@ -869,8 +869,8 @@
   {
    "label": "Unique Eternal Undercurrent in chest",
    "kind": "unique",
-   "gain": 1.0729054192923186,
-   "kill": 23617967.29001645,
+   "gain": 1.073576060255423,
+   "kill": 23632730.172228742,
    "costFE": null,
    "buy": {
     "name": "Eternal Undercurrent",
@@ -1435,6 +1435,17 @@
    "costFE": null
   },
   {
+   "label": "Re-craft T4 +22% Critical Strike Damage (suffix) on boots, replacing its lower tier",
+   "kind": "craft",
+   "gain": 1.036068404840167,
+   "kill": 22807070.64735932,
+   "costFE": 5.208372093023256,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 23.674418604651166
+   }
+  },
+  {
    "label": "Craft T5 +15% Critical Strike Damage (suffix) on helmet",
    "kind": "craft",
    "gain": 1.036068404840167,
@@ -1614,6 +1625,17 @@
    "buy": {
     "name": "Flaming Evil",
     "qty": 1
+   }
+  },
+  {
+   "label": "Re-craft T4 +22% Critical Strike Damage (suffix) on ring2, replacing its lower tier",
+   "kind": "craft",
+   "gain": 1.027744879643349,
+   "kill": 22623844.109119132,
+   "costFE": 13.068,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 59.4
    }
   },
   {
@@ -1911,6 +1933,17 @@
    "market": "not-on-market"
   },
   {
+   "label": "Re-craft T5 +15% Critical Strike Damage (suffix) on boots, replacing its lower tier",
+   "kind": "craft",
+   "gain": 1.0194215077060638,
+   "kill": 22440620.944595356,
+   "costFE": 2.986133333333334,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 13.573333333333336
+   }
+  },
+  {
    "label": "Socket Micro Fate: Dexterity on contract point 101",
    "kind": "kismet",
    "gain": 1.019231509074277,
@@ -1923,6 +1956,17 @@
    "gain": 1.019231509074277,
    "kill": 22436438.48695277,
    "costFE": 50
+  },
+  {
+   "label": "Re-craft T3 +36% damage (prefix) on belt, replacing its lower tier",
+   "kind": "craft",
+   "gain": 1.0191218313718104,
+   "kill": 22434024.141435713,
+   "costFE": 18.436363636363637,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 236.36363636363637
+   }
   },
   {
    "label": "Craft T6 Adds 6 - 8 Physical Damage to Attacks and Spells (prefix) on ring2",
@@ -2031,6 +2075,17 @@
    }
   },
   {
+   "label": "Re-craft T3 +61% Critical Strike Rating (suffix) on ring2, replacing its lower tier",
+   "kind": "craft",
+   "gain": 1.0152968530719024,
+   "kill": 22349824.536561094,
+   "costFE": 15.156818181818183,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 194.31818181818184
+   }
+  },
+  {
    "label": "Craft T7 +6% Critical Strike Damage (suffix) on helmet",
    "kind": "craft",
    "gain": 1.0152597451076548,
@@ -2039,6 +2094,17 @@
    "buy": {
     "name": "Matchless Ember",
     "qty": 10.7175
+   }
+  },
+  {
+   "label": "Re-craft T3 +30 Dexterity (prefix) on ring2, replacing its lower tier",
+   "kind": "craft",
+   "gain": 1.0152582164712993,
+   "kill": 22348974.02546027,
+   "costFE": 41.57999999999999,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 188.99999999999997
    }
   },
   {
@@ -2122,6 +2188,28 @@
    }
   },
   {
+   "label": "Re-craft T3 +30 Dexterity (prefix) on belt, replacing its lower tier",
+   "kind": "craft",
+   "gain": 1.0129105693823965,
+   "kill": 22297295.050634343,
+   "costFE": 21.96,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 99.81818181818183
+   }
+  },
+  {
+   "label": "Re-craft T4 +29% damage (prefix) on belt, replacing its lower tier",
+   "kind": "craft",
+   "gain": 1.0125801345118655,
+   "kill": 22290021.15694031,
+   "costFE": 4.716279069767442,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 60.46511627906976
+   }
+  },
+  {
    "label": "Craft T6 Adds 6 - 8 Cold Damage to Attacks and Spells (prefix) on ring2",
    "kind": "craft",
    "gain": 1.012364808709455,
@@ -2171,6 +2259,17 @@
    "gain": 1.011958357147108,
    "kill": 22276333.913686194,
    "costFE": null
+  },
+  {
+   "label": "Re-craft T5 +15% Critical Strike Damage (suffix) on ring2, replacing its lower tier",
+   "kind": "craft",
+   "gain": 1.011097982509246,
+   "kill": 22257394.40635517,
+   "costFE": 6.826567164179104,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 31.029850746268654
+   }
   },
   {
    "label": "Unique Sigh of the Giant in belt",
@@ -2250,6 +2349,17 @@
    "gain": 1.010073537388814,
    "kill": 22234843.200154025,
    "costFE": null
+  },
+  {
+   "label": "Re-craft T4 +44% Critical Strike Rating (suffix) on ring2, replacing its lower tier",
+   "kind": "craft",
+   "gain": 1.0093273494340869,
+   "kill": 22218417.294953015,
+   "costFE": 3.877325581395349,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 49.7093023255814
+   }
   },
   {
    "label": "Unique Skin of Malice in chest",
@@ -2346,6 +2456,17 @@
    "costFE": null
   },
   {
+   "label": "Re-craft T5 +23% damage (prefix) on belt, replacing its lower tier",
+   "kind": "craft",
+   "gain": 1.0075483610597455,
+   "kill": 22179256.257568914,
+   "costFE": 2.7039999999999997,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 34.666666666666664
+   }
+  },
+  {
    "label": "Unique Glorious Journey in chest",
    "kind": "unique",
    "gain": 1.0073311843402029,
@@ -2354,6 +2475,28 @@
    "buy": {
     "name": "Glorious Journey",
     "qty": 1
+   }
+  },
+  {
+   "label": "Re-craft T6 +10% Critical Strike Damage (suffix) on boots, replacing its lower tier",
+   "kind": "craft",
+   "gain": 1.0069362199108371,
+   "kill": 22165781.137235075,
+   "costFE": 1.6288000000000002,
+   "buy": {
+    "name": "Matchless Ember",
+    "qty": 7.403636363636364
+   }
+  },
+  {
+   "label": "Re-craft T4 +29% damage (prefix) on boots, replacing its lower tier",
+   "kind": "craft",
+   "gain": 1.006541696859945,
+   "kill": 22157096.464435793,
+   "costFE": 4.088651162790698,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 52.41860465116279
    }
   },
   {
@@ -2397,6 +2540,17 @@
    "costFE": null
   },
   {
+   "label": "Re-craft T4 +44% Critical Strike Rating (suffix) on chest, replacing its lower tier",
+   "kind": "craft",
+   "gain": 1.0048502217057251,
+   "kill": 22119861.863746956,
+   "costFE": 4.358023255813953,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 55.87209302325581
+   }
+  },
+  {
    "label": "Craft T7 Adds 1 - 9 Lightning Damage to Attacks and Spells (prefix) on ring2",
    "kind": "craft",
    "gain": 1.0046371116540553,
@@ -2405,6 +2559,17 @@
    "buy": {
     "name": "Matchless Ember",
     "qty": 10.395
+   }
+  },
+  {
+   "label": "Re-craft T5 +29% Critical Strike Rating (suffix) on ring2, replacing its lower tier",
+   "kind": "craft",
+   "gain": 1.004626365319307,
+   "kill": 22114934.092186652,
+   "costFE": 2.223,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 28.5
    }
   },
   {
@@ -2480,6 +2645,17 @@
    "costFE": null
   },
   {
+   "label": "Re-craft T6 +19% damage (prefix) on belt, replacing its lower tier",
+   "kind": "craft",
+   "gain": 1.0030192188259603,
+   "kill": 22079555.82619265,
+   "costFE": 1.4749090909090907,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 18.909090909090907
+   }
+  },
+  {
    "label": "Unique Vestment of Song in chest",
    "kind": "unique",
    "gain": 1.002678092604034,
@@ -2521,6 +2697,17 @@
    "buy": {
     "name": "Matchless Ember",
     "qty": 1018.0000000000001
+   }
+  },
+  {
+   "label": "Re-craft T6 +19% Critical Strike Rating (suffix) on ring2, replacing its lower tier",
+   "kind": "craft",
+   "gain": 1.0016416135003994,
+   "kill": 22049230.471382614,
+   "costFE": 1.2125454545454546,
+   "buy": {
+    "name": "Precious Ember",
+    "qty": 15.545454545454547
    }
   },
   {
