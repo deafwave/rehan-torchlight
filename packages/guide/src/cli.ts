@@ -85,7 +85,7 @@ async function main() {
         try {
           const line = execFileSync('python', ['-I', resolve(dd, 'reader/export.py'), '--no-clipboard'], { cwd: dd, encoding: 'utf8' }).trim().split(/\r?\n/).at(-1)!;
           const path = line.split(' items=')[0].trim();
-          const state = fromExport(readJson(path)), book = mine.wrap(await liveBook());
+          const state = fromExport(readJson(path), num('fe')), book = mine.wrap(await liveBook());   // --fe N: plan on N FE instead of the read FE
           final(out, dump(await runAdvise(ev, state, { budgetMinutes: budgetMinutes ?? 20, maxSteps: num('steps') ?? 0, ...mine.knobs }, book, (o) => writeAtomic(out, dump(o)))));
           try { git('add', out); git('commit', '-m', `data: your plan from the live game (L${state.level}, etor ${book.fetchedAt})`, '--', out); git('push'); }
           catch { console.log(new Date().toISOString(), 'auto: nothing new to push'); }
