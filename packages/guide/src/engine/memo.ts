@@ -11,7 +11,7 @@ export function canonical(v: unknown): string {
 }
 
 export const memoKey = (pin: string, skill: string, level: number, loadout: unknown, changes: unknown, fight: unknown, rollBudget: number, target?: string): string =>
-  `v9|${pin}|${skill}|${level}|${target ?? 'dummy'}|${canonical([loadout, changes, fight, FIRST_ROLL_BUDGET, rollBudget])}`;
+  `v10|${pin}|${skill}|${level}|${target ?? 'dummy'}|${canonical([loadout, changes, fight, FIRST_ROLL_BUDGET, rollBudget])}`;
 
 export const DEFAULT_MEMO_ENTRIES = 20000;
 /** `max`: settled results kept in memory (least recently used leave first; in-flight computations are always kept) */
