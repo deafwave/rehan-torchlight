@@ -8,7 +8,22 @@ type Pact = { servantId: number; rank: number; slot: number };
 const equip = (m: ReturnType<typeof gen>[number]) => (m.changes[0] as { changes: { rank: number; contractKeys: number[]; servantId: number }[] }).changes[1];
 
 describe('pactMoves', () => {
-  const moves = gen({});
+  const all = gen({}), moves = all.filter(m => m.label.startsWith('Raise '));
+  it('equips an owned battle pactspirit at its owned rank with the contract points of its slot; never a drop pactspirit or one already held', () => {
+    const own = all.filter(m => m.label.startsWith('Equip '));
+    expect(own.length).toBeGreaterThan(0);
+    const held = new Set((l100.pacts as Pact[]).map(p => p.servantId));
+    for (const m of own) {
+      const e = (m.changes[0] as { changes: { action: string; servantId: number; slot: number; rank: number; contractKeys: number[] }[] }).changes.at(-1)!;
+      expect(e.action).toBe('equip');
+      expect(held.has(e.servantId)).toBe(false);
+      expect([1, 2, 3]).toContain(e.slot);
+      expect(e.contractKeys.length).toBeGreaterThan(0);
+      expect(e.contractKeys.every(k => Math.floor(k / 100) === e.slot)).toBe(true);
+      expect(m).toMatchObject({ costFE: 0, market: 'drop' });
+    }
+    expect(own.some(m => /Twilight Sparks|Starfish Chanter|Plaintive Ball of Thread - Gold Leaf/.test(m.label))).toBe(false);   // drop pactspirits
+  });
   it('raises each equipped pact to every higher rank up to 5, never lowers', () => {
     for (const p of l100.pacts as Pact[]) {
       const ranks = moves.filter(m => equip(m).servantId === p.servantId).map(m => equip(m).rank);
@@ -17,7 +32,7 @@ describe('pactMoves', () => {
   });
   it('a rank-up is not on the market: costFE null even when etor prices the servant name', () => {
     expect(moves.every(m => m.acquisition && m.costFE === null && m.market === 'not-on-market')).toBe(true);
-    expect(gen({ 'Red Umbrella': 9 }).every(m => m.costFE === null)).toBe(true);
+    expect(gen({ 'Red Umbrella': 9 }).filter(m => m.label.startsWith('Raise ')).every(m => m.costFE === null)).toBe(true);
   });
   it('re-equips with the contractKeys of its own slot only', () => {
     const m = moves.find(x => equip(x).servantId === 1130)!;
