@@ -88,6 +88,15 @@ describe('evaluator (stub workers)', () => {
     const ev = await createEvaluator({ factory: stub(() => ({ life100: 200, life0: 100, left: [], needs: [...notes, ...kept] })).factory, workers: 1, pin: 'p' });
     expect((await ev.run(lo, [], ctx)).figure.partial).toEqual(kept);
   });
+  it('nodes that move no figure are notes: the no-op execute (mov al, 1; ret), a node inert in the client, a cull (CULL1 counts it); a real unported node stays an omission', async () => {
+    const notes = ['not in this figure: node 2206 (execute 0x1407d0580) - affix class 702200384 row 1 (pactspirit 7420 point 501) - ticked at the grant (x5)',
+      'not in this figure: node 2215 (execute 0x1407d0580 `mov al, 1; ret`) - affix class 1010080264 row 1 (hero 4001 spawn class 1010080264) - ticked at the grant',
+      'not in this figure: node 2700 (Q1: inert in the client - runtime vt 0x1452537d0: build FUN_141ac4370 only evaluates its fields and drops them)',
+      'not in this figure: node 1003 (a hit that kills the target when its comp 0x6f life is at or below max life x 0.01 x f8: FUN_141e0c8d0 (execute FUN_141a52ea0, t3b_exec.ann.c 306-384)) - affix class 110030008 row 1'];
+    const kept = ['not in this figure: node 2320 (comp 0x82 / 0x91, triggers a skill (execute FUN_141a9df70, c9b_nodes.c 4093-4466)) - affix class 909512640 row 1'];
+    const ev = await createEvaluator({ factory: stub(() => ({ life100: 200, life0: 100, left: [], needs: [...notes, ...kept] })).factory, workers: 1, pin: 'p' });
+    expect((await ev.run(lo, [], ctx)).figure.partial).toEqual(kept);
+  });
   it('held buff "not carried" lines are informational; "left off" stays an omission', async () => {
     const off = 'held buffs left off: 11210';
     const ev = await createEvaluator({ factory: stub(() => ({ life100: 200, life0: 100, left: [], needs: ['held buff 390 (zhanyi) not carried: no piece of this build adds it', off, 'price: x'] })).factory, workers: 1, pin: 'p' });

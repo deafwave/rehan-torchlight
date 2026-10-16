@@ -12,7 +12,9 @@ import { createMemo, memoKey } from './memo';
 /** dps-debug lines that are notes, not omissions (their numbers vary per build): never part of `partial` */
 export const INFO: (string | RegExp)[] = ['price:', /^held buff \d+ \(.*\) not carried: no piece of this build adds it/,
   // U2-MIX (dps-debug buffrate.ts): how a buff in a mix of states was priced - the expectation over its stack states - not an omission
-  'priced as the expectation over a mix of states (U2-MIX)', 'U2-MIX joint states ', 'U2-MIX affine closed form', /^the target's buff \(IN1\): .* stated at \d+ of its mix of states \(U2-MIX/];
+  'priced as the expectation over a mix of states (U2-MIX)', 'U2-MIX joint states ', 'U2-MIX affine closed form',
+  // nodes that move no figure: the no-op execute 0x1407d0580 (`mov al, 1; ret`), a node inert in the client (Q1), a cull (node 1003: CULL1 counts it in the cull)
+  /^not in this figure: node \d+ \(execute 0x1407d0580/, /^not in this figure: node \d+ \(Q1: inert in the client/, /^not in this figure: node 1003 \(a hit that kills the target/, /^the target's buff \(IN1\): .* stated at \d+ of its mix of states \(U2-MIX/];
 
 /** Stated fight inputs (dps-debug Carry.fight): `bombs` = bombs on the battlefield, `inputs` = other named per-cast / fight inputs */
 export interface Fight { bombs?: number; inputs?: Record<string, number> }
