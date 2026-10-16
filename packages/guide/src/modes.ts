@@ -275,6 +275,20 @@ async function rollAdvice(ev: Evaluator, state: State, ctx: GenCtx, base: Figure
   return out;
 }
 
+/** the uniques among your owned (not worn) items: an item whose modifier groups hold one of every key of a config_item_gold row on its base */
+function ownedUniques(state: State): Set<string> {
+  const gold = table<{ rows: Record<string, Record<string, unknown> & { i8: number }> }>('config_item_gold').rows, lang = table<{ rows: Record<string, string> }>('lang_en').rows;
+  const KEYS = ['m88', 'ma8', 'mc8', 'me8', 'm108', 'm128', 'm148', 'm168'], out = new Set<string>();
+  for (const o of state.owned) {
+    const groups = new Set(Object.values((o.modifiers ?? {}) as Record<string, { id: number }[]>).flat().map((m) => Math.floor(m.id / 10)));
+    const hit = Object.entries(gold).find(([, r]) => r.i8 === o.baseId && (() => { const ks = KEYS.map((k) => Object.keys((r[k] ?? {}) as object).map(Number)).filter((x) => x.length);
+      return ks.length > 0 && ks.every((x) => x.some((y) => groups.has(y))); })());
+    const name = hit && lang[`item_gold|name|${hit[0]}`];
+    if (name) out.add(name);
+  }
+  return out;
+}
+
 async function priceable(ev: Evaluator, state: State, out: string[]): Promise<State> {
   type L = Record<string, any>;   // eslint-disable-line @typescript-eslint/no-explicit-any
   const lang = () => table<{ rows: Record<string, string> }>('lang_en').rows;
@@ -377,10 +391,15 @@ export async function runAdvise(ev: Evaluator, state: State, k: Partial<Knobs> =
   // one row per support gem: a gem goes in one socket of a skill (the sockets it could take are alternatives, not steps)
   const gem = (n: NextBuy) => (n.kind === 'support' ? / with (.+?)$/.exec(n.label)?.[1] : undefined), bestGem = new Map<string, number>();
   for (const n of all) { const g = gem(n); if (g && n.gain > (bestGem.get(g) ?? -Infinity)) bestGem.set(g, n.gain); }
+  // a unique you already own is never a buy (yours may price lower only where the model cannot read its roll: it is named instead)
+  const own = ownedUniques(state);
+  for (const u of own) startNotes.push(`you have ${u} in your inventory: wear it rather than buy one`);
   const seenGem = new Set<string>();   // ties (the same gain in two sockets): the first
   const next = [...all.filter((n) => { const sl = n.kind === 'pact' && /in battle slot (\d)/.exec(n.label)?.[1], g = gem(n);
     if (g && (n.gain !== bestGem.get(g) || seenGem.has(g))) return false;
     if (g) seenGem.add(g);
+    const u = /^Unique (.+) in \w+$/.exec(n.label)?.[1];
+    if (u && own.has(u)) return false;
     return !sl || n.gain === best.get(sl); }), ...await rollAdvice(ev, state, ctxOf(state), first.figure, books)].sort((a, b) => b.gain - a.gain);
   const bought = Object.fromEntries(next.filter((n) => n.buy).map((n) => [n.buy!.name, books.price(n.buy!.name, state.level)]));
   const withNext = { ...base, legs, startNotes, next, prices: bought, ...(sw ? { switch: sw } : {}), ...(respecView ? { respec: respecView } : {}) };
