@@ -42,7 +42,7 @@ export interface IdealKnobs extends Knobs {
 /** Hammer of Ash's bosses in order of difficulty (dps-debug BOSSES keys; Cube 1 3.2e10 Life, Keegan 2 1.4e13, Cube 2 1.6e13: full damage taken;
  *  Cube 3 5.3e13 at -90 % taken): a leg moves on once its boss dies within `moveOnSeconds`; the last runs to the damage lock (user, 2026-10-15) */
 export const BOSS_ORDER = ['cube1', 'keegan2', 'cube2', 'cube3'];
-export const DEFAULT_IDEAL: IdealKnobs = { ...DEFAULT_KNOBS, stepsPerStage: 25, startLevel: 60, endLevel: 90, stageStep: 5, talentPoints: 108, switchAt: 2e8, switchRounds: 5, finalSteps: 100, hoaTarget: true };
+export const DEFAULT_IDEAL: IdealKnobs = { ...DEFAULT_KNOBS, topK: 1, maxRounds: 1, stepsPerStage: 15, startLevel: 60, endLevel: 90, stageStep: 5, talentPoints: 108, switchAt: 2e8, switchRounds: 5, finalSteps: 100, hoaTarget: true };
 const BOSS_NAME: Record<string, string> = { cube1: 'Cube 1', cube2: 'Cube 2', cube3: 'Cube 3', keegan: 'Keegan 1', keegan2: 'Keegan 2', void1: 'Void 1', void2: 'Void 2', void3: 'Void 3', traveler: 'the Traveler' };
 export const bossName = (t: string) => BOSS_NAME[t] ?? t;
 const secs = (x: number) => (x < 1 ? `${(x * 1000).toPrecision(2)} ms` : x < 600 ? `${x.toPrecision(3)} s` : x < 36_000 ? `${(x / 60).toPrecision(3)} min`
