@@ -83,7 +83,10 @@ describe('targetMoves', () => {
     expect(priced.filter(m => /^Target: /.test(m.label) && m.kind === 'gear').every(m => m.costFE === 5)).toBe(true);
     const bases = priced.filter(m => /^Rare base /.test(m.label));
     expect(bases.length).toBeGreaterThan(0);
-    for (const m of bases) expect(Object.keys((m.changes[0] as { item: { modifiers: object } }).item.modifiers)).toEqual(['baseAttr']);
+    // a bare base: its base attributes and its implicit (modifier type 1) at the midpoint of its rolls, no crafted mod
+    for (const m of bases) expect(Object.keys((m.changes[0] as { item: { modifiers: object } }).item.modifiers).filter(k => k !== 'baseAffix')).toEqual(['baseAttr']);
+    const maulBase = bases.find(m => /Sierra Reverberation Maul/.test(m.label))!;
+    expect((maulBase.changes[0] as unknown as { item: { modifiers: { baseAffix: unknown } } }).item.modifiers.baseAffix).toEqual([{ id: 1501119, dynArgs: [-45] }]);
     // ranked by its finished item: the base plus one craft per craftable mod, at the base's price plus every craft's embers
     const maul = bases.find(m => m.then)!;
     const done = (maul.then!.changes[0] as unknown as { item: { modifiers: { prefix?: unknown[]; suffix?: unknown[] } } }).item.modifiers;

@@ -119,12 +119,15 @@ export const targetMoves: Generator = (s, ctx) => {
       // on the base already: a rare there (a unique on the same base is replaced by the bare base, not crafted on)
       const onBase = !!cur && cur.baseId === baseId && !goldOf({ label: it.label, affixes: cur.affixes }, baseId);
       const LIST: Record<string, string> = { BAffixInfoList: 'baseAffix', BaseAttrInfoList: 'baseAttr', PrefixInfoList: 'prefix', SuffixInfoList: 'suffix', FixedBaseAffix: 'fixed' };
-      const mods: Record<string, { id: number; dynArgs: number[] }[]> = onBase ? {} : { baseAttr: modifiers.baseAttr ?? [] };
+      // a base drops with its implicit (modifier type 1, config_modifier_types `mt`) at a random roll: its expected value, the midpoint of each range
+      const types = rows('config_modifier_types'), rolls = rows('config_modifier_rolls'), implicit = (id: number) => types[id]?.mt === 1;
+      const imp = it.affixes.filter(a => !attrs.has(a.id) && implicit(a.id)).map(a => ({ id: a.id, dynArgs: (rolls[a.id] as number[][] | undefined)?.map(r => (r[0] + r[1]) / 2) ?? [...a.dyn] }));
+      const mods: Record<string, { id: number; dynArgs: number[] }[]> = onBase ? {} : { baseAttr: modifiers.baseAttr ?? [], ...(imp.length ? { baseAffix: imp } : {}) };
       if (onBase) for (const a of cur!.affixes) (mods[LIST[a.list ?? ''] ?? 'fixed'] ??= []).push({ id: a.id, dynArgs: [...a.dyn] });
       const have = new Set((onBase ? cur!.affixes : []).map(a => Math.floor(a.id / 100)));   // by modifier group: one tier of a group per item
       const plan: { c: NonNullable<ReturnType<typeof craftGroupStep>> & { id: number; dynArgs: number[] }; own: boolean }[] = [], per: Record<string, number> = {};
       let outside = 0;
-      for (const a of it.affixes.filter(x => !attrs.has(x.id) && !have.has(Math.floor(x.id / 100)))) {
+      for (const a of it.affixes.filter(x => !attrs.has(x.id) && !implicit(x.id) && !have.has(Math.floor(x.id / 100)))) {
         // its own tier when the library makes it, else the best tier the library makes of that group (a known build's tier 0 is not craftable)
         const own = craftStep(baseId, a.id, ctx), c = own ? { ...own, id: a.id, dynArgs: [...a.dyn] } : craftGroupStep(baseId, Math.floor(a.id / 100), ctx);
         if (!c) { outside++; continue; }

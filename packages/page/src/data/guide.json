@@ -6488,6 +6488,14 @@
            ]
           }
          ],
+         "baseAffix": [
+          {
+           "id": 1501119,
+           "dynArgs": [
+            -45
+           ]
+          }
+         ],
          "prefix": [
           {
            "id": 140111901,
@@ -6568,6 +6576,14 @@
            1.5
           ]
          }
+        ],
+        "baseAffix": [
+         {
+          "id": 1501119,
+          "dynArgs": [
+           -45
+          ]
+         }
         ]
        }
       }
@@ -6606,9 +6622,9 @@
     "lifeMax": 53469896141586
    },
    "after": {
-    "life100": 301309512407.9137,
-    "life0": 180424857727.8744,
-    "kill": 284020857148.4257,
+    "life100": 385029552109.03265,
+    "life0": 230556618028.54852,
+    "kill": 362937175609.6724,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
      "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
@@ -6665,6 +6681,14 @@
        "itemId": "guide-target-1019-107110001",
        "level": 86,
        "modifiers": {
+        "baseAffix": [
+         {
+          "id": 1501119,
+          "dynArgs": [
+           -45
+          ]
+         }
+        ],
         "baseAttr": [
          {
           "id": 510020,
@@ -6701,9 +6725,9 @@
    },
    "triggered": [],
    "before": {
-    "life100": 301309512407.9137,
-    "life0": 180424857727.8744,
-    "kill": 284020857148.4257,
+    "life100": 385029552109.03265,
+    "life0": 230556618028.54852,
+    "kill": 362937175609.6724,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
      "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
@@ -6731,9 +6755,9 @@
     "lifeMax": 53469896141586
    },
    "after": {
-    "life100": 483994230901.79504,
-    "life0": 289816904739.235,
-    "kill": 456223420292.31335,
+    "life100": 618473942156.1228,
+    "life0": 370343677947.3954,
+    "kill": 582986901985.0968,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
      "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
@@ -6789,6 +6813,14 @@
        "itemId": "guide-target-1019-110110001",
        "level": 86,
        "modifiers": {
+        "baseAffix": [
+         {
+          "id": 1501119,
+          "dynArgs": [
+           -45
+          ]
+         }
+        ],
         "baseAttr": [
          {
           "id": 510020,
@@ -6834,9 +6866,9 @@
    },
    "triggered": [],
    "before": {
-    "life100": 483994230901.79504,
-    "life0": 289816904739.235,
-    "kill": 456223420292.31335,
+    "life100": 618473942156.1228,
+    "life0": 370343677947.3954,
+    "kill": 582986901985.0968,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
      "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
@@ -6864,9 +6896,9 @@
     "lifeMax": 53469896141586
    },
    "after": {
-    "life100": 818657213930.9009,
-    "life0": 490213900540.5488,
-    "kill": 771683979543.0752,
+    "life100": 1046124358610.4402,
+    "life0": 626421771600.6924,
+    "kill": 986099425268.4006,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
      "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
@@ -6922,6 +6954,14 @@
        "itemId": "guide-target-1019-111110401",
        "level": 86,
        "modifiers": {
+        "baseAffix": [
+         {
+          "id": 1501119,
+          "dynArgs": [
+           -45
+          ]
+         }
+        ],
         "baseAttr": [
          {
           "id": 510020,
@@ -6973,9 +7013,9 @@
    },
    "triggered": [],
    "before": {
-    "life100": 818657213930.9009,
-    "life0": 490213900540.5488,
-    "kill": 771683979543.0752,
+    "life100": 1046124358610.4402,
+    "life0": 626421771600.6924,
+    "kill": 986099425268.4006,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
      "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
@@ -7003,9 +7043,9 @@
     "lifeMax": 53469896141586
    },
    "after": {
-    "life100": 1022062498318.5406,
-    "life0": 612013472025.7424,
-    "kill": 963418195824.5801,
+    "life100": 1318799920636.75,
+    "life0": 789700551251.2522,
+    "kill": 1243129302056.648,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
      "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
@@ -7061,6 +7101,14 @@
        "itemId": "guide-target-1019-140111401",
        "level": 86,
        "modifiers": {
+        "baseAffix": [
+         {
+          "id": 1501119,
+          "dynArgs": [
+           -45
+          ]
+         }
+        ],
         "baseAttr": [
          {
           "id": 510020,
@@ -7118,9 +7166,9 @@
    },
    "triggered": [],
    "before": {
-    "life100": 1022062498318.5406,
-    "life0": 612013472025.7424,
-    "kill": 963418195824.5801,
+    "life100": 1318799920636.75,
+    "life0": 789700551251.2522,
+    "kill": 1243129302056.648,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
      "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
@@ -7148,9 +7196,9 @@
     "lifeMax": 53469896141586
    },
    "after": {
-    "life100": 1323876529963.243,
-    "life0": 792740437087.7804,
-    "kill": 1247914623711.2576,
+    "life100": 1708240215763.304,
+    "life0": 1022898332772.0168,
+    "kill": 1610224139347.8354,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
      "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
@@ -7205,6 +7253,14 @@
        "itemId": "guide-target-1019-140111901",
        "level": 86,
        "modifiers": {
+        "baseAffix": [
+         {
+          "id": 1501119,
+          "dynArgs": [
+           -45
+          ]
+         }
+        ],
         "baseAttr": [
          {
           "id": 510020,
@@ -7270,9 +7326,9 @@
    },
    "triggered": [],
    "before": {
-    "life100": 1323876529963.243,
-    "life0": 792740437087.7804,
-    "kill": 1247914623711.2576,
+    "life100": 1708240215763.304,
+    "life0": 1022898332772.0168,
+    "kill": 1610224139347.8354,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
      "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
@@ -7300,9 +7356,9 @@
     "lifeMax": 53469896141586
    },
    "after": {
-    "life100": 2453768226345.016,
-    "life0": 1469322291232.9465,
-    "kill": 2312974951650.5947,
+    "life100": 3166175598352.681,
+    "life0": 1895913531959.341,
+    "kill": 2984505534341.584,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
      "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
@@ -7357,6 +7413,14 @@
        "itemId": "guide-target-1019-140110901",
        "level": 86,
        "modifiers": {
+        "baseAffix": [
+         {
+          "id": 1501119,
+          "dynArgs": [
+           -45
+          ]
+         }
+        ],
         "baseAttr": [
          {
           "id": 510020,
@@ -7428,9 +7492,9 @@
    },
    "triggered": [],
    "before": {
-    "life100": 2453768226345.016,
-    "life0": 1469322291232.9465,
-    "kill": 2312974951650.5947,
+    "life100": 3166175598352.681,
+    "life0": 1895913531959.341,
+    "kill": 2984505534341.584,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
      "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
@@ -7458,9 +7522,9 @@
     "lifeMax": 53469896141586
    },
    "after": {
-    "life100": 4292884371385.5566,
-    "life0": 2570589443966.188,
-    "kill": 4046565569947.371,
+    "life100": 5539245963533.699,
+    "life0": 3316913750650.1714,
+    "kill": 5221412938330.656,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
      "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
@@ -7726,7 +7790,7 @@
   "planned switch waits for Ruinous Star (hero level 82)",
   "single slates: board adjacency is resolved server-side",
   "target kismets appear once their pact is equipped in that slot",
-  "target Sierra Reverberation Maul: 2 of its mods are outside the craft library (blended, corroded or rolled): not offered"
+  "target Sierra Reverberation Maul: 1 of its mods are outside the craft library (blended, corroded or rolled): not offered"
  ],
  "unpriced": [
   "L60 not on the market / unpriced: Unique Endless Night - Prototype in boots: +109.4 % if you get it",
@@ -8522,7 +8586,7 @@
       "chest: Ruinous Star",
       "gloves: Death's Touch",
       "helmet: Fool's Crown",
-      "mainHand: Sierra Reverberation Maul - T1 +(49-80)% Gear Physical Damage (prefix); T1 +(77-110)% Gear Physical Damage / Adds (53-55) - (65-67) Physical Damage to the gear (prefix); T1 +6 to Attack Skill Level (prefix); T1 +(80-100)% additional Attack Damage after standing still for 0.1s. -20% additional Attack Speed (suffix); T1 +(127-180)% Critical Strike Damage (suffix); T1 +(152-216)% Erosion Damage (suffix)",
+      "mainHand: Sierra Reverberation Maul - T1 +(49-80)% Gear Physical Damage (prefix); T1 +(77-110)% Gear Physical Damage / Adds (53-55) - (65-67) Physical Damage to the gear (prefix); T1 +6 to Attack Skill Level (prefix); T1 +(80-100)% additional Attack Damage after standing still for 0.1s. -20% additional Attack Speed (suffix); T1 +(127-180)% Critical Strike Damage (suffix); T1 +(152-216)% Erosion Damage (suffix) (+1 more mods)",
       "necklace: Broken Sun Ring",
       "ring2: Kaleidoscope",
       "ring1: Vorax Limb: Digits"
