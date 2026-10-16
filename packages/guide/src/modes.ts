@@ -376,7 +376,7 @@ export async function runAdvise(ev: Evaluator, state: State, k: Partial<Knobs> =
   const gem = (n: NextBuy) => (n.kind === 'support' ? / with (.+?)$/.exec(n.label)?.[1] : undefined), bestGem = new Map<string, number>();
   for (const n of all) { const g = gem(n); if (g && n.gain > (bestGem.get(g) ?? -Infinity)) bestGem.set(g, n.gain); }
   const next = [...all.filter((n) => { const sl = n.kind === 'pact' && /in battle slot (\d)/.exec(n.label)?.[1], g = gem(n);
-    return (!sl || n.gain === best.get(sl)) && (!g || n.gain === bestGem.get(g)); }), ...await rollAdvice(ev, state, ctxOf(state), first.figure, books)];
+    return (!sl || n.gain === best.get(sl)) && (!g || n.gain === bestGem.get(g)); }), ...await rollAdvice(ev, state, ctxOf(state), first.figure, books)].sort((a, b) => b.gain - a.gain);
   const bought = Object.fromEntries(next.filter((n) => n.buy).map((n) => [n.buy!.name, books.price(n.buy!.name, state.level)]));
   const withNext = { ...base, legs, startNotes, next, prices: bought, ...(sw ? { switch: sw } : {}) };
   onStep?.({ ...withNext, knobs: { ...base.knobs, partialRun: true }, inputs: first.inputs, start: first.figure, steps: [], notSearched: [], unpriced: [], notCalculable: [] });
