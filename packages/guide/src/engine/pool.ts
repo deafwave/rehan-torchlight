@@ -16,6 +16,8 @@ export const INFO: (string | RegExp)[] = ['price:', /^held buff \d+ \(.*\) not c
   'priced as the expectation over a mix of states (U2-MIX)', 'U2-MIX joint states ', 'U2-MIX affine closed form',
   // statements, not omissions: a battlecry's enemy-map buff and its derived uptime (IN1); a held buff at the count the character's capture measured
   /^the target's buff \d+ \(\w+\) from the battlecry's enemy map \(IN1\): /, /^not calculable without a capture: held buffs the pieces do not derive, taken from the capture: /,
+  // Kaleidoscope's modifier is set aside from the compile and priced over its three phase states (dps-debug KAL2 / ringW, coordinator 2026-10-16)
+  /^not in this figure as compiled: gear \d+: modifier \d+ \(Kaleidoscope: /,
   // nodes that move no figure: the no-op execute 0x1407d0580 (`mov al, 1; ret`), a node inert in the client (Q1), a cull (node 1003: CULL1 counts it in the cull)
   // node 2320 here is the Corona ring's trigger (its enemy buff 35110 is priced, its owner buff 35109 empty); node 626 only sets a buff's duration (NATIVE: no record)
   /^not in this figure: node 2320 \(comp 0x82 \/ 0x91, triggers a skill/, /^not in this figure: node 626 \(/,
