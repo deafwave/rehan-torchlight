@@ -328,8 +328,19 @@ export async function runAdvise(ev: Evaluator, state: State, k: Partial<Knobs> =
   if (state.skill === 'iceShot') {
     const hoa: State = { ...state, skill: 'hoa', target: targets[0] }, ctx = ctxOf(hoa), m = switchWithPage(state, ctx);
     if (m) {
-      const e = await ev.run(state.loadout, m.changes, ctxOfState(hoa));
-      sw = { label: m.label, costFE: m.costFE, target: targets[0], figure: e.figure };
+      let e = await ev.run(state.loadout, m.changes, ctxOfState(hoa)), label = m.label, cost = m.costFE;
+      // the target page reads the target build's skills (Fixate needs Timid): a character without them takes the target skill set with the switch
+      const skills = e.figure.stop ? targetMoves({ ...hoa, loadout: e.loadout }, ctx).find((x) => x.label.startsWith('Target skills: all')) : undefined;
+      if (skills) {
+        const e2 = await ev.run(e.loadout, skills.changes, ctxOfState(hoa));
+        if (!e2.figure.stop) { e = e2; label = `${label}; with the target build's skills (${skills.label.replace(/^Target skills: all \d+ remaining groups \((.*)\)$/, '$1')})`; cost = cost === null || skills.costFE === null ? null : cost + skills.costFE; }
+      }
+      // a piece that prices on the dummy can stop on the boss (Preserver of Eternity's when-hit count): left out of the switch's figure, named
+      if (e.figure.stop) {
+        const out: string[] = [], s2 = await priceable(ev, { ...hoa, loadout: e.loadout }, out);
+        if (out.length) { e = await ev.run(s2.loadout, [], ctxOfState(hoa)); label = `${label} (on ${bossName(targets[0])}, ${out.map((x) => x.replace(/^left out of every figure: /, '').replace(/: the model stops on it .*$/, '')).join(', ')} left out: the model cannot price ${out.length === 1 ? 'it' : 'them'} there)`; }
+      }
+      sw = { label, costFE: cost, target: targets[0], figure: e.figure };
     } else startNotes.push(`Hammer of Ash switch: ${[...ctx.notSearched].find((x) => /switch waits/.test(x)) ?? 'not offered yet'}`);
   }
   // one pactspirit per battle slot: the best (every owned one is priced; a list of near-equal swaps is noise)
