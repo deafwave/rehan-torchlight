@@ -19,6 +19,7 @@ import { ICE_SHOT_INPUTS, idealStartNotes } from './start';
 import { setTalentPoints } from './talentRules';
 import { talentName } from './names';
 import { buildSheet } from './sheet';
+import { prismOf } from './patches';
 import type { Evaluator, Figure, GenCtx, Generator, GuideOut, Leg, Move, NextBuy, PriceBook, Skill, State, Step } from './types';
 
 export const SEASON = 1501;
@@ -164,7 +165,7 @@ async function ideal(ev: Evaluator, K: IdealKnobs, prices: PriceBook | Record<Sk
     if (s.skill === 'hoa' && K.hoaTarget) {
       const tp = targetPage(s, level), have = Object.values((s.loadout.talents ?? {}) as Record<string, number>).reduce((a, b) => a + b, 0);
       if (tp.points > have) {
-        const e = await ev.run(s.loadout, tp.changes, ctxOfState(s));
+        const pp = prismOf(s.loadout), e = await ev.run(s.loadout, [...tp.changes, ...(pp ? [pp] : [])], ctxOfState(s));   // the page change drops the prism's resolved entries: put back
         if (!e.figure.stop) { s = { ...s, loadout: e.loadout }; f = e.figure; notes.push(`L${level}: the target talent page re-fitted to ${tp.points} points`); }
       }
     }

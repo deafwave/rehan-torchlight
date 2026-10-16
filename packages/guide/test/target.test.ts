@@ -33,6 +33,18 @@ describe("the known build's hero memories and vorax limb", () => {
   });
 });
 
+describe("the known build's talent prism", () => {
+  it('is offered as one farmed patch: its mirrored copies (an original it replaced removed) and its extra affixes', () => {
+    const ms = gen({ ...l100, resolvedTalents: { talents: [[12040100, 2, 'talent:12040100']], ext: [] } }).moves;
+    const m = ms.find(x => /^Target talent prism/.test(x.label))!;
+    expect(m).toMatchObject({ costFE: 0, market: 'drop' });
+    const r = (applyPatch({ ...l100, resolvedTalents: { talents: [[12040100, 2, 'talent:12040100']], ext: [] } }, m.changes[0] as never) as { resolvedTalents: { talents: [number, number, string][]; ext: unknown[] } }).resolvedTalents;
+    expect(r.talents.some(t => t[2] === 'talent:12040100')).toBe(false);
+    expect(r.talents.find(t => t[2] === 'talent:-12040100@102%')?.[1]).toBeCloseTo(2.04);
+    expect(r.ext.length).toBe(3);
+  });
+});
+
 describe('targetMoves', () => {
   it('offers gear and pacts as enabler acquisitions', () => {
     expect(of('gear').length).toBeGreaterThan(0);

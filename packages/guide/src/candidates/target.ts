@@ -13,14 +13,15 @@ import { pinRoot, table } from '../pin';
 import { priceOfBase, priceOfGold, priceOfName } from '../priceOf';
 import { craftGroupStep, craftStep, slotsOfBase } from './gear';
 import { costOf } from '../priceOf';
-import type { LoadoutPatch } from '../patches';
+import { prismOf, type LoadoutPatch } from '../patches';
 import type { Change, Generator, Move } from '../types';
 
 type Aff = { id: number; dyn: number[] };
 export interface TGear { label: string; affixes: Aff[] }
 interface Target { gear: TGear[]; pacts: { servantId: number; rank: number; promotionLevels: number[][]; slot: number }[];
   kismets: { modifierId: number | null; servantId: number; node: number; rolls: number[] }[]; contractKeys: number[]; heroMemories: unknown[]; vorax: unknown[]; slates: number[];
-  skills: { name: string; level: number; place: { kind: string; slot: number; ownerKind?: string; ownerSlot?: number } }[] }
+  skills: { name: string; level: number; place: { kind: string; slot: number; ownerKind?: string; ownerSlot?: number } }[];
+  resolvedTalents?: { talents: [number, number, string][]; ext?: unknown[] } }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const rows = (f: string): Record<string, any> => table<{ rows: Record<string, any> }>(f).rows;
@@ -228,5 +229,17 @@ export const targetMoves: Generator = (s, ctx) => {
     const change: Change = { kind: 'kismet', action: at.has(point) ? 'replace' : 'socket', point, modifierId: k.modifierId, rolls: k.rolls };
     keep(mk({ kind: 'kismet', label: `Target: ${name ?? k.modifierId} on contract point ${point}`, costFE: baseId ? priceOfBase(ctx.prices, Number(baseId), ctx.level).fe : null, changes: [change] }), String(name ?? k.modifierId));
   }
+  // kismets that only pay together (each alone a little below the build): the remaining ones as one move too
+  const kis = out.filter((m) => m.kind === 'kismet');
+  if (kis.length > 1 && kis.every((m) => m.costFE !== null))
+    out.push(mk({ kind: 'kismet', label: `Target kismets: all ${kis.length} remaining (${kis.map((m) => m.label.replace(/^Target: /, '')).join(', ')})`,
+      costFE: kis.reduce((a, m) => a + m.costFE!, 0), changes: kis.flatMap((m) => m.changes) }));
+
+  // the target's talent prism, as the server resolved it: its mirrored (inverse) talent copies and its extra affixes (resolvedTalents.ext); farmed, 0 FE
+  const rtL = ((l.resolvedTalents?.talents ?? []) as [number, number, string][]), pr = prismOf(t as never);
+  const mirrors = (t.resolvedTalents?.talents ?? []).filter(([, , tag]) => tag.startsWith('talent:-'));
+  if (pr && (!mirrors.every(([, w, tag]) => rtL.some((x) => x[2] === tag && Math.abs(x[1] - w) < 1e-9)) || !same(l.resolvedTalents?.ext ?? [], pr.ext)))
+    out.push(mk({ kind: 'prism', label: `Target talent prism: ${pr.copies.length} mirrored talents at ${pr.copies.map((c) => 100 + c.ee).join('/')} % and ${pr.ext!.length} prism affixes`, costFE: 0, market: 'drop',
+      costNote: 'farmed: the talent prism drops (its making is not priced)', changes: [pr] }));
   return out;
 };

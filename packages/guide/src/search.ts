@@ -22,7 +22,9 @@ export const pieceKey = (p: string) => p.replace(/\d+\.\d+(?:e[-+]?\d+)?|\d+e[-+
  *  granted to skill stones (a grant: leaving it out only understates; the known >= 110T build's vorax limb carries it) */
 const LOWER_BOUND = [/^not in this figure: node 306 \(buff component 0x12 only/, /^not in this figure: node 2230 \(skill stones' energy/,
   // Kaleidoscope's phase modifier (a bonus per phase) left out of the compiled item
-  /^not in this figure as compiled: gear \d+: modifier \d+ \(Kaleidoscope: /];
+  /^not in this figure as compiled: gear \d+: modifier \d+ \(Kaleidoscope: /,
+  // a buff the build's own skill puts on the target, not derived (IN1: its hits are not in the fight's hit stream)
+  /^the target's buff not derived \(IN1\): /];
 /** A figure is rankable only if it dropped no piece the baseline still had (but a lower-bound one), and it computed. */
 export function rankable(before: Figure, after: Figure): boolean {
   const had = new Set(before.partial.map(pieceKey));

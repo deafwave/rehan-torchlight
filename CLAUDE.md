@@ -49,7 +49,9 @@ the `game.busy` file exists (`DEFAULT_BUSY_FILE` in `engine/pool.ts`, env `GUIDE
 - The planned switch also puts on Ruinous Star (gold 112158, chest; the >= 110T build's core, user 2026-10-15). The known build's rares come one step at a time:
   the bare base (with its implicit, modifier type 1, at the midpoint of its rolls), ranked by its finished item (`Move.then`: base + one library craft per
   mod, total cost), then one craft per step; the item as the known build rolled it (tier 0, chip) is unpriced, listed with its gain. Its pacts, slate
-  board, hero memories and vorax limb (it takes ring1) are farmed (0 FE); its skills come one group (a skill and its supports) per move, gems priced by name.
+  board, hero memories, vorax limb (it takes ring1) and talent prism (its mirrored talents and extra affixes in resolvedTalents, put back after each talent
+  page re-fit, `prismOf`) are farmed (0 FE); its skills come one group (a skill and its supports) per move, gems priced by name; groups and kismets that only
+  pay together are also offered as one move. Hero trait tiers are not offered (the tier budget is not in the catalog).
   A legendary with a pooled key (one of several groups) is a legendary (`goldOf`). A craft tier's text ranges match its rolls in any order.
 - Ideal: the Ice Shot leg ends at `switchAt` (2e8): the Ice Shot -> Hammer of Ash switch follows at once, at that level (mid-stage too), or at
   the next stage start after a stage with no step. It is planned, not searched: the target build's talent page, trimmed to the level's points
