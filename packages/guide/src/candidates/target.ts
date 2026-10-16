@@ -11,7 +11,7 @@ import { fileURLToPath } from 'node:url';
 import { applyChanges, openCatalog } from '@dps/guide/figure';
 import { pinRoot, table } from '../pin';
 import { priceOfBase, priceOfGold } from '../priceOf';
-import { craftStep, slotsOfBase } from './gear';
+import { craftGroupStep, craftStep, slotsOfBase } from './gear';
 import { costOf } from '../priceOf';
 import type { LoadoutPatch } from '../patches';
 import type { Change, Generator, Move } from '../types';
@@ -123,14 +123,16 @@ export const targetMoves: Generator = (s, ctx) => {
       const LIST: Record<string, string> = { BAffixInfoList: 'baseAffix', BaseAttrInfoList: 'baseAttr', PrefixInfoList: 'prefix', SuffixInfoList: 'suffix', FixedBaseAffix: 'fixed' };
       const mods: Record<string, { id: number; dynArgs: number[] }[]> = {};
       for (const a of cur.affixes) (mods[LIST[a.list ?? ''] ?? 'fixed'] ??= []).push({ id: a.id, dynArgs: [...a.dyn] });
-      const have = new Set(cur.affixes.map(a => a.id));
+      const have = new Set(cur.affixes.map(a => Math.floor(a.id / 100)));   // by modifier group: one tier of a group per item
       let outside = 0;
-      for (const a of it.affixes.filter(x => !attrs.has(x.id) && !have.has(x.id))) {
-        const c = craftStep(baseId, a.id, ctx);
+      for (const a of it.affixes.filter(x => !attrs.has(x.id) && !have.has(Math.floor(x.id / 100)))) {
+        // its own tier when the library makes it, else the best tier the library makes of that group (a known build's tier 0 is not craftable)
+        const own = craftStep(baseId, a.id, ctx), c = own ? { ...own, id: a.id, dynArgs: [...a.dyn] } : craftGroupStep(baseId, Math.floor(a.id / 100), ctx);
         if (!c) { outside++; continue; }
         if ((mods[c.side]?.length ?? 0) >= 3) continue;
         keep(mk({ kind: 'craft', label: `Craft ${c.tier} ${c.text} (${c.side}) on ${slot}`, costFE: c.costFE, buy: { name: c.ember, qty: c.qty }, minLevel: level,
-          changes: [{ kind: 'gear', slot, item: { baseId, baseName: it.label, itemId: `guide-target-${baseId}-${a.id}`, level, modifiers: { ...mods, [c.side]: [...(mods[c.side] ?? []), { id: a.id, dynArgs: [...a.dyn] }] } } }] }), it.label);
+          ...(own ? {} : { costNote: "the known build's tier of this mod is not craftable: its best craftable tier" }),
+          changes: [{ kind: 'gear', slot, item: { baseId, baseName: it.label, itemId: `guide-target-${baseId}-${c.id}`, level, modifiers: { ...mods, [c.side]: [...(mods[c.side] ?? []), { id: c.id, dynArgs: c.dynArgs }] } } }] }), it.label);
       }
       if (outside) ns.add(`target ${it.label}: ${outside} of its mods are outside the craft library (blended, corroded or rolled): not offered`);
       continue;

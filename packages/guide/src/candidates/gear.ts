@@ -154,6 +154,15 @@ export function craftStep(baseId: number, tierAffixId: number, ctx: GenCtx): { t
   return { tier: o.tier, text: o.text.replace(/\n/g, ' / '), side: o.side.toLowerCase(), ember: o.ember, qty: o.expectedEmbers, costFE: p === null ? null : o.expectedEmbers * p };
 }
 
+/** the best craftable tier of a modifier group on a base (a known build's tier 0 the library cannot make: its best tier stands in), at the midpoint of its rolls */
+export function craftGroupStep(baseId: number, group: number, ctx: GenCtx): (NonNullable<ReturnType<typeof craftStep>> & { id: number; dynArgs: number[] }) | null {
+  const r = cat().rows.get(baseId);
+  const best = r?.lib ? craftOptions(library, r.lib, ctx.level).filter(o => Math.floor(Number(o.tierAffixId) / 100) === group && !UNVERIFIED.has(o.tierAffixId))
+    .sort((a, b) => Number(a.tierAffixId) - Number(b.tierAffixId))[0] : undefined;
+  const dynArgs = best && mids(Number(best.tierAffixId)), c = best && craftStep(baseId, Number(best.tierAffixId), ctx);
+  return c && dynArgs ? { ...c, id: Number(best!.tierAffixId), dynArgs } : null;
+}
+
 export function craftCostOf(baseId: number, affixIds: number[], ctx: GenCtx): { costFE: number | null; crafted: number; uncraftable: number } {
   const r = cat().rows.get(baseId);
   if (!r?.lib) return { costFE: null, crafted: 0, uncraftable: affixIds.length };

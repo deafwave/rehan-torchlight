@@ -79,8 +79,8 @@ describe('targetMoves', () => {
     expect(crafts.map(m => m.label)).toEqual(expect.arrayContaining([expect.stringMatching(/^Craft T1 \+6 to Attack Skill Level \(prefix\) on mainHand$/)]));
     for (const m of crafts) {
       expect(m.costFE).toBe(2 * m.buy!.qty);
-      const prefix = (m.changes[0] as { item: { modifiers: { prefix: unknown[] } } }).item.modifiers.prefix;
-      expect(prefix).toHaveLength(1);   // one mod per step
+      const mods = (m.changes[0] as unknown as { item: { modifiers: { prefix?: unknown[]; suffix?: unknown[] } } }).item.modifiers;
+      expect((mods.prefix?.length ?? 0) + (mods.suffix?.length ?? 0)).toBe(1);   // one mod per step
     }
     expect([...notSearched].some(n => /^target Sierra Reverberation Maul: \d+ of its mods are outside the craft library/.test(n))).toBe(true);
   });
