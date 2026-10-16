@@ -42,7 +42,9 @@ export function gemLevelAt(sid: number, heroLevel: number, maxGemLevel: number, 
 export interface Support { sid: number; name: string }
 /** supports the client catalog still holds but the season does not (absent from tlidb's index, 2026-10-16; Cold Penetration confirmed missing in game by the user) */
 export const NOT_THIS_SEASON = new Set(['Fire Penetration', 'Cold Penetration', 'Lightning Penetration', 'Erosion Penetration', 'Greater Multiple Projectiles', 'Devastator']);
-export const supportsFor = (skill: Skill): Support[] => (sup1 as unknown as Record<Skill, Support[]>)[skill].filter((x) => !NOT_THIS_SEASON.has(x.name));
+/** supports that break the skill's own build, with why (user, 2026-10-16: Elemental Fusion stops Ice Shot inflicting Frostbite, which its Frostbite talents pay through) */
+export const NOT_FOR: Partial<Record<Skill, Record<string, string>>> = { iceShot: { 'Elemental Fusion': 'it stops inflicting Frostbite, which a Frostbite build pays through' } };
+export const supportsFor = (skill: Skill): Support[] => (sup1 as unknown as Record<Skill, Support[]>)[skill].filter((x) => !NOT_THIS_SEASON.has(x.name) && !NOT_FOR[skill]?.[x.name]);
 const SOCKETS = [1, 2, 3, 4, 5];   // a six-stone group = the skill + five supports (loadout sockets 1..5)
 export const GEM_LEVEL = 20;
 type Gem = { sid: number; level: number; place: { kind: string; slot: number; ownerKind?: string; ownerSlot?: number } };
@@ -51,6 +53,7 @@ export const gemMoves: Generator = (s, ctx) => {
   const ns = ctx.notSearched;
   ns.add('support: a bought support is priced by its English name; installed at gem level 20 (or the replaced gem level), lowered to what the hero level allows; its own rolled modifiers (Magnificent / Noble gems) are not modelled');
   ns.add(`support: not this season (absent from tlidb, not offered): ${[...NOT_THIS_SEASON].join(', ')}`);
+  for (const [g, why] of Object.entries(NOT_FOR[s.skill] ?? {})) ns.add(`support: ${g} is not offered for ${s.skill}: ${why}`);
   ns.add('support: supports on the non-damage skills (Blink, Timid, warcries, auras) and replacing a skill gem are not searched');
   const skills = (s.loadout.skills ?? []) as Gem[];
   const main = skills.find(g => g.place.kind === 'active' && g.place.slot === 0);
