@@ -819,3 +819,5 @@ a.t-branch:hover,a.t-branch:focus-visible{text-decoration:underline}
 .gl-route tr.start td{opacity:.75}
 @media (max-width:900px){.gl-routes{grid-template-columns:1fr}}
 .gl-routes.one{grid-template-columns:1fr}
+
+.gl-plan-steps td:nth-child(n+3) { white-space: nowrap; }

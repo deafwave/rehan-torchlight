@@ -7,7 +7,7 @@ the Vite page (`packages/page`) renders it. Nothing on the page is typed in by h
 ## The pin
 
 `@dps/*` resolves to `<tli>/dps-debug/.worktrees/tli-lens-pin/model/*` (a detached, locked worktree of dps-debug), now dps-debug main a0938487
-(MANA2: every Hammer of Ash figure carries the auras' Sealed Mana fit; on top of TANGO1, SHOT2, MANA1, SLP-B, IGN0, OH1, SEA1). Checked by tli-lens 285 / 285 with
+(MANA2: every Hammer of Ash figure carries the auras' Sealed Mana fit; on top of TANGO1, SHOT2, MANA1, SLP-B, IGN0, OH1, SEA1). Checked by tli-lens 286 / 286 with
 GUIDE_REAL=1. dps-debug's own guide gates (`GUIDE_GATES=1`, model/guide/) are red on main since the ungated SEA1 merges (10 failures: figure.test (a) / (b), cull-figure,
 iceshot-figure, perf; the season catalog moved the figures off last season's captures): re-baseline them before trusting a bit-equal claim. tsconfig paths + vitest
 alias; env `DPS_DEBUG_PIN` overrides, see `packages/guide/src/pin.ts`). Every output

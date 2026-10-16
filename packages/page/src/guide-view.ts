@@ -336,7 +336,7 @@ function planCard(g: GuideOut): string {
   return `<div class="gl-final"><b>Your path to ${fmtDps(p.goal)} per second on ${boss}</b>`
     + `<p>Now: <b>${fmtDps(p.start.figure.kill)}</b>/s (${boss} in ${t(p.start.figure)}). ${g.knobs?.partialRun ? `<span class="warn">Still computing</span>: ${p.steps.length} steps so far, at ${fmtDps(end.kill)}/s.` : reached ? `Goal reached after ${p.steps.length} steps for <b>${fmtFE(p.steps.at(-1)?.totalFE ?? 0)} FE</b>: ${fmtDps(end.kill)}/s.` : `<span class="warn">Not reached</span>: the steps below end at ${fmtDps(end.kill)}/s.`}</p>`
     + `<p class="bnote">Do the steps in order: each is priced on your build after the ones above it, and the next one is always the most damage per FE (free ones first). Read from your game and priced ${esc(p.at.slice(0, 16).replace('T', ' '))} UTC (model numbers, live etor prices).</p>`
-    + `<table><tr><th>#</th><th>Do this</th><th>Cost</th><th>Total</th><th>Gain</th><th>Damage/s after</th><th>${boss} dies in</th></tr>${rows}</table>`
+    + `<table class="gl-plan-steps"><tr><th>#</th><th>Do this</th><th>Cost</th><th>Total</th><th>Gain</th><th>Damage/s after</th><th>${boss} dies in</th></tr>${rows}</table>`
     + (notes ? `<ul class="bnote">${notes}</ul>` : '') + refused + build + '</div>';
 }
 function finalCard(g: GuideOut): string {
