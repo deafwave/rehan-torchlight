@@ -122,6 +122,13 @@ describe('targetMoves', () => {
       expect((mods.prefix?.length ?? 0) + (mods.suffix?.length ?? 0)).toBe(1);   // one mod per step
     }
     expect([...notSearched].some(n => /^target Sierra Reverberation Maul: \d+ of its mods are outside the craft library/.test(n))).toBe(true);
+    // incremental: a mod at every tier (cheap first), and once a lower tier is on, a re-craft at a better one
+    const phys = crafts.filter(m => /Gear Physical Damage \(prefix\)/.test(m.label)).map(m => m.label.slice(6, 8));
+    expect(phys).toEqual(expect.arrayContaining(['T1', 'T4', 'T7']));
+    const t7 = crafts.find(m => /^Craft T7 .*Gear Physical Damage \(prefix\)/.test(m.label))!;
+    const withT7 = { ...l, gear: (l.gear as { slot: string }[]).map(g => (g.slot === 'mainHand' ? dumpToItem((t7.changes[0] as never as { item: never }).item, 'mainHand') : g)) };
+    const again = targetMoves({ loadout: withT7, owned: [], fe: 0, level: 100, skill: 'hoa' }, { prices: { season: 't', fetchedAt: 't', price: k => (typeof k === 'string' ? 2 : null) }, level: 100, notSearched: new Set() });
+    expect(again.some(m => /^Re-craft T1 .*Gear Physical Damage .*replacing its lower tier$/.test(m.label))).toBe(true);
   });
   it('goldOf: a real legendary matches; the same item padded with unrelated groups is a rare', () => {
     const lang = table<{ rows: Record<string, string> }>('lang_en').rows, base = table<{ rows: Record<string, { a1b8?: number[] }> }>('config_item_base').rows;

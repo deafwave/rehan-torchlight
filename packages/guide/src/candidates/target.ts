@@ -11,7 +11,7 @@ import { fileURLToPath } from 'node:url';
 import { applyChanges, openCatalog } from '@dps/guide/figure';
 import { pinRoot, table } from '../pin';
 import { priceOfBase, priceOfGold, priceOfName } from '../priceOf';
-import { craftGroupStep, craftStep, slotsOfBase } from './gear';
+import { craftGroupStep, craftStep, craftTiers, slotsOfBase } from './gear';
 import { costOf } from '../priceOf';
 import { prismOf, type LoadoutPatch } from '../patches';
 import type { Change, Generator, Move } from '../types';
@@ -145,7 +145,7 @@ export const targetMoves: Generator = (s, ctx) => {
         const then = plan.length && bare.costFE !== null && Number.isFinite(craftFE)
           ? { changes: [gear(`guide-target-${baseId}-full`, plan.reduce((ms, { c }) => plus(ms, c), mods))], costFE: bare.costFE + craftFE,
             note: `chosen for the finished item: then ${plan.map(({ c }) => `${c.tier} ${c.text} (${c.side})`).join(', ')}` } : undefined;
-        keep(mk({ kind: 'gear', label: `Rare base ${it.label} (item level ${level}) on ${slot}`, ...bare, minLevel: level, ...(then ? { then } : {}),
+        keep(mk({ kind: 'gear', label: `Rare base ${it.label} (item level 100: every craft tier; wearable at level ${level}) on ${slot}`, ...bare, minLevel: level, ...(then ? { then } : {}),
           changes: [gear(`guide-target-base-${baseId}`, mods)] }), it.label);
         continue;
       }
@@ -158,10 +158,21 @@ export const targetMoves: Generator = (s, ctx) => {
           const key = attrs.has(a.id) ? 'baseAttr' : implicit(a.id) ? 'baseAffix' : types[a.id]?.mt === 40 ? 'chip' : sideOf(a.id) ?? craftGroupStep(baseId, Math.floor(a.id / 100), ctx)?.side ?? 'fixed';
           return { ...ms, [key]: [...(ms[key] ?? []), { id: a.id, dynArgs: [...a.dyn] }] };
         }, {} as typeof mods))] }));
-      for (const { c, own } of plan)
-        keep(mk({ kind: 'craft', label: `Craft ${c.tier} ${c.text} (${c.side}) on ${slot}`, costFE: c.costFE, buy: { name: c.ember, qty: c.qty }, minLevel: level,
-          ...(own ? {} : { costNote: "the known build's tier of this mod is not craftable: its best craftable tier" }),
-          changes: [gear(`guide-target-${baseId}-${c.id}`, plus(mods, c))] }), it.label);
+      // each missing mod at every tier the library makes (cheap first is a step too: the search weighs gain per FE), the known build's own tier included
+      for (const { c } of plan)
+        for (const t of craftTiers(baseId, Math.floor(c.id / 100), 100, ctx))
+          keep(mk({ kind: 'craft', label: `Craft ${t.tier} ${t.text} (${t.side}) on ${slot}`, costFE: t.costFE, buy: { name: t.ember, qty: t.qty }, minLevel: level,
+            ...(t.id === c.id ? {} : { costNote: t.id < c.id ? "the known build's tier of this mod is not craftable: a craftable tier" : "a cheaper tier than the known build's, re-crafted later" }),
+            changes: [gear(`guide-target-${baseId}-${t.id}`, plus(mods, t))] }), it.label);
+      // a target mod already on the item at a worse tier: re-craft it at each better tier (the old roll is replaced)
+      const want = new Map(it.affixes.filter(a => !attrs.has(a.id) && !implicit(a.id)).map(a => [Math.floor(a.id / 100), a.id]));
+      for (const [side, list] of Object.entries(mods)) for (const m of list) {
+        const grp = Math.floor(m.id / 100), goal = want.get(grp);
+        if (goal === undefined || m.id <= goal) continue;   // lower tier id = better tier; at or above the known build's tier
+        for (const t of craftTiers(baseId, grp, 100, ctx).filter(t => t.id < m.id && t.id >= goal))
+          keep(mk({ kind: 'craft', label: `Re-craft ${t.tier} ${t.text} (${t.side}) on ${slot}, replacing its lower tier`, costFE: t.costFE, buy: { name: t.ember, qty: t.qty }, minLevel: level,
+            changes: [gear(`guide-target-${baseId}-${t.id}`, { ...mods, [side]: list.map(x => (x === m ? { id: t.id, dynArgs: t.dynArgs } : x)) })] }), it.label);
+      }
       continue;
     }
     const cost = { costFE: priceOfGold(ctx.prices, Number(gid), ctx.level).fe };

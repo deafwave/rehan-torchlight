@@ -163,6 +163,18 @@ export function craftGroupStep(baseId: number, group: number, ctx: GenCtx): (Non
   return c && dynArgs ? { ...c, id: Number(best!.tierAffixId), dynArgs } : null;
 }
 
+/** every verified tier of a modifier group the base's craft pool makes at `itemLevel`, best first, at the midpoint of its rolls: a mod can be crafted
+ *  cheap first and re-crafted at a better tier later */
+export function craftTiers(baseId: number, group: number, itemLevel: number, ctx: GenCtx): (NonNullable<ReturnType<typeof craftStep>> & { id: number; dynArgs: number[] })[] {
+  const r = cat().rows.get(baseId);
+  if (!r?.lib) return [];
+  return craftOptions(library, r.lib, itemLevel).filter(o => Math.floor(Number(o.tierAffixId) / 100) === group && !UNVERIFIED.has(o.tierAffixId))
+    .sort((a, b) => Number(a.tierAffixId) - Number(b.tierAffixId)).flatMap(o => {
+      const dynArgs = mids(Number(o.tierAffixId)), c = craftStep(baseId, Number(o.tierAffixId), ctx);
+      return c && dynArgs ? [{ ...c, id: Number(o.tierAffixId), dynArgs }] : [];
+    });
+}
+
 export function craftCostOf(baseId: number, affixIds: number[], ctx: GenCtx): { costFE: number | null; crafted: number; uncraftable: number } {
   const r = cat().rows.get(baseId);
   if (!r?.lib) return { costFE: null, crafted: 0, uncraftable: affixIds.length };
