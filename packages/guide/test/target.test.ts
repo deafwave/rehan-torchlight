@@ -23,7 +23,7 @@ describe('targetMoves', () => {
   it('offers gear and pacts as enabler acquisitions', () => {
     expect(of('gear').length).toBeGreaterThan(0);
     expect(of('pact').length).toBe(5);   // 19330 is already held in another slot
-    expect(moves.every(m => m.acquisition && m.enabler && /^Target[: ]/.test(m.label))).toBe(true);
+    expect(moves.every(m => m.acquisition && m.enabler && /^(Target[: ]|Rare base |Craft )/.test(m.label))).toBe(true);
   });
   it('pacts are farmed, not bought: 0 FE, ranked like a drop, said so', () => {
     expect(of('pact').every(m => m.costFE === 0 && m.market === 'drop' && /^farmed: /.test(m.costNote ?? ''))).toBe(true);
@@ -52,8 +52,8 @@ describe('targetMoves', () => {
   const tg = JSON.parse(readFileSync(join(pinRoot(), 're/evidence/loadout_probuild-hanshansi-bing.json'), 'utf8')) as { gear: { label: string; affixes: { id: number; dyn: number[] }[] }[] };
   const pairs = (a: { id: number; dyn: number[] }[]) => JSON.stringify(a.map(x => [x.id, x.dyn]).sort());
   const gearItem = (m: Move) => (m.changes[0] as unknown as { slot: string; item: Parameters<typeof dumpToItem>[0] });
-  it('each gear move carries exactly the target item affixes (dumpToItem round trip)', () => {
-    for (const m of of('gear')) {
+  it('each legendary gear move carries exactly the target item affixes (dumpToItem round trip)', () => {
+    for (const m of of('gear').filter(x => /^Target: /.test(x.label))) {
       const { slot, item } = gearItem(m), t = tg.gear.find(g => g.label === item.baseName)!;
       expect(pairs(dumpToItem(item, slot).affixes.map(a => ({ id: a.id, dyn: a.dyn }))), m.label).toBe(pairs(t.affixes));
     }
@@ -61,16 +61,28 @@ describe('targetMoves', () => {
   it('a legendary with a fixed affix keeps it under modifiers.fixed', () => {
     expect(of('gear').some(m => (gearItem(m).item.modifiers.fixed?.length ?? 0) > 0)).toBe(true);
   });
-  it('a legendary is priced by its gold item; a rare at its base plus each crafted affix at the expected embers of its tier', () => {
-    const priced = targetMoves({ loadout: l100, owned: [], fe: 0, level: 100, skill: 'hoa' }, { prices: { season: 't', fetchedAt: 't', price: k => (typeof k === 'string' ? 5 : null) }, level: 100, notSearched: new Set() }).filter(m => m.kind === 'gear');
-    const gold = priced.filter(m => m.costFE === 5 && !m.costNote), rare = priced.filter(m => /^crafted: /.test(m.costNote ?? ''));
-    expect(gold.length).toBeGreaterThan(0);
-    expect(rare.length).toBeGreaterThan(0);
-    expect(rare.every(m => m.costFE! >= 5)).toBe(true);   // the base (5), plus the ember-priced crafts
-    expect(rare.some(m => m.costFE! > 5)).toBe(true);
-    // an affix outside the base's craft pool (blended, corroded) is not costed, and the note says how many
-    for (const m of rare) expect(m.costNote).toMatch(/^crafted: base \+ \d+ affix\(es\) at their expected embers(; \d+ affix\(es\) outside its craft pool not costed)?$/);
-    expect(rare.some(m => /outside its craft pool not costed$/.test(m.costNote!))).toBe(true);
+  it('a legendary is priced by its gold item; a rare comes one step at a time: its bare base first (then one craft per mod, test below)', () => {
+    const priced = targetMoves({ loadout: l100, owned: [], fe: 0, level: 100, skill: 'hoa' }, { prices: { season: 't', fetchedAt: 't', price: k => (typeof k === 'string' ? 5 : null) }, level: 100, notSearched: new Set() });
+    expect(priced.filter(m => /^Target: /.test(m.label) && m.kind === 'gear').every(m => m.costFE === 5)).toBe(true);
+    const bases = priced.filter(m => /^Rare base /.test(m.label));
+    expect(bases.length).toBeGreaterThan(0);
+    for (const m of bases) expect(Object.keys((m.changes[0] as { item: { modifiers: object } }).item.modifiers)).toEqual(['baseAttr']);
+  });
+  it("on the target rare's own base the next steps are one craft each of its craftable mods, at the expected embers", () => {
+    const maul = tg.gear.find(g => /Maul/.test(g.label))!;
+    const cur = (l100.gear as { slot: string; baseId?: number }[]).find(g => g.slot === 'mainHand')!;
+    const base = { ...cur, label: maul.label, baseId: 1019, affixes: maul.affixes.filter(a => [510020, 740000, 740001].includes(a.id)).map(a => ({ ...a, list: 'BaseAttrInfoList' })) };
+    const l = { ...l100, gear: (l100.gear as { slot: string }[]).map(g => (g.slot === 'mainHand' ? base : g)) };
+    const notSearched = new Set<string>();
+    const ms = targetMoves({ loadout: l, owned: [], fe: 0, level: 100, skill: 'hoa' }, { prices: { season: 't', fetchedAt: 't', price: k => (typeof k === 'string' ? 2 : null) }, level: 100, notSearched });
+    const crafts = ms.filter(m => m.kind === 'craft' && /on mainHand$/.test(m.label));
+    expect(crafts.map(m => m.label)).toEqual(expect.arrayContaining([expect.stringMatching(/^Craft T1 \+6 to Attack Skill Level \(prefix\) on mainHand$/)]));
+    for (const m of crafts) {
+      expect(m.costFE).toBe(2 * m.buy!.qty);
+      const prefix = (m.changes[0] as { item: { modifiers: { prefix: unknown[] } } }).item.modifiers.prefix;
+      expect(prefix).toHaveLength(1);   // one mod per step
+    }
+    expect([...notSearched].some(n => /^target Sierra Reverberation Maul: \d+ of its mods are outside the craft library/.test(n))).toBe(true);
   });
   it('goldOf: a real legendary matches; the same item padded with unrelated groups is a rare', () => {
     const lang = table<{ rows: Record<string, string> }>('lang_en').rows, base = table<{ rows: Record<string, { a1b8?: number[] }> }>('config_item_base').rows;

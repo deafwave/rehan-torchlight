@@ -145,6 +145,15 @@ export function goldItem(gid: number, level: number): { name: string; minLevel: 
 
 /** What a rare costs to make (a target build's rare: no market price): its base (etor, else a white drop at 0) plus each crafted affix at the expected embers of
  *  its tier, as a craft step is priced. Null when an ember is unpriced; an affix outside the base's craft pool is counted in `uncraftable`, not costed. */
+/** one craft of a tier on a base: its library text, tier and side, and the expected embers at the ember's price (null when unpriced); null when the base's
+ *  craft pool does not hold the tier */
+export function craftStep(baseId: number, tierAffixId: number, ctx: GenCtx): { tier: string; text: string; side: string; ember: string; qty: number; costFE: number | null } | null {
+  const r = cat().rows.get(baseId), o = r?.lib ? craftOptions(library, r.lib, 100).find(x => Number(x.tierAffixId) === tierAffixId) : undefined;
+  if (!o) return null;
+  const p = ctx.prices.price(o.ember, ctx.level);
+  return { tier: o.tier, text: o.text.replace(/\n/g, ' / '), side: o.side.toLowerCase(), ember: o.ember, qty: o.expectedEmbers, costFE: p === null ? null : o.expectedEmbers * p };
+}
+
 export function craftCostOf(baseId: number, affixIds: number[], ctx: GenCtx): { costFE: number | null; crafted: number; uncraftable: number } {
   const r = cat().rows.get(baseId);
   if (!r?.lib) return { costFE: null, crafted: 0, uncraftable: affixIds.length };

@@ -11,7 +11,8 @@ import { fileURLToPath } from 'node:url';
 import { applyChanges, openCatalog } from '@dps/guide/figure';
 import { pinRoot, table } from '../pin';
 import { priceOfBase, priceOfGold } from '../priceOf';
-import { craftCostOf, slotsOfBase } from './gear';
+import { craftStep, slotsOfBase } from './gear';
+import { costOf } from '../priceOf';
 import type { LoadoutPatch } from '../patches';
 import type { Change, Generator, Move } from '../types';
 
@@ -110,11 +111,31 @@ export const targetMoves: Generator = (s, ctx) => {
     const attrs = new Set<number>(base[baseId].a1b8 ?? []), modifiers: Record<string, { id: number; dynArgs: number[] }[]> = {};
     for (const a of it.affixes) (modifiers[attrs.has(a.id) ? 'baseAttr' : sideOf(a.id) ?? 'fixed'] ??= []).push({ id: a.id, dynArgs: [...a.dyn] });
     const gid = goldOf(it, baseId);
-    // a rare has no market price: its base plus each crafted affix at the expected embers of its tier (craftCostOf)
-    // (an affix the craft pool does not hold - blended, corroded - is not costed, and the note says how many)
-    const c = gid ? undefined : craftCostOf(baseId, it.affixes.filter(a => !attrs.has(a.id)).map(a => a.id), ctx);
-    const cost = gid ? { costFE: priceOfGold(ctx.prices, Number(gid), ctx.level).fe }
-      : { costFE: c!.costFE, costNote: `crafted: base + ${c!.crafted} affix(es) at their expected embers${c!.uncraftable ? `; ${c!.uncraftable} affix(es) outside its craft pool not costed` : ''}` };
+    // a rare is made one step at a time (user, 2026-10-16: "one at a time"): its bare base first, then each of its mods as one craft at its expected embers;
+    // a mod the craft library does not hold (blended, corroded, rolled) is named, not offered
+    if (!gid) {
+      const cur = (l.gear ?? []).find((g: { slot?: string }) => g.slot === slot) as { baseId?: number; affixes: (Aff & { list?: string })[] } | undefined;
+      if (cur?.baseId !== baseId) {
+        keep(mk({ kind: 'gear', label: `Rare base ${it.label} (item level ${level}) on ${slot}`, ...costOf(ctx.prices, it.label, ctx.level, 'bare'), minLevel: level,
+          changes: [{ kind: 'gear', slot, item: { baseId, baseName: it.label, itemId: `guide-target-base-${baseId}`, level, modifiers: { baseAttr: modifiers.baseAttr ?? [] } } }] }), it.label);
+        continue;
+      }
+      const LIST: Record<string, string> = { BAffixInfoList: 'baseAffix', BaseAttrInfoList: 'baseAttr', PrefixInfoList: 'prefix', SuffixInfoList: 'suffix', FixedBaseAffix: 'fixed' };
+      const mods: Record<string, { id: number; dynArgs: number[] }[]> = {};
+      for (const a of cur.affixes) (mods[LIST[a.list ?? ''] ?? 'fixed'] ??= []).push({ id: a.id, dynArgs: [...a.dyn] });
+      const have = new Set(cur.affixes.map(a => a.id));
+      let outside = 0;
+      for (const a of it.affixes.filter(x => !attrs.has(x.id) && !have.has(x.id))) {
+        const c = craftStep(baseId, a.id, ctx);
+        if (!c) { outside++; continue; }
+        if ((mods[c.side]?.length ?? 0) >= 3) continue;
+        keep(mk({ kind: 'craft', label: `Craft ${c.tier} ${c.text} (${c.side}) on ${slot}`, costFE: c.costFE, buy: { name: c.ember, qty: c.qty }, minLevel: level,
+          changes: [{ kind: 'gear', slot, item: { baseId, baseName: it.label, itemId: `guide-target-${baseId}-${a.id}`, level, modifiers: { ...mods, [c.side]: [...(mods[c.side] ?? []), { id: a.id, dynArgs: [...a.dyn] }] } } }] }), it.label);
+      }
+      if (outside) ns.add(`target ${it.label}: ${outside} of its mods are outside the craft library (blended, corroded or rolled): not offered`);
+      continue;
+    }
+    const cost = { costFE: priceOfGold(ctx.prices, Number(gid), ctx.level).fe };
     keep(mk({ kind: 'gear', label: `Target: ${it.label} in ${slot}`, ...cost, minLevel: level,
       changes: [{ kind: 'gear', slot, item: { baseId, baseName: it.label, itemId: `guide-target-${baseId}`, level, modifiers } }] }), it.label);
   }
