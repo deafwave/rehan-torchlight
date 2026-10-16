@@ -20,7 +20,9 @@ export const pieceKey = (p: string) => p.replace(/\d+\.\d+(?:e[-+]?\d+)?|\d+e[-+
 /** omissions that only leave out a buff the build would add, so the figure is a lower bound and still ranks (it is better if it beats the base without
  *  it): node 306, a timed attribute buff the model does not build (dps-debug's coordinator, 2026-10-16: its parameters are not decoded); node 2230, energy
  *  granted to skill stones (a grant: leaving it out only understates; the known >= 110T build's vorax limb carries it) */
-const LOWER_BOUND = [/^not in this figure: node 306 \(buff component 0x12 only/, /^not in this figure: node 2230 \(skill stones' energy/];
+const LOWER_BOUND = [/^not in this figure: node 306 \(buff component 0x12 only/, /^not in this figure: node 2230 \(skill stones' energy/,
+  // Kaleidoscope's phase modifier (a bonus per phase) left out of the compiled item
+  /^not in this figure as compiled: gear \d+: modifier \d+ \(Kaleidoscope: /];
 /** A figure is rankable only if it dropped no piece the baseline still had (but a lower-bound one), and it computed. */
 export function rankable(before: Figure, after: Figure): boolean {
   const had = new Set(before.partial.map(pieceKey));

@@ -64,8 +64,8 @@
   "L85: Cube 1 dies in 5.14 s (under 10 s): move on to Keegan 2",
   "L90: gems raised to the hero-level limit",
   "L90: the target talent page re-fitted to 103 points",
-  "L90: Keegan 2 dies in 9.74 s (under 10 s): move on to Cube 2",
-  "L90: Cube 2 dies in 8.38 s (under 10 s): move on to Cube 3"
+  "L90: Keegan 2 dies in 9.09 s (under 10 s): move on to Cube 2",
+  "L90: Cube 2 dies in 7.82 s (under 10 s): move on to Cube 3"
  ],
  "steps": [
   {
@@ -5034,6 +5034,124 @@
    "move": {
     "acquisition": true,
     "enabler": true,
+    "minLevel": 24,
+    "kind": "gear",
+    "label": "Target: Kaleidoscope (Agony Darkness Ring) in ring2",
+    "costFE": 6.4875,
+    "changes": [
+     {
+      "kind": "gear",
+      "slot": "ring2",
+      "item": {
+       "baseId": 4639,
+       "baseName": "Agony Darkness Ring",
+       "itemId": "guide-target-4639-u113128",
+       "level": 24,
+       "modifiers": {
+        "fixed": [
+         {
+          "id": 710001,
+          "dynArgs": [
+           4
+          ]
+         },
+         {
+          "id": 51512811,
+          "dynArgs": [
+           66
+          ]
+         },
+         {
+          "id": 51512821,
+          "dynArgs": [
+           7
+          ]
+         },
+         {
+          "id": 51512840,
+          "dynArgs": [
+           63,
+           8
+          ]
+         }
+        ]
+       }
+      }
+     }
+    ]
+   },
+   "triggered": [],
+   "before": {
+    "life100": 51362231516.66717,
+    "life0": 36008155924.359764,
+    "kill": 43231719754.59993,
+    "partial": [
+     "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
+     "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
+     "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
+     "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
+     "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
+     "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
+     "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
+     "not in this figure: node 343 (queues an inflict request on each task-filter target's comp 0xf: FUN_141bacd50(comp 0xf, kind +0x78, id +0x7c, probability +0x80 (f64), count +0x88, tag lists +0x90 / +0xa0) - no attribute / char-field record (T3d: data vt 0x14524cb20, build FUN_141ad1060, execute FUN_141aad500 once per target, abort FUN_141ab5450; t3d_a.ann.c). The EffectNote carries the task: its ch",
+     "not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 2446 row 1 (pactspirit 8530 point 110) - fires on event 0xf4285",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 2)) - ticked at the grant",
+     "not in this figure: node 2230 (skill stones' energy: FUN_141cc6b90(comp 0x83, value) on each skill of the target's comp 0x82 whose tags pass filterTags (FUN_141d153a0) - no attribute / char-field record (execute FUN_141a9b410, c14_n2230b.ann.c); the stone's charge change is the energy model's (stone.ts), not read from the store) - affix class 168890 row 1 (gear 380009 modifier 51533041) - fires on",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 72818 row 1 (gem 7006 (skill 1110)) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7031 modifier 771009001) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7130 modifier 771009001) - ticked at the grant",
+     "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a"
+    ],
+    "lock": 15000000000000,
+    "cullNote": "HP lock (label 3001400, fields 2007110 / 2007100): Life is held at 715826101765.4501 = 0.05 of max Life while the label holds; every kill hit is clamped to it",
+    "target": "keegan2",
+    "lifeMax": 14316522035309
+   },
+   "after": {
+    "life100": 76122686672.34157,
+    "life0": 53366792320.876915,
+    "kill": 64072656967.1701,
+    "partial": [
+     "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
+     "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
+     "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
+     "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
+     "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
+     "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
+     "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
+     "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
+     "not in this figure: node 343 (queues an inflict request on each task-filter target's comp 0xf: FUN_141bacd50(comp 0xf, kind +0x78, id +0x7c, probability +0x80 (f64), count +0x88, tag lists +0x90 / +0xa0) - no attribute / char-field record (T3d: data vt 0x14524cb20, build FUN_141ad1060, execute FUN_141aad500 once per target, abort FUN_141ab5450; t3d_a.ann.c). The EffectNote carries the task: its ch",
+     "not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 2446 row 1 (pactspirit 8530 point 110) - fires on event 0xf4285",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 2)) - ticked at the grant",
+     "not in this figure: node 2230 (skill stones' energy: FUN_141cc6b90(comp 0x83, value) on each skill of the target's comp 0x82 whose tags pass filterTags (FUN_141d153a0) - no attribute / char-field record (execute FUN_141a9b410, c14_n2230b.ann.c); the stone's charge change is the energy model's (stone.ts), not read from the store) - affix class 168890 row 1 (gear 380009 modifier 51533041) - fires on",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 72818 row 1 (gem 7006 (skill 1110)) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7031 modifier 771009001) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7130 modifier 771009001) - ticked at the grant",
+     "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a"
+    ],
+    "lock": 15000000000000,
+    "cullNote": "HP lock (label 3001400, fields 2007110 / 2007100): Life is held at 715826101765.4501 = 0.05 of max Life while the label holds; every kill hit is clamped to it",
+    "target": "keegan2",
+    "lifeMax": 14316522035309
+   },
+   "cumFE": 1671.8564,
+   "notes": [
+    "talent points assumed"
+   ]
+  },
+  {
+   "level": 85,
+   "move": {
+    "acquisition": true,
+    "enabler": true,
     "minLevel": 0,
     "kind": "skill",
     "label": "Target skill: Precise: Domain Expansion with 3 supports (Increased Area, Restrain, Aura Amplification) in passive 3",
@@ -5107,12 +5225,13 @@
    },
    "triggered": [],
    "before": {
-    "life100": 51362231516.66717,
-    "life0": 36008155924.359764,
-    "kill": 43231719754.59993,
+    "life100": 76122686672.34157,
+    "life0": 53366792320.876915,
+    "kill": 64072656967.1701,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
@@ -5137,12 +5256,13 @@
     "lifeMax": 14316522035309
    },
    "after": {
-    "life100": 74291949929.86037,
-    "life0": 52083331171.38677,
-    "kill": 62531721514.712975,
+    "life100": 110106252065.29134,
+    "life0": 77191410055.29364,
+    "kill": 92676709746.5305,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
@@ -5166,7 +5286,7 @@
     "target": "keegan2",
     "lifeMax": 14316522035309
    },
-   "cumFE": 1745.244,
+   "cumFE": 1751.7314999999999,
    "notes": [
     "talent points assumed"
    ]
@@ -5238,12 +5358,13 @@
    },
    "triggered": [],
    "before": {
-    "life100": 74291949929.86037,
-    "life0": 52083331171.38677,
-    "kill": 62531721514.712975,
+    "life100": 110106252065.29134,
+    "life0": 77191410055.29364,
+    "kill": 92676709746.5305,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
@@ -5268,12 +5389,13 @@
     "lifeMax": 14316522035309
    },
    "after": {
-    "life100": 142252959489.33115,
-    "life0": 99728274627.15465,
-    "kill": 119734674455.58345,
+    "life100": 210989218717.29648,
+    "life0": 147916716541.30856,
+    "kill": 177590156806.67615,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
@@ -5297,7 +5419,7 @@
     "target": "keegan2",
     "lifeMax": 14316522035309
    },
-   "cumFE": 2204.1814999999997,
+   "cumFE": 2210.669,
    "notes": [
     "talent points assumed"
    ]
@@ -5325,12 +5447,13 @@
    },
    "triggered": [],
    "before": {
-    "life100": 142252959489.33115,
-    "life0": 99728274627.15465,
-    "kill": 119734674455.58345,
+    "life100": 210989218717.29648,
+    "life0": 147916716541.30856,
+    "kill": 177590156806.67615,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
@@ -5355,12 +5478,13 @@
     "lifeMax": 14316522035309
    },
    "after": {
-    "life100": 146957127614.9689,
-    "life0": 103026192563.20108,
-    "kill": 123694184683.49622,
+    "life100": 217966428222.14545,
+    "life0": 152808179832.54883,
+    "kill": 183462891881.55438,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
@@ -5384,7 +5508,7 @@
     "target": "keegan2",
     "lifeMax": 14316522035309
    },
-   "cumFE": 2248.8695,
+   "cumFE": 2255.357,
    "notes": [
     "talent points assumed"
    ]
@@ -5412,12 +5536,13 @@
    },
    "triggered": [],
    "before": {
-    "life100": 146957127614.9689,
-    "life0": 103026192563.20108,
-    "kill": 123694184683.49622,
+    "life100": 217966428222.14545,
+    "life0": 152808179832.54883,
+    "kill": 183462891881.55438,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
@@ -5442,12 +5567,13 @@
     "lifeMax": 14316522035309
    },
    "after": {
-    "life100": 151661295847.17697,
-    "life0": 106324110495.92825,
-    "kill": 127653694957.03358,
+    "life100": 224943638229.84302,
+    "life0": 157699642673.8258,
+    "kill": 189335626926.39774,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
@@ -5471,7 +5597,7 @@
     "target": "keegan2",
     "lifeMax": 14316522035309
    },
-   "cumFE": 2293.5575,
+   "cumFE": 2300.045,
    "notes": [
     "talent points assumed"
    ]
@@ -5543,12 +5669,13 @@
    },
    "triggered": [],
    "before": {
-    "life100": 151661295847.17697,
-    "life0": 106324110495.92825,
-    "kill": 127653694957.03358,
+    "life100": 224943638229.84302,
+    "life0": 157699642673.8258,
+    "kill": 189335626926.39774,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
@@ -5573,12 +5700,13 @@
     "lifeMax": 14316522035309
    },
    "after": {
-    "life100": 280911268162.1841,
-    "life0": 196936472447.47388,
-    "kill": 236443722022.3918,
+    "life100": 416646859868.35095,
+    "life0": 292095662008.767,
+    "kill": 350692711478.453,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
@@ -5602,7 +5730,7 @@
     "target": "keegan2",
     "lifeMax": 14316522035309
    },
-   "cumFE": 3388.1205,
+   "cumFE": 3394.608,
    "notes": [
     "talent points assumed"
    ]
@@ -5698,12 +5826,13 @@
    },
    "triggered": [],
    "before": {
-    "life100": 280911268162.1841,
-    "life0": 196936472447.47388,
-    "kill": 236443722022.3918,
+    "life100": 416646859868.35095,
+    "life0": 292095662008.767,
+    "kill": 350692711478.453,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
@@ -5728,12 +5857,13 @@
     "lifeMax": 14316522035309
    },
    "after": {
-    "life100": 318699810676.4867,
-    "life0": 223428618257.0774,
-    "kill": 268250433473.49994,
+    "life100": 472719961299.7698,
+    "life0": 331406434084.00134,
+    "kill": 397889582282.81445,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
@@ -5757,13 +5887,13 @@
     "target": "keegan2",
     "lifeMax": 14316522035309
    },
-   "cumFE": 3615.0567,
+   "cumFE": 3621.5442000000003,
    "notes": [
     "talent points assumed"
    ]
   },
   {
-   "level": 85,
+   "level": 90,
    "move": {
     "acquisition": true,
     "enabler": true,
@@ -5853,12 +5983,13 @@
    },
    "triggered": [],
    "before": {
-    "life100": 318699810676.4867,
-    "life0": 223428618257.0774,
-    "kill": 268250433473.49994,
+    "life100": 670821742533.032,
+    "life0": 468167750662.38727,
+    "kill": 563433641941.2162,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
@@ -5883,12 +6014,13 @@
     "lifeMax": 14316522035309
    },
    "after": {
-    "life100": 350208134363.2973,
-    "life0": 245517935516.98135,
-    "kill": 294771068899.02826,
+    "life100": 737161716551.8815,
+    "life0": 514466543026.2472,
+    "kill": 619153620715.9688,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
@@ -5912,7 +6044,7 @@
     "target": "keegan2",
     "lifeMax": 14316522035309
    },
-   "cumFE": 3832.5589,
+   "cumFE": 3839.0464,
    "notes": [
     "talent points assumed"
    ]
@@ -5995,12 +6127,13 @@
    },
    "triggered": [],
    "before": {
-    "life100": 497392035259.45557,
-    "life0": 347130833171.67957,
-    "kill": 417767326486.8602,
+    "life100": 737161716551.8815,
+    "life0": 514466543026.2472,
+    "kill": 619153620715.9688,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
@@ -6025,12 +6158,13 @@
     "lifeMax": 14316522035309
    },
    "after": {
-    "life100": 753076411037.1957,
-    "life0": 525573437787.6636,
-    "kill": 632520620591.3243,
+    "life100": 1116099696933.0234,
+    "life0": 778928069120.0375,
+    "kill": 937429539242.152,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
@@ -6054,7 +6188,7 @@
     "target": "keegan2",
     "lifeMax": 14316522035309
    },
-   "cumFE": 3851.693,
+   "cumFE": 3858.1805000000004,
    "notes": [
     "talent points assumed"
    ]
@@ -6125,12 +6259,13 @@
    },
    "triggered": [],
    "before": {
-    "life100": 753076411037.1957,
-    "life0": 525573437787.6636,
-    "kill": 632520620591.3243,
+    "life100": 1116099696933.0234,
+    "life0": 778928069120.0375,
+    "kill": 937429539242.152,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
@@ -6155,12 +6290,13 @@
     "lifeMax": 14316522035309
    },
    "after": {
-    "life100": 1270061039700.9312,
-    "life0": 886377978614.9795,
-    "kill": 1066744071804.1923,
+    "life100": 1874975864025.2153,
+    "life0": 1308549167721.4043,
+    "kill": 1574821465494.5999,
     "partial": [
      "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
@@ -6184,7 +6320,7 @@
     "target": "keegan2",
     "lifeMax": 14316522035309
    },
-   "cumFE": 5534.965,
+   "cumFE": 5541.4525,
    "notes": [
     "talent points assumed"
    ]
@@ -6245,12 +6381,12 @@
    },
    "triggered": [],
    "before": {
-    "life100": 1270061039700.9312,
-    "life0": 886377978614.9795,
-    "kill": 1066744071804.1923,
+    "life100": 218527710996.12332,
+    "life0": 130854916772.177,
+    "kill": 205988942378.15286,
     "partial": [
-     "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
@@ -6270,17 +6406,17 @@
      "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a"
     ],
     "lock": 15000000000000,
-    "cullNote": "HP lock (label 3001400, fields 2007110 / 2007100): Life is held at 715826101765.4501 = 0.05 of max Life while the label holds; every kill hit is clamped to it",
-    "target": "keegan2",
-    "lifeMax": 14316522035309
+    "cull": 0.136,
+    "target": "cube3",
+    "lifeMax": 53469896141586
    },
    "after": {
-    "life100": 1626745538522.6062,
-    "life0": 1135308758491.2734,
-    "kill": 1366328944300.9722,
+    "life100": 280199043709.06036,
+    "life0": 167783858507.0097,
+    "kill": 264121673193.84637,
     "partial": [
-     "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
@@ -6300,11 +6436,11 @@
      "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a"
     ],
     "lock": 15000000000000,
-    "cullNote": "HP lock (label 3001400, fields 2007110 / 2007100): Life is held at 715826101765.4501 = 0.05 of max Life while the label holds; every kill hit is clamped to it",
-    "target": "keegan2",
-    "lifeMax": 14316522035309
+    "cull": 0.136,
+    "target": "cube3",
+    "lifeMax": 53469896141586
    },
-   "cumFE": 6340.7047,
+   "cumFE": 6347.1922,
    "notes": [
     "talent points assumed"
    ]
@@ -6440,12 +6576,12 @@
    },
    "triggered": [],
    "before": {
-    "life100": 1626745538522.6062,
-    "life0": 1135308758491.2734,
-    "kill": 1366328944300.9722,
+    "life100": 280199043709.06036,
+    "life0": 167783858507.0097,
+    "kill": 264121673193.84637,
     "partial": [
-     "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
@@ -6465,17 +6601,17 @@
      "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a"
     ],
     "lock": 15000000000000,
-    "cullNote": "HP lock (label 3001400, fields 2007110 / 2007100): Life is held at 715826101765.4501 = 0.05 of max Life while the label holds; every kill hit is clamped to it",
-    "target": "keegan2",
-    "lifeMax": 14316522035309
+    "cull": 0.136,
+    "target": "cube3",
+    "lifeMax": 53469896141586
    },
    "after": {
-    "life100": 1749251782570.5867,
-    "life0": 1220806095693.5864,
-    "kill": 1469223848970.0168,
+    "life100": 301309512407.9137,
+    "life0": 180424857727.8744,
+    "kill": 284020857148.4257,
     "partial": [
-     "the target's Life lock (BOSS1; FUN_141e10280): label 3001400 holds, field 2007110 = 5: a hit leaves its Life at no less than that % of Max Life (or field 2007100) while the label holds; what lifts it is a fight phase not in the dumps",
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
@@ -6495,11 +6631,11 @@
      "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a"
     ],
     "lock": 15000000000000,
-    "cullNote": "HP lock (label 3001400, fields 2007110 / 2007100): Life is held at 715826101765.4501 = 0.05 of max Life while the label holds; every kill hit is clamped to it",
-    "target": "keegan2",
-    "lifeMax": 14316522035309
+    "cull": 0.136,
+    "target": "cube3",
+    "lifeMax": 53469896141586
    },
-   "cumFE": 6340.7047,
+   "cumFE": 6347.1922,
    "notes": [
     "chosen for the finished item: then T1 +110% Gear Physical Damage / Adds 55 - 67 Physical Damage to the gear (prefix), T1 +6 to Attack Skill Level (prefix), T1 +80% Gear Physical Damage (prefix), T7 +22% additional Attack Damage after standing still for 0.1s. -7% additional Attack Speed (suffix), T1 +180% Critical Strike Damage (suffix), T1 +216% Erosion Damage (suffix)",
     "talent points assumed"
@@ -6566,11 +6702,12 @@
    },
    "triggered": [],
    "before": {
-    "life100": 203874617979.0024,
-    "life0": 122080609569.3914,
-    "kill": 192176620269.38046,
+    "life100": 301309512407.9137,
+    "life0": 180424857727.8744,
+    "kill": 284020857148.4257,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
@@ -6595,11 +6732,12 @@
     "lifeMax": 53469896141586
    },
    "after": {
-    "life100": 247041777273.44586,
-    "life0": 147929207960.1553,
-    "kill": 232866917390.8417,
+    "life100": 366369535370.8662,
+    "life0": 219382955285.55447,
+    "kill": 345347840608.28186,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
@@ -6623,7 +6761,7 @@
     "target": "cube3",
     "lifeMax": 53469896141586
    },
-   "cumFE": 6342.6931,
+   "cumFE": 6349.180600000001,
    "notes": [
     "talent points assumed"
    ]
@@ -6697,11 +6835,12 @@
    },
    "triggered": [],
    "before": {
-    "life100": 247041777273.44586,
-    "life0": 147929207960.1553,
-    "kill": 232866917390.8417,
+    "life100": 366369535370.8662,
+    "life0": 219382955285.55447,
+    "kill": 345347840608.28186,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
@@ -6726,11 +6865,12 @@
     "lifeMax": 53469896141586
    },
    "after": {
-    "life100": 396762063087.26263,
-    "life0": 237582073669.90268,
-    "kill": 373996493956.2653,
+    "life100": 588500310094.8955,
+    "life0": 352395395278.90967,
+    "kill": 554733108729.8962,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
@@ -6754,7 +6894,7 @@
     "target": "cube3",
     "lifeMax": 53469896141586
    },
-   "cumFE": 6543.427100000001,
+   "cumFE": 6549.914600000001,
    "notes": [
     "talent points assumed"
    ]
@@ -6834,11 +6974,12 @@
    },
    "triggered": [],
    "before": {
-    "life100": 396762063087.26263,
-    "life0": 237582073669.90268,
-    "kill": 373996493956.2653,
+    "life100": 588500310094.8955,
+    "life0": 352395395278.90967,
+    "kill": 554733108729.8962,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
@@ -6863,11 +7004,12 @@
     "lifeMax": 53469896141586
    },
    "after": {
-    "life100": 495342395495.07947,
-    "life0": 296612212826.8029,
-    "kill": 466920445421.0647,
+    "life100": 734720328559.5432,
+    "life0": 439952292566.08606,
+    "kill": 692563257686.4976,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
@@ -6891,7 +7033,7 @@
     "target": "cube3",
     "lifeMax": 53469896141586
    },
-   "cumFE": 6744.161100000001,
+   "cumFE": 6750.648600000001,
    "notes": [
     "talent points assumed"
    ]
@@ -6977,11 +7119,12 @@
    },
    "triggered": [],
    "before": {
-    "life100": 495342395495.07947,
-    "life0": 296612212826.8029,
-    "kill": 466920445421.0647,
+    "life100": 734720328559.5432,
+    "life0": 439952292566.08606,
+    "kill": 692563257686.4976,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
@@ -7006,11 +7149,12 @@
     "lifeMax": 53469896141586
    },
    "after": {
-    "life100": 632908448755.8871,
-    "life0": 378987095090.95276,
-    "kill": 596593179820.0089,
+    "life100": 951682505424.9816,
+    "life0": 569869763722.1671,
+    "kill": 897076493747.9912,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
@@ -7034,7 +7178,7 @@
     "target": "cube3",
     "lifeMax": 53469896141586
    },
-   "cumFE": 7141.8411000000015,
+   "cumFE": 7148.328600000002,
    "notes": [
     "talent points assumed"
    ]
@@ -7127,11 +7271,12 @@
    },
    "triggered": [],
    "before": {
-    "life100": 632908448755.8871,
-    "life0": 378987095090.95276,
-    "kill": 596593179820.0089,
+    "life100": 951682505424.9816,
+    "life0": 569869763722.1671,
+    "kill": 897076493747.9912,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
@@ -7156,11 +7301,12 @@
     "lifeMax": 53469896141586
    },
    "after": {
-    "life100": 1172953513854.0605,
-    "life0": 702367373610.436,
-    "kill": 1105651327588.7388,
+    "life100": 1763916982095.0894,
+    "life0": 1056237713817.7292,
+    "kill": 1662706262371.4348,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
@@ -7184,7 +7330,7 @@
     "target": "cube3",
     "lifeMax": 53469896141586
    },
-   "cumFE": 14868.884100000001,
+   "cumFE": 14875.371600000002,
    "notes": [
     "talent points assumed"
    ]
@@ -7283,11 +7429,12 @@
    },
    "triggered": [],
    "before": {
-    "life100": 1172953513854.0605,
-    "life0": 702367373610.436,
-    "kill": 1105651327588.7388,
+    "life100": 1763916982095.0894,
+    "life0": 1056237713817.7292,
+    "kill": 1662706262371.4348,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
@@ -7312,11 +7459,12 @@
     "lifeMax": 53469896141586
    },
    "after": {
-    "life100": 2052090231699.0715,
-    "life0": 1228796545932.7244,
-    "kill": 1934344594360.5476,
+    "life100": 3085984879676.4194,
+    "life0": 1847895137539.5095,
+    "kill": 2908916030139.277,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
@@ -7340,7 +7488,7 @@
     "target": "cube3",
     "lifeMax": 53469896141586
    },
-   "cumFE": 22595.9271,
+   "cumFE": 22602.414600000004,
    "notes": [
     "talent points assumed"
    ]
@@ -7772,15 +7920,13 @@
   "Target skill: Fixate with 3 supports (Extended Duration, Cooldown Reduction, Activation Medium: Boss) in active 2: stopped: not ported: T5 timid: the build has no Timid (stone 1960)",
   "Target skill: Timid with 1 support (Activation Medium: Demolisher) in active 3: dropped not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7130 modifier 771009001) - ticked at the grant (x2)",
   "Target skill: Precise: Cruelty with 3 supports (Increased Area, Restrain, Aura Amplification) in passive 2: dropped aura gem 8329 (skill 63300, skill data 580062): buff 15183 is also granted by another aura (the container's stack policy is not decoded), aura gem 8329 (skill 63300, skill data 580062): buff 15181 is also granted by another aura (the container's stack policy is not decoded)",
-  "Target skills: all 9 remaining groups (Hammer of Ash, Blink, Flame Core, Fixate, Timid, Precise: Weapon Amplification, Precise: Erosion Amplification, Precise: Cruelty, Precise: Domain Expansion): dropped the target's buff 330 (biaoji) from the battlecry's enemy map (IN1): level 20, 6 s = 180 frames present each cast, held 96.26 % of the time, the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110), not calculable without a capture: held buffs the pieces do not derive, taken from the capture: 10330 x1 (tasks W8 / uptime rules)",
-  "Target skills: all 9 remaining groups (Hammer of Ash, Blink, Flame Core, Fixate, Timid, Precise: Weapon Amplification, Precise: Erosion Amplification, Precise: Cruelty, Precise: Domain Expansion): dropped the target's buff 330 (biaoji) from the battlecry's enemy map (IN1): level 22, 6 s = 180 frames present each cast, held 97.30 % of the time, the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110), not calculable without a capture: held buffs the pieces do not derive, taken from the capture: 10330 x1 (tasks W8 / uptime rules)",
-  "Target: Kaleidoscope (Agony Darkness Ring) in ring2: dropped not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
+  "Target skills: all 9 remaining groups (Hammer of Ash, Blink, Flame Core, Fixate, Timid, Precise: Weapon Amplification, Precise: Erosion Amplification, Precise: Cruelty, Precise: Domain Expansion): dropped the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110)",
   "Target skill: Timid with 1 support (Activation Medium: Demolisher) in active 3: stopped: not ported: 2 gems of skill 1960 in the build",
-  "Target skills: all 8 remaining groups (Blink, Flame Core, Fixate, Timid, Precise: Weapon Amplification, Precise: Erosion Amplification, Precise: Cruelty, Precise: Domain Expansion): dropped the target's buff 330 (biaoji) from the battlecry's enemy map (IN1): level 22, 6 s = 180 frames present each cast, held 97.30 % of the time, the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110), not calculable without a capture: held buffs the pieces do not derive, taken from the capture: 10330 x1 (tasks W8 / uptime rules)",
-  "Target skills: all 7 remaining groups (Blink, Flame Core, Fixate, Timid, Precise: Weapon Amplification, Precise: Erosion Amplification, Precise: Cruelty): dropped the target's buff 330 (biaoji) from the battlecry's enemy map (IN1): level 22, 6 s = 180 frames present each cast, held 97.30 % of the time, the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110), not calculable without a capture: held buffs the pieces do not derive, taken from the capture: 10330 x1 (tasks W8 / uptime rules)",
-  "Target skills: all 6 remaining groups (Blink, Flame Core, Fixate, Timid, Precise: Weapon Amplification, Precise: Cruelty): dropped the target's buff 330 (biaoji) from the battlecry's enemy map (IN1): level 22, 6 s = 180 frames present each cast, held 97.30 % of the time, the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110), not calculable without a capture: held buffs the pieces do not derive, taken from the capture: 10330 x1 (tasks W8 / uptime rules)",
-  "Target skills: all 6 remaining groups (Hammer of Ash, Blink, Flame Core, Fixate, Timid, Precise: Cruelty): dropped the target's buff 330 (biaoji) from the battlecry's enemy map (IN1): level 23, 6 s = 180 frames present each cast, held 100.00 % of the time, the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110), not calculable without a capture: held buffs the pieces do not derive, taken from the capture: 10330 x1 (tasks W8 / uptime rules)",
-  "Target skills: all 5 remaining groups (Hammer of Ash, Blink, Flame Core, Fixate, Timid): dropped the target's buff 330 (biaoji) from the battlecry's enemy map (IN1): level 23, 6 s = 180 frames present each cast, held 100.00 % of the time, the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110), not calculable without a capture: held buffs the pieces do not derive, taken from the capture: 10330 x1 (tasks W8 / uptime rules)"
+  "Target skills: all 8 remaining groups (Blink, Flame Core, Fixate, Timid, Precise: Weapon Amplification, Precise: Erosion Amplification, Precise: Cruelty, Precise: Domain Expansion): dropped the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110)",
+  "Target skills: all 7 remaining groups (Blink, Flame Core, Fixate, Timid, Precise: Weapon Amplification, Precise: Erosion Amplification, Precise: Cruelty): dropped the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110)",
+  "Target skills: all 7 remaining groups (Hammer of Ash, Blink, Flame Core, Fixate, Timid, Precise: Weapon Amplification, Precise: Cruelty): dropped the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110)",
+  "Target skills: all 6 remaining groups (Hammer of Ash, Blink, Flame Core, Fixate, Timid, Precise: Cruelty): dropped the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110)",
+  "Target skills: all 5 remaining groups (Hammer of Ash, Blink, Flame Core, Fixate, Timid): dropped the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110)"
  ],
  "start": {
   "life100": 81901.04911237008,
@@ -8136,7 +8282,7 @@
     "target": "keegan2",
     "lifeMax": 14316522035309
    },
-   "end": "Keegan 2 dies in 9.74 s (under 10 s): move on to Cube 2",
+   "end": "Keegan 2 dies in 9.09 s (under 10 s): move on to Cube 2",
    "build": [
     {
      "section": "Gear",
@@ -8146,9 +8292,9 @@
       "chest: Ruinous Star",
       "gloves: Death's Touch",
       "helmet: Fool's Crown",
-      "mainHand: Sierra Reverberation Maul",
-      "necklace: Broken Sun Ring",
-      "ring2: Frozen Lightning",
+      "mainHand: Forger's Maul",
+      "necklace: Vortex Heart",
+      "ring2: Kaleidoscope",
       "ring1: Vorax Limb: Digits"
      ]
     },
@@ -8222,13 +8368,14 @@
   {
    "skill": "hoa",
    "target": "cube2",
-   "firstStep": 41,
+   "firstStep": 40,
    "start": {
-    "life100": 2038746179789.8894,
-    "life0": 1220806095693.5864,
-    "kill": 1921766202693.5347,
+    "life100": 2185277109961.003,
+    "life0": 1308549167721.4043,
+    "kill": 2059889423781.1797,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
@@ -8252,7 +8399,7 @@
     "target": "cube2",
     "lifeMax": 16098976434407
    },
-   "end": "Cube 2 dies in 8.38 s (under 10 s): move on to Cube 3",
+   "end": "Cube 2 dies in 7.82 s (under 10 s): move on to Cube 3",
    "build": [
     {
      "section": "Gear",
@@ -8262,9 +8409,9 @@
       "chest: Ruinous Star",
       "gloves: Death's Touch",
       "helmet: Fool's Crown",
-      "mainHand: Sierra Reverberation Maul",
-      "necklace: Broken Sun Ring",
-      "ring2: Frozen Lightning",
+      "mainHand: Forger's Maul",
+      "necklace: Vortex Heart",
+      "ring2: Kaleidoscope",
       "ring1: Vorax Limb: Digits"
      ]
     },
@@ -8338,13 +8485,14 @@
   {
    "skill": "hoa",
    "target": "cube3",
-   "firstStep": 41,
+   "firstStep": 40,
    "start": {
-    "life100": 203874617979.0024,
-    "life0": 122080609569.3914,
-    "kill": 192176620269.38046,
+    "life100": 218527710996.12332,
+    "life0": 130854916772.177,
+    "kill": 205988942378.15286,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
@@ -8368,7 +8516,7 @@
     "target": "cube3",
     "lifeMax": 53469896141586
    },
-   "end": "the plan ends here at L90: no upgrade the model can price fully raises the kill speed (most often: the target's buff 330 (biaoji) from the battlecry's enemy map (IN1): level 23, 6 s = 180 frames present each cast, held # % of the time, the)",
+   "end": "the plan ends here at L90: no upgrade the model can price fully raises the kill speed (most often: the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in )",
    "build": [
     {
      "section": "Gear",
@@ -8380,7 +8528,7 @@
       "helmet: Fool's Crown",
       "mainHand: Sierra Reverberation Maul - T1 +(49-80)% Gear Physical Damage (prefix); T1 +(77-110)% Gear Physical Damage / Adds (53-55) - (65-67) Physical Damage to the gear (prefix); T1 +6 to Attack Skill Level (prefix); T7 +22% additional Attack Damage after standing still for 0.1s. (-8--7)% additional Attack Speed (suffix); T1 +(127-180)% Critical Strike Damage (suffix); T1 +(152-216)% Erosion Damage (suffix)",
       "necklace: Broken Sun Ring",
-      "ring2: Frozen Lightning",
+      "ring2: Kaleidoscope",
       "ring1: Vorax Limb: Digits"
      ]
     },
