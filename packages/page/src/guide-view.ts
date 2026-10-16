@@ -12,7 +12,10 @@ export interface GuideOut {
   /** advise, an Ice Shot character at the switch's level: the planned switch to Hammer of Ash on this character, on the first boss */ switch?: { label: string; costFE: number | null; target: string; figure: Figure };
   /** advise: talents worth finding on a slate, each priced as one more slate talent */ slates?: { id: number; name: string; gain: number; core: boolean }[];
   /** the cheapest Hammer of Ash path to a boss kill: the switch, then buys best damage per FE first */ hoaPath?: HoaPath;
+  /** Hammer of Ash routes side by side (each forces its first legendary, then the best damage per FE) */ hoaRoutes?: HoaRoutes;
 }
+export interface HoaRoutes { target: string; at: string; worn?: string[]; start: { label: string; costFE: number; figure: HFig };
+  routes: { name: string; steps: { label: string; slot: string; costFE: number; totalFE: number; figure: HFig }[] }[] }
 type HFig = { kill: number; life100: number; lifeMax?: number };
 export interface HoaPath { target: string; goal: number; at: string; start: { label: string; figure: HFig }; skillsFE: number | null;
   steps: { label: string; costFE: number | null; totalFE: number; figure: HFig; note?: string }[]; alternatives?: { label: string; costFE: number | null; figure: HFig }[] }
@@ -291,9 +294,9 @@ function legPanel(g: GuideOut, l: Leg, i: number): string {
     + (l.end ? `<p class="leg-end">→ ${esc(human(l.end))}</p>` : i === legs.length - 1 && g.knobs?.partialRun ? `<p class="leg-end">… still computing: ${own.length} upgrade${own.length === 1 ? '' : 's'} so far on ${esc(l.target ? bossName(l.target) : 'this leg')}</p>` : '') + '</section>';
 }
 function legTabs(g: GuideOut): string {
-  const id = `leg-${g.mode}`, legs = g.legs!;
-  return `<div class="gl-tabs">${legs.map((l, i) => `<input type="radio" name="${id}" id="${id}-${i}"${i === 0 ? ' checked' : ''}><label for="${id}-${i}">${esc(legName(l))}</label>`).join('')}`
-    + `<div class="gl-tab-panels">${legs.map((l, i) => legPanel(g, l, i)).join('')}</div></div>`;
+  const id = `leg-${g.mode}`, shown = g.legs!.map((l, i) => [l, i] as const).filter(([l]) => l.skill !== 'iceShot');   // Hammer of Ash only (user, 2026-10-16)
+  return `<div class="gl-tabs">${shown.map(([l, i], k) => `<input type="radio" name="${id}" id="${id}-${i}"${k === 0 ? ' checked' : ''}><label for="${id}-${i}">${esc(legName(l))}</label>`).join('')}`
+    + `<div class="gl-tab-panels">${shown.map(([l, i]) => legPanel(g, l, i)).join('')}</div></div>`;
 }
 
 /** advise: the free talent respec as your page after it - points added green, removed red */
@@ -336,6 +339,20 @@ function hoaPathCard(g: GuideOut): string {
     + `${p.skillsFE !== null ? `The build's skill gems you do not hold cost about ${fmtFE(p.skillsFE)} FE on top. ` : ''}Model numbers (season patch notes applied), ${esc(p.at.slice(0, 16).replace('T', ' '))} UTC.</p>`
     + `<table><tr><th>#</th><th>Buy</th><th>Cost</th><th>Total</th><th>Damage/s</th><th>${esc(bossName(p.target))} dies in</th></tr>${rows}</table>${alt}</div>`;
 }
+/** the Hammer of Ash routes in columns: the switch, then each route's buys with the boss's kill time after each */
+function routesCard(g: GuideOut): string {
+  const r = g.hoaRoutes;
+  if (!r) return '';
+  const boss = esc(bossName(r.target)), t = (f: HFig) => (f.lifeMax && f.kill > 0 ? fmtTime(f.lifeMax / f.kill) : '—');
+  const col = (x: HoaRoutes['routes'][number]) => `<div class="gl-route"><h3>${esc(x.name)}</h3><table><tr><th>#</th><th>Buy</th><th>FE</th><th>Total</th><th>${boss}</th></tr>`
+    + `<tr class="start"><td>0</td><td>Switch (see above)</td><td>${fmtFE(r.start.costFE)}</td><td>${fmtFE(r.start.costFE)}</td><td>${t(r.start.figure)}</td></tr>`
+    + x.steps.map((s, i) => `<tr><td>${i + 1}</td><td>${esc(s.label)}</td><td>${fmtFE(s.costFE)}</td><td>${fmtFE(s.totalFE)}</td><td title="${fmtDps(s.figure.kill)} per second">${t(s.figure)}</td></tr>`).join('')
+    + '</table></div>';
+  return `<div class="gl-final"><b>Hammer of Ash: your plan to kill ${boss}</b><p class="bnote">Step 0, both routes: ${esc(r.start.label)}. That alone: ${boss} in ${t(r.start.figure)}; its skill gems you do not hold cost about ${fmtFE(r.start.costFE)} FE. `
+    + `Then each route buys its first legendary and after that whatever adds the most damage per FE${r.worn?.length ? ` (never one you already wear: ${esc(r.worn.join(', '))})` : ''}. `
+    + `Live etor prices; Formation Breaker at the 900 FE you found. Model numbers with the season patch notes, not yet checked against your game (${esc(r.at.slice(0, 16).replace('T', ' '))} UTC).</p>`
+    + `<div class="gl-routes">${r.routes.map(col).join('')}</div></div>`;
+}
 function finalCard(g: GuideOut): string {
   if (!g.final?.length) return '';
   return `<div class="gl-final"><b>The final build, boss by boss</b><table><tr><th>Boss</th><th>Damage per second at full Life</th><th>Time to kill</th></tr>`
@@ -343,6 +360,7 @@ function finalCard(g: GuideOut): string {
     + '</table></div>';
 }
 export function renderGuide(g: GuideOut, mine: Record<string, number> = {}): string {
+  if (g.hoaRoutes) return `<div class="gl-plan">${routesCard(g)}</div>`;   // the Hammer of Ash plan alone (user, 2026-10-16: no Ice Shot)
   const plan = g.legs?.length ? legTabs(g) : chart(g.start, entries(g.steps)) + stages(entries(g.steps), g.mode);
   return `<div class="gl-plan">${goalCard(g)}${hoaPathCard(g)}${g.character ? renderCharacter(g.character) : ''}${g.character?.skill === 'hoa' && g.switch ? switchCard(g) + respecCard(g) : respecCard(g) + switchCard(g)}${g.next?.length ? renderNext(g.next, g.prices ?? {}, mine, g.character?.fe ?? Infinity) : ''}${slateCard(g)}${finalCard(g)}${plan}${huntingList(g)}${details(g)}</div>`;
 }
@@ -421,6 +439,7 @@ export function parseAdvice(text: string): GuideOut {
       checkFigure(l.start, `${p}.start`);
     });
   }
+  if (j.hoaRoutes !== undefined && !(j.hoaRoutes && Array.isArray(j.hoaRoutes.routes) && j.hoaRoutes.start)) throw bad('hoaRoutes', j.hoaRoutes);
   if (j.hoaPath !== undefined && !(j.hoaPath && Array.isArray(j.hoaPath.steps) && j.hoaPath.start)) throw bad('hoaPath', j.hoaPath);
   if (j.slates !== undefined && !(Array.isArray(j.slates) && j.slates.every((x: any) => typeof x?.name === 'string' && typeof x?.gain === 'number'))) throw bad('slates', j.slates);   // eslint-disable-line @typescript-eslint/no-explicit-any
   if (j.respec !== undefined && !(j.respec && Array.isArray(j.respec.trees) && j.respec.before && typeof j.respec.before === 'object')) throw bad('respec', j.respec);

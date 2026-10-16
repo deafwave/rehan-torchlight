@@ -812,3 +812,9 @@ a.t-branch:hover,a.t-branch:focus-visible{text-decoration:underline}
 .leg-up { color: #7ef0a8; font-weight: 600; } .leg-down { color: #e06060; font-weight: 600; }
 
 .gl-next td.what small.alts { display: block; opacity: .7; margin-top: 2px; }
+.gl-routes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:10px}
+.gl-route h3{margin:0 0 6px;color:var(--frost)}
+.gl-route table{width:100%;border-collapse:collapse;font-size:13px}
+.gl-route td,.gl-route th{padding:4px 6px;border-bottom:1px solid var(--ice-line);text-align:left;vertical-align:top}
+.gl-route tr.start td{opacity:.75}
+@media (max-width:900px){.gl-routes{grid-template-columns:1fr}}
