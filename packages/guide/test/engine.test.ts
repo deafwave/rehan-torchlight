@@ -6,7 +6,7 @@ import { applyPatch, type LoadoutPatch } from '../src/patches';
 import { killSpeed } from '../src/kill';
 import { memoKey } from '../src/engine/memo';
 import { pinRoot } from '../src/pin';
-import { applyInOrder, figureDefaultFirst, withAsked } from '../src/engine/apply';
+import { applyInOrder, figureDefaultFirst, FIRST_ROLL_BUDGET, withAsked } from '../src/engine/apply';
 import { type Knobs, overBudget, rankable } from '../src/search';
 import { writeAtomic } from '../src/atomic';
 import { createEvaluator, DEFAULT_FIGHT, DEFAULT_TARGET, INFO, type Fight, WorkerDied, type Job, type JobResult, type WorkerLike } from '../src/engine/pool';
@@ -441,26 +441,27 @@ describe('figureDefaultFirst', () => {
   const affine = (n: number, b: number) => `roll space of ${n} exceeds the enumeration budget ${b} and the price is not affine in the draw of type 3 (at 0.5: 1 against 2)`;
   it('re-prices at the big budget only on a not-affine stop', () => {
     const seen: (number | undefined)[] = [];
-    const r = figureDefaultFirst(o => { seen.push(o.rollBudget); return o.rollBudget ? { stop: undefined, v: 1 } : { stop: affine(9, 262144), v: 0 }; }, 1 << 20);
+    const r = figureDefaultFirst(o => { seen.push(o.rollBudget); return o.rollBudget === 1 << 20 ? { stop: undefined, v: 1 } : { stop: affine(9, 4096), v: 0 }; }, 1 << 20);
     expect(r.v).toBe(1);
-    expect(seen).toEqual([undefined, 1 << 20]);
+    expect(seen).toEqual([FIRST_ROLL_BUDGET, 1 << 20]);
   });
   it('matches the across-the-draws form too', () => {
     const seen: (number | undefined)[] = [];
-    figureDefaultFirst(o => { seen.push(o.rollBudget); return { stop: o.rollBudget ? undefined : "not ported: roll space of 9 exceeds the budget 262144 and the price is not affine across the draws (midpoint 1 against the corners' mean)" }; }, 1 << 20);
-    expect(seen).toEqual([undefined, 1 << 20]);
+    figureDefaultFirst(o => { seen.push(o.rollBudget); return { stop: o.rollBudget === 1 << 20 ? undefined : "not ported: roll space of 9 exceeds the budget 4096 and the price is not affine across the draws (midpoint 1 against the corners' mean)" }; }, 1 << 20);
+    expect(seen).toEqual([FIRST_ROLL_BUDGET, 1 << 20]);
   });
   it("matches the owner's main messages (no budget number)", () => {
     for (const stop of ['not ported: roll space of 9 exceeds the enumeration budget and the price is not affine in the draw of type 3 (at 0.5: 1 against 2)',
       'not ported: roll space of 9 exceeds the budget and the price is not affine across the draws (price at the mean fractions 1 against the corners interpolation 2)']) {
       const seen: (number | undefined)[] = [];
-      figureDefaultFirst(o => { seen.push(o.rollBudget); return { stop: o.rollBudget ? undefined : stop }; }, 1 << 20);
-      expect(seen).toEqual([undefined, 1 << 20]);
+      figureDefaultFirst(o => { seen.push(o.rollBudget); return { stop: o.rollBudget === 1 << 20 ? undefined : stop }; }, 1 << 20);
+      expect(seen).toEqual([FIRST_ROLL_BUDGET, 1 << 20]);
     }
   });
-  it('prices once, without a budget, when the default computes', () => {
+  it('prices once, at the small first budget (4096: above it the price takes the affine closed form), when that computes', () => {
     const seen: unknown[] = [];
     figureDefaultFirst(o => { seen.push(o); return { stop: undefined }; }, 1 << 20);
-    expect(seen).toEqual([{}]);
+    expect(seen).toEqual([{ rollBudget: FIRST_ROLL_BUDGET }]);
+    expect(FIRST_ROLL_BUDGET).toBe(4096);
   });
 });

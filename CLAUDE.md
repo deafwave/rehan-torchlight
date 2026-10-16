@@ -34,7 +34,7 @@ the `game.busy` file exists (`DEFAULT_BUSY_FILE` in `engine/pool.ts`, env `GUIDE
 ## Policies the code applies
 
 - Fight inputs: 10 bombs, training dummy stands still. Ice Shot stated inputs (`ICE_SHOT_INPUTS`) are chosen, not measured.
-- Roll budget: dps-debug default first; only a "not affine" stop retries at 1<<20.
+- Roll budget: 4096 first (`FIRST_ROLL_BUDGET`: above it a price takes the affine closed form; 40 s -> 2.6 s on a Hammer of Ash figure); only a "not affine" stop retries at 1<<20.
 - Market: `drop` costs 0 FE and is ranked; `not-on-market` and unpriced (costFE null) are listed under `unpriced`, never ranked.
 - Churn gate 5 %. Talent points below L93 are assumed (scaled), noted on the step.
 - Target: Hammer of Ash is priced against Cube 3 (`target` / `--target`, a dps-debug `BOSSES` key, `dummy` = the ground's dummy); Ice Shot, the

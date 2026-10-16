@@ -38,8 +38,11 @@ export function withAsked<R extends { stop?: string }>(figure: (extra: Record<st
 /** dps-debug's two "exceeds the budget … price is not affine" stops (calc.ts) */
 const NOT_AFFINE = /exceeds the (?:enumeration )?budget(?: \d+)? and the price is not affine/;
 
-/** Prices at dps-debug's default roll budget; only a "not affine" stop is re-priced with the large `rollBudget`. */
+/** The first pricing's roll budget: above it a price takes AQ1's affine closed form (about 11 evaluations, checked within the Life quantum) instead of
+ *  enumerating every joint roll - dps-debug's coordinator, 2026-10-15: 40.3 s -> 2.6 s on a Hammer of Ash figure, equal to 7e-7 */
+export const FIRST_ROLL_BUDGET = 4096;
+/** Prices at FIRST_ROLL_BUDGET; only a "not affine" stop is re-priced with the large `rollBudget`. */
 export function figureDefaultFirst<R extends { stop?: string }>(figure: (o: { rollBudget?: number }) => R, rollBudget: number): R {
-  const r = figure({});
+  const r = figure({ rollBudget: FIRST_ROLL_BUDGET });
   return r.stop && NOT_AFFINE.test(r.stop) ? figure({ rollBudget }) : r;
 }

@@ -1,4 +1,5 @@
 /** Figure memo keyed by pin + skill + level + canonical JSON of (loadout, changes). In-process always; on disk only when the pin is clean. */
+import { FIRST_ROLL_BUDGET } from './apply';
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -10,7 +11,7 @@ export function canonical(v: unknown): string {
 }
 
 export const memoKey = (pin: string, skill: string, level: number, loadout: unknown, changes: unknown, fight: unknown, rollBudget: number, target?: string): string =>
-  `v6|${pin}|${skill}|${level}|${target ?? 'dummy'}|${canonical([loadout, changes, fight, rollBudget])}`;
+  `v7|${pin}|${skill}|${level}|${target ?? 'dummy'}|${canonical([loadout, changes, fight, FIRST_ROLL_BUDGET, rollBudget])}`;
 
 export const DEFAULT_MEMO_ENTRIES = 20000;
 /** `max`: settled results kept in memory (least recently used leave first; in-flight computations are always kept) */
