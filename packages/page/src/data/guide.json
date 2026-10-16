@@ -6512,10 +6512,10 @@
          ],
          "suffix": [
           {
-           "id": 110110007,
+           "id": 110110001,
            "dynArgs": [
-            -7.5,
-            22
+            -20,
+            90
            ]
           },
           {
@@ -6535,8 +6535,8 @@
        }
       }
      ],
-     "costFE": 16255.2224,
-     "note": "chosen for the finished item: then T1 +110% Gear Physical Damage / Adds 55 - 67 Physical Damage to the gear (prefix), T1 +6 to Attack Skill Level (prefix), T1 +80% Gear Physical Damage (prefix), T7 +22% additional Attack Damage after standing still for 0.1s. -7% additional Attack Speed (suffix), T1 +180% Critical Strike Damage (suffix), T1 +216% Erosion Damage (suffix)"
+     "costFE": 16650.914,
+     "note": "chosen for the finished item: then T1 +110% Gear Physical Damage / Adds 55 - 67 Physical Damage to the gear (prefix), T1 +6 to Attack Skill Level (prefix), T1 +80% Gear Physical Damage (prefix), T1 +100% additional Attack Damage after standing still for 0.1s. -20% additional Attack Speed (suffix), T1 +180% Critical Strike Damage (suffix), T1 +216% Erosion Damage (suffix)"
     },
     "changes": [
      {
@@ -6637,132 +6637,7 @@
    },
    "cumFE": 6347.1922,
    "notes": [
-    "chosen for the finished item: then T1 +110% Gear Physical Damage / Adds 55 - 67 Physical Damage to the gear (prefix), T1 +6 to Attack Skill Level (prefix), T1 +80% Gear Physical Damage (prefix), T7 +22% additional Attack Damage after standing still for 0.1s. -7% additional Attack Speed (suffix), T1 +180% Critical Strike Damage (suffix), T1 +216% Erosion Damage (suffix)",
-    "talent points assumed"
-   ]
-  },
-  {
-   "level": 90,
-   "move": {
-    "acquisition": true,
-    "enabler": true,
-    "minLevel": 86,
-    "kind": "craft",
-    "label": "Craft T7 +22% additional Attack Damage after standing still for 0.1s. -7% additional Attack Speed (suffix) on mainHand",
-    "costFE": 1.9884,
-    "buy": {
-     "name": "Precious Ember",
-     "qty": 12
-    },
-    "costNote": "the known build's tier of this mod is not craftable: its best craftable tier",
-    "changes": [
-     {
-      "kind": "gear",
-      "slot": "mainHand",
-      "item": {
-       "baseId": 1019,
-       "baseName": "Sierra Reverberation Maul",
-       "itemId": "guide-target-1019-110110007",
-       "level": 86,
-       "modifiers": {
-        "baseAttr": [
-         {
-          "id": 510020,
-          "dynArgs": [
-           220,
-           220
-          ]
-         },
-         {
-          "id": 740000,
-          "dynArgs": [
-           500
-          ]
-         },
-         {
-          "id": 740001,
-          "dynArgs": [
-           1.5
-          ]
-         }
-        ],
-        "suffix": [
-         {
-          "id": 110110007,
-          "dynArgs": [
-           -7.5,
-           22
-          ]
-         }
-        ]
-       }
-      }
-     }
-    ]
-   },
-   "triggered": [],
-   "before": {
-    "life100": 301309512407.9137,
-    "life0": 180424857727.8744,
-    "kill": 284020857148.4257,
-    "partial": [
-     "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
-     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
-     "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
-     "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
-     "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
-     "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
-     "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
-     "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
-     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
-     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
-     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
-     "not in this figure: node 343 (queues an inflict request on each task-filter target's comp 0xf: FUN_141bacd50(comp 0xf, kind +0x78, id +0x7c, probability +0x80 (f64), count +0x88, tag lists +0x90 / +0xa0) - no attribute / char-field record (T3d: data vt 0x14524cb20, build FUN_141ad1060, execute FUN_141aad500 once per target, abort FUN_141ab5450; t3d_a.ann.c). The EffectNote carries the task: its ch",
-     "not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 2446 row 1 (pactspirit 8530 point 110) - fires on event 0xf4285",
-     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 2)) - ticked at the grant",
-     "not in this figure: node 2230 (skill stones' energy: FUN_141cc6b90(comp 0x83, value) on each skill of the target's comp 0x82 whose tags pass filterTags (FUN_141d153a0) - no attribute / char-field record (execute FUN_141a9b410, c14_n2230b.ann.c); the stone's charge change is the energy model's (stone.ts), not read from the store) - affix class 168890 row 1 (gear 380009 modifier 51533041) - fires on",
-     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 72818 row 1 (gem 7006 (skill 1110)) - ticked at the grant",
-     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7031 modifier 771009001) - ticked at the grant",
-     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7130 modifier 771009001) - ticked at the grant",
-     "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a"
-    ],
-    "lock": 15000000000000,
-    "cull": 0.136,
-    "target": "cube3",
-    "lifeMax": 53469896141586
-   },
-   "after": {
-    "life100": 366369535370.8662,
-    "life0": 219382955285.55447,
-    "kill": 345347840608.28186,
-    "partial": [
-     "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
-     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
-     "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
-     "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
-     "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
-     "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
-     "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
-     "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
-     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
-     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
-     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
-     "not in this figure: node 343 (queues an inflict request on each task-filter target's comp 0xf: FUN_141bacd50(comp 0xf, kind +0x78, id +0x7c, probability +0x80 (f64), count +0x88, tag lists +0x90 / +0xa0) - no attribute / char-field record (T3d: data vt 0x14524cb20, build FUN_141ad1060, execute FUN_141aad500 once per target, abort FUN_141ab5450; t3d_a.ann.c). The EffectNote carries the task: its ch",
-     "not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 2446 row 1 (pactspirit 8530 point 110) - fires on event 0xf4285",
-     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 2)) - ticked at the grant",
-     "not in this figure: node 2230 (skill stones' energy: FUN_141cc6b90(comp 0x83, value) on each skill of the target's comp 0x82 whose tags pass filterTags (FUN_141d153a0) - no attribute / char-field record (execute FUN_141a9b410, c14_n2230b.ann.c); the stone's charge change is the energy model's (stone.ts), not read from the store) - affix class 168890 row 1 (gear 380009 modifier 51533041) - fires on",
-     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 72818 row 1 (gem 7006 (skill 1110)) - ticked at the grant",
-     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7031 modifier 771009001) - ticked at the grant",
-     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7130 modifier 771009001) - ticked at the grant",
-     "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a"
-    ],
-    "lock": 15000000000000,
-    "cull": 0.136,
-    "target": "cube3",
-    "lifeMax": 53469896141586
-   },
-   "cumFE": 6349.180600000001,
-   "notes": [
+    "chosen for the finished item: then T1 +110% Gear Physical Damage / Adds 55 - 67 Physical Damage to the gear (prefix), T1 +6 to Attack Skill Level (prefix), T1 +80% Gear Physical Damage (prefix), T1 +100% additional Attack Damage after standing still for 0.1s. -20% additional Attack Speed (suffix), T1 +180% Critical Strike Damage (suffix), T1 +216% Erosion Damage (suffix)",
     "talent points assumed"
    ]
   },
@@ -6811,15 +6686,6 @@
           ]
          }
         ],
-        "suffix": [
-         {
-          "id": 110110007,
-          "dynArgs": [
-           -7.5,
-           22
-          ]
-         }
-        ],
         "prefix": [
          {
           "id": 107110001,
@@ -6835,9 +6701,9 @@
    },
    "triggered": [],
    "before": {
-    "life100": 366369535370.8662,
-    "life0": 219382955285.55447,
-    "kill": 345347840608.28186,
+    "life100": 301309512407.9137,
+    "life0": 180424857727.8744,
+    "kill": 284020857148.4257,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
      "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
@@ -6865,9 +6731,9 @@
     "lifeMax": 53469896141586
    },
    "after": {
-    "life100": 588500310094.8955,
-    "life0": 352395395278.90967,
-    "kill": 554733108729.8962,
+    "life100": 483994230901.79504,
+    "life0": 289816904739.235,
+    "kill": 456223420292.31335,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
      "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
@@ -6894,7 +6760,140 @@
     "target": "cube3",
     "lifeMax": 53469896141586
    },
-   "cumFE": 6549.914600000001,
+   "cumFE": 6547.926200000001,
+   "notes": [
+    "talent points assumed"
+   ]
+  },
+  {
+   "level": 90,
+   "move": {
+    "acquisition": true,
+    "enabler": true,
+    "minLevel": 86,
+    "kind": "craft",
+    "label": "Craft T1 +100% additional Attack Damage after standing still for 0.1s. -20% additional Attack Speed (suffix) on mainHand",
+    "costFE": 397.67999999999995,
+    "buy": {
+     "name": "Precious Ember",
+     "qty": 2400
+    },
+    "costNote": "the known build's tier of this mod is not craftable: its best craftable tier",
+    "changes": [
+     {
+      "kind": "gear",
+      "slot": "mainHand",
+      "item": {
+       "baseId": 1019,
+       "baseName": "Sierra Reverberation Maul",
+       "itemId": "guide-target-1019-110110001",
+       "level": 86,
+       "modifiers": {
+        "baseAttr": [
+         {
+          "id": 510020,
+          "dynArgs": [
+           220,
+           220
+          ]
+         },
+         {
+          "id": 740000,
+          "dynArgs": [
+           500
+          ]
+         },
+         {
+          "id": 740001,
+          "dynArgs": [
+           1.5
+          ]
+         }
+        ],
+        "prefix": [
+         {
+          "id": 107110001,
+          "dynArgs": [
+           64.5
+          ]
+         }
+        ],
+        "suffix": [
+         {
+          "id": 110110001,
+          "dynArgs": [
+           -20,
+           90
+          ]
+         }
+        ]
+       }
+      }
+     }
+    ]
+   },
+   "triggered": [],
+   "before": {
+    "life100": 483994230901.79504,
+    "life0": 289816904739.235,
+    "kill": 456223420292.31335,
+    "partial": [
+     "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
+     "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
+     "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
+     "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
+     "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
+     "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
+     "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
+     "not in this figure: node 343 (queues an inflict request on each task-filter target's comp 0xf: FUN_141bacd50(comp 0xf, kind +0x78, id +0x7c, probability +0x80 (f64), count +0x88, tag lists +0x90 / +0xa0) - no attribute / char-field record (T3d: data vt 0x14524cb20, build FUN_141ad1060, execute FUN_141aad500 once per target, abort FUN_141ab5450; t3d_a.ann.c). The EffectNote carries the task: its ch",
+     "not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 2446 row 1 (pactspirit 8530 point 110) - fires on event 0xf4285",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 2)) - ticked at the grant",
+     "not in this figure: node 2230 (skill stones' energy: FUN_141cc6b90(comp 0x83, value) on each skill of the target's comp 0x82 whose tags pass filterTags (FUN_141d153a0) - no attribute / char-field record (execute FUN_141a9b410, c14_n2230b.ann.c); the stone's charge change is the energy model's (stone.ts), not read from the store) - affix class 168890 row 1 (gear 380009 modifier 51533041) - fires on",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 72818 row 1 (gem 7006 (skill 1110)) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7031 modifier 771009001) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7130 modifier 771009001) - ticked at the grant",
+     "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a"
+    ],
+    "lock": 15000000000000,
+    "cull": 0.136,
+    "target": "cube3",
+    "lifeMax": 53469896141586
+   },
+   "after": {
+    "life100": 818657213930.9009,
+    "life0": 490213900540.5488,
+    "kill": 771683979543.0752,
+    "partial": [
+     "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
+     "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
+     "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
+     "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
+     "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
+     "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
+     "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
+     "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
+     "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
+     "not in this figure: node 343 (queues an inflict request on each task-filter target's comp 0xf: FUN_141bacd50(comp 0xf, kind +0x78, id +0x7c, probability +0x80 (f64), count +0x88, tag lists +0x90 / +0xa0) - no attribute / char-field record (T3d: data vt 0x14524cb20, build FUN_141ad1060, execute FUN_141aad500 once per target, abort FUN_141ab5450; t3d_a.ann.c). The EffectNote carries the task: its ch",
+     "not in this figure: node 306 (buff component 0x12 only (execute FUN_141aa6d60: mode +0x78 1/2/3 over the task-filter targets, GetComponent(0x12) and FUN_141bab400; u1_n306x.ann.c) - the buffs it adds grant through the captured buff list) - affix class 2446 row 1 (pactspirit 8530 point 110) - fires on event 0xf4285",
+     "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 2)) - ticked at the grant",
+     "not in this figure: node 2230 (skill stones' energy: FUN_141cc6b90(comp 0x83, value) on each skill of the target's comp 0x82 whose tags pass filterTags (FUN_141d153a0) - no attribute / char-field record (execute FUN_141a9b410, c14_n2230b.ann.c); the stone's charge change is the energy model's (stone.ts), not read from the store) - affix class 168890 row 1 (gear 380009 modifier 51533041) - fires on",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 72818 row 1 (gem 7006 (skill 1110)) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7031 modifier 771009001) - ticked at the grant",
+     "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7130 modifier 771009001) - ticked at the grant",
+     "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a"
+    ],
+    "lock": 15000000000000,
+    "cull": 0.136,
+    "target": "cube3",
+    "lifeMax": 53469896141586
+   },
+   "cumFE": 6945.606200000001,
    "notes": [
     "talent points assumed"
    ]
@@ -6954,10 +6953,10 @@
         ],
         "suffix": [
          {
-          "id": 110110007,
+          "id": 110110001,
           "dynArgs": [
-           -7.5,
-           22
+           -20,
+           90
           ]
          },
          {
@@ -6974,9 +6973,9 @@
    },
    "triggered": [],
    "before": {
-    "life100": 588500310094.8955,
-    "life0": 352395395278.90967,
-    "kill": 554733108729.8962,
+    "life100": 818657213930.9009,
+    "life0": 490213900540.5488,
+    "kill": 771683979543.0752,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
      "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
@@ -7004,9 +7003,9 @@
     "lifeMax": 53469896141586
    },
    "after": {
-    "life100": 734720328559.5432,
-    "life0": 439952292566.08606,
-    "kill": 692563257686.4976,
+    "life100": 1022062498318.5406,
+    "life0": 612013472025.7424,
+    "kill": 963418195824.5801,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
      "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
@@ -7033,7 +7032,7 @@
     "target": "cube3",
     "lifeMax": 53469896141586
    },
-   "cumFE": 6750.648600000001,
+   "cumFE": 7146.3402000000015,
    "notes": [
     "talent points assumed"
    ]
@@ -7093,10 +7092,10 @@
         ],
         "suffix": [
          {
-          "id": 110110007,
+          "id": 110110001,
           "dynArgs": [
-           -7.5,
-           22
+           -20,
+           90
           ]
          },
          {
@@ -7119,9 +7118,9 @@
    },
    "triggered": [],
    "before": {
-    "life100": 734720328559.5432,
-    "life0": 439952292566.08606,
-    "kill": 692563257686.4976,
+    "life100": 1022062498318.5406,
+    "life0": 612013472025.7424,
+    "kill": 963418195824.5801,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
      "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
@@ -7149,9 +7148,9 @@
     "lifeMax": 53469896141586
    },
    "after": {
-    "life100": 951682505424.9816,
-    "life0": 569869763722.1671,
-    "kill": 897076493747.9912,
+    "life100": 1323876529963.243,
+    "life0": 792740437087.7804,
+    "kill": 1247914623711.2576,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
      "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
@@ -7178,7 +7177,7 @@
     "target": "cube3",
     "lifeMax": 53469896141586
    },
-   "cumFE": 7148.328600000002,
+   "cumFE": 7544.020200000002,
    "notes": [
     "talent points assumed"
    ]
@@ -7245,10 +7244,10 @@
         ],
         "suffix": [
          {
-          "id": 110110007,
+          "id": 110110001,
           "dynArgs": [
-           -7.5,
-           22
+           -20,
+           90
           ]
          },
          {
@@ -7271,9 +7270,9 @@
    },
    "triggered": [],
    "before": {
-    "life100": 951682505424.9816,
-    "life0": 569869763722.1671,
-    "kill": 897076493747.9912,
+    "life100": 1323876529963.243,
+    "life0": 792740437087.7804,
+    "kill": 1247914623711.2576,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
      "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
@@ -7301,9 +7300,9 @@
     "lifeMax": 53469896141586
    },
    "after": {
-    "life100": 1763916982095.0894,
-    "life0": 1056237713817.7292,
-    "kill": 1662706262371.4348,
+    "life100": 2453768226345.016,
+    "life0": 1469322291232.9465,
+    "kill": 2312974951650.5947,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
      "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
@@ -7330,7 +7329,7 @@
     "target": "cube3",
     "lifeMax": 53469896141586
    },
-   "cumFE": 14875.371600000002,
+   "cumFE": 15271.0632,
    "notes": [
     "talent points assumed"
    ]
@@ -7403,10 +7402,10 @@
         ],
         "suffix": [
          {
-          "id": 110110007,
+          "id": 110110001,
           "dynArgs": [
-           -7.5,
-           22
+           -20,
+           90
           ]
          },
          {
@@ -7429,9 +7428,9 @@
    },
    "triggered": [],
    "before": {
-    "life100": 1763916982095.0894,
-    "life0": 1056237713817.7292,
-    "kill": 1662706262371.4348,
+    "life100": 2453768226345.016,
+    "life0": 1469322291232.9465,
+    "kill": 2312974951650.5947,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
      "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
@@ -7459,9 +7458,9 @@
     "lifeMax": 53469896141586
    },
    "after": {
-    "life100": 3085984879676.4194,
-    "life0": 1847895137539.5095,
-    "kill": 2908916030139.277,
+    "life100": 4292884371385.5566,
+    "life0": 2570589443966.188,
+    "kill": 4046565569947.371,
     "partial": [
      "the target's class 200000250 (BOSS1): below a Life threshold the player's skills gain charge points, a limited number of times: a fight phase, not in the figure",
      "not in this figure as compiled: gear 4639: modifier 51512840 (Kaleidoscope: its phase is a state of the fight; averaged over its three states)",
@@ -7488,7 +7487,7 @@
     "target": "cube3",
     "lifeMax": 53469896141586
    },
-   "cumFE": 22602.414600000004,
+   "cumFE": 22998.106200000002,
    "notes": [
     "talent points assumed"
    ]
@@ -7499,12 +7498,9 @@
   "cull: Ill Omen / Ominous is no cull: a once-per-boss 20 % max-Life hit after 50 % of max Life dealt as DoT, Reap or Spacetime damage, which Hammer of Ash does not deal",
   "corrosion: a Corroded item is not offered (etor lists no corroded variant, and which affix a corrosion upgrades or adds is decided by the server, so its odds are unknown); one you own is priced as read",
   "craft on boots: 1 tiers whose library text ranges differ from the catalog rolls",
-  "craft on gloves: 4 tiers whose library text ranges differ from the catalog rolls",
-  "craft on helmet: 6 tiers whose library text ranges differ from the catalog rolls",
-  "craft on mainHand: 2 tiers whose library text ranges differ from the catalog rolls",
+  "craft on gloves: 3 tiers whose library text ranges differ from the catalog rolls",
+  "craft on helmet: 3 tiers whose library text ranges differ from the catalog rolls",
   "craft on necklace: 1 tiers whose library text ranges differ from the catalog rolls",
-  "craft on ring2: 1 tiers whose library text ranges differ from the catalog rolls",
-  "craft on ring1: 1 tiers whose library text ranges differ from the catalog rolls",
   "unique Gift: modifier group(s) 5102300, 5102301, 5102302, 5102303 not in the catalog; not offered",
   "unique Electromagnetic Fang: base 55 has no lang name; not offered",
   "unique Shattering Wind: base 56 has no lang name; not offered",
@@ -8526,7 +8522,7 @@
       "chest: Ruinous Star",
       "gloves: Death's Touch",
       "helmet: Fool's Crown",
-      "mainHand: Sierra Reverberation Maul - T1 +(49-80)% Gear Physical Damage (prefix); T1 +(77-110)% Gear Physical Damage / Adds (53-55) - (65-67) Physical Damage to the gear (prefix); T1 +6 to Attack Skill Level (prefix); T7 +22% additional Attack Damage after standing still for 0.1s. (-8--7)% additional Attack Speed (suffix); T1 +(127-180)% Critical Strike Damage (suffix); T1 +(152-216)% Erosion Damage (suffix)",
+      "mainHand: Sierra Reverberation Maul - T1 +(49-80)% Gear Physical Damage (prefix); T1 +(77-110)% Gear Physical Damage / Adds (53-55) - (65-67) Physical Damage to the gear (prefix); T1 +6 to Attack Skill Level (prefix); T1 +(80-100)% additional Attack Damage after standing still for 0.1s. -20% additional Attack Speed (suffix); T1 +(127-180)% Critical Strike Damage (suffix); T1 +(152-216)% Erosion Damage (suffix)",
       "necklace: Broken Sun Ring",
       "ring2: Kaleidoscope",
       "ring1: Vorax Limb: Digits"
