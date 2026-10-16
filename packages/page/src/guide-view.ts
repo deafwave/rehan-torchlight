@@ -351,8 +351,8 @@ function routesCard(g: GuideOut): string {
     + (ch.buys.length ? `<h4>2. Cheap buys for the build's skills</h4><table><tr><th>Change</th><th>Gain</th><th>Cost</th><th>Gems to get</th></tr>${ch.buys.map((b) => `<tr><td>${esc(actionText({ label: b.label } as Move))}</td><td>${fmtGain(1, b.gain)}</td><td>${b.costFE === null ? 'not listed' : `${fmtFE(b.costFE)} FE`}</td><td>${esc(b.buy.join(', '))}</td></tr>`).join('')}</table>` : '') : '';
   const boss = esc(bossName(r.target));
   const path = r.routes.map((x) => `<h4>3. ${esc(x.name)}</h4><p class="bnote">Start: ${esc(r.start.label)}: ${boss} in ${t(r.start.figure)}. Each step is priced on top of the ones before (most damage per FE first; farmed pieces count as free FE but take farming).</p>`
-    + `<table><tr><th>#</th><th>Get</th><th>Cost</th><th>Total FE</th><th>${boss} dies in</th></tr>`
-    + x.steps.map((s, k) => `<tr><td>${k + 1}</td><td>${esc(s.label)}</td><td>${s.costFE === null ? 'not listed' : s.costFE === 0 ? 'farm' : `${fmtFE(s.costFE)} FE`}</td><td>${fmtFE(s.totalFE)}</td><td title="${fmtDps(s.figure.kill)} per second">${t(s.figure)}</td></tr>`).join('') + '</table>').join('');
+    + `<table><tr><th>#</th><th>Get</th><th>Cost</th><th>Total FE</th><th>Damage/s</th><th>${boss} dies in</th></tr>`
+    + x.steps.map((s, k) => `<tr><td>${k + 1}</td><td>${esc(s.label)}</td><td>${s.costFE === null ? 'not listed' : s.costFE === 0 ? 'farm' : `${fmtFE(s.costFE)} FE`}</td><td>${fmtFE(s.totalFE)}</td><td>${fmtDps(s.figure.kill)}</td><td>${t(s.figure)}</td></tr>`).join('') + '</table>').join('');
   const build = r.build?.length ? `<details class="gl-build" open><summary>The build as it should be: skills, talent trees, pactspirits, gear${r.buildNote ? ` (${esc(r.buildNote)})` : ''}</summary>${r.build.map(sectionView).join('')}</details>` : '';
   return `<div class="gl-final"><b>Hammer of Ash: your plan</b><p class="bnote">Model numbers on your live character (Ruinous Star, Formation Breaker on), ${esc(r.at.slice(0, 16).replace('T', ' '))} UTC.</p>${changes}${path}${build}</div>`;
 }

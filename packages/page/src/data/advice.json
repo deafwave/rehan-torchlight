@@ -20,15 +20,15 @@
  "unpriced": [],
  "notCalculable": [],
  "hoaRoutes": {
-  "target": "cube2",
-  "at": "2026-10-16T19:22:10.117716+00:00",
+  "target": "traveler",
+  "at": "2026-10-16T19:35:09.041715+00:00",
   "start": {
-   "label": "your character with the talent changes",
+   "label": "your character now with the talent changes",
    "costFE": 0,
    "figure": {
-    "kill": 17846672448.4202,
-    "life100": 17846672448.4202,
-    "lifeMax": 16098976434407
+    "kill": 23446272555.318153,
+    "life100": 23446272555.318153,
+    "lifeMax": 1610461523817
    }
   },
   "build": [
@@ -53,38 +53,39 @@
      "  + Steamroll (level 17)",
      "  + Elemental Fusion (level 17)",
      "  + Hammer of Ash: Upheaval (Magnificent) (level 1)",
-     "  + Passivation (level 16)",
+     "  + Passivation (level 17)",
      "  + Slow Projectile (level 20)",
      "active 1: Timid (level 18)",
      "  + Activation Medium: Demolisher (level 20)",
-     "active 2: Bull's Rage (level 17)",
-     "  + Preparation (level 20)",
+     "active 2: Fixate (level 17)",
+     "  + Activation Medium: Boss (level 20)",
      "  + Extended Duration (level 20)",
-     "active 3: Blink (level 16)",
-     "  + Quick Mobility (level 20)",
      "  + Cooldown Reduction (level 16)",
+     "active 3: Blink (level 17)",
+     "  + Quick Mobility (level 20)",
+     "  + Cooldown Reduction (level 17)",
      "  + Magic Dash (level 20)",
-     "active 4: Flame Core (level 16)",
-     "  + Activation Medium: Motionless (level 17)",
+     "active 4: Flame Core (level 17)",
+     "  + Activation Medium: Motionless (level 18)",
      "  + Glacial Freeze (level 19)",
-     "  + Grudge (level 16)",
+     "  + Grudge (level 17)",
      "passive 0: Precise: Weapon Amplification (level 20)",
      "  + Restrain (level 20)",
      "  + Seal Conversion (level 20)",
-     "  + Increased Area (level 16)",
-     "  + Aura Amplification (level 16)",
-     "passive 1: Precise: Erosion Amplification (level 16)",
+     "  + Increased Area (level 17)",
+     "  + Aura Amplification (level 17)",
+     "passive 1: Precise: Erosion Amplification (level 17)",
      "  + Aura Amplification (level 20)",
      "  + Restrain (level 18)",
-     "  + Increased Area (level 16)",
-     "passive 2: Precise: Domain Expansion (level 16)",
+     "  + Increased Area (level 17)",
+     "passive 2: Precise: Domain Expansion (level 17)",
      "  + Restrain (level 20)",
      "  + Aura Amplification (level 20)",
      "  + Increased Area (level 20)",
      "passive 3: Precise: Cruelty (level 17)",
      "  + Restrain (level 17)",
      "  + Aura Amplification (level 18)",
-     "  + Increased Area (level 16)"
+     "  + Increased Area (level 17)"
     ]
    },
    {
@@ -95,7 +96,7 @@
      "core: Forbidden Power",
      "core: Off The Beaten Track",
      "core: Dirt",
-     "Onslaughter: Attack Damage x3, Area Damage x1, Attack Damage x3, Attack Damage x1, Attack Critical Strike Rating x3, Attack Critical Strike Rating x3, Attack Damage when holding a Two-Handed Weapon x3, additional Base Damage for Two-Handed Weapons x3, Attack Critical Strike Rating when holding a Two-Handed Weapon x3, Strength x3, additional Base Damage for Two-Handed Weapons x1, inflicted Paralysis Effect when holding a Two-Handed Weapon x1, Strength x1",
+     "Onslaughter: Attack Damage x3, Area Damage x2, Attack Damage x3, Attack Critical Strike Rating x3, Attack Critical Strike Rating x3, Attack Damage when holding a Two-Handed Weapon x3, additional Base Damage for Two-Handed Weapons x3, Attack Critical Strike Rating when holding a Two-Handed Weapon x3, Strength x3, additional Base Damage for Two-Handed Weapons x1, inflicted Paralysis Effect when holding a Two-Handed Weapon x1, Strength x1",
      "Goddess of Deception: damage x3, Movement Speed x3, damage x2, Movement Speed x3, Critical Strike Rating x3, Critical Strike Rating x3, Deterioration Chance x3, Erosion Damage x3, additional damage applied to Life x1",
      "Shadowmaster: Erosion Damage x3, Attack and Cast Speed x2, Deterioration Chance x3, Critical Strike Rating x3, Deterioration Damage x3, Critical Strike Rating x3, Erosion Damage x3, Deterioration Chance x3, additional Deterioration Damage x1",
      "Lich: damage x3, damage x3, Critical Strike Rating x3, Critical Strike Rating x3, All Stats x1, damage x3, Sealed Mana Compensation x3, Attack and Cast Speed x3, Sealed Mana Compensation x3, All Skills' Levels x1, Sealed Mana Compensation x1"
@@ -132,7 +133,7 @@
         "col": 5,
         "kind": 1,
         "max": 3,
-        "pts": 1,
+        "pts": 2,
         "name": "Area Damage",
         "prereq": []
        },
@@ -154,7 +155,7 @@
         "col": 2,
         "kind": 1,
         "max": 3,
-        "pts": 1,
+        "pts": 0,
         "name": "Attack Damage",
         "prereq": []
        },
@@ -1554,24 +1555,23 @@
     "+1 point: Onslaughter: Attack Damage",
     "+1 point: Onslaughter: Attack Damage",
     "Move a point: Lich: Max Life -> Lich: All Stats",
-    "Move a point: Onslaughter: Area Damage -> Onslaughter: Attack Damage",
     "Move a point: Onslaughter: Area Damage -> Onslaughter: Attack Damage"
    ],
    "buys": [],
    "before": {
-    "kill": 16792655021.548866,
-    "life100": 16792655021.548866,
-    "lifeMax": 16098976434407
+    "kill": 22232197339.71447,
+    "life100": 22232197339.71447,
+    "lifeMax": 1610461523817
    },
    "after": {
-    "kill": 17846672448.4202,
-    "life100": 17846672448.4202,
-    "lifeMax": 16098976434407
+    "kill": 23446272555.318153,
+    "life100": 23446272555.318153,
+    "lifeMax": 1610461523817
    }
   },
   "routes": [
    {
-    "name": "Path to Cube 2 (things you can buy or level; no copies of the example build)",
+    "name": "Path to 200 billion per second (Traveler 8)",
     "steps": [
      {
       "label": "Level Hammer of Ash 17 -> 20",
@@ -1579,317 +1579,152 @@
       "costFE": 0,
       "totalFE": 0,
       "figure": {
-       "kill": 21623774144.952217,
-       "life100": 21623774144.952217,
-       "lifeMax": 16098976434407
+       "kill": 28408483651.88851,
+       "life100": 28408483651.88851,
+       "lifeMax": 1610461523817
       }
      },
      {
-      "label": "Level Hammer of Ash: Upheaval (Magnificent) 1 -> 20",
+      "label": "Fixate's supports to level 20 (your Cooldown Reduction is 16)",
       "slot": "",
       "costFE": 0,
       "totalFE": 0,
       "figure": {
-       "kill": 25948529004.781822,
-       "life100": 25948529004.781822,
-       "lifeMax": 16098976434407
+       "kill": 29449328500.917503,
+       "life100": 29449328500.917503,
+       "lifeMax": 1610461523817
       }
      },
      {
-      "label": "Fixate with 3 supports (Extended Duration, Cooldown Reduction, Activation Medium: Boss) in active 2",
-      "slot": "",
-      "costFE": 2,
-      "totalFE": 2,
-      "figure": {
-       "kill": 33448243711.61888,
-       "life100": 33448243711.61888,
-       "lifeMax": 16098976434407
-      }
-     },
-     {
-      "label": "Decaying Blessing (necklace)",
-      "slot": "",
-      "costFE": 5,
-      "totalFE": 7,
-      "figure": {
-       "kill": 35059402013.00832,
-       "life100": 35059402013.00832,
-       "lifeMax": 16098976434407
-      }
-     },
-     {
-      "label": "A slate with Ranger: chance to gain Agility Blessing on Critical Strike (assumed ~100 FE per slate; two lines can share one slate)",
+      "label": "A slate with Ranger: chance to gain Agility Blessing on Critical Strike (most of it comes through your Portrait of a Fallen Saintess: its Repentance stacks on any Blessing)",
       "slot": "",
       "costFE": 100,
-      "totalFE": 107,
+      "totalFE": 100,
       "figure": {
-       "kill": 46825846375.85328,
-       "life100": 46825846375.85328,
-       "lifeMax": 16098976434407
-      }
-     },
-     {
-      "label": "A slate with Lich: All Skills' Levels",
-      "slot": "",
-      "costFE": 100,
-      "totalFE": 207,
-      "figure": {
-       "kill": 54256371616.54973,
-       "life100": 54256371616.54973,
-       "lifeMax": 16098976434407
-      }
-     },
-     {
-      "label": "A slate with Ranger: additional damage taken by enemies in Proximity",
-      "slot": "",
-      "costFE": 100,
-      "totalFE": 307,
-      "figure": {
-       "kill": 62394827359.03643,
-       "life100": 62394827359.03643,
-       "lifeMax": 16098976434407
+       "kill": 39332950697.608215,
+       "life100": 39332950697.608215,
+       "lifeMax": 1610461523817
       }
      },
      {
       "label": "Wriggling Tango (boots)",
       "slot": "",
       "costFE": 289.687,
-      "totalFE": 596.687,
+      "totalFE": 389.687,
       "figure": {
-       "kill": 88975365937.98854,
-       "life100": 88975365937.98854,
-       "lifeMax": 16098976434407
+       "kill": 61034388668.93449,
+       "life100": 61034388668.93449,
+       "lifeMax": 1610461523817
+      }
+     },
+     {
+      "label": "A slate with Ranger: additional damage taken by enemies in Proximity",
+      "slot": "",
+      "costFE": 100,
+      "totalFE": 489.687,
+      "figure": {
+       "kill": 70189546969.27113,
+       "life100": 70189546969.27113,
+       "lifeMax": 1610461523817
+      }
+     },
+     {
+      "label": "Last Words of Chaos (helmet)",
+      "slot": "",
+      "costFE": 41.786,
+      "totalFE": 531.473,
+      "figure": {
+       "kill": 73714684070.3812,
+       "life100": 73714684070.3812,
+       "lifeMax": 1610461523817
       }
      },
      {
       "label": "A slate with Shadowdancer: Armor DMG Mitigation Penetration",
       "slot": "",
       "costFE": 100,
-      "totalFE": 696.687,
+      "totalFE": 631.473,
       "figure": {
-       "kill": 99144003156.84999,
-       "life100": 99144003156.84999,
-       "lifeMax": 16098976434407
+       "kill": 82139239250.49948,
+       "life100": 82139239250.49948,
+       "lifeMax": 1610461523817
       }
      },
      {
       "label": "A slate with God of Might: Attack Skill Level",
       "slot": "",
       "costFE": 100,
-      "totalFE": 796.687,
+      "totalFE": 731.473,
       "figure": {
-       "kill": 110114812288.73659,
-       "life100": 110114812288.73659,
-       "lifeMax": 16098976434407
-      }
-     },
-     {
-      "label": "Last Words of Chaos (helmet)",
-      "slot": "",
-      "costFE": 47.525,
-      "totalFE": 844.212,
-      "figure": {
-       "kill": 115642807663.82837,
-       "life100": 115642807663.82837,
-       "lifeMax": 16098976434407
+       "kill": 91232902468.46376,
+       "life100": 91232902468.46376,
+       "lifeMax": 1610461523817
       }
      },
      {
       "label": "A slate with Elementalist: Fire Skill Level",
       "slot": "",
       "costFE": 100,
-      "totalFE": 944.212,
+      "totalFE": 831.473,
       "figure": {
-       "kill": 127341122982.77574,
-       "life100": 127341122982.77574,
-       "lifeMax": 16098976434407
+       "kill": 100462705690.10858,
+       "life100": 100462705690.10858,
+       "lifeMax": 1610461523817
       }
      },
      {
       "label": "A slate with Onslaughter: additional Base Damage for Two-Handed Weapons",
       "slot": "",
       "costFE": 100,
-      "totalFE": 1044.212,
+      "totalFE": 931.473,
       "figure": {
-       "kill": 138425587549.25635,
-       "life100": 138425587549.25635,
-       "lifeMax": 16098976434407
+       "kill": 109216159509.46544,
+       "life100": 109216159509.46544,
+       "lifeMax": 1610461523817
       }
      },
      {
       "label": "A slate with Warlock: additional damage against Cursed enemies",
       "slot": "",
       "costFE": 100,
-      "totalFE": 1144.212,
+      "totalFE": 1031.473,
       "figure": {
-       "kill": 149499634511.97952,
-       "life100": 149499634511.97952,
-       "lifeMax": 16098976434407
+       "kill": 117953452328.67673,
+       "life100": 117953452328.67673,
+       "lifeMax": 1610461523817
       }
      },
      {
-      "label": "A talent prism like the example build (Onslaughter crit and two-handed mirrors)",
+      "label": "A talent prism like the example build (Onslaughter crit and two-handed mirrors) (priced at the 555 FE you found)",
       "slot": "",
       "costFE": 555,
-      "totalFE": 1699.212,
+      "totalFE": 1586.473,
       "figure": {
-       "kill": 225324407035.43414,
-       "life100": 225324407035.43414,
-       "lifeMax": 16098976434407
+       "kill": 177791098541.19293,
+       "life100": 177791098541.19293,
+       "lifeMax": 1610461523817
       }
      },
      {
       "label": "A slate with Shadowmaster: Gains Profane when inflicting Wilt or Deterioration",
       "slot": "",
       "costFE": 100,
-      "totalFE": 1799.212,
+      "totalFE": 1686.473,
       "figure": {
-       "kill": 241097115554.8045,
-       "life100": 241097115554.8045,
-       "lifeMax": 16098976434407
+       "kill": 190236475407.67157,
+       "life100": 190236475407.67157,
+       "lifeMax": 1610461523817
       }
      },
      {
       "label": "A slate with Shadowmaster: additional Deterioration Damage",
       "slot": "",
       "costFE": 100,
-      "totalFE": 1899.212,
+      "totalFE": 1786.473,
       "figure": {
-       "kill": 351341239385.8964,
-       "life100": 351341239385.8964,
-       "lifeMax": 16098976434407
-      }
-     },
-     {
-      "label": "A slate with Onslaughter: Strength",
-      "slot": "",
-      "costFE": 100,
-      "totalFE": 1999.212,
-      "figure": {
-       "kill": 374303153335.76514,
-       "life100": 374303153335.76514,
-       "lifeMax": 16098976434407
-      }
-     },
-     {
-      "label": "A slate with Goddess of Deception: additional damage applied to Life",
-      "slot": "",
-      "costFE": 100,
-      "totalFE": 2099.212,
-      "figure": {
-       "kill": 398068432912.67896,
-       "life100": 398068432912.67896,
-       "lifeMax": 16098976434407
-      }
-     },
-     {
-      "label": "A slate with Ranger: Critical Strike Damage per Fervor Rating",
-      "slot": "",
-      "costFE": 100,
-      "totalFE": 2199.212,
-      "figure": {
-       "kill": 422638349647.2452,
-       "life100": 422638349647.2452,
-       "lifeMax": 16098976434407
-      }
-     },
-     {
-      "label": "A slate with Assassin: additional Max Damage",
-      "slot": "",
-      "costFE": 100,
-      "totalFE": 2299.212,
-      "figure": {
-       "kill": 448243647515.2059,
-       "life100": 448243647515.2059,
-       "lifeMax": 16098976434407
-      }
-     },
-     {
-      "label": "A slate with Steel Vanguard: additional damage applied to Life",
-      "slot": "",
-      "costFE": 100,
-      "totalFE": 2399.212,
-      "figure": {
-       "kill": 475004462292.22656,
-       "life100": 475004462292.22656,
-       "lifeMax": 16098976434407
-      }
-     },
-     {
-      "label": "A slate with Shadowmaster: Deterioration Damage",
-      "slot": "",
-      "costFE": 100,
-      "totalFE": 2499.212,
-      "figure": {
-       "kill": 500484296009.0563,
-       "life100": 500484296009.0563,
-       "lifeMax": 16098976434407
-      }
-     },
-     {
-      "label": "A slate with Marksman: Projectile Damage against enemies in proximity",
-      "slot": "",
-      "costFE": 100,
-      "totalFE": 2599.212,
-      "figure": {
-       "kill": 524193191435.377,
-       "life100": 524193191435.377,
-       "lifeMax": 16098976434407
-      }
-     },
-     {
-      "label": "A slate with Elementalist: damage while standing still",
-      "slot": "",
-      "costFE": 100,
-      "totalFE": 2699.212,
-      "figure": {
-       "kill": 547902086671.47577,
-       "life100": 547902086671.47577,
-       "lifeMax": 16098976434407
-      }
-     },
-     {
-      "label": "A slate with Ranger: the increase/decrease on Knockback distance is also applied to damage bonuses, up to damage",
-      "slot": "",
-      "costFE": 100,
-      "totalFE": 2799.212,
-      "figure": {
-       "kill": 570662626197.281,
-       "life100": 570662626197.281,
-       "lifeMax": 16098976434407
-      }
-     },
-     {
-      "label": "A slate with God of Might: Strength",
-      "slot": "",
-      "costFE": 100,
-      "totalFE": 2899.212,
-      "figure": {
-       "kill": 589583847046.4675,
-       "life100": 589583847046.4675,
-       "lifeMax": 16098976434407
-      }
-     },
-     {
-      "label": "Death's Touch (gloves)",
-      "slot": "",
-      "costFE": 1995.469,
-      "totalFE": 4894.6810000000005,
-      "figure": {
-       "kill": 875066557710.3688,
-       "life100": 875066557710.3688,
-       "lifeMax": 16098976434407
-      }
-     },
-     {
-      "label": "A slate with Ranger: chance to Mark the enemy on Critical Strike",
-      "slot": "",
-      "costFE": 100,
-      "totalFE": 4994.6810000000005,
-      "figure": {
-       "kill": 886665074663.2032,
-       "life100": 886665074663.2032,
-       "lifeMax": 16098976434407
+       "kill": 277224050948.65094,
+       "life100": 277224050948.65094,
+       "lifeMax": 1610461523817
       }
      }
     ]
@@ -1930,7 +1765,7 @@
       "col": 5,
       "kind": 1,
       "max": 3,
-      "pts": 1,
+      "pts": 2,
       "name": "Area Damage",
       "prereq": []
      },
@@ -1952,7 +1787,7 @@
       "col": 2,
       "kind": 1,
       "max": 3,
-      "pts": 1,
+      "pts": 0,
       "name": "Attack Damage",
       "prereq": []
      },
@@ -3372,7 +3207,7 @@
    "54070100": 1,
    "54070500": 1
   },
-  "title": "Your talent page: 5 point changes (Paralysis and Sealed Mana Compensation kept)",
+  "title": "Your talent page: 4 point changes (Paralysis and Sealed Mana Compensation kept)",
   "note": "Green: points to add, red: points to take out."
  }
 }
