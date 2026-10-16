@@ -10,7 +10,7 @@ import { pinRoot } from '../src/pin';
 import { applyInOrder, figureDefaultFirst, FIRST_ROLL_BUDGET, withAsked } from '../src/engine/apply';
 import { type Knobs, overBudget, rankable } from '../src/search';
 import { writeAtomic } from '../src/atomic';
-import { createEvaluator, DEFAULT_FIGHT, DEFAULT_TARGET, INFO, type Fight, WorkerDied, type Job, type JobResult, type WorkerLike } from '../src/engine/pool';
+import { createEvaluator, DEFAULT_FIGHT, DEFAULT_TARGET, INFO, type Fight, WorkerDied, type Job, type JobResult, type WorkerLike, RESOURCE1_KEY } from '../src/engine/pool';
 import type { Change } from '../src/types';
 import { realSkip } from './real';
 
@@ -166,7 +166,7 @@ describe('evaluator (stub workers)', () => {
     const [d, five, again] = [await mk(), await mk({ bombs: 5 }), await mk({ bombs: 5 })];
     await d.run(lo, [], ctx); await five.run(lo, [], ctx); await again.run(lo, [], ctx);
     expect(s.jobs.map(j => j.fight)).toEqual([DEFAULT_FIGHT, { bombs: 5 }]);
-    expect(d.fight).toEqual({ bombs: 10, inputs: { 'castLogSum id=10000000 window=4s tags=[[],[],[],[]]': 0 } });
+    expect(d.fight).toEqual({ bombs: 10, inputs: { 'castLogSum id=10000000 window=4s tags=[[],[],[],[]]': 0, [RESOURCE1_KEY]: 50 } });   // Fighting Will stated (Opening Heart, OH1)
     expect(d.fightNote).toBe('training dummy stands still (dps-debug STILL / e2e1-lib.ts)');
     // same bombs, different named input: its own entry too
     await (await mk({ bombs: 5, inputs: { x: 1 } })).run(lo, [], ctx);
