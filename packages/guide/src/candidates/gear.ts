@@ -307,6 +307,11 @@ export const gearMoves: Generator = (s: State, ctx: GenCtx): Move[] => {
  *  it or not (the owner, 2026-10-16: "Random, but you can keep or replace"). Every outcome on a rare you wear, with its chance per craft: kept, it goes on its
  *  side (added while the side has room, else in place of that side's lowest-tier mod). An affix family the item already has is not an outcome. */
 export interface RollOutcome { p: number; label: string; changes: Change[] }
+const ADVANCED_MAX = 2;
+let grades: Map<number, { grade: string; text: string }> | undefined;
+const gradeIndex = () => grades ??= new Map(library.flatMap(a => a.tiers.map(t => [Number(t.tierAffixId), { grade: a.grade, text: `${t.tier} ${topRoll(t.text).replace(/\n/g, ' / ')}` }] as const)));
+const gradeOf = (id: number) => gradeIndex().get(id)?.grade;
+const gradeTextOf = (id: number) => gradeIndex().get(id)?.text ?? `mod ${id}`;
 export interface RollPlan { slot: string; ember: string; perCraft: number; outcomes: RollOutcome[] }
 export function rollPlans(s: State, ctx: GenCtx): RollPlan[] {
   const out: RollPlan[] = [];
@@ -326,12 +331,16 @@ export function rollPlans(s: State, ctx: GenCtx): RollPlan[] {
         const tiers = a.tiers.filter(t => t.requiredLevel <= dump.level), tw = tiers.reduce((t, x) => t + x.weight, 0);
         if (!tw) continue;
         const side = a.side.toLowerCase(), list = dump.modifiers[side] ?? [];
-        const victim = list.length >= SIDE_MAX ? [...list].sort((x, y) => (y.id % 100) - (x.id % 100))[0] : undefined;   // the lowest tier: the highest tier digit
+        // at most 2 advanced affixes on an item (the owner, 2026-10-16): with 2 on it, an advanced roll can only go in place of one of them, on its side
+        const full = grade === 'Advanced' && Object.values(dump.modifiers).flat().filter(m => gradeOf(m.id) === 'Advanced').length >= ADVANCED_MAX;
+        const pick = full ? list.filter(m => gradeOf(m.id) === 'Advanced') : list.length >= SIDE_MAX ? list : [];
+        if (full && !pick.length) continue;
+        const victim = pick.length ? [...pick].sort((x, y) => (y.id % 100) - (x.id % 100))[0] : undefined;   // the lowest tier: the highest tier digit
         for (const t of tiers) {
           const id = Number(t.tierAffixId), dyn = mids(id);
           if (UNVERIFIED.has(t.tierAffixId) || !dyn || (have.has(Math.floor(id / 100)) && Math.floor((victim?.id ?? -1) / 100) !== Math.floor(id / 100))) continue;
           const next = victim ? list.map(m => (m === victim ? { id, dynArgs: dyn } : m)) : [...list, { id, dynArgs: dyn }];
-          outcomes.push({ p: (a.weight / gw) * (t.weight / tw), label: `${t.tier} ${topRoll(t.text).replace(/\n/g, ' / ')} (${side})${victim ? ' replacing your lowest-tier ' + side : ''}`,
+          outcomes.push({ p: (a.weight / gw) * (t.weight / tw), label: `${t.tier} ${topRoll(t.text).replace(/\n/g, ' / ')} (${side})${victim ? ` in place of your ${gradeTextOf(victim.id)}` : ''}`,
             changes: swap(slot, withMods(dump, { [side]: next }, `guide-roll-${slot}-${id}`)) });
         }
       }
