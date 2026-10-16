@@ -101,6 +101,7 @@ describe('evaluator (stub workers)', () => {
     const notes = ['not in this figure: node 2320 (comp 0x82 / 0x91, triggers a skill (execute FUN_141a9df70, c9b_nodes.c 4093-4466)) - affix class 909512640 row 1',
       "not in this figure: node 626 ([inf] the owner's comp 0x12 buffs: a value from buff +0xc8 / +0x68)"];
     const kept = ['not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100)'];
+    notes.push('not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 (execute FUN_141af4140)) - affix class 411268 row 1 (buff 390 class 411268)');
     const ev = await createEvaluator({ factory: stub(() => ({ life100: 200, life0: 100, left: [], needs: [...notes, ...kept] })).factory, workers: 1, pin: 'p' });
     expect((await ev.run(lo, [], ctx)).figure.partial).toEqual(kept);
   });

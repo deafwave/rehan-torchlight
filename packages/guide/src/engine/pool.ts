@@ -17,6 +17,9 @@ export const INFO: (string | RegExp)[] = ['price:', /^held buff \d+ \(.*\) not c
   // nodes that move no figure: the no-op execute 0x1407d0580 (`mov al, 1; ret`), a node inert in the client (Q1), a cull (node 1003: CULL1 counts it in the cull)
   // node 2320 here is the Corona ring's trigger (its enemy buff 35110 is priced, its owner buff 35109 empty); node 626 only sets a buff's duration (NATIVE: no record)
   /^not in this figure: node 2320 \(comp 0x82 \/ 0x91, triggers a skill/, /^not in this figure: node 626 \(/,
+  // Fervor's per-hit gain (class 411268, buff 390): no figure moves while the rating is fixed (the target belt's 67; every capture kept its fixed value) - a build with
+  // Fervor and no fixed rating would be a real gap (the coordinator, 2026-10-16)
+  /^not in this figure: node 627 \(.* - affix class 411268 row \d+ \(buff 390 class 411268\)/,
   /^not in this figure: node \d+ \(execute 0x1407d0580/, /^not in this figure: node \d+ \(Q1: inert in the client/, /^not in this figure: node 1003 \(a hit that kills the target/, /^the target's buff \(IN1\): .* stated at \d+ of its mix of states \(U2-MIX/,
   /^the target's buff \(IN1\): .* stated at \d+ \(POL1/];
 
