@@ -18,6 +18,7 @@ import { ctxOfState, pieceKey, DEFAULT_KNOBS, type Knobs, newMem, overBudget, pa
 import { ICE_SHOT_INPUTS, idealStartNotes } from './start';
 import { setTalentPoints } from './talentRules';
 import { talentName } from './names';
+import { buildSheet } from './sheet';
 import type { Evaluator, Figure, GenCtx, Generator, GuideOut, Leg, Move, NextBuy, PriceBook, Skill, State, Step } from './types';
 
 export const SEASON = 1501;
@@ -106,6 +107,7 @@ async function ideal(ev: Evaluator, K: IdealKnobs, prices: PriceBook | Record<Sk
   const targets = K.targets ?? BOSS_ORDER, moveOn = K.moveOnSeconds ?? 10;
   let ti = 0;
   const legs: Leg[] = [{ skill: s.skill, target: null, firstStep: 0, start: first.figure }];
+  const endLeg = (end: string) => { legs[legs.length - 1].end = end; legs[legs.length - 1].build = buildSheet(s.loadout); };
   /** while the current boss dies within moveOn seconds its leg ends and the next boss's begins (the last boss stays: its goal is the lock); false = the
    *  next boss's figure stopped */
   const advance = async (): Promise<boolean> => {
@@ -113,7 +115,7 @@ async function ideal(ev: Evaluator, K: IdealKnobs, prices: PriceBook | Record<Sk
       const from = targets[ti], t = killTime(f);
       ti++; s = { ...s, target: targets[ti] };
       const g = (await ev.run(s.loadout, [], ctxOfState(s))).figure;
-      legs[legs.length - 1].end = `${bossName(from)} dies in ${secs(t)} (under ${moveOn} s): move on to ${bossName(targets[ti])}`;
+      endLeg(`${bossName(from)} dies in ${secs(t)} (under ${moveOn} s): move on to ${bossName(targets[ti])}`);
       notes.push(`L${s.level}: ${legs[legs.length - 1].end}`);
       legs.push({ skill: 'hoa', target: targets[ti], firstStep: steps.length, start: g });
       f = g; mem.scores.clear(); mem.since = 0;
@@ -137,7 +139,7 @@ async function ideal(ev: Evaluator, K: IdealKnobs, prices: PriceBook | Record<Sk
     const sp = await spendFree(r.state, ev, talentPointMoves, ctx, K, r.figure, mem);
     mem.cumFE += m.costFE!;
     const why = f.kill >= K.switchAt ? `the Ice Shot leg reached ${f.kill.toExponential(2)} (switchAt ${K.switchAt.toExponential(0)})` : `the Ice Shot leg stalled (no step in the last ${STALL_STAGES} stages)`;
-    legs[legs.length - 1].end = `${why}: switch to Hammer of Ash`;
+    endLeg(`${why}: switch to Hammer of Ash`);
     legs.push({ skill: 'hoa', target: targets[0], firstStep: steps.length, start: sp.figure });
     steps.push({ level, move: m, triggered: [...r.taken, ...sp.taken], before: f, after: sp.figure, cumFE: mem.cumFE,
       notes: [`planned switch: ${why}${sp.figure.target ? `; from here figures are against ${bossName(sp.figure.target)}, not the Ice Shot leg's training dummy` : ''}`, ...switchNote(f, sp.figure), ...(level < 93 ? ['talent points assumed'] : [])] });
@@ -177,7 +179,7 @@ async function ideal(ev: Evaluator, K: IdealKnobs, prices: PriceBook | Record<Sk
     for (let n = 0; n < (last && s.skill === 'hoa' ? Math.max(K.stepsPerStage, K.finalSteps) : K.stepsPerStage); n++) {
       if (overBudget(K, t0, ev)) { stopped = true; break; }
       if (s.skill === 'hoa' && ti === targets.length - 1 && lockBound(f)) {
-        legs[legs.length - 1].end = `goal reached: ${bossName(targets[ti])} is lock-bound (more damage no longer kills it faster; ${secs(killTime(f))} to kill)`;
+        endLeg(`goal reached: ${bossName(targets[ti])} is lock-bound (more damage no longer kills it faster; ${secs(killTime(f))} to kill)`);
         notes.push(`L${level}: ${legs[legs.length - 1].end}`); goal = true;
         break;
       }
@@ -214,12 +216,12 @@ async function ideal(ev: Evaluator, K: IdealKnobs, prices: PriceBook | Record<Sk
     const count = new Map<string, number>();
     for (const r of [...mem.notCalculable].slice(stageReasons)) { const k = pieceKey(/: (?:dropped|stopped:) (.*)$/.exec(r)?.[1] ?? r).slice(0, 140); count.set(k, (count.get(k) ?? 0) + 1); }
     const top = [...count].sort((a, b) => b[1] - a[1])[0]?.[0];
-    legs[legs.length - 1].end = `the plan ends here at L${lastLevel}: no upgrade the model can price fully raises the kill speed${top ? ` (most often: ${top})` : ''}`;
+    endLeg(`the plan ends here at L${lastLevel}: no upgrade the model can price fully raises the kill speed${top ? ` (most often: ${top})` : ''}`);
   }
   // the bosses after the one the plan ended on: a tab each, the plan's last build priced on it
   if (s.skill === 'hoa' && !halted) for (let j = ti + 1; j < targets.length; j++) {
     const g = (await ev.run(s.loadout, [], ctxOfState({ ...s, target: targets[j] }))).figure;
-    legs.push({ skill: 'hoa', target: targets[j], firstStep: steps.length, start: g, reached: false,
+    legs.push({ skill: 'hoa', target: targets[j], firstStep: steps.length, start: g, reached: false, build: buildSheet(s.loadout),
       end: `not reached: the ${stopped ? 'run stopped' : 'plan ends'} on ${bossName(targets[ti])}; ${g.stop ? `the last build cannot be priced on ${bossName(targets[j])}: ${g.stop}` : `with its last build ${bossName(targets[j])} dies in ${secs(killTime(g))}`}` });
   }
   return snap(stopped ? { stoppedBy: 'budget' } : {});

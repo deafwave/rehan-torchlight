@@ -9,7 +9,7 @@ export interface GuideOut {
   character?: Character; next?: NextBuy[]; prices?: Record<string, number | null>; legs?: Leg[];
 }
 /** one tab: a skill against one yardstick (target null = the training dummy), from step `firstStep` on; `end` = why it ended */
-export interface Leg { skill: string; target: string | null; firstStep: number; end?: string; start: Figure; reached?: false }
+export interface Leg { skill: string; target: string | null; firstStep: number; end?: string; start: Figure; reached?: false; build?: { section: string; lines: string[] }[] }
 /** advise: one upgrade at the start with its exact figure; `buy` = what is bought and how many (cost = qty x its price) */
 export interface NextBuy { label: string; kind: string; gain: number; kill: number; costFE: number | null; market?: string; buy?: { name: string; qty: number }; partial?: string[] }
 
@@ -191,12 +191,13 @@ export function renderNext(next: NextBuy[], etor: Record<string, number | null>,
 // ---- one tab per leg: each leg is one yardstick (Ice Shot on the training dummy, then Hammer of Ash boss by boss), so no chart mixes two
 const legName = (l: Leg) => (l.skill === 'iceShot' ? 'Ice Shot' : l.target ? bossName(l.target) : SKILL[l.skill] ?? l.skill) + (l.reached === false ? ' · not reached' : '');
 const yardstick = (l: Leg) => (l.target ? `on ${bossName(l.target)}` : 'on the training dummy');
+const buildOf = (l: Leg) => (l.build?.length ? `<details class="gl-build" open><summary>The build at the end of this leg</summary>${l.build.map((b) => `<h4>${esc(b.section)}</h4><ul>${b.lines.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>`).join('')}</details>` : '');
 function legPanel(g: GuideOut, l: Leg, i: number): string {
   if (l.reached === false) {   // a boss the plan did not reach: the plan's last build there
     const t = killTime(l.start);
     return `<section class="gl-leg" data-leg="${i}"><div class="leg-head"><b>${esc(SKILL[l.skill] ?? l.skill)} ${esc(yardstick(l))}: not reached yet</b>`
       + `<div class="goal-stats"><div><span class="k">kill speed (last build)</span><span class="v">${fmtDps(l.start.kill)}</span></div>`
-      + (t ? `<div><span class="k">time to kill</span><span class="v">${t}</span></div>` : '') + '</div></div>'
+      + (t ? `<div><span class="k">time to kill</span><span class="v">${t}</span></div>` : '') + '</div></div>' + buildOf(l)
       + (l.end ? `<p class="leg-end">→ ${esc(human(l.end))}</p>` : '') + '</section>';
   }
   const legs = g.legs!, to = legs[i + 1]?.firstStep ?? g.steps.length, es = entries(g.steps.slice(l.firstStep, to), l.firstStep);
@@ -206,6 +207,7 @@ function legPanel(g: GuideOut, l: Leg, i: number): string {
     + `<div class="goal-stats"><div><span class="k">kill speed</span><span class="v">${fmtDps(l.start.kill)} → ${fmtDps(end.kill)}</span></div>`
     + (t0 || t1 ? `<div><span class="k">time to kill</span><span class="v">${t0 || '—'} → ${t1 || '—'}</span></div>` : '')
     + `<div><span class="k">upgrades</span><span class="v">${own.length}</span></div><div><span class="k">FE spent</span><span class="v">${fmtFE(fe)}</span></div></div></div>`
+    + buildOf(l)
     + chart(l.start, es.filter((e) => e.s.move.kind !== 'switch'), fe0) + stages(es, g.mode)
     + (l.end ? `<p class="leg-end">→ ${esc(human(l.end))}</p>` : i === legs.length - 1 && g.knobs?.partialRun ? `<p class="leg-end">… still computing: ${own.length} upgrade${own.length === 1 ? '' : 's'} so far on ${esc(l.target ? bossName(l.target) : 'this leg')}</p>` : '') + '</section>';
 }
@@ -290,6 +292,7 @@ export function parseAdvice(text: string): GuideOut {
       if (!Number.isInteger(l.firstStep) || l.firstStep < 0 || l.firstStep > j.steps.length) throw bad(`${p}.firstStep`, l.firstStep);
       if (l.end !== undefined && typeof l.end !== 'string') throw bad(`${p}.end`, l.end);
       if (l.reached !== undefined && l.reached !== false) throw bad(`${p}.reached`, l.reached);
+      if (l.build !== undefined && !(Array.isArray(l.build) && l.build.every((b: { section?: unknown; lines?: unknown }) => typeof b?.section === 'string' && Array.isArray(b.lines) && (b.lines as unknown[]).every((x) => typeof x === 'string')))) throw bad(`${p}.build`, l.build);
       checkFigure(l.start, `${p}.start`);
     });
   }

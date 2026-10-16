@@ -6764,7 +6764,65 @@
     ],
     "lock": 15000000000000
    },
-   "end": "the Ice Shot leg reached 2.17e+8 (switchAt 2e+8): switch to Hammer of Ash"
+   "end": "the Ice Shot leg reached 2.17e+8 (switchAt 2e+8): switch to Hammer of Ash",
+   "build": [
+    {
+     "section": "Gear",
+     "lines": [
+      "belt: Witchdoctor's Herb Bag",
+      "boots: Awaiting",
+      "chest: Trinity",
+      "gloves: Providential Grace",
+      "helmet: Hekate's Vision",
+      "mainHand: Bow of Endless Dusk",
+      "necklace: Vortex Heart",
+      "ring2: Frozen Lightning",
+      "ring1: Kaleidoscope"
+     ]
+    },
+    {
+     "section": "Skills",
+     "lines": [
+      "active 0: Ice Shot (level 19)",
+      "  + Elemental Fusion (level 19)",
+      "  + Cold Penetration (level 19)",
+      "  + Wind Projectiles (level 19)",
+      "  + Critical Strike Damage Increase (level 19)",
+      "  + Slow Projectile (level 19)",
+      "active 1: Blink (level 19)",
+      "  + Magic Dash (level 19)",
+      "  + Quick Mobility (level 19)",
+      "active 2: Timid (level 19)",
+      "  + Activation Medium: Demolisher (level 20)",
+      "  + Extended Duration (level 19)",
+      "active 3: Bull's Rage (level 19)",
+      "  + Activation Medium: Demolisher (level 20)",
+      "active 4: Flame Core (level 19)",
+      "  + Activation Medium: Motionless (level 20)",
+      "passive 0: Precise: Precise Projectiles (level 19)",
+      "passive 1: Precise: Cruelty (level 19)"
+     ]
+    },
+    {
+     "section": "Talents (93 points)",
+     "lines": [
+      "core: Steady Accumulation",
+      "Goddess of Hunting: damage x3, Attack and Cast Speed x3, damage x3, Max Life x3, Movement Speed x1, Attack and Cast Speed x3, Dexterity x3, Attack and Cast Speed x2, Dexterity x3",
+      "Marksman: Projectile Damage x3, Max Life x3, Evasion x3, Projectile Damage x3, Attack and Cast Speed x3, Attack and Cast Speed x2, Projectile Critical Strike Rating x1, Dexterity x3, +12% Projectile Damage x2",
+      "Prophet: Cold Damage x3, Max Life x3, Cold Damage x3, Cold Damage x3, Attack and Cast Speed x3, Max Life x2, Cold Damage x3, Cold Penetration x3",
+      "Ranger: Critical Strike Rating x3, Max Life x3, damage x3, Critical Strike Rating x3, Critical Strike Damage x3, Max Life x2, damage dealt to Nearby enemies x3, Critical Strike Damage x3"
+     ]
+    },
+    {
+     "section": "Hero memories, pacts",
+     "lines": [
+      "memory 1: Memory of Origin",
+      "memory 2: Memory of Discipline",
+      "memory 3: Memory of Progress",
+      "memory 3: awaken"
+     ]
+    }
+   ]
   },
   {
    "skill": "hoa",
@@ -6797,7 +6855,71 @@
     "target": "cube1",
     "lifeMax": 31633200895
    },
-   "end": "Cube 1 dies in 9.55 s (under 10 s): move on to Keegan 2"
+   "end": "Cube 1 dies in 9.55 s (under 10 s): move on to Keegan 2",
+   "build": [
+    {
+     "section": "Gear",
+     "lines": [
+      "belt: Witchdoctor's Herb Bag",
+      "boots: Awaiting",
+      "chest: Ruinous Star",
+      "gloves: Providential Grace",
+      "helmet: Hekate's Vision",
+      "mainHand: Forger's Maul",
+      "necklace: Vortex Heart",
+      "ring2: Frozen Lightning",
+      "ring1: Kaleidoscope"
+     ]
+    },
+    {
+     "section": "Skills",
+     "lines": [
+      "active 0: Hammer of Ash (level 19)",
+      "  + Slow Projectile (level 19)",
+      "  + Critical Strike Damage Increase (level 19)",
+      "  + Hammer of Ash: Upheaval (Magnificent) (level 2)",
+      "  + Passivation (level 19)",
+      "  + Steamroll (level 19)",
+      "active 1: Blink (level 19)",
+      "  + Magic Dash (level 19)",
+      "  + Quick Mobility (level 19)",
+      "active 2: Timid (level 19)",
+      "  + Activation Medium: Demolisher (level 20)",
+      "  + Extended Duration (level 19)",
+      "active 3: Bull's Rage (level 19)",
+      "  + Activation Medium: Demolisher (level 20)",
+      "active 4: Flame Core (level 19)",
+      "  + Activation Medium: Motionless (level 20)",
+      "passive 0: Precise: Precise Projectiles (level 19)",
+      "passive 1: Precise: Cruelty (level 19)"
+     ]
+    },
+    {
+     "section": "Talents (99 points)",
+     "lines": [
+      "core: Well Matched",
+      "core: Dirt",
+      "core: Off The Beaten Track",
+      "core: Mixture",
+      "core: Forbidden Power",
+      "Onslaughter: Attack Damage x3, Attack Critical Strike Rating x1, Attack Critical Strike Rating x2, Area Damage x3, additional Base Damage for Two-Handed Weapons x3, Attack Critical Strike Rating when holding a Two-Handed Weapon x3, Strength x3, Skill Area if Main Skill is not used in the last 2 s x1, additional Base Damage for Two-Handed Weapons x1, inflicted Paralysis Effect when holding a Two-Handed Weapon x1, Strength x1",
+      "Goddess of Deception: damage x3, Movement Speed x3, damage x2, Movement Speed x3, Critical Strike Rating x3, Critical Strike Rating x3, Deterioration Chance x3, Erosion Damage x3, additional damage applied to Life x1",
+      "Shadowmaster: Erosion Damage x3, Deterioration Chance x3, Critical Strike Rating x3, Deterioration Damage x3, Critical Strike Rating x4, Erosion Damage x3, chance to inflict additional stack(s) of Wilt x3, Deterioration Chance x4",
+      "Lich: damage x3, damage x3, Critical Strike Rating x3, Critical Strike Rating x3, damage x3, Sealed Mana Compensation x3, Attack and Cast Speed x3, Cooldown Recovery Speed x3, Sealed Mana Compensation x3"
+     ]
+    },
+    {
+     "section": "Hero memories, pacts",
+     "lines": [
+      "memory 1: Memory of Origin",
+      "memory 2: Memory of Discipline",
+      "memory 3: Memory of Progress",
+      "memory 3: awaken",
+      "pact: undefined rank 5",
+      "pact: undefined rank 5"
+     ]
+    }
+   ]
   },
   {
    "skill": "hoa",
@@ -6832,7 +6954,72 @@
     "target": "keegan2",
     "lifeMax": 14316522035309
    },
-   "end": "the plan ends here at L90: no upgrade the model can price fully raises the kill speed"
+   "end": "the plan ends here at L90: no upgrade the model can price fully raises the kill speed",
+   "build": [
+    {
+     "section": "Gear",
+     "lines": [
+      "belt: Witchdoctor's Herb Bag",
+      "boots: Old King's Sabatons",
+      "chest: Ruinous Star",
+      "gloves: Providential Grace",
+      "helmet: Ranger's Broken Mask",
+      "mainHand: Sierra Reverberation Maul - T1 +(49-80)% Gear Physical Damage (prefix); T1 +(77-110)% Gear Physical Damage / Adds (53-55) - (65-67) Physical Damage to the gear (prefix); T1 +6 to Attack Skill Level (prefix); T7 +22% additional Attack Damage after standing still for 0.1s. (-8--7)% additional Attack Speed (suffix); T1 +(127-180)% Critical Strike Damage (suffix); T1 +(152-216)% Erosion Damage (suffix)",
+      "necklace: Vortex Heart",
+      "ring2: Frozen Lightning",
+      "ring1: Agony Darkness Ring"
+     ]
+    },
+    {
+     "section": "Skills",
+     "lines": [
+      "active 0: Hammer of Ash (level 20)",
+      "  + Slow Projectile (level 20)",
+      "  + Critical Strike Damage Increase (level 20)",
+      "  + Hammer of Ash: Upheaval (Magnificent) (level 20)",
+      "  + Passivation (level 20)",
+      "  + Steamroll (level 20)",
+      "active 1: Blink (level 20)",
+      "  + Magic Dash (level 20)",
+      "  + Quick Mobility (level 20)",
+      "active 2: Timid (level 20)",
+      "  + Activation Medium: Demolisher (level 20)",
+      "  + Extended Duration (level 20)",
+      "active 3: Bull's Rage (level 20)",
+      "  + Activation Medium: Demolisher (level 20)",
+      "active 4: Flame Core (level 20)",
+      "  + Activation Medium: Motionless (level 20)",
+      "passive 0: Precise: Precise Projectiles (level 20)",
+      "passive 1: Precise: Cruelty (level 20)"
+     ]
+    },
+    {
+     "section": "Talents (103 points)",
+     "lines": [
+      "core: Well Matched",
+      "core: Dirt",
+      "core: Off The Beaten Track",
+      "core: Mixture",
+      "core: Forbidden Power",
+      "Onslaughter: Attack Damage x3, Attack Critical Strike Rating x1, Attack Critical Strike Rating x2, Area Damage x3, additional Base Damage for Two-Handed Weapons x3, Attack Critical Strike Rating when holding a Two-Handed Weapon x3, Strength x3, Skill Area if Main Skill is not used in the last 2 s x1, additional Base Damage for Two-Handed Weapons x1, inflicted Paralysis Effect when holding a Two-Handed Weapon x1, Strength x1",
+      "Goddess of Deception: damage x3, Movement Speed x3, damage x2, Movement Speed x3, Critical Strike Rating x3, Critical Strike Rating x3, Deterioration Chance x3, Erosion Damage x3, additional damage applied to Life x1",
+      "Shadowmaster: Erosion Damage x3, Deterioration Chance x3, Critical Strike Rating x3, Deterioration Damage x3, Critical Strike Rating x4, Erosion Damage x3, chance to inflict additional stack(s) of Wilt x3, Deterioration Chance x4, additional Deterioration Damage x1",
+      "Lich: damage x3, damage x3, Critical Strike Rating x3, Critical Strike Rating x3, damage x3, Sealed Mana Compensation x3, Attack and Cast Speed x3, Cooldown Recovery Speed x3, Sealed Mana Compensation x3, All Skills' Levels x1, Cooldown Recovery Speed x1, Sealed Mana Compensation x1"
+     ]
+    },
+    {
+     "section": "Hero memories, pacts",
+     "lines": [
+      "memory 1: Memory of Origin",
+      "memory 2: Memory of Discipline",
+      "memory 3: Memory of Progress",
+      "memory 4: awaken",
+      "pact: undefined rank 5",
+      "pact: undefined rank 5",
+      "pact: undefined rank 4"
+     ]
+    }
+   ]
   },
   {
    "skill": "hoa",
@@ -6868,6 +7055,71 @@
     "lifeMax": 16098976434407
    },
    "reached": false,
+   "build": [
+    {
+     "section": "Gear",
+     "lines": [
+      "belt: Witchdoctor's Herb Bag",
+      "boots: Old King's Sabatons",
+      "chest: Ruinous Star",
+      "gloves: Providential Grace",
+      "helmet: Ranger's Broken Mask",
+      "mainHand: Sierra Reverberation Maul - T1 +(49-80)% Gear Physical Damage (prefix); T1 +(77-110)% Gear Physical Damage / Adds (53-55) - (65-67) Physical Damage to the gear (prefix); T1 +6 to Attack Skill Level (prefix); T7 +22% additional Attack Damage after standing still for 0.1s. (-8--7)% additional Attack Speed (suffix); T1 +(127-180)% Critical Strike Damage (suffix); T1 +(152-216)% Erosion Damage (suffix)",
+      "necklace: Vortex Heart",
+      "ring2: Frozen Lightning",
+      "ring1: Agony Darkness Ring"
+     ]
+    },
+    {
+     "section": "Skills",
+     "lines": [
+      "active 0: Hammer of Ash (level 20)",
+      "  + Slow Projectile (level 20)",
+      "  + Critical Strike Damage Increase (level 20)",
+      "  + Hammer of Ash: Upheaval (Magnificent) (level 20)",
+      "  + Passivation (level 20)",
+      "  + Steamroll (level 20)",
+      "active 1: Blink (level 20)",
+      "  + Magic Dash (level 20)",
+      "  + Quick Mobility (level 20)",
+      "active 2: Timid (level 20)",
+      "  + Activation Medium: Demolisher (level 20)",
+      "  + Extended Duration (level 20)",
+      "active 3: Bull's Rage (level 20)",
+      "  + Activation Medium: Demolisher (level 20)",
+      "active 4: Flame Core (level 20)",
+      "  + Activation Medium: Motionless (level 20)",
+      "passive 0: Precise: Precise Projectiles (level 20)",
+      "passive 1: Precise: Cruelty (level 20)"
+     ]
+    },
+    {
+     "section": "Talents (103 points)",
+     "lines": [
+      "core: Well Matched",
+      "core: Dirt",
+      "core: Off The Beaten Track",
+      "core: Mixture",
+      "core: Forbidden Power",
+      "Onslaughter: Attack Damage x3, Attack Critical Strike Rating x1, Attack Critical Strike Rating x2, Area Damage x3, additional Base Damage for Two-Handed Weapons x3, Attack Critical Strike Rating when holding a Two-Handed Weapon x3, Strength x3, Skill Area if Main Skill is not used in the last 2 s x1, additional Base Damage for Two-Handed Weapons x1, inflicted Paralysis Effect when holding a Two-Handed Weapon x1, Strength x1",
+      "Goddess of Deception: damage x3, Movement Speed x3, damage x2, Movement Speed x3, Critical Strike Rating x3, Critical Strike Rating x3, Deterioration Chance x3, Erosion Damage x3, additional damage applied to Life x1",
+      "Shadowmaster: Erosion Damage x3, Deterioration Chance x3, Critical Strike Rating x3, Deterioration Damage x3, Critical Strike Rating x4, Erosion Damage x3, chance to inflict additional stack(s) of Wilt x3, Deterioration Chance x4, additional Deterioration Damage x1",
+      "Lich: damage x3, damage x3, Critical Strike Rating x3, Critical Strike Rating x3, damage x3, Sealed Mana Compensation x3, Attack and Cast Speed x3, Cooldown Recovery Speed x3, Sealed Mana Compensation x3, All Skills' Levels x1, Cooldown Recovery Speed x1, Sealed Mana Compensation x1"
+     ]
+    },
+    {
+     "section": "Hero memories, pacts",
+     "lines": [
+      "memory 1: Memory of Origin",
+      "memory 2: Memory of Discipline",
+      "memory 3: Memory of Progress",
+      "memory 4: awaken",
+      "pact: undefined rank 5",
+      "pact: undefined rank 5",
+      "pact: undefined rank 4"
+     ]
+    }
+   ],
    "end": "not reached: the plan ends on Keegan 2; with its last build Cube 2 dies in 51.1 s"
   },
   {
@@ -6904,6 +7156,71 @@
     "lifeMax": 53469896141586
    },
    "reached": false,
+   "build": [
+    {
+     "section": "Gear",
+     "lines": [
+      "belt: Witchdoctor's Herb Bag",
+      "boots: Old King's Sabatons",
+      "chest: Ruinous Star",
+      "gloves: Providential Grace",
+      "helmet: Ranger's Broken Mask",
+      "mainHand: Sierra Reverberation Maul - T1 +(49-80)% Gear Physical Damage (prefix); T1 +(77-110)% Gear Physical Damage / Adds (53-55) - (65-67) Physical Damage to the gear (prefix); T1 +6 to Attack Skill Level (prefix); T7 +22% additional Attack Damage after standing still for 0.1s. (-8--7)% additional Attack Speed (suffix); T1 +(127-180)% Critical Strike Damage (suffix); T1 +(152-216)% Erosion Damage (suffix)",
+      "necklace: Vortex Heart",
+      "ring2: Frozen Lightning",
+      "ring1: Agony Darkness Ring"
+     ]
+    },
+    {
+     "section": "Skills",
+     "lines": [
+      "active 0: Hammer of Ash (level 20)",
+      "  + Slow Projectile (level 20)",
+      "  + Critical Strike Damage Increase (level 20)",
+      "  + Hammer of Ash: Upheaval (Magnificent) (level 20)",
+      "  + Passivation (level 20)",
+      "  + Steamroll (level 20)",
+      "active 1: Blink (level 20)",
+      "  + Magic Dash (level 20)",
+      "  + Quick Mobility (level 20)",
+      "active 2: Timid (level 20)",
+      "  + Activation Medium: Demolisher (level 20)",
+      "  + Extended Duration (level 20)",
+      "active 3: Bull's Rage (level 20)",
+      "  + Activation Medium: Demolisher (level 20)",
+      "active 4: Flame Core (level 20)",
+      "  + Activation Medium: Motionless (level 20)",
+      "passive 0: Precise: Precise Projectiles (level 20)",
+      "passive 1: Precise: Cruelty (level 20)"
+     ]
+    },
+    {
+     "section": "Talents (103 points)",
+     "lines": [
+      "core: Well Matched",
+      "core: Dirt",
+      "core: Off The Beaten Track",
+      "core: Mixture",
+      "core: Forbidden Power",
+      "Onslaughter: Attack Damage x3, Attack Critical Strike Rating x1, Attack Critical Strike Rating x2, Area Damage x3, additional Base Damage for Two-Handed Weapons x3, Attack Critical Strike Rating when holding a Two-Handed Weapon x3, Strength x3, Skill Area if Main Skill is not used in the last 2 s x1, additional Base Damage for Two-Handed Weapons x1, inflicted Paralysis Effect when holding a Two-Handed Weapon x1, Strength x1",
+      "Goddess of Deception: damage x3, Movement Speed x3, damage x2, Movement Speed x3, Critical Strike Rating x3, Critical Strike Rating x3, Deterioration Chance x3, Erosion Damage x3, additional damage applied to Life x1",
+      "Shadowmaster: Erosion Damage x3, Deterioration Chance x3, Critical Strike Rating x3, Deterioration Damage x3, Critical Strike Rating x4, Erosion Damage x3, chance to inflict additional stack(s) of Wilt x3, Deterioration Chance x4, additional Deterioration Damage x1",
+      "Lich: damage x3, damage x3, Critical Strike Rating x3, Critical Strike Rating x3, damage x3, Sealed Mana Compensation x3, Attack and Cast Speed x3, Cooldown Recovery Speed x3, Sealed Mana Compensation x3, All Skills' Levels x1, Cooldown Recovery Speed x1, Sealed Mana Compensation x1"
+     ]
+    },
+    {
+     "section": "Hero memories, pacts",
+     "lines": [
+      "memory 1: Memory of Origin",
+      "memory 2: Memory of Discipline",
+      "memory 3: Memory of Progress",
+      "memory 4: awaken",
+      "pact: undefined rank 5",
+      "pact: undefined rank 5",
+      "pact: undefined rank 4"
+     ]
+    }
+   ],
    "end": "not reached: the plan ends on Keegan 2; with its last build Cube 3 dies in 28.3 min"
   }
  ]

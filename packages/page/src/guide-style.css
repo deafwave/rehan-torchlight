@@ -751,3 +751,7 @@ a.t-branch:hover,a.t-branch:focus-visible{text-decoration:underline}
   .gl-steps>li{grid-template-columns:22px 1fr;}
   .gl-steps .cost,.gl-steps .gain{grid-column:2;text-align:left}
 }
+.gl-build { margin: .5rem 0 1rem; padding: .5rem .75rem; border: 1px solid #3a3f4b; border-radius: 6px; }
+.gl-build summary { cursor: pointer; font-weight: 600; }
+.gl-build h4 { margin: .6rem 0 .2rem; }
+.gl-build ul { margin: 0; padding-left: 1.2rem; font-size: .9em; }

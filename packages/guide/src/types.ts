@@ -94,7 +94,8 @@ export interface Step {
 }
 /** One tab of the guide: a skill against one yardstick (target null = the training dummy), from step `firstStep` on; `end` says why it ended */
 export interface Leg { skill: Skill; target: string | null; firstStep: number; end?: string; /** the figure the leg begins with, on its own yardstick */ start: Figure;
-  /** false: a boss the plan did not reach, priced with the plan's last build */ reached?: false }
+  /** false: a boss the plan did not reach, priced with the plan's last build */ reached?: false;
+  /** the build at the leg's end (sheet.ts) */ build?: import('./sheet').Sheet[] }
 export interface NextBuy { label: string; kind: MoveKind; gain: number; kill: number; costFE: number | null; market?: Move['market']; buy?: Move['buy']; partial?: string[] }
 export interface GuideOut {
   mode: 'ideal' | 'advise';
