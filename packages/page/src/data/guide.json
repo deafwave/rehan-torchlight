@@ -7797,7 +7797,8 @@
   "L65 not on the market / unpriced: Unique Endless Night - Prototype in boots: +104.5 % if you get it",
   "L70 not on the market / unpriced: Unique Endless Night - Prototype in boots: +84.4 % if you get it",
   "L75 not on the market / unpriced: Unique Endless Night - Prototype in boots: +78.2 % if you get it",
-  "123 distinct acquisitions had no price; the best 1 per stage are listed above"
+  "L90 not on the market / unpriced: Target: Sierra Reverberation Maul as the known build rolled it (T0 of +80% Gear Physical Damage; T0 of +100% additional Attack Damage after standing still for 0.1s. -20% additional Attack Speed; T0 of +180% Critical Strike Damage; T0 of +216% Erosion Damage; chip 160416011 [16]) on mainHand: +90.8 % if you get it",
+  "124 distinct acquisitions had no price; the best 1 per stage are listed above"
  ],
  "notCalculable": [
   "Craft T5 Reaps 0.03 s of Damage Over Time when inflicting Trauma. The effect has a 1 s Recovery Time against the same target (suffix) on belt: dropped not in this figure: node 631 (N2: 'Reap': for each task-filter target FUN_141e0bcd0(world service +0x1a8, the executor, the target, a hit descriptor FUN_141a4b8d0, reapTime +0x78 (f64, FUN_141980a40), tags +0x80, reapFromSelf +0x90, 0, 1.0, b38 flag +0x91 == 0, the id of the type-4 payload entry or -1) - the damage pipeline's reap of the target's damage-over-time; no attribute / char-field record ",

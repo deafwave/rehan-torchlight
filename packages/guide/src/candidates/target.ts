@@ -147,6 +147,15 @@ export const targetMoves: Generator = (s, ctx) => {
           changes: [gear(`guide-target-base-${baseId}`, mods)] }), it.label);
         continue;
       }
+      // the known item's mods the library cannot make at their own tier (a tier 0, a chip): the item as rolled, unpriced - listed with its gain, never ranked
+      const beyond = it.affixes.filter(a => !attrs.has(a.id) && !implicit(a.id) && !craftStep(baseId, a.id, ctx));
+      if (beyond.length) out.push(mk({ kind: 'gear', label: `Target: ${it.label} as the known build rolled it (${beyond.map(a => { const g = craftGroupStep(baseId, Math.floor(a.id / 100), ctx);
+        return g ? `T0 of ${g.text.replace(/\(([-\d.]+)-([-\d.]+)\)/g, '$2')}` : `${types[a.id]?.mt === 40 ? 'chip' : 'mod'} ${a.id} [${a.dyn.join(', ')}]`; }).join('; ')}) on ${slot}`,
+        costFE: null, costNote: 'tier 0 and chip mods are not made by the craft library: not priced', minLevel: level,
+        changes: [gear(`guide-target-${baseId}-known`, it.affixes.reduce((ms, a) => {
+          const key = attrs.has(a.id) ? 'baseAttr' : implicit(a.id) ? 'baseAffix' : types[a.id]?.mt === 40 ? 'chip' : sideOf(a.id) ?? craftGroupStep(baseId, Math.floor(a.id / 100), ctx)?.side ?? 'fixed';
+          return { ...ms, [key]: [...(ms[key] ?? []), { id: a.id, dynArgs: [...a.dyn] }] };
+        }, {} as typeof mods))] }));
       for (const { c, own } of plan)
         keep(mk({ kind: 'craft', label: `Craft ${c.tier} ${c.text} (${c.side}) on ${slot}`, costFE: c.costFE, buy: { name: c.ember, qty: c.qty }, minLevel: level,
           ...(own ? {} : { costNote: "the known build's tier of this mod is not craftable: its best craftable tier" }),
