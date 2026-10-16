@@ -290,7 +290,7 @@ describe('fix round 1', () => {
     const next = out.next!;
     expect(next.length).toBeGreaterThan(10);
     expect(next.every((n) => n.gain > 1 && n.kill > out.start.kill)).toBe(true);
-    expect(next.some((n) => n.costFE === null)).toBe(true);
+    expect(next.filter((n) => n.costFE === null && /^Unique /.test(n.label))).toEqual([]);   // an unlisted legendary may not exist this season
     expect(next.map((n) => n.gain)).toEqual([...next.map((n) => n.gain)].sort((a, b) => b - a));
     for (const n of next) if (n.buy) expect(Object.hasOwn(out.prices!, n.buy.name), n.buy.name).toBe(true);
   });
