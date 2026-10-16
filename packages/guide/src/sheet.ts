@@ -41,10 +41,15 @@ export function buildSheet(l: Loadout): Sheet[] {
   const points = Object.values((x.talents ?? {}) as Record<string, number>).reduce((a, b) => a + b, 0);
   return [
     { section: 'Gear', lines: [...(x.gear ?? []), ...(x.vorax ?? [])].map(item) },
-    { section: 'Skills', lines: (x.skills ?? []).map((s: { name: string | null; itemId?: string; level: number; place: { kind: string; slot: number } }) => {
-      const name = s.name ?? L()[`item_base|name|${(s.itemId ?? '').split('_')[0]}`] ?? 'unnamed skill';   // a guide-made gem carries no name
-      return s.place.kind === 'support' ? `  + ${name} (level ${s.level})` : `${s.place.kind} ${s.place.slot}: ${name} (level ${s.level})`;
-    }) },
+    // each skill followed by its own supports (a loadout's skills list is not in that order: a support line read after another skill landed under it)
+    { section: 'Skills', lines: ((sk: { name: string | null; itemId?: string; level: number; place: { kind: string; slot: number; ownerKind?: string; ownerSlot?: number } }[]) => {
+      const name = (s: typeof sk[number]) => s.name ?? L()[`item_base|name|${(s.itemId ?? '').split('_')[0]}`] ?? 'unnamed skill';   // a guide-made gem carries no name
+      const order = (k: string) => (k === 'active' ? 0 : 1);
+      return sk.filter((s) => s.place.kind !== 'support').sort((a, b) => order(a.place.kind) - order(b.place.kind) || a.place.slot - b.place.slot).flatMap((o) => [
+        `${o.place.kind} ${o.place.slot}: ${name(o)} (level ${o.level})`,
+        ...sk.filter((s) => s.place.kind === 'support' && s.place.ownerKind === o.place.kind && s.place.ownerSlot === o.place.slot).sort((a, b) => a.place.slot - b.place.slot)
+          .map((s) => `  + ${name(s)} (level ${s.level})`)]);
+    })(x.skills ?? []) },
     { section: `Talents (${points} points)`, lines: [...(x.coreTalents ?? []).map((c: number) => `core: ${talentName(c)}`),
       ...[...byTree].map(([t, ns]) => `${treeName(t)}: ${ns.join(', ')}`)], trees: [...byTree.keys()].map((t) => treeView(t, x.talents ?? {}, x.coreTalents ?? [])) },
     { section: 'Hero memories, pactspirits', lines: [...(x.heroMemories ?? []).map((m: Gear, i: number) => `memory ${m.slot ?? i + 1}: ${m.label}`),

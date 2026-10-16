@@ -13,10 +13,7 @@ const { applyPatch, isPatch } = await import('../patches');
 const { applyInOrder, figureDefaultFirst, withAsked } = await import('./apply');
 const root = (workerData as { pinRoot: string }).pinRoot;
 const fig: typeof import('@dps/guide/figure') = await import(pathToFileURL(join(root, 'model', 'guide', 'figure.ts')).href);
-// SS14: the season's patch notes over the pinned client's tables (Passivation, Slow Projectile, Judgment, true damage and Life bonuses); the owner's rule
-// (2026-10-15: "Just change them as the source"). Without it those price at the old client's values
-const { ss14 } = await import(pathToFileURL(join(root, 'model', 'src', 'core', 'ss14.ts')).href);
-const cat = ss14(fig.openCatalog(join(root, 'catalog')));
+const cat = fig.openCatalog(join(root, 'catalog'));   // SEA1: the season client's rows are applied by openCatalog itself
 const session = fig.figureSession(cat);   // one per worker: related builds share compiles; bit-equal to guideFigure
 
 function price({ loadout, changes, ctx, fight, rollBudget, target }: Job): JobResult {

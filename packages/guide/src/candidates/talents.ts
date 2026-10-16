@@ -7,7 +7,8 @@ type Pts = Record<number, number>;
 export interface TalentOpts { /** cap on "move a point" candidates (docs/talent-rules.md, Shift selection) */ maxShifts: number;
   /** only the "+1 point" moves (spending points a level-up made available) */ pointsOnly?: boolean;
   /** only whole-page variants (a free respec): one tree raised to a core's need with that core, or swapped for a tree of its role at a core's need */ pages?: boolean;
-  /** nodes whose points never go down and whose tree is never swapped away (a respec keeps what the model prices at 0: it cannot see it, e.g. a Frozen target) */ locked?: ReadonlySet<number> }
+  /** nodes whose points never go down and whose tree is never swapped away (a respec keeps what the model prices at 0: it cannot see it, e.g. a Frozen target) */ locked?: ReadonlySet<number>;
+  /** nodes and cores never given a point or taken (the owner's rule for the build, e.g. no Erosion before Ruinous Star); points already in them may leave */ banned?: ReadonlySet<number> }
 
 const sum = (t: Pts) => Object.values(t).reduce((a, b) => a + b, 0);
 const ofTree = (t: Pts, tr: number): Pts => Object.fromEntries(Object.entries(t).filter(([k, p]) => p > 0 && treeOf(+k) === tr));
@@ -18,13 +19,13 @@ const broken = (tr: number, t: Pts, cores: number[], copies: Copy[]) => {
   return new Set([...violations(tr, own, copies).map(n => `n${n}`), ...cores.filter(c => treeOf(c) === tr && total < (nodeRow(c)?.need ?? Infinity)).map(c => `c${c}`)]);
 };
 /** fill `tree` up to `total` points in node order (rows ascend with id) from `start`, legal at every step */
-export function fill(tree: number, total: number, start: Pts = {}): Pts {
+export function fill(tree: number, total: number, start: Pts = {}, banned?: ReadonlySet<number>): Pts {
   const pts: Pts = { ...start };
   for (let left = total - sum(start), moved = true; left > 0 && moved;) {
     moved = false;
     for (const n of treeNodes(tree)) {
       const give = Math.min(n.max - (pts[n.id] ?? 0), left);
-      if (give > 0 && violations(tree, { ...pts, [n.id]: (pts[n.id] ?? 0) + give }).length === 0) { pts[n.id] = (pts[n.id] ?? 0) + give; left -= give; moved = true; }
+      if (give > 0 && !banned?.has(n.id) && violations(tree, { ...pts, [n.id]: (pts[n.id] ?? 0) + give }).length === 0) { pts[n.id] = (pts[n.id] ?? 0) + give; left -= give; moved = true; }
     }
   }
   return pts;
@@ -65,14 +66,15 @@ export const talentMovesWith = (opts: TalentOpts): Generator => (s, ctx) => {
       }
       return t;
     };
+    // from 0: a tree the page does not use yet (an empty profession slot), opened at the core's need
     const page = (label: string, from: number, to: number, core: TalentRow) => {
-      const gone = from === to ? cores.filter(c => treeOf(c) === to && coreSet(c) === coreSet(core.id)) : cores.filter(c => treeOf(c) === from);
+      const gone = from === to ? cores.filter(c => treeOf(c) === to && coreSet(c) === coreSet(core.id)) : cores.filter(c => from !== 0 && treeOf(c) === from);
       const nextCores = [...cores.filter(c => !gone.includes(c)), core.id];
-      const start = from === to ? ofTree(talents, from) : {}, n = Math.max(total(talents, from), core.need);
-      const rest = from === to ? talents : Object.fromEntries(Object.entries(talents).filter(([k]) => treeOf(+k) !== from)) as Pts;
+      const start = from === to ? ofTree(talents, from) : {}, n = Math.max(from === 0 ? 0 : total(talents, from), core.need);
+      const rest = from === to || from === 0 ? talents : Object.fromEntries(Object.entries(talents).filter(([k]) => treeOf(+k) !== from)) as Pts;
       const short = n - sum(start) - Math.max(0, budget - sum(rest));
       const t = short > 0 ? take(rest, nextCores, short, to) : rest;
-      const grown = t && fill(to, n, start);
+      const grown = t && fill(to, n, start, opts.banned);
       if (!t || !grown || sum(grown) !== n) return;
       const next = { ...t, ...grown };
       const changes: Change[] = [...new Set([...Object.keys(talents), ...Object.keys(next)].map(Number))].filter(k => (talents[k] ?? 0) !== (next[k] ?? 0))
@@ -80,10 +82,12 @@ export const talentMovesWith = (opts: TalentOpts): Generator => (s, ctx) => {
       push('talent', label, [...changes, ...gone.map(c => ({ kind: 'core', node: c, action: 'remove' }) as Change), { kind: 'core', node: core.id, action: 'add' }], next, nextCores, true);
     };
     const [gods, profs] = treeSlotsAllowed(0);
+    if (used.filter(t => profs.includes(t)).length < 3) for (const u of profs) if (!used.includes(u)) for (const c of treeCores(u).filter(x => !opts.banned?.has(x.id)))
+      page(`Add talent tree ${treeName(u)} (${c.need} points, core talent ${talentName(c.id)})`, 0, u, c);
     for (const t of used) {
-      for (const c of treeCores(t)) if (!cores.includes(c.id) && c.need > total(talents, t))
+      for (const c of treeCores(t)) if (!cores.includes(c.id) && !opts.banned?.has(c.id) && c.need > total(talents, t))
         page(`Raise ${treeName(t)} to ${c.need} points and take core talent ${talentName(c.id)}`, t, t, c);
-      if (!holdsLocked(t)) for (const u of gods.includes(t) ? gods : profs) if (!used.includes(u)) for (const c of treeCores(u))
+      if (!holdsLocked(t)) for (const u of gods.includes(t) ? gods : profs) if (!used.includes(u)) for (const c of treeCores(u).filter(x => !opts.banned?.has(x.id)))
         page(`Swap talent tree ${treeName(t)} for ${treeName(u)} (${Math.max(total(talents, t), c.need)} points, core talent ${talentName(c.id)})`, t, u, c);
     }
     return out;
@@ -91,7 +95,7 @@ export const talentMovesWith = (opts: TalentOpts): Generator => (s, ctx) => {
 
   // points: +1 (budget left), -1
   const nodes = used.flatMap(treeNodes);
-  const adds = nodes.filter(n => (talents[n.id] ?? 0) < n.max);
+  const adds = nodes.filter(n => (talents[n.id] ?? 0) < n.max && !opts.banned?.has(n.id));
   const has = nodes.filter(n => (talents[n.id] ?? 0) > 0 && !opts.locked?.has(n.id));
   if (spent < budget) for (const n of adds) push('talent', `+1 point: ${talentName(n.id)}`, [setPts(n.id, (talents[n.id] ?? 0) + 1)], inc(n.id, 1), cores);
   if (opts.pointsOnly) return out;
@@ -116,7 +120,7 @@ export const talentMovesWith = (opts: TalentOpts): Generator => (s, ctx) => {
   }
 
   // core talents: add into a free (tree, set), or swap the held one of that set
-  for (const t of used) for (const c of treeCores(t)) {
+  for (const t of used) for (const c of treeCores(t).filter(x => !opts.banned?.has(x.id))) {
     if (cores.includes(c.id)) continue;
     const held = cores.find(h => treeOf(h) === t && coreSet(h) === coreSet(c.id));
     push('core', held ? `Swap core talent ${talentName(held)} for ${talentName(c.id)}` : `Add core talent ${talentName(c.id)}`,
@@ -132,7 +136,7 @@ export const talentMovesWith = (opts: TalentOpts): Generator => (s, ctx) => {
     const rest = Object.fromEntries(Object.entries(talents).filter(([k]) => treeOf(+k) !== t)) as Pts;
     for (const u of gods.includes(t) ? gods : profs) {
       if (used.includes(u)) continue;
-      const filled = fill(u, total);
+      const filled = fill(u, total, {}, opts.banned);
       push('talent', `Swap talent tree ${treeName(t)} for ${treeName(u)}`,
         [...Object.keys(tp).map(k => setPts(+k, 0)), ...gone.map(c => ({ kind: 'core', node: c, action: 'remove' }) as Change), ...Object.entries(filled).map(([k, p]) => setPts(+k, p))],
         { ...rest, ...filled }, cores.filter(c => !gone.includes(c)), true);
