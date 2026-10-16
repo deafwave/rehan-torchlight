@@ -3,7 +3,7 @@
  "pin": "e5e767cb4de1730b9702d6045c3164b1186aef5a",
  "etor": {
   "season": "1601",
-  "fetchedAt": "2026-10-16T08:47:05.804Z"
+  "fetchedAt": "2026-10-16T09:05:44.405Z"
  },
  "knobs": {
   "churn": 0.05,
@@ -13,7 +13,7 @@
   "maxSteps": 0,
   "continueSteps": 10,
   "enablerFloor": 0.25,
-  "budgetMinutes": 20,
+  "budgetMinutes": 15,
   "fight": {
    "bombs": 10,
    "inputs": {
@@ -23,15 +23,15 @@
   "fightNote": "training dummy stands still (dps-debug STILL / e2e1-lib.ts)",
   "rollBudget": 1048576,
   "target": "cube3",
-  "fe": 5,
+  "fe": 36,
   "level": 90,
   "skill": "iceShot"
  },
  "character": {
   "level": 90,
   "skill": "iceShot",
-  "fe": 5,
-  "owned": 170,
+  "fe": 36,
+  "owned": 177,
   "gear": [
    {
     "slot": "belt",
@@ -121,7 +121,7 @@
    "kind": "unique",
    "gain": 2.5349752385975566,
    "kill": 236226210.74770638,
-   "costFE": 65.143,
+   "costFE": 70.537,
    "buy": {
     "name": "Howling Wind",
     "qty": 1
@@ -183,7 +183,7 @@
    "kind": "unique",
    "gain": 1.6761158384590722,
    "kill": 156191858.31276664,
-   "costFE": 37.859,
+   "costFE": 50.069,
    "buy": {
     "name": "Vortex Heart",
     "qty": 1
@@ -216,7 +216,7 @@
    "kind": "unique",
    "gain": 1.5120896520275917,
    "kill": 140906784.16524088,
-   "costFE": 107.708,
+   "costFE": 125.245,
    "buy": {
     "name": "Blind Vision",
     "qty": 1
@@ -299,7 +299,7 @@
    "kind": "unique",
    "gain": 1.2937889698194585,
    "kill": 120564043.85895051,
-   "costFE": 5.085,
+   "costFE": 5,
    "buy": {
     "name": "Kaleidoscope",
     "qty": 1
@@ -321,7 +321,7 @@
    "kind": "unique",
    "gain": 1.252322852452986,
    "kill": 116699949.39729388,
-   "costFE": 48.555,
+   "costFE": 50.839,
    "buy": {
     "name": "Hekate's Vision",
     "qty": 1
@@ -343,7 +343,7 @@
    "kind": "unique",
    "gain": 1.2426533523542165,
    "kill": 115798879.7010784,
-   "costFE": 5.085,
+   "costFE": 5,
    "buy": {
     "name": "Kaleidoscope",
     "qty": 1
@@ -365,7 +365,7 @@
    "kind": "unique",
    "gain": 1.2287884923197447,
    "kill": 114506857.87040263,
-   "costFE": 19.041,
+   "costFE": 21.189,
    "buy": {
     "name": "Heavyware",
     "qty": 1
@@ -387,7 +387,7 @@
    "kind": "unique",
    "gain": 1.206180355687139,
    "kill": 112400078.1403799,
-   "costFE": null,
+   "costFE": 32.155,
    "buy": {
     "name": "Hunting the Eye of the Kraken",
     "qty": 1
@@ -464,7 +464,7 @@
    "kind": "unique",
    "gain": 1.1237960703987628,
    "kill": 104722950.8680844,
-   "costFE": 38.804,
+   "costFE": 38.051,
    "buy": {
     "name": "Tyrant's Smoldering Hold",
     "qty": 1
@@ -505,7 +505,7 @@
    "kind": "unique",
    "gain": 1.1221391593568009,
    "kill": 104568548.64315172,
-   "costFE": 28.55,
+   "costFE": 32.684,
    "buy": {
     "name": "Twilight Vestment",
     "qty": 1
@@ -528,7 +528,7 @@
    "kind": "craft",
    "gain": 1.1164483108005847,
    "kill": 104038236.72139987,
-   "costFE": 606.6104999999999,
+   "costFE": 617.328,
    "buy": {
     "name": "Matchless Ember",
     "qty": 2143.5
@@ -553,7 +553,7 @@
    "kind": "craft",
    "gain": 1.0983190779974463,
    "kill": 102348831.67174043,
-   "costFE": 606.6104999999999,
+   "costFE": 617.328,
    "buy": {
     "name": "Matchless Ember",
     "qty": 2143.5
@@ -564,7 +564,7 @@
    "kind": "unique",
    "gain": 1.0977634983664095,
    "kill": 102297058.988122,
-   "costFE": 118.393,
+   "costFE": 147.048,
    "buy": {
     "name": "Fiend Crown",
     "qty": 1
@@ -586,7 +586,7 @@
    "kind": "craft",
    "gain": 1.0839771522808326,
    "kill": 101012353.62048534,
-   "costFE": 202.2035,
+   "costFE": 205.77599999999998,
    "buy": {
     "name": "Matchless Ember",
     "qty": 714.5
@@ -627,7 +627,7 @@
    "kind": "unique",
    "gain": 1.0723691152409256,
    "kill": 99930637.88519742,
-   "costFE": 31.48,
+   "costFE": 41.632,
    "buy": {
     "name": "Restless Glacier",
     "qty": 1
@@ -653,7 +653,7 @@
    "kind": "gear",
    "gain": 1.071678246866738,
    "kill": 99866258.07758632,
-   "costFE": 1207.6266666666668,
+   "costFE": 1256.96,
    "market": "drop"
   },
   {
@@ -684,7 +684,7 @@
    "kind": "craft",
    "gain": 1.070587905618864,
    "kill": 99764652.67431238,
-   "costFE": 202.2035,
+   "costFE": 205.77599999999998,
    "buy": {
     "name": "Matchless Ember",
     "qty": 714.5
@@ -714,7 +714,7 @@
    "kind": "craft",
    "gain": 1.0604635426133635,
    "kill": 98821195.76293567,
-   "costFE": 55.14640909090909,
+   "costFE": 56.12072727272727,
    "buy": {
     "name": "Matchless Ember",
     "qty": 194.86363636363637
@@ -750,7 +750,7 @@
    "kind": "craft",
    "gain": 1.0549492685750899,
    "kill": 98307338.25409213,
-   "costFE": 218.224,
+   "costFE": 232.45600000000002,
    "buy": {
     "name": "Precious Ember",
     "qty": 2372
@@ -779,7 +779,7 @@
    "kind": "craft",
    "gain": 1.0504201528666832,
    "kill": 97885284.48980102,
-   "costFE": 55.14640909090909,
+   "costFE": 56.12072727272727,
    "buy": {
     "name": "Matchless Ember",
     "qty": 194.86363636363637
@@ -879,7 +879,7 @@
    "kind": "craft",
    "gain": 1.042548400978571,
    "kill": 97151741.18248904,
-   "costFE": 14.107220930232556,
+   "costFE": 14.356465116279068,
    "buy": {
     "name": "Matchless Ember",
     "qty": 49.848837209302324
@@ -901,7 +901,7 @@
    "label": "Craft on mainHand with Precious Ember (2 per craft): keep any of 8 results - T2 +151% Physical Damage (suffix) in place of your T2 +22% gear Attack Speed; T3 +108% Physical Damage (suffix) in place of your T2 +22% gear Attack Speed; T4 +86% Physical Damage (suffix) in place of your T2 +22% gear Attack Speed; T5 +69% Physical Damage (suffix) in place of your T2 +22% gear Attack Speed; or another of the list - about 12 crafts",
    "gain": 1.0398049468224015,
    "kill": 96896087.49017507,
-   "costFE": 2.164492610837439,
+   "costFE": 2.3056551724137937,
    "buy": {
     "name": "Precious Ember",
     "qty": 23.527093596059117
@@ -912,7 +912,7 @@
    "kind": "craft",
    "gain": 1.038866589801479,
    "kill": 96808645.0094731,
-   "costFE": 72.74133333333333,
+   "costFE": 77.48533333333333,
    "buy": {
     "name": "Precious Ember",
     "qty": 790.6666666666666
@@ -937,7 +937,7 @@
    "kind": "craft",
    "gain": 1.0352937326064833,
    "kill": 96475701.90854424,
-   "costFE": 14.107220930232556,
+   "costFE": 14.356465116279068,
    "buy": {
     "name": "Matchless Ember",
     "qty": 49.848837209302324
@@ -977,7 +977,7 @@
    "kind": "unique",
    "gain": 1.0299847773714597,
    "kill": 95980977.40035038,
-   "costFE": 31.48,
+   "costFE": 41.632,
    "buy": {
     "name": "Restless Glacier",
     "qty": 1
@@ -992,7 +992,7 @@
    "kind": "craft",
    "gain": 1.029485054318037,
    "kill": 95934409.81202212,
-   "costFE": 19.838545454545454,
+   "costFE": 21.132363636363635,
    "buy": {
     "name": "Precious Ember",
     "qty": 215.63636363636363
@@ -1011,7 +1011,7 @@
    "kind": "craft",
    "gain": 1.0291120777001463,
    "kill": 95899653.31744172,
-   "costFE": 6.699860465116279,
+   "costFE": 6.8182325581395355,
    "buy": {
     "name": "Matchless Ember",
     "qty": 23.674418604651166
@@ -1022,7 +1022,7 @@
    "kind": "craft",
    "gain": 1.0291120777001463,
    "kill": 95899653.31744172,
-   "costFE": 8.08814,
+   "costFE": 8.231039999999998,
    "buy": {
     "name": "Matchless Ember",
     "qty": 28.58
@@ -1069,7 +1069,7 @@
    "kind": "craft",
    "gain": 1.0256314134119486,
    "kill": 95575301.37775937,
-   "costFE": 17.87727272727273,
+   "costFE": 19.04318181818182,
    "buy": {
     "name": "Precious Ember",
     "qty": 194.31818181818184
@@ -1116,7 +1116,7 @@
    "kind": "craft",
    "gain": 1.0239494073766904,
    "kill": 95418560.63090156,
-   "costFE": 8.08814,
+   "costFE": 8.231039999999998,
    "buy": {
     "name": "Matchless Ember",
     "qty": 28.58
@@ -1134,7 +1134,7 @@
    "kind": "craft",
    "gain": 1.0236771689809345,
    "kill": 95393191.6080921,
-   "costFE": 5.0749767441860465,
+   "costFE": 5.405953488372093,
    "buy": {
     "name": "Precious Ember",
     "qty": 55.16279069767442
@@ -1159,7 +1159,7 @@
    "kind": "craft",
    "gain": 1.022393916060934,
    "kill": 95273609.38491805,
-   "costFE": 16.8102,
+   "costFE": 17.1072,
    "buy": {
     "name": "Matchless Ember",
     "qty": 59.4
@@ -1177,7 +1177,7 @@
    "label": "Craft on ring2 with Matchless Ember (1 per craft): keep any of 5 results - T3 +10 to Max Frostbite Rating (suffix) in place of your mod 110210007; T4 +7 to Max Frostbite Rating (suffix) in place of your mod 110210007; T3 +30 Dexterity (prefix) in place of your T4 +24 Dexterity; T3 Adds 19 - 23 Physical Damage to Attacks and Spells (prefix) in place of your T4 +24 Dexterity; or another of the list - about 23 crafts",
    "gain": 1.020071978905997,
    "kill": 95057235.50979945,
-   "costFE": 6.413941065796026,
+   "costFE": 6.527261579325992,
    "buy": {
     "name": "Matchless Ember",
     "qty": 22.664102705993027
@@ -1196,7 +1196,7 @@
    "kind": "craft",
    "gain": 1.0192098204756308,
    "kill": 94976893.73132026,
-   "costFE": 2.909653333333333,
+   "costFE": 3.099413333333333,
    "buy": {
     "name": "Precious Ember",
     "qty": 31.626666666666665
@@ -1221,7 +1221,7 @@
    "kind": "craft",
    "gain": 1.0190348352413279,
    "kill": 94960587.41865622,
-   "costFE": 4.411712727272727,
+   "costFE": 4.489658181818181,
    "buy": {
     "name": "Matchless Ember",
     "qty": 15.58909090909091
@@ -1262,7 +1262,7 @@
    "label": "Craft on chest with Matchless Ember (1 per craft): keep any of 11 results - T4 +16% Projectile Speed (prefix) in place of your T4 +88 Max Life; T4 +7% Dexterity (suffix) in place of your T5 +29% Critical Strike Rating; T4 +22% Critical Strike Damage (suffix) in place of your T5 +29% Critical Strike Rating; T5 +11% Projectile Speed (prefix) in place of your T4 +88 Max Life; or another of the list - about 3 crafts",
    "gain": 1.0168830480353916,
    "kill": 94760069.27147505,
-   "costFE": 0.8272196580773044,
+   "costFE": 0.8418348463825571,
    "buy": {
     "name": "Matchless Ember",
     "qty": 2.9230376610505457
@@ -1317,7 +1317,7 @@
    "kind": "craft",
    "gain": 1.0163864506731177,
    "kill": 94713792.95627831,
-   "costFE": 4.411712727272727,
+   "costFE": 4.489658181818181,
    "buy": {
     "name": "Matchless Ember",
     "qty": 15.58909090909091
@@ -1328,7 +1328,7 @@
    "kind": "craft",
    "gain": 1.0156757544217219,
    "kill": 94647565.4523944,
-   "costFE": 3.841253333333334,
+   "costFE": 3.9091200000000006,
    "buy": {
     "name": "Matchless Ember",
     "qty": 13.573333333333336
@@ -1339,7 +1339,7 @@
    "kind": "craft",
    "gain": 1.0156289106170417,
    "kill": 94643200.22850263,
-   "costFE": 4.573255813953488,
+   "costFE": 4.871511627906977,
    "buy": {
     "name": "Precious Ember",
     "qty": 49.7093023255814
@@ -1350,7 +1350,7 @@
    "kind": "craft",
    "gain": 1.0151889804146468,
    "kill": 94602204.54415712,
-   "costFE": 1.5870836363636363,
+   "costFE": 1.6905890909090908,
    "buy": {
     "name": "Precious Ember",
     "qty": 17.25090909090909
@@ -1361,7 +1361,7 @@
    "label": "Craft on helmet with Matchless Ember (1 per craft): keep any of 4 results - T6 +10% Critical Strike Damage (suffix); T6 +7% Projectile Speed (prefix); T7 +6% Critical Strike Damage (suffix); T7 +5% Projectile Speed (prefix) - about 6 crafts",
    "gain": 1.014770560204032,
    "kill": 94563213.30694547,
-   "costFE": 1.5165262499999999,
+   "costFE": 1.5433199999999998,
    "buy": {
     "name": "Matchless Ember",
     "qty": 5.35875
@@ -1372,7 +1372,7 @@
    "label": "Craft on helmet with Precious Ember (1 per craft): keep any of 2 results - T6 +19% damage (prefix); T7 +14% damage (prefix) - about 12 crafts",
    "gain": 1.0134021553414772,
    "kill": 94435696.04739666,
-   "costFE": 1.0911199999999999,
+   "costFE": 1.16228,
    "buy": {
     "name": "Precious Ember",
     "qty": 11.86
@@ -1394,21 +1394,21 @@
    "kind": "kismet",
    "gain": 1.0127906484411997,
    "kill": 94378711.68096216,
-   "costFE": 47.119
+   "costFE": 40.108
   },
   {
    "label": "Socket Micro Fate: Dexterity on contract point 301",
    "kind": "kismet",
    "gain": 1.0127906484411997,
    "kill": 94378711.68096216,
-   "costFE": 47.119
+   "costFE": 40.108
   },
   {
    "label": "Craft T7 +6% Critical Strike Damage (suffix) on helmet",
    "kind": "craft",
    "gain": 1.0123166296718893,
    "kill": 94334539.39241569,
-   "costFE": 3.0330524999999997,
+   "costFE": 3.0866399999999996,
    "buy": {
     "name": "Matchless Ember",
     "qty": 10.7175
@@ -1419,7 +1419,7 @@
    "label": "Craft on boots with Matchless Ember (1 per craft): keep any of 4 results - T4 +22% Critical Strike Damage (suffix) in place of your T7 +6% Critical Strike Damage; T5 +15% Critical Strike Damage (suffix) in place of your T7 +6% Critical Strike Damage; T6 +10% Critical Strike Damage (suffix) in place of your T7 +6% Critical Strike Damage; T4 +16% Projectile Speed (prefix) in place of your T4 +16% Projectile Speed - about 7 crafts",
    "gain": 1.0117588736925553,
    "kill": 94282563.90188079,
-   "costFE": 1.717658233438486,
+   "costFE": 1.7480055520504734,
    "buy": {
     "name": "Matchless Ember",
     "qty": 6.069463722397478
@@ -1430,7 +1430,7 @@
    "kind": "craft",
    "gain": 1.0116153302683073,
    "kill": 94269187.55063619,
-   "costFE": 1.0911199999999999,
+   "costFE": 1.16228,
    "buy": {
     "name": "Precious Ember",
     "qty": 11.86
@@ -1480,7 +1480,7 @@
    "kind": "craft",
    "gain": 1.0114433951435475,
    "kill": 94253165.46789627,
-   "costFE": 53.48699999999999,
+   "costFE": 54.43199999999999,
    "buy": {
     "name": "Matchless Ember",
     "qty": 188.99999999999997
@@ -1491,7 +1491,7 @@
    "kind": "craft",
    "gain": 1.0113443252297931,
    "kill": 94243933.46043167,
-   "costFE": 3.0330524999999997,
+   "costFE": 3.0866399999999996,
    "buy": {
     "name": "Matchless Ember",
     "qty": 10.7175
@@ -1502,7 +1502,7 @@
    "kind": "kismet",
    "gain": 1.0109612138214898,
    "kill": 94208232.53724325,
-   "costFE": 47.119
+   "costFE": 40.108
   },
   {
    "label": "Unique Berserker Bracer in gloves",
@@ -1520,7 +1520,7 @@
    "kind": "craft",
    "gain": 1.0096827302910825,
    "kill": 94089094.75818606,
-   "costFE": 28.248545454545454,
+   "costFE": 28.747636363636364,
    "buy": {
     "name": "Matchless Ember",
     "qty": 99.81818181818183
@@ -1545,7 +1545,7 @@
    "kind": "craft",
    "gain": 1.008957548852283,
    "kill": 94021517.42615385,
-   "costFE": 8.781447761194029,
+   "costFE": 8.936597014925372,
    "buy": {
     "name": "Matchless Ember",
     "qty": 31.029850746268654
@@ -1556,7 +1556,7 @@
    "label": "Craft on ring2 with Precious Ember (1 per craft): keep any of 4 results - T3 +61% Critical Strike Rating (suffix) in place of your mod 110210007; T4 +44% Critical Strike Rating (suffix) in place of your mod 110210007; T5 +29% Critical Strike Rating (suffix) in place of your mod 110210007; T6 +19% Critical Strike Rating (suffix) in place of your mod 110210007 - about 16 crafts",
    "gain": 1.0083654760828409,
    "kill": 93966344.06403075,
-   "costFE": 1.4301818181818182,
+   "costFE": 1.5234545454545456,
    "buy": {
     "name": "Precious Ember",
     "qty": 15.545454545454547
@@ -1567,7 +1567,7 @@
    "kind": "craft",
    "gain": 1.0081270335208619,
    "kill": 93944124.36656007,
-   "costFE": 5.140232558139534,
+   "costFE": 5.47546511627907,
    "buy": {
     "name": "Precious Ember",
     "qty": 55.87209302325581
@@ -1578,7 +1578,7 @@
    "label": "Craft on chest with Precious Ember (1 per craft): keep any of 1 result - T4 +44% Critical Strike Rating (suffix) in place of your T5 +29% Critical Strike Rating - about 70 crafts",
    "gain": 1.0081270335208619,
    "kill": 93944124.36656009,
-   "costFE": 6.3546125,
+   "costFE": 6.769043750000001,
    "buy": {
     "name": "Precious Ember",
     "qty": 69.071875
@@ -1603,7 +1603,7 @@
    "kind": "craft",
    "gain": 1.0077519396660528,
    "kill": 93909170.57346295,
-   "costFE": 2.622,
+   "costFE": 2.793,
    "buy": {
     "name": "Precious Ember",
     "qty": 28.5
@@ -1685,7 +1685,7 @@
    "kind": "craft",
    "gain": 1.0058074449312047,
    "kill": 93727969.34670614,
-   "costFE": 4.822511627906977,
+   "costFE": 5.137023255813953,
    "buy": {
     "name": "Precious Ember",
     "qty": 52.41860465116279
@@ -1696,7 +1696,7 @@
    "kind": "craft",
    "gain": 1.0055984680326768,
    "kill": 93708495.45989202,
-   "costFE": 2.0952290909090907,
+   "costFE": 2.1322472727272728,
    "buy": {
     "name": "Matchless Ember",
     "qty": 7.403636363636364
@@ -1743,14 +1743,14 @@
    "kind": "kismet",
    "gain": 1.0035735836991824,
    "kill": 93519802.98431247,
-   "costFE": 3.25
+   "costFE": 3.01
   },
   {
    "label": "Socket Micro Fate: Attack Damage on contract point 301",
    "kind": "kismet",
    "gain": 1.0035735836991824,
    "kill": 93519802.98431247,
-   "costFE": 3.25
+   "costFE": 3.01
   },
   {
    "label": "Socket Medium Fate: Attack Damage on contract point 207",
@@ -1778,7 +1778,7 @@
    "kind": "craft",
    "gain": 1.0027506882685997,
    "kill": 93443119.9988346,
-   "costFE": 1.4301818181818182,
+   "costFE": 1.5234545454545456,
    "buy": {
     "name": "Precious Ember",
     "qty": 15.545454545454547
@@ -1848,7 +1848,7 @@
    "kind": "kismet",
    "gain": 1.0017869788289617,
    "kill": 93353315.00755847,
-   "costFE": 3.25
+   "costFE": 3.01
   },
   {
    "label": "Unique Elemental Cleric in ring2",
@@ -1906,51 +1906,51 @@
   }
  ],
  "prices": {
-  "Howling Wind": 65.143,
+  "Howling Wind": 70.537,
   "Wriggling Tango": null,
   "Truth": null,
   "Exquisite Box - Unique": null,
   "Lightning Striker's Sacrum": null,
-  "Vortex Heart": 37.859,
+  "Vortex Heart": 50.069,
   "Stray Bird's Return": null,
   "Dawn Break": null,
-  "Blind Vision": 107.708,
+  "Blind Vision": 125.245,
   "Heart of the Storm": null,
   "Endless Night - Prototype": null,
   "Fool's Crown": null,
   "Death's Touch": null,
   "Witchdoctor's Herb Bag": null,
   "Trinity": null,
-  "Kaleidoscope": 5.085,
+  "Kaleidoscope": 5,
   "Legless Bird's Lament": null,
-  "Hekate's Vision": 48.555,
+  "Hekate's Vision": 50.839,
   "Everlasting Cloud": null,
   "Gauze of Phantom Sin": null,
-  "Heavyware": 19.041,
+  "Heavyware": 21.189,
   "Frostbolt": null,
-  "Hunting the Eye of the Kraken": null,
+  "Hunting the Eye of the Kraken": 32.155,
   "Royal Cycle": null,
   "Rat King's Megagon Dice": null,
   "Double Rainbow - Unique": null,
   "Silent Avowal": null,
   "Genius Battlegear": null,
-  "Tyrant's Smoldering Hold": 38.804,
+  "Tyrant's Smoldering Hold": 38.051,
   "Tide of the Styx": null,
   "Scarlet Decree": null,
-  "Twilight Vestment": 28.55,
-  "Matchless Ember": 0.283,
+  "Twilight Vestment": 32.684,
+  "Matchless Ember": 0.288,
   "The Three Saints": null,
-  "Fiend Crown": 118.393,
+  "Fiend Crown": 147.048,
   "Lens of the Mage's Assistant": null,
   "Blight": null,
   "Double Rainbow": null,
-  "Restless Glacier": 31.48,
+  "Restless Glacier": 41.632,
   "Howling Ring": null,
   "Wind Projectiles": null,
   "Mercurial Torment": null,
   "Frozen Lightning": null,
   "Silver Frost": null,
-  "Precious Ember": 0.092,
+  "Precious Ember": 0.098,
   "Ownerless": null,
   "Providential Grace": null,
   "Unholy Prayer": null,
