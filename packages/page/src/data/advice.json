@@ -21,7 +21,7 @@
  "notCalculable": [],
  "hoaRoutes": {
   "target": "traveler",
-  "at": "2026-10-16T19:35:09.041715+00:00",
+  "at": "2026-10-16T19:59:57.941390+00:00",
   "start": {
    "label": "your character now with the talent changes",
    "costFE": 0,
@@ -1571,7 +1571,7 @@
   },
   "routes": [
    {
-    "name": "Path to 200 billion per second (Traveler 8)",
+    "name": "Path to 200 billion per second (Traveler 8); Wriggling Tango and Decaying Blessing left out",
     "steps": [
      {
       "label": "Level Hammer of Ash 17 -> 20",
@@ -1607,35 +1607,24 @@
       }
      },
      {
-      "label": "Wriggling Tango (boots)",
-      "slot": "",
-      "costFE": 289.687,
-      "totalFE": 389.687,
-      "figure": {
-       "kill": 61034388668.93449,
-       "life100": 61034388668.93449,
-       "lifeMax": 1610461523817
-      }
-     },
-     {
       "label": "A slate with Ranger: additional damage taken by enemies in Proximity",
       "slot": "",
       "costFE": 100,
-      "totalFE": 489.687,
+      "totalFE": 200,
       "figure": {
-       "kill": 70189546969.27113,
-       "life100": 70189546969.27113,
+       "kill": 45232893302.24981,
+       "life100": 45232893302.24981,
        "lifeMax": 1610461523817
       }
      },
      {
       "label": "Last Words of Chaos (helmet)",
       "slot": "",
-      "costFE": 41.786,
-      "totalFE": 531.473,
+      "costFE": 39.052,
+      "totalFE": 239.052,
       "figure": {
-       "kill": 73714684070.3812,
-       "life100": 73714684070.3812,
+       "kill": 47504629758.44252,
+       "life100": 47504629758.44252,
        "lifeMax": 1610461523817
       }
      },
@@ -1643,10 +1632,10 @@
       "label": "A slate with Shadowdancer: Armor DMG Mitigation Penetration",
       "slot": "",
       "costFE": 100,
-      "totalFE": 631.473,
+      "totalFE": 339.052,
       "figure": {
-       "kill": 82139239250.49948,
-       "life100": 82139239250.49948,
+       "kill": 52933743099.40169,
+       "life100": 52933743099.40169,
        "lifeMax": 1610461523817
       }
      },
@@ -1654,10 +1643,10 @@
       "label": "A slate with God of Might: Attack Skill Level",
       "slot": "",
       "costFE": 100,
-      "totalFE": 731.473,
+      "totalFE": 439.052,
       "figure": {
-       "kill": 91232902468.46376,
-       "life100": 91232902468.46376,
+       "kill": 58794055881.70771,
+       "life100": 58794055881.70771,
        "lifeMax": 1610461523817
       }
      },
@@ -1665,10 +1654,10 @@
       "label": "A slate with Elementalist: Fire Skill Level",
       "slot": "",
       "costFE": 100,
-      "totalFE": 831.473,
+      "totalFE": 539.052,
       "figure": {
-       "kill": 100462705690.10858,
-       "life100": 100462705690.10858,
+       "kill": 64742102542.548096,
+       "life100": 64742102542.548096,
        "lifeMax": 1610461523817
       }
      },
@@ -1676,10 +1665,10 @@
       "label": "A slate with Onslaughter: additional Base Damage for Two-Handed Weapons",
       "slot": "",
       "costFE": 100,
-      "totalFE": 931.473,
+      "totalFE": 639.052,
       "figure": {
-       "kill": 109216159509.46544,
-       "life100": 109216159509.46544,
+       "kill": 70383171046.74445,
+       "life100": 70383171046.74445,
        "lifeMax": 1610461523817
       }
      },
@@ -1687,10 +1676,10 @@
       "label": "A slate with Warlock: additional damage against Cursed enemies",
       "slot": "",
       "costFE": 100,
-      "totalFE": 1031.473,
+      "totalFE": 739.052,
       "figure": {
-       "kill": 117953452328.67673,
-       "life100": 117953452328.67673,
+       "kill": 76013824751.495,
+       "life100": 76013824751.495,
        "lifeMax": 1610461523817
       }
      },
@@ -1698,10 +1687,10 @@
       "label": "A talent prism like the example build (Onslaughter crit and two-handed mirrors) (priced at the 555 FE you found)",
       "slot": "",
       "costFE": 555,
-      "totalFE": 1586.473,
+      "totalFE": 1294.0520000000001,
       "figure": {
-       "kill": 177791098541.19293,
-       "life100": 177791098541.19293,
+       "kill": 114575547750.80653,
+       "life100": 114575547750.80653,
        "lifeMax": 1610461523817
       }
      },
@@ -1709,10 +1698,10 @@
       "label": "A slate with Shadowmaster: Gains Profane when inflicting Wilt or Deterioration",
       "slot": "",
       "costFE": 100,
-      "totalFE": 1686.473,
+      "totalFE": 1394.0520000000001,
       "figure": {
-       "kill": 190236475407.67157,
-       "life100": 190236475407.67157,
+       "kill": 122595836147.51335,
+       "life100": 122595836147.51335,
        "lifeMax": 1610461523817
       }
      },
@@ -1720,10 +1709,32 @@
       "label": "A slate with Shadowmaster: additional Deterioration Damage",
       "slot": "",
       "costFE": 100,
-      "totalFE": 1786.473,
+      "totalFE": 1494.0520000000001,
       "figure": {
-       "kill": 277224050948.65094,
-       "life100": 277224050948.65094,
+       "kill": 178654037052.66757,
+       "life100": 178654037052.66757,
+       "lifeMax": 1610461523817
+      }
+     },
+     {
+      "label": "A slate with Onslaughter: Strength",
+      "slot": "",
+      "costFE": 100,
+      "totalFE": 1594.0520000000001,
+      "figure": {
+       "kill": 190329975329.25476,
+       "life100": 190329975329.25476,
+       "lifeMax": 1610461523817
+      }
+     },
+     {
+      "label": "A slate with Goddess of Deception: additional damage applied to Life",
+      "slot": "",
+      "costFE": 100,
+      "totalFE": 1694.0520000000001,
+      "figure": {
+       "kill": 202414418207.30728,
+       "life100": 202414418207.30728,
        "lifeMax": 1610461523817
       }
      }
