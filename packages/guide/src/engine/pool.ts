@@ -45,7 +45,7 @@ export { RESOURCE1_KEY } from './apply';
 export const DEFAULT_FIGHT: Fight = { bombs: 10, inputs: { [STILL_KEY]: 0 } };   // Fighting Will (RESOURCE1_KEY): apply.ts ON_ASK
 export interface Job { loadout: Loadout; changes: (Change | LoadoutPatch)[]; ctx: EvalCtx; fight: Fight; rollBudget: number; /** a dps-debug BOSSES key (hoa) */ target?: string }
 export interface JobResult { loadout: Loadout; dropped: string[]; fig: { life100: number; life0: number; left: string[]; needs: string[]; stop?: string; inputs?: Record<string, unknown>;
-  /** the damage lock's ceiling, the build's cull on the target (CULL1), the boss's max Life */ lock?: number; cull?: { threshold: number; blocked: string[]; stop?: string }; lifeMax?: number; mana?: ManaFit } }
+  /** the damage lock's ceiling, the build's cull on the target (CULL1), the boss's max Life */ lock?: number; cull?: { threshold: number; blocked: string[]; stop?: string }; lifeMax?: number; mana?: ManaFit; projectile?: { speedInc: number; areaInc: number } } }
 /** One worker: runs a job, rejects with the dps-debug error message when pricing throws. */
 export interface WorkerLike {
   /** settles when the worker can take jobs; rejects when its startup failed */
@@ -193,7 +193,7 @@ export async function createEvaluator(o: EvaluatorOpts = {}): Promise<Evaluator>
         return { keep: true, v: { loadout: lo, dropped, ...(fig.inputs ? { inputs: fig.inputs } : {}),
           figure: { life100: fig.life100, life0: fig.life0, kill: killSpeed(fig.life100, fig.life0, fig.lock ?? Infinity, cull),
             partial: [...fig.left, ...fig.needs, ...dropped].filter(l => !INFO.some(p => typeof p === 'string' ? l.startsWith(p) : p.test(l))), ...(fig.stop ? { stop: fig.stop } : {}),
-            ...(fig.lock !== undefined ? { lock: fig.lock } : {}), ...(fig.mana ? { mana: fig.mana } : {}), ...(cull ? { cull } : {}), ...(cullNote ? { cullNote } : {}),
+            ...(fig.lock !== undefined ? { lock: fig.lock } : {}), ...(fig.mana ? { mana: fig.mana } : {}), ...(fig.projectile ? { projectile: fig.projectile } : {}), ...(cull ? { cull } : {}), ...(cullNote ? { cullNote } : {}),
             ...(targetOf(ctx) ? { target: targetOf(ctx), ...(fig.lifeMax !== undefined ? { lifeMax: fig.lifeMax } : {}) } : {}) } } as Evaluated };
       },
       (e: Error) => {

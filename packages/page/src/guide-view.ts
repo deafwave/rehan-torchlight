@@ -15,7 +15,7 @@ export interface GuideOut {
   /** your slate board now and after the plan (guide slates.ts boardView) */ board?: { now: Board; after: Board };
 }
 export interface Board { cells: { x: number; y: number; level: number }[]; slates: { cells: [number, number][]; lines: string[]; source: string; changed: boolean }[] }
-export interface Plan { target: string; goal: number; at: string; start: { label: string; figure: Figure }; steps: { label: string; costFE: number; totalFE: number; figure: Figure; note?: string }[];
+export interface Plan { target: string; goal: number; goalSeconds?: number; at: string; start: { label: string; figure: Figure }; steps: { label: string; costFE: number; totalFE: number; figure: Figure; note?: string }[];
   build?: { section: string; lines: string[]; trees?: TreeView[] }[] }
 /** one tab: a skill against one yardstick (target null = the training dummy), from step `firstStep` on; `end` = why it ended */
 export interface Leg { skill: string; target: string | null; firstStep: number; end?: string; start: Figure; reached?: false; build?: { section: string; lines: string[]; trees?: TreeView[] }[] }
@@ -335,7 +335,7 @@ function planCard(g: GuideOut): string {
   const notes = (g.startNotes ?? []).map((n) => `<li>${esc(n)}</li>`).join('');
   const refused = g.notCalculable.length ? `<details><summary>Left out although they would gain (${g.notCalculable.length}): the model cannot price them whole, or they unseal an aura</summary><ul>${g.notCalculable.slice(0, 40).map((n) => `<li>${esc(n)}</li>`).join('')}</ul></details>` : '';
   const build = p.build?.length ? `<details class="gl-build"><summary>Your build after the last step: skills, talent trees, pactspirits, gear</summary>${p.build.map(sectionView).join('')}</details>` : '';
-  return `<div class="gl-final"><b>Your path to ${fmtDps(p.goal)} per second on ${boss}</b>`
+  return `<div class="gl-final"><b>${p.goalSeconds ? `Your path to ${boss} dead in under ${p.goalSeconds} s (${fmtDps(p.goal)} per second)` : `Your path to ${fmtDps(p.goal)} per second on ${boss}`}</b>`
     + `<p>Now: <b>${fmtDps(p.start.figure.life100)}</b>/s at full Life (your dummy reading in the model), ${boss} in ${t(p.start.figure)}. ${g.knobs?.partialRun ? `<span class="warn">Still computing</span>: ${p.steps.length} steps so far, at ${fmtDps(end.kill)}/s.` : reached ? `Goal reached after ${p.steps.length} steps for <b>${fmtFE(p.steps.at(-1)?.totalFE ?? 0)} FE</b>: ${fmtDps(end.kill)}/s.` : `<span class="warn">Not reached</span>: the steps below end at ${fmtDps(end.kill)}/s.`}</p>`
     + `<p class="bnote">Do the steps in order and check each on the training dummy: its "Dummy after" number should go up. Each is priced on your build after the ones above it, and the next one is always the most damage per FE (free ones first). Read from your game and priced ${esc(p.at.slice(0, 16).replace('T', ' '))} UTC (model numbers, live etor prices).</p>`
     + `<table class="gl-plan-steps"><tr><th>#</th><th>Do this</th><th>Cost</th><th>Total</th><th>Gain</th><th title="damage per second at full Life: what the training dummy shows">Dummy after</th><th title="kill speed: the damage averaged from full Life to 0 on the boss">${boss} kill speed</th><th>${boss} dies in</th></tr>${rows}</table>`

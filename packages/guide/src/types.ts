@@ -23,7 +23,8 @@ export interface State { loadout: Loadout; owned: OwnedItem[]; fe: number; level
  *  (dps-debug BOSSES key; absent = the ground's dummy) and its max Life `lifeMax` (time to kill = lifeMax / kill). */
 export interface Figure { life100: number; life0: number; kill: number; partial: string[]; stop?: string;
   lock?: number; cull?: number; cullNote?: string; target?: string; lifeMax?: number;
-  /** Hammer of Ash: the auras' Sealed Mana against the pools (dps-debug MANA2); `fits` false = an aura goes off in game. `stop`: not calculated */ mana?: ManaFit }
+  /** Hammer of Ash: the auras' Sealed Mana against the pools (dps-debug MANA2); `fits` false = an aura goes off in game. `stop`: not calculated */ mana?: ManaFit;
+  /** Hammer of Ash: the increased projectile speed and skill area of the embers (dps-debug SHOT3) */ projectile?: { speedInc: number; areaInc: number } }
 export type ManaFit = { reserved: number; capacity: number; margin: number; fits: boolean; life: { reserved: number; capacity: number; margin: number } } | { stop: string };
 
 export type MoveKind = 'gear' | 'craft' | 'unique' | 'talent' | 'core' | 'prism' | 'inverse' | 'slate' | 'pact'
@@ -131,7 +132,7 @@ export interface GuideOut {
   final?: { target: string; figure: Figure }[];
   /** plan: your slate board now and after the plan (slates.ts boardView) */ board?: { now: import('./candidates/slates').BoardView; after: import('./candidates/slates').BoardView };
   /** plan (plan.ts): your character to `goal` damage per second on `target`, the most damage per FE first; `build` = the build at the end */
-  plan?: { target: string; goal: number; at: string; start: { label: string; figure: Figure }; steps: { label: string; costFE: number; totalFE: number; figure: Figure; note?: string }[];
+  plan?: { target: string; goal: number; /** the goal as a kill time (s) */ goalSeconds?: number; at: string; start: { label: string; figure: Figure }; steps: { label: string; costFE: number; totalFE: number; figure: Figure; note?: string }[];
     build?: import('./sheet').Sheet[] };
   /** advise: the price book's FE for every `next[].buy.name` (null = no price), the page's default */
   prices?: Record<string, number | null>;

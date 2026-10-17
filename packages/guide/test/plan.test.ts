@@ -100,6 +100,12 @@ describe('plan candidates keep the rules of the game (owner, 2026-10-16)', () =>
     expect(put).toBeDefined();
     expect((put!.changes[0] as unknown as { items: { baseId: number; shapeId: number }[] }).items.some((x) => x.baseId === 261005 && x.shapeId === 2030)).toBe(true);
   });
+  it('a slate on the board is never offered as one you own (owner, 2026-10-16: the read lists board slates among the items)', () => {
+    const b = live.loadout.slateItems[0];
+    const own = { ...s, owned: [{ itemId: b.itemId, baseId: b.baseId, baseName: null, level: 86, where: 'board', page: -4, slot: 1, count: 1, modifiers: {}, talents: b.talents, shapeId: b.shapeId },
+      { itemId: 'stashed-copy', baseId: b.baseId, baseName: null, level: 86, where: 'stash', page: 0, slot: 1, count: 1, modifiers: {}, talents: [...b.talents].reverse(), shapeId: b.shapeId }] };
+    expect(candidates(own, ctx, DEFAULT_PLAN, lines).filter((x) => x.key.startsWith('ownslate|'))).toEqual([]);
+  });
   it('a slate takes the place of one of yours (same shape and cell, so it fits the board), priced at your price', () => {
     const sl = cs.filter((c) => c.label.startsWith('Replace your slate'));
     expect(sl.length).toBe(live.loadout.slateItems.length * 3);   // 2 lines alone + the pair, per slate
@@ -110,6 +116,19 @@ describe('plan candidates keep the rules of the game (owner, 2026-10-16)', () =>
     expect(sl.find((c) => c.label.endsWith('with Ranger: chance to gain Agility Blessing on Critical Strike'))!.costFE).toBe(100);
     expect(sl.find((c) => /Agility Blessing.* \+ Lich/.test(c.label))!.costFE).toBe(370);
   });
+});
+
+describe('runPlan: no step raises the projectile speed (owner, 2026-10-16: Precise Projectiles, Wind Projectiles cost embers in game)', () => {
+  it('a change that speeds the embers up is refused with why, however much it gains; the goal can be a kill time', async () => {
+    const fig = (k: number, speedInc: number) => ({ life100: k, life0: k, kill: k, partial: [], target: 'cube2', lifeMax: 1.6e13, projectile: { speedInc, areaInc: 200 } });
+    const ev: Evaluator = { pin: 'stub', parallelism: 4, close: async () => {},
+      run: async (loadout, changes) => { const j = JSON.stringify(changes);
+        return { loadout, dropped: [], figure: /"name":"Critical Strike Damage Increase"/.test(j) ? fig(5e10, 51) : /"name":"Multiple Projectiles"/.test(j) ? fig(1.2e10, 40) : fig(1e10, 40) }; } };
+    const r = await runPlan(ev, s, ctx.prices, { target: 'cube2', goalSeconds: 10, maxSteps: 3 });
+    expect(r.plan!.goal).toBe(1.6e12);
+    expect(r.plan!.steps.some((x) => /Critical Strike Damage Increase/.test(x.label))).toBe(false);
+    expect(r.notCalculable.some((n) => /Critical Strike Damage Increase.*raises projectile speed/.test(n))).toBe(true);
+  }, 300_000);
 });
 
 describe('runPlan: a step must raise the damage at full Life too (owner, 2026-10-16: Passivation -> Wind Projectiles, +8.6 % kill speed, -25 % on the dummy)', () => {

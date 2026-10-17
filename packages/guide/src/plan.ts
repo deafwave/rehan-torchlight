@@ -21,7 +21,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Evaluator, Figure, GenCtx, GuideOut, Move, PriceBook, State } from './types';
 
-export interface PlanOpts { target: string; goal: number; maxSteps: number;
+export interface PlanOpts { target: string; goal: number; /** the goal as a time to kill the target (s): goal = its max Life / goalSeconds */ goalSeconds?: number; maxSteps: number;
   /** FE of a slate carrying one wanted line, by line (the owner's prices); others `slateFE` */ slatePrices: [RegExp, number][]; slateFE: number;
   /** FE of the talent prism like the example build's (the owner's price) */ prismFE: number;
   /** talent nodes whose points never move (set by runPlan) */ locked?: Set<number>;
@@ -36,7 +36,7 @@ const RULES = [
   'A Magnificent or Noble support is never levelled (max level 5, levelled by consuming copies).',
   'A legendary you wear or own is never bought.',
   'A change that unseals an aura (Sealed Mana over your Mana, MANA2) is refused.',
-  'Projectile speed is not traded for damage: Wind Projectiles is not offered and Slow Projectile is never taken out. The model overrates faster projectiles (your dummy, 2026-10-16: Passivation -> Wind Projectiles measured 22.5 B -> 16.9 B where the model said -8 %).',
+  'Projectile speed is never raised (any aura, support, slate line or item that adds it is refused); Wind Projectiles is not offered and Slow Projectile is never taken out. The model overrates faster projectiles (your dummy, 2026-10-16: Passivation -> Wind Projectiles measured 22.5 B -> 16.9 B where the model said -8 %).',
   'Every step raises both the Traveler kill speed and your damage at full Life (the number the training dummy shows, the "Dummy" column): check each step there.',
   'Talent points are only moved (a respec is free at level 90 and below), never added: the plan does not assume a point you do not have.',
   'Hero memories: each is levelled to its rarity cap (Rare 30, Epic 40); a higher rarity is a new memory bought, priced from market listings only.',
@@ -171,7 +171,9 @@ export function candidates(s: State, ctx: GenCtx, o: PlanOpts, lines: { id: numb
     }
   }
   // a slate you own (bag, stash) in place of one on the board: free
-  for (const own of s.owned.filter((x) => x.talents?.length)) {
+  // not one already on the board: the read lists board slates among the items (where 'board'), and a board slate's own lines may be read in part
+  const onBoard = new Set(((s.loadout.slateItems ?? []) as { itemId: string; talents: number[] }[]).flatMap((x) => [x.itemId, JSON.stringify([...x.talents].sort())]));
+  for (const own of s.owned.filter((x) => x.talents?.length && x.where !== 'board' && !onBoard.has(x.itemId) && !onBoard.has(JSON.stringify([...x.talents!].sort())))) {
     const where = own.where === 'bag' ? 'bag' : 'stash';
     ((s.loadout.slateItems ?? []) as { talents: number[] }[]).forEach((it, i) => (o.slateSlots && !o.slateSlots.includes(i))
       || !fitsLayout(applyPatch(s.loadout, replaceSlate(s, i, own.talents!, { baseId: own.baseId, shapeId: own.shapeId }) as never), s.level, added) || out.push({ key: `ownslate|${own.itemId}|${i}`, group: `ownslate|${own.itemId}`, kind: 'slate', costFE: 0,
@@ -200,6 +202,7 @@ export async function runPlan(ev: Evaluator, s0: State, books: PriceBook, k: Par
   const ctx: GenCtx = { prices: books, level: s.level, notSearched: new Set() };
   const C = ctxOfState(s), first = (await ev.run(s.loadout, [], C)).figure;
   if (first.stop) throw new Error(`your character cannot be priced on ${bossName(o.target)}: ${first.stop}`);
+  if (o.goalSeconds) { if (!first.lifeMax) throw new Error(`${o.target}: no max Life to set a kill time against`); o.goal = first.lifeMax / o.goalSeconds; }
   const lines = (await slateWants(ev, s, first, 0, 25, false)).filter((x) => !CONVERSION.test(x.name));
   // talent points that stay where they are: the owner's (Paralysis is applied in game, Sealed Mana Compensation keeps the auras on) and a node the model prices
   // at exactly 0 (a state it does not evaluate, so it cannot judge the node)
@@ -222,6 +225,9 @@ export async function runPlan(ev: Evaluator, s0: State, books: PriceBook, k: Par
       : lost.length ? `takes out a piece the model does not price: ${lost[0].slice(0, 160)}`
       // the kill speed averages the damage from the boss's full Life down to 0; the training dummy (what the owner checks a step on) stays at full Life. A step
       // must raise both: Passivation -> Wind Projectiles was +8.6 % on the kill speed, -8 % at full Life in the model and -25 % on the owner's dummy (2026-10-16)
+      // faster embers: the model has Gale turn the speed into damage and every ember still landing; the owner's dummy says the shotgun loses more (Wind Projectiles
+      // 22.5 B -> 16.9 B, Precise Projectiles 56.7 B where the model said x1.16, 2026-10-16): no step raises the projectile speed
+      : g.projectile && f.projectile && g.projectile.speedInc > f.projectile.speedInc + 0.5 ? `raises projectile speed (+${f.projectile.speedInc.toFixed(0)}% -> +${g.projectile.speedInc.toFixed(0)}%), which costs embers in your game`
       : g.life100 < f.life100 * 0.995 ? `lowers your damage at full Life (what the training dummy shows) by ${((1 - g.life100 / f.life100) * 100).toFixed(1)} %` : !fits(g) ? `unseals an aura (Sealed Mana ${(g.mana as { reserved: number }).reserved} over ${(g.mana as { capacity: number }).capacity})` : undefined;
     if (why && g.kill > f.kill * 1.01) refused.set(c.label, `${why} (+${((g.kill / f.kill - 1) * 100).toFixed(0)} % if it were)`);
     const v = g.stop || why || !(g.kill > f.kill * 1.005) ? -Infinity : Math.log(g.kill / f.kill) / Math.max(c.costFE, 1);
@@ -232,7 +238,7 @@ export async function runPlan(ev: Evaluator, s0: State, books: PriceBook, k: Par
     knobs: { plan: { ...o, slatePrices: o.slatePrices.map(([r, v]) => `${r.source}: ${v}`) }, fight: ev.fight, rollBudget: ev.rollBudget, target: o.target, partialRun },
     character: { level: s0.level, skill: 'hoa', fe: s0.fe, owned: s0.owned.length, gear: ((s0.loadout.gear ?? []) as { slot?: string; label: string; name?: string }[]).map((g) => ({ slot: g.slot ?? '', label: g.name ?? g.label })) },
     start: first, startNotes: notes, steps: [], notSearched: [...ctx.notSearched], unpriced: [], notCalculable: [...refused].map(([l, w]) => `${l}: ${w}`),
-    slates: lines.slice(0, 25), plan: { target: o.target, goal: o.goal, at: new Date().toISOString(), start: { label: 'your character as read from the game', figure: first }, steps,
+    slates: lines.slice(0, 25), plan: { target: o.target, goal: o.goal, ...(o.goalSeconds ? { goalSeconds: o.goalSeconds } : {}), at: new Date().toISOString(), start: { label: 'your character as read from the game', figure: first }, steps,
       build: buildSheet(s.loadout) } });
   const keep = heldUniques(s0);
   // the weakest board slates (the least lost when emptied): a new slate is tried in place of these 2 only (6 figures, again after a slate step)

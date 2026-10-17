@@ -1,4 +1,4 @@
-/** guide plan [<export.json>, default a fresh read of the running game] [--target <boss>, default traveler] [--goal N, default 2e11] [--slate-fe N] [--prism-fe N] [--steps N] | ideal [--live] [--out path] | live [--every M, default 60]: ideal --live every M minutes, each committed and pushed | advise <export.json> [--fe N] [--season N] [--out path] [--hoa: an Ice Shot character planned as switched to Hammer of Ash now] [--steps N, default 0: the next-buys list only] [--budget-minutes N, default 30] | figure <loadout.json> [--skill hoa|iceShot] [--level N]   (ideal / advise: [--prices <file>, default prices.json at the repository root when it exists: { "<item name>": FE }]; all: [--workers N] [--bombs N, default 10] [--budget-minutes N] [--roll-budget N, default 1<<20] [--target <dps-debug BOSSES key | dummy>, default cube3: what Hammer of Ash is priced against]) */
+/** guide plan [<export.json>, default a fresh read of the running game] [--target <boss>, default traveler] [--goal N, default 2e11 | --kill-seconds S: the target dead within S seconds] [--slate-fe N] [--prism-fe N] [--steps N] | ideal [--live] [--out path] | live [--every M, default 60]: ideal --live every M minutes, each committed and pushed | advise <export.json> [--fe N] [--season N] [--out path] [--hoa: an Ice Shot character planned as switched to Hammer of Ash now] [--steps N, default 0: the next-buys list only] [--budget-minutes N, default 30] | figure <loadout.json> [--skill hoa|iceShot] [--level N]   (ideal / advise: [--prices <file>, default prices.json at the repository root when it exists: { "<item name>": FE }]; all: [--workers N] [--bombs N, default 10] [--budget-minutes N] [--roll-budget N, default 1<<20] [--target <dps-debug BOSSES key | dummy>, default cube3: what Hammer of Ash is priced against]) */
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { writeAtomic } from './atomic';
@@ -105,7 +105,7 @@ async function main() {
     const out = flag('out') ?? fileURLToPath(new URL('../../page/src/data/advice.json', import.meta.url));
     const ev = await evaluator();
     try {
-      final(out, dump(await runPlan(ev, state, book, { ...(flag('target') ? { target: flag('target')! } : {}), ...(num('goal') ? { goal: num('goal')! } : {}), ...(num('steps') ? { maxSteps: num('steps')! } : {}),
+      final(out, dump(await runPlan(ev, state, book, { ...(flag('target') ? { target: flag('target')! } : {}), ...(num('goal') ? { goal: num('goal')! } : {}), ...(num('kill-seconds') ? { goalSeconds: num('kill-seconds')! } : {}), ...(num('steps') ? { maxSteps: num('steps')! } : {}),
         ...(num('slate-fe') ? { slateFE: num('slate-fe')! } : {}), ...(num('prism-fe') ? { prismFE: num('prism-fe')! } : {}) }, (o) => writeAtomic(out, dump(o)))));
     } finally { await ev.close(); }
     console.log(`wrote ${out}`);
