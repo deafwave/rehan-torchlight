@@ -1,6 +1,6 @@
 ---
 name: market
-description: "Rank the auction house search the player has open in Torchlight: Infinite by what each listing costs to finish: price + expected crafting to get every wanted mod to T1 (market-targets.json); a Divinity Slate search by the model's % damage gain on your character. Reads the listings from game memory, no screenshots, ~3 s (slates ~40 s). Use when the user asks which market item is the best deal, the best base to craft on, or says /market."
+description: "Rank the auction house search the player has open in Torchlight: Infinite by what each listing costs to finish: price + expected crafting to get every wanted mod to T1 (market-targets.json); a Divinity Slate search by the model's % damage gain on your character. Reads the listings from game memory, no screenshots, ~3 s (slates ~15 s for a page; --watch keeps it warm and re-ranks on every change). Use when the user asks which market item is the best deal, the best base to craft on, or says /market."
 ---
 
 # market
@@ -35,6 +35,8 @@ Notes:
 - A two-handed weapon spends 2 embers per craft.
 - Max 2 advanced affixes per item. A listing with an advanced T1 mod outside the target (for example T1 Strength on a maul) can be a cheaper alternative. Mention it.
 - To test without the game: `pnpm -s guide:market --file <saved listings.json>`.
+- `--watch` keeps running: it re-reads the screen every 2 s and ranks again when the listings change (workers and prices stay warm; Ctrl+C to stop). etor prices are cached in `packages/guide/.cache/etor-snapshot.json` and fetched again every 30 minutes.
+- Slates use 8 workers (about 1.4 GB each; `--workers N`). A listing is priced in place of your weakest slate and of any slate that shares one of its talents; `--exact` tries every slate (6x the figures).
 
 ## Slate searches
 

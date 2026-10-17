@@ -4,10 +4,10 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "guide": "tsx src/cli.ts",
+    "guide": "node --import tsx src/cli.ts",
     "test": "tsc --noEmit && vitest run",
     "typecheck": "tsc --noEmit",
-    "market": "tsx scripts/market.ts"
+    "market": "node --import tsx scripts/market.ts"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",

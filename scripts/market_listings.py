@@ -12,8 +12,9 @@ from lua import Lua
 
 def listings(L):
     objs = L.path(L.globals(), 'LuaObjectMgr', 'LuaObjectMap')
-    show = next((v for k, v in L.items(objs) if isinstance(k, str) and k.endswith('_AuctionHouseShowGoodV2')), None)
-    goods = show and L.get(show, 'GoodDatas')
+    # the client keeps an old results view next to the one on screen (a memory search opens a second one): the newest view with goods
+    shows = sorted(((int(k.split('_')[0]), v) for k, v in L.items(objs) if isinstance(k, str) and k.endswith('_AuctionHouseShowGoodV2')), key=lambda kv: -kv[0])
+    goods = next((g for _, v in shows for g in [L.get(v, 'GoodDatas')] if g and any(True for _ in L.items(g))), None)
     if not goods:
         return []
     val = lambda tv: tv and L.val(tv)
@@ -33,7 +34,7 @@ def listings(L):
         td = it and L.get(it, 'TalentDatas')   # a slate (Pedigree of Gods, divinity slates): its talents and shape
         tl = td and L.get(td, 'BaseTalentList')
         res.append({'n': i, 'price': val(L.get(raw, 'PriceNum')), 'priceType': val(L.get(raw, 'PriceType')), 'baseId': val(L.get(it, 'ConfigBaseId')),
-                    'level': val(L.get(it, 'Level')), 'prefix': side(aff, 'PrefixInfoList'), 'suffix': side(aff, 'SuffixInfoList'),
+                    'level': val(L.get(it, 'Level')), 'prefix': side(aff, 'PrefixInfoList'), 'suffix': side(aff, 'SuffixInfoList'), 'fixed': side(aff, 'BAffixInfoList'), 'base': side(aff, 'BaseAttrInfoList'),
                     **({'talents': [val(x) for _, x in sorted(L.items(tl), key=lambda kv: kv[0])], 'shapeId': val(L.get(td, 'ShapeId'))} if tl else {})})
     return res
 

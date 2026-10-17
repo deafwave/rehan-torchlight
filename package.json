@@ -9,6 +9,6 @@
     "preview": "pnpm --filter @tli-lens/page preview",
     "test": "pnpm -r test",
     "guide": "pnpm --filter @tli-lens/guide guide",
-    "guide:market": "pnpm --filter @tli-lens/guide market"
+    "guide:market": "cd packages/guide && node --import tsx scripts/market.ts"
   }
 }
