@@ -38,11 +38,11 @@ describe('plan candidates keep the rules of the game (owner, 2026-10-16)', () =>
     expect(c?.costFE).toBe(1433);
     expect(c?.changes).toEqual([{ kind: 'patch', op: 'gear-roll', slot: 'chest', id: 80935371, dyn: [30] }]);
   });
-  it('a hero memory levelled to its cap, or awakened to the next rarity and levelled to that cap, at the scraps, threads and dust it takes', () => {
+  it('a hero memory levelled to its rarity cap at the scraps and threads it takes; never awakened to another rarity (a new memory is bought: owner, 2026-10-16)', () => {
     const priced = { ...ctx, prices: withPrices(ctx.prices, { 'Memory Scrap': 0.1, 'Memory Thread - Epic': 1, 'Crude Lunar Dust': 1, 'Luminous Lunar Dust': 1 }).book };
     const m = candidates(s, priced, DEFAULT_PLAN, lines).filter((c) => c.kind === 'memory');
     expect(m.length).toBeGreaterThan(0);
-    for (const c of m) expect(c.label).toMatch(/^(Level|Awaken) your Memory of \w+ .* -> \d+: .*Memory Scrap/);
+    for (const c of m) expect(c.label).toMatch(/^Level your Memory of \w+ \d+ -> \d+: .*Memory Scrap/);
   });
   it('a slate takes the place of one of yours (same shape and cell, so it fits the board), priced at your price', () => {
     const sl = cs.filter((c) => c.label.startsWith('Replace your slate'));

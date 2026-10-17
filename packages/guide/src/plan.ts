@@ -35,6 +35,7 @@ const RULES = [
   'Projectile speed is not traded for damage: Wind Projectiles is not offered and Slow Projectile is never taken out. The model overrates faster projectiles (your dummy, 2026-10-16: Passivation -> Wind Projectiles measured 22.5 B -> 16.9 B where the model said -8 %).',
   'Every step raises both the Traveler kill speed and your damage at full Life (the number the training dummy shows, the "Dummy" column): check each step there.',
   'Talent points are only moved (a respec is free at level 90 and below), never added: the plan does not assume a point you do not have.',
+  'Hero memories: each is levelled to its rarity cap (Rare 30, Epic 40); a higher rarity is a new memory bought, priced from market listings only.',
   'Your Paralysis and Sealed Mana Compensation talent points stay, and so do points on a node the model prices at exactly 0 (it cannot judge them).',
 ];
 const KEPT = /Paralysis|Sealed Mana Compensation/;
@@ -46,8 +47,6 @@ type Enh = Record<string, { Rarity: number[]; CurrentEnhanceLevel: number; Targe
 let enh: Enh | undefined;
 const ENH = (): Enh => (enh ??= JSON.parse(readFileSync(join(pinRoot(), 'catalog/0x6ac8071f/lua_config_hero_item_enhance.json'), 'utf8')).rows as Enh);
 const MEM_ITEM: Record<string, string> = { 5140: 'Memory Scrap', 5141: 'Memory Thread - Normal', 5142: 'Memory Thread - Magic', 5143: 'Memory Thread - Rare', 5144: 'Memory Thread - Epic', 391000: 'Crude Lunar Dust', 391001: 'Luminous Lunar Dust', 391002: 'Flawless Lunar Dust' };
-/** awakening a memory of this rarity (lua_config_memory_awaken_recipe_s14 CostItemNew) */
-const AWAKEN: Record<number, Record<string, number>> = { 3: { 391000: 8 }, 4: { 391001: 4 } };
 function memoryCands(s: State, ctx: GenCtx): Cand[] {
   const rolls = table<{ rows: Record<string, [number, number][]> }>('config_modifier_rolls').rows, out: Cand[] = [];
   const cap = (r: number) => Math.max(0, ...Object.values(ENH()).filter((x) => x.Rarity.includes(r)).map((x) => x.TargetEnhanceLevel));
@@ -56,15 +55,15 @@ function memoryCands(s: State, ctx: GenCtx): Cand[] {
   for (const m of mems) {
     const b = m.affixes.find((a) => a.list === 'BaseAttrInfoList'); if (!b) continue;
     const group = Math.floor(b.id / 100), rarity = group % 10;
-    for (const [r, g, fromCost] of [[rarity, group, {}], [rarity + 1, group + 1, AWAKEN[rarity]]] as [number, number, Record<string, number> | undefined][]) {
-      const top = cap(r), id = g * 100 + (51 - top);
-      if (!fromCost || !rolls[id] || top <= (r === rarity ? m.reminiscenceLevel : 0)) continue;
-      const n = { ...need(r, m.reminiscenceLevel, top) }; for (const [k, v] of Object.entries(fromCost)) n[k] = (n[k] ?? 0) + v;
+    {
+      const r = rarity, top = cap(r), id = group * 100 + (51 - top);
+      if (!rolls[id] || top <= m.reminiscenceLevel) continue;
+      const n = need(r, m.reminiscenceLevel, top);
       const fe = Object.entries(n).reduce((t, [k, v]) => t + v * (ctx.prices.price(MEM_ITEM[k] ?? k, s.level) ?? NaN), 0);
       if (!Number.isFinite(fe)) continue;
       const dyn = rolls[id].map(([lo]) => lo), items = mems.map((x) => (x !== m ? x : { ...x, reminiscenceLevel: top, affixes: x.affixes.map((a) => (a === b ? { ...a, id, dyn } : a)) }));
       out.push({ key: `memory|${m.slot}|${r}`, group: `memory|${m.slot}|${r}`, kind: 'memory', costFE: fe, note: 'its random affix at 20 / 40 is not priced: at least this',
-        label: `${r === rarity ? `Level your ${m.label} ${m.reminiscenceLevel} -> ${top}` : `Awaken your ${m.label} to rarity ${r} and level it ${m.reminiscenceLevel} -> ${top}`}: ${lineText(id, dyn)} (yours ${lineText(b.id, b.dyn)}); ${Object.entries(n).map(([k, v]) => `${v} ${MEM_ITEM[k] ?? k}`).join(', ')}`,
+        label: `Level your ${m.label} ${m.reminiscenceLevel} -> ${top}: ${lineText(id, dyn)} (yours ${lineText(b.id, b.dyn)}); ${Object.entries(n).map(([k, v]) => `${v} ${MEM_ITEM[k] ?? k}`).join(', ')}`,
         changes: [{ kind: 'patch', op: 'memories', items } as never] });
     }
   }
@@ -108,8 +107,9 @@ export function candidates(s: State, ctx: GenCtx, o: PlanOpts, lines: { id: numb
         label: `Buy another ${name} with ${lineText(a.id, best)} (yours: ${a.dyn.join(' / ')}); replace yours`, changes: [{ kind: 'patch', op: 'gear-roll', slot, id: a.id, dyn: best } as never] });
     }
   }
-  // a worn hero memory levelled to its rarity's cap, or awakened to the next rarity and levelled to that cap (MEM1: base attr = group x 100 + BaseAttrTier;
-  // its value is the roll table's). The random affix a level 20 / 40 step adds and awakening's random part are not in the catalog: the step is a lower bound
+  // a worn hero memory levelled to its rarity's cap (MEM1: base attr = group x 100 + BaseAttrTier; its value is the roll table's). The random affix a level
+  // 20 / 40 step adds is not in the catalog: the step is a lower bound. A higher rarity is a new memory bought (owner, 2026-10-16), with its own random
+  // affixes: priced from market listings, not here
   for (const c of memoryCands(s, ctx)) out.push(c);
   // a gem to level 20 (time, no FE); a Magnificent / Noble support is levelled by consuming copies (max 5): never a time step
   for (const g of L.skills.filter((x) => x.level < 20 && !/\((Magnificent|Noble)\)/.test(x.name))) {
