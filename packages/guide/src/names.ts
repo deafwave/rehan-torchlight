@@ -38,3 +38,10 @@ export function uniqueName(baseId: number, modifierIds: number[]): string | unde
     return ks.length > 0 && ks.every((x) => x.some((y) => groups.has(y))); })());
   return hit ? L()[`item_gold|name|${hit[0]}`] : undefined;
 }
+
+/** a skill or support gem by its stone id (config_item_base p5c -> lang_en item_base name): the read sometimes names none (2026-10-17) */
+let stones: Map<number, string> | undefined;
+export function stoneName(sid: number): string | undefined {
+  if (!stones) { stones = new Map(); for (const [b, r] of Object.entries(rows('config_item_base'))) { const s = r.p5c?.[0], n = L()[`item_base|name|${b}`]; if (typeof s === 'number' && n && !stones.has(s)) stones.set(s, n); } }
+  return stones.get(sid);
+}

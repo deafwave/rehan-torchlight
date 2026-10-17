@@ -1,5 +1,5 @@
 /** Start states: the ideal Bing1 character at map entry (spec §3.3) and a live character from a tli-lens export (dps-debug reader/export.py). */
-import { uniqueName } from './names';
+import { stoneName, uniqueName } from './names';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { basesFor, bareItem, familyOf } from './candidates/gear';
@@ -99,6 +99,8 @@ export function fromExport(json: unknown, fe?: number): State {
   for (const sl of (loadout.slateItems ?? []) as { talents?: number[] }[]) if (Array.isArray(sl.talents)) sl.talents = sl.talents.filter(t => t !== 0);
   // a worn legendary is named by its own name (the read labels it by its base: Old King's Sabatons is Boots of Devastation); `label` stays the base
   for (const g of (loadout.gear ?? []) as Dict[]) { const n = uniqueName(g.baseId, ((g.affixes ?? []) as { id: number }[]).map(a => a.id)); if (n) g.name = n; }
+  // a read that named no skill (2026-10-17: every name null) names each by its stone: labels and the rules that match a name (Blink, Slow Projectile) need it
+  for (const g of (loadout.skills ?? []) as Dict[]) g.name ??= stoneName(g.sid) ?? null;
   const skill = (['iceShot', 'hoa'] as Skill[]).find(sk => mainSid(sk) === active?.sid);
   if (!skill) throw new Error(`export main skill (sid ${active?.sid}) is neither Ice Shot nor Hammer of Ash`);
   const owned: OwnedItem[] = (j.items as Dict[]).filter(i => i.where !== 'equipped' && !FE_BASES.has(i.baseId)).map(i => ({

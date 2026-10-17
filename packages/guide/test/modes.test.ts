@@ -81,6 +81,13 @@ describe('fromExport', () => {
     expect(() => fromExport(exportOf({ fe: undefined }))).toThrow('export has no fe; pass --fe N');
     expect(fromExport(exportOf({ fe: undefined }), 7).fe).toBe(7);
   });
+  it("a skill or support the read did not name is named by its stone (2026-10-17: a read with every name null let a step take Slow Projectile out)", () => {
+    const blank = structuredClone(exportOf().loadout) as { skills: { sid: number; name: string | null }[] };
+    for (const g of blank.skills) g.name = null;
+    const skills = fromExport(exportOf({ loadout: blank })).loadout.skills as { sid: number; name: string }[];
+    expect(skills.find((g) => g.sid === 10002010)?.name).toBe('Multiple Projectiles');
+    expect(skills.every((g) => typeof g.name === 'string' && g.name.length > 0)).toBe(true);
+  });
   it('rejects another schema', () => expect(() => fromExport(exportOf({ schema: 'x' }))).toThrow(/tli-lens export/));
 });
 
