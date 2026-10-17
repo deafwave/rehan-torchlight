@@ -74,8 +74,9 @@ export function planPrism(item: Pick<OwnedItem, 'modifiers'>, c: Catalog = catal
     else return { skip: `server affix ${aff} (${m.id}) has no documented resolution` };
   }
   if (!ext.length && !provide.length) return { skip: 'no 10007 or 10004 affix: nothing to place' };
-  // a prism without 10008 keeps its base area; the base InfluenceId is not in OwnedItem, so that case is not generated
-  if (shape === undefined) return { skip: 'no 10008 affix: the base area (item InfluenceId) is not in the export' };
+  // a prism without 10008 keeps its base area; the base InfluenceId is not in OwnedItem, so a prism that copies onto the nodes around it (10007) is not
+  // generated. One that only grants a tree-wide ExtraAffix (10004: the Haze's two-handed base damage) needs no area: its own cell (shape 8)
+  if (shape === undefined) { if (ext.length) return { skip: 'no 10008 affix: the base area (item InfluenceId) is not in the export' }; shape = 8; }
   return { shape, ext, provide };
 }
 

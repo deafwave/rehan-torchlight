@@ -28,7 +28,10 @@ export function applyInOrder(lo: Loadout, changes: (Change | LoadoutPatch)[], a:
 export const RESOURCE1_KEY = 'comp 0x26 resource key 1 (counter 0x2d: Fighting Will, buff 390, 0..100)';
 /** Fighting Will (OH1, RESOURCE1_KEY) too: stated on a build with a fixed rating (the probuild belt's 67) it stops the figure ("how a fight value and a fixed
  *  rating combine is not traced"), so only a build with no rating gets it */
-export const ON_ASK: Record<string, number> = { 'affix class 782097792 var 1': 0, [RESOURCE1_KEY]: 50 };
+/** Lich 54070400 "additional damage when having both Sealed Mana and Life" gates on comp 0x6f resource 1001 > 0 and 1301 > 0 (class 97720264, getter 76, cond 300):
+ *  stated true (1) when a figure asks - the owner's build seals Life (Seal Conversion) and Mana. dps-debug HANDOFF H1641: on another character the engine's gate was
+ *  false while the UI showed both, so this is a statement to check on the dummy, not a derived value */
+export const ON_ASK: Record<string, number> = { 'affix class 782097792 var 1': 0, [RESOURCE1_KEY]: 50, 'resource 1001 value': 1, 'resource 1301 value': 1 };
 const ASKED = /the scenario did not supply the fight input (.+?)(?: \(|$)|the fight input '(.+?)' is not given/;
 /** price with no extra input; while the figure stops naming an ON_ASK input not yet given, price again with it */
 export function withAsked<R extends { stop?: string }>(figure: (extra: Record<string, number>) => R): R {
