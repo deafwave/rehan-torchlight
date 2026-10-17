@@ -35,3 +35,10 @@ Notes:
 - A two-handed weapon spends 2 embers per craft.
 - Max 2 advanced affixes per item. A listing with an advanced T1 mod outside the target (for example T1 Strength on a maul) can be a cheaper alternative. Mention it.
 - To test without the game: `pnpm -s guide:market --file <saved listings.json>`.
+
+## Slate searches
+
+- A Divinity Slate search is ranked by the model's damage gain of each listing **in place of one of your slates of the same shape** (your board is full:
+  a slate only fits where one of its shape sits), on the Traveler (the plan's target; `--target <boss>` to change). The row names which of your slates it replaces.
+- A listing whose shape matches none of your slates is listed as not ranked.
+- The reader sees the listings on screen: run it again for each page of the search.

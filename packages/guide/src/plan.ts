@@ -7,7 +7,7 @@ import { gemMoves } from './candidates/gems';
 import { kismetMoves } from './candidates/kismets';
 import { pactMoves } from './candidates/pacts';
 import { prismMoves } from './candidates/prisms';
-import { slateMoves, slateWants } from './candidates/slates';
+import { replaceSlate, slateMoves, slateWants } from './candidates/slates';
 import { talentMovesWith } from './candidates/talents';
 import { targetMoves } from './candidates/target';
 import { bossName, ownedGear, ownedUniques } from './modes';
@@ -93,11 +93,9 @@ export function candidates(s: State, ctx: GenCtx, o: PlanOpts, lines: { id: numb
     const was = (it.talents as number[]).map(talentName).join(', ');
     for (const set of sets) {
       const ids = set.map((x) => x.id), names = set.map((x) => x.name);
-      const items = slates.map((x, j) => (j !== i ? x : { ...x, itemId: `guide-slate-${i}-${ids.join('-')}`, talents: ids,
-        influence: { ...(x.influence as object), EffectTalentIds: ids, TalentIdDevour: ids.map(() => false), TalentIdInfluence: ids.map(() => 0), TalentIdCopyInfluence: {}, TalentIdCopy: {},
-          DevilProjectionTalentIds: {}, DevilProjectionInfluence: {}, DevilLineBoostInfluence: {}, DevilLineBoostTalentIds: {} } }));
+
       out.push({ key: `slate|${i}|${ids.join('-')}`, kind: 'slate', costFE: names.reduce((t, n) => t + price(n), 0), note: 'slate price assumed: check /market',
-        label: `Replace your slate ${i + 1} (${was}) with a slate of the same shape with ${names.join(' + ')}`, changes: [{ kind: 'patch', op: 'slate-board', items } as never] });
+        label: `Replace your slate ${i + 1} (${was}) with a slate of the same shape with ${names.join(' + ')}`, changes: [replaceSlate(s, i, ids)] });
     }
   });
   return out;
