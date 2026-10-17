@@ -52,8 +52,8 @@ export function boardView(l: Record<string, unknown>, from: (i: number) => { sou
  *  into the board's open cells by an exact search, each by its type's rule - a Pedigree (7 cells, 2090) is only flipped across the vertical axis, a normal
  *  slate (4 cells) takes the square / L / Z shapes in any rotation, a Corner of Divinity or Fallen Starlight (the 2- and 3-cell shapes) any rotation. Null when
  *  they do not all fit; else each slate's cells, the placed ones first in board order, then the extras. */
-/** slate types the game allows at most 3 of on a board (owner, 2026-10-16: Corners of Divinity, Fallen Starlight: the 2- and 3-cell bases) */
-export const SLATE_CAP: Record<number, number> = { 261003: 3, 261005: 3 };
+/** slate types the game allows a few of on a board (owner, 2026-10-16/17: at most 3 Corners of Divinity and 3 Fallen Starlight - the 2- and 3-cell bases - and 1 Pedigree) */
+export const SLATE_CAP: Record<number, number> = { 261003: 3, 261005: 3, 261010: 1 };
 export const overCap = (items: { baseId: number }[]) => Object.entries(SLATE_CAP).some(([b, n]) => items.filter((x) => x.baseId === +b).length > n);
 export function packBoard(l: Record<string, unknown>, level: number, extra: number[]): [number, number][][] | null {
   const items = ((l.slateItems ?? []) as SlateItem[]).filter((it) => !it.itemId.startsWith('guide-add-')), shapes = rows('lua_config_talent_block_shape');
