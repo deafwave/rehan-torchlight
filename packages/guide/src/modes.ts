@@ -273,7 +273,7 @@ async function rollAdvice(ev: Evaluator, state: State, ctx: GenCtx, base: Figure
     });
     if (!best) continue;
     const b = best as { k: number; eg: number; cost: number; crafts: number }, keep = good.slice(0, b.k);
-    out.push({ kind: 'craft', label: `Craft on ${plan.slot} with ${plan.ember} (${plan.perCraft} per craft): keep any of ${b.k} result${b.k === 1 ? '' : 's'} - ${keep.slice(0, 4).map((x) => x.o.label).join('; ')}${b.k > 4 ? '; or another of the list' : ''} - about ${Math.ceil(b.crafts)} crafts`,
+    out.push({ kind: 'craft', label: `Craft on ${plan.slot} ${plan.target} with ${plan.ember} (${plan.perCraft} per craft): keep any of ${b.k} result${b.k === 1 ? '' : 's'} - ${keep.slice(0, 4).map((x) => x.o.label).join('; ')}${b.k > 4 ? '; or another of the list' : ''} - about ${Math.ceil(b.crafts)} crafts`,
       gain: b.eg, kill: base.kill * b.eg, costFE: b.cost, buy: { name: plan.ember, qty: b.crafts * plan.perCraft } });
   }
   return out;

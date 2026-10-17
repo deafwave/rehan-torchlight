@@ -41,7 +41,7 @@ const RULES = [
   'Projectile speed is never raised (any aura, support, slate line or item that adds it is refused); Wind Projectiles is not offered and Slow Projectile is never taken out. The model overrates faster projectiles (your dummy, 2026-10-16: Passivation -> Wind Projectiles measured 22.5 B -> 16.9 B where the model said -8 %).',
   'Every step raises both the Traveler kill speed and your damage at full Life (the number the training dummy shows, the "Dummy" column): check each step there.',
   'Talent points are only moved (a respec is free at level 90 and below), never added: the plan does not assume a point you do not have.',
-  'Hero memories: each is levelled to its rarity cap (Rare 30, Epic 40); a higher rarity is a new memory bought, priced from market listings only.',
+  'Hero memories: each is levelled to its rarity cap (Rare 30, Epic 40), its random affixes rerolled one slot at a time until each lands (no keep: a reroll replaces the affix in the slot) at the game odds of Affliction Effect for every affix (1.46 % an Epic roll); a higher rarity is a new memory bought, priced from market listings only.',
   'Your Paralysis and Sealed Mana Compensation talent points stay, and so do points on a node the model prices at exactly 0 (it cannot judge them).',
 ];
 const KEPT = /Paralysis|Sealed Mana Compensation/;
@@ -49,28 +49,64 @@ const CONVERSION = /Converts? .*Physical Damage to (Cold|Lightning|Fire)|Physica
 
 /** the legendaries you wear or own: never bought, also after a step takes one off (a new one is priced at the middle of its rolls; yours is the roll there is) */
 const heldUniques = (s: State) => new Set([...ownedUniques(s, true).values(), ...ownedUniques(s).values()]);
-type Enh = Record<string, { Rarity: number[]; CurrentEnhanceLevel: number; TargetEnhanceLevel: number; BaseAttrTier: number; ItemConsume: Record<string, number> }>;
-let enh: Enh | undefined;
+type Enh = Record<string, { Rarity: number[]; CurrentEnhanceLevel: number; TargetEnhanceLevel: number; BaseAttrTier: number; RandomAffixMod: number; ItemConsume: Record<string, number> }>;
+type Reroll = Record<string, { Rarity: number[]; ItemLevel: [number, number]; ItemConsume: Record<string, number>; AffixTier: { Key: number; Value: number }[] }>;
+let enh: Enh | undefined, reroll: Reroll | undefined;
 const ENH = (): Enh => (enh ??= JSON.parse(readFileSync(join(pinRoot(), 'catalog/0x6ac8071f/lua_config_hero_item_enhance.json'), 'utf8')).rows as Enh);
+const REROLL = (): Reroll => (reroll ??= JSON.parse(readFileSync(join(pinRoot(), 'catalog/0x6ac8071f/lua_config_hero_item_reroll.json'), 'utf8')).rows as Reroll);
 const MEM_ITEM: Record<string, string> = { 5140: 'Memory Scrap', 5141: 'Memory Thread - Normal', 5142: 'Memory Thread - Magic', 5143: 'Memory Thread - Rare', 5144: 'Memory Thread - Epic', 391000: 'Crude Lunar Dust', 391001: 'Luminous Lunar Dust', 391002: 'Flawless Lunar Dust' };
+/** a memory's random affix groups (its base: Origin 71001, Discipline 71002, Progress 71003): one block of 19 from 4021569 and one of 26 from 4021650, in that
+ *  order (the reads: Origin rolls 4021653 and 4021666, Progress 4021717; Affliction Effect, which the game lists, is only in the first block) */
+const memPool = (baseId: number) => { const i = baseId - 71001; return i < 0 || i > 2 ? [] : [...Array.from({ length: 19 }, (_, k) => 4021569 + 19 * i + k), ...Array.from({ length: 26 }, (_, k) => 4021650 + 26 * i + k)]; };
+/** the chance one roll lands a given affix group: the game's odds for Affliction Effect on an Epic (0.32 % T1 + 0.49 % T2 + 0.65 % T3, owner 2026-10-17), taken
+ *  for every group (the catalog has no affix weights); the tier split is the reroll table's */
+const MEM_GROUP_P = 0.0146;
+/** One random affix slot you pick, rerolled until the affix lands (a reroll puts a random affix in it, there is no keep: owner 2026-10-17; expected rerolls 1 / p): a reroll costs the reroll table's items for the rarity and item level (the read
+ *  has no memory item level: the hero's). A level step that reaches a RandomAffixMod level (Epic: 20, 40) rolls a new affix free, then rerolls. */
 function memoryCands(s: State, ctx: GenCtx): Cand[] {
   const rolls = table<{ rows: Record<string, [number, number][]> }>('config_modifier_rolls').rows, out: Cand[] = [];
+  const fe = (n: Record<string, number>) => Object.entries(n).reduce((t, [k, v]) => t + v * (ctx.prices.price(MEM_ITEM[k] ?? k, s.level) ?? NaN), 0);
+  const said = (n: Record<string, number>) => Object.entries(n).map(([k, v]) => `${v} ${MEM_ITEM[k] ?? k}`).join(' + ');
   const cap = (r: number) => Math.max(0, ...Object.values(ENH()).filter((x) => x.Rarity.includes(r)).map((x) => x.TargetEnhanceLevel));
   const need = (r: number, from: number, to: number) => { const n: Record<string, number> = {}; for (const x of Object.values(ENH())) if (x.Rarity.includes(r) && x.CurrentEnhanceLevel >= from && x.TargetEnhanceLevel <= to) for (const [k, v] of Object.entries(x.ItemConsume)) n[k] = (n[k] ?? 0) + v; return n; };
-  const mems = (s.loadout.heroMemories ?? []) as { label: string; slot: number; reminiscenceLevel: number; affixes: { id: number; dyn: number[]; list: string }[] }[];
+  const mid = (id: number) => rolls[id].map(([lo, hi]) => (lo + hi) / 2);
+  type Aff = { id: number; dyn: number[]; list: string };
+  const mems = (s.loadout.heroMemories ?? []) as { label: string; slot: number; baseId: number; reminiscenceLevel: number; affixes: Aff[] }[];
   for (const m of mems) {
     const b = m.affixes.find((a) => a.list === 'BaseAttrInfoList'); if (!b) continue;
-    const group = Math.floor(b.id / 100), rarity = group % 10;
-    {
-      const r = rarity, top = cap(r), id = group * 100 + (51 - top);
-      if (!rolls[id] || top <= m.reminiscenceLevel) continue;
-      const n = need(r, m.reminiscenceLevel, top);
-      const fe = Object.entries(n).reduce((t, [k, v]) => t + v * (ctx.prices.price(MEM_ITEM[k] ?? k, s.level) ?? NaN), 0);
-      if (!Number.isFinite(fe)) continue;
-      const dyn = rolls[id].map(([lo]) => lo), items = mems.map((x) => (x !== m ? x : { ...x, reminiscenceLevel: top, affixes: x.affixes.map((a) => (a === b ? { ...a, id, dyn } : a)) }));
-      out.push({ key: `memory|${m.slot}|${r}`, group: `memory|${m.slot}|${r}`, kind: 'memory', costFE: fe, note: 'its random affix at 20 / 40 is not priced: at least this',
-        label: `Level your ${m.label} ${m.reminiscenceLevel} -> ${top}: ${lineText(id, dyn)} (yours ${lineText(b.id, b.dyn)}); ${Object.entries(n).map(([k, v]) => `${v} ${MEM_ITEM[k] ?? k}`).join(', ')}`,
-        changes: [{ kind: 'patch', op: 'memories', items } as never] });
+    const group = Math.floor(b.id / 100), r = group % 10, L = m.reminiscenceLevel, top = cap(r);
+    const at = (lv: number) => { const id = group * 100 + (51 - lv); return rolls[id] ? { ...b, id, dyn: rolls[id].map(([lo]) => lo) } : undefined; };
+    const write = (affixes: Aff[], lv = L) => [{ kind: 'patch', op: 'memories', items: mems.map((x) => (x !== m ? x : { ...x, reminiscenceLevel: lv, affixes })) } as never];
+    // the random affix outcomes: every pool group not on the memory's other random affixes, at each tier the reroll table rolls, and its chance (tier and better)
+    const rr = Object.values(REROLL()).find((x) => x.Rarity.includes(r) && x.ItemLevel[0] <= s.level && s.level <= x.ItemLevel[1]);
+    const rerollFE = rr ? fe(rr.ItemConsume) : NaN, W = rr ? rr.AffixTier.reduce((t, x) => t + x.Value, 0) : 0;
+    const outcomes = (taken: Aff[]) => (rr ? memPool(m.baseId) : []).filter((g) => !taken.some((a) => Math.floor(a.id / 100) === g)).flatMap((g) => rr!.AffixTier
+      .filter((t) => rolls[g * 100 + t.Key]).map((t) => ({ id: g * 100 + t.Key, p: MEM_GROUP_P * rr!.AffixTier.filter((x) => x.Key <= t.Key).reduce((u, x) => u + x.Value, 0) / W })));
+    const random = m.affixes.filter((a) => a.list === 'SuffixInfoList');
+    // a random affix you have, rerolled to another (or the same group at a better tier)
+    if (Number.isFinite(rerollFE)) for (const a of random) for (const o of outcomes(random.filter((x) => x !== a)))
+      if (Math.floor(o.id / 100) !== Math.floor(a.id / 100) || o.id % 100 < a.id % 100)
+        out.push({ key: `memroll|${m.slot}|${a.id}|${o.id}`, kind: 'memory', costFE: rerollFE / o.p, note: `${(o.p * 100).toFixed(2)} % a reroll (that tier or better)`,
+          label: `Reroll your ${m.label}'s ${lineText(a.id, a.dyn)} to ${lineText(o.id, mid(o.id))}: about ${Math.round(1 / o.p)} rerolls of ${said(rr!.ItemConsume)}`,
+          changes: write(m.affixes.map((x) => (x === a ? { ...x, id: o.id, dyn: mid(o.id) } : x))) });
+    // levelled to its cap: the base stat only (a random affix it rolls on the way is not priced: at least this)
+    const capped = at(top);
+    if (top > L && capped) {
+      const n = need(r, L, top);
+      if (Number.isFinite(fe(n))) out.push({ key: `memlevel|${m.slot}|${L}|${top}`, group: `memlevel|${m.slot}|${L}`, kind: 'memory', costFE: fe(n), note: 'a random affix it rolls on the way is not priced: at least this',
+        label: `Level your ${m.label} ${L} -> ${top}: ${lineText(capped.id, capped.dyn)} (yours ${lineText(b.id, b.dyn)}); ${said(n)}`, changes: write(m.affixes.map((x) => (x === b ? capped : x)), top) });
+    }
+    // levelled to the next level that rolls a random affix, that affix rerolled until it lands (its first roll is free)
+    const next = Math.min(...Object.values(ENH()).filter((x) => x.Rarity.includes(r) && x.RandomAffixMod && x.TargetEnhanceLevel > L && x.TargetEnhanceLevel <= top).map((x) => x.TargetEnhanceLevel));
+    const base = Number.isFinite(next) ? at(next) : undefined;
+    if (base && Number.isFinite(rerollFE)) {
+      const n = need(r, L, next), lv = fe(n);
+      if (Number.isFinite(lv)) for (const o of outcomes(random)) {
+        const rerolls = Math.max(0, 1 / o.p - 1);
+        out.push({ key: `memlevel|${m.slot}|${L}|${o.id}`, group: `memlevel|${m.slot}|${L}`, kind: 'memory', costFE: lv + rerolls * rerollFE, note: `${(o.p * 100).toFixed(2)} % a roll (that tier or better)`,
+          label: `Level your ${m.label} ${L} -> ${next} (${said(n)}), its new random affix rerolled to ${lineText(o.id, mid(o.id))}: about ${Math.round(rerolls)} rerolls of ${said(rr!.ItemConsume)}`,
+          changes: write([...m.affixes.map((x) => (x === b ? base : x)), { id: o.id, dyn: mid(o.id), list: 'SuffixInfoList' }], next) });
+      }
     }
   }
   return out;
@@ -149,9 +185,8 @@ export function candidates(s: State, ctx: GenCtx, o: PlanOpts, lines: { id: numb
         label: `Buy another ${name} with ${lineText(a.id, best)} (yours: ${a.dyn.join(' / ')}); replace yours`, changes: [{ kind: 'patch', op: 'gear-roll', slot, id: a.id, dyn: best } as never] });
     }
   }
-  // a worn hero memory levelled to its rarity's cap (MEM1: base attr = group x 100 + BaseAttrTier; its value is the roll table's). The random affix a level
-  // 20 / 40 step adds is not in the catalog: the step is a lower bound. A higher rarity is a new memory bought (owner, 2026-10-16), with its own random
-  // affixes: priced from market listings, not here
+  // a worn hero memory levelled (MEM1: base attr = group x 100 + BaseAttrTier) and its random affixes rerolled. A higher rarity is a new memory bought
+  // (owner, 2026-10-16): its base from the market, not here
   for (const c of memoryCands(s, ctx)) out.push(c);
   // a gem to level 20 (time, no FE); a Magnificent / Noble support is levelled by consuming copies (max 5): never a time step
   for (const g of L.skills.filter((x) => x.level < 20 && !/\((Magnificent|Noble)\)/.test(x.name))) {

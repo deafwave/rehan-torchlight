@@ -70,7 +70,22 @@ describe('plan candidates keep the rules of the game (owner, 2026-10-16)', () =>
     const priced = { ...ctx, prices: withPrices(ctx.prices, { 'Memory Scrap': 0.1, 'Memory Thread - Epic': 1, 'Crude Lunar Dust': 1, 'Luminous Lunar Dust': 1 }).book };
     const m = candidates(s, priced, DEFAULT_PLAN, lines).filter((c) => c.kind === 'memory');
     expect(m.length).toBeGreaterThan(0);
-    for (const c of m) expect(c.label).toMatch(/^Level your Memory of \w+ \d+ -> \d+: .*Memory Scrap/);
+    for (const c of m) expect(c.label).toMatch(/^(Level|Reroll) your Memory of \w+\W.*Memory Scrap/);
+  });
+  it('a memory random affix rerolled to another of its pool (the slot you pick, no keep: owner, 2026-10-17); a level past 20 / 40 rolls one free, then rerolls', () => {
+    const priced = { ...ctx, prices: withPrices(ctx.prices, { 'Memory Scrap': 0.1, 'Memory Thread - Rare': 2, 'Memory Thread - Epic': 1, 'Crude Lunar Dust': 1, 'Luminous Lunar Dust': 1 }).book };
+    const m = candidates(s, priced, DEFAULT_PLAN, lines).filter((c) => c.kind === 'memory');
+    // Origin (Rare, L30): its random affix 402165302 (T2 Fire Skill Critical Strike Damage); at item level 86+ a Rare rerolls T2 (3000) or T3 (4000), a group
+    // 1.46 % a roll (the game's odds for Affliction Effect): T2 Attack Damage (group 4021665) = 1 / (0.0146 x 3/7) rerolls of 5 Memory Scrap + 1 Rare Thread
+    const ad = m.find((c) => c.key === 'memroll|1|402165302|402166502');
+    expect(ad?.costFE).toBeCloseTo((1 / (0.0146 * 3 / 7)) * (5 * 0.1 + 2));
+    const mem = (ad!.changes[0] as unknown as { items: { slot: number; affixes: { id: number; list: string }[] }[] }).items.find((x) => x.slot === 1)!;
+    expect(mem.affixes.filter((a) => a.list === 'SuffixInfoList').map((a) => a.id)).toEqual([402166502]);
+    expect(m.some((c) => c.key === 'memroll|1|402165302|402165303')).toBe(false);   // the same group at a worse tier is no reroll
+    // Discipline (Epic, L13): to 20 rolls its first random affix free; T1 (2000 of 9000) Attack Damage of its pool (4021691) = 1 / (0.0146 x 2/9) - 1 rerolls
+    const lv = m.find((c) => c.key === 'memlevel|2|13|402169101');
+    expect(lv?.costFE).toBeGreaterThan((1 / (0.0146 * 2 / 9) - 1) * (10 * 0.1 + 1));
+    expect(lv?.label).toMatch(/^Level your Memory of Discipline 13 -> 20/);
   });
   it('a slate you own (bag, stash) is a free step in place of each board slate', () => {
     const own = { ...s, owned: [{ itemId: 'x', baseId: 261003, baseName: null, level: 86, where: 'stash', page: 0, slot: 1, count: 1, modifiers: {}, talents: [43040200], shapeId: 2020 }] };

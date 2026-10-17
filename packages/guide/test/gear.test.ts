@@ -231,6 +231,24 @@ describe('whiteBaseMoves', () => {
     expect(Object.keys(it2.modifiers)).toEqual(['baseAttr']);
     expect(it2.modifiers.baseAttr.map((m: { id: number }) => m.id)).toEqual(rows('config_item_base')[chest.baseId].a1b8);
   });
+
+  it('a full side is crafted on the slot you pick: each other affix of the side in place of each of its mods, never a family the item has, at most 2 Advanced (owner, 2026-10-17)', () => {
+    const fam = (id: number) => Math.floor(id / 100), grade = new Map(library.flatMap(a => a.tiers.map(t => [Number(t.tierAffixId), a.grade] as const)));
+    const adds = gearMoves(hoa100(), ctx(100)).filter(m => m.kind === 'craft' && (m.changes[0] as { slot: string }).slot === 'mainHand' && swapped(m).modifiers.suffix);
+    const three: { id: number; dynArgs: number[] }[] = [];
+    for (const m of adds) { const x = swapped(m).modifiers.suffix[0]; if (!three.some(y => fam(y.id) === fam(x.id)) && (grade.get(x.id) !== 'Advanced' || three.filter(y => grade.get(y.id) === 'Advanced').length < 1)) three.push(x); if (three.length === 3) break; }
+    expect(three.length).toBe(3);
+    const full = { ...MAUL, level: 100, affixes: three.map(x => ({ id: x.id, dyn: x.dynArgs, list: 'SuffixInfoList' })) };
+    const c = ctx(100), moves = gearMoves(state('hoa', 100, [full, HELM]), c).filter(m => m.kind === 'craft' && (m.changes[0] as { slot: string }).slot === 'mainHand' && / in place of your /.test(m.label));
+    for (const v of three) expect(moves.some(m => !swapped(m).modifiers.suffix.some((x: { id: number }) => x.id === v.id))).toBe(true);
+    for (const m of moves) {
+      const suf: { id: number }[] = swapped(m).modifiers.suffix;
+      expect(suf.length).toBe(3);
+      expect(new Set(suf.map(x => fam(x.id))).size).toBe(3);
+      expect(suf.filter(x => grade.get(x.id) === 'Advanced').length).toBeLessThanOrEqual(2);
+    }
+    expect([...c.notSearched].some(n => /side full/.test(n))).toBe(false);
+  });
 });
 
 describe('what you buy (Move.buy)', () => {

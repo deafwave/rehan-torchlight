@@ -1,7 +1,7 @@
-/** Hero memory candidates: none. dps-debug's what-if (WHATIF.md) has no change form for a hero memory (loadout.heroMemories is read, never rewritten). */
+/** Hero memory candidates in ideal / advise: none (`guide plan` levels and rerolls worn memories: plan.ts memoryCands). */
 import type { Generator } from '../types';
 
 export const memoryMoves: Generator = (_s, ctx) => {
-  ctx.notSearched.add('memory: dps-debug has no what-if change for hero memories (WHATIF.md forms), so memory swaps and rerolls cannot be calculated');
+  ctx.notSearched.add('memory: levelling and rerolling a worn memory is priced by `guide plan` only; a memory swap is not searched');
   return [];
 };

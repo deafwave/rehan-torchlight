@@ -6,19 +6,20 @@ const tier = (t: string, lvl: number, w: number, id: string, text = `+(${lvl}-${
 const lib: LibraryAffix[] = [
   { slot: 'Ring', grade: 'Basic', side: 'Prefix', affixId: '1', weight: 30, effect: 'a',
     tiers: [tier('T1', 80, 100, '101'), tier('T2', 60, 300, '102'), tier('T3', 1, 600, '103')] },
+  { slot: 'Ring', grade: 'Basic', side: 'Prefix', affixId: '5', weight: 70, effect: 'e', tiers: [tier('T1', 1, 10, '501')] },
   { slot: 'Ring', grade: 'Basic', side: 'Suffix', affixId: '2', weight: 70, effect: 'b', tiers: [tier('T1', 1, 10, '201')] },
   { slot: 'Ring', grade: 'Ultimate', side: 'Suffix', affixId: '3', weight: 5, effect: 'c', tiers: [tier('T1', 1, 10, '301')] },
   { slot: 'Belt', grade: 'Basic', side: 'Prefix', affixId: '4', weight: 1, effect: 'd', tiers: [tier('T1', 1, 1, '401')] },
 ];
 
 describe('craftOptions', () => {
-  it('expected embers = 1 / (P(affix | grade) x P(tier >= t | allowed tiers))', () => {
+  it('expected embers = 1 / (P(affix | grade, side) x P(tier >= t | allowed tiers)): a craft rolls on the slot you pick, from its side (owner, 2026-10-17)', () => {
     const o = craftOptions(lib, 'Ring', 100);
     const get = (id: string) => o.find(x => x.tierAffixId === id)!;
-    expect(get('101').expectedEmbers).toBeCloseTo(1 / (0.3 * 0.1));         // 30/100 x 100/1000
+    expect(get('101').expectedEmbers).toBeCloseTo(1 / (0.3 * 0.1));         // 30/100 of the Basic prefixes x 100/1000
     expect(get('102').expectedEmbers).toBeCloseTo(1 / (0.3 * 0.4));         // T1+T2 = 400/1000
     expect(get('103').expectedEmbers).toBeCloseTo(1 / 0.3);                 // every tier = 1
-    expect(get('201').expectedEmbers).toBeCloseTo(1 / 0.7);
+    expect(get('201').expectedEmbers).toBeCloseTo(1);                       // the only Basic suffix
     expect(get('301').expectedEmbers).toBeCloseTo(1);                       // the only Ultimate affix
     expect([get('101').ember, get('301').ember]).toEqual(['Precious Ember', 'Ultimate Ember']);
   });

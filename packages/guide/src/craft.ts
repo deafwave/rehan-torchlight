@@ -1,8 +1,8 @@
 /* Rare-gear craft options (port of packages/dmg/src/bingCraft.ts craftOptions, pure; mechanics.md#bing-craft).
 
-   One ember of a grade (Precious -> Basic, Matchless -> Advanced, Ultimate -> Ultimate) adds a random affix of that
-   grade for the gear type, picked by affix weight; its tier is rolled by tier weight among the tiers the item level
-   allows (data/affix_library.json). Expected embers to land "affix A at tier >= t" = 1 / (P(A) x P(tier >= t)). */
+   One ember of a grade (Precious -> Basic, Matchless -> Advanced, Ultimate -> Ultimate) on the affix slot you pick rolls a random affix of that
+   grade and the slot's side (prefix / suffix) for the gear type, picked by affix weight (owner, 2026-10-17); its tier is rolled by tier weight among
+   the tiers the item level allows (data/affix_library.json). Expected embers to land "affix A at tier >= t" = 1 / (P(A) x P(tier >= t)). */
 export interface LibraryTier { tier: string; text: string; requiredLevel: number; weight: number; tierAffixId: string }
 export interface LibraryAffix {
   slot: string; grade: 'Basic' | 'Advanced' | 'Ultimate'; side: 'Prefix' | 'Suffix';
@@ -30,13 +30,13 @@ export const topRoll = (text: string) => text.replace(/\((-?[\d.]+)-(-?[\d.]+)\)
 /** Every reachable (affix, tier) on `gearType` at `itemLevel`, with its expected ember count. Tiers above the item level are excluded. */
 export function craftOptions(library: LibraryAffix[], gearType: string, itemLevel: number): CraftOption[] {
   const pool = library.filter(a => a.slot === gearType);
-  const gradeWeight = (g: string) => pool.filter(a => a.grade === g).reduce((s, a) => s + a.weight, 0);
+  const gradeWeight = (g: string, side: string) => pool.filter(a => a.grade === g && a.side === side).reduce((s, a) => s + a.weight, 0);
   const out: CraftOption[] = [];
   for (const a of pool) {
     const allowed = a.tiers.filter(t => t.requiredLevel <= itemLevel);
     const total = allowed.reduce((s, t) => s + t.weight, 0);
     if (!total) continue;
-    const pAffix = a.weight / gradeWeight(a.grade);
+    const pAffix = a.weight / gradeWeight(a.grade, a.side);
     for (const t of allowed) {
       const atLeast = allowed.filter(x => tierRank(x.tier) <= tierRank(t.tier)).reduce((s, x) => s + x.weight, 0);
       out.push({ affixId: a.affixId, tierAffixId: t.tierAffixId, gearType, grade: a.grade, side: a.side, tier: t.tier,
