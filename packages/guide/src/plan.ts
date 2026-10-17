@@ -41,9 +41,12 @@ const RULES = [
   'Projectile speed is never raised (any aura, support, slate line or item that adds it is refused); Wind Projectiles is not offered and Slow Projectile is never taken out. The model overrates faster projectiles (your dummy, 2026-10-16: Passivation -> Wind Projectiles measured 22.5 B -> 16.9 B where the model said -8 %).',
   'Every step raises both the Traveler kill speed and your damage at full Life (the number the training dummy shows, the "Dummy" column): check each step there.',
   'Talent points are only moved (a respec is free at level 90 and below), never added: the plan does not assume a point you do not have.',
+  'A slate line already on your board is not offered on another slate.',
   'Hero memories: each is levelled to its rarity cap (Rare 30, Epic 40), its random affixes rerolled one slot at a time until each lands (no keep: a reroll replaces the affix in the slot) at the game odds of Affliction Effect for every affix (1.46 % an Epic roll); a higher rarity is a new memory bought, priced from market listings only.',
   'Your Paralysis and Sealed Mana Compensation talent points stay, and so do points on a node the model prices at exactly 0 (it cannot judge them).',
 ];
+/** where an item you own is: the read's 'stash' is item page 0: My Booth, what you list on the trade house (owner, 2026-10-17: your stash is empty; page 0 holds your 28 listed slates) */
+const placeOf = (where?: string) => (where === 'stash' ? 'booth' : where ?? 'bag');
 const KEPT = /Paralysis|Sealed Mana Compensation/;
 const CONVERSION = /Converts? .*Physical Damage to (Cold|Lightning|Fire)|Physical .*->.*(Cold|Lightning|Fire)/i;
 
@@ -210,32 +213,36 @@ export function candidates(s: State, ctx: GenCtx, o: PlanOpts, lines: { id: numb
   }
   // one more slate where the board, re-laid out (moving and rotating a slate costs next to nothing: owner, 2026-10-16), still has room: packBoard
   const added = ((s.loadout.slateItems ?? []) as { itemId: string; shapeId?: number }[]).filter((x) => x.itemId.startsWith('guide-add-')).map((x) => x.shapeId!);
+  // a line already on a board slate is never offered on another (owner, 2026-10-17: an added slate with the Proximity line the board has)
+  const elsewhere = (skip?: number) => new Set(((s.loadout.slateItems ?? []) as { talents: number[] }[]).flatMap((x, j) => (j === skip ? [] : x.talents)));
   const kinds: [number, string][] = [[2020, 'a 2-cell slate (the type of your 2-cell slates)'], [2030, 'a 3-cell slate (the type of your 3-cell slate)']];
   for (const [shape, what] of kinds) {
     if (!fitsLayout(applyPatch(s.loadout, addSlate(s, shape, []) as never), s.level, [...added, shape])) continue;
     for (const set of [...lines.slice(0, 10).map((a) => [a]), ...lines.slice(0, 6).flatMap((a, i) => lines.slice(i + 1, 6).map((b) => [a, b]))]) {
+      if (set.some((x) => elsewhere().has(x.id))) continue;
       const names = set.map((x) => x.name), price = (n: string) => o.slatePrices.find(([r]) => r.test(n))?.[1] ?? o.slateFE;
       out.push({ key: `add|${added.length}|${shape}|${set.map((x) => x.id).join('-')}`, group: `add|${added.length}`, kind: 'slate', costFE: names.reduce((t, n) => t + price(n), 0),
         note: 'slate price assumed: check /market; the board re-laid out to fit it (the slate board shows where each goes)',
         label: `Add ${what} with ${names.join(' + ')}`, changes: [addSlate(s, shape, set.map((x) => x.id))] });
     }
   }
-  // a slate you own (bag, stash) in place of one on the board: free
+  // a slate you own (bag, booth) in place of one on the board: free
   // not one already on the board: the read lists board slates among the items (where 'board'), and a board slate's own lines may be read in part
   const onBoard = new Set(((s.loadout.slateItems ?? []) as { itemId: string; talents: number[] }[]).flatMap((x) => [x.itemId, JSON.stringify([...x.talents].sort())]));
   for (const own of s.owned.filter((x) => x.talents?.length && x.where !== 'board' && !onBoard.has(x.itemId) && !onBoard.has(JSON.stringify([...x.talents!].sort())))) {
-    const where = own.where === 'bag' ? 'bag' : 'stash';
+    const where = placeOf(own.where);
     ((s.loadout.slateItems ?? []) as { talents: number[] }[]).forEach((it, i) => (o.slateSlots && !o.slateSlots.includes(i))
       || !fitsLayout(applyPatch(s.loadout, replaceSlate(s, i, own.talents!, { baseId: own.baseId, shapeId: own.shapeId }) as never), s.level, added) || out.push({ key: `ownslate|${own.itemId}|${i}`, group: `ownslate|${own.itemId}`, kind: 'slate', costFE: 0,
-      label: `Put your ${where} slate (${own.talents!.map(talentName).join(', ')}) in place of board slate ${i + 1} (${it.talents.map(talentName).join(', ')})`, changes: [replaceSlate(s, i, own.talents!, { baseId: own.baseId, shapeId: own.shapeId })] }));
+      label: `Put your ${where} slate (slot ${own.slot}: ${own.talents!.map(talentName).join(', ')}) in place of board slate ${i + 1} (${it.talents.map(talentName).join(', ')})`, changes: [replaceSlate(s, i, own.talents!, { baseId: own.baseId, shapeId: own.shapeId })] }));
   }
   // a slate in place of one of yours, same shape (so it fits the board), carrying one or two wanted lines (its other lines priced as nothing)
   const slates = L.slateItems ?? [], price = (n: string) => o.slatePrices.find(([r]) => r.test(n))?.[1] ?? o.slateFE;
   const sets = [...lines.slice(0, 10).map((a) => [a]), ...lines.slice(0, 6).flatMap((a, i) => lines.slice(i + 1, 6).map((b) => [a, b]))];
   slates.forEach((it, i) => {
     if (o.slateSlots && !o.slateSlots.includes(i)) return;
-    const was = (it.talents as number[]).map(talentName).join(', ');
+    const was = (it.talents as number[]).map(talentName).join(', '), there = elsewhere(i);
     for (const set of sets) {
+      if (set.some((x) => there.has(x.id))) continue;
       const ids = set.map((x) => x.id), names = set.map((x) => x.name);
 
       out.push({ key: `slate|${i}|${ids.join('-')}`, kind: 'slate', costFE: names.reduce((t, n) => t + price(n), 0), note: 'slate price assumed: check /market',
@@ -284,7 +291,15 @@ export async function runPlan(ev: Evaluator, s0: State, books: PriceBook, k: Par
     score.set(c.key, v);
     return { c, e, v };
   };
-  const out = (partialRun: boolean): GuideOut => ({ mode: 'advise', pin: ev.pin, etor: { season: books.season, fetchedAt: books.fetchedAt },
+  // the board after the steps so far, in every write (a stopped plan keeps its slate viewer): as packBoard lays it out when slates were added (each placed
+  // slate moved or rotated where it shows), else as it is
+  const board = (): GuideOut['board'] => {
+    const items = (s.loadout.slateItems ?? []) as { itemId: string; shapeId?: number }[], extra = items.filter((x) => x.itemId.startsWith('guide-add-'));
+    const reshaped = items.some((x) => x.itemId.startsWith('guide-slate-')), lay = extra.length || reshaped ? packBoard(s.loadout, s.level, extra.map((x) => x.shapeId!)) : null, nowCells = boardView(s.loadout).slates.map((x) => JSON.stringify(x.cells));
+    return { now: boardView(s0.loadout), after: boardView(s.loadout, (i) => (slateFrom[i] ? { source: slateFrom[i], changed: true }
+      : lay && JSON.stringify(lay[i]) !== nowCells[i] ? { source: 'on your board: move or rotate it to where it shows', changed: true } : { source: 'on your board', changed: false }), lay ?? undefined) };
+  };
+  const out = (partialRun: boolean): GuideOut => ({ mode: 'advise', board: board(), pin: ev.pin, etor: { season: books.season, fetchedAt: books.fetchedAt },
     knobs: { plan: { ...o, slatePrices: o.slatePrices.map(([r, v]) => `${r.source}: ${v}`) }, fight: ev.fight, rollBudget: ev.rollBudget, target: o.target, partialRun },
     character: { level: s0.level, skill: 'hoa', fe: s0.fe, owned: s0.owned.length, gear: ((s0.loadout.gear ?? []) as { slot?: string; label: string; name?: string }[]).map((g) => ({ slot: g.slot ?? '', label: g.name ?? g.label })) },
     start: first, startNotes: notes, steps: [], notSearched: [...ctx.notSearched], unpriced: [], notCalculable: [...refused].map(([l, w]) => `${l}: ${w}`),
@@ -333,7 +348,7 @@ export async function runPlan(ev: Evaluator, s0: State, books: PriceBook, k: Par
     }
     // the board slot a slate step fills, and where that slate comes from (the slate viewer)
     const own = /^ownslate\|(.+)\|(\d+)$/.exec(w.c.key), buy = /^slate\|(\d+)\|/.exec(w.c.key);
-    if (own) { const o = s0.owned.find((x) => x.itemId === own[1]); slateFrom[+own[2]] = `from your ${o?.where === 'bag' ? 'bag' : 'stash'} (free, step ${steps.length + 1})`; }
+    if (own) { const o = s0.owned.find((x) => x.itemId === own[1]); slateFrom[+own[2]] = `from your ${placeOf(o?.where)}${o ? `, slot ${o.slot}` : ''} (free, step ${steps.length + 1})`; }
     if (buy) slateFrom[+buy[1]] = `buy (about ${Math.round(w.c.costFE)} FE, price assumed: check /market; step ${steps.length + 1})`;
     if (w.c.key.startsWith('add|')) slateFrom[((s.loadout.slateItems ?? []) as unknown[]).length] = `buy and add (about ${Math.round(w.c.costFE)} FE, price assumed: check /market; step ${steps.length + 1})`;
     s = { ...s, loadout: w.e.loadout }; spent += w.c.costFE; taken.add(w.c.key); if (w.c.group) taken.add(w.c.group);
@@ -350,12 +365,6 @@ export async function runPlan(ev: Evaluator, s0: State, books: PriceBook, k: Par
     cands = next;
   }
   const r = out(false);
-  r.plan!.build = buildSheet(s.loadout);
-  // after the plan: the board as packBoard lays it out when slates were added (each placed slate moved or rotated where it shows), else as it is
-  const items = (s.loadout.slateItems ?? []) as { itemId: string; shapeId?: number }[], extra = items.filter((x) => x.itemId.startsWith('guide-add-'));
-  const reshaped = items.some((x) => x.itemId.startsWith('guide-slate-')), lay = extra.length || reshaped ? packBoard(s.loadout, s.level, extra.map((x) => x.shapeId!)) : null, nowCells = boardView(s.loadout).slates.map((x) => JSON.stringify(x.cells));
-  r.board = { now: boardView(s0.loadout), after: boardView(s.loadout, (i) => (slateFrom[i] ? { source: slateFrom[i], changed: true }
-    : lay && JSON.stringify(lay[i]) !== nowCells[i] ? { source: 'on your board: move or rotate it to where it shows', changed: true } : { source: 'on your board', changed: false }), lay ?? undefined) };
   if (f.kill < o.goal) r.startNotes!.push(`The goal is not reached: the plan ends at ${f.kill.toExponential(2)} per second; nothing left that the model can price raises it.`);
   return r;
 }

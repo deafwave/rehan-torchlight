@@ -87,12 +87,18 @@ describe('plan candidates keep the rules of the game (owner, 2026-10-16)', () =>
     expect(lv?.costFE).toBeGreaterThan((1 / (0.0146 * 2 / 9) - 1) * (10 * 0.1 + 1));
     expect(lv?.label).toMatch(/^Level your Memory of Discipline 13 -> 20/);
   });
-  it('a slate you own (bag, stash) is a free step in place of each board slate', () => {
+  it('a line already on a board slate is never offered on another slate (owner, 2026-10-17: "Add a 3-cell slate with Ranger: additional damage taken by enemies in Proximity" - we already have one)', () => {
+    const onBoard = live.loadout.slateItems[1].talents[0], ids = (k: string) => k.split('|').at(-1)!.split('-');
+    const c = candidates(s, ctx, DEFAULT_PLAN, [{ id: onBoard, name: 'on the board' }, ...lines]).filter((x) => /^(add|slate)\|/.test(x.key) && ids(x.key).includes(String(onBoard)));
+    expect(c.length).toBeGreaterThan(0);   // the slate that has it: replaced by one with it
+    for (const x of c) expect(x.key).toMatch(/^slate\|1\|/);
+  });
+  it('a slate you own (bag, booth: the read\'s page 0 is My Booth, owner 2026-10-17) is a free step in place of each board slate, its slot named', () => {
     const own = { ...s, owned: [{ itemId: 'x', baseId: 261003, baseName: null, level: 86, where: 'stash', page: 0, slot: 1, count: 1, modifiers: {}, talents: [43040200], shapeId: 2020 }] };
     const c = candidates(own, ctx, DEFAULT_PLAN, lines).filter((x) => x.key.startsWith('ownslate|'));
     expect(c.length).toBe(live.loadout.slateItems.length);
     expect(c[0].costFE).toBe(0);
-    expect(c[0].label).toMatch(/^Put your stash slate \(Ranger: chance to gain Agility Blessing on Critical Strike\) in place of board slate 1 /);
+    expect(c[0].label).toMatch(/^Put your booth slate \(slot 1: Ranger: chance to gain Agility Blessing on Critical Strike\) in place of board slate 1 /);
   });
   it("another skill in a weak place: an active for an active place, an aura for an aura place, its supports kept (owner: Fixate for Bull's Rage)", () => {
     const fix = live.loadout.skills.find((g: { name: string }) => g.name === 'Fixate'), aura = live.loadout.skills.find((g: { place: { kind: string } }) => g.place.kind === 'passive');
@@ -163,5 +169,17 @@ describe('runPlan: a step must raise the damage at full Life too (owner, 2026-10
     expect(r.plan!.steps.some((x) => /Critical Strike Damage Increase/.test(x.label))).toBe(false);
     expect(r.plan!.steps.some((x) => /Multiple Projectiles/.test(x.label))).toBe(true);
     expect(r.notCalculable.some((n) => /Critical Strike Damage Increase.*lowers your damage at full Life/.test(n))).toBe(true);
+  }, 300_000);
+});
+
+describe('runPlan: every write carries the slate board (owner, 2026-10-17: a stopped plan left the page with no slate viewer)', () => {
+  it('each partial output has the board now and after, as the final one does', async () => {
+    const fig = (k: number) => ({ life100: k, life0: k, kill: k, partial: [], target: 'traveler', lifeMax: 1.6e12 });
+    const ev: Evaluator = { pin: 'stub', parallelism: 4, close: async () => {},
+      run: async (loadout, changes) => ({ loadout, dropped: [], figure: /"name":"Multiple Projectiles"/.test(JSON.stringify(changes)) ? fig(1.1e10) : fig(1e10) }) };
+    const writes: { board?: unknown }[] = [];
+    await runPlan(ev, s, ctx.prices, { goal: 1e12, maxSteps: 1 }, (o) => writes.push(o));
+    expect(writes.length).toBeGreaterThan(0);
+    for (const w of writes) expect(w.board).toMatchObject({ now: { slates: expect.any(Array) }, after: { slates: expect.any(Array) } });
   }, 300_000);
 });
