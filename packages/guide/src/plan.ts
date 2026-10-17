@@ -8,7 +8,7 @@ import { costOf } from './priceOf';
 import { kismetMoves } from './candidates/kismets';
 import { pactMoves } from './candidates/pacts';
 import { prismMoves } from './candidates/prisms';
-import { addSlate, boardView, overCap, packBoard, replaceSlate, slateMoves, slateWants } from './candidates/slates';
+import { addSlate, boardView, overCap, packBoard, replaceable, replaceSlate, slateMoves, slateWants } from './candidates/slates';
 import { applyPatch } from './patches';
 import { talentMovesWith } from './candidates/talents';
 import { targetMoves } from './candidates/target';
@@ -229,9 +229,11 @@ export function candidates(s: State, ctx: GenCtx, o: PlanOpts, lines: { id: numb
   // a slate you own (bag, booth) in place of one on the board: free
   // not one already on the board: the read lists board slates among the items (where 'board'), and a board slate's own lines may be read in part
   const onBoard = new Set(((s.loadout.slateItems ?? []) as { itemId: string; talents: number[] }[]).flatMap((x) => [x.itemId, JSON.stringify([...x.talents].sort())]));
+  // free, so tried in every board slot its type may take (SLATE_CAP), not only the weakest (owner, 2026-10-17: a Pedigree you own fits only in place of yours)
+  const board = (s.loadout.slateItems ?? []) as { talents: number[]; baseId: number }[];
   for (const own of s.owned.filter((x) => x.talents?.length && x.where !== 'board' && !onBoard.has(x.itemId) && !onBoard.has(JSON.stringify([...x.talents!].sort())))) {
-    const where = placeOf(own.where);
-    ((s.loadout.slateItems ?? []) as { talents: number[] }[]).forEach((it, i) => (o.slateSlots && !o.slateSlots.includes(i))
+    const where = placeOf(own.where), may = replaceable(board, own.baseId);
+    board.forEach((it, i) => !may.includes(i)
       || !fitsLayout(applyPatch(s.loadout, replaceSlate(s, i, own.talents!, { baseId: own.baseId, shapeId: own.shapeId }) as never), s.level, added) || out.push({ key: `ownslate|${own.itemId}|${i}`, group: `ownslate|${own.itemId}`, kind: 'slate', costFE: 0,
       label: `Put your ${where} slate (slot ${own.slot}: ${own.talents!.map(talentName).join(', ')}) in place of board slate ${i + 1} (${it.talents.map(talentName).join(', ')})`, changes: [replaceSlate(s, i, own.talents!, { baseId: own.baseId, shapeId: own.shapeId })] }));
   }

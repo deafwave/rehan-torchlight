@@ -100,6 +100,11 @@ describe('plan candidates keep the rules of the game (owner, 2026-10-16)', () =>
     expect(c[0].costFE).toBe(0);
     expect(c[0].label).toMatch(/^Put your booth slate \(slot 1: Ranger: chance to gain Agility Blessing on Critical Strike\) in place of board slate 1 /);
   });
+  it('a slate you own is tried in every board slot its type may take, not only the weakest (owner, 2026-10-17: free slates in the bag and booth were never offered)', () => {
+    const own = { ...s, owned: [{ itemId: 'ped', baseId: 261010, baseName: null, level: 86, where: 'stash', page: 0, slot: 1, count: 1, modifiers: {}, talents: [43040200], shapeId: 2090 }] };
+    const c = candidates(own, ctx, { ...DEFAULT_PLAN, slateSlots: [1, 3] }, lines).filter((x) => x.key.startsWith('ownslate|'));
+    expect(c.map((x) => x.key)).toEqual(['ownslate|ped|0']);   // a Pedigree: only in place of your Pedigree (board slate 1)
+  });
   it("another skill in a weak place: an active for an active place, an aura for an aura place, its supports kept (owner: Fixate for Bull's Rage)", () => {
     const fix = live.loadout.skills.find((g: { name: string }) => g.name === 'Fixate'), aura = live.loadout.skills.find((g: { place: { kind: string } }) => g.place.kind === 'passive');
     const priced = { ...ctx, prices: withPrices(ctx.prices, { "Bull's Rage": 5 }).book };
