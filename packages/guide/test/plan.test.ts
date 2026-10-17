@@ -106,6 +106,13 @@ describe('plan candidates keep the rules of the game (owner, 2026-10-16)', () =>
       { itemId: 'stashed-copy', baseId: b.baseId, baseName: null, level: 86, where: 'stash', page: 0, slot: 1, count: 1, modifiers: {}, talents: [...b.talents].reverse(), shapeId: b.shapeId }] };
     expect(candidates(own, ctx, DEFAULT_PLAN, lines).filter((x) => x.key.startsWith('ownslate|'))).toEqual([]);
   });
+  it('your roll prices: one step per roll you priced, a roll above the drop tier as the corrupted tier (x 10 + 0); also for a line already at its best drop roll', () => {
+    const ring = live.loadout.gear.find((g: { slot: string }) => g.slot === 'ring2'), kal = ring.affixes.find((a: { id: number }) => Math.floor(a.id / 10) === 5151284);
+    const s2 = { ...s, loadout: { ...live.loadout, gear: live.loadout.gear.map((g: { slot: string }) => (g === ring ? { ...ring, affixes: ring.affixes.map((a: { id: number }) => (a === kal ? { ...kal, dyn: [50, 8] } : a)) } : g)) } };
+    const c = candidates(s2, ctx, { ...DEFAULT_PLAN, rollPrices: [{ item: 'Kaleidoscope', line: 51512841, rolls: [[56, 168], [65, 368]] }] }, lines).filter((x) => x.key.startsWith('rollp|ring2|'));
+    expect(c.map((x) => x.costFE)).toEqual([168, 368]);
+    expect(c[0].changes[0]).toEqual({ kind: 'patch', op: 'gear-roll', slot: 'ring2', id: kal.id, dyn: [56, 8], newId: 51512840 });
+  });
   it('a slate takes the place of one of yours (same shape and cell, so it fits the board), priced at your price', () => {
     const sl = cs.filter((c) => c.label.startsWith('Replace your slate'));
     expect(sl.length).toBe(live.loadout.slateItems.length * 3);   // 2 lines alone + the pair, per slate

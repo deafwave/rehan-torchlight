@@ -106,7 +106,8 @@ async function main() {
     const ev = await evaluator();
     try {
       final(out, dump(await runPlan(ev, state, book, { ...(flag('target') ? { target: flag('target')! } : {}), ...(num('goal') ? { goal: num('goal')! } : {}), ...(num('kill-seconds') ? { goalSeconds: num('kill-seconds')! } : {}), ...(num('steps') ? { maxSteps: num('steps')! } : {}),
-        ...(num('slate-fe') ? { slateFE: num('slate-fe')! } : {}), ...(num('prism-fe') ? { prismFE: num('prism-fe')! } : {}) }, (o) => writeAtomic(out, dump(o)))));
+        ...(num('slate-fe') ? { slateFE: num('slate-fe')! } : {}), ...(num('prism-fe') ? { prismFE: num('prism-fe')! } : {}),
+        ...(existsSync(fileURLToPath(new URL('../../../roll-prices.json', import.meta.url))) ? { rollPrices: readJson(fileURLToPath(new URL('../../../roll-prices.json', import.meta.url))) } : {}) }, (o) => writeAtomic(out, dump(o)))));
     } finally { await ev.close(); }
     console.log(`wrote ${out}`);
   } else if (cmd === 'advise') {

@@ -27,6 +27,8 @@ export interface PlanOpts { target: string; goal: number; /** the goal as a time
   /** talent nodes whose points never move (set by runPlan) */ locked?: Set<number>;
   /** the character's talent points: the points it has spent at the start (set by runPlan) */ points?: number;
   /** the board slates a new slate is tried in place of: the weakest (set by runPlan; absent = every one) */ slateSlots?: number[];
+  /** your prices for a legendary at a roll of one line (roll-prices.json: { item, line: its modifier id, rolls: [[value, FE]] }); the item's other lines as yours */
+  rollPrices?: { item: string; line: number; rolls: [number, number][] }[];
   /** the skill places another skill is tried in: the weakest active and aura places (set by runPlan; absent = none) */ skillSlots?: { kind: string; slot: number }[] }
 export const DEFAULT_PLAN: PlanOpts = { target: 'traveler', goal: 2e11, maxSteps: 60, slatePrices: [[/Agility Blessing on Critical Strike/, 100], [/All Skills' Levels/, 270]], slateFE: 100, prismFE: 555 };
 
@@ -129,7 +131,20 @@ export function candidates(s: State, ctx: GenCtx, o: PlanOpts, lines: { id: numb
     if (fe === null || !g) continue;
     for (const a of (g.affixes ?? []).filter((x) => x.list !== 'BaseAttrInfoList')) {
       const r = rolls[a.id], best = r?.map(([lo, hi], i) => (lo < 0 ? Math.min(lo, a.dyn[i]) : Math.max(hi, a.dyn[i])));
+      if (!r) continue;
+      // your prices for this line: one step per roll you gave (a roll above the drop tier is the corrupted tier: id x 10 + 0 when its range holds it)
+      const mine = o.rollPrices?.find((p) => p.item === name && Math.floor(p.line / 10) === Math.floor(a.id / 10));
+      if (mine) {
+        for (const [v, cost] of mine.rolls) {
+          if (v <= a.dyn[0]) continue;
+          const t0 = Math.floor(a.id / 10) * 10, id = !r || r[0][1] >= v ? a.id : rolls[t0] && rolls[t0][0][0] <= v && v <= rolls[t0][0][1] ? t0 : a.id, dyn = [v, ...a.dyn.slice(1)];
+          out.push({ key: `rollp|${slot}|${a.id}|${v}`, group: `roll|${slot}`, kind: 'unique', costFE: cost, note: id === t0 && t0 !== a.id ? 'a corrupted copy, at your price' : 'at your price',
+            label: `Buy another ${name} with ${lineText(id, dyn)} (yours: ${a.dyn[0]}); replace yours`, changes: [{ kind: 'patch', op: 'gear-roll', slot, id: a.id, dyn, newId: id } as never] });
+        }
+        continue;
+      }
       if (!r || !best || best.every((v, i) => v === a.dyn[i])) continue;
+
       out.push({ key: `roll|${slot}|${a.id}`, group: `roll|${slot}`, kind: 'unique', costFE: fe, roll: { slot, id: a.id, now: a.dyn, best, range: r },
         label: `Buy another ${name} with ${lineText(a.id, best)} (yours: ${a.dyn.join(' / ')}); replace yours`, changes: [{ kind: 'patch', op: 'gear-roll', slot, id: a.id, dyn: best } as never] });
     }
