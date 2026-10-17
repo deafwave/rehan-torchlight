@@ -1,7 +1,7 @@
 /** The market search on screen ranked by what it costs to finish: listing price + the expected crafting left to have every wanted mod at T1
  *  (market-targets.json at the repository root, by base name; each missing T1 at craftStep's expected embers at live etor prices). No damage figures: fast.
- *  A slate search (listings with talents) is ranked instead by the model's damage gain of the listing in place of your slate of the same shape (the board is full:
- *  a slate fits where one of its shape is), the best of them named
+ *  A slate search (listings with talents) is ranked instead by the model's damage gain of the listing's talents in place of one of your slates (the best one
+ *  named; the owner rebuilds the board around the slates bought, so the shape is not held to the replaced one's; --same-shape holds it)
  *  (--export <export.json>, default the newest dps-debug game/exports read).
  *  usage (repo root, elevated shell, game running, a market search open): pnpm guide:market [--top N] [--file <saved listings.json>] [--export <export.json>] */
 import { execFileSync } from 'node:child_process';
@@ -40,15 +40,16 @@ if (slates.length) {
     const mine = (state.loadout.slateItems ?? []) as { shapeId?: number; talents: number[] }[];
     const one = (i: number, t: number[]) => by.get(`${i}|${t}`) ?? by.set(`${i}|${t}`, ev.run(state.loadout, [replaceSlate(state, i, t)], ctxOfState(state))
       .then((r) => (rankable(base, r.figure) ? r.figure.kill / base.kill - 1 : r.figure.stop ?? r.figure.partial.filter((p) => !base.partial.includes(p)).join('; ')))).get(`${i}|${t}`)!;   // a partial figure is flagged with what it dropped, not ranked
-    // the listing in place of each of your slates of its shape, the best kept; none of its shape: it does not fit the board as it is
+    // the listing in place of each of your slates (--same-shape: of its shape only), the best kept
+    const same = process.argv.includes('--same-shape');
     const gain = async (l: Listing): Promise<{ g: number | string; slot?: number }> => {
-      const fits = mine.map((m, i) => (m.shapeId === l.shapeId ? i : -1)).filter((i) => i >= 0);
+      const fits = mine.map((m, i) => (!same || m.shapeId === l.shapeId ? i : -1)).filter((i) => i >= 0);
       if (!fits.length) return { g: `no slate of shape ${l.shapeId} on your board to put it in place of` };
       const gs = await Promise.all(fits.map(async (i) => ({ g: await one(i, l.talents!), slot: i })));
       return gs.sort((a, b) => (typeof b.g === 'number' ? b.g : -Infinity) - (typeof a.g === 'number' ? a.g : -Infinity))[0];
     };
     const rows = await Promise.all(slates.map(async (l) => ({ l, ...(await gain(l)) })));
-    console.log(`${slates.length} slates; ranked by damage gain (kill speed vs ${base.target ?? 'the target'}) in place of your slate of the same shape, on ${exp} (L${state.level} ${state.skill}); your slates: ${mine.map((m, i) => `${i + 1} shape ${m.shapeId}`).join(', ')}`);
+    console.log(`${slates.length} slates; ranked by damage gain (kill speed vs ${base.target ?? 'the target'}) in place of one of your slates${process.argv.includes('--same-shape') ? ' of the same shape' : ''}, on ${exp} (L${state.level} ${state.skill}); your slates: ${mine.map((m, i) => `${i + 1} shape ${m.shapeId}`).join(', ')}`);
     const pct = (g: number) => `${g >= 0 ? '+' : ''}${(g * 100).toFixed(2)}%`;
     const num = (g: number | string) => (typeof g === 'number' ? g : -Infinity);
     for (const r of rows.sort((a, b) => num(b.g) - num(a.g)).slice(0, top))

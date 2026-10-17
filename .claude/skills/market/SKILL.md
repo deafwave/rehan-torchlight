@@ -38,7 +38,7 @@ Notes:
 
 ## Slate searches
 
-- A Divinity Slate search is ranked by the model's damage gain of each listing **in place of one of your slates of the same shape** (your board is full:
+- A Divinity Slate search is ranked by the model's damage gain of each listing **in place of one of your slates** (the best one named; `--same-shape` only lets it replace a slate of its own shape: your board is full,
   a slate only fits where one of its shape sits), on the Traveler (the plan's target; `--target <boss>` to change). The row names which of your slates it replaces.
-- A listing whose shape matches none of your slates is listed as not ranked.
+- With `--same-shape`, a listing whose shape matches none of your slates is listed as not ranked.
 - The reader sees the listings on screen: run it again for each page of the search.
