@@ -38,12 +38,51 @@ const cellsOf = (it: SlateItem, slot = (it.link as { SlotId: number }).SlotId, d
 
 /** the board drawn: every cell (the level it opens at) and each placed slate's cells with its lines and where it comes from (`from(i)`, board index i) */
 export interface BoardView { cells: { x: number; y: number; level: number }[]; slates: { cells: [number, number][]; lines: string[]; source: string; changed: boolean }[] }
-export function boardView(l: Record<string, unknown>, from: (i: number) => { source: string; changed: boolean } = () => ({ source: 'on your board', changed: false })): BoardView {
+export function boardView(l: Record<string, unknown>, from: (i: number) => { source: string; changed: boolean } = () => ({ source: 'on your board', changed: false }), cellsAt?: [number, number][][]): BoardView {
   const items = (l.slateItems ?? []) as SlateItem[], shapes = rows('lua_config_talent_block_shape');
-  const at = (it: SlateItem): [number, number][] => (shapes[it.shapeId!]?.Shape ? cellsOf(it) : []);
-  const held = new Set(items.flatMap((it) => at(it).map(([x, y]) => cellKey(x, y))));
+  const at = (it: SlateItem, i = items.indexOf(it)): [number, number][] => cellsAt?.[i] ?? (shapes[it.shapeId!]?.Shape ? cellsOf(it) : []);
+  const held = new Set(items.filter((it) => !it.itemId.startsWith('guide-add-')).flatMap((it) => cellsOf(it).map(([x, y]) => cellKey(x, y))));
   return { cells: [...board(held)].map(([k, level]) => { const [x, y] = k.split(',').map(Number); return { x, y, level }; }),
     slates: items.map((it, i) => ({ cells: at(it), lines: it.talents.map(talentName), ...from(i) })) };
+}
+
+/** The board re-laid out (owner, 2026-10-16: moving and rotating a slate costs next to nothing): every placed slate and the `extra` new ones (shape ids) packed
+ *  into the board's open cells by an exact search, each by its type's rule - a Pedigree (7 cells, 2090) is only flipped across the vertical axis, a normal
+ *  slate (4 cells) takes the square / L / Z shapes in any rotation, a Corner of Divinity or Fallen Starlight (the 2- and 3-cell shapes) any rotation. Null when
+ *  they do not all fit; else each slate's cells, the placed ones first in board order, then the extras. */
+export function packBoard(l: Record<string, unknown>, level: number, extra: number[]): [number, number][][] | null {
+  const items = ((l.slateItems ?? []) as SlateItem[]).filter((it) => !it.itemId.startsWith('guide-add-')), shapes = rows('lua_config_talent_block_shape');
+  const cellsOfShape = (id: number): [number, number][] => (shapes[id]?.Shape as string).split(';').map((q) => q.split(',').map(Number) as [number, number]);
+  const rot = (c: [number, number][]) => c.map(([x, y]) => [-y, x] as [number, number]), mirror = (c: [number, number][]) => c.map(([x, y]) => [-x, y] as [number, number]);
+  const rots = (c: [number, number][]) => { const out = [c]; for (let i = 0; i < 3; i++) out.push(rot(out[i])); return out; };
+  const norm = (c: [number, number][]) => { const mx = Math.min(...c.map((p) => p[0])), my = Math.min(...c.map((p) => p[1])); return c.map(([x, y]) => [x - mx, y - my] as [number, number]).sort((a, b) => a[0] - b[0] || a[1] - b[1]); };
+  const uniq = (os: [number, number][][]) => [...new Map(os.map((o) => [JSON.stringify(norm(o)), norm(o)])).values()];
+  const NORMAL = [1050, 1030, 1040, 1020];   // square, L (both hands), Z
+  const forms = (shapeId: number, placed?: SlateItem): [number, number][][] => {
+    const c = cellsOfShape(shapeId);
+    if (c.length === 7) { const now = placed ? cellsOf(placed).map(([x, y]) => [x, y] as [number, number]) : c; return uniq([now, mirror(now)]); }   // a Pedigree: flipped only
+    if (c.length === 4) return uniq(NORMAL.flatMap((id) => rots(cellsOfShape(id))));
+    return uniq(rots(c));
+  };
+  const open = [...board(new Set(items.flatMap((it) => cellsOf(it).map(([x, y]) => cellKey(x, y)))))].filter(([, lv]) => lv <= level).map(([k]) => k);
+  const free = new Set(open);
+  const pieces = [...items.map((it) => forms(it.shapeId!, it)), ...extra.map((id) => forms(id))];
+  const order = pieces.map((_, i) => i).sort((a, b) => pieces[b][0].length - pieces[a][0].length);   // the largest first
+  const placed: [number, number][][] = [];
+  const go = (k: number): boolean => {
+    if (k === order.length) return true;
+    const i = order[k];
+    for (const f of pieces[i]) for (const anchor of open) {   // the fixed list: `free` changes while it is walked
+      if (!free.has(anchor)) continue;
+      const [ax, ay] = anchor.split(',').map(Number), cells = f.map(([x, y]) => [ax + x - f[0][0], ay + y - f[0][1]] as [number, number]);
+      if (!cells.every(([x, y]) => free.has(cellKey(x, y)))) continue;
+      cells.forEach(([x, y]) => free.delete(cellKey(x, y))); placed[i] = cells;
+      if (go(k + 1)) return true;
+      cells.forEach(([x, y]) => free.add(cellKey(x, y)));
+    }
+    return false;
+  };
+  return go(0) ? placed : null;
 }
 
 /** One more slate carrying `talents` on the character (a copy of its first placed slate, nothing devoured or copied); undefined when it has none placed */
@@ -51,6 +90,14 @@ export function withSlate(s: State, talents: number[]): Change | undefined {
   const items = (s.loadout.slateItems ?? []) as SlateItem[], tmpl = items[0];
   if (!tmpl) return undefined;
   return { kind: 'patch', op: 'slate-board', items: [...items, { ...tmpl, itemId: `guide-slate-${talents.join('-')}`, talents,
+    influence: { ...(tmpl.influence as object), EffectTalentIds: talents, TalentIdDevour: talents.map(() => false), TalentIdInfluence: talents.map(() => 0), TalentIdCopyInfluence: {},
+      TalentIdCopy: {}, DevilProjectionTalentIds: {}, DevilProjectionInfluence: {}, DevilLineBoostInfluence: {}, DevilLineBoostTalentIds: {} } }] } as never;
+}
+
+/** one more slate of `shapeId` carrying `talents` (a copy of a placed slate of that shape, else the first; its place on the board is packBoard's to find) */
+export function addSlate(s: State, shapeId: number, talents: number[]): Change {
+  const items = (s.loadout.slateItems ?? []) as SlateItem[], tmpl = items.find((x) => x.shapeId === shapeId) ?? items[0];
+  return { kind: 'patch', op: 'slate-board', items: [...items, { ...tmpl, shapeId, itemId: `guide-add-${items.length}-${talents.join('-')}`, talents,
     influence: { ...(tmpl.influence as object), EffectTalentIds: talents, TalentIdDevour: talents.map(() => false), TalentIdInfluence: talents.map(() => 0), TalentIdCopyInfluence: {},
       TalentIdCopy: {}, DevilProjectionTalentIds: {}, DevilProjectionInfluence: {}, DevilLineBoostInfluence: {}, DevilLineBoostTalentIds: {} } }] } as never;
 }

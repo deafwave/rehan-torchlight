@@ -7,7 +7,7 @@ import { gemMoves } from './candidates/gems';
 import { kismetMoves } from './candidates/kismets';
 import { pactMoves } from './candidates/pacts';
 import { prismMoves } from './candidates/prisms';
-import { boardView, replaceSlate, slateMoves, slateWants } from './candidates/slates';
+import { addSlate, boardView, packBoard, replaceSlate, slateMoves, slateWants } from './candidates/slates';
 import { talentMovesWith } from './candidates/talents';
 import { targetMoves } from './candidates/target';
 import { bossName, ownedGear, ownedUniques } from './modes';
@@ -75,6 +75,13 @@ export function lineText(id: number, dyn: number[]): string {
   const b = (table<{ rows: Record<string, { bindings?: string[] }> }>('config_modifier').rows[id]?.bindings ?? [])[0], t = b && table<{ rows: Record<string, string> }>('lang_en').rows[`affix_class|description|${b.split('_')[0]}`];
   return t ? t.replace(/<[^>]+>/g, '').replace(/\\n/g, ' ').replace(/\s+/g, ' ').trim().replace(/\$([+-]?)P(\d)\$/g, (_, sg: string, i: string) => `${sg}${dyn[+i - 1] ?? '?'}`) : `modifier ${id} at ${dyn.join(' / ')}`;
 }
+/** packBoard, remembered per board and shape list (a search that fails can take seconds) */
+const packed = new Map<string, boolean>();
+function fitsMore(s: State, shapes: number[]): boolean {
+  const k = JSON.stringify([((s.loadout.slateItems ?? []) as { itemId: string; shapeId?: number; link?: unknown; direction?: number }[]).filter((x) => !x.itemId.startsWith('guide-add-')).map((x) => [x.shapeId, x.link, x.direction]), shapes, s.level]);
+  if (!packed.has(k)) packed.set(k, packBoard(s.loadout, s.level, shapes) !== null);
+  return packed.get(k)!;
+}
 type Cand = { key: string; /** taken once per group */ group?: string; /** a better roll of a worn legendary: the lowest roll with the same figure is found when taken */ roll?: { slot: string; id: number; now: number[]; best: number[]; range: [number, number][] }; label: string; costFE: number; kind: string; note?: string; changes: Move['changes'] };
 const fits = (f: Figure) => !f.mana || 'stop' in f.mana || f.mana.fits;
 
@@ -122,6 +129,18 @@ export function candidates(s: State, ctx: GenCtx, o: PlanOpts, lines: { id: numb
     const group = L.skills.filter((x) => (x.place.kind === p.kind && x.place.slot === p.slot) || (x.place.ownerKind === p.kind && x.place.ownerSlot === p.slot));
     out.push({ key: `level|${g.name}|${JSON.stringify(g.place)}`, label: `Level ${g.name} ${g.level} -> 20 (time)`, costFE: 0, kind: 'level',
       changes: [{ kind: 'patch', op: 'skill-group', place: p, items: group.map((x) => (at(x) ? { ...x, level: 20 } : x)) } as never] });
+  }
+  // one more slate where the board, re-laid out (moving and rotating a slate costs next to nothing: owner, 2026-10-16), still has room: packBoard
+  const added = ((s.loadout.slateItems ?? []) as { itemId: string; shapeId?: number }[]).filter((x) => x.itemId.startsWith('guide-add-')).map((x) => x.shapeId!);
+  const kinds: [number, string][] = [[2020, 'a 2-cell slate (the type of your 2-cell slates)'], [2030, 'a 3-cell slate (the type of your 3-cell slate)']];
+  for (const [shape, what] of kinds) {
+    if (!fitsMore(s, [...added, shape])) continue;
+    for (const set of [...lines.slice(0, 10).map((a) => [a]), ...lines.slice(0, 6).flatMap((a, i) => lines.slice(i + 1, 6).map((b) => [a, b]))]) {
+      const names = set.map((x) => x.name), price = (n: string) => o.slatePrices.find(([r]) => r.test(n))?.[1] ?? o.slateFE;
+      out.push({ key: `add|${added.length}|${shape}|${set.map((x) => x.id).join('-')}`, group: `add|${added.length}`, kind: 'slate', costFE: names.reduce((t, n) => t + price(n), 0),
+        note: 'slate price assumed: check /market; the board re-laid out to fit it (the slate board shows where each goes)',
+        label: `Add ${what} with ${names.join(' + ')}`, changes: [addSlate(s, shape, set.map((x) => x.id))] });
+    }
   }
   // a slate you own (bag, stash) in place of one on the board: free
   for (const own of s.owned.filter((x) => x.talents?.length)) {
@@ -224,6 +243,7 @@ export async function runPlan(ev: Evaluator, s0: State, books: PriceBook, k: Par
     const own = /^ownslate\|(.+)\|(\d+)$/.exec(w.c.key), buy = /^slate\|(\d+)\|/.exec(w.c.key);
     if (own) { const o = s0.owned.find((x) => x.itemId === own[1]); slateFrom[+own[2]] = `from your ${o?.where === 'bag' ? 'bag' : 'stash'} (free, step ${steps.length + 1})`; }
     if (buy) slateFrom[+buy[1]] = `buy (about ${Math.round(w.c.costFE)} FE, price assumed: check /market; step ${steps.length + 1})`;
+    if (w.c.key.startsWith('add|')) slateFrom[((s.loadout.slateItems ?? []) as unknown[]).length] = `buy and add (about ${Math.round(w.c.costFE)} FE, price assumed: check /market; step ${steps.length + 1})`;
     s = { ...s, loadout: w.e.loadout }; spent += w.c.costFE; taken.add(w.c.key); if (w.c.group) taken.add(w.c.group);
     steps.push({ label: w.c.label, costFE: w.c.costFE, totalFE: spent, figure: w.e.figure, ...(w.c.note ? { note: w.c.note } : {}) });
     f = w.e.figure;
@@ -231,14 +251,18 @@ export async function runPlan(ev: Evaluator, s0: State, books: PriceBook, k: Par
     console.log(`step ${steps.length}: ${w.c.label.slice(0, 120)} | ${w.c.costFE} FE (total ${spent}) -> ${f.kill.toExponential(3)}/s`);
     onStep?.(out(true));
     // the build changed: new moves (a socket's new neighbours, a slot's new item) are priced, the rest keep their stale score
-    if (/^(own)?slate\|/.test(w.c.key)) await weakest();
+    if (/^(own)?slate\||^add\|/.test(w.c.key)) await weakest();
     const seen = new Set(cands.map((c) => c.key)), next = candidates(s, ctx, o, lines, keep);
     await Promise.all(next.filter((c) => !seen.has(c.key)).map(rate));
     cands = next;
   }
   const r = out(false);
   r.plan!.build = buildSheet(s.loadout);
-  r.board = { now: boardView(s0.loadout), after: boardView(s.loadout, (i) => (slateFrom[i] ? { source: slateFrom[i], changed: true } : { source: 'on your board', changed: false })) };
+  // after the plan: the board as packBoard lays it out when slates were added (each placed slate moved or rotated where it shows), else as it is
+  const items = (s.loadout.slateItems ?? []) as { itemId: string; shapeId?: number }[], extra = items.filter((x) => x.itemId.startsWith('guide-add-'));
+  const lay = extra.length ? packBoard(s.loadout, s.level, extra.map((x) => x.shapeId!)) : null, nowCells = boardView(s.loadout).slates.map((x) => JSON.stringify(x.cells));
+  r.board = { now: boardView(s0.loadout), after: boardView(s.loadout, (i) => (slateFrom[i] ? { source: slateFrom[i], changed: true }
+    : lay && JSON.stringify(lay[i]) !== nowCells[i] ? { source: 'on your board: move or rotate it to where it shows', changed: true } : { source: 'on your board', changed: false }), lay ?? undefined) };
   if (f.kill < o.goal) r.startNotes!.push(`The goal is not reached: the plan ends at ${f.kill.toExponential(2)} per second; nothing left that the model can price raises it.`);
   return r;
 }

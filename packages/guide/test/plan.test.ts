@@ -22,6 +22,25 @@ describe('a worn legendary is named by its own name, not its base (owner, 2026-1
   });
 });
 
+describe('packBoard: the board re-laid out by each slate type rule (owner, 2026-10-16)', () => {
+  it('every placed slate fits again; the Pedigree only flipped across the vertical axis; a slate too many does not fit', async () => {
+    const { packBoard } = await import('../src/candidates/slates');
+    const lay = packBoard(live.loadout, 90, []);
+    expect(lay).not.toBeNull();
+    const ped = live.loadout.slateItems.findIndex((x: { shapeId: number }) => x.shapeId === 2090);
+    if (ped >= 0) {   // the packed Pedigree is its cells as they are, or mirrored across the vertical axis, moved
+      const { boardView } = await import('../src/candidates/slates');
+      const norm = (c: [number, number][]) => { const mx = Math.min(...c.map((p) => p[0])), my = Math.min(...c.map((p) => p[1])); return JSON.stringify(c.map(([x, y]) => [x - mx, y - my]).sort((a, b) => a[0] - b[0] || a[1] - b[1])); };
+      const cur = boardView(live.loadout).slates[ped].cells;
+      expect([norm(cur), norm(cur.map(([x, y]) => [-x, y] as [number, number]))]).toContain(norm(lay![ped]));
+    }
+    const cells = (l: [number, number][][]) => l.reduce((n, c) => n + c.length, 0);
+    expect(packBoard(live.loadout, 90, Array(30).fill(2020))).toBeNull();
+    const { boardView } = await import('../src/candidates/slates');
+    expect(cells(lay!)).toBe(boardView(live.loadout).slates.reduce((n, x) => n + x.cells.length, 0));
+  });
+});
+
 describe('plan candidates keep the rules of the game (owner, 2026-10-16)', () => {
   const points = Object.values(live.loadout.talents as Record<string, number>).reduce((a, b) => a + b, 0);
   const cs = candidates(s, ctx, { ...DEFAULT_PLAN, points }, lines);
