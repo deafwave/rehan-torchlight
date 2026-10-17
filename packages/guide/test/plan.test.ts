@@ -21,7 +21,7 @@ describe('plan candidates keep the rules of the game (owner, 2026-10-16)', () =>
   });
   it("no example-build skill group, no copy of a worn legendary", () => {
     expect(cs.filter((c) => /^Add the skill|Target skill/.test(c.label))).toEqual([]);
-    expect(cs.filter((c) => c.kind === 'support' && /Wind Projectiles/.test(c.label))).toEqual([]);   // the owner's dummy disproved the model's figure
+    expect(cs.filter((c) => c.kind === 'support' && /Wind Projectiles|Slow Projectile -> /.test(c.label))).toEqual([]);   // the owner's dummy disproved the model's figure
     expect(cs.filter((c) => /^Unique (Ruinous Star|Formation Breaker|Kaleidoscope) in /.test(c.label))).toEqual([]);
   });
   it('a legendary held at the start stays out after a step takes it off (a new one is priced mid-roll; yours is the roll there is)', () => {

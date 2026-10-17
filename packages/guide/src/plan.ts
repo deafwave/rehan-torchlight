@@ -29,7 +29,7 @@ const RULES = [
   'A Magnificent or Noble support is never levelled (max level 5, levelled by consuming copies).',
   'A legendary you wear or own is never bought.',
   'A change that unseals an aura (Sealed Mana over your Mana, MANA2) is refused.',
-  'Wind Projectiles is not offered: the model overrates it (your dummy, 2026-10-16: Passivation -> Wind Projectiles measured 22.5 B -> 16.9 B where the model said -8 %).',
+  'Projectile speed is not traded for damage: Wind Projectiles is not offered and Slow Projectile is never taken out. The model overrates faster projectiles (your dummy, 2026-10-16: Passivation -> Wind Projectiles measured 22.5 B -> 16.9 B where the model said -8 %).',
   'Every step raises both the Traveler kill speed and your damage at full Life (the number the training dummy shows, the "Dummy" column): check each step there.',
   'Your Paralysis and Sealed Mana Compensation talent points stay, and so do points on a node the model prices at exactly 0 (it cannot judge them).',
 ];
@@ -57,7 +57,7 @@ export function candidates(s: State, ctx: GenCtx, o: PlanOpts, lines: { id: numb
     out.push({ key: `${m.kind}|${label}`, label: t ? `${label} (${t.note})` : label, costFE: cost, kind: m.kind, changes: t ? t.changes : m.changes });
   };
   // Wind Projectiles: the model's figure is off against the owner's dummy (RULES)
-  const MEASURED_WRONG = /Wind Projectiles/;
+  const MEASURED_WRONG = /Wind Projectiles|Slow Projectile -> /;
   for (const g of [ownedGear, gearMoves, gemMoves, kismetMoves, pactMoves, prismMoves, slateMoves, talentMovesWith({ maxShifts: 60, locked: o.locked }), whiteBaseMoves]) for (const m of g(s, ctx)) add(m);
   for (const m of targetMoves(s, ctx)) {
     // the example build's skill groups are not offered: they replace a whole group at a cost they do not carry (a socket's gem is gemMoves', priced)
