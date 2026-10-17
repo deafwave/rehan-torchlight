@@ -68,7 +68,7 @@ describe('gemMoves', () => {
     const { moves } = gen(l100, 'hoa', { Steamroll: 12 });
     const st = moves.find(m => sup(m).gem?.name === 'Steamroll' && sup(m).socket === 1)!;
     expect([sup(st).action, sup(st).gem!.level, st.acquisition, st.costFE]).toEqual(['replace', sockets(l100).find(g => g.place.slot === 1)!.level, true, 12]);
-    expect(moves.find(m => sup(m).gem?.name === 'Multistrike')!.costFE).toBeNull();
+    expect(moves.some(m => sup(m).gem && m.costFE === null && m.market !== 'drop')).toBe(true);   // a gem etor has no row for is unpriced (Multistrike was the example; SUP2 left it out: it stops the model)
     const rm = moves.find(m => sup(m).action === 'remove')!;
     expect([rm.acquisition, rm.costFE]).toEqual([false, 0]);
   });

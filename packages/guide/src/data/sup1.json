@@ -1,6 +1,74 @@
 {
- "_about": "SUP1 support census (dps-debug .superpowers/sdd/2026-10-12-exact-dps-model-m2/task-SUP1-supports.csv, generated 2026-10-14): support stones with status COMPILES for the skill (G2 tag gate ALLOWED, compiled, priced effect). sid = config_skill_stone id = the loadout gem sid; name = item_base|name|<support_item>. Stones with no English item name are left out (not tradeable gems).",
+ "_about": "SUP1 support census (dps-debug .superpowers/sdd/2026-10-12-exact-dps-model-m2/task-SUP1-supports.csv, generated 2026-10-14): support stones with status COMPILES for the skill (G2 tag gate ALLOWED, compiled, priced effect). sid = config_skill_stone id = the loadout gem sid; name = item_base|name|<support_item>. Stones with no English item name are left out (not tradeable gems). | SUP2 (2026-10-16, tli-lens .cache/nap/census.ts on the season catalog, pin 5953c1fd): Hammer of Ash's list is every support gem (and Hammer of Ash's Magnificent / Noble ones) that priced on the owner's build in place of its weakest support, priced or partial; Multistrike, Raid, Recklessness and Willpower stop the model and are left out.",
  "hoa": [
+  {
+   "sid": 66001,
+   "name": "Precise: Seal Conversion"
+  },
+  {
+   "sid": 66002,
+   "name": "Precise: Selfless"
+  },
+  {
+   "sid": 66003,
+   "name": "Precise: Selfishness"
+  },
+  {
+   "sid": 66004,
+   "name": "Precise: Stand as One"
+  },
+  {
+   "sid": 66005,
+   "name": "Precise: Disciplined"
+  },
+  {
+   "sid": 66006,
+   "name": "Precise: Concentrated"
+  },
+  {
+   "sid": 66007,
+   "name": "Precise: Malleable"
+  },
+  {
+   "sid": 66008,
+   "name": "Precise: Safety in Numbers"
+  },
+  {
+   "sid": 66009,
+   "name": "Precise: Torrent"
+  },
+  {
+   "sid": 66010,
+   "name": "Precise: Focus Acceleration"
+  },
+  {
+   "sid": 66011,
+   "name": "Precise: Focus Buff"
+  },
+  {
+   "sid": 66012,
+   "name": "Precise: Superpower"
+  },
+  {
+   "sid": 66013,
+   "name": "Precise: Friend of Spirit Magi"
+  },
+  {
+   "sid": 66014,
+   "name": "Precise: Protection Field"
+  },
+  {
+   "sid": 66015,
+   "name": "Precise Restrain"
+  },
+  {
+   "sid": 66016,
+   "name": "Precise: Harmony"
+  },
+  {
+   "sid": 66017,
+   "name": "Precise: Purify"
+  },
   {
    "sid": 10002010,
    "name": "Multiple Projectiles"
@@ -10,8 +78,8 @@
    "name": "Greater Multiple Projectiles"
   },
   {
-   "sid": 10002050,
-   "name": "Multistrike"
+   "sid": 10002060,
+   "name": "Projectile Split"
   },
   {
    "sid": 10002070,
@@ -22,8 +90,8 @@
    "name": "Melee Knockback"
   },
   {
-   "sid": 10002090,
-   "name": "Raid"
+   "sid": 10002100,
+   "name": "Overload"
   },
   {
    "sid": 10002110,
@@ -40,6 +108,18 @@
   {
    "sid": 10002140,
    "name": "High Voltage"
+  },
+  {
+   "sid": 10002150,
+   "name": "Quick Mobility"
+  },
+  {
+   "sid": 10002160,
+   "name": "Extended Duration"
+  },
+  {
+   "sid": 10002170,
+   "name": "Spell Concentration"
   },
   {
    "sid": 10002180,
@@ -106,6 +186,10 @@
    "name": "Added Lightning Damage"
   },
   {
+   "sid": 10002340,
+   "name": "Control Spell"
+  },
+  {
    "sid": 10002350,
    "name": "Elemental Fusion"
   },
@@ -122,12 +206,12 @@
    "name": "Lightning Penetration"
   },
   {
-   "sid": 10002390,
-   "name": "Recklessness"
-  },
-  {
    "sid": 10002400,
    "name": "Slow Projectile"
+  },
+  {
+   "sid": 10002410,
+   "name": "Grudge"
   },
   {
    "sid": 10002420,
@@ -142,12 +226,56 @@
    "name": "Cataclysm"
   },
   {
+   "sid": 10002450,
+   "name": "Hunting Tempo"
+  },
+  {
+   "sid": 10002460,
+   "name": "Elemental Impact"
+  },
+  {
+   "sid": 10002470,
+   "name": "Multifaceted Guard"
+  },
+  {
+   "sid": 10002480,
+   "name": "Sentry Modification"
+  },
+  {
    "sid": 10002490,
    "name": "Fire Explosion"
   },
   {
+   "sid": 10002500,
+   "name": "Nova Shot"
+  },
+  {
    "sid": 10002510,
    "name": "Precision Strike"
+  },
+  {
+   "sid": 10002520,
+   "name": "Haunt"
+  },
+  {
+   "sid": 10002530,
+   "name": "Shadowmask"
+  },
+  {
+   "sid": 10002540,
+   "name": "Guard"
+  },
+  {
+   "sid": 10002550,
+   "name": "Channel Preparation"
+  },
+  {
+   "sid": 10002560,
+   "name": "Raging Slash"
+  },
+  {
+   "sid": 10002570,
+   "name": "Slash Duet"
   },
   {
    "sid": 10002580,
@@ -158,8 +286,32 @@
    "name": "Devastator"
   },
   {
+   "sid": 10002600,
+   "name": "Selfless"
+  },
+  {
+   "sid": 10002610,
+   "name": "Selfishness"
+  },
+  {
+   "sid": 10002620,
+   "name": "Stand as One"
+  },
+  {
+   "sid": 10002630,
+   "name": "Restrain"
+  },
+  {
    "sid": 10002640,
    "name": "Attack Focus"
+  },
+  {
+   "sid": 10002650,
+   "name": "Abysmal Hatred"
+  },
+  {
+   "sid": 10002660,
+   "name": "Powerful Warcry"
   },
   {
    "sid": 10002670,
@@ -168,6 +320,10 @@
   {
    "sid": 10002690,
    "name": "Wind Projectiles"
+  },
+  {
+   "sid": 10002710,
+   "name": "Reaping Agony"
   },
   {
    "sid": 10002720,
@@ -182,24 +338,296 @@
    "name": "Electric Punishment"
   },
   {
+   "sid": 10002750,
+   "name": "Ailment Termination"
+  },
+  {
    "sid": 10002760,
    "name": "Enhanced Ailment"
+  },
+  {
+   "sid": 10002770,
+   "name": "Seal Conversion"
   },
   {
    "sid": 10002780,
    "name": "Cooldown Reduction"
   },
   {
+   "sid": 10002790,
+   "name": "Emergency restoration"
+  },
+  {
+   "sid": 10002800,
+   "name": "Instant restoration"
+  },
+  {
+   "sid": 10002810,
+   "name": "Strategic Strike"
+  },
+  {
+   "sid": 10002820,
+   "name": "Carpet Bombardment"
+  },
+  {
+   "sid": 10002830,
+   "name": "Ground Divide"
+  },
+  {
+   "sid": 10002840,
+   "name": "Speed-up Formation"
+  },
+  {
+   "sid": 10002850,
+   "name": "Scattershot Beam"
+  },
+  {
+   "sid": 10002860,
+   "name": "Focused Beam"
+  },
+  {
+   "sid": 10002870,
+   "name": "Refracted Prism"
+  },
+  {
+   "sid": 10002880,
+   "name": "Servant Damage"
+  },
+  {
+   "sid": 10002890,
+   "name": "Servant Life"
+  },
+  {
+   "sid": 10002900,
+   "name": "Servant Speed"
+  },
+  {
+   "sid": 10002910,
+   "name": "Superpower"
+  },
+  {
+   "sid": 10002920,
+   "name": "Elemental Duo"
+  },
+  {
+   "sid": 10002930,
+   "name": "Maniacal Army"
+  },
+  {
+   "sid": 10002940,
+   "name": "Mechanical Modification"
+  },
+  {
+   "sid": 10002950,
+   "name": "Assault Command"
+  },
+  {
+   "sid": 10002960,
+   "name": "Defense Form"
+  },
+  {
+   "sid": 10002970,
+   "name": "Ceaselessness"
+  },
+  {
+   "sid": 10002980,
+   "name": "Mania"
+  },
+  {
+   "sid": 10002990,
+   "name": "Overclock"
+  },
+  {
+   "sid": 10003000,
+   "name": "Self-Sacrifice"
+  },
+  {
+   "sid": 10003010,
+   "name": "Well-Fought Battle"
+  },
+  {
+   "sid": 10003020,
+   "name": "Fragile Resurrection"
+  },
+  {
+   "sid": 10003030,
+   "name": "Berserk"
+  },
+  {
+   "sid": 10003040,
+   "name": "Residues"
+  },
+  {
+   "sid": 10003050,
+   "name": "Armor Infusion"
+  },
+  {
+   "sid": 10003060,
+   "name": "All In"
+  },
+  {
+   "sid": 10003070,
+   "name": "Iron Fortification"
+  },
+  {
+   "sid": 10003080,
+   "name": "Emergency Avoidance"
+  },
+  {
+   "sid": 10003090,
+   "name": "Concentration Warcry"
+  },
+  {
+   "sid": 10003100,
+   "name": "Lion's Roars"
+  },
+  {
+   "sid": 10003110,
+   "name": "Periodic Burst"
+  },
+  {
+   "sid": 10003120,
+   "name": "Terrain of Malice"
+  },
+  {
    "sid": 10003130,
    "name": "Mark"
+  },
+  {
+   "sid": 10003140,
+   "name": "Mass Effect"
+  },
+  {
+   "sid": 10003150,
+   "name": "Defense Layers"
+  },
+  {
+   "sid": 10003160,
+   "name": "Shadow Will"
+  },
+  {
+   "sid": 10003170,
+   "name": "Silhouette"
+  },
+  {
+   "sid": 10003180,
+   "name": "Focus Acceleration"
+  },
+  {
+   "sid": 10003190,
+   "name": "Focus Buff"
   },
   {
    "sid": 10003200,
    "name": "Hardened"
   },
   {
+   "sid": 10003210,
+   "name": "Psychic Burst"
+  },
+  {
+   "sid": 10003220,
+   "name": "Magic Dash"
+  },
+  {
+   "sid": 10003230,
+   "name": "Psychic Surge"
+  },
+  {
+   "sid": 10003240,
+   "name": "Savage Growth"
+  },
+  {
+   "sid": 10003250,
+   "name": "Harvest Time"
+  },
+  {
+   "sid": 10003260,
+   "name": "Preparation"
+  },
+  {
    "sid": 10003270,
    "name": "Added Physical Damage"
+  },
+  {
+   "sid": 10003280,
+   "name": "Charge"
+  },
+  {
+   "sid": 10003290,
+   "name": "Limber Stretch"
+  },
+  {
+   "sid": 10003300,
+   "name": "Gladiator's Roar"
+  },
+  {
+   "sid": 10003310,
+   "name": "Aura Amplification"
+  },
+  {
+   "sid": 10003320,
+   "name": "Disciplined"
+  },
+  {
+   "sid": 10003330,
+   "name": "Concentrated"
+  },
+  {
+   "sid": 10003340,
+   "name": "Malleable"
+  },
+  {
+   "sid": 10003350,
+   "name": "Safety in Numbers"
+  },
+  {
+   "sid": 10003360,
+   "name": "Torrent"
+  },
+  {
+   "sid": 10003370,
+   "name": "Friend of Spirit Magi"
+  },
+  {
+   "sid": 10003380,
+   "name": "Protection Field"
+  },
+  {
+   "sid": 10003390,
+   "name": "Hyper Metabolism"
+  },
+  {
+   "sid": 10003400,
+   "name": "Emergency Aid"
+  },
+  {
+   "sid": 10003410,
+   "name": "Medicinal Buildup"
+  },
+  {
+   "sid": 10003420,
+   "name": "Meditation"
+  },
+  {
+   "sid": 10003430,
+   "name": "Reclusion"
+  },
+  {
+   "sid": 10003440,
+   "name": "Uplifting"
+  },
+  {
+   "sid": 10003460,
+   "name": "Recuperation"
+  },
+  {
+   "sid": 10003470,
+   "name": "Spell Tangle"
+  },
+  {
+   "sid": 10003480,
+   "name": "Manifold Entanglement"
   },
   {
    "sid": 10003574,
@@ -216,6 +644,10 @@
   {
    "sid": 10003578,
    "name": "Hammer of Ash: Blast Quake (Noble)"
+  },
+  {
+   "sid": 10003835,
+   "name": "Channeled Depths"
   }
  ],
  "iceShot": [
