@@ -19,6 +19,8 @@ export const INFO: (string | RegExp)[] = ['price:', /^held buff \d+ \(.*\) not c
   /^the target's buff \d+ \(\w+\) from the battlecry's enemy map \(IN1\): /, /^the target's buff \(IN1\): /,/^not calculable without a capture: held buffs the pieces do not derive, taken from the capture: /,
   // U2-IS states the cast rate its uptime rules ran on: its text changes whenever attack speed does (dps-debug coordinator, 2026-10-16: a statement)
   /^U2-IS: the uptime rules over the figure's own hit rates /,
+  // AIM1 (dps-debug ed320b33): a Boss-medium skill's AddBuff buff, derived, and the held / not-held split of one that slows the throws; "adds no buff the figure derives" stays a gap
+  /^the build's buff \d+ \(\w+\) from skill \d+'s AddBuff \(AIM1\): /, /^the build's buff \d+ \(\w+\) slows the auto-throw from \d+ to \d+ frames while held \(AIM1\): /,
   // Kaleidoscope's modifier is set aside from the compile and priced over its three phase states (dps-debug KAL2 / ringW, coordinator 2026-10-16)
   /^not in this figure as compiled: gear \d+: modifier \d+ \(Kaleidoscope: /,
   // nodes that move no figure: the no-op execute 0x1407d0580 (`mov al, 1; ret`), a node inert in the client (Q1), a cull (node 1003: CULL1 counts it in the cull)
