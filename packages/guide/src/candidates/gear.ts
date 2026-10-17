@@ -133,7 +133,9 @@ function goldMods(g: Record<string, Record<string, unknown> | undefined>): { mod
   for (const key of ['m88', 'ma8', 'mc8', 'me8', 'm108', 'm128', 'm148', 'm168']) {
     const groups = Object.keys(g[key] ?? {});
     if (groups.length > 1) { pooled.push(`${key}: 1 of ${groups.length}`); continue; }
-    for (const grp of groups) { const id = Number(grp) * 10, dyn = mids(id); if (dyn) mods.push({ id, dynArgs: dyn }); else lost.push(grp); }
+    // a group's dropped variant is x 10 + 1, the one worn items carry (Ruinous Star 80935371, Kaleidoscope 51512841); x 10 can be a corruption (Decaying Blessing
+    // 51527440: Sealed Mana Compensation -5..+5, owner 2026-10-16), taken only when the dropped one is not in the catalog
+    for (const grp of groups) { const id = mids(Number(grp) * 10 + 1) ? Number(grp) * 10 + 1 : Number(grp) * 10, dyn = mids(id); if (dyn) mods.push({ id, dynArgs: dyn }); else lost.push(grp); }
   }
   return { mods, pooled, lost };
 }

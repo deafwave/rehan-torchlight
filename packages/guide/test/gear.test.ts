@@ -160,20 +160,20 @@ describe('gearMoves', () => {
 
   it('a unique with random affix slots is offered with its fixed affixes only, the slots named', () => {
     const c = ctx(100), enamor = gearMoves(ALL(), c).find(x => x.kind === 'unique' && x.label.startsWith('Unique Enamor '))!;
-    expect((swapped(enamor).modifiers.prefix as { id: number }[]).map(x => x.id)).toEqual([80935000]);
+    expect((swapped(enamor).modifiers.prefix as { id: number }[]).map(x => x.id)).toEqual([80935001]);   // the drop tier (x 10 + 1)
     expect([...c.notSearched].some((n) => /^unique Enamor: random affix slots \(ma8: 1 of \d+, mc8: 1 of \d+, me8: 1 of \d+, m108: 1 of \d+\) not priced; offered with its fixed affixes only$/.test(n))).toBe(true);
   });
-  it('a unique uses tier digit 0 at the midpoint of its rolls', () => {
+  it('a unique uses its drop tier (digit 1; digit 0 is the corrupted tier, owner 2026-10-16) at the midpoint of its rolls, digit 0 only when 1 is not in the catalog', () => {
     const u = goldAt100().find(g => g.groups.length && g.groups.every(x => g.rolls[x * 10]) && g.groups.some(x => g.rolls[x * 10 + 1]))!;
     const m = gearMoves(ALL(), ctx(100)).find(x => x.kind === 'unique' && x.label.startsWith(`Unique ${u.name} `))!;
     const mods = swapped(m).modifiers.prefix as { id: number; dynArgs: number[] }[];
-    expect(mods.map(x => x.id)).toEqual(u.groups.map(x => x * 10));
-    const x = u.groups.find(x => u.rolls[x * 10 + 1])!, got = mods.find(y => y.id === x * 10)!;
-    expect(got.dynArgs).toEqual(u.rolls[x * 10].map((r: number[]) => (r[0] + r[1]) / 2));
+    expect(mods.map(x => x.id)).toEqual(u.groups.map(x => (u.rolls[x * 10 + 1] ? x * 10 + 1 : x * 10)));
+    const x = u.groups.find(x => u.rolls[x * 10 + 1])!, got = mods.find(y => y.id === x * 10 + 1)!;
+    expect(got.dynArgs).toEqual(u.rolls[x * 10 + 1].map((r: number[]) => (r[0] + r[1]) / 2));
   });
 
   it('a unique with an unresolved modifier group is not offered and is named in notSearched', () => {
-    const u = goldAt100().find(g => g.groups.some(x => !g.rolls[x * 10]))!;
+    const u = goldAt100().find(g => g.groups.some(x => !g.rolls[x * 10] && !g.rolls[x * 10 + 1]))!;
     const c = ctx(100), ms = gearMoves(ALL(), c);
     expect(ms.some(x => x.label.startsWith(`Unique ${u.name} `))).toBe(false);
     expect([...c.notSearched].some(x => x.startsWith(`unique ${u.name}:`))).toBe(true);
@@ -241,5 +241,16 @@ describe('what you buy (Move.buy)', () => {
     expect(craft.costFE).toBeCloseTo(craft.buy!.qty * c.prices.price(craft.buy!.name, 60)!);
     const u = moves.find(m => m.kind === 'unique')!;
     expect(u.buy).toEqual({ name: u.label.replace(/^Unique (.+) in \w+$/, '$1'), qty: 1 });
+  });
+});
+
+describe('goldItem: a legendary as it drops (owner, 2026-10-16: Decaying Blessing ±5 Sealed Mana Compensation is a corruption)', () => {
+  it("takes a group's dropped variant (id x 10 + 1, the one worn items carry) over the corrupted one (x 10)", async () => {
+    const { goldItem } = await import('../src/candidates/gear');
+    const { table } = await import('../src/pin');
+    const gold = (table<{ rows: Record<string, unknown> }>('config_item_gold')).rows, lang = table<{ rows: Record<string, string> }>('lang_en').rows;
+    const gid = Number(Object.keys(gold).find((k) => lang[`item_gold|name|${k}`] === 'Decaying Blessing'));
+    const mods = (goldItem(gid, 90)!.item.modifiers as { prefix: { id: number; dynArgs: number[] }[] }).prefix;
+    expect(mods.find((m) => Math.floor(m.id / 10) === 5152744)).toEqual({ id: 51527441, dynArgs: [-15] });
   });
 });

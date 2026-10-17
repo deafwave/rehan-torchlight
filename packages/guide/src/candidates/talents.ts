@@ -8,6 +8,7 @@ export interface TalentOpts { /** cap on "move a point" candidates (docs/talent-
   /** only the "+1 point" moves (spending points a level-up made available) */ pointsOnly?: boolean;
   /** only whole-page variants (a free respec): one tree raised to a core's need with that core, or swapped for a tree of its role at a core's need */ pages?: boolean;
   /** nodes whose points never go down and whose tree is never swapped away (a respec keeps what the model prices at 0: it cannot see it, e.g. a Frozen target) */ locked?: ReadonlySet<number>;
+  /** the character's talent points (a live read: the points it has spent; the level's assumed count would offer points it does not have) */ budget?: number;
   /** nodes and cores never given a point or taken (the owner's rule for the build, e.g. no Erosion before Ruinous Star); points already in them may leave */ banned?: ReadonlySet<number> }
 
 const sum = (t: Pts) => Object.values(t).reduce((a, b) => a + b, 0);
@@ -36,7 +37,7 @@ export const talentMovesWith = (opts: TalentOpts): Generator => (s, ctx) => {
   const talents: Pts = Object.fromEntries(Object.entries(l.talents ?? {}).map(([k, v]) => [+k, v]));
   const cores = l.coreTalents ?? [];
   const copies = copiesOf(l.resolvedTalents?.talents);
-  const budget = pointsAtLevel(ctx.level), spent = sum(talents);
+  const budget = opts.budget ?? pointsAtLevel(ctx.level), spent = sum(talents);
   const out: Move[] = [];
   const before = new Map<number, Set<string>>();
   const was = (tr: number) => before.get(tr) ?? (before.set(tr, broken(tr, talents, cores, copies)), before.get(tr)!);

@@ -14,14 +14,17 @@ const ctx = { prices: snapshotBook(localItems()), level: 90, notSearched: new Se
 const lines = [{ id: 43040200, name: 'Ranger: chance to gain Agility Blessing on Critical Strike' }, { id: 54070400, name: "Lich: All Skills' Levels" }];
 
 describe('plan candidates keep the rules of the game (owner, 2026-10-16)', () => {
-  const cs = candidates(s, ctx, DEFAULT_PLAN, lines);
+  const points = Object.values(live.loadout.talents as Record<string, number>).reduce((a, b) => a + b, 0);
+  const cs = candidates(s, ctx, { ...DEFAULT_PLAN, points }, lines);
   it('a Magnificent / Noble support is never levelled; another gem below 20 is (time, 0 FE)', () => {
     expect(cs.filter((c) => /Magnificent|Noble/.test(c.label) && /^Level /.test(c.label))).toEqual([]);
     expect(cs.some((c) => c.label === 'Level Hammer of Ash 17 -> 20 (time)' && c.costFE === 0)).toBe(true);
   });
   it("no example-build skill group, no copy of a worn legendary", () => {
     expect(cs.filter((c) => /^Add the skill|Target skill/.test(c.label))).toEqual([]);
-    expect(cs.filter((c) => c.kind === 'support' && /Wind Projectiles|Slow Projectile -> /.test(c.label))).toEqual([]);   // the owner's dummy disproved the model's figure
+    expect(cs.filter((c) => c.kind === 'support' && /Wind Projectiles|Slow Projectile -> /.test(c.label))).toEqual([]);
+    expect(cs.filter((c) => /^\+\d+ points?/.test(c.label))).toEqual([]);   // no point out of thin air (owner): only moves
+    expect(cs.some((c) => /^Move a point/.test(c.label))).toBe(true);   // the owner's dummy disproved the model's figure
     expect(cs.filter((c) => /^Unique (Ruinous Star|Formation Breaker|Kaleidoscope) in /.test(c.label))).toEqual([]);
   });
   it('a legendary held at the start stays out after a step takes it off (a new one is priced mid-roll; yours is the roll there is)', () => {

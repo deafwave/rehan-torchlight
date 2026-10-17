@@ -20,7 +20,8 @@ import type { Evaluator, Figure, GenCtx, GuideOut, Move, PriceBook, State } from
 export interface PlanOpts { target: string; goal: number; maxSteps: number;
   /** FE of a slate carrying one wanted line, by line (the owner's prices); others `slateFE` */ slatePrices: [RegExp, number][]; slateFE: number;
   /** FE of the talent prism like the example build's (the owner's price) */ prismFE: number;
-  /** talent nodes whose points never move (set by runPlan) */ locked?: Set<number> }
+  /** talent nodes whose points never move (set by runPlan) */ locked?: Set<number>;
+  /** the character's talent points: the points it has spent at the start (set by runPlan) */ points?: number }
 export const DEFAULT_PLAN: PlanOpts = { target: 'traveler', goal: 2e11, maxSteps: 60, slatePrices: [[/Agility Blessing on Critical Strike/, 100], [/All Skills' Levels/, 270]], slateFE: 100, prismFE: 555 };
 
 /** the owner's rules the candidates must keep (2026-10-16) */
@@ -31,6 +32,7 @@ const RULES = [
   'A change that unseals an aura (Sealed Mana over your Mana, MANA2) is refused.',
   'Projectile speed is not traded for damage: Wind Projectiles is not offered and Slow Projectile is never taken out. The model overrates faster projectiles (your dummy, 2026-10-16: Passivation -> Wind Projectiles measured 22.5 B -> 16.9 B where the model said -8 %).',
   'Every step raises both the Traveler kill speed and your damage at full Life (the number the training dummy shows, the "Dummy" column): check each step there.',
+  'Talent points are only moved (a respec is free at level 90 and below), never added: the plan does not assume a point you do not have.',
   'Your Paralysis and Sealed Mana Compensation talent points stay, and so do points on a node the model prices at exactly 0 (it cannot judge them).',
 ];
 const KEPT = /Paralysis|Sealed Mana Compensation/;
@@ -58,7 +60,7 @@ export function candidates(s: State, ctx: GenCtx, o: PlanOpts, lines: { id: numb
   };
   // Wind Projectiles: the model's figure is off against the owner's dummy (RULES)
   const MEASURED_WRONG = /Wind Projectiles|Slow Projectile -> /;
-  for (const g of [ownedGear, gearMoves, gemMoves, kismetMoves, pactMoves, prismMoves, slateMoves, talentMovesWith({ maxShifts: 60, locked: o.locked }), whiteBaseMoves]) for (const m of g(s, ctx)) add(m);
+  for (const g of [ownedGear, gearMoves, gemMoves, kismetMoves, pactMoves, prismMoves, slateMoves, talentMovesWith({ maxShifts: 60, locked: o.locked, budget: o.points }), whiteBaseMoves]) for (const m of g(s, ctx)) add(m);
   for (const m of targetMoves(s, ctx)) {
     // the example build's skill groups are not offered: they replace a whole group at a cost they do not carry (a socket's gem is gemMoves', priced)
     if (/talent prism/.test(m.label)) add({ ...m, costFE: o.prismFE }, 'A talent prism like the example build (Onslaughter crit and two-handed mirrors) at your price');
@@ -113,6 +115,7 @@ export async function runPlan(ev: Evaluator, s0: State, books: PriceBook, k: Par
   // at exactly 0 (a state it does not evaluate, so it cannot judge the node)
   const held = Object.entries((s.loadout.talents ?? {}) as Record<string, number>).filter(([, p]) => p > 0).map(([n]) => +n);
   const zero = await Promise.all(held.map(async (n) => ((g) => !g.stop && g.kill === first.kill)((await ev.run(s.loadout, [{ kind: 'talent', node: n, points: 0 } as never], C)).figure)));
+  o.points = Object.values((s.loadout.talents ?? {}) as Record<string, number>).reduce((a, b) => a + b, 0);
   o.locked = new Set(held.filter((n, i) => zero[i] || KEPT.test(talentName(n))));
   const notes = [...RULES, ...(first.mana && !('stop' in first.mana) ? [`Sealed Mana now: ${first.mana.reserved} of ${first.mana.capacity} (${first.mana.margin} free); Life sealed ${first.mana.life.reserved} of ${first.mana.life.capacity}.`] : [`Sealed Mana: not calculated (${first.mana && 'stop' in first.mana ? first.mana.stop : 'no figure'}); changes are not checked against it.`])];
   const steps: NonNullable<GuideOut['plan']>['steps'] = [], refused = new Map<string, string>(), score = new Map<string, number>(), taken = new Set<string>();
