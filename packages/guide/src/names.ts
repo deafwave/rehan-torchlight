@@ -17,12 +17,14 @@ export function treeName(tree: number): string {
 export function talentName(id: number): string {
   const name: string | undefined = L()[`talent|name|${id}`];
   if (name && !/ Talent$|^Talent$/.test(name)) return name;
-  const fx = (talent ??= rows('config_talent'))[String(id)]?.c50?.[0] as [number, unknown[]] | undefined;
-  const desc: string | undefined = fx && L()[`affix_class|description|${fx[0]}`];
-  const v = fx?.[1]?.[0], lit = Array.isArray(v) && v[0] === 'lit' ? String(v[2]) : undefined;
-  // a computed value (the node's per-point expression) is left out with its sign and %, never guessed
-  const effect = !desc ? name ?? `talent ${id}`
-    : strip(desc).replace(/\$([+-]?)P1\$(%?)/g, (_, s: string, p: string) => (lit === undefined ? '' : `${s}${lit}${p}`))
+  // every effect of the node (owner, 2026-10-16: '+8% additional Deterioration Damage / +5% additional Deterioration Duration' read as Damage alone)
+  const fxs = ((talent ??= rows('config_talent'))[String(id)]?.c50 ?? []) as [number, unknown[]][];
+  const effects = fxs.map((fx) => {
+    const desc: string | undefined = L()[`affix_class|description|${fx[0]}`];
+    const v = fx[1]?.[0], lit = Array.isArray(v) && v[0] === 'lit' ? String(v[2]) : undefined;
+    // a computed value (the node's per-point expression) is left out with its sign and %, never guessed
+    return desc && strip(desc).replace(/\$([+-]?)P1\$(%?)/g, (_, s: string, p: string) => (lit === undefined ? '' : `${s}${lit}${p}`))
       .replace(/\$[+-]?P\d\$%?/g, '').replace(/\s+/g, ' ').trim().replace(/^(to|of) /i, '');
-  return `${treeName(treeOf(id))}: ${effect}`;
+  }).filter((x): x is string => !!x);
+  return `${treeName(treeOf(id))}: ${effects.length ? [...new Set(effects)].join(' / ') : name ?? `talent ${id}`}`;
 }
