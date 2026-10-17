@@ -7,7 +7,9 @@ export type LoadoutPatch =
   | { kind: 'patch'; op: 'inverse'; copies: { node: number; points: number; ee: number }[]; remove?: number[]; /** the prism's extra affixes (resolvedTalents.ext) */ ext?: unknown[] }
   /** a known build's hero memories / vorax limbs written into the loadout (dps-debug has no what-if change for them; it prices the loadout's lists) */
   | { kind: 'patch'; op: 'memories'; items: unknown[] } | { kind: 'patch'; op: 'vorax'; items: unknown[] }
-  | { kind: 'patch'; op: 'skill-group'; place: { kind: string; slot: number }; items: unknown[] };
+  | { kind: 'patch'; op: 'skill-group'; place: { kind: string; slot: number }; items: unknown[] }
+  /** one modifier of the item worn in `slot` at the roll `dyn` (another copy of a legendary, bought with that roll) */
+  | { kind: 'patch'; op: 'gear-roll'; slot: string; id: number; dyn: number[] };
 
 export const isPatch = (c: Change | LoadoutPatch): c is LoadoutPatch => (c as { kind: string }).kind === 'patch';
 
@@ -35,6 +37,10 @@ export function applyPatch(lo: Loadout, p: LoadoutPatch): Loadout {
     return l;
   }
   if (p.op === 'slate-board') { l.slateItems = structuredClone(p.items); return l; }
+  if (p.op === 'gear-roll') {
+    for (const g of (l.gear ?? []) as { slot?: string; affixes?: { id: number; dyn: number[] }[] }[]) if (g.slot === p.slot) for (const a of g.affixes ?? []) if (a.id === p.id) a.dyn = [...p.dyn];
+    return l;
+  }
   if (p.op === 'memories') { l.heroMemories = structuredClone(p.items); return l; }
   if (p.op === 'skill-group') {   // the skill in that place and its supports become `items`
     type G = { place: { kind: string; slot: number; ownerKind?: string; ownerSlot?: number } };

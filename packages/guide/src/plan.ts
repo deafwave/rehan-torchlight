@@ -14,6 +14,7 @@ import { bossName, ownedGear, ownedUniques } from './modes';
 import { ctxOfState, pieceKey, rankable } from './search';
 import { talentName } from './names';
 import { buildSheet } from './sheet';
+import { table } from './pin';
 import type { Evaluator, Figure, GenCtx, GuideOut, Move, PriceBook, State } from './types';
 
 export interface PlanOpts { target: string; goal: number; maxSteps: number;
@@ -36,7 +37,12 @@ const CONVERSION = /Converts? .*Physical Damage to (Cold|Lightning|Fire)|Physica
 
 /** the legendaries you wear or own: never bought, also after a step takes one off (a new one is priced at the middle of its rolls; yours is the roll there is) */
 const heldUniques = (s: State) => new Set([...ownedUniques(s, true).values(), ...ownedUniques(s).values()]);
-type Cand = { key: string; label: string; costFE: number; kind: string; note?: string; changes: Move['changes'] };
+/** a modifier's game text at a roll ($+P1$ -> +18), else its id */
+export function lineText(id: number, dyn: number[]): string {
+  const b = (table<{ rows: Record<string, { bindings?: string[] }> }>('config_modifier').rows[id]?.bindings ?? [])[0], t = b && table<{ rows: Record<string, string> }>('lang_en').rows[`affix_class|description|${b.split('_')[0]}`];
+  return t ? t.replace(/<[^>]+>/g, '').replace(/\$([+-]?)P(\d)\$/g, (_, sg: string, i: string) => `${sg}${dyn[+i - 1] ?? '?'}`) : `modifier ${id} at ${dyn.join(' / ')}`;
+}
+type Cand = { key: string; /** taken once per group */ group?: string; /** a better roll of a worn legendary: the lowest roll with the same figure is found when taken */ roll?: { slot: string; id: number; now: number[]; best: number[]; range: [number, number][] }; label: string; costFE: number; kind: string; note?: string; changes: Move['changes'] };
 const fits = (f: Figure) => !f.mana || 'stop' in f.mana || f.mana.fits;
 
 export function candidates(s: State, ctx: GenCtx, o: PlanOpts, lines: { id: number; name: string }[], held = heldUniques(s)): Cand[] {
@@ -53,6 +59,19 @@ export function candidates(s: State, ctx: GenCtx, o: PlanOpts, lines: { id: numb
   for (const m of targetMoves(s, ctx)) {
     // the example build's skill groups are not offered: they replace a whole group at a cost they do not carry (a socket's gem is gemMoves', priced)
     if (/talent prism/.test(m.label)) add({ ...m, costFE: o.prismFE }, 'A talent prism like the example build (Onslaughter crit and two-handed mirrors) at your price');
+  }
+  // another copy of a legendary you wear, bought with one line at its best roll (user, 2026-10-16: a Ruinous Star with Deterioration Duration 28+ is a breakpoint);
+  // the lowest roll that gives the same figure is found once the step is taken (runPlan)
+  const rolls = table<{ rows: Record<string, [number, number][]> }>('config_modifier_rolls').rows;
+  for (const [slot, name] of ownedUniques(s, true)) {
+    const fe = ctx.prices.price(name, s.level), g = ((s.loadout.gear ?? []) as { slot: string; affixes?: { id: number; dyn: number[]; list: string }[] }[]).find((x) => x.slot === slot);
+    if (fe === null || !g) continue;
+    for (const a of (g.affixes ?? []).filter((x) => x.list !== 'BaseAttrInfoList')) {
+      const r = rolls[a.id], best = r?.map(([lo, hi], i) => (lo < 0 ? Math.min(lo, a.dyn[i]) : Math.max(hi, a.dyn[i])));
+      if (!r || !best || best.every((v, i) => v === a.dyn[i])) continue;
+      out.push({ key: `roll|${slot}|${a.id}`, group: `roll|${slot}`, kind: 'unique', costFE: fe, roll: { slot, id: a.id, now: a.dyn, best, range: r },
+        label: `Buy another ${name} with ${lineText(a.id, best)} (yours: ${a.dyn.join(' / ')}); replace yours`, changes: [{ kind: 'patch', op: 'gear-roll', slot, id: a.id, dyn: best } as never] });
+    }
   }
   // a gem to level 20 (time, no FE); a Magnificent / Noble support is levelled by consuming copies (max 5): never a time step
   for (const g of L.skills.filter((x) => x.level < 20 && !/\((Magnificent|Noble)\)/.test(x.name))) {
@@ -120,12 +139,21 @@ export async function runPlan(ev: Evaluator, s0: State, books: PriceBook, k: Par
   console.log(`start: ${first.kill.toExponential(3)}/s on ${o.target}; ${cands.length} candidates; ${lines.length} slate lines`);
   await Promise.all(cands.map(rate));
   while (steps.length < o.maxSteps && f.kill < o.goal) {
-    const open = cands.filter((c) => !taken.has(c.key) && (score.get(c.key) ?? 0) > -Infinity).sort((a, b) => score.get(b.key)! - score.get(a.key)!);
+    const open = cands.filter((c) => !taken.has(c.key) && !(c.group && taken.has(c.group)) && (score.get(c.key) ?? 0) > -Infinity).sort((a, b) => score.get(b.key)! - score.get(a.key)!);
     if (!open.length) break;
     // lazy greedy: the stale best are re-priced on the build as it is now, the best of them is taken
     const w = (await Promise.all(open.slice(0, Math.max(16, ev.parallelism ?? 16)).map(rate))).filter((x) => x.v > -Infinity).sort((a, b) => b.v - a.v)[0];
     if (!w) continue;
-    s = { ...s, loadout: w.e.loadout }; spent += w.c.costFE; taken.add(w.c.key);
+    // a better roll: the lowest single-line roll that still gives this figure (Deterioration Duration 28 is the same breakpoint as 30)
+    if (w.c.roll && w.c.roll.best.length === 1) {
+      const { slot, id, now, best, range } = w.c.roll, up = best[0] > now[0];
+      for (let v = best[0] + (up ? -1 : 1); up ? v > now[0] : v < now[0]; v += up ? -1 : 1) {
+        const e = await ev.run(s.loadout, [{ kind: 'patch', op: 'gear-roll', slot, id, dyn: [v] } as never], C);
+        if (e.figure.kill < w.e.figure.kill * 0.999 || e.figure.life100 < w.e.figure.life100 * 0.999) break;
+        w.e = e; w.c = { ...w.c, label: w.c.label.replace(lineText(id, best), `${lineText(id, [v])} or ${up ? 'more' : 'less'} (range ${range[0][0]}-${range[0][1]})`) };
+      }
+    }
+    s = { ...s, loadout: w.e.loadout }; spent += w.c.costFE; taken.add(w.c.key); if (w.c.group) taken.add(w.c.group);
     steps.push({ label: w.c.label, costFE: w.c.costFE, totalFE: spent, figure: w.e.figure, ...(w.c.note ? { note: w.c.note } : {}) });
     f = w.e.figure;
     console.log(`step ${steps.length}: ${w.c.label.slice(0, 120)} | ${w.c.costFE} FE (total ${spent}) -> ${f.kill.toExponential(3)}/s`);

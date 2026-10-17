@@ -28,6 +28,12 @@ describe('plan candidates keep the rules of the game (owner, 2026-10-16)', () =>
     expect(candidates(s, priced, DEFAULT_PLAN, lines, new Set()).some(lwc)).toBe(true);
     expect(candidates(s, priced, DEFAULT_PLAN, lines, new Set(['Last Words of Chaos'])).some(lwc)).toBe(false);
   });
+  it('another copy of a worn legendary with one line at its best roll, priced at its market price, named in game words', () => {
+    const priced = { ...ctx, prices: withPrices(ctx.prices, { 'Ruinous Star': 1433 }).book };
+    const c = candidates(s, priced, DEFAULT_PLAN, lines).find((x) => /^Buy another Ruinous Star with \+30% additional Deterioration Duration \(yours: \d+\)/.test(x.label));
+    expect(c?.costFE).toBe(1433);
+    expect(c?.changes).toEqual([{ kind: 'patch', op: 'gear-roll', slot: 'chest', id: 80935371, dyn: [30] }]);
+  });
   it('a slate takes the place of one of yours (same shape and cell, so it fits the board), priced at your price', () => {
     const sl = cs.filter((c) => c.label.startsWith('Replace your slate'));
     expect(sl.length).toBe(live.loadout.slateItems.length * 3);   // 2 lines alone + the pair, per slate

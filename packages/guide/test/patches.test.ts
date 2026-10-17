@@ -63,3 +63,13 @@ describe('inverse patch', () => {
   });
 });
 
+
+describe('gear-roll: one line of a worn item at another roll (a second copy of a legendary bought with a better roll)', () => {
+  it('sets the line in that slot only, leaves the rest and the input alone', () => {
+    const lo = { gear: [{ slot: 'chest', affixes: [{ id: 80935371, dyn: [18] }, { id: 80935381, dyn: [26] }] }, { slot: 'belt', affixes: [{ id: 80935371, dyn: [5] }] }] };
+    const out = applyPatch(lo, { kind: 'patch', op: 'gear-roll', slot: 'chest', id: 80935371, dyn: [28] }) as typeof lo;
+    expect(out.gear[0].affixes).toEqual([{ id: 80935371, dyn: [28] }, { id: 80935381, dyn: [26] }]);
+    expect(out.gear[1].affixes[0].dyn).toEqual([5]);
+    expect(lo.gear[0].affixes[0].dyn).toEqual([18]);
+  });
+});
