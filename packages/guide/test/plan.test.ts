@@ -2,10 +2,10 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { pinRoot } from '../src/pin';
-import { candidates, DEFAULT_PLAN } from '../src/plan';
+import { candidates, DEFAULT_PLAN, runPlan } from '../src/plan';
 import { snapshotBook, withPrices } from '../src/pricing';
 import { localItems } from '../src/modes';
-import type { State } from '../src/types';
+import type { Evaluator, State } from '../src/types';
 
 // the owner's live Hammer of Ash character (export 20261016-122806, dps-debug MANA1's fixture)
 const live = JSON.parse(readFileSync(join(pinRoot(), 're/evidence/mana1_live.json'), 'utf8'));
@@ -38,4 +38,17 @@ describe('plan candidates keep the rules of the game (owner, 2026-10-16)', () =>
     expect(sl.find((c) => c.label.endsWith('with Ranger: chance to gain Agility Blessing on Critical Strike'))!.costFE).toBe(100);
     expect(sl.find((c) => /Agility Blessing.* \+ Lich/.test(c.label))!.costFE).toBe(370);
   });
+});
+
+describe('runPlan: a step must raise the damage at full Life too (owner, 2026-10-16: Passivation -> Wind Projectiles, +8.6 % kill speed, -25 % on the dummy)', () => {
+  it('a change that raises the kill speed but lowers full-Life damage is refused, named with why; one that raises both is taken', async () => {
+    const fig = (life100: number, kill: number) => ({ life100, life0: kill, kill, partial: [], target: 'traveler', lifeMax: 1.6e12 });
+    const ev: Evaluator = { pin: 'stub', parallelism: 4, close: async () => {},
+      run: async (loadout, changes) => { const j = JSON.stringify(changes);
+        return { loadout, dropped: [], figure: /"name":"Wind Projectiles"/.test(j) ? fig(0.9e10, 1.2e10) : /"name":"Multiple Projectiles"/.test(j) ? fig(1.1e10, 1.1e10) : fig(1e10, 1e10) }; } };
+    const r = await runPlan(ev, s, ctx.prices, { goal: 1e12, maxSteps: 3 });
+    expect(r.plan!.steps.some((x) => /Wind Projectiles/.test(x.label))).toBe(false);
+    expect(r.plan!.steps.some((x) => /Multiple Projectiles/.test(x.label))).toBe(true);
+    expect(r.notCalculable.some((n) => /Wind Projectiles.*lowers your damage at full Life/.test(n))).toBe(true);
+  }, 300_000);
 });
