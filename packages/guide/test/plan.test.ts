@@ -89,6 +89,17 @@ describe('plan candidates keep the rules of the game (owner, 2026-10-16)', () =>
     expect(items.filter((x) => x.place.kind === 'support').length).toBe(live.loadout.skills.filter((g: { place: { ownerKind?: string; ownerSlot?: number } }) => g.place.ownerKind === 'active' && g.place.ownerSlot === fix.place.slot).length);
     expect(c.some((x) => x.label.startsWith(`Replace ${aura.name} with Bull's Rage`))).toBe(false);   // an active never in an aura place
   });
+  it('at most 3 slates of a capped type (the 2- and 3-cell bases: Corners of Divinity, Fallen Starlight); a slate you own brings its own type and shape', async () => {
+    const { overCap } = await import('../src/candidates/slates');
+    const three = { ...s, loadout: { ...live.loadout, slateItems: [0, 1, 2].map((i) => ({ ...live.loadout.slateItems[0], itemId: `t${i}`, baseId: 261003, shapeId: 2020 })) } };
+    expect(overCap(three.loadout.slateItems)).toBe(false);
+    const c = candidates(three, ctx, DEFAULT_PLAN, lines);
+    expect(c.filter((x) => x.label.startsWith('Add a 2-cell slate'))).toEqual([]);   // a 4th of that type
+    const own = { ...three, owned: [{ itemId: 'p', baseId: 261005, baseName: null, level: 86, where: 'stash', page: 0, slot: 1, count: 1, modifiers: {}, talents: [43040200], shapeId: 2030 }] };
+    const put = candidates(own, ctx, DEFAULT_PLAN, lines).find((x) => x.key.startsWith('ownslate|p|'));
+    expect(put).toBeDefined();
+    expect((put!.changes[0] as unknown as { items: { baseId: number; shapeId: number }[] }).items.some((x) => x.baseId === 261005 && x.shapeId === 2030)).toBe(true);
+  });
   it('a slate takes the place of one of yours (same shape and cell, so it fits the board), priced at your price', () => {
     const sl = cs.filter((c) => c.label.startsWith('Replace your slate'));
     expect(sl.length).toBe(live.loadout.slateItems.length * 3);   // 2 lines alone + the pair, per slate

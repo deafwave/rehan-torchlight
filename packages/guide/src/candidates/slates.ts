@@ -29,6 +29,8 @@ function board(placed: Set<string>): Map<string, number> {
   return m;
 }
 
+/** a slate's cells in its own orientation, at the origin (its shape rotated by its direction) */
+const orientedCells = (it: SlateItem): [number, number][] => { let c = (rows('lua_config_talent_block_shape')[it.shapeId!].Shape as string).split(';').map((q) => q.split(',').map(Number) as [number, number]); for (let i = 0; i < (it.direction ?? 0) % 4; i++) c = c.map(([x, y]) => [-y, x]); return c; };
 const cellsOf = (it: SlateItem, slot = (it.link as { SlotId: number }).SlotId, dir = it.direction!): [number, number][] =>
   (rows('lua_config_talent_block_shape')[it.shapeId!].Shape as string).split(';').map(s => {
     let [x, y] = s.split(',').map(Number);
@@ -50,6 +52,9 @@ export function boardView(l: Record<string, unknown>, from: (i: number) => { sou
  *  into the board's open cells by an exact search, each by its type's rule - a Pedigree (7 cells, 2090) is only flipped across the vertical axis, a normal
  *  slate (4 cells) takes the square / L / Z shapes in any rotation, a Corner of Divinity or Fallen Starlight (the 2- and 3-cell shapes) any rotation. Null when
  *  they do not all fit; else each slate's cells, the placed ones first in board order, then the extras. */
+/** slate types the game allows at most 3 of on a board (owner, 2026-10-16: Corners of Divinity, Fallen Starlight: the 2- and 3-cell bases) */
+export const SLATE_CAP: Record<number, number> = { 261003: 3, 261005: 3 };
+export const overCap = (items: { baseId: number }[]) => Object.entries(SLATE_CAP).some(([b, n]) => items.filter((x) => x.baseId === +b).length > n);
 export function packBoard(l: Record<string, unknown>, level: number, extra: number[]): [number, number][][] | null {
   const items = ((l.slateItems ?? []) as SlateItem[]).filter((it) => !it.itemId.startsWith('guide-add-')), shapes = rows('lua_config_talent_block_shape');
   const cellsOfShape = (id: number): [number, number][] => (shapes[id]?.Shape as string).split(';').map((q) => q.split(',').map(Number) as [number, number]);
@@ -60,11 +65,11 @@ export function packBoard(l: Record<string, unknown>, level: number, extra: numb
   const NORMAL = [1050, 1030, 1040, 1020];   // square, L (both hands), Z
   const forms = (shapeId: number, placed?: SlateItem): [number, number][][] => {
     const c = cellsOfShape(shapeId);
-    if (c.length === 7) { const now = placed ? cellsOf(placed).map(([x, y]) => [x, y] as [number, number]) : c; return uniq([now, mirror(now)]); }   // a Pedigree: flipped only
+    if (c.length === 7) { const now = placed ? orientedCells(placed) : c; return uniq([now, mirror(now)]); }   // a Pedigree: flipped only
     if (c.length === 4) return uniq(NORMAL.flatMap((id) => rots(cellsOfShape(id))));
     return uniq(rots(c));
   };
-  const open = [...board(new Set(items.flatMap((it) => cellsOf(it).map(([x, y]) => cellKey(x, y)))))].filter(([, lv]) => lv <= level).map(([k]) => k);
+  const open = [...board(new Set(((l.slateItems ?? []) as SlateItem[]).filter((it) => !it.itemId.startsWith('guide-')).flatMap((it) => cellsOf(it).map(([x, y]) => cellKey(x, y)))))].filter(([, lv]) => lv <= level).map(([k]) => k);
   const free = new Set(open);
   const pieces = [...items.map((it) => forms(it.shapeId!, it)), ...extra.map((id) => forms(id))];
   const order = pieces.map((_, i) => i).sort((a, b) => pieces[b][0].length - pieces[a][0].length);   // the largest first
@@ -103,9 +108,9 @@ export function addSlate(s: State, shapeId: number, talents: number[]): Change {
 }
 
 /** your slate `index` replaced by one of the same shape and place carrying `talents` (nothing devoured or copied): the only way a slate fits a full board */
-export function replaceSlate(s: State, index: number, talents: number[]): Change {
+export function replaceSlate(s: State, index: number, talents: number[], as?: { baseId: number; shapeId?: number }): Change {
   const items = (s.loadout.slateItems ?? []) as SlateItem[];
-  return { kind: 'patch', op: 'slate-board', items: items.map((x, j) => (j !== index ? x : { ...x, itemId: `guide-slate-${index}-${talents.join('-')}`, talents,
+  return { kind: 'patch', op: 'slate-board', items: items.map((x, j) => (j !== index ? x : { ...x, ...(as ? { baseId: as.baseId, shapeId: as.shapeId ?? x.shapeId } : {}), itemId: `guide-slate-${index}-${talents.join('-')}`, talents,
     influence: { ...(x.influence as object), EffectTalentIds: talents, TalentIdDevour: talents.map(() => false), TalentIdInfluence: talents.map(() => 0), TalentIdCopyInfluence: {},
       TalentIdCopy: {}, DevilProjectionTalentIds: {}, DevilProjectionInfluence: {}, DevilLineBoostInfluence: {}, DevilLineBoostTalentIds: {} } })) } as never;
 }

@@ -8,7 +8,8 @@ import { costOf } from './priceOf';
 import { kismetMoves } from './candidates/kismets';
 import { pactMoves } from './candidates/pacts';
 import { prismMoves } from './candidates/prisms';
-import { addSlate, boardView, packBoard, replaceSlate, slateMoves, slateWants } from './candidates/slates';
+import { addSlate, boardView, overCap, packBoard, replaceSlate, slateMoves, slateWants } from './candidates/slates';
+import { applyPatch } from './patches';
 import { talentMovesWith } from './candidates/talents';
 import { targetMoves } from './candidates/target';
 import { bossName, ownedGear, ownedUniques } from './modes';
@@ -79,9 +80,11 @@ export function lineText(id: number, dyn: number[]): string {
 }
 /** packBoard, remembered per board and shape list (a search that fails can take seconds) */
 const packed = new Map<string, boolean>();
-function fitsMore(s: State, shapes: number[]): boolean {
-  const k = JSON.stringify([((s.loadout.slateItems ?? []) as { itemId: string; shapeId?: number; link?: unknown; direction?: number }[]).filter((x) => !x.itemId.startsWith('guide-add-')).map((x) => [x.shapeId, x.link, x.direction]), shapes, s.level]);
-  if (!packed.has(k)) packed.set(k, packBoard(s.loadout, s.level, shapes) !== null);
+/** the board `l` (its slates, the added ones as `extra` shapes) packs, and no capped type (SLATE_CAP: at most 3) is over */
+function fitsLayout(l: Record<string, unknown>, level: number, extra: number[]): boolean {
+  const items = (l.slateItems ?? []) as { itemId: string; baseId: number; shapeId?: number; link?: unknown; direction?: number }[];
+  const k = JSON.stringify([items.filter((x) => !x.itemId.startsWith('guide-add-')).map((x) => [x.baseId, x.shapeId, x.link, x.direction, x.itemId.startsWith('guide-')]), extra, level]);
+  if (!packed.has(k)) packed.set(k, !overCap(items) && packBoard(l, level, extra) !== null);
   return packed.get(k)!;
 }
 /** the skill gems one can hold (config_item_base p5c -> config_skill_stone) of a kind (config_skill_stone i4: 1 active, 3 aura), named */
@@ -159,7 +162,7 @@ export function candidates(s: State, ctx: GenCtx, o: PlanOpts, lines: { id: numb
   const added = ((s.loadout.slateItems ?? []) as { itemId: string; shapeId?: number }[]).filter((x) => x.itemId.startsWith('guide-add-')).map((x) => x.shapeId!);
   const kinds: [number, string][] = [[2020, 'a 2-cell slate (the type of your 2-cell slates)'], [2030, 'a 3-cell slate (the type of your 3-cell slate)']];
   for (const [shape, what] of kinds) {
-    if (!fitsMore(s, [...added, shape])) continue;
+    if (!fitsLayout(applyPatch(s.loadout, addSlate(s, shape, []) as never), s.level, [...added, shape])) continue;
     for (const set of [...lines.slice(0, 10).map((a) => [a]), ...lines.slice(0, 6).flatMap((a, i) => lines.slice(i + 1, 6).map((b) => [a, b]))]) {
       const names = set.map((x) => x.name), price = (n: string) => o.slatePrices.find(([r]) => r.test(n))?.[1] ?? o.slateFE;
       out.push({ key: `add|${added.length}|${shape}|${set.map((x) => x.id).join('-')}`, group: `add|${added.length}`, kind: 'slate', costFE: names.reduce((t, n) => t + price(n), 0),
@@ -170,8 +173,9 @@ export function candidates(s: State, ctx: GenCtx, o: PlanOpts, lines: { id: numb
   // a slate you own (bag, stash) in place of one on the board: free
   for (const own of s.owned.filter((x) => x.talents?.length)) {
     const where = own.where === 'bag' ? 'bag' : 'stash';
-    ((s.loadout.slateItems ?? []) as { talents: number[] }[]).forEach((it, i) => (o.slateSlots && !o.slateSlots.includes(i)) || out.push({ key: `ownslate|${own.itemId}|${i}`, group: `ownslate|${own.itemId}`, kind: 'slate', costFE: 0,
-      label: `Put your ${where} slate (${own.talents!.map(talentName).join(', ')}) in place of board slate ${i + 1} (${it.talents.map(talentName).join(', ')})`, changes: [replaceSlate(s, i, own.talents!)] }));
+    ((s.loadout.slateItems ?? []) as { talents: number[] }[]).forEach((it, i) => (o.slateSlots && !o.slateSlots.includes(i))
+      || !fitsLayout(applyPatch(s.loadout, replaceSlate(s, i, own.talents!, { baseId: own.baseId, shapeId: own.shapeId }) as never), s.level, added) || out.push({ key: `ownslate|${own.itemId}|${i}`, group: `ownslate|${own.itemId}`, kind: 'slate', costFE: 0,
+      label: `Put your ${where} slate (${own.talents!.map(talentName).join(', ')}) in place of board slate ${i + 1} (${it.talents.map(talentName).join(', ')})`, changes: [replaceSlate(s, i, own.talents!, { baseId: own.baseId, shapeId: own.shapeId })] }));
   }
   // a slate in place of one of yours, same shape (so it fits the board), carrying one or two wanted lines (its other lines priced as nothing)
   const slates = L.slateItems ?? [], price = (n: string) => o.slatePrices.find(([r]) => r.test(n))?.[1] ?? o.slateFE;
@@ -293,7 +297,7 @@ export async function runPlan(ev: Evaluator, s0: State, books: PriceBook, k: Par
   r.plan!.build = buildSheet(s.loadout);
   // after the plan: the board as packBoard lays it out when slates were added (each placed slate moved or rotated where it shows), else as it is
   const items = (s.loadout.slateItems ?? []) as { itemId: string; shapeId?: number }[], extra = items.filter((x) => x.itemId.startsWith('guide-add-'));
-  const lay = extra.length ? packBoard(s.loadout, s.level, extra.map((x) => x.shapeId!)) : null, nowCells = boardView(s.loadout).slates.map((x) => JSON.stringify(x.cells));
+  const reshaped = items.some((x) => x.itemId.startsWith('guide-slate-')), lay = extra.length || reshaped ? packBoard(s.loadout, s.level, extra.map((x) => x.shapeId!)) : null, nowCells = boardView(s.loadout).slates.map((x) => JSON.stringify(x.cells));
   r.board = { now: boardView(s0.loadout), after: boardView(s.loadout, (i) => (slateFrom[i] ? { source: slateFrom[i], changed: true }
     : lay && JSON.stringify(lay[i]) !== nowCells[i] ? { source: 'on your board: move or rotate it to where it shows', changed: true } : { source: 'on your board', changed: false }), lay ?? undefined) };
   if (f.kill < o.goal) r.startNotes!.push(`The goal is not reached: the plan ends at ${f.kill.toExponential(2)} per second; nothing left that the model can price raises it.`);
