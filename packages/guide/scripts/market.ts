@@ -12,7 +12,8 @@ import { craftStep } from '../src/candidates/gear';
 import { localItems } from '../src/modes';
 import { fetchSeason, fetchSnapshot, snapshotBook } from '../src/pricing';
 import { table } from '../src/pin';
-import { replaceSlate } from '../src/candidates/slates';
+import { overCap, packBoard, replaceSlate } from '../src/candidates/slates';
+import { applyPatch } from '../src/patches';
 import { createEvaluator } from '../src/engine/pool';
 import { talentName } from '../src/names';
 import { rankable, ctxOfState } from '../src/search';
@@ -21,6 +22,8 @@ import { DEFAULT_PLAN } from '../src/plan';
 
 type Aff = { id: number; tier: number; text: string };
 type Listing = { n: number; price: number; priceType: number; baseId: number; level: number; prefix: Aff[]; suffix: Aff[]; talents?: number[]; shapeId?: number };
+/** a slate listing as it would sit on the board: its own type and shape in place of your slate i */
+const asSlate = (l: Listing) => ({ baseId: l.baseId, shapeId: l.shapeId });
 const root = fileURLToPath(new URL('../../../', import.meta.url));
 const top = Number(process.argv[process.argv.indexOf('--top') + 1]) || 8;
 const file = resolve(process.env.INIT_CWD ?? process.cwd(), process.argv[process.argv.indexOf('--file') + 1] ?? '');   // --file <listings.json>: a saved read instead of the live game
@@ -38,14 +41,17 @@ if (slates.length) {
   try {
     const base = (await ev.run(state.loadout, [], ctxOfState(state))).figure, by = new Map<string, Promise<number | string>>();
     const mine = (state.loadout.slateItems ?? []) as { shapeId?: number; talents: number[] }[];
-    const one = (i: number, t: number[]) => by.get(`${i}|${t}`) ?? by.set(`${i}|${t}`, ev.run(state.loadout, [replaceSlate(state, i, t)], ctxOfState(state))
-      .then((r) => (rankable(base, r.figure) ? r.figure.kill / base.kill - 1 : r.figure.stop ?? r.figure.partial.filter((p) => !base.partial.includes(p)).join('; ')))).get(`${i}|${t}`)!;   // a partial figure is flagged with what it dropped, not ranked
+    const one = (i: number, t: number[], l: Listing) => by.get(`${i}|${t}|${l.shapeId}`) ?? by.set(`${i}|${t}|${l.shapeId}`, ev.run(state.loadout, [replaceSlate(state, i, t, asSlate(l))], ctxOfState(state))
+      .then((r) => (rankable(base, r.figure) ? r.figure.kill / base.kill - 1 : r.figure.stop ?? r.figure.partial.filter((p) => !base.partial.includes(p)).join('; ')))).get(`${i}|${t}|${l.shapeId}`)!;   // a partial figure is flagged with what it dropped, not ranked
     // the listing in place of each of your slates (--same-shape: of its shape only), the best kept
     const same = process.argv.includes('--same-shape');
     const gain = async (l: Listing): Promise<{ g: number | string; slot?: number }> => {
-      const fits = mine.map((m, i) => (!same || m.shapeId === l.shapeId ? i : -1)).filter((i) => i >= 0);
-      if (!fits.length) return { g: `no slate of shape ${l.shapeId} on your board to put it in place of` };
-      const gs = await Promise.all(fits.map(async (i) => ({ g: await one(i, l.talents!), slot: i })));
+      // only where the board still holds it: the slates re-laid out (packBoard: each type's moves and rotations) and no type over its cap (SLATE_CAP)
+      const fits = mine.map((m, i) => (!same || m.shapeId === l.shapeId ? i : -1)).filter((i) => i >= 0).filter((i) => {
+        const lo = applyPatch(state.loadout, replaceSlate(state, i, l.talents!, asSlate(l)) as never) as { slateItems: { baseId: number }[] };
+        return !overCap(lo.slateItems) && packBoard(lo, state.level, []) !== null; });
+      if (!fits.length) return { g: `does not fit your board in place of any slate (shape ${l.shapeId}, base ${l.baseId}; or a type over its cap of 3)` };
+      const gs = await Promise.all(fits.map(async (i) => ({ g: await one(i, l.talents!, l), slot: i })));
       return gs.sort((a, b) => (typeof b.g === 'number' ? b.g : -Infinity) - (typeof a.g === 'number' ? a.g : -Infinity))[0];
     };
     const rows = await Promise.all(slates.map(async (l) => ({ l, ...(await gain(l)) })));
