@@ -73,7 +73,7 @@ function memoryCands(s: State, ctx: GenCtx): Cand[] {
 /** a modifier's game text at a roll ($+P1$ -> +18), else its id */
 export function lineText(id: number, dyn: number[]): string {
   const b = (table<{ rows: Record<string, { bindings?: string[] }> }>('config_modifier').rows[id]?.bindings ?? [])[0], t = b && table<{ rows: Record<string, string> }>('lang_en').rows[`affix_class|description|${b.split('_')[0]}`];
-  return t ? t.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim().replace(/\$([+-]?)P(\d)\$/g, (_, sg: string, i: string) => `${sg}${dyn[+i - 1] ?? '?'}`) : `modifier ${id} at ${dyn.join(' / ')}`;
+  return t ? t.replace(/<[^>]+>/g, '').replace(/\\n/g, ' ').replace(/\s+/g, ' ').trim().replace(/\$([+-]?)P(\d)\$/g, (_, sg: string, i: string) => `${sg}${dyn[+i - 1] ?? '?'}`) : `modifier ${id} at ${dyn.join(' / ')}`;
 }
 type Cand = { key: string; /** taken once per group */ group?: string; /** a better roll of a worn legendary: the lowest roll with the same figure is found when taken */ roll?: { slot: string; id: number; now: number[]; best: number[]; range: [number, number][] }; label: string; costFE: number; kind: string; note?: string; changes: Move['changes'] };
 const fits = (f: Figure) => !f.mana || 'stop' in f.mana || f.mana.fits;
