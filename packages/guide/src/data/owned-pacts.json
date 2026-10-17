@@ -1,5 +1,5 @@
 {
- "readAt": "2026-10-16T05:03:37.613Z",
+ "readAt": "2026-10-17T15:14:40.666Z",
  "pets": [
   {
    "servantId": 1110,
@@ -106,6 +106,10 @@
    "rank": 5
   },
   {
+   "servantId": 3330,
+   "rank": 0
+  },
+  {
    "servantId": 4110,
    "rank": 5
   },
@@ -162,6 +166,10 @@
    "rank": 5
   },
   {
+   "servantId": 5230,
+   "rank": 0
+  },
+  {
    "servantId": 5310,
    "rank": 5
   },
@@ -198,6 +206,18 @@
    "rank": 0
   },
   {
+   "servantId": 6210,
+   "rank": 0
+  },
+  {
+   "servantId": 6220,
+   "rank": 0
+  },
+  {
+   "servantId": 6230,
+   "rank": 0
+  },
+  {
    "servantId": 6310,
    "rank": 5
   },
@@ -218,6 +238,10 @@
    "rank": 5
   },
   {
+   "servantId": 7130,
+   "rank": 0
+  },
+  {
    "servantId": 7210,
    "rank": 5
   },
@@ -226,12 +250,20 @@
    "rank": 2
   },
   {
+   "servantId": 7230,
+   "rank": 0
+  },
+  {
    "servantId": 7310,
    "rank": 5
   },
   {
    "servantId": 7320,
    "rank": 5
+  },
+  {
+   "servantId": 7330,
+   "rank": 0
   },
   {
    "servantId": 7410,
@@ -256,6 +288,18 @@
   {
    "servantId": 8130,
    "rank": 5
+  },
+  {
+   "servantId": 8210,
+   "rank": 0
+  },
+  {
+   "servantId": 8220,
+   "rank": 0
+  },
+  {
+   "servantId": 8230,
+   "rank": 0
   },
   {
    "servantId": 8310,
@@ -294,6 +338,18 @@
    "rank": 0
   },
   {
+   "servantId": 9110,
+   "rank": 0
+  },
+  {
+   "servantId": 9120,
+   "rank": 0
+  },
+  {
+   "servantId": 9130,
+   "rank": 0
+  },
+  {
    "servantId": 9210,
    "rank": 5
   },
@@ -318,6 +374,30 @@
    "rank": 5
   },
   {
+   "servantId": 10110,
+   "rank": 0
+  },
+  {
+   "servantId": 10120,
+   "rank": 0
+  },
+  {
+   "servantId": 10130,
+   "rank": 0
+  },
+  {
+   "servantId": 10210,
+   "rank": 0
+  },
+  {
+   "servantId": 10220,
+   "rank": 0
+  },
+  {
+   "servantId": 10230,
+   "rank": 0
+  },
+  {
    "servantId": 10310,
    "rank": 5
   },
@@ -326,12 +406,32 @@
    "rank": 5
   },
   {
+   "servantId": 10330,
+   "rank": 0
+  },
+  {
    "servantId": 10410,
    "rank": 5
   },
   {
    "servantId": 10420,
    "rank": 3
+  },
+  {
+   "servantId": 10430,
+   "rank": 0
+  },
+  {
+   "servantId": 11110,
+   "rank": 0
+  },
+  {
+   "servantId": 11120,
+   "rank": 0
+  },
+  {
+   "servantId": 11130,
+   "rank": 0
   },
   {
    "servantId": 11210,
@@ -352,6 +452,10 @@
   {
    "servantId": 11320,
    "rank": 1
+  },
+  {
+   "servantId": 11330,
+   "rank": 0
   },
   {
    "servantId": 11410,
@@ -375,6 +479,30 @@
   },
   {
    "servantId": 12130,
+   "rank": 1
+  },
+  {
+   "servantId": 12210,
+   "rank": 0
+  },
+  {
+   "servantId": 12220,
+   "rank": 0
+  },
+  {
+   "servantId": 12230,
+   "rank": 0
+  },
+  {
+   "servantId": 13110,
+   "rank": 0
+  },
+  {
+   "servantId": 13120,
+   "rank": 0
+  },
+  {
+   "servantId": 13130,
    "rank": 0
   },
   {
@@ -383,7 +511,7 @@
   },
   {
    "servantId": 13220,
-   "rank": 4
+   "rank": 5
   },
   {
    "servantId": 13230,
@@ -426,6 +554,18 @@
    "rank": 5
   },
   {
+   "servantId": 15110,
+   "rank": 0
+  },
+  {
+   "servantId": 15120,
+   "rank": 0
+  },
+  {
+   "servantId": 15130,
+   "rank": 0
+  },
+  {
    "servantId": 15210,
    "rank": 5
   },
@@ -435,7 +575,7 @@
   },
   {
    "servantId": 15230,
-   "rank": 3
+   "rank": 5
   },
   {
    "servantId": 16110,
@@ -444,6 +584,10 @@
   {
    "servantId": 16120,
    "rank": 1
+  },
+  {
+   "servantId": 16130,
+   "rank": 0
   },
   {
    "servantId": 16210,
@@ -558,6 +702,10 @@
    "rank": 0
   },
   {
+   "servantId": 20120,
+   "rank": 0
+  },
+  {
    "servantId": 20130,
    "rank": 0
   },
@@ -567,10 +715,34 @@
   },
   {
    "servantId": 20220,
+   "rank": 2
+  },
+  {
+   "servantId": 20230,
    "rank": 0
   },
   {
    "servantId": 21110,
+   "rank": 2
+  },
+  {
+   "servantId": 21120,
+   "rank": 0
+  },
+  {
+   "servantId": 21130,
+   "rank": 0
+  },
+  {
+   "servantId": 21210,
+   "rank": 0
+  },
+  {
+   "servantId": 21220,
+   "rank": 0
+  },
+  {
+   "servantId": 21230,
    "rank": 0
   }
  ]

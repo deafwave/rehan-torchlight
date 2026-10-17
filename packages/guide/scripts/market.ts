@@ -1,30 +1,36 @@
-/** The market search on screen ranked by what it costs to finish: listing price + the expected crafting left to have every wanted mod at T1
- *  (market-targets.json at the repository root, by base name; each missing T1 at craftStep's expected embers at etor prices, cached 30 minutes). No damage figures: fast.
+/** The market search on screen ranked by the model: a gear search by each listing's kill-speed gain per FE in place of what you wear in its slot.
+ *  --craft ranks gear instead by price + the expected crafting left to have every wanted mod at T1 (market-targets.json at the repository root, by base
+ *  name; each missing T1 at craftStep's expected embers at etor prices, cached 30 minutes). No damage figures.
  *  A slate search (listings with talents) is ranked instead by the model's damage gain of the listing's talents in place of one of your slates (the best one
  *  named; the owner rebuilds the board around the slates bought, so the shape is not held to the replaced one's; --same-shape holds it)
- *  (--export <export.json>, default the newest dps-debug game/exports read). A listing is priced in place of your weakest slate (the one whose removal costs
- *  least) and of any slate sharing one of its talents; --exact prices it in place of every slate (6x the figures).
- *  --watch: keep running, re-read the screen every 2 s and rank again when the listings change (the workers and prices stay warm).
+ *  (--export <export.json>, default the newest dps-debug game/exports read). A listing only goes in place of a slate the board's caps allow (SLATE_CAP: a
+ *  Pedigree only in place of your Pedigree); of those, your weakest slate (the one whose removal costs least) and any slate sharing one of its talents;
+ *  --exact prices it in place of every one it can replace.
+ *  --watch: keep running, re-read the screen 4 times a second and redraw the ranking as each figure lands (the page on screen is priced first; the workers
+ *  start at once and stay warm).
  *  usage (repo root, elevated shell, game running, a market search open): pnpm guide:market [--top N] [--watch] [--workers N, default 8] [--exact] [--file <saved listings.json>] [--export <export.json>] */
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawn } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { basename, resolve } from 'node:path';
+import { createInterface } from 'node:readline';
 import { fileURLToPath } from 'node:url';
 import { writeAtomic } from '../src/atomic';
-import { craftStep } from '../src/candidates/gear';
+import { craftStep, slotsOfBase } from '../src/candidates/gear';
 import { localItems } from '../src/modes';
 import { fetchSeason, fetchSnapshot, snapshotBook, type EtorItems } from '../src/pricing';
-import { table } from '../src/pin';
-import { replaceSlate } from '../src/candidates/slates';
+import { pinCommit, table } from '../src/pin';
+import { replaceable, replaceSlate } from '../src/candidates/slates';
 import { createEvaluator } from '../src/engine/pool';
 import { talentName } from '../src/names';
 import { rankable, ctxOfState } from '../src/search';
 import { fromExport } from '../src/start';
 import { DEFAULT_PLAN } from '../src/plan';
-import type { Evaluator } from '../src/types';
+import type { Change, EvalCtx, Evaluator, Figure, State } from '../src/types';
 
-type Aff = { id: number; tier: number; text: string };
-type Listing = { n: number; price: number; priceType: number; baseId: number; level: number; prefix: Aff[]; suffix: Aff[]; talents?: number[]; shapeId?: number };
+type Aff = { id: number; tier: number; text: string; dyn: (number | string)[] };
+type Listing = { n: number; price: number; priceType: number; baseId: number; level: number; prefix: Aff[]; suffix: Aff[]; base?: Aff[]; fixed?: Aff[]; talents?: number[]; shapeId?: number };
+type Ranked = { lines: string[]; pending: number };
 const root = fileURLToPath(new URL('../../../', import.meta.url));
 const argv = process.argv, has = (f: string) => argv.includes(`--${f}`), arg = (f: string) => (has(f) ? argv[argv.indexOf(`--${f}`) + 1] : undefined);
 const top = Number(arg('top')) || 8, watch = has('watch'), exact = has('exact'), same = has('same-shape');
@@ -42,7 +48,7 @@ async function prices(): Promise<EtorItems> {
 const targets: Record<string, { want: number[] }> = JSON.parse(readFileSync(`${root}market-targets.json`, 'utf8'));
 const lang = table<{ rows: Record<string, string> }>('lang_en').rows;
 const group = (id: number) => Math.floor(id / 100);
-async function rankGear(listings: Listing[]) {
+async function rankGear(listings: Listing[]): Promise<Ranked> {
   const ctx = { prices: snapshotBook(await prices()), level: 100, notSearched: new Set<string>() };
   const rows = listings.map((l) => {
     const base = lang[`item_base|name|${l.baseId}`] ?? String(l.baseId), want = targets[base]?.want;
@@ -55,69 +61,180 @@ async function rankGear(listings: Listing[]) {
       have: want.filter((id) => at(id)?.tier === 1).map((id) => at(id)!.text.slice(0, 40)) };
   });
   const known = rows.filter((r) => r.total !== null).sort((a, b) => a.total! - b.total!);
-  for (const b of new Set(rows.filter((r) => r.total === null).map((r) => r.base))) console.log(`no target for ${b}: add it to market-targets.json`);
-  console.log(`${listings.length} listings; ranked by price + expected crafting to all wanted mods at T1 (etor ember prices of ${ctx.prices.fetchedAt ?? 'the stored snapshot'})`);
+  const lines = [...new Set(rows.filter((r) => r.total === null).map((r) => r.base))].map((b) => `no target for ${b}: add it to market-targets.json`);
+  lines.push(`${listings.length} listings; ranked by price + expected crafting to all wanted mods at T1 (etor ember prices of ${ctx.prices.fetchedAt ?? 'the stored snapshot'})`);
   for (const r of known.slice(0, top))
-    console.log(`#${String(r.l.n).padStart(2)}  ${String(r.l.price).padStart(5)} FE + craft ${String(Math.round(r.total! - r.l.price)).padStart(5)} = ${String(Math.round(r.total!)).padStart(5)} FE | T1 already: ${r.have.join(', ') || 'none'} | to craft: ${r.left.join('; ')}`);
+    lines.push(`#${String(r.l.n).padStart(2)}  ${String(r.l.price).padStart(5)} FE + craft ${String(Math.round(r.total! - r.l.price)).padStart(5)} = ${String(Math.round(r.total!)).padStart(5)} FE | T1 already: ${r.have.join(', ') || 'none'} | to craft: ${r.left.join('; ')}`);
+  return { lines, pending: 0 };
 }
 
-/** the evaluator and your character, made on the first slate search and kept (--watch) */
-let slateRun: Promise<(slates: Listing[]) => Promise<void>> | undefined, ev: Evaluator | undefined;
-async function slateRanker() {
+/** your character: the newest dps-debug read (--export to choose), on the target the plan ranks on (plan.ts DEFAULT_PLAN, --target to change) */
+let who: { exp: string; state: State; ctx: EvalCtx } | undefined;
+function character() {
+  if (who) return who;
   const dd = resolve(process.env.DPS_DEBUG ?? `${root}../dps-debug`, 'game/exports');
   const exp = arg('export') ? resolve(process.env.INIT_CWD ?? process.cwd(), arg('export')!)
     : readdirSync(dd).sort().reverse().map((d) => resolve(dd, d, `export-${d}.json`)).find((f) => { try { return readFileSync(f).length > 0; } catch { return false; } })!;
-  // the target the plan ranks on (plan.ts DEFAULT_PLAN, --target to change)
-  const state = { ...fromExport(JSON.parse(readFileSync(exp, 'utf8')), 0), target: arg('target') ?? DEFAULT_PLAN.target }, ctx = ctxOfState(state);
+  const state = { ...fromExport(JSON.parse(readFileSync(exp, 'utf8')), 0), target: arg('target') ?? DEFAULT_PLAN.target };
+  return who = { exp, state, ctx: ctxOfState(state) };
+}
+/** the evaluator and your character's figure, started on the first figure a search needs (--watch: at once) and kept */
+let warmRun: Promise<void> | undefined, ev: Evaluator | undefined, base: Figure | undefined;
+const warm = () => warmRun ??= (async () => {
+  const { state, ctx } = character();
   // 8 workers (~1.4 GB each) by default: the 16 a plan takes held 21 GB for a page of slates
   ev = await createEvaluator({ memoDir: `${root}packages/guide/.cache/memo`, workers: Number(arg('workers')) || 8 });
-  const base = (await ev.run(state.loadout, [], ctx)).figure, by = new Map<string, Promise<number | string>>();
-  const mine = (state.loadout.slateItems ?? []) as { shapeId?: number; talents: number[] }[];
-  const one = (i: number, t: number[]) => {
-    const k = `${i}|${[...t].sort()}`;   // the same talents in another order: one figure
-    if (!by.has(k)) by.set(k, ev!.run(state.loadout, [replaceSlate(state, i, t)], ctx)
-      .then((r) => (rankable(base, r.figure) ? r.figure.kill / base.kill - 1 : r.figure.stop ?? r.figure.partial.filter((p) => !base.partial.includes(p)).join('; '))));   // a partial figure is flagged with what it dropped, not ranked
-    return by.get(k)!;
+  base = (await ev.run(state.loadout, [], ctx)).figure;
+  pump(); landed();
+})();
+/** a figure against your character's: the kill-speed gain, or what a partial figure dropped / why it stopped (never ranked) */
+const versus = (f: Figure): number | string => (rankable(base!, f) ? f.kill / base!.kill - 1 : f.stop ?? f.partial.filter((p) => !base!.partial.includes(p)).join('; '));
+
+/** Figures as they land. `want` gives a key's gain once settled, else queues it once and gives undefined. The evaluator is handed no more than it runs at
+ *  once and the page on screen goes first, so a page flipped past never holds up the one shown; `landed` redraws. */
+const settled = new Map<string, number | string>(), asked = new Set<string>(), waiting: { page: number; k: string; changes: Change[] }[] = [];
+let page = 0, running = 0, landed = () => {};
+function pump() {
+  while (base && running < (ev!.parallelism ?? 8) && waiting.length) {
+    const [w] = waiting.splice(Math.max(0, waiting.findIndex((x) => x.page === page)), 1), { state, ctx } = character();
+    running++;
+    ev!.run(state.loadout, w.changes, ctx).then((r) => settled.set(w.k, versus(r.figure)), (e: Error) => settled.set(w.k, e.message))
+      .finally(() => { running--; pump(); landed(); });
+  }
+}
+function want(k: string, changes: () => Change[]): number | string | undefined {
+  if (settled.has(k)) return settled.get(k);
+  if (!asked.has(k)) { asked.add(k); waiting.push({ page, k, changes: changes() }); void warm(); pump(); }
+  else { const w = waiting.find((x) => x.k === k); if (w) w.page = page; }
+  return undefined;
+}
+/** a row's gain for sorting: pending rows last, partial ones just above them */
+const num = (g: number | string | undefined) => (typeof g === 'number' ? g : g === undefined ? -Infinity : -1e300);
+
+/** gear gains on disk by pin, read, target and item: a listing seen by an earlier run prints without starting the evaluator */
+const GAINS = `${root}packages/guide/.cache/market-gains.json`;
+const gains: Record<string, number | string> = existsSync(GAINS) ? JSON.parse(readFileSync(GAINS, 'utf8')) : {};
+let unsaved = false;
+
+/** A gear search: each listing as it is, in place of what you wear in its slot (a ring: the better of the two), by the model's kill-speed gain per FE. */
+function rankWorn(listings: Listing[]): Ranked {
+  const { exp, state } = character(), pin = pinCommit().slice(0, 8);
+  const mods = (xs: Aff[] = []) => xs.map((a) => ({ id: a.id, dynArgs: a.dyn.map(Number) }));
+  const gain = (l: Listing, slot: string) => {
+    const modifiers = { baseAttr: mods(l.base), ...(l.fixed?.length ? { baseAffix: mods(l.fixed) } : {}), prefix: mods(l.prefix), suffix: mods(l.suffix) };
+    const id = createHash('sha1').update(JSON.stringify([slot, l.baseId, l.level, modifiers])).digest('hex').slice(0, 16);
+    const k = `${pin}|${basename(exp)}|${state.target}|${id}`;
+    if (k in gains) return gains[k];
+    const g = want(k, () => [{ kind: 'gear', slot, item: { baseId: l.baseId, itemId: `market-${id}`, level: l.level, modifiers } } as Change]);
+    if (g !== undefined) { gains[k] = g; unsaved = true; }
+    return g;
   };
+  const rows = listings.map((l) => {
+    const slots = slotsOfBase(l.baseId, state.skill).slots;
+    if (!slots.length) return { l, g: `not worn by ${state.skill} (${lang[`item_base|name|${l.baseId}`] ?? l.baseId})` as number | string | undefined, slot: '' };
+    const gs = slots.map((slot) => ({ l, g: gain(l, slot), slot }));
+    return gs.some((r) => r.g === undefined) ? { l, g: undefined, slot: '' } : gs.sort((a, b) => num(b.g) - num(a.g))[0];
+  });
+  const pending = rows.filter((r) => r.g === undefined).length;
+  if (!pending && unsaved) { writeAtomic(GAINS, JSON.stringify(gains)); unsaved = false; }
+  const per = (r: { l: Listing; g?: number | string }) => num(r.g) / Math.max(r.l.price, 1);
+  const lines = [`${listings.length} listings${pending ? ` (${pending} pricing)` : ''}; ranked by kill-speed gain vs ${state.target} per FE, each in place of what you wear, on ${exp}`];
+  const best = rows.reduce((a, b) => (num(b.g) > num(a.g) ? b : a));
+  for (const r of rows.sort((a, b) => per(b) - per(a)).slice(0, top)) {
+    const tiers = [...r.l.prefix, ...r.l.suffix].map((a) => `T${a.tier}`).join(' ');
+    lines.push(`#${String(r.l.n).padStart(2)}  ${String(r.l.price).padStart(6)} FE  ${r.g === undefined ? '  pricing' : typeof r.g === 'string' ? `  partial | not ranked: ${r.g.slice(0, 160)}`
+      : `${pct(r.g).padStart(8)}  ${(r.g * 1e4 / Math.max(r.l.price, 1)).toFixed(2).padStart(6)}%/100FE | ${r.slot} | ${tiers}${r === best ? ' | best outright' : ''}`}`);
+  }
+  if (!rows.slice(0, top).includes(best) && typeof best.g === 'number') lines.push(`best outright: #${best.l.n} ${best.l.price} FE ${pct(best.g)}`);
+  return { lines, pending };
+}
+
+/** A slate search: each listing's talents (on its own base) in place of one of your slates the board's caps let it replace */
+function rankSlates(slates: Listing[]): Ranked {
+  const { exp, state } = character();
+  const mine = (state.loadout.slateItems ?? []) as { baseId: number; shapeId?: number; talents: number[] }[];
+  // the same talents in another order: one figure; the listing's base on the slate it replaces (its shape stays: the board is rebuilt around it)
+  const one = (i: number, t: number[], baseId?: number) => want(`slate|${i}|${baseId ?? ''}|${[...t].sort()}`, () => [replaceSlate(state, i, t, baseId === undefined ? undefined : { baseId })]);
   // what each of your slates is worth: an empty slate in its place
-  const drop = await Promise.all(mine.map((_, i) => one(i, [])));
-  return async (slates: Listing[]) => {
-    // ponytail: the weakest slate (+ any sharing a talent) stands in for every slate - exact when talents multiply; a listing that interacts with another
-    // slate some other way is ranked low. --exact prices every slot.
-    const gain = async (l: Listing): Promise<{ g: number | string; slot?: number }> => {
-      const fits = mine.map((m, i) => (!same || m.shapeId === l.shapeId ? i : -1)).filter((i) => i >= 0);
-      if (!fits.length) return { g: `no slate of shape ${l.shapeId} on your board to put it in place of` };
-      const weakest = fits.filter((i) => typeof drop[i] === 'number').sort((a, b) => (drop[b] as number) - (drop[a] as number))[0];
-      const tries = exact || weakest === undefined ? fits
-        : fits.filter((i) => i === weakest || typeof drop[i] !== 'number' || mine[i].talents.some((t) => l.talents!.includes(t)));
-      const gs = await Promise.all(tries.map(async (i) => ({ g: await one(i, l.talents!), slot: i })));
-      return gs.sort((a, b) => (typeof b.g === 'number' ? b.g : -Infinity) - (typeof a.g === 'number' ? a.g : -Infinity))[0];
-    };
-    const rows = await Promise.all(slates.map(async (l) => ({ l, ...(await gain(l)) })));
-    console.log(`${slates.length} slates; ranked by damage gain (kill speed vs ${base.target ?? 'the target'}) in place of ${exact ? 'one of your slates' : 'your weakest slate (or one sharing a talent)'}${same ? ' of the same shape' : ''}, on ${exp} (L${state.level} ${state.skill}); your slates: ${mine.map((m, i) => `${i + 1} shape ${m.shapeId}${typeof drop[i] === 'number' ? ` (${pct(drop[i] as number)} without it)` : ''}`).join(', ')}`);
-    const num = (g: number | string) => (typeof g === 'number' ? g : -Infinity);
-    for (const r of rows.sort((a, b) => num(b.g) - num(a.g)).slice(0, top))
-      console.log(`#${String(r.l.n).padStart(2)}  ${String(r.l.price).padStart(5)} FE  ${typeof r.g === 'string' ? '  partial' : `${pct(r.g).padStart(8)}  ${(r.g * 100 / Math.max(r.l.price, 1) * 100).toFixed(2).padStart(6)}%/100FE`} | ${r.l.talents!.map(talentName).join(' + ')}${r.slot !== undefined && typeof r.g === 'number' ? ` | in place of your slate ${r.slot + 1}` : ''}${typeof r.g === 'string' ? ` | not ranked: ${r.g.slice(0, 160)}` : ''}`);
+  const drop = mine.map((_, i) => one(i, []));
+  // ponytail: the weakest slate (+ any sharing a talent) stands in for every slate - exact when talents multiply; a listing that interacts with another
+  // slate some other way is ranked low. --exact prices every slot.
+  const gain = (l: Listing): { g?: number | string; slot?: number } => {
+    const fits = replaceable(mine, l.baseId).filter((i) => !same || mine[i].shapeId === l.shapeId);
+    if (!fits.length) return { g: `no slate on your board it can go in place of (${same ? `shape ${l.shapeId}, ` : ''}base ${l.baseId}: SLATE_CAP)` };
+    if (!exact && fits.some((i) => drop[i] === undefined)) return {};
+    const weakest = fits.filter((i) => typeof drop[i] === 'number').sort((a, b) => (drop[b] as number) - (drop[a] as number))[0];
+    const tries = exact || weakest === undefined ? fits
+      : fits.filter((i) => i === weakest || typeof drop[i] !== 'number' || mine[i].talents.some((t) => l.talents!.includes(t)));
+    const gs = tries.map((i) => ({ g: one(i, l.talents!, l.baseId), slot: i }));
+    return gs.some((x) => x.g === undefined) ? {} : gs.sort((a, b) => num(b.g) - num(a.g))[0];
   };
+  const rows = slates.map((l) => ({ l, ...gain(l) })), pending = rows.filter((r) => r.g === undefined).length;
+  const lines = [`${slates.length} slates${pending ? ` (${pending} pricing)` : ''}; ranked by damage gain (kill speed vs ${state.target}) in place of ${exact ? 'one of your slates' : 'your weakest slate (or one sharing a talent)'} the board's caps allow${same ? ', of the same shape' : ''}, on ${exp} (L${state.level} ${state.skill}); your slates: ${mine.map((m, i) => `${i + 1} shape ${m.shapeId}${typeof drop[i] === 'number' ? ` (${pct(drop[i] as number)} without it)` : ''}`).join(', ')}`];
+  for (const r of rows.sort((a, b) => num(b.g) - num(a.g)).slice(0, top))
+    lines.push(`#${String(r.l.n).padStart(2)}  ${String(r.l.price).padStart(5)} FE  ${r.g === undefined ? '  pricing' : typeof r.g === 'string' ? '  partial' : `${pct(r.g).padStart(8)}  ${(r.g * 100 / Math.max(r.l.price, 1) * 100).toFixed(2).padStart(6)}%/100FE`} | ${r.l.talents!.map(talentName).join(' + ')}${r.slot !== undefined && typeof r.g === 'number' ? ` | in place of your slate ${r.slot + 1}` : ''}${typeof r.g === 'string' ? ` | not ranked: ${r.g.slice(0, 160)}` : ''}`);
+  return { lines, pending };
 }
 const pct = (g: number) => `${g >= 0 ? '+' : ''}${(g * 100).toFixed(2)}%`;
 
-async function rank(text: string) {
-  const listings: Listing[] = JSON.parse(text).map((l: Listing, i: number) => ({ ...l, n: l.n ?? i + 1 }));
-  if (!listings.length) return console.log('no market search result on screen (open a search in the auction house first)');
+/** the listings ranked from the figures landed so far */
+async function rank(listings: Listing[]): Promise<Ranked> {
+  if (!listings.length) return { lines: ['no market search result on screen (open a search in the auction house first)'], pending: 0 };
   const slates = listings.filter((l) => l.talents?.length);
-  if (slates.length) await (await (slateRun ??= slateRanker()))(slates);
-  else await rankGear(listings);
+  return slates.length ? rankSlates(slates) : has('craft') ? rankGear(listings) : rankWorn(listings);
+}
+const parse = (text: string): Listing[] => JSON.parse(text).map((l: Listing, i: number) => ({ ...l, n: l.n ?? i + 1 }));
+
+/** --watch reads through one python kept attached to the game (a new one costs ~0.8 s to start and attach, a read ~0.2 s) */
+function reader() {
+  const py = spawn('python', [`${root}scripts/market_listings.py`, '--serve'], { stdio: ['pipe', 'pipe', 'inherit'] });
+  const out = createInterface({ input: py.stdout })[Symbol.asyncIterator]();
+  return async () => {
+    py.stdin.write('\n');
+    const { value, done } = await out.next();
+    if (done) throw new Error('the market reader exited');
+    const r = JSON.parse(value);
+    if (!Array.isArray(r)) throw new Error(r.error);
+    return value as string;
+  };
 }
 
 try {
-  if (!watch) await rank(screen());
-  else for (let last = ''; ;) {
-    try {
-      const text = screen();
-      if (text !== last) { last = text; console.log(`\n${new Date().toLocaleTimeString()}`); await rank(text); }
-    } catch (e) { console.warn(`market: ${(e as Error).message.split(/\r?\n/).filter(Boolean).at(-1)}`); }
-    await new Promise((r) => setTimeout(r, 2000));
+  if (!watch) {
+    const listings = parse(screen());
+    let landings = 0, wake = () => {};
+    landed = () => { landings++; wake(); };
+    for (;;) {
+      const seen = landings, r = await rank(listings);
+      if (!r.pending) { console.log(r.lines.join('\n')); break; }
+      if (landings === seen) await new Promise<void>((ok) => (wake = ok));
+    }
+  } else {
+    // a terminal: the page redrawn as each figure lands; a pipe: printed once ranked
+    const tty = process.stdout.isTTY, read = file ? async () => readFileSync(file, 'utf8') : reader();
+    let shown: Listing[] | undefined, at = '', printed = 0, drawing = false, again = false;
+    const draw = async () => {
+      if (drawing) return void (again = true);
+      drawing = true;
+      try {
+        do {
+          again = false;
+          if (!shown) continue;
+          const p = page, r = await rank(shown), head = `${at}${base || !warmRun ? '' : ' (the evaluator is starting)'}`;
+          if (tty) process.stdout.write(`\x1b[H\x1b[J${head}\n${r.lines.join('\n')}\n`);
+          else if (!r.pending && printed !== p) { printed = p; console.log(`\n${head}\n${r.lines.join('\n')}`); }
+        } while (again);
+      } catch (e) { console.warn(`market: ${(e as Error).message}`); } finally { drawing = false; }
+    };
+    landed = () => void draw();
+    if (!has('craft')) void warm();
+    for (let last = ''; ;) {
+      try {
+        const text = await read();
+        if (text !== last) { last = text; page++; shown = parse(text); at = new Date().toLocaleTimeString(); void draw(); }
+      } catch (e) { console.warn(`market: ${(e as Error).message.split(/\r?\n/).filter(Boolean).at(-1)}`); }
+      await new Promise((r) => setTimeout(r, 250));
+    }
   }
 } finally { await ev?.close(); }
 process.exit(0);

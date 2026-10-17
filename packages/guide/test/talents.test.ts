@@ -138,6 +138,12 @@ describe('talent moves', () => {
     for (const m of ms) expect(total(apply(talents, l94.coreTalents, m.changes).t), m.label).toBeLessThanOrEqual(108);
     expect(ms.some(m => m.label.startsWith('Move a point'))).toBe(false);
   });
+  it("a live character's budget is the points it holds, not its level's (owner 2026-10-17: Path of Progression grants talent points too)", () => {
+    const talents = { ...l94.talents }; delete talents['34070400'];
+    const ms = talentMoves({ ...state, loadout: { ...l94, talents }, level: 94 }, { prices: {} as any, level: 94, talentBudget: 107, notSearched: new Set<string>() });
+    expect(ms.some(m => m.label.startsWith('+1 point'))).toBe(false);
+    expect(ms.some(m => m.label.startsWith('Move a point'))).toBe(true);
+  });
   it('a core is offered at exactly its threshold and not one point below', () => {
     const t21 = Object.fromEntries(Object.entries(l94.talents).filter(([k]) => k.startsWith('21'))) as Record<string, number>;
     expect(total(t21)).toBe(24);

@@ -55,6 +55,9 @@ export function boardView(l: Record<string, unknown>, from: (i: number) => { sou
 /** slate types the game allows a few of on a board (owner, 2026-10-16/17: at most 3 Corners of Divinity and 3 Fallen Starlight - the 2- and 3-cell bases - and 1 Pedigree) */
 export const SLATE_CAP: Record<number, number> = { 261003: 3, 261005: 3, 261010: 1 };
 export const overCap = (items: { baseId: number }[]) => Object.entries(SLATE_CAP).some(([b, n]) => items.filter((x) => x.baseId === +b).length > n);
+/** the board indexes a slate of `baseId` can go in place of, the board staying within SLATE_CAP (a Pedigree: only your Pedigree) */
+export const replaceable = (items: { baseId: number }[], baseId: number) =>
+  items.map((_, i) => i).filter((i) => !overCap(items.map((x, j) => (j === i ? { baseId } : x))));
 export function packBoard(l: Record<string, unknown>, level: number, extra: number[]): [number, number][][] | null {
   const items = ((l.slateItems ?? []) as SlateItem[]).filter((it) => !it.itemId.startsWith('guide-add-')), shapes = rows('lua_config_talent_block_shape');
   const cellsOfShape = (id: number): [number, number][] => (shapes[id]?.Shape as string).split(';').map((q) => q.split(',').map(Number) as [number, number]);

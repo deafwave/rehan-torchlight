@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { readdirSync } from 'node:fs';
 import { gemLevelAt, gemMoves, gemRequires, supportsFor } from '../src/candidates/gems';
+import { tagGate } from '@dps/src/core/build';
 import { pinRoot, table } from '../src/pin';
 import type { Skill } from '../src/types';
 import { GROUND, L100, L94, applyAll, fakePrices, loadout } from './apply';
@@ -12,12 +13,13 @@ const gen = (l: Record<string, unknown>, skill: Skill, prices: Record<string, nu
 };
 type Sup = { kind: string; action: string; socket: number; gem?: { sid: number; level: number; name: string } };
 const sup = (m: { changes: unknown[] }) => m.changes[0] as Sup;
+const onMain = (m: { changes: unknown[] }) => { const o = (m.changes[0] as { owner: { kind: string; slot: number } }).owner; return o.kind === 'active' && o.slot === 0; };
 type Gem = { sid: number; level: number; place: { kind: string; slot: number; ownerKind?: string; ownerSlot?: number } };
 const sockets = (l: Record<string, unknown>) => (l.skills as Gem[]).filter(g => g.place.kind === 'support' && g.place.ownerSlot === 0 && g.place.ownerKind === 'active');
 
 describe('gemMoves', () => {
   it('emits only supports the SUP1 census compiles for the skill: Steamroll on Hammer of Ash, never on Ice Shot (G2 tag gate)', () => {
-    const hoa = gen(l100, 'hoa').moves.filter(m => sup(m).gem).map(m => sup(m).gem!.name), ice = gen(l94, 'iceShot').moves.filter(m => sup(m).gem).map(m => sup(m).gem!.name);
+    const hoa = gen(l100, 'hoa').moves.filter(m => onMain(m) && sup(m).gem).map(m => sup(m).gem!.name), ice = gen(l94, 'iceShot').moves.filter(m => onMain(m) && sup(m).gem).map(m => sup(m).gem!.name);
     expect(hoa).toContain('Steamroll');
     expect(ice).not.toContain('Steamroll');
     expect(new Set(ice).size).toBeGreaterThan(10);
@@ -62,7 +64,7 @@ describe('gemMoves', () => {
   });
   it('never offers a support the skill already holds', () => {
     const held = new Set(sockets(l100).map(g => g.sid));
-    expect(gen(l100, 'hoa').moves.every(m => !sup(m).gem || !held.has(sup(m).gem!.sid))).toBe(true);
+    expect(gen(l100, 'hoa').moves.filter(onMain).every(m => !sup(m).gem || !held.has(sup(m).gem!.sid))).toBe(true);
   });
   it('replace keeps the socket\'s gem level, is priced by name (null when etor has no row), remove is free', () => {
     const { moves } = gen(l100, 'hoa', { Steamroll: 12 });
@@ -87,6 +89,34 @@ describe('gemMoves', () => {
     const ms = gemMoves({ loadout: l, owned, fe: 0, level: 100, skill: 'hoa' } as never, { prices: fakePrices({ [name]: 500 }), level: 100, notSearched: new Set() }).filter(m => sup(m).gem?.name === name);
     expect(ms.length).toBeGreaterThan(0);
     expect(ms.every(m => m.costFE === 0 && !m.buy && sup(m).gem!.level === 1 && JSON.stringify((sup(m).gem as { mods?: unknown }).mods) === JSON.stringify(prefix))).toBe(true);
+  });
+  // owner, 2026-10-17: Red Umbrella paralyzes on hit, so Flame Core's Grudge (its paralysis) is free for something else; only Hammer of Ash's sockets were searched
+  describe('the other skills\' sockets (owner, 2026-10-17)', () => {
+    const st = table<{ rows: Record<string, { ab0: number[]; ae0: number[][]; af0: number[][] }> }>('config_skill_stone').rows;
+    const { moves, notSearched } = gen(l100, 'hoa');
+    const heads = new Map((l100.skills as (Gem & { name: string })[]).filter(g => g.place.kind !== 'support').map(g => [`${g.place.kind}|${g.place.slot}`, g]));
+    const other = moves.map(m => ({ m, c: m.changes[0] as Sup & { owner: { kind: string; slot: number } } })).filter(({ c }) => !(c.owner.kind === 'active' && c.owner.slot === 0));
+    it('a filled socket of Flame Core, Timid, a warcry or an aura gets replace and remove moves', () => {
+      for (const name of ['Flame Core', 'Timid', 'Raging Warcry', 'Precise: Cruelty']) {
+        const ms = other.filter(({ c }) => heads.get(`${c.owner.kind}|${c.owner.slot}`)!.name === name);
+        expect(ms.some(({ c }) => c.action === 'replace'), name).toBe(true);
+        expect(ms.some(({ c }) => c.action === 'remove'), name).toBe(true);
+      }
+      expect(other.find(({ c }) => c.action === 'replace' && heads.get(`${c.owner.kind}|${c.owner.slot}`)!.name === 'Flame Core')!.m.label).toMatch(/^Flame Core socket 1: Activation Medium: Motionless -> /);
+    });
+    it('every support offered passes dps-debug\'s tag gate for that skill (G2) and is not already in the group', () => {
+      for (const { c } of other.filter(({ c }) => c.gem)) {
+        const head = heads.get(`${c.owner.kind}|${c.owner.slot}`)!;
+        expect(tagGate(st[c.gem!.sid], st[head.sid].ab0).ok, `${c.gem!.name} on ${head.name}`).toBe(true);
+        expect((l100.skills as Gem[]).some(g => g.place.ownerKind === c.owner.kind && g.place.ownerSlot === c.owner.slot && g.sid === c.gem!.sid)).toBe(false);
+      }
+    });
+    it('Blink is not searched (movement: the figure does not price it), nor an empty socket of another skill (the Energy that unlocks it is not read)', () => {
+      expect(other.some(({ c }) => heads.get(`${c.owner.kind}|${c.owner.slot}`)!.name === 'Blink')).toBe(false);
+      expect(other.some(({ c }) => c.action === 'install')).toBe(false);
+      expect([...notSearched].join()).toMatch(/Blink/);
+      expect([...notSearched].join()).toMatch(/Energy/);
+    });
   });
   it('a main skill that is not the state\'s skill is not searched', () => {
     const r = gen(l94, 'hoa');

@@ -22,11 +22,10 @@ description: "Rank the auction house search the player has open in Torchlight: I
 
    Say which one to buy and why: usually the one with the most wanted T1 mods per FE.
 
-   A **Divinity Slate** search (the listings carry talents) is ranked by the model instead. Each listing's talents go on your character as one more slate
-   (`withSlate`), using the newest `dps-debug/game/exports` read (`--export <file>` overrides it). Report `#n`, the price, the % damage gain (kill speed vs
+   A **Divinity Slate** search (the listings carry talents) is ranked by the model instead. Each listing replaces one of your slates (`replaceSlate`, see "Slate searches"),
+   using the newest `dps-debug/game/exports/<stamp>/export-<stamp>.json` (`--export <file>` overrides it; a newer read dir with no export file is skipped silently). Report `#n`, the price, the % damage gain (kill speed vs
    the target), the %/100 FE and the two talents. Recommend the best gain per FE, and also the best gain outright if it costs more. A `partial` row is a
-   piece the model cannot price (it names what it dropped). It is never ranked, so say it is unknown, not zero. The gain assumes a free board spot; with
-   a full board the slate replaces one.
+   piece the model cannot price (it names what it dropped). It is never ranked, so say it is unknown, not zero.
 
 3. If a gear base has no entry in `market-targets.json`, ask the user which T1 mods they want. Add them, using T1 ids from `data/affix_library.json` (`tiers[0].tierAffixId` of the item's slot library), then run again.
 
@@ -35,11 +34,12 @@ Notes:
 - A two-handed weapon spends 2 embers per craft.
 - Max 2 advanced affixes per item. A listing with an advanced T1 mod outside the target (for example T1 Strength on a maul) can be a cheaper alternative. Mention it.
 - To test without the game: `pnpm -s guide:market --file <saved listings.json>`.
-- `--watch` keeps running: it re-reads the screen every 2 s and ranks again when the listings change (workers and prices stay warm; Ctrl+C to stop). etor prices are cached in `packages/guide/.cache/etor-snapshot.json` and fetched again every 30 minutes.
-- Slates use 8 workers (about 1.4 GB each; `--workers N`). A listing is priced in place of your weakest slate and of any slate that shares one of its talents; `--exact` tries every slate (6x the figures).
+- `--watch` keeps running: one reader stays attached to the game and reads the screen 4 times a second; a new page shows at once and its rows fill in as each figure lands (the page on screen is priced first, a page flipped past waits; workers start at once and stay warm; Ctrl+C to stop). A page seen before ranks in under a second. etor prices are cached in `packages/guide/.cache/etor-snapshot.json` and fetched again every 30 minutes.
+- Slates use 8 workers (about 1.4 GB each; `--workers N`). A listing is priced in place of your weakest slate and of any slate that shares one of its talents; `--exact` tries every slate you hold (one figure per slate).
 
 ## Slate searches
 
+- A listing only replaces a slate the board's caps allow (`SLATE_CAP`, `replaceable`): a **Pedigree only ever replaces your Pedigree**, a fourth Corner of Divinity only one of your three.
 - A Divinity Slate search is ranked by the model's damage gain of each listing **in place of one of your slates** (the best one named; `--same-shape` only lets it replace a slate of its own shape: your board is full,
   a slate only fits where one of its shape sits), on the Traveler (the plan's target; `--target <boss>` to change). The row names which of your slates it replaces.
 - With `--same-shape`, a listing whose shape matches none of your slates is listed as not ranked.

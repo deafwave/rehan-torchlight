@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { slateMoves } from '../src/candidates/slates';
+import { replaceable, slateMoves } from '../src/candidates/slates';
 import { table } from '../src/pin';
 import { GROUND, L100, applyAll, fakePrices, loadout } from './apply';
 
@@ -47,4 +47,12 @@ describe('slateMoves', () => {
     expect(r.moves).toEqual([]);
     expect([...r.notSearched].some(n => /no slateItems/.test(n))).toBe(true);
   });
+});
+
+describe('replaceable', () => {
+  // the owner's board, 2026-10-17: three Corners of Divinity (261005), two 261003, a God of Might's Divinity, one Pedigree (261010)
+  const board = [261005, 261003, 260504, 261010, 261005, 261005, 261003].map((baseId) => ({ baseId }));
+  it('a Pedigree replaces only the Pedigree (owner: at most one on a board)', () => expect(replaceable(board, 261010)).toEqual([3]));
+  it('a fourth Corner of Divinity replaces only one of the three', () => expect(replaceable(board, 261005)).toEqual([0, 4, 5]));
+  it('a base with no cap replaces any slate', () => expect(replaceable(board, 260504)).toEqual([0, 1, 2, 3, 4, 5, 6]));
 });

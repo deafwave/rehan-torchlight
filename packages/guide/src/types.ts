@@ -89,7 +89,11 @@ export interface PriceBook {
 }
 
 /** `notSearched`: generators add one line per configuration they skip because its rule is not ported (copied to GuideOut.notSearched) */
-export interface GenCtx { prices: PriceBook; level: number; notSearched: Set<string> }
+export interface GenCtx {
+  prices: PriceBook; level: number; notSearched: Set<string>;
+  /** a live character's talent points (what it holds; Path of Progression adds points, so its level does not give them); unset: `pointsAtLevel` */
+  talentBudget?: number;
+}
 export type Generator = (s: State, ctx: GenCtx) => Move[];
 
 export interface Step {

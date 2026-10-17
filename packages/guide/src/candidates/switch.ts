@@ -28,8 +28,8 @@ const targetSkills = (): Gem[] => targetFile().skills;
 const sum = (p: Record<string, number>) => Object.values(p).reduce((a, b) => a + b, 0);
 /** the target build's talent page at a level (trimmed to its points, trimPage) as changes over the state's page: every point and core of it removed, the
  *  target's set; `points` = what the page holds, `need` = the whole page */
-export function targetPage(s: { loadout: Record<string, unknown> }, level: number): { changes: Change[]; page: { talents: Record<number, number>; cores: number[] }; points: number; need: number } {
-  const t = targetFile(), page = trimPage(t.talents, t.coreTalents, pointsAtLevel(level));
+export function targetPage(s: { loadout: Record<string, unknown> }, level: number, points = pointsAtLevel(level)): { changes: Change[]; page: { talents: Record<number, number>; cores: number[] }; points: number; need: number } {
+  const t = targetFile(), page = trimPage(t.talents, t.coreTalents, points);
   return { changes: pageChanges(s.loadout, page), page, points: sum(page.talents), need: sum(t.talents) };
 }
 
@@ -50,7 +50,7 @@ export const switchWithPage: (s: Parameters<Generator>[0], ctx: Parameters<Gener
   // the >= 110T path starts with Ruinous Star on (user, 2026-10-15): the planned switch waits for a level that wears it
   const star = goldItem(RUINOUS_STAR, ctx.level);
   if (star && star.minLevel > ctx.level) { ctx.notSearched.add(`planned switch waits for Ruinous Star (hero level ${star.minLevel})`); return null; }
-  const { changes, page, need, points: n } = targetPage(s, ctx.level);
+  const { changes, page, need, points: n } = targetPage(s, ctx.level, ctx.talentBudget);
   const trees = [...new Set(Object.keys(page.talents).map(k => treeOf(Number(k))))].map(treeName).join(', ');
   return { ...m, label: `${m.label}, on the target build's talent page ${n < need ? `trimmed to ${n} of ${need} points (` : `(${need} points; `}${trees}; cores ${page.cores.map(talentName).join(', ') || 'none'})`,
     changes: [...m.changes, ...changes] };

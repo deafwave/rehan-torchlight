@@ -42,7 +42,7 @@ if (args.includes("--buffs")) {
 }
 await done;
 const csv = path.join(poor, "tli_dump/diagnostics/_last_combat_watch.csv");
-// keep each run's per-frame capture for throw-period.mjs: ../scratch/watch/<label>.csv (then <label>-2.csv, …)
+// keep each run's per-frame capture: ../scratch/watch/<label>.csv (then <label>-2.csv, …)
 const watchDir = path.resolve(here, "../../../../scratch/watch");
 fs.mkdirSync(watchDir, { recursive: true });
 let kept = path.join(watchDir, `${label || "unlabeled"}.csv`);
@@ -50,12 +50,14 @@ for (let i = 2; fs.existsSync(kept); i++) kept = path.join(watchDir, `${label ||
 fs.copyFileSync(csv, kept);
 const rows = fs.readFileSync(csv, "utf8").trim().split(/\r?\n/).slice(1)
   .map(l => l.split(",").map(Number)).map(([t, dmg, dur, frame]) => ({ t, dmg, dur, frame }));
-const [a, b] = [rows[0], rows.at(-1)];
+// a Recount mid-window drops the total: measure only after the last reset (the fight ramps again after one)
+const resets = rows.filter((r, i) => i && r.dmg < rows[i - 1].dmg).length;
+const [a, b] = [rows.findLast((r, i) => i && r.dmg < rows[i - 1].dmg) ?? rows[0], rows.at(-1)];
 const gameS = (b.frame - a.frame) / 30, wallS = (b.t - a.t) / 1000;
 const out = { label, at: new Date().toISOString(), wallS, gameS, speed: gameS / wallS,
-  dps: (b.dmg - a.dmg) / gameS, wallDps: (b.dmg - a.dmg) / wallS, increments: rows.length - 2 };
+  dps: (b.dmg - a.dmg) / gameS, wallDps: (b.dmg - a.dmg) / wallS, increments: rows.length - 2, resets };
 console.log(`${label ? label + ": " : ""}DPS ${fmt(out.dps)} per game-second over ${gameS.toFixed(1)} game-s ` +
-  `(${wallS.toFixed(1)} wall-s, sim speed ${out.speed.toFixed(2)}×, wall-clock ${fmt(out.wallDps)})${b.dmg < a.dmg ? "  !! count reset" : ""}`);
+  `(${wallS.toFixed(1)} wall-s, sim speed ${out.speed.toFixed(2)}×, wall-clock ${fmt(out.wallDps)})${resets ? `  !! count reset x${resets}: after the last only` : ""}`);
 
 if (n) {
   out.uptime = Object.fromEntries(Object.entries(up).map(([k, v]) => [k, v / n]));

@@ -37,7 +37,7 @@ export const talentMovesWith = (opts: TalentOpts): Generator => (s, ctx) => {
   const talents: Pts = Object.fromEntries(Object.entries(l.talents ?? {}).map(([k, v]) => [+k, v]));
   const cores = l.coreTalents ?? [];
   const copies = copiesOf(l.resolvedTalents?.talents);
-  const budget = opts.budget ?? pointsAtLevel(ctx.level), spent = sum(talents);
+  const budget = opts.budget ?? ctx.talentBudget ?? pointsAtLevel(ctx.level), spent = sum(talents);
   const out: Move[] = [];
   const before = new Map<number, Set<string>>();
   const was = (tr: number) => before.get(tr) ?? (before.set(tr, broken(tr, talents, cores, copies)), before.get(tr)!);

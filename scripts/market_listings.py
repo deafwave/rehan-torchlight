@@ -39,4 +39,13 @@ def listings(L):
     return res
 
 if __name__ == '__main__':
-    print(json.dumps(listings(Lua(Proc())), ensure_ascii=False))
+    if '--serve' in sys.argv:   # market.ts --watch: one read per line on stdin, one JSON line out; attached once (again after a failed read: the game restarted)
+        L = None
+        for _ in sys.stdin:
+            try:
+                L = L or Lua(Proc()); out = listings(L)
+            except Exception as e:
+                L, out = None, {'error': str(e)}
+            print(json.dumps(out), flush=True)
+    else:
+        print(json.dumps(listings(Lua(Proc())), ensure_ascii=False))

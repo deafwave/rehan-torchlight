@@ -346,6 +346,8 @@ async function switchOn(ev: Evaluator, state: State, ctx: GenCtx, target: string
 export async function runAdvise(ev: Evaluator, state: State, k: Partial<Knobs> = {}, prices?: PriceBook, onStep?: (out: GuideOut) => void): Promise<GuideOut> {
   const K = { ...DEFAULT_KNOBS, ...k };
   const books = prices ?? snapshotBook(localItems());
+  // the character's talent points are what it holds: its level does not give them (Path of Progression adds points; owner, 2026-10-17)
+  const talentBudget = Object.values((state.loadout.talents ?? {}) as Record<string, number>).reduce((a, b) => a + b, 0);
   const acq0 = [ownedGear, ...ALL.map(only(true))], recon = ALL.map(only(false));
   const base = { mode: 'advise' as const, pin: ev.pin, etor: { season: books.season, fetchedAt: books.fetchedAt }, knobs: { ...K, fight: ev.fight, fightNote: ev.fightNote, rollBudget: ev.rollBudget, target: ev.target, fe: state.fe, level: state.level, skill: state.skill },
     character: { level: state.level, skill: state.skill, fe: state.fe, owned: state.owned.length,
@@ -358,7 +360,7 @@ export async function runAdvise(ev: Evaluator, state: State, k: Partial<Knobs> =
   // Hammer of Ash focus (user, 2026-10-16: "focus completely on switching to hammer of ash"): an Ice Shot character is planned as if switched now; the
   // switch is the plan's own card and everything after it (respec, next buys) is Hammer of Ash on the first boss
   if (K.focusHoa && state.skill === 'iceShot') {
-    const ctx = { prices: books, level: state.level, notSearched: new Set<string>() }, r = await switchOn(ev, state, ctx, targets[0]);
+    const ctx = { prices: books, level: state.level, talentBudget, notSearched: new Set<string>() }, r = await switchOn(ev, state, ctx, targets[0]);
     if (r) {
       const sw = { label: r.label, costFE: r.costFE, target: targets[0], figure: r.figure };
       const ice = { ...((state.loadout.talents ?? {}) as Record<string, number>) }, iceTrees = [...new Set(Object.keys(ice).filter((n) => ice[n] > 0).map((n) => treeName(treeOf(+n))))];
@@ -389,7 +391,7 @@ export async function runAdvise(ev: Evaluator, state: State, k: Partial<Knobs> =
   }
   const acq = acq0.map((g): Generator => (st, c) => g(st, c).filter((m) => !touchesOut(m)));
   const startNotes = [...leftOut, ...(passed.length ? [`${passed.join(', ')} (under ${moveOn} s): the advice is for ${bossName(state.target!)}`] : [])];
-  const ctxOf = (s: State): GenCtx => ({ prices: books, level: s.level,
+  const ctxOf = (s: State): GenCtx => ({ prices: books, level: s.level, talentBudget,
     notSearched: new Set(s.skill === 'iceShot' ? ['switch to Hammer of Ash: planned in the ideal guide, not searched for an Ice Shot character'] : CULL_NOT_COUNTED) });
   // a talent respec is free at level 90 and below (user, 2026-10-16): the character's own page and its best whole-page variants (a tree raised to a core's
   // need with that core, or swapped for a tree of its role) are each re-fitted by point and core moves while they help (no churn gate); the best is shown

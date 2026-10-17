@@ -126,7 +126,7 @@ function rebased(d: Dump, nb: Row, id: string, ctx: GenCtx): { item: Dump; recra
 }
 const swap = (slot: string, item: Dump): Change[] => [{ kind: 'gear', slot, item }];
 
-/** a unique's modifiers: one per fixed group at the midpoint of its best tier (tier digit 0, docs/gear-rules.md); a slot listing several groups is a random
+/** a unique's modifiers: one per fixed group at the midpoint of its dropped variant (digit 1, else 0; docs/gear-rules.md); a slot listing several groups is a random
  *  pool (Enamor: four slots drawn from one pool of 20) - no roll is assumed, the slot is named in `pooled`; a group the catalog lacks is in `lost` */
 function goldMods(g: Record<string, Record<string, unknown> | undefined>): { mods: { id: number; dynArgs: number[] }[]; pooled: string[]; lost: string[] } {
   const mods: { id: number; dynArgs: number[] }[] = [], pooled: string[] = [], lost: string[] = [];

@@ -1,31 +1,21 @@
 # TLI Lens
 
-Build-progression guide for Torchlight: Infinite. `packages/guide` drives the pinned dps-debug calculator
-and writes `packages/page/src/data/guide.json`; `packages/page` (Vite) renders it. See `CLAUDE.md` for
-layout, the dps-debug pin and invariants.
+Build-progression guide for Torchlight: Infinite. `packages/guide` drives the pinned dps-debug calculator over your character and writes
+`packages/page/src/data/advice.json`; `packages/page` (Vite) renders it. Commands, flags, the dps-debug pin and the invariants are in
+`CLAUDE.md`.
 
-## Commands
+## Quick start
 
-- `pnpm guide ideal [--out path]` - full ideal-progression run (L60 to L100), writes `guide.json`.
-- `pnpm guide advise <export.json> [--fe N] [--season N] [--out path]` - ranked next moves for your character;
-  writes `advice.json` and copies it to the clipboard. Uses live etor prices, else the stored snapshot.
-- `pnpm guide figure <loadout.json> [--skill hoa|iceShot] [--level N]` - print one figure.
-- Flags for all three: `--workers N`, `--bombs N` (default 10), `--roll-budget N` (default 1<<20),
-  `--budget-minutes N`.
-- `pnpm dev` / `pnpm build` - the page. `pnpm test` - all package tests (guide: tsc + vitest).
+Elevated shell, game running, sibling `../dps-debug` checkout:
 
-## Getting your export
+- `pnpm guide plan` - reads your character from the game and plans it to the damage goal at the least FE.
+- `pnpm dev` - the page.
+- `pnpm test` - light tests; `GUIDE_REAL=1 pnpm test` adds real-figure tests.
 
-Elevated shell, game running, in the dps-debug checkout: `python reader/export.py [--fe N]`. It writes
-`game/exports/<stamp>/export-<stamp>.json` and copies the same JSON to the clipboard. The poorchlight
-button (branch `feat/tli-lens-export`) produces the same export. Pass the file to `pnpm guide advise`.
-
-## Tests
-
-`pnpm test` is light (no dps-debug workers). `GUIDE_REAL=1 pnpm test` adds real-figure tests; they skip
-while the game.busy file exists, and the evaluator pool pauses on it (`GUIDE_BUSY_FILE` overrides the path).
+A saved read: `python reader/export.py` in dps-debug writes `game/exports/<stamp>/export-<stamp>.json` (and copies it to the clipboard);
+pass it to `pnpm guide plan <file>` or `pnpm guide advise <file>`.
 
 ## Known limits
 
-Anything the search could not cover (unported craft rules, uncatalogued bases, rank-ups not on the market)
-is listed in the output's `notSearched` / `unpriced`. Partial figures are flagged, never ranked as complete.
+Anything the search could not cover (unported rules, uncatalogued bases, items not on the market) is listed in the output's `notSearched` /
+`unpriced`. Partial figures are flagged, never ranked as complete.

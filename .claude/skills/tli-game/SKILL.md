@@ -1,12 +1,12 @@
 ---
 name: tli-game
-description: "Read and drive the running Torchlight: Infinite client — memory-read the build page (gear, skills+supports, talents, slates, prisms, memories, pactspirits, kismets), scrape builds, screenshot, press keys, click and hover the UI, and compare model sources against the in-game character sheet. Use when validating the Bing/HoA DPS model against the game, scraping a Pro Build or the user's own build, or navigating game menus."
+description: "Read and drive the running Torchlight: Infinite client — memory-read the build page (gear, skills+supports, talents, slates, prisms, memories, pactspirits, kismets), measure dummy DPS from memory, screenshot, press keys, click and hover the UI, and compare model inputs against the in-game character sheet. Use when checking the model against the game, reading a Pro Build or the user's own build, or navigating game menus."
 ---
 
 # tli-game
 
-**Memory first, screen second.** Everything a build page shows is in memory; read it with `state.mjs`
-or `scripts/scrape_build.mjs`. Use screenshots/input only for what memory does not hold yet (the
+**Memory first, screen second.** Everything a build page shows is in memory; read it with `state.mjs`.
+The logged-in character (no build page needed) is read by dps-debug's `reader/export.py` (what `pnpm guide plan` uses). Use screenshots/input only for what memory does not hold yet (the
 character sheet, the dummy DPS readout) or to open a page so memory can be read. All of it needs
 the **elevated** shell and the sibling repo `../poorchlight` (`target/release/tli_dump.exe` built).
 
@@ -15,7 +15,6 @@ the **elevated** shell and the sibling repo `../poorchlight` (`target/release/tl
 | Command (repo root) | What |
 |---|---|
 | `node .claude/skills/tli-game/state.mjs [--reuse] [--section gear\|skills\|memories\|traits\|talents\|slates\|prisms\|pacts\|kismets\|issues]` | readable dump of the open build page — every affix with its in-game text, supports by socket with Magnificent rolls, talent points per node, pact levels |
-| `node scripts/scrape_build.mjs <slug> --stated "<DPS + what it measured>"` | writes `data/bing1/scraped/<slug>.json` (planner export + native talents + prism placements) for `pnpm bing diagnose data/bing1/scraped/<slug>.json --season ss13` |
 
 The page read is whatever **build page** is open: a Pro Build, a Hunter File, or the user's own build
 (`sourcePage` `ViewPlayerBDReference`, `hero.sourceName` = character name). Any tab works.
@@ -24,9 +23,9 @@ Where things live (`poorchlight/tli_dump/diagnostics/`):
 - `_last_live_portable.json` → `proBuild.loadout.{hero, heroMemories, gear, skills, skillTree, divinity, etherealPrisms, pactspirits, kismets, vorax}`; affix text is in `affixes.*[].Simple` (strip `<p>`/`<e>` tags), raw ids in `.Id`, rolls in `DynArgs`.
 - `_last_live_snapshot.json` (raw) → `GeniusInfos` (talent `GeniusList` node→points, `BonusTalents`), `EtherealPrismState.Placements` (the portable projection drops placements).
 - Skills: `data.compendiumPlacement` = `{kind, slot, ownerKind, ownerSlot}`; level = `itemLevel`; Magnificent roll = `data.ServerPlayerItem.Prefix[].DynArgs`, tier from `identity.base.metadata.skillTierProgression`.
-- Pactspirit level = `StarRank`. Six can be equipped; drop pacts (Captain Shadow, Chalk Spirit, Twilight Sparks…) are loot-only and the exporter skips them.
+- Pactspirit level = `StarRank`. Six are equipped: slots 1-3 battle (`installServantType` 1), 4-6 drop pactspirits (type 2, loot only; checked on the owner's read 2026-10-17).
 - Talent node id `<tree:2><col:2><row:2>00` (cols = point thresholds 0…18 → 1…7, rows 1…5).
-- Known exporter gaps (handled in `scrape_build.mjs` / `bingImport.ts`): Magnificent tiers missing from poorchlight's catalog (restored from the item's tier table); 1,069 catalog GUIDs carry two game ids — index game ids from the raw entry list, never a GUID-keyed map; prism base attribute `1204509011` has no text anywhere.
+- Known exporter gaps: Magnificent tiers missing from poorchlight's catalog (restored from the item's tier table); 1,069 catalog GUIDs carry two game ids — index game ids from the raw entry list, never a GUID-keyed map; prism base attribute `1204509011` has no text anywhere.
 
 ## Screen and input (background — never steals focus)
 
@@ -53,8 +52,8 @@ Where things live (`poorchlight/tli_dump/diagnostics/`):
 PowerShell gotcha: variables are case-insensitive (`$h` and `$H` are one variable).
 
 Keys (ESC menu lists them): **B** inventory + character sheet, F1 Trade House, F2 Skill, F3 Talent, F4 Hero Trait,
-F5 Pact, M World Map, P Boon, K Season Pass, J Outfit, O Help; skill bar SPACE = Blink (10.6 mana, 2 charges —
-castable even with 498/520 mana sealed), R = HoA (disabled under Firepower Coverage), mouse, E, Q, F. **ESC** opens/closes the menu; close panels with their X (character sheet X at
+F5 Pact, M World Map, P Boon, K Season Pass, J Outfit, O Help; skill bar SPACE, R, mouse, E, Q, F (what sits
+where is the build's: read it with `ops.mjs state`). **ESC** opens/closes the menu; close panels with their X (character sheet X at
 3354,54; menu back arrow 3370,76) — B does not always toggle the sheet shut.
 
 Character sheet (B), right panel at x≈1900–2460: tab icons at y=320 — Overview x=2016, **Damage x=2132**,
@@ -62,20 +61,18 @@ Defense x=2248, 4th x=2364. Damage tab has a skill dropdown (Hammer of Ash) and 
 to scroll. **Hover a row → tooltip; click the row to pin it, then click the tooltip's `Base`/`Additional
 Bonus ▼` bar to expand the per-category breakdown** (Base Value / Talent / Hero Memories / Gear / Skill / Others).
 
-**The sheet is static data only.** Its DPS (≈18M vs a real 484B) ignores buffs, procs, Deterioration,
+**The sheet is static data only.** Its DPS is orders of magnitude below the dummy's: it ignores buffs, procs, Deterioration,
 enemy-taken and conditional lines; "Additional Damage Bonus" lists only buffs live at that instant and
 hides "additional Base Damage" lines. Use it to check inputs, not outcomes: Strength, crit chance/damage,
 typed increased pools, attack speed, penetration, projectile count, knockback.
 
-Checked 2026-10-10 on DeafwaveB (`data/bing1/scraped/my-build-2026-10-10.json`): Strength 339, crit chance
-57.05%, crit damage 324 (150 base + 121 talent + 53 memory), physical 176, fire 48, erosion 247, attack
-1.97/s (model ×1.05 Aggression in combat), knockback 48, erosion pen 10, projectiles 6 — all exact.
+On 2026-10-10 these sheet inputs matched the model exactly on the owner's build (Strength, crit chance/damage, typed increased,
+attack speed, knockback, erosion pen, projectiles).
 
-The dummy panel's **Info** tab (click 450,174) is the same sheet **captured in combat** (DPS 46M vs 18M at rest):
+The dummy panel's **Info** tab (click 450,174) is the same sheet **captured in combat**:
 its Damage section (269,269) shows live buffs (Kaleidoscope turns, Bull's Rage) — sample it, values change by the second.
 
-Floating damage numbers over the dummy (crop `1950 380 700 450`, burst 150ms): yellow 6–24B, purple 4–58B at
-this build. They merge: with the game's "draw each hit" setting off, each logic frame's hits become one number per
+Floating damage numbers over the dummy (crop `1950 380 700 450`, burst 150ms) merge: with the game's "draw each hit" setting off, each logic frame's hits become one number per
 category (Deterioration ticks have their own HP-removal style). Count hits with `combat.mjs --hits`, not screenshots.
 
 ## Memory combat reads (preferred)
@@ -85,7 +82,7 @@ category (Deterioration ticks have their own HP-removal style). Count hits with 
 (Deterioration, Timid, Frostbitten). Appends to `../scratch/measurements.jsonl` (outside the repo). Needs the dummy
 count running: 0 game-s from `combat.mjs 5` means it is stopped — with the dummy panel open, `game.ps1 click 310 545`
 (its Recount button, client pixels; game in front) restarts it in place. **30-second windows, A-B-A, two per state** (the user's choice; ±~5% per window from
-Kaleidoscope's 8s rotation) — the full protocol is the `bing-ab-test` skill. Never move between A and B.
+Kaleidoscope's 8s rotation). Never move between A and B.
 
 `--hits` adds `tli_dump --hit-watch` over the same window: one row per hit the dummy takes
 (`../scratch/watch/<label>-hits.csv`: frame, kind, crit, damage, source, hit_id, skill, flags, index; layout in
@@ -116,14 +113,7 @@ Bag clicks: the gear grid shows 3 rows at (2556 + col·100, 996 + visibleRow·14
 closes every panel including the dummy's (its counter keeps running; restart it from Sidney if the user wants it shown).
 Other panels can cover the bag (e.g. Talent) — `views` lists them; a click that changes nothing aborts the op.
 
-## DPS readings
+## DPS readings (screen)
 
-The training dummy's panel (top-left of the hideout, crop `0 140 680 440`) shows span average, duration,
-best 5s and 5s average. The user runs the timing macro; read the result by screenshot. Ratios need 3
-span runs per state in one session (mechanics.md#real-build). Measured 2026-10-10: **484,260,480,426**
-span over 31s for the build above; self-measured with no input 498.3B (50s) and 492.8B (32s).
-
-Observed 2026-10-10 (no input, standing at the dummy): **auto-throws every ~0.48s = sheet APS 1.97 × Aggression
-1.05** (burst count on the wall clock, before the game-time correction — superseded: handoff Task 0); **Bull's Rage up ~62%** (37/60 samples over 30s); no Blink is cast unless pressed (it IS castable: 10.6 mana — an earlier "uncastable" note was an input bug), so
-with no input Blade-dancer's after-Mobility +45% and Saintess Repentance (needs a Blessing) are off;
-Feline Stimulant 5 stacks, Attack Aggression and the four aura buffs are always up.
+The training dummy's panel (top-left of the hideout, crop `0 140 680 300`, as `measure` uses) shows span average, duration,
+best 5s and 5s average. Prefer `combat.mjs`; the panel is for when the user runs their timing macro.

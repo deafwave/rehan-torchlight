@@ -38,7 +38,8 @@ python tlibuild.py <code> --raw                        # decode, skip resolution
 python tlibuild.py <code> --season SS12 --refresh      # force season / re-download
 ```
 
-First run downloads ~6MB of bundles into `cache/` and writes a `guid-index-*.json`
+The local `cache/` holds SS10-SS12.5 bundles only (July 2026); a build from a newer season needs `--season <it> --refresh`.
+First run of a season downloads ~6MB of bundles into `cache/` and writes a `guid-index-*.json`
 (~25.7k entries). Later runs are offline and instant. Every run prints resolution
 stats to stderr — **`unresolved` should be 0**; if it is not, the season is wrong.
 

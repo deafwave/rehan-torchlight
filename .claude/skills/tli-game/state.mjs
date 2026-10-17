@@ -24,7 +24,7 @@ const section = (name, fn) => { if (!only || only === name) { out.push(`## ${nam
 out.push(`${portable.proBuild?.name ?? "(no build page)"} — ${lo.hero?.sourceName ?? "?"} L${lo.hero?.level ?? "?"} (${lo.hero?.identity?.label ?? "?"}), page ${portable.proBuild?.sourcePage}, captured ${portable.capturedAt}`, "");
 section("traits", () => {
   for (const [slot, id] of Object.entries(lo.hero?.sourceData?.compendiumTraits ?? {})) out.push(`  ${slot}: ${id}`);
-  out.push("  (names/levels: pnpm bing diagnose prints them; levels come from the slot's memory)");
+  out.push("  (ids only; levels come from the slot's memory)");
 });
 section("memories", () => list(lo.heroMemories?.items).forEach(it => {
   out.push(`  ${it.identity?.base?.label} (item level ${it.itemLevel})`);

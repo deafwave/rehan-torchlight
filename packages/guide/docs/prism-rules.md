@@ -1,6 +1,6 @@
 # Prism rules the guide uses
 
-Prism resolution happens on the game server; the client only receives the result. Task 7b generates a prism move only where the rules below determine the result and dps-debug's `{ kind: 'prism', action: 'add', node, modifierId, dyn }` change can express it. Paths are under the pin (`dps-debug/.worktrees/tli-lens-pin`).
+Prism resolution happens on the game server; the client only receives the result. The guide generates a prism move (`candidates/prisms.ts`) only where the rules below determine the result and dps-debug's `{ kind: 'prism', action: 'add', node, modifierId, dyn }` change can express it. Paths are under the pin (`dps-debug/.worktrees/tli-lens-pin`).
 
 ## Rules used
 
@@ -15,11 +15,11 @@ Prism resolution happens on the game server; the client only receives the result
 
 ## Not searched, and why
 
-- **Buying a prism**: rolled values and the base shape of an unowned prism are not known before purchase.
+- **Buying a random prism**: rolled values and the base shape of an unowned prism are not known before purchase. (`plan` does offer the target build's own prism at `--prism-fe`, applied with `prismOf`.)
 - **Moving a placed prism**: what happens to the vacated and the target cell's Points is not documented.
 - **10005** (+Points to nodes in the area): cap and stacking not documented.
 - **10007 on types 2 and 4**: `prisms.md` (a) says the type-to-node mapping is unconfirmed.
-- **Influence shapes 1, 2, 4, 5, 8** (no captured resolution) and **6, 7** (offsets undocumented), a prism without 10008 (the item's base `InfluenceId` is not in the export), two 10008 affixes, and any other server affix (10003, 10006, 10010).
+- **Influence shapes 1, 2, 4, 5, 8** (no captured resolution) and **6, 7** (offsets undocumented), a prism without 10008 that has a 10007 (the item's base `InfluenceId` is not in the export; one with only 10004 is generated on its own cell, shape 8), two 10008 affixes, and any other server affix (10003, 10006, 10010).
 - **Inverse Image placement (10026)**: `applyPatch` op `inverse` writes copies (weight Point x (1 + EE/100), tag `talent:-<id>@<100+EE>%`) and drops listed originals, but the one captured resolution (item 360701 on cell 12050100, shape 1) is not reproducible from documented rules: (1) the copy of 12040100 carries 3 points (L104) / 2 (A52) while its original has Point 0 in the loadout and in the server list, so the copy's Point is not the loadout's; (2) why the area nodes 12040200 and 12050200 get no copy (they are absent from the server's talent list) and why the micro 12050100 copy gets the type-2 value -98 rather than the type-4 value 13 are undocumented; (3) the item's base InfluenceId is not in the export. Data that would settle it: the allocation before resolution (the planner/GeniusList Point of 12040100 with the prism removed) and one more Inverse Image capture with a different cell or rolls. `test/patches.test.ts` pins this: the rules match 12060100 and 12060200 but not 12040100.
 - **Cell legality**: no source says which nodes accept a prism. Cells offered are the kinds the owner has placed prisms on (micro, legendary medium; never a core) with no allocated Point, in trees that hold no prism. This is an assumption, listed in `notSearched`.
 

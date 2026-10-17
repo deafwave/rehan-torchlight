@@ -1,10 +1,12 @@
 /**
- * Support candidates for the main skill (active slot 0): install into an empty socket, replace, remove. Which supports are offered is the SUP1 census
+ * Support candidates: for the main skill (active slot 0) install into an empty socket, replace, remove, the supports offered being the SUP1 census
  * (src/data/sup1.json: status COMPILES for the skill); a support the G2 tag gate refuses for the skill (Steamroll on Ice Shot) or that does not compile is never emitted.
+ * Every other skill but Blink: replace or remove in a filled socket, the supports offered being those dps-debug's tag gate (G2) passes for its stone.
  */
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import sup1 from '../data/sup1.json';
+import { tagGate } from '@dps/src/core/build';
 import { pinRoot, table } from '../pin';
 import { costOf } from '../priceOf';
 import type { Generator, Move, Skill } from '../types';
@@ -49,6 +51,18 @@ export const NOT_THIS_SEASON = new Set(['Fire Penetration', 'Cold Penetration', 
 const COVERAGE: Partial<Record<Skill, Set<string>>> = { iceShot: new Set(['Multiple Projectiles', 'Greater Multiple Projectiles', 'Projectile Penetration']) };
 export const NOT_FOR: Partial<Record<Skill, Record<string, string>>> = { iceShot: { 'Elemental Fusion': 'it stops inflicting Frostbite, which a Frostbite build pays through' } };
 export const supportsFor = (skill: Skill): Support[] => (sup1 as unknown as Record<Skill, Support[]>)[skill].filter((x) => !NOT_THIS_SEASON.has(x.name) && !NOT_FOR[skill]?.[x.name]);
+type StoneRow = { i4: number; i18: number; ab0: number[]; ae0: number[][]; af0: number[][] };
+let catalogSupports: Support[] | undefined;
+/** the supports dps-debug's tag gate (G2) lets stone `sid` take, from the catalog's support gems (config_item_base p5c stone, row +4 = 2) this season; null: a summoner's stone, whose gate is not ported */
+function gatedFor(sid: number): Support[] | null {
+  const st = table<{ rows: Record<string, StoneRow> }>('config_skill_stone').rows;
+  catalogSupports ??= Object.entries(table<{ rows: Record<string, { p5c?: number[] }> }>('config_item_base').rows).flatMap(([b, r]) => {
+    const s = r.p5c?.[0], name = table<{ rows: Record<string, string> }>('lang_en').rows[`item_base|name|${b}`];
+    return typeof s === 'number' && st[s]?.i4 === 2 && name && !NOT_THIS_SEASON.has(name) ? [{ sid: s, name }] : [];
+  });
+  const head = st[sid];
+  return !head || head.i18 > 0 ? null : catalogSupports.filter((x) => tagGate(st[x.sid], head.ab0).ok);
+}
 const SOCKETS = [1, 2, 3, 4, 5];   // a six-stone group = the skill + five supports (loadout sockets 1..5)
 export const GEM_LEVEL = 20;
 type Gem = { sid: number; level: number; name?: string; place: { kind: string; slot: number; ownerKind?: string; ownerSlot?: number } };
@@ -58,31 +72,38 @@ export const gemMoves: Generator = (s, ctx) => {
   ns.add('support: a bought support is priced by its English name; installed at gem level 20 (or the replaced gem level), lowered to what the hero level allows; its own rolled modifiers (Magnificent / Noble gems) are not modelled');
   ns.add(`support: not this season (absent from tlidb, not offered): ${[...NOT_THIS_SEASON].join(', ')}`);
   for (const [g, why] of Object.entries(NOT_FOR[s.skill] ?? {})) ns.add(`support: ${g} is not offered for ${s.skill}: ${why}`);
-  ns.add('support: supports on the non-damage skills (Blink, Timid, warcries, auras) and replacing a skill gem are not searched');
+  // every skill's sockets, not the main skill's only (owner, 2026-10-17: Red Umbrella paralyzes on hit, so Flame Core's Grudge is free for something else)
+  ns.add("support: Blink's supports are not searched (movement, which the figure does not price), nor a support into an empty socket of a skill other than the main one "
+    + '(the Energy that unlocks a socket is not read: a socket freed on one skill to open one on another is not offered); replacing a skill gem is the plan\'s skill step');
   const skills = (s.loadout.skills ?? []) as Gem[];
   const main = skills.find(g => g.place.kind === 'active' && g.place.slot === 0);
   if (main?.sid !== mainSid(s.skill)) { ns.add(`support: the main skill of the loadout (sid ${main?.sid}) is not ${s.skill}`); return []; }
-  const owner = { kind: 'active' as const, slot: 0 };
-  const sockets = skills.filter(g => g.place.kind === 'support' && g.place.ownerKind === 'active' && g.place.ownerSlot === 0);
-  const have = new Set(sockets.map(g => g.sid));
   const moves: Move[] = [];
   // a support you hold off the board (bag, stash) goes in free, at its own level and rolls (owner, 2026-10-17: the Upheaval in the bag was never offered)
   const held = new Map(s.owned.filter((o) => o.where !== 'equipped' && o.baseName).map((o) => [o.baseName!, o]));
-  for (const socket of SOCKETS) {
-    const cur = sockets.find(g => g.place.slot === socket);
-    // coverage is Ice Shot's job (it clears maps; the figure is one target): a coverage support is kept, never replaced or removed (the owner, 2026-10-16)
-    if (cur && COVERAGE[s.skill]?.has(cur.name ?? '')) { ns.add(`support: ${cur.name} (socket ${socket}) is kept: coverage, which the one-target figure does not price`); continue; }
-    for (const c of supportsFor(s.skill)) {
-      const own = held.get(c.name), level = gemLevelAt(c.sid, ctx.level, own?.level ?? cur?.level ?? GEM_LEVEL, ns);
-      if (have.has(c.sid) || !level) continue;
-      const gem = { sid: c.sid, level, name: c.name, ...(own ? { mods: Object.values(own.modifiers ?? {}).flat() as { id: number; dynArgs: number[] }[] } : {}) };
-      moves.push({
-        kind: 'support', label: `${main.name ?? s.skill} socket ${socket}: ${cur ? `${cur.name} -> ` : 'add '}${c.name}${own ? ` (yours, ${own.where})` : ''}`, acquisition: true, minLevel: gemRequires(c.sid, 1),
-        ...(own ? { costFE: 0 } : { ...costOf(ctx.prices, c.name, ctx.level, 'gem'), buy: { name: c.name, qty: 1 } }),
-        changes: [{ kind: 'support', action: cur ? 'replace' : 'install', owner, socket, gem }],
-      });
+  for (const head of skills.filter(g => g.place.kind !== 'support' && (g === main || g.name !== 'Blink'))) {
+    const owner = { kind: head.place.kind as 'active' | 'passive', slot: head.place.slot }, isMain = head === main, name = head.name ?? (isMain ? s.skill : String(head.sid));
+    const pool = isMain ? supportsFor(s.skill) : gatedFor(head.sid);
+    if (!pool) { ns.add(`support: ${name}'s sockets are not searched (a summoner's stone: dps-debug's tag gate for it is not ported)`); continue; }
+    const sockets = skills.filter(g => g.place.kind === 'support' && g.place.ownerKind === owner.kind && g.place.ownerSlot === owner.slot);
+    const have = new Set(sockets.map(g => g.sid));
+    for (const socket of SOCKETS) {
+      const cur = sockets.find(g => g.place.slot === socket);
+      if (!cur && !isMain) continue;
+      // coverage is Ice Shot's job (it clears maps; the figure is one target): a coverage support is kept, never replaced or removed (the owner, 2026-10-16)
+      if (isMain && cur && COVERAGE[s.skill]?.has(cur.name ?? '')) { ns.add(`support: ${cur.name} (socket ${socket}) is kept: coverage, which the one-target figure does not price`); continue; }
+      for (const c of pool) {
+        const own = held.get(c.name), level = gemLevelAt(c.sid, ctx.level, own?.level ?? cur?.level ?? GEM_LEVEL, ns);
+        if (have.has(c.sid) || !level) continue;
+        const gem = { sid: c.sid, level, name: c.name, ...(own ? { mods: Object.values(own.modifiers ?? {}).flat() as { id: number; dynArgs: number[] }[] } : {}) };
+        moves.push({
+          kind: 'support', label: `${name} socket ${socket}: ${cur ? `${cur.name} -> ` : 'add '}${c.name}${own ? ` (yours, ${own.where})` : ''}`, acquisition: true, minLevel: gemRequires(c.sid, 1),
+          ...(own ? { costFE: 0 } : { ...costOf(ctx.prices, c.name, ctx.level, 'gem'), buy: { name: c.name, qty: 1 } }),
+          changes: [{ kind: 'support', action: cur ? 'replace' : 'install', owner, socket, gem }],
+        });
+      }
+      if (cur) moves.push({ kind: 'support', label: `${name} socket ${socket}: remove ${cur.name}`, acquisition: false, costFE: 0, minLevel: 0, changes: [{ kind: 'support', action: 'remove', owner, socket }] });
     }
-    if (cur) moves.push({ kind: 'support', label: `${main.name ?? s.skill} socket ${socket}: remove ${cur.name}`, acquisition: false, costFE: 0, minLevel: 0, changes: [{ kind: 'support', action: 'remove', owner, socket }] });
   }
   return moves;
 };

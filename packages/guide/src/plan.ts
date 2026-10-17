@@ -30,7 +30,7 @@ export interface PlanOpts { target: string; goal: number; /** your FE: an option
   /** your prices for a legendary at a roll of one line (roll-prices.json: { item, line: its modifier id, rolls: [[value, FE]] }); the item's other lines as yours */
   rollPrices?: { item: string; line: number; rolls: [number, number][] }[];
   /** the skill places another skill is tried in: the weakest active and aura places (set by runPlan; absent = none) */ skillSlots?: { kind: string; slot: number }[] }
-export const DEFAULT_PLAN: PlanOpts = { target: 'traveler', goal: 2e11, maxSteps: 60, slatePrices: [[/Agility Blessing on Critical Strike/, 100], [/All Skills' Levels/, 270]], slateFE: 100, prismFE: 555 };
+export const DEFAULT_PLAN: PlanOpts = { target: 'traveler', goal: 2e11, maxSteps: 60, slatePrices: [[/Agility Blessing on Critical Strike/, 100], [/All Skills' Levels/, 270]], slateFE: 100, prismFE: 4000 };   // the target's prism is a Phantasmagoria, ~4000 FE (owner, 2026-10-17)
 
 /** the owner's rules the candidates must keep (2026-10-16) */
 const RULES = [
@@ -160,7 +160,7 @@ export function candidates(s: State, ctx: GenCtx, o: PlanOpts, lines: { id: numb
   for (const g of [ownedGear, gearMoves, gemMoves, kismetMoves, pactMoves, prismMoves, slateMoves, talentMovesWith({ maxShifts: 60, locked: o.locked, budget: o.points }), whiteBaseMoves]) for (const m of g(s, ctx)) add(m);
   for (const m of targetMoves(s, ctx)) {
     // the example build's skill groups are not offered: they replace a whole group at a cost they do not carry (a socket's gem is gemMoves', priced)
-    if (/talent prism/.test(m.label)) add({ ...m, costFE: o.prismFE }, 'A talent prism like the example build (Onslaughter crit and two-handed mirrors) at your price');
+    if (/talent prism/.test(m.label)) add({ ...m, costFE: o.prismFE }, 'A Phantasmagoria talent prism like the example build (Onslaughter crit and two-handed mirrors) at your price');
   }
   // another copy of a legendary you wear, bought with one line at its best roll (user, 2026-10-16: a Ruinous Star with Deterioration Duration 28+ is a breakpoint);
   // the lowest roll that gives the same figure is found once the step is taken (runPlan)
