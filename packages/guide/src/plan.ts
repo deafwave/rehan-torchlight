@@ -14,7 +14,9 @@ import { bossName, ownedGear, ownedUniques } from './modes';
 import { ctxOfState, pieceKey, rankable } from './search';
 import { talentName } from './names';
 import { buildSheet } from './sheet';
-import { table } from './pin';
+import { pinRoot, table } from './pin';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import type { Evaluator, Figure, GenCtx, GuideOut, Move, PriceBook, State } from './types';
 
 export interface PlanOpts { target: string; goal: number; maxSteps: number;
@@ -40,6 +42,34 @@ const CONVERSION = /Converts? .*Physical Damage to (Cold|Lightning|Fire)|Physica
 
 /** the legendaries you wear or own: never bought, also after a step takes one off (a new one is priced at the middle of its rolls; yours is the roll there is) */
 const heldUniques = (s: State) => new Set([...ownedUniques(s, true).values(), ...ownedUniques(s).values()]);
+type Enh = Record<string, { Rarity: number[]; CurrentEnhanceLevel: number; TargetEnhanceLevel: number; BaseAttrTier: number; ItemConsume: Record<string, number> }>;
+let enh: Enh | undefined;
+const ENH = (): Enh => (enh ??= JSON.parse(readFileSync(join(pinRoot(), 'catalog/0x6ac8071f/lua_config_hero_item_enhance.json'), 'utf8')).rows as Enh);
+const MEM_ITEM: Record<string, string> = { 5140: 'Memory Scrap', 5141: 'Memory Thread - Normal', 5142: 'Memory Thread - Magic', 5143: 'Memory Thread - Rare', 5144: 'Memory Thread - Epic', 391000: 'Crude Lunar Dust', 391001: 'Luminous Lunar Dust', 391002: 'Flawless Lunar Dust' };
+/** awakening a memory of this rarity (lua_config_memory_awaken_recipe_s14 CostItemNew) */
+const AWAKEN: Record<number, Record<string, number>> = { 3: { 391000: 8 }, 4: { 391001: 4 } };
+function memoryCands(s: State, ctx: GenCtx): Cand[] {
+  const rolls = table<{ rows: Record<string, [number, number][]> }>('config_modifier_rolls').rows, out: Cand[] = [];
+  const cap = (r: number) => Math.max(0, ...Object.values(ENH()).filter((x) => x.Rarity.includes(r)).map((x) => x.TargetEnhanceLevel));
+  const need = (r: number, from: number, to: number) => { const n: Record<string, number> = {}; for (const x of Object.values(ENH())) if (x.Rarity.includes(r) && x.CurrentEnhanceLevel >= from && x.TargetEnhanceLevel <= to) for (const [k, v] of Object.entries(x.ItemConsume)) n[k] = (n[k] ?? 0) + v; return n; };
+  const mems = (s.loadout.heroMemories ?? []) as { label: string; slot: number; reminiscenceLevel: number; affixes: { id: number; dyn: number[]; list: string }[] }[];
+  for (const m of mems) {
+    const b = m.affixes.find((a) => a.list === 'BaseAttrInfoList'); if (!b) continue;
+    const group = Math.floor(b.id / 100), rarity = group % 10;
+    for (const [r, g, fromCost] of [[rarity, group, {}], [rarity + 1, group + 1, AWAKEN[rarity]]] as [number, number, Record<string, number> | undefined][]) {
+      const top = cap(r), id = g * 100 + (51 - top);
+      if (!fromCost || !rolls[id] || top <= (r === rarity ? m.reminiscenceLevel : 0)) continue;
+      const n = { ...need(r, m.reminiscenceLevel, top) }; for (const [k, v] of Object.entries(fromCost)) n[k] = (n[k] ?? 0) + v;
+      const fe = Object.entries(n).reduce((t, [k, v]) => t + v * (ctx.prices.price(MEM_ITEM[k] ?? k, s.level) ?? NaN), 0);
+      if (!Number.isFinite(fe)) continue;
+      const dyn = rolls[id].map(([lo]) => lo), items = mems.map((x) => (x !== m ? x : { ...x, reminiscenceLevel: top, affixes: x.affixes.map((a) => (a === b ? { ...a, id, dyn } : a)) }));
+      out.push({ key: `memory|${m.slot}|${r}`, group: `memory|${m.slot}|${r}`, kind: 'memory', costFE: fe, note: 'its random affix at 20 / 40 is not priced: at least this',
+        label: `${r === rarity ? `Level your ${m.label} ${m.reminiscenceLevel} -> ${top}` : `Awaken your ${m.label} to rarity ${r} and level it ${m.reminiscenceLevel} -> ${top}`}: ${lineText(id, dyn)} (yours ${lineText(b.id, b.dyn)}); ${Object.entries(n).map(([k, v]) => `${v} ${MEM_ITEM[k] ?? k}`).join(', ')}`,
+        changes: [{ kind: 'patch', op: 'memories', items } as never] });
+    }
+  }
+  return out;
+}
 /** a modifier's game text at a roll ($+P1$ -> +18), else its id */
 export function lineText(id: number, dyn: number[]): string {
   const b = (table<{ rows: Record<string, { bindings?: string[] }> }>('config_modifier').rows[id]?.bindings ?? [])[0], t = b && table<{ rows: Record<string, string> }>('lang_en').rows[`affix_class|description|${b.split('_')[0]}`];
@@ -78,6 +108,9 @@ export function candidates(s: State, ctx: GenCtx, o: PlanOpts, lines: { id: numb
         label: `Buy another ${name} with ${lineText(a.id, best)} (yours: ${a.dyn.join(' / ')}); replace yours`, changes: [{ kind: 'patch', op: 'gear-roll', slot, id: a.id, dyn: best } as never] });
     }
   }
+  // a worn hero memory levelled to its rarity's cap, or awakened to the next rarity and levelled to that cap (MEM1: base attr = group x 100 + BaseAttrTier;
+  // its value is the roll table's). The random affix a level 20 / 40 step adds and awakening's random part are not in the catalog: the step is a lower bound
+  for (const c of memoryCands(s, ctx)) out.push(c);
   // a gem to level 20 (time, no FE); a Magnificent / Noble support is levelled by consuming copies (max 5): never a time step
   for (const g of L.skills.filter((x) => x.level < 20 && !/\((Magnificent|Noble)\)/.test(x.name))) {
     const at = (x: typeof g) => JSON.stringify(x.place) === JSON.stringify(g.place) && x.sid === g.sid;
