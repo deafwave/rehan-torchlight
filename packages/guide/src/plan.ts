@@ -3,7 +3,8 @@
  *  most damage per FE (a free one first). A candidate is refused when the model cannot price it whole (a new omission), when it unseals an aura (MANA2:
  *  the auras' Sealed Mana no longer fits), or when it breaks a rule of the game the generators do not know (listed in GuideOut.startNotes). */
 import { gearMoves, whiteBaseMoves } from './candidates/gear';
-import { gemMoves } from './candidates/gems';
+import { gemLevelAt, gemMoves, gemsHeld } from './candidates/gems';
+import { costOf } from './priceOf';
 import { kismetMoves } from './candidates/kismets';
 import { pactMoves } from './candidates/pacts';
 import { prismMoves } from './candidates/prisms';
@@ -24,7 +25,8 @@ export interface PlanOpts { target: string; goal: number; maxSteps: number;
   /** FE of the talent prism like the example build's (the owner's price) */ prismFE: number;
   /** talent nodes whose points never move (set by runPlan) */ locked?: Set<number>;
   /** the character's talent points: the points it has spent at the start (set by runPlan) */ points?: number;
-  /** the board slates a new slate is tried in place of: the weakest (set by runPlan; absent = every one) */ slateSlots?: number[] }
+  /** the board slates a new slate is tried in place of: the weakest (set by runPlan; absent = every one) */ slateSlots?: number[];
+  /** the skill places another skill is tried in: the weakest active and aura places (set by runPlan; absent = none) */ skillSlots?: { kind: string; slot: number }[] }
 export const DEFAULT_PLAN: PlanOpts = { target: 'traveler', goal: 2e11, maxSteps: 60, slatePrices: [[/Agility Blessing on Critical Strike/, 100], [/All Skills' Levels/, 270]], slateFE: 100, prismFE: 555 };
 
 /** the owner's rules the candidates must keep (2026-10-16) */
@@ -82,6 +84,17 @@ function fitsMore(s: State, shapes: number[]): boolean {
   if (!packed.has(k)) packed.set(k, packBoard(s.loadout, s.level, shapes) !== null);
   return packed.get(k)!;
 }
+/** the skill gems one can hold (config_item_base p5c -> config_skill_stone) of a kind (config_skill_stone i4: 1 active, 3 aura), named */
+let pools: Map<number, { sid: number; name: string }[]> | undefined;
+function skillPool(kind: number): { sid: number; name: string }[] {
+  if (!pools) {
+    pools = new Map();
+    const base = table<{ rows: Record<string, { p5c?: number[] }> }>('config_item_base').rows, st = table<{ rows: Record<string, { i4?: number }> }>('config_skill_stone').rows, lang = table<{ rows: Record<string, string> }>('lang_en').rows;
+    for (const [b, r] of Object.entries(base)) { const sid = r.p5c?.[0], name = lang[`item_base|name|${b}`]; if (typeof sid !== 'number' || !st[sid] || !name) continue;
+      const k = st[sid].i4 ?? 0; if (!pools.get(k)) pools.set(k, []); if (!pools.get(k)!.some((x) => x.sid === sid)) pools.get(k)!.push({ sid, name }); }
+  }
+  return pools.get(kind) ?? [];
+}
 type Cand = { key: string; /** taken once per group */ group?: string; /** a better roll of a worn legendary: the lowest roll with the same figure is found when taken */ roll?: { slot: string; id: number; now: number[]; best: number[]; range: [number, number][] }; label: string; costFE: number; kind: string; note?: string; changes: Move['changes'] };
 const fits = (f: Figure) => !f.mana || 'stop' in f.mana || f.mana.fits;
 
@@ -129,6 +142,18 @@ export function candidates(s: State, ctx: GenCtx, o: PlanOpts, lines: { id: numb
     const group = L.skills.filter((x) => (x.place.kind === p.kind && x.place.slot === p.slot) || (x.place.ownerKind === p.kind && x.place.ownerSlot === p.slot));
     out.push({ key: `level|${g.name}|${JSON.stringify(g.place)}`, label: `Level ${g.name} ${g.level} -> 20 (time)`, costFE: 0, kind: 'level',
       changes: [{ kind: 'patch', op: 'skill-group', place: p, items: group.map((x) => (at(x) ? { ...x, level: 20 } : x)) } as never] });
+  }
+  // another skill in one of the weakest active / aura places (owner, 2026-10-16: Fixate for Bull's Rage, another curse...): an active skill for an active place,
+  // an aura for an aura place, the place's supports kept; at the gem's market price (free when you hold one); the mana check guards an aura
+  for (const p of o.skillSlots ?? []) for (const k of skillPool(p.kind === 'passive' ? 3 : 1)) {
+    const groupOf = (x: { place: { kind: string; slot?: number; ownerKind?: string; ownerSlot?: number } }) => (x.place.kind === p.kind && x.place.slot === p.slot) || (x.place.ownerKind === p.kind && x.place.ownerSlot === p.slot);
+    const group = L.skills.filter(groupOf), head = group.find((x) => x.place.kind === p.kind);
+    if (!head || head.sid === k.sid || L.skills.some((x) => x.sid === k.sid)) continue;
+    const level = gemLevelAt(k.sid, s.level, 20), held = gemsHeld(s).has(k.name), cost = held ? { costFE: 0 } : costOf(ctx.prices, k.name, s.level, 'gem');
+    if (!level || cost.costFE === null) continue;
+    out.push({ key: `skill|${p.kind}|${p.slot}|${k.sid}`, group: `skill|${p.kind}|${p.slot}`, kind: 'skill', costFE: cost.costFE ?? 0, ...(held ? { note: 'you hold one' } : {}),
+      label: `Replace ${head.name} with ${k.name} (${p.kind === 'passive' ? 'aura' : 'active'} slot ${p.slot}; its supports kept)`,
+      changes: [{ kind: 'patch', op: 'skill-group', place: p, items: group.map((x) => (x === head ? { ...x, sid: k.sid, name: k.name, level, itemId: `guide-skill-${k.sid}`, mods: [] } : x)) } as never] });
   }
   // one more slate where the board, re-laid out (moving and rotating a slate costs next to nothing: owner, 2026-10-16), still has room: packBoard
   const added = ((s.loadout.slateItems ?? []) as { itemId: string; shapeId?: number }[]).filter((x) => x.itemId.startsWith('guide-add-')).map((x) => x.shapeId!);
@@ -211,6 +236,13 @@ export async function runPlan(ev: Evaluator, s0: State, books: PriceBook, k: Par
     const loss = await Promise.all(Array.from({ length: n }, async (_, i) => ({ i, k: (await ev.run(s.loadout, [replaceSlate(s, i, [])], C)).figure.kill })));
     o.slateSlots = loss.sort((a, b) => b.k - a.k).slice(0, 2).map((x) => x.i); };
   await weakest();
+  // the weakest skill places (the least lost when the place is emptied): 2 active (never the main skill or Blink: movement, which the figure does not price), 2 aura
+  const weakSkills = async () => { const sk = ((s.loadout.skills ?? []) as { name?: string; place: { kind: string; slot?: number; ownerKind?: string; ownerSlot?: number } }[]);
+    const places = sk.filter((g) => (g.place.kind === 'active' && g.place.slot !== 0 && !/^Blink$/.test(g.name ?? '')) || g.place.kind === 'passive').map((g) => ({ kind: g.place.kind, slot: g.place.slot! }));
+    const loss = await Promise.all(places.map(async (p) => ({ p, k: (await ev.run({ ...s.loadout, skills: sk.filter((g) => !((g.place.kind === p.kind && g.place.slot === p.slot) || (g.place.ownerKind === p.kind && g.place.ownerSlot === p.slot))) }, [], C)).figure.kill })));
+    const by = (k: string) => loss.filter((x) => x.p.kind === k).sort((a, b) => b.k - a.k).slice(0, 2).map((x) => x.p);
+    o.skillSlots = [...by('active'), ...by('passive')]; };
+  await weakSkills();
   let cands = candidates(s, ctx, o, lines, keep);
   console.log(`start: ${first.kill.toExponential(3)}/s on ${o.target}; ${cands.length} candidates; ${lines.length} slate lines`);
   lap('slate lines and talent checks');
@@ -252,6 +284,7 @@ export async function runPlan(ev: Evaluator, s0: State, books: PriceBook, k: Par
     onStep?.(out(true));
     // the build changed: new moves (a socket's new neighbours, a slot's new item) are priced, the rest keep their stale score
     if (/^(own)?slate\||^add\|/.test(w.c.key)) await weakest();
+    if (w.c.key.startsWith('skill|')) await weakSkills();
     const seen = new Set(cands.map((c) => c.key)), next = candidates(s, ctx, o, lines, keep);
     await Promise.all(next.filter((c) => !seen.has(c.key)).map(rate));
     cands = next;

@@ -79,6 +79,16 @@ describe('plan candidates keep the rules of the game (owner, 2026-10-16)', () =>
     expect(c[0].costFE).toBe(0);
     expect(c[0].label).toMatch(/^Put your stash slate \(Ranger: chance to gain Agility Blessing on Critical Strike\) in place of board slate 1 /);
   });
+  it("another skill in a weak place: an active for an active place, an aura for an aura place, its supports kept (owner: Fixate for Bull's Rage)", () => {
+    const fix = live.loadout.skills.find((g: { name: string }) => g.name === 'Fixate'), aura = live.loadout.skills.find((g: { place: { kind: string } }) => g.place.kind === 'passive');
+    const priced = { ...ctx, prices: withPrices(ctx.prices, { "Bull's Rage": 5 }).book };
+    const c = candidates(s, priced, { ...DEFAULT_PLAN, skillSlots: [fix.place, aura.place] }, lines);
+    const bull = c.find((x) => x.label.startsWith("Replace Fixate with Bull's Rage"));
+    expect(bull?.costFE).toBe(5);
+    const items = (bull!.changes[0] as unknown as { items: { name: string; place: { kind: string } }[] }).items;
+    expect(items.filter((x) => x.place.kind === 'support').length).toBe(live.loadout.skills.filter((g: { place: { ownerKind?: string; ownerSlot?: number } }) => g.place.ownerKind === 'active' && g.place.ownerSlot === fix.place.slot).length);
+    expect(c.some((x) => x.label.startsWith(`Replace ${aura.name} with Bull's Rage`))).toBe(false);   // an active never in an aura place
+  });
   it('a slate takes the place of one of yours (same shape and cell, so it fits the board), priced at your price', () => {
     const sl = cs.filter((c) => c.label.startsWith('Replace your slate'));
     expect(sl.length).toBe(live.loadout.slateItems.length * 3);   // 2 lines alone + the pair, per slate
