@@ -177,6 +177,20 @@ describe('runPlan: a step must raise the damage at full Life too (owner, 2026-10
   }, 300_000);
 });
 
+describe('runPlan: your free Mana never shrinks (owner, 2026-10-17: Precise: Malleable sealed 485 of 485 and Sentry could not be cast, 500 B)', () => {
+  it('a change that seals more Mana than is free at the read is refused, named with why; one that seals Life instead is taken', async () => {
+    const mana = (reserved: number, life = 1729) => ({ reserved, capacity: 485, margin: 485 - reserved, fits: true, life: { reserved: life, capacity: 2161, margin: 2161 - life } });
+    const fig = (k: number, m: ReturnType<typeof mana>) => ({ life100: k, life0: k, kill: k, partial: [], target: 'traveler', lifeMax: 1.6e12, mana: m });
+    const ev: Evaluator = { pin: 'stub', parallelism: 4, close: async () => {},
+      run: async (loadout, changes) => { const j = JSON.stringify(changes);
+        return { loadout, dropped: [], figure: /"name":"Critical Strike Damage Increase"/.test(j) ? fig(1.2e10, mana(485)) : /"name":"Multiple Projectiles"/.test(j) ? fig(1.1e10, mana(466, 1947)) : fig(1e10, mana(466)) }; } };
+    const r = await runPlan(ev, s, ctx.prices, { goal: 1e12, maxSteps: 3 });
+    expect(r.plan!.steps.some((x) => /Critical Strike Damage Increase/.test(x.label))).toBe(false);
+    expect(r.plan!.steps.some((x) => /Multiple Projectiles/.test(x.label))).toBe(true);
+    expect(r.notCalculable.some((n) => /Critical Strike Damage Increase.*free Mana 19 -> 0/.test(n))).toBe(true);
+  }, 300_000);
+});
+
 describe('runPlan: within your FE (owner, 2026-10-17: "within the 641 FE budget I have right now")', () => {
   it('an option dearer than the FE left is never priced, and the plan stops when none fits', async () => {
     const fig = (k: number) => ({ life100: k, life0: k, kill: k, partial: [], target: 'traveler', lifeMax: 1.6e12 });

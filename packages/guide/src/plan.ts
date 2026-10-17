@@ -43,6 +43,7 @@ const RULES = [
   'Talent points are only moved (a respec is free at level 90 and below), never added: the plan does not assume a point you do not have.',
   'A slate line already on your board is not offered on another slate.',
   'Hero memories: each is levelled to its rarity cap (Rare 30, Epic 40), its random affixes rerolled one slot at a time until each lands (no keep: a reroll replaces the affix in the slot) at the game odds of Affliction Effect for every affix (1.46 % an Epic roll); a higher rarity is a new memory bought, priced from market listings only.',
+  'No step seals Mana you have free now: the model does not price what a cast costs, and with none free Sentry is not cast (Precise: Malleable sealed 485 of 485: 500 B in game, 2026-10-17).',
   'Your Paralysis and Sealed Mana Compensation talent points stay, and so do points on a node the model prices at exactly 0 (it cannot judge them).',
 ];
 /** where an item you own is: the read's 'stash' is item page 0: My Booth, what you list on the trade house (owner, 2026-10-17: your stash is empty; page 0 holds your 28 listed slates) */
@@ -273,6 +274,8 @@ export async function runPlan(ev: Evaluator, s0: State, books: PriceBook, k: Par
   const steps: NonNullable<GuideOut['plan']>['steps'] = [], refused = new Map<string, string>(), score = new Map<string, number>(), taken = new Set<string>();
   let f = first, spent = 0;
   const slateFrom: Record<number, string> = {};
+  // the model does not price a skill's cast cost: the Mana free at the read is what is known to cast Sentry (owner, 2026-10-17: Precise: Malleable sealed 485 of 485, 500 B)
+  const freeMana = first.mana && 'margin' in first.mana ? first.mana.margin : -Infinity;
   let figures = 0, t0 = Date.now();
   const lap = (what: string) => { console.log(`[time] ${what}: ${figures} figures, ${((Date.now() - t0) / 1000).toFixed(0)} s`); figures = 0; t0 = Date.now(); };
   const rate = async (c: Cand) => {
@@ -287,7 +290,8 @@ export async function runPlan(ev: Evaluator, s0: State, books: PriceBook, k: Par
       // faster embers: the model has Gale turn the speed into damage and every ember still landing; the owner's dummy says the shotgun loses more (Wind Projectiles
       // 22.5 B -> 16.9 B, Precise Projectiles 56.7 B where the model said x1.16, 2026-10-16): no step raises the projectile speed
       : g.projectile && f.projectile && g.projectile.speedInc > f.projectile.speedInc + 0.5 ? `raises projectile speed (+${f.projectile.speedInc.toFixed(0)}% -> +${g.projectile.speedInc.toFixed(0)}%), which costs embers in your game`
-      : g.life100 < f.life100 * 0.995 ? `lowers your damage at full Life (what the training dummy shows) by ${((1 - g.life100 / f.life100) * 100).toFixed(1)} %` : !fits(g) ? `unseals an aura (Sealed Mana ${(g.mana as { reserved: number }).reserved} over ${(g.mana as { capacity: number }).capacity})` : undefined;
+      : g.life100 < f.life100 * 0.995 ? `lowers your damage at full Life (what the training dummy shows) by ${((1 - g.life100 / f.life100) * 100).toFixed(1)} %` : !fits(g) ? `unseals an aura (Sealed Mana ${(g.mana as { reserved: number }).reserved} over ${(g.mana as { capacity: number }).capacity})`
+      : g.mana && 'margin' in g.mana && g.mana.margin < freeMana ? `seals Mana you cast with (free Mana ${freeMana} -> ${g.mana.margin})` : undefined;
     if (why && g.kill > f.kill * 1.01) refused.set(c.label, `${why} (+${((g.kill / f.kill - 1) * 100).toFixed(0)} % if it were)`);
     const v = g.stop || why || !(g.kill > f.kill * 1.005) ? -Infinity : Math.log(g.kill / f.kill) / Math.max(c.costFE, 1);
     score.set(c.key, v);
