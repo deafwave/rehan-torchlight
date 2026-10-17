@@ -117,7 +117,8 @@ function threadWorker(root: string): WorkerLike {
 export async function createEvaluator(o: EvaluatorOpts = {}): Promise<Evaluator> {
   const root = o.pinRoot ?? defaultPinRoot();
   const pin = o.pin ?? gitPin(root);
-  const n = Math.max(1, o.workers ?? Math.min(24, os.availableParallelism() - 4));
+  // 16 threads: 96 one-change figures took 37 s on 8, 29 s on 16, 31 s on 24 (2026-10-16, 32 cores; each thread holds ~1.2 GB and a warm figure slows as more run)
+  const n = Math.max(1, o.workers ?? Math.min(16, os.availableParallelism() - 4));
   if (!o.factory) os.setPriority(os.constants.priority.PRIORITY_BELOW_NORMAL);   // process-wide; the workers are threads of it
   let serial = 0;
   const spawn = (): WorkerLike => (o.factory ?? (() => threadWorker(root)))(serial++);
