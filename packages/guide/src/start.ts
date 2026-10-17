@@ -102,6 +102,6 @@ export function fromExport(json: unknown, fe?: number): State {
   const skill = (['iceShot', 'hoa'] as Skill[]).find(sk => mainSid(sk) === active?.sid);
   if (!skill) throw new Error(`export main skill (sid ${active?.sid}) is neither Ice Shot nor Hammer of Ash`);
   const owned: OwnedItem[] = (j.items as Dict[]).filter(i => i.where !== 'equipped' && !FE_BASES.has(i.baseId)).map(i => ({
-    itemId: i.itemId, baseId: i.baseId, baseName: i.baseName ?? null, level: i.level, where: i.where, page: i.page, slot: i.slot, count: i.count, modifiers: i.modifiers ?? {} }));
+    itemId: i.itemId, baseId: i.baseId, baseName: i.baseName ?? null, level: i.level, where: i.where, page: i.page, slot: i.slot, count: i.count, modifiers: i.modifiers ?? {}, ...(Array.isArray(i.talents) ? { talents: i.talents, shapeId: i.shapeId } : {}) }));
   return { loadout, owned, fe: budget, level: j.hero.level, skill };
 }

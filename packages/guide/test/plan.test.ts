@@ -53,6 +53,13 @@ describe('plan candidates keep the rules of the game (owner, 2026-10-16)', () =>
     expect(m.length).toBeGreaterThan(0);
     for (const c of m) expect(c.label).toMatch(/^Level your Memory of \w+ \d+ -> \d+: .*Memory Scrap/);
   });
+  it('a slate you own (bag, stash) is a free step in place of each board slate', () => {
+    const own = { ...s, owned: [{ itemId: 'x', baseId: 261003, baseName: null, level: 86, where: 'stash', page: 0, slot: 1, count: 1, modifiers: {}, talents: [43040200], shapeId: 2020 }] };
+    const c = candidates(own, ctx, DEFAULT_PLAN, lines).filter((x) => x.key.startsWith('ownslate|'));
+    expect(c.length).toBe(live.loadout.slateItems.length);
+    expect(c[0].costFE).toBe(0);
+    expect(c[0].label).toMatch(/^Put your stash slate \(Ranger: chance to gain Agility Blessing on Critical Strike\) in place of board slate 1 /);
+  });
   it('a slate takes the place of one of yours (same shape and cell, so it fits the board), priced at your price', () => {
     const sl = cs.filter((c) => c.label.startsWith('Replace your slate'));
     expect(sl.length).toBe(live.loadout.slateItems.length * 3);   // 2 lines alone + the pair, per slate

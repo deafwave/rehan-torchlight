@@ -12,6 +12,7 @@ export interface OwnedItem {
   itemId: string; baseId: number; baseName: string | null; level: number;
   where: string; page: number; slot: number; count: number;
   modifiers: Record<string, { id: number; dynArgs: number[] }[]>;
+  /** a slate: its talents and shape (the read's TalentDatas) */ talents?: number[]; shapeId?: number;
 }
 
 /** `target`: the boss Hammer of Ash is priced against in this state (a dps-debug BOSSES key; absent = the evaluator's default) */

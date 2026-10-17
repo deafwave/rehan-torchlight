@@ -119,6 +119,12 @@ export function candidates(s: State, ctx: GenCtx, o: PlanOpts, lines: { id: numb
     out.push({ key: `level|${g.name}|${JSON.stringify(g.place)}`, label: `Level ${g.name} ${g.level} -> 20 (time)`, costFE: 0, kind: 'level',
       changes: [{ kind: 'patch', op: 'skill-group', place: p, items: group.map((x) => (at(x) ? { ...x, level: 20 } : x)) } as never] });
   }
+  // a slate you own (bag, stash) in place of one on the board: free
+  for (const o of s.owned.filter((x) => x.talents?.length)) {
+    const where = o.where === 'bag' ? 'bag' : 'stash';
+    ((s.loadout.slateItems ?? []) as { talents: number[] }[]).forEach((it, i) => out.push({ key: `ownslate|${o.itemId}|${i}`, group: `ownslate|${o.itemId}`, kind: 'slate', costFE: 0,
+      label: `Put your ${where} slate (${o.talents!.map(talentName).join(', ')}) in place of board slate ${i + 1} (${it.talents.map(talentName).join(', ')})`, changes: [replaceSlate(s, i, o.talents!)] }));
+  }
   // a slate in place of one of yours, same shape (so it fits the board), carrying one or two wanted lines (its other lines priced as nothing)
   const slates = L.slateItems ?? [], price = (n: string) => o.slatePrices.find(([r]) => r.test(n))?.[1] ?? o.slateFE;
   const sets = [...lines.slice(0, 10).map((a) => [a]), ...lines.slice(0, 6).flatMap((a, i) => lines.slice(i + 1, 6).map((b) => [a, b]))];
