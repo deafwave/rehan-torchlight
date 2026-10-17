@@ -468,6 +468,21 @@ describe('withAsked (fight inputs stated only when a figure asks)', () => {
     expect(seen).toEqual([{}, { [RESOURCE1_KEY]: 50 }]);
     expect(DEFAULT_FIGHT.inputs).not.toHaveProperty([RESOURCE1_KEY]);
   });
+  it('the inputs earlier figures asked are given from the start (one figure, not one per input); a figure that stops on them is priced afresh', () => {
+    const learned: Record<string, number> = {}, calls: Record<string, number>[] = [];
+    const needs = (keys: string[]) => (x: Record<string, number>) => (calls.push(x), keys.find((k) => !(k in x)) ? { stop: ask(keys.find((k) => !(k in x))!) } : {});
+    withAsked(needs(['resource 1001 value', 'resource 1301 value']), learned);
+    expect(learned).toEqual({ 'resource 1001 value': 1, 'resource 1301 value': 1 });
+    calls.length = 0;
+    expect(withAsked(needs(['resource 1001 value', 'resource 1301 value']), learned).stop).toBeUndefined();
+    expect(calls).toEqual([{ 'resource 1001 value': 1, 'resource 1301 value': 1 }]);
+    // the probuild belt's fixed rating: Fighting Will, once learned, stops it; priced again from nothing, it is not asked
+    withAsked((x) => (x[RESOURCE1_KEY] === 50 ? {} : { stop: `the fight input '${RESOURCE1_KEY}' is not given` }), learned);
+    calls.length = 0;
+    const fixed = (x: Record<string, number>) => (calls.push(x), RESOURCE1_KEY in x ? { stop: 'how a fight value and a fixed rating combine is not traced' } : {});
+    expect(withAsked(fixed, learned).stop).toBeUndefined();
+    expect(calls.at(-1)).toEqual({});
+  });
 });
 
 describe('figureDefaultFirst', () => {

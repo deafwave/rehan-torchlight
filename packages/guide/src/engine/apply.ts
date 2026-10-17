@@ -33,14 +33,22 @@ export const RESOURCE1_KEY = 'comp 0x26 resource key 1 (counter 0x2d: Fighting W
  *  false while the UI showed both, so this is a statement to check on the dummy, not a derived value */
 export const ON_ASK: Record<string, number> = { 'affix class 782097792 var 1': 0, [RESOURCE1_KEY]: 50, 'resource 1001 value': 1, 'resource 1301 value': 1 };
 const ASKED = /the scenario did not supply the fight input (.+?)(?: \(|$)|the fight input '(.+?)' is not given/;
-/** price with no extra input; while the figure stops naming an ON_ASK input not yet given, price again with it */
-export function withAsked<R extends { stop?: string }>(figure: (extra: Record<string, number>) => R): R {
-  let extra: Record<string, number> = {}, r = figure(extra);
-  for (let m = r.stop ? ASKED.exec(r.stop) : null, k = m && (m[1] ?? m[2]); k && k in ON_ASK && !(k in extra); m = r.stop ? ASKED.exec(r.stop) : null, k = m && (m[1] ?? m[2])) {
-    extra = { ...extra, [k]: ON_ASK[k] };
-    r = figure(extra);
-  }
-  return r;
+/** price with the inputs earlier figures asked (`learned`, filled here); while the figure stops naming an ON_ASK input not yet given, price again with it. A figure
+ *  that still stops is priced afresh from no input, as one stated anyway can stop it (Fighting Will on a fixed rating). The owner's build asks three: one figure
+ *  instead of four (2026-10-17: 4.3 s -> about 1.1 s a candidate). */
+export function withAsked<R extends { stop?: string }>(figure: (extra: Record<string, number>) => R, learned: Record<string, number> = {}): R {
+  const from = (extra: Record<string, number>) => {
+    let r = figure(extra);
+    for (let m = r.stop ? ASKED.exec(r.stop) : null, k = m && (m[1] ?? m[2]); k && k in ON_ASK && !(k in extra); m = r.stop ? ASKED.exec(r.stop) : null, k = m && (m[1] ?? m[2])) {
+      extra = { ...extra, [k]: ON_ASK[k] };
+      r = figure(extra);
+    }
+    return { r, extra };
+  };
+  let got = from({ ...learned });
+  if (got.r.stop && Object.keys(learned).length) got = from({});
+  if (!got.r.stop) Object.assign(learned, got.extra);
+  return got.r;
 }
 
 /** dps-debug's two "exceeds the budget … price is not affine" stops (calc.ts) */
