@@ -308,7 +308,7 @@ async function priceable(ev: Evaluator, state: State, out: string[]): Promise<St
         .map((x: L) => ({ label: `your ${x.place.kind} skill ${x.name ?? x.sid} with its supports`, loadout: { ...l, skills: l.skills.filter((y: L) => !own(x.place.kind, x.place.slot)(y)) } })),
       ...(l.pacts ?? []).map((p: L) => ({ label: `your pactspirit ${lang()[`servant|name|${p.servantId}`] ?? p.servantId} (slot ${p.slot})`,
         loadout: { ...l, pacts: l.pacts.filter((q: L) => q !== p), contractKeys: (l.contractKeys ?? []).filter((k: number) => Math.floor(k / 100) !== p.slot) } })),
-      ...(l.gear ?? []).filter((g: L) => g.slot !== 'mainHand').map((g: L) => ({ label: `your ${g.slot} ${g.label}`, loadout: { ...l, gear: l.gear.filter((h: L) => h !== g) } })),
+      ...(l.gear ?? []).filter((g: L) => g.slot !== 'mainHand').map((g: L) => ({ label: `your ${g.slot} ${g.name ?? g.label}`, loadout: { ...l, gear: l.gear.filter((h: L) => h !== g) } })),
       ...(l.slateItems ?? []).map((x: L, i: number) => ({ label: `your slate ${i + 1}`, loadout: { ...l, slateItems: l.slateItems.filter((y: L) => y !== x) } })),
       ...(l.kismets ?? []).map((x: L, i: number) => ({ label: `your kismet ${i + 1}`, loadout: { ...l, kismets: l.kismets.filter((y: L) => y !== x) } })),
       ...((l.heroMemories ?? []).length ? [{ label: 'your hero memories', loadout: { ...l, heroMemories: [] } }] : []),
@@ -349,7 +349,7 @@ export async function runAdvise(ev: Evaluator, state: State, k: Partial<Knobs> =
   const acq0 = [ownedGear, ...ALL.map(only(true))], recon = ALL.map(only(false));
   const base = { mode: 'advise' as const, pin: ev.pin, etor: { season: books.season, fetchedAt: books.fetchedAt }, knobs: { ...K, fight: ev.fight, fightNote: ev.fightNote, rollBudget: ev.rollBudget, target: ev.target, fe: state.fe, level: state.level, skill: state.skill },
     character: { level: state.level, skill: state.skill, fe: state.fe, owned: state.owned.length,
-      gear: ((state.loadout.gear ?? []) as { slot?: string; label: string }[]).map((g) => ({ slot: g.slot ?? '', label: g.label })) } };
+      gear: ((state.loadout.gear ?? []) as { slot?: string; label: string; name?: string }[]).map((g) => ({ slot: g.slot ?? '', label: g.name ?? g.label })) } };
   // Hammer of Ash: the first boss (in order) the character does not kill within moveOnSeconds; the last boss when it kills them all
   const targets = K.targets ?? BOSS_ORDER, moveOn = K.moveOnSeconds ?? 10, passed: string[] = [];
   const leftOut: string[] = [], before = state.loadout as { pacts?: { slot?: number }[]; gear?: { slot?: string }[] };

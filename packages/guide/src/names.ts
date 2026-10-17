@@ -28,3 +28,13 @@ export function talentName(id: number): string {
   }).filter((x): x is string => !!x);
   return `${treeName(treeOf(id))}: ${effects.length ? [...new Set(effects)].join(' / ') : name ?? `talent ${id}`}`;
 }
+
+/** the legendary an item is (config_item_gold: its base, and one of every key's modifier groups among the item's), else undefined. The game read labels an
+ *  item by its base (Old King's Sabatons); the owner knows it by this name (Boots of Devastation) */
+export function uniqueName(baseId: number, modifierIds: number[]): string | undefined {
+  const gold = rows('config_item_gold'), groups = new Set(modifierIds.map((id) => Math.floor(id / 10)));
+  const KEYS = ['m88', 'ma8', 'mc8', 'me8', 'm108', 'm128', 'm148', 'm168'];
+  const hit = Object.entries(gold).find(([, r]) => r.i8 === baseId && (() => { const ks = KEYS.map((k) => Object.keys(r[k] ?? {}).map(Number)).filter((x) => x.length);
+    return ks.length > 0 && ks.every((x) => x.some((y) => groups.has(y))); })());
+  return hit ? L()[`item_gold|name|${hit[0]}`] : undefined;
+}

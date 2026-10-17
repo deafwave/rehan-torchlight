@@ -13,6 +13,15 @@ const s: State = { loadout: live.loadout, owned: [], fe: 0, level: 90, skill: 'h
 const ctx = { prices: snapshotBook(localItems()), level: 90, notSearched: new Set<string>() };
 const lines = [{ id: 43040200, name: 'Ranger: chance to gain Agility Blessing on Critical Strike' }, { id: 54070400, name: "Lich: All Skills' Levels" }];
 
+describe('a worn legendary is named by its own name, not its base (owner, 2026-10-16: wearing Boots of Devastation, not its base Old King Sabatons)', () => {
+  it('uniqueName resolves the base and modifier groups to the legendary', async () => {
+    const { uniqueName } = await import('../src/names');
+    const boots = live.loadout.gear.find((g: { slot: string }) => g.slot === 'boots');
+    expect(boots.label).toBe("Old King's Sabatons");
+    expect(uniqueName(boots.baseId, boots.affixes.map((a: { id: number }) => a.id))).toBe('Boots of Devastation');
+  });
+});
+
 describe('plan candidates keep the rules of the game (owner, 2026-10-16)', () => {
   const points = Object.values(live.loadout.talents as Record<string, number>).reduce((a, b) => a + b, 0);
   const cs = candidates(s, ctx, { ...DEFAULT_PLAN, points }, lines);
