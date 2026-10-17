@@ -3,7 +3,7 @@
  "pin": "a0938487851e00b5f6b04c99f0109e166290bdd1",
  "etor": {
   "season": "1601",
-  "fetchedAt": "2026-10-17T04:13:24.970Z"
+  "fetchedAt": "2026-10-17T04:55:10.575Z"
  },
  "knobs": {
   "plan": {
@@ -19,8 +19,26 @@
    "points": 103,
    "locked": {},
    "slateSlots": [
-    0,
-    2
+    2,
+    5
+   ],
+   "skillSlots": [
+    {
+     "kind": "active",
+     "slot": 2
+    },
+    {
+     "kind": "active",
+     "slot": 4
+    },
+    {
+     "kind": "passive",
+     "slot": 2
+    },
+    {
+     "kind": "passive",
+     "slot": 1
+    }
    ]
   },
   "fight": {
@@ -36,8 +54,8 @@
  "character": {
   "level": 90,
   "skill": "hoa",
-  "fe": 411,
-  "owned": 188,
+  "fe": 590,
+  "owned": 190,
   "gear": [
    {
     "slot": "belt",
@@ -78,9 +96,9 @@
   ]
  },
  "start": {
-  "life100": 55154716056.198784,
-  "life0": 36285997386.78016,
-  "kill": 51271292737.59166,
+  "life100": 59055115652.839714,
+  "life0": 38852049775.74737,
+  "kill": 54897066643.53591,
   "partial": [
    "the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110)",
    "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
@@ -369,158 +387,161 @@
   "single slates: board adjacency is resolved server-side",
   "target kismets appear once their pact is equipped in that slot",
   "target Sierra Reverberation Maul: 1 of its mods are outside the craft library (blended, corroded or rolled): not offered",
-  "target drop pactspirits (slots 4-6) change loot, not damage: not offered"
+  "target drop pactspirits (slots 4-6) change loot, not damage: not offered",
+  "slate: the placed board does not resolve (slates guide-slate-0-20020200-20010300-10020400-52020500 and guide-add-6-43070400 overlap at 4,2)",
+  "slate: the placed board does not resolve (slates guide-slate-0-10070100-33070300 and guide-add-6-43070400 overlap at 4,2)"
  ],
  "unpriced": [],
  "notCalculable": [
   "Unique Death's Touch in gloves: takes out a piece the model does not price: not in this figure: node 243 (M2 (L30): the 'cannot use skills with this tag' block (execute FUN_141aa2570, re/evidence/c17_r.ann.c): for each task-filter targe (+20 % if it were)",
-  "Unique Wriggling Tango in boots: not priced whole: not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 271919904 row 1 (gear 4011 modifier 51443431)  (+10 % if it were)",
-  "Unique Decaying Blessing in necklace: unseals an aura (Sealed Mana 526 over 485) (+1 % if it were)"
+  "Unique Wriggling Tango in boots: not priced whole: not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 271919904 row 1 (gear 4011 modifier 51443431)  (+16 % if it were)",
+  "Unique Decaying Blessing in necklace: unseals an aura (Sealed Mana 526 over 485) (+1 % if it were)",
+  "Replace Precise: Erosion Amplification with Precise: Precise Projectiles (aura slot 1; its supports kept): not priced whole: aura gem 7110 (skill 50100, skill data 537131): buff 15101 is also granted by another aura (the container's stack policy is not decoded) (+3 % if it were)"
  ],
  "slates": [
   {
+   "id": 54070100,
+   "name": "Lich: All Skills' Levels",
+   "gain": 1.1604429747979896,
+   "core": false
+  },
+  {
    "id": 43070400,
    "name": "Ranger: additional damage taken by enemies in Proximity",
-   "gain": 1.1500000000000232,
+   "gain": 1.150000000000021,
    "core": false
   },
   {
    "id": 41070200,
    "name": "Shadowdancer: Armor DMG Mitigation Penetration / Armor DMG Mitigation Penetration for Minions",
-   "gain": 1.1142859836729238,
-   "core": false
-  },
-  {
-   "id": 54070100,
-   "name": "Lich: All Skills' Levels",
-   "gain": 1.1060223391656376,
-   "core": false
-  },
-  {
-   "id": 12070100,
-   "name": "Onslaughter: additional Base Damage for Two-Handed Weapons",
-   "gain": 1.0897403020415857,
-   "core": false
-  },
-  {
-   "id": 53050200,
-   "name": "Warlock: additional damage against Cursed enemies",
-   "gain": 1.080000000200465,
-   "core": false
-  },
-  {
-   "id": 51050200,
-   "name": "Shadowmaster: Gains Profane when inflicting Wilt or Deterioration",
-   "gain": 1.068261067172436,
-   "core": false
-  },
-  {
-   "id": 50070500,
-   "name": "Goddess of Deception: additional damage applied to Life",
-   "gain": 1.0634920634920886,
-   "core": false
-  },
-  {
-   "id": 62070200,
-   "name": "Steel Vanguard: additional damage applied to Life / Minions deal additional damage to Life",
-   "gain": 1.0634920634920886,
-   "core": false
-  },
-  {
-   "id": 43060100,
-   "name": "Ranger: Critical Strike Damage per Fervor Rating",
-   "gain": 1.0631406527373075,
-   "core": false
-  },
-  {
-   "id": 24070500,
-   "name": "Assassin: additional Max Damage / additional Max Damage for Minions",
-   "gain": 1.0624257608988368,
-   "core": false
-  },
-  {
-   "id": 51070200,
-   "name": "Shadowmaster: additional Deterioration Damage / additional Deterioration Duration",
-   "gain": 1.059270317107052,
+   "gain": 1.1142859836728807,
    "core": false
   },
   {
    "id": 10070100,
    "name": "God of Might: Attack Skill Level",
-   "gain": 1.0584499087709538,
-   "core": false
-  },
-  {
-   "id": 10040500,
-   "name": "God of Might: Skill Area / Projectile Speed",
-   "gain": 1.058025885132776,
-   "core": false
-  },
-  {
-   "id": 21040100,
-   "name": "Marksman: Projectile Speed",
-   "gain": 1.058025885132776,
-   "core": false
-  },
-  {
-   "id": 12070400,
-   "name": "Onslaughter: Strength",
-   "gain": 1.0579745009322303,
-   "core": false
-  },
-  {
-   "id": 21050200,
-   "name": "Marksman: Projectile Damage against enemies in proximity",
-   "gain": 1.057087772804928,
-   "core": false
-  },
-  {
-   "id": 33050200,
-   "name": "Elementalist: damage while standing still",
-   "gain": 1.057087772804928,
-   "core": false
-  },
-  {
-   "id": 43070500,
-   "name": "Ranger: the increase/decrease on Knockback distance is also applied to damage bonuses, up to damage",
-   "gain": 1.0548042628229977,
-   "core": false
-  },
-  {
-   "id": 40070500,
-   "name": "God of War: additional Physical Damage while having Fervor",
-   "gain": 1.0538671265897828,
-   "core": false
-  },
-  {
-   "id": 51030400,
-   "name": "Shadowmaster: Deterioration Damage",
-   "gain": 1.04865950969817,
+   "gain": 1.1105883822495521,
    "core": false
   },
   {
    "id": 33070300,
    "name": "Elementalist: Fire Skill Level",
-   "gain": 1.0482954541963554,
+   "gain": 1.0999999998365857,
+   "core": false
+  },
+  {
+   "id": 12070100,
+   "name": "Onslaughter: additional Base Damage for Two-Handed Weapons",
+   "gain": 1.0897403020967011,
+   "core": false
+  },
+  {
+   "id": 53050200,
+   "name": "Warlock: additional damage against Cursed enemies",
+   "gain": 1.0800000001806682,
+   "core": false
+  },
+  {
+   "id": 51050200,
+   "name": "Shadowmaster: Gains Profane when inflicting Wilt or Deterioration",
+   "gain": 1.068261067016906,
+   "core": false
+  },
+  {
+   "id": 50070500,
+   "name": "Goddess of Deception: additional damage applied to Life",
+   "gain": 1.0634920634921212,
+   "core": false
+  },
+  {
+   "id": 62070200,
+   "name": "Steel Vanguard: additional damage applied to Life / Minions deal additional damage to Life",
+   "gain": 1.0634920634921212,
+   "core": false
+  },
+  {
+   "id": 43060100,
+   "name": "Ranger: Critical Strike Damage per Fervor Rating",
+   "gain": 1.0631598306652708,
+   "core": false
+  },
+  {
+   "id": 24070500,
+   "name": "Assassin: additional Max Damage / additional Max Damage for Minions",
+   "gain": 1.0624257619387474,
+   "core": false
+  },
+  {
+   "id": 51070200,
+   "name": "Shadowmaster: additional Deterioration Damage / additional Deterioration Duration",
+   "gain": 1.0592703171070057,
+   "core": false
+  },
+  {
+   "id": 10040500,
+   "name": "God of Might: Skill Area / Projectile Speed",
+   "gain": 1.058025885047376,
+   "core": false
+  },
+  {
+   "id": 21040100,
+   "name": "Marksman: Projectile Speed",
+   "gain": 1.058025885047376,
+   "core": false
+  },
+  {
+   "id": 12070400,
+   "name": "Onslaughter: Strength",
+   "gain": 1.0579745012341506,
+   "core": false
+  },
+  {
+   "id": 21050200,
+   "name": "Marksman: Projectile Damage against enemies in proximity",
+   "gain": 1.0570877737294622,
+   "core": false
+  },
+  {
+   "id": 33050200,
+   "name": "Elementalist: damage while standing still",
+   "gain": 1.0570877737294622,
+   "core": false
+  },
+  {
+   "id": 43070500,
+   "name": "Ranger: the increase/decrease on Knockback distance is also applied to damage bonuses, up to damage",
+   "gain": 1.0548042619344633,
+   "core": false
+  },
+  {
+   "id": 40070500,
+   "name": "God of War: additional Physical Damage while having Fervor",
+   "gain": 1.0538671266172264,
+   "core": false
+  },
+  {
+   "id": 51030400,
+   "name": "Shadowmaster: Deterioration Damage",
+   "gain": 1.0486595096981048,
    "core": false
   },
   {
    "id": 40050200,
    "name": "God of War: Critical Strike Damage",
-   "gain": 1.0404100177519136,
+   "gain": 1.040422291625765,
    "core": false
   }
  ],
  "plan": {
   "target": "traveler",
   "goal": 200000000000,
-  "at": "2026-10-17T04:21:27.867Z",
+  "at": "2026-10-17T05:05:25.177Z",
   "start": {
    "label": "your character as read from the game",
    "figure": {
-    "life100": 55154716056.198784,
-    "life0": 36285997386.78016,
-    "kill": 51271292737.59166,
+    "life100": 59055115652.839714,
+    "life0": 38852049775.74737,
+    "kill": 54897066643.53591,
     "partial": [
      "the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110)",
      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
@@ -558,13 +579,57 @@
   },
   "steps": [
    {
-    "label": "Level Hammer of Ash 18 -> 20 (time)",
+    "label": "Replace Precise: Weapon Amplification with Precise Projectiles (aura slot 0; its supports kept)",
     "costFE": 0,
     "totalFE": 0,
     "figure": {
-     "life100": 63600281955.86533,
-     "life0": 41842290676.64848,
-     "kill": 59122209405.981064,
+     "life100": 68726295880.36227,
+     "life0": 45214668321.0624,
+     "kill": 63887302607.48447,
+     "partial": [
+      "the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110)",
+      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
+      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
+      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
+      "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
+      "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
+      "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
+      "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
+      "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
+      "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
+      "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 1)) - ticked at the grant",
+      "not in this figure: node 243 (M2 (L30): the 'cannot use skills with this tag' block (execute FUN_141aa2570, re/evidence/c17_r.ann.c): for each task-filter target entity (FUN_1419622b0) not yet handled, find-or-create the target's comp 0x82 entry keyed by the node key +0x78 (FUN_141c6a830 / FUN_141c54040) and add that key to the target's comp 4 (FUN_141bd5a30, m2_comp4.ann.c: a count-sorted id list",
+      "not in this figure: node 2230 (skill stones' energy: FUN_141cc6b90(comp 0x83, value) on each skill of the target's comp 0x82 whose tags pass filterTags (FUN_141d153a0) - no attribute / char-field record (execute FUN_141a9b410, c14_n2230b.ann.c); the stone's charge change is the energy model's (stone.ts), not read from the store) - affix class 168890 row 1 (gear 4728 modifier 51533041) - fires on e",
+      "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 72818 row 1 (gem 7006 (skill 1110)) - ticked at the grant",
+      "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7130 modifier 771009001) - ticked at the grant",
+      "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a"
+     ],
+     "lock": 15000000000000,
+     "mana": {
+      "reserved": 467,
+      "capacity": 485,
+      "margin": 18,
+      "fits": true,
+      "life": {
+       "reserved": 1342,
+       "capacity": 1678,
+       "margin": 336
+      }
+     },
+     "cull": 0.1,
+     "target": "traveler",
+     "lifeMax": 1610461523817
+    },
+    "note": "you hold one"
+   },
+   {
+    "label": "Level Hammer of Ash 19 -> 20 (time)",
+    "costFE": 0,
+    "totalFE": 0,
+    "figure": {
+     "life100": 75598925396.44621,
+     "life0": 49736135126.76105,
+     "kill": 70276032813.2226,
      "partial": [
       "the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110)",
       "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
@@ -605,9 +670,9 @@
     "costFE": 0,
     "totalFE": 0,
     "figure": {
-     "life100": 68713919614.39667,
-     "life0": 45206526050.47595,
-     "kill": 63875797755.33964,
+     "life100": 79705823296.01773,
+     "life0": 52438041608.043686,
+     "kill": 74093765521.5627,
      "partial": [
       "the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110)",
       "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
@@ -648,52 +713,9 @@
     "costFE": 0,
     "totalFE": 0,
     "figure": {
-     "life100": 71649487709.87657,
-     "life0": 47137820866.73045,
-     "kill": 66604673588.39694,
-     "partial": [
-      "the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110)",
-      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
-      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
-      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
-      "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
-      "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
-      "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
-      "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
-      "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
-      "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
-      "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 1)) - ticked at the grant",
-      "not in this figure: node 243 (M2 (L30): the 'cannot use skills with this tag' block (execute FUN_141aa2570, re/evidence/c17_r.ann.c): for each task-filter target entity (FUN_1419622b0) not yet handled, find-or-create the target's comp 0x82 entry keyed by the node key +0x78 (FUN_141c6a830 / FUN_141c54040) and add that key to the target's comp 4 (FUN_141bd5a30, m2_comp4.ann.c: a count-sorted id list",
-      "not in this figure: node 2230 (skill stones' energy: FUN_141cc6b90(comp 0x83, value) on each skill of the target's comp 0x82 whose tags pass filterTags (FUN_141d153a0) - no attribute / char-field record (execute FUN_141a9b410, c14_n2230b.ann.c); the stone's charge change is the energy model's (stone.ts), not read from the store) - affix class 168890 row 1 (gear 4728 modifier 51533041) - fires on e",
-      "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 72818 row 1 (gem 7006 (skill 1110)) - ticked at the grant",
-      "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7130 modifier 771009001) - ticked at the grant",
-      "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a"
-     ],
-     "lock": 15000000000000,
-     "mana": {
-      "reserved": 467,
-      "capacity": 485,
-      "margin": 18,
-      "fits": true,
-      "life": {
-       "reserved": 1306,
-       "capacity": 1632,
-       "margin": 326
-      }
-     },
-     "cull": 0.1,
-     "target": "traveler",
-     "lifeMax": 1610461523817
-    }
-   },
-   {
-    "label": "Level Precise: Domain Expansion 18 -> 20 (time)",
-    "costFE": 0,
-    "totalFE": 0,
-    "figure": {
-     "life100": 72825152300.98456,
-     "life0": 47911284353.24014,
-     "kill": 67697560033.0783,
+     "life100": 83115524859.2859,
+     "life0": 54681266360.79669,
+     "kill": 77263391272.33743,
      "partial": [
       "the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110)",
       "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
@@ -734,95 +756,9 @@
     "costFE": 0,
     "totalFE": 0,
     "figure": {
-     "life100": 73955208634.77167,
-     "life0": 48654742536.743286,
-     "kill": 68748049554.53998,
-     "partial": [
-      "the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110)",
-      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
-      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
-      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
-      "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
-      "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
-      "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
-      "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
-      "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
-      "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
-      "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 1)) - ticked at the grant",
-      "not in this figure: node 243 (M2 (L30): the 'cannot use skills with this tag' block (execute FUN_141aa2570, re/evidence/c17_r.ann.c): for each task-filter target entity (FUN_1419622b0) not yet handled, find-or-create the target's comp 0x82 entry keyed by the node key +0x78 (FUN_141c6a830 / FUN_141c54040) and add that key to the target's comp 4 (FUN_141bd5a30, m2_comp4.ann.c: a count-sorted id list",
-      "not in this figure: node 2230 (skill stones' energy: FUN_141cc6b90(comp 0x83, value) on each skill of the target's comp 0x82 whose tags pass filterTags (FUN_141d153a0) - no attribute / char-field record (execute FUN_141a9b410, c14_n2230b.ann.c); the stone's charge change is the energy model's (stone.ts), not read from the store) - affix class 168890 row 1 (gear 4728 modifier 51533041) - fires on e",
-      "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 72818 row 1 (gem 7006 (skill 1110)) - ticked at the grant",
-      "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7130 modifier 771009001) - ticked at the grant",
-      "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a"
-     ],
-     "lock": 15000000000000,
-     "mana": {
-      "reserved": 467,
-      "capacity": 485,
-      "margin": 18,
-      "fits": true,
-      "life": {
-       "reserved": 1306,
-       "capacity": 1632,
-       "margin": 326
-      }
-     },
-     "cull": 0.1,
-     "target": "traveler",
-     "lifeMax": 1610461523817
-    }
-   },
-   {
-    "label": "Level Precise: Cruelty 18 -> 20 (time)",
-    "costFE": 0,
-    "totalFE": 0,
-    "figure": {
-     "life100": 75066564230.7951,
-     "life0": 49385897489.66846,
-     "kill": 69781154985.84306,
-     "partial": [
-      "the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110)",
-      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
-      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
-      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
-      "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
-      "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
-      "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
-      "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
-      "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
-      "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
-      "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 1)) - ticked at the grant",
-      "not in this figure: node 243 (M2 (L30): the 'cannot use skills with this tag' block (execute FUN_141aa2570, re/evidence/c17_r.ann.c): for each task-filter target entity (FUN_1419622b0) not yet handled, find-or-create the target's comp 0x82 entry keyed by the node key +0x78 (FUN_141c6a830 / FUN_141c54040) and add that key to the target's comp 4 (FUN_141bd5a30, m2_comp4.ann.c: a count-sorted id list",
-      "not in this figure: node 2230 (skill stones' energy: FUN_141cc6b90(comp 0x83, value) on each skill of the target's comp 0x82 whose tags pass filterTags (FUN_141d153a0) - no attribute / char-field record (execute FUN_141a9b410, c14_n2230b.ann.c); the stone's charge change is the energy model's (stone.ts), not read from the store) - affix class 168890 row 1 (gear 4728 modifier 51533041) - fires on e",
-      "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 72818 row 1 (gem 7006 (skill 1110)) - ticked at the grant",
-      "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7130 modifier 771009001) - ticked at the grant",
-      "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a"
-     ],
-     "lock": 15000000000000,
-     "mana": {
-      "reserved": 467,
-      "capacity": 485,
-      "margin": 18,
-      "fits": true,
-      "life": {
-       "reserved": 1306,
-       "capacity": 1632,
-       "margin": 326
-      }
-     },
-     "cull": 0.1,
-     "target": "traveler",
-     "lifeMax": 1610461523817
-    }
-   },
-   {
-    "label": "Level Critical Strike Damage Increase 17 -> 20 (time)",
-    "costFE": 0,
-    "totalFE": 0,
-    "figure": {
-     "life100": 75819473669.93849,
-     "life0": 49881232684.73649,
-     "kill": 70481052369.21184,
+     "life100": 84405260998.79285,
+     "life0": 55529776987.448654,
+     "kill": 78462317568.62917,
      "partial": [
       "the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110)",
       "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
@@ -863,9 +799,9 @@
     "costFE": 0,
     "totalFE": 0,
     "figure": {
-     "life100": 76528738198.95268,
-     "life0": 50347854083.76674,
-     "kill": 71140377842.20824,
+     "life100": 85194809522.67404,
+     "life0": 56049216807.809784,
+     "kill": 79196274271.96349,
      "partial": [
       "the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110)",
       "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
@@ -902,13 +838,56 @@
     }
    },
    {
-    "label": "Buy another Boots of Devastation with +40% additional skill damage when Demolisher Charge is consumed (yours: 37); replace yours",
-    "costFE": 3,
-    "totalFE": 3,
+    "label": "Level Precise: Domain Expansion 19 -> 20 (time)",
+    "costFE": 0,
+    "totalFE": 0,
     "figure": {
-     "life100": 78204550047.73982,
-     "life0": 51450361855.66887,
-     "kill": 72698196380.72816,
+     "life100": 85888083559.9187,
+     "life0": 56505318188.8323,
+     "kill": 79840735161.88506,
+     "partial": [
+      "the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110)",
+      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
+      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
+      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
+      "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
+      "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
+      "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
+      "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
+      "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
+      "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
+      "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 1)) - ticked at the grant",
+      "not in this figure: node 243 (M2 (L30): the 'cannot use skills with this tag' block (execute FUN_141aa2570, re/evidence/c17_r.ann.c): for each task-filter target entity (FUN_1419622b0) not yet handled, find-or-create the target's comp 0x82 entry keyed by the node key +0x78 (FUN_141c6a830 / FUN_141c54040) and add that key to the target's comp 4 (FUN_141bd5a30, m2_comp4.ann.c: a count-sorted id list",
+      "not in this figure: node 2230 (skill stones' energy: FUN_141cc6b90(comp 0x83, value) on each skill of the target's comp 0x82 whose tags pass filterTags (FUN_141d153a0) - no attribute / char-field record (execute FUN_141a9b410, c14_n2230b.ann.c); the stone's charge change is the energy model's (stone.ts), not read from the store) - affix class 168890 row 1 (gear 4728 modifier 51533041) - fires on e",
+      "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 72818 row 1 (gem 7006 (skill 1110)) - ticked at the grant",
+      "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7130 modifier 771009001) - ticked at the grant",
+      "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a"
+     ],
+     "lock": 15000000000000,
+     "mana": {
+      "reserved": 467,
+      "capacity": 485,
+      "margin": 18,
+      "fits": true,
+      "life": {
+       "reserved": 1306,
+       "capacity": 1632,
+       "margin": 326
+      }
+     },
+     "cull": 0.1,
+     "target": "traveler",
+     "lifeMax": 1610461523817
+    }
+   },
+   {
+    "label": "Level Precise: Cruelty 19 -> 20 (time)",
+    "costFE": 0,
+    "totalFE": 0,
+    "figure": {
+     "life100": 86528608785.27806,
+     "life0": 56926716291.078575,
+     "kill": 80436161200.24602,
      "partial": [
       "the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110)",
       "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
@@ -947,11 +926,11 @@
    {
     "label": "Level Timid 19 -> 20 (time)",
     "costFE": 0,
-    "totalFE": 3,
+    "totalFE": 0,
     "figure": {
-     "life100": 78767172709.95944,
-     "life0": 51820508343.83961,
-     "kill": 73221204987.78717,
+     "life100": 87151116762.15181,
+     "life0": 57336261012.596825,
+     "kill": 81014838618.95337,
      "partial": [
       "the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110)",
       "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
@@ -988,13 +967,13 @@
     }
    },
    {
-    "label": "Buy another Kaleidoscope with Gains the following buffs by turns. Each buff lasts for 8 s: \\n +50% additional Erosion Damage\\n +50% additional Elemental Damage \\n +50% additional Physical Damage (yours: 46 / 8); replace yours",
-    "costFE": 14,
-    "totalFE": 17,
+    "label": "Level Critical Strike Damage Increase 18 -> 20 (time)",
+    "costFE": 0,
+    "totalFE": 0,
     "figure": {
-     "life100": 80638516259.80946,
-     "life0": 53051655438.7281,
-     "kill": 74960787938.17064,
+     "life100": 87731953044.38239,
+     "life0": 57718390194.85533,
+     "kill": 81554778459.724,
      "partial": [
       "the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110)",
       "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
@@ -1031,13 +1010,13 @@
     }
    },
    {
-    "label": "Socket Medium Fate: Attack Damage on contract point 107",
-    "costFE": 7,
-    "totalFE": 24,
+    "label": "Buy another Boots of Devastation with +40% additional skill damage when Demolisher Charge is consumed (yours: 37); replace yours",
+    "costFE": 4,
+    "totalFE": 4,
     "figure": {
-     "life100": 81252643011.95453,
-     "life0": 53455686212.39552,
-     "kill": 75531674260.06294,
+     "life100": 89653090721.16309,
+     "life0": 58982296559.75065,
+     "kill": 83340649537.20918,
      "partial": [
       "the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110)",
       "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
@@ -1074,13 +1053,56 @@
     }
    },
    {
-    "label": "Replace your slate 5 (Bladerunner: Attack Damage while Dual Wielding, Goddess of Hunting: Evasion, Steel Vanguard: additional damage applied to Life / Minions deal additional damage to Life, Prophet: Life Regain / Energy Shield Regain) with a slate of the same shape with Ranger: additional damage taken by enemies in Proximity + Shadowdancer: Armor DMG Mitigation Penetration / Armor DMG Mitigation Penetration for Minions",
-    "costFE": 200,
-    "totalFE": 224,
+    "label": "Buy another Kaleidoscope with Gains the following buffs by turns. Each buff lasts for 8 s: +50% additional Erosion Damage +50% additional Elemental Damage +50% additional Physical Damage (yours: 46 / 8); replace yours",
+    "costFE": 14.8,
+    "totalFE": 18.8,
     "figure": {
-     "life100": 97508722578.5077,
-     "life0": 64150475404.98361,
-     "kill": 90643169234.8904,
+     "life100": 91766518770.21997,
+     "life0": 60372709695.33294,
+     "kill": 85305271862.28107,
+     "partial": [
+      "the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110)",
+      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
+      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
+      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
+      "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
+      "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
+      "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
+      "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
+      "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
+      "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
+      "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 1)) - ticked at the grant",
+      "not in this figure: node 243 (M2 (L30): the 'cannot use skills with this tag' block (execute FUN_141aa2570, re/evidence/c17_r.ann.c): for each task-filter target entity (FUN_1419622b0) not yet handled, find-or-create the target's comp 0x82 entry keyed by the node key +0x78 (FUN_141c6a830 / FUN_141c54040) and add that key to the target's comp 4 (FUN_141bd5a30, m2_comp4.ann.c: a count-sorted id list",
+      "not in this figure: node 2230 (skill stones' energy: FUN_141cc6b90(comp 0x83, value) on each skill of the target's comp 0x82 whose tags pass filterTags (FUN_141d153a0) - no attribute / char-field record (execute FUN_141a9b410, c14_n2230b.ann.c); the stone's charge change is the energy model's (stone.ts), not read from the store) - affix class 168890 row 1 (gear 4728 modifier 51533041) - fires on e",
+      "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 72818 row 1 (gem 7006 (skill 1110)) - ticked at the grant",
+      "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7130 modifier 771009001) - ticked at the grant",
+      "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a"
+     ],
+     "lock": 15000000000000,
+     "mana": {
+      "reserved": 467,
+      "capacity": 485,
+      "margin": 18,
+      "fits": true,
+      "life": {
+       "reserved": 1306,
+       "capacity": 1632,
+       "margin": 326
+      }
+     },
+     "cull": 0.1,
+     "target": "traveler",
+     "lifeMax": 1610461523817
+    }
+   },
+   {
+    "label": "Add a 2-cell slate (the type of your 2-cell slates) with Ranger: additional damage taken by enemies in Proximity",
+    "costFE": 100,
+    "totalFE": 118.8,
+    "figure": {
+     "life100": 105531496585.75366,
+     "life0": 69428616149.63234,
+     "kill": 98101062641.62337,
      "partial": [
       "the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110)",
       "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
@@ -1115,16 +1137,60 @@
      "target": "traveler",
      "lifeMax": 1610461523817
     },
-    "note": "slate price assumed: check /market"
+    "note": "slate price assumed: check /market; the board re-laid out to fit it (the slate board shows where each goes)"
    },
    {
-    "label": "Socket Medium Fate: Attack Cast Speed on contract point 108",
-    "costFE": 39.864,
-    "totalFE": 263.864,
+    "label": "Add a 2-cell slate (the type of your 2-cell slates) with Shadowdancer: Armor DMG Mitigation Penetration / Armor DMG Mitigation Penetration for Minions",
+    "costFE": 100,
+    "totalFE": 218.8,
     "figure": {
-     "life100": 100334018190.47714,
-     "life0": 66009222519.39844,
-     "kill": 93269536820.82309,
+     "life100": 117592267481.53046,
+     "life0": 77363333841.34035,
+     "kill": 109312639084.97787,
+     "partial": [
+      "the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110)",
+      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
+      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
+      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
+      "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
+      "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
+      "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
+      "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
+      "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
+      "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
+      "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 1)) - ticked at the grant",
+      "not in this figure: node 243 (M2 (L30): the 'cannot use skills with this tag' block (execute FUN_141aa2570, re/evidence/c17_r.ann.c): for each task-filter target entity (FUN_1419622b0) not yet handled, find-or-create the target's comp 0x82 entry keyed by the node key +0x78 (FUN_141c6a830 / FUN_141c54040) and add that key to the target's comp 4 (FUN_141bd5a30, m2_comp4.ann.c: a count-sorted id list",
+      "not in this figure: node 2230 (skill stones' energy: FUN_141cc6b90(comp 0x83, value) on each skill of the target's comp 0x82 whose tags pass filterTags (FUN_141d153a0) - no attribute / char-field record (execute FUN_141a9b410, c14_n2230b.ann.c); the stone's charge change is the energy model's (stone.ts), not read from the store) - affix class 168890 row 1 (gear 4728 modifier 51533041) - fires on e",
+      "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 72818 row 1 (gem 7006 (skill 1110)) - ticked at the grant",
+      "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7130 modifier 771009001) - ticked at the grant",
+      "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a"
+     ],
+     "lock": 15000000000000,
+     "mana": {
+      "reserved": 467,
+      "capacity": 485,
+      "margin": 18,
+      "fits": true,
+      "life": {
+       "reserved": 1306,
+       "capacity": 1632,
+       "margin": 326
+      }
+     },
+     "cull": 0.1,
+     "target": "traveler",
+     "lifeMax": 1610461523817
+    },
+    "note": "slate price assumed: check /market; the board re-laid out to fit it (the slate board shows where each goes)"
+   },
+   {
+    "label": "Socket Medium Fate: Attack Damage on contract point 107",
+    "costFE": 7,
+    "totalFE": 225.8,
+    "figure": {
+     "life100": 118480111837.58778,
+     "life0": 77947442021.35138,
+     "kill": 110137970674.84111,
      "partial": [
       "the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110)",
       "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
@@ -1163,11 +1229,11 @@
    {
     "label": "A talent prism like the example build (Onslaughter crit and two-handed mirrors) at your price",
     "costFE": 555,
-    "totalFE": 818.864,
+    "totalFE": 780.8,
     "figure": {
-     "life100": 149249913411.70035,
-     "life0": 98190732505.38673,
-     "kill": 138741281802.60126,
+     "life100": 174942675055.12546,
+     "life0": 115093865203.63841,
+     "kill": 162625025553.15973,
      "partial": [
       "the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110)",
       "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
@@ -1204,13 +1270,56 @@
     }
    },
    {
-    "label": "Replace your slate 1 (Goddess of Hunting: Attack and Cast Speed / Movement Speed, Goddess of Hunting: damage, God of Might: Attack Damage, Psychic: Attack and Cast Speed) with a slate of the same shape with Shadowdancer: Armor DMG Mitigation Penetration / Armor DMG Mitigation Penetration for Minions + Onslaughter: additional Base Damage for Two-Handed Weapons",
-    "costFE": 200,
-    "totalFE": 1018.864,
+    "label": "Socket Medium Fate: Attack Cast Speed on contract point 108",
+    "costFE": 42.142,
+    "totalFE": 822.942,
     "figure": {
-     "life100": 166458216020.49963,
-     "life0": 109511984175.55533,
-     "kill": 154737954116.3769,
+     "life100": 180826024249.3437,
+     "life0": 118964489673.93895,
+     "kill": 168094130290.861,
+     "partial": [
+      "the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110)",
+      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
+      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
+      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
+      "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
+      "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
+      "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
+      "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
+      "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
+      "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
+      "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 1)) - ticked at the grant",
+      "not in this figure: node 243 (M2 (L30): the 'cannot use skills with this tag' block (execute FUN_141aa2570, re/evidence/c17_r.ann.c): for each task-filter target entity (FUN_1419622b0) not yet handled, find-or-create the target's comp 0x82 entry keyed by the node key +0x78 (FUN_141c6a830 / FUN_141c54040) and add that key to the target's comp 4 (FUN_141bd5a30, m2_comp4.ann.c: a count-sorted id list",
+      "not in this figure: node 2230 (skill stones' energy: FUN_141cc6b90(comp 0x83, value) on each skill of the target's comp 0x82 whose tags pass filterTags (FUN_141d153a0) - no attribute / char-field record (execute FUN_141a9b410, c14_n2230b.ann.c); the stone's charge change is the energy model's (stone.ts), not read from the store) - affix class 168890 row 1 (gear 4728 modifier 51533041) - fires on e",
+      "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 72818 row 1 (gem 7006 (skill 1110)) - ticked at the grant",
+      "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7130 modifier 771009001) - ticked at the grant",
+      "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a"
+     ],
+     "lock": 15000000000000,
+     "mana": {
+      "reserved": 467,
+      "capacity": 485,
+      "margin": 18,
+      "fits": true,
+      "life": {
+       "reserved": 1306,
+       "capacity": 1632,
+       "margin": 326
+      }
+     },
+     "cull": 0.1,
+     "target": "traveler",
+     "lifeMax": 1610461523817
+    }
+   },
+   {
+    "label": "Replace your slate 5 (Bladerunner: Attack Damage while Dual Wielding, Goddess of Hunting: Evasion, Steel Vanguard: additional damage applied to Life / Minions deal additional damage to Life, Prophet: Life Regain / Energy Shield Regain) with a slate of the same shape with Shadowdancer: Armor DMG Mitigation Penetration / Armor DMG Mitigation Penetration for Minions + God of Might: Attack Skill Level",
+    "costFE": 200,
+    "totalFE": 1022.942,
+    "figure": {
+     "life100": 206588958206.1546,
+     "life0": 135913788171.42648,
+     "kill": 192043105436.534,
      "partial": [
       "the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110)",
       "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
@@ -1248,13 +1357,13 @@
     "note": "slate price assumed: check /market"
    },
    {
-    "label": "Replace your slate 3 (The Brave: Life Regain, Onslaughter: additional Base Damage for Two-Handed Weapons) with a slate of the same shape with Shadowdancer: Armor DMG Mitigation Penetration / Armor DMG Mitigation Penetration for Minions + Onslaughter: additional Base Damage for Two-Handed Weapons",
+    "label": "Replace your slate 1 (Goddess of Hunting: Attack and Cast Speed / Movement Speed, Goddess of Hunting: damage, God of Might: Attack Damage, Psychic: Attack and Cast Speed) with a slate of the same shape with God of Might: Attack Skill Level + Elementalist: Fire Skill Level",
     "costFE": 200,
-    "totalFE": 1218.864,
+    "totalFE": 1222.942,
     "figure": {
-     "life100": 181942730940.24,
-     "life0": 119699165039.2905,
-     "kill": 169132210023.03262,
+     "life100": 233033768596.8517,
+     "life0": 153311689881.0588,
+     "kill": 216625946514.18137,
      "partial": [
       "the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110)",
       "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
@@ -1290,136 +1399,6 @@
      "lifeMax": 1610461523817
     },
     "note": "slate price assumed: check /market"
-   },
-   {
-    "label": "Replace your slate 6 (The Brave: Life Regain, Onslaughter: additional Base Damage for Two-Handed Weapons, Onslaughter: Max Life / Regenerates Life per second, Onslaughter: Life Regain, The Brave: Armor) with a slate of the same shape with Shadowdancer: Armor DMG Mitigation Penetration / Armor DMG Mitigation Penetration for Minions + Onslaughter: additional Base Damage for Two-Handed Weapons",
-    "costFE": 200,
-    "totalFE": 1418.864,
-    "figure": {
-     "life100": 197427245859.97763,
-     "life0": 129886345903.03247,
-     "kill": 183526465929.69064,
-     "partial": [
-      "the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110)",
-      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
-      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
-      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
-      "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
-      "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
-      "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
-      "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
-      "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
-      "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
-      "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 1)) - ticked at the grant",
-      "not in this figure: node 243 (M2 (L30): the 'cannot use skills with this tag' block (execute FUN_141aa2570, re/evidence/c17_r.ann.c): for each task-filter target entity (FUN_1419622b0) not yet handled, find-or-create the target's comp 0x82 entry keyed by the node key +0x78 (FUN_141c6a830 / FUN_141c54040) and add that key to the target's comp 4 (FUN_141bd5a30, m2_comp4.ann.c: a count-sorted id list",
-      "not in this figure: node 2230 (skill stones' energy: FUN_141cc6b90(comp 0x83, value) on each skill of the target's comp 0x82 whose tags pass filterTags (FUN_141d153a0) - no attribute / char-field record (execute FUN_141a9b410, c14_n2230b.ann.c); the stone's charge change is the energy model's (stone.ts), not read from the store) - affix class 168890 row 1 (gear 4728 modifier 51533041) - fires on e",
-      "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 72818 row 1 (gem 7006 (skill 1110)) - ticked at the grant",
-      "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7130 modifier 771009001) - ticked at the grant",
-      "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a"
-     ],
-     "lock": 15000000000000,
-     "mana": {
-      "reserved": 467,
-      "capacity": 485,
-      "margin": 18,
-      "fits": true,
-      "life": {
-       "reserved": 1246,
-       "capacity": 1557,
-       "margin": 311
-      }
-     },
-     "cull": 0.1,
-     "target": "traveler",
-     "lifeMax": 1610461523817
-    },
-    "note": "slate price assumed: check /market"
-   },
-   {
-    "label": "Replace the kismet on contract point 107 with Medium Fate: Aura Effect",
-    "costFE": 92,
-    "totalFE": 1510.864,
-    "figure": {
-     "life100": 203835785906.2401,
-     "life0": 134102490704.44394,
-     "kill": 189483783043.49164,
-     "partial": [
-      "the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110)",
-      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
-      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
-      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
-      "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
-      "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
-      "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
-      "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
-      "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
-      "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
-      "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 1)) - ticked at the grant",
-      "not in this figure: node 243 (M2 (L30): the 'cannot use skills with this tag' block (execute FUN_141aa2570, re/evidence/c17_r.ann.c): for each task-filter target entity (FUN_1419622b0) not yet handled, find-or-create the target's comp 0x82 entry keyed by the node key +0x78 (FUN_141c6a830 / FUN_141c54040) and add that key to the target's comp 4 (FUN_141bd5a30, m2_comp4.ann.c: a count-sorted id list",
-      "not in this figure: node 2230 (skill stones' energy: FUN_141cc6b90(comp 0x83, value) on each skill of the target's comp 0x82 whose tags pass filterTags (FUN_141d153a0) - no attribute / char-field record (execute FUN_141a9b410, c14_n2230b.ann.c); the stone's charge change is the energy model's (stone.ts), not read from the store) - affix class 168890 row 1 (gear 4728 modifier 51533041) - fires on e",
-      "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 72818 row 1 (gem 7006 (skill 1110)) - ticked at the grant",
-      "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7130 modifier 771009001) - ticked at the grant",
-      "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a"
-     ],
-     "lock": 15000000000000,
-     "mana": {
-      "reserved": 467,
-      "capacity": 485,
-      "margin": 18,
-      "fits": true,
-      "life": {
-       "reserved": 1246,
-       "capacity": 1557,
-       "margin": 311
-      }
-     },
-     "cull": 0.1,
-     "target": "traveler",
-     "lifeMax": 1610461523817
-    }
-   },
-   {
-    "label": "Buy another Ruinous Star with +29% additional Deterioration Duration or more (range 15-30) (yours: 16); replace yours",
-    "costFE": 921.131,
-    "totalFE": 2431.995,
-    "figure": {
-     "life100": 278187203725.5794,
-     "life0": 183017897156.02017,
-     "kill": 258600144826.67746,
-     "partial": [
-      "the target's buff not derived (IN1): buff 230 (369609664 row 1): the hits of skill 1580 (the supported skill of 369609664 row 1) are not in the fight's hit stream (skills 1110)",
-      "not calculable without a capture: the spawn action tag list [6300031] and the conditional tags 0x2dcae5 / 0x4c62ba of the cast request (W11: writer not located)",
-      "not calculable without a capture: the throw's trait class 7999301 (the node 2320 class of the hero trait)",
-      "not calculable without a capture: the hand mode (the weapon hand state; the training ground)",
-      "not in this figure: node 3030 (comp 0x69 / 0x12 (execute FUN_141aa50d0, c9b_nodes.c 4505-4738)) - affix class 905758 row 1 (hero 4001 spawn class 905758) - ticked at the grant",
-      "not in this figure: node 233 (comp 0x7e (execute FUN_141a9fe80, c9b_nodes.c 1455-1519)) - affix class 775414272 row 2 (hero 4001 spawn class 775414272) - fires on event 0xf42b8",
-      "not in this figure: node 1011 (adds a buff: comp 0x12 FUN_141bab400 (execute FUN_141a54c40, c9b_trigexec.c 859-1204)) - affix class 147709584 row 1 (hero 4001 spawn class 147709584) - fires on event 0xf425e",
-      "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 385021504 row 1 (hero 4001 spawn class 385021504) - fires on event 0xf46ce (x5)",
-      "not in this figure: node 627 (comps 5 / 0x1a / 0x26 via FUN_141e31100 → FUN_141e8de30, which adds to an f64 accumulator (hitdriver2.ann.c 6894-) (execute FUN_141af4140, c9b_trigexec.c 1205-1290; c9b_trig2.c 1-40)) - affix class 413647904 row 2 (hero 4001 spawn class 413647904) - fires on event 0xf4285",
-      "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 245094144 row 3 (started by node 112, affix class 245094144 row 1 (trait 810001 tier 1)) - ticked at the grant",
-      "not in this figure: node 2402 (comp 0x40 +0x88 (execute FUN_141aa1bd0, c9b_nodes.c 4466-4505)) - affix class 326425984 row 1 (started by node 112, affix class 326425984 row 2 (trait 810021 tier 1)) - ticked at the grant",
-      "not in this figure: node 243 (M2 (L30): the 'cannot use skills with this tag' block (execute FUN_141aa2570, re/evidence/c17_r.ann.c): for each task-filter target entity (FUN_1419622b0) not yet handled, find-or-create the target's comp 0x82 entry keyed by the node key +0x78 (FUN_141c6a830 / FUN_141c54040) and add that key to the target's comp 4 (FUN_141bd5a30, m2_comp4.ann.c: a count-sorted id list",
-      "not in this figure: node 2230 (skill stones' energy: FUN_141cc6b90(comp 0x83, value) on each skill of the target's comp 0x82 whose tags pass filterTags (FUN_141d153a0) - no attribute / char-field record (execute FUN_141a9b410, c14_n2230b.ann.c); the stone's charge change is the energy model's (stone.ts), not read from the store) - affix class 168890 row 1 (gear 4728 modifier 51533041) - fires on e",
-      "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 72818 row 1 (gem 7006 (skill 1110)) - ticked at the grant",
-      "not in this figure: node 612 (comp 0x15 via FUN_141bfbe90 (execute FUN_141af21b0, c9_nodes_misc.c)) - affix class 420453504 row 2 (support 8009 (skill 71009) on gem 7130 modifier 771009001) - ticked at the grant",
-      "not in this figure: node 2322 (N5: casts the linked skill at the filter targets: comps 0x82 / 0x91 (FUN_141bc4eb0 / 141bc46d0 / 141e3ede0 / 141e32a70), the cast request into comp 0x7e map (FUN_141a95660 / 141ad96a0); runtime vt 0x1452661d8 (build FUN_141a931b0), execute slot 23 FUN_141a9ec10, abort FUN_141ab2850 (comp 0x7e FUN_141ad6d40, returns 1); no attribute / char-field call (n5_b.ann.c)) - a"
-     ],
-     "lock": 15000000000000,
-     "mana": {
-      "reserved": 467,
-      "capacity": 485,
-      "margin": 18,
-      "fits": true,
-      "life": {
-       "reserved": 1246,
-       "capacity": 1557,
-       "margin": 311
-      }
-     },
-     "cull": 0.1,
-     "target": "traveler",
-     "lifeMax": 1610461523817
-    }
    }
   ],
   "build": [
@@ -1441,7 +1420,7 @@
     "section": "Skills",
     "lines": [
      "active 0: Hammer of Ash (level 20)",
-     "  + Steamroll (level 18)",
+     "  + Steamroll (level 19)",
      "  + Multiple Projectiles (level 20)",
      "  + Critical Strike Damage Increase (level 20)",
      "  + Passivation (level 18)",
@@ -1452,15 +1431,15 @@
      "  + Activation Medium: Boss (level 20)",
      "  + Extended Duration (level 20)",
      "  + Cooldown Reduction (level 18)",
-     "active 3: Blink (level 18)",
+     "active 3: Blink (level 19)",
      "  + Quick Mobility (level 20)",
-     "  + Cooldown Reduction (level 18)",
+     "  + Cooldown Reduction (level 19)",
      "  + Magic Dash (level 20)",
-     "active 4: Flame Core (level 18)",
+     "active 4: Flame Core (level 19)",
      "  + Activation Medium: Motionless (level 19)",
      "  + Glacial Freeze (level 20)",
-     "  + Grudge (level 18)",
-     "passive 0: Precise: Weapon Amplification (level 20)",
+     "  + Grudge (level 19)",
+     "passive 0: Precise Projectiles (level 20)",
      "  + Restrain (level 20)",
      "  + Seal Conversion (level 20)",
      "  + Increased Area (level 18)",
@@ -1468,7 +1447,7 @@
      "passive 1: Precise: Erosion Amplification (level 20)",
      "  + Aura Amplification (level 20)",
      "  + Restrain (level 18)",
-     "  + Increased Area (level 18)",
+     "  + Increased Area (level 19)",
      "passive 2: Precise: Domain Expansion (level 20)",
      "  + Restrain (level 20)",
      "  + Aura Amplification (level 20)",
@@ -1476,7 +1455,7 @@
      "passive 3: Precise: Cruelty (level 20)",
      "  + Restrain (level 17)",
      "  + Aura Amplification (level 19)",
-     "  + Increased Area (level 18)"
+     "  + Increased Area (level 19)"
     ]
    },
    {
@@ -3346,90 +3325,90 @@
     {
      "cells": [
       [
-       4,
-       2
+       1,
+       3
       ],
       [
-       5,
-       2
+       1,
+       4
       ]
      ],
      "lines": [
-      "Shadowdancer: Armor DMG Mitigation Penetration / Armor DMG Mitigation Penetration for Minions",
-      "Onslaughter: additional Base Damage for Two-Handed Weapons"
+      "God of Might: Attack Skill Level",
+      "Elementalist: Fire Skill Level"
      ],
-     "source": "buy (about 200 FE, price assumed: check /market; step 16)",
+     "source": "buy (about 200 FE, price assumed: check /market; step 19)",
      "changed": true
     },
     {
      "cells": [
       [
-       3,
-       2
-      ],
-      [
        2,
        2
       ],
       [
+       2,
+       3
+      ],
+      [
        3,
-       1
+       3
       ]
      ],
      "lines": [
       "Ranger: chance to gain Agility Blessing on Critical Strike",
       "Shadowmaster: Converts of Physical Damage to Erosion Damage / Converts of Minion Physical Damage to Erosion Damage"
      ],
-     "source": "on your board",
-     "changed": false
+     "source": "on your board: move or rotate it to where it shows",
+     "changed": true
     },
     {
      "cells": [
       [
-       3,
+       6,
        3
       ],
       [
-       4,
-       3
+       6,
+       4
       ]
      ],
      "lines": [
-      "Shadowdancer: Armor DMG Mitigation Penetration / Armor DMG Mitigation Penetration for Minions",
+      "The Brave: Life Regain",
       "Onslaughter: additional Base Damage for Two-Handed Weapons"
      ],
-     "source": "buy (about 200 FE, price assumed: check /market; step 17)",
+     "source": "from your stash (free, step 3)",
      "changed": true
     },
     {
      "cells": [
       [
        3,
-       5
-      ],
-      [
-       4,
-       6
-      ],
-      [
-       4,
-       5
+       1
       ],
       [
        3,
-       6
+       2
       ],
       [
-       3,
-       4
+       4,
+       1
       ],
       [
-       2,
-       5
+       4,
+       2
       ],
       [
-       2,
-       4
+       4,
+       3
+      ],
+      [
+       5,
+       2
+      ],
+      [
+       5,
+       3
       ]
      ],
      "lines": [
@@ -3438,51 +3417,88 @@
       "Arcanist: Spell Damage",
       "Sweep"
      ],
-     "source": "on your board",
-     "changed": false
+     "source": "on your board: move or rotate it to where it shows",
+     "changed": true
     },
     {
      "cells": [
       [
-       1,
-       3
+       4,
+       4
       ],
       [
-       2,
-       3
+       4,
+       5
       ]
      ],
      "lines": [
-      "Ranger: additional damage taken by enemies in Proximity",
-      "Shadowdancer: Armor DMG Mitigation Penetration / Armor DMG Mitigation Penetration for Minions"
+      "Shadowdancer: Armor DMG Mitigation Penetration / Armor DMG Mitigation Penetration for Minions",
+      "God of Might: Attack Skill Level"
      ],
-     "source": "buy (about 200 FE, price assumed: check /market; step 13)",
+     "source": "buy (about 200 FE, price assumed: check /market; step 18)",
+     "changed": true
+    },
+    {
+     "cells": [
+      [
+       2,
+       4
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       3,
+       4
+      ],
+      [
+       3,
+       5
+      ]
+     ],
+     "lines": [
+      "The Brave: Life Regain",
+      "Onslaughter: additional Base Damage for Two-Handed Weapons",
+      "Onslaughter: Max Life / Regenerates Life per second",
+      "Onslaughter: Life Regain",
+      "The Brave: Armor"
+     ],
+     "source": "on your board: move or rotate it to where it shows",
      "changed": true
     },
     {
      "cells": [
       [
        5,
-       3
+       4
       ],
       [
        5,
-       4
-      ],
-      [
-       6,
-       3
-      ],
-      [
-       6,
-       4
+       5
       ]
      ],
      "lines": [
-      "Shadowdancer: Armor DMG Mitigation Penetration / Armor DMG Mitigation Penetration for Minions",
-      "Onslaughter: additional Base Damage for Two-Handed Weapons"
+      "Ranger: additional damage taken by enemies in Proximity"
      ],
-     "source": "buy (about 200 FE, price assumed: check /market; step 18)",
+     "source": "buy and add (about 100 FE, price assumed: check /market; step 13)",
+     "changed": true
+    },
+    {
+     "cells": [
+      [
+       3,
+       6
+      ],
+      [
+       4,
+       6
+      ]
+     ],
+     "lines": [
+      "Shadowdancer: Armor DMG Mitigation Penetration / Armor DMG Mitigation Penetration for Minions"
+     ],
+     "source": "buy and add (about 100 FE, price assumed: check /market; step 14)",
      "changed": true
     }
    ]
