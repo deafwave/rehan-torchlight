@@ -151,7 +151,7 @@ export function candidates(s: State, ctx: GenCtx, o: PlanOpts, lines: { id: numb
     const u = /^Unique (.+) in \w+$/.exec(m.label)?.[1];
     if (u && held.has(u)) return;
     // a fate prices the same on any free point of its kind (the steps show only the next copy's smaller gain): offered on the first one only
-    const fate = m.kind === 'kismet' && /^Socket (.+) on contract point \d+$/.exec(label)?.[1];
+    const fate = m.kind === 'kismet' && /^Socket (.+) on .+ \d-\d$/.exec(label)?.[1];
     if (fate) { if (fates.has(fate)) return; fates.add(fate); }
     out.push({ key: `${m.kind}|${label}`, label: t ? `${label} (${t.note})` : label, costFE: cost, kind: m.kind, changes: t ? t.changes : m.changes });
   };

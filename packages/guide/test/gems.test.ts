@@ -80,6 +80,14 @@ describe('gemMoves', () => {
     const rep = gen(l100, 'hoa').moves.find(m => sup(m).action === 'replace')!;
     expect(sockets(applyAll(l100, rep, GROUND.hoa)).find(g => g.place.slot === sup(rep).socket)!.sid).toBe(sup(rep).gem!.sid);
   });
+  it('a support you hold in the bag is offered free, at its own level and with its own rolls (owner, 2026-10-17: the Upheaval in the bag was never offered)', () => {
+    const name = 'Hammer of Ash: Upheaval (Magnificent)', prefix = [{ id: 771030922, dynArgs: [32] }];
+    const l = { ...l100, skills: (l100.skills as Gem[]).filter(g => g.sid !== 10003574) };   // L100 wears one: socket 3 left empty
+    const owned = [{ itemId: 'u1', baseId: 7734, baseName: name, level: 1, where: 'bag', page: 101, slot: 3, count: 1, modifiers: { prefix } }];
+    const ms = gemMoves({ loadout: l, owned, fe: 0, level: 100, skill: 'hoa' } as never, { prices: fakePrices({ [name]: 500 }), level: 100, notSearched: new Set() }).filter(m => sup(m).gem?.name === name);
+    expect(ms.length).toBeGreaterThan(0);
+    expect(ms.every(m => m.costFE === 0 && !m.buy && sup(m).gem!.level === 1 && JSON.stringify((sup(m).gem as { mods?: unknown }).mods) === JSON.stringify(prefix))).toBe(true);
+  });
   it('a main skill that is not the state\'s skill is not searched', () => {
     const r = gen(l94, 'hoa');
     expect(r.moves).toEqual([]);

@@ -66,16 +66,19 @@ export const gemMoves: Generator = (s, ctx) => {
   const sockets = skills.filter(g => g.place.kind === 'support' && g.place.ownerKind === 'active' && g.place.ownerSlot === 0);
   const have = new Set(sockets.map(g => g.sid));
   const moves: Move[] = [];
+  // a support you hold off the board (bag, stash) goes in free, at its own level and rolls (owner, 2026-10-17: the Upheaval in the bag was never offered)
+  const held = new Map(s.owned.filter((o) => o.where !== 'equipped' && o.baseName).map((o) => [o.baseName!, o]));
   for (const socket of SOCKETS) {
     const cur = sockets.find(g => g.place.slot === socket);
     // coverage is Ice Shot's job (it clears maps; the figure is one target): a coverage support is kept, never replaced or removed (the owner, 2026-10-16)
     if (cur && COVERAGE[s.skill]?.has(cur.name ?? '')) { ns.add(`support: ${cur.name} (socket ${socket}) is kept: coverage, which the one-target figure does not price`); continue; }
     for (const c of supportsFor(s.skill)) {
-      const level = gemLevelAt(c.sid, ctx.level, cur?.level ?? GEM_LEVEL, ns);
+      const own = held.get(c.name), level = gemLevelAt(c.sid, ctx.level, own?.level ?? cur?.level ?? GEM_LEVEL, ns);
       if (have.has(c.sid) || !level) continue;
-      const gem = { sid: c.sid, level, name: c.name };
+      const gem = { sid: c.sid, level, name: c.name, ...(own ? { mods: Object.values(own.modifiers ?? {}).flat() as { id: number; dynArgs: number[] }[] } : {}) };
       moves.push({
-        kind: 'support', label: `${main.name ?? s.skill} socket ${socket}: ${cur ? `${cur.name} -> ` : 'add '}${c.name}`, acquisition: true, ...costOf(ctx.prices, c.name, ctx.level, 'gem'), buy: { name: c.name, qty: 1 }, minLevel: gemRequires(c.sid, 1),
+        kind: 'support', label: `${main.name ?? s.skill} socket ${socket}: ${cur ? `${cur.name} -> ` : 'add '}${c.name}${own ? ` (yours, ${own.where})` : ''}`, acquisition: true, minLevel: gemRequires(c.sid, 1),
+        ...(own ? { costFE: 0 } : { ...costOf(ctx.prices, c.name, ctx.level, 'gem'), buy: { name: c.name, qty: 1 } }),
         changes: [{ kind: 'support', action: cur ? 'replace' : 'install', owner, socket, gem }],
       });
     }

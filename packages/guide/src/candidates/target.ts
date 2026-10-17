@@ -13,6 +13,7 @@ import { pinRoot, table } from '../pin';
 import { priceOfBase, priceOfGold, priceOfName } from '../priceOf';
 import { craftGroupStep, craftStep, craftTiers, slotsOfBase } from './gear';
 import { gemsHeld } from './gems';
+import { pointName } from './kismets';
 import { costOf } from '../priceOf';
 import { prismOf, type LoadoutPatch } from '../patches';
 import type { Change, Generator, Move } from '../types';
@@ -218,7 +219,7 @@ export const targetMoves: Generator = (s, ctx) => {
     costFE: groups.reduce((a, m) => a + (m.costFE ?? 0), 0), costNote: groups.map((m) => m.costNote).filter(Boolean).join('; ') || undefined, changes: groups.flatMap((m) => m.changes) }));
 
   // pacts: not on the market - a pactspirit rank is levelled, not bought: farmed, 0 FE
-  const pacts = (l.pacts ?? []) as { servantId: number; slot?: number; rank: number }[];
+  const pacts = (l.pacts ?? []) as { servantId: number; slot?: number; rank: number; name?: string }[];
   // slots 4-6 hold drop pactspirits (the live client's PetMgr.ServantEquipSlotDataList: InstallServantType 2): they change loot, not damage
   if (t.pacts.some(p => p.slot >= DROP_SLOT)) ns.add('target drop pactspirits (slots 4-6) change loot, not damage: not offered');
   for (const p of t.pacts.filter(x => x.slot < DROP_SLOT)) {
@@ -243,7 +244,7 @@ export const targetMoves: Generator = (s, ctx) => {
     const baseId = tat.find(([, r]) => r.Modifier?.[0] === k.modifierId)?.[0];
     const name = baseId ? lang[`item_base|name|${baseId}`] : undefined;
     const change: Change = { kind: 'kismet', action: at.has(point) ? 'replace' : 'socket', point, modifierId: k.modifierId, rolls: k.rolls };
-    keep(mk({ kind: 'kismet', label: `Target: ${name ?? k.modifierId} on contract point ${point}`, costFE: baseId ? priceOfBase(ctx.prices, Number(baseId), ctx.level).fe : null, changes: [change] }), String(name ?? k.modifierId));
+    keep(mk({ kind: 'kismet', label: `Target: ${name ?? k.modifierId} on ${pointName(point, pacts.find(p => p.slot === slot)?.name)}`, costFE: baseId ? priceOfBase(ctx.prices, Number(baseId), ctx.level).fe : null, changes: [change] }), String(name ?? k.modifierId));
   }
   // kismets that only pay together (each alone a little below the build): the remaining ones as one move too
   const kis = out.filter((m) => m.kind === 'kismet');

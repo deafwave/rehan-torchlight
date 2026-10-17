@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { kismetMoves } from '../src/candidates/kismets';
+import { kismetMoves, pointName } from '../src/candidates/kismets';
 import { GROUND, L100, applyAll, fakePrices, loadout } from './apply';
 
 const l100 = loadout(L100);   // kismets on 103 104 108 305 307, Undetermined Fates on 111 [1,1] and 211 [2]; 311 is a free Fate slot
@@ -11,8 +11,19 @@ const ch = (m: { changes: unknown[] }) => m.changes[0] as { kind: string; action
 type K = { node: number; modifierId: number | null };
 const plain = (m: { changes: unknown[] }, a: string) => ch(m).kind === 'kismet' && ch(m).action === a;
 
+describe('pointName', () => {
+  it('names a contract point as the page shows it: the pact, then group-position along the path, three to a group (owner, 2026-10-17: 101 102 107 103 104 108 105 106 109 110 111)', () => {
+    const order = [101, 102, 107, 103, 104, 108, 105, 106, 109, 110, 111].map((n) => pointName(n));
+    expect(order).toEqual(['1-1', '1-2', '1-3', '2-1', '2-2', '2-3', '3-1', '3-2', '3-3', '4-1', '4-2']);
+    expect(pointName(307, 'Kong')).toBe('Kong 1-3');
+  });
+});
+
 describe('kismetMoves', () => {
   const { moves, notSearched } = run(l100, { 'Micro Fate: Fire Resistance': 7, 'Undetermined Fate': 50 });
+  it('labels a point by its pact and place, never its id', () => {
+    expect(moves.every((m) => !/contract point \d/.test(m.label) && / \d-\d\b/.test(m.label))).toBe(true);
+  });
   it('sockets only free small / middle points of an equipped pact, replaces and removes only held kismets', () => {
     const held = new Set((l100.kismets as K[]).map(k => k.node));
     for (const m of moves.filter(x => plain(x, 'socket'))) expect(held.has(ch(m).point), m.label).toBe(false);
