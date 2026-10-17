@@ -111,6 +111,11 @@ describe('gemMoves', () => {
         expect((l100.skills as Gem[]).some(g => g.place.ownerKind === c.owner.kind && g.place.ownerSlot === c.owner.slot && g.sid === c.gem!.sid)).toBe(false);
       }
     });
+    it('a support absent from tlidb this season is never offered (owner, 2026-10-17: there is no Selfishness, only Precise: Selfishness)', () => {
+      const offered = new Set(moves.map(m => sup(m).gem?.name));
+      for (const n of ['Selfishness', 'Malleable']) expect(offered.has(n), n).toBe(false);
+      expect(offered.has('Precise: Malleable')).toBe(true);
+    });
     it('Blink is not searched (movement: the figure does not price it), nor an empty socket of another skill (the Energy that unlocks it is not read)', () => {
       expect(other.some(({ c }) => heads.get(`${c.owner.kind}|${c.owner.slot}`)!.name === 'Blink')).toBe(false);
       expect(other.some(({ c }) => c.action === 'install')).toBe(false);

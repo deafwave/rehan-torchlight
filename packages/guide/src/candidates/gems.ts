@@ -45,8 +45,12 @@ export function gemLevelAt(sid: number, heroLevel: number, maxGemLevel: number, 
   return 0;
 }
 export interface Support { sid: number; name: string }
-/** supports the client catalog still holds but the season does not (absent from tlidb's index, 2026-10-16; Cold Penetration confirmed missing in game by the user) */
-export const NOT_THIS_SEASON = new Set(['Fire Penetration', 'Cold Penetration', 'Lightning Penetration', 'Erosion Penetration', 'Greater Multiple Projectiles', 'Devastator']);
+/** supports the client catalog still holds but the season does not: every one tlidb's index (autocomplete_en.json, 2026-10-17) does not list (Cold Penetration
+ *  confirmed missing in game by the user; owner: there is no Selfishness, only Precise: Selfishness) */
+export const NOT_THIS_SEASON = new Set(['Fire Penetration', 'Cold Penetration', 'Lightning Penetration', 'Erosion Penetration', 'Greater Multiple Projectiles', 'Devastator',
+  'Shadowmask', 'Slash Duet', 'Selfless', 'Selfishness', 'Stand as One', 'Abysmal Hatred', 'Powerful Warcry', 'Speed-up Formation', 'Servant Speed', 'Superpower', 'Ceaselessness',
+  'Mania', 'Overclock', 'Self-Sacrifice', 'Armor Infusion', 'Strategic Strike', 'Shadow Will', 'Silhouette', 'Limber Stretch', 'Disciplined', 'Concentrated', 'Malleable',
+  'Safety in Numbers', 'Torrent', 'Meditation', 'Reclusion', 'Uplifting', 'Precise: Focus Acceleration', 'Precise: Torrent']);
 /** supports that break the skill's own build, with why (user, 2026-10-16: Elemental Fusion stops Ice Shot inflicting Frostbite, which its Frostbite talents pay through) */
 const COVERAGE: Partial<Record<Skill, Set<string>>> = { iceShot: new Set(['Multiple Projectiles', 'Greater Multiple Projectiles', 'Projectile Penetration']) };
 export const NOT_FOR: Partial<Record<Skill, Record<string, string>>> = { iceShot: { 'Elemental Fusion': 'it stops inflicting Frostbite, which a Frostbite build pays through' } };
