@@ -21,6 +21,7 @@ describe('plan candidates keep the rules of the game (owner, 2026-10-16)', () =>
   });
   it("no example-build skill group, no copy of a worn legendary", () => {
     expect(cs.filter((c) => /^Add the skill|Target skill/.test(c.label))).toEqual([]);
+    expect(cs.filter((c) => c.kind === 'support' && /Wind Projectiles/.test(c.label))).toEqual([]);   // the owner's dummy disproved the model's figure
     expect(cs.filter((c) => /^Unique (Ruinous Star|Formation Breaker|Kaleidoscope) in /.test(c.label))).toEqual([]);
   });
   it('a legendary held at the start stays out after a step takes it off (a new one is priced mid-roll; yours is the roll there is)', () => {
@@ -51,10 +52,10 @@ describe('runPlan: a step must raise the damage at full Life too (owner, 2026-10
     const fig = (life100: number, kill: number) => ({ life100, life0: kill, kill, partial: [], target: 'traveler', lifeMax: 1.6e12 });
     const ev: Evaluator = { pin: 'stub', parallelism: 4, close: async () => {},
       run: async (loadout, changes) => { const j = JSON.stringify(changes);
-        return { loadout, dropped: [], figure: /"name":"Wind Projectiles"/.test(j) ? fig(0.9e10, 1.2e10) : /"name":"Multiple Projectiles"/.test(j) ? fig(1.1e10, 1.1e10) : fig(1e10, 1e10) }; } };
+        return { loadout, dropped: [], figure: /"name":"Critical Strike Damage Increase"/.test(j) ? fig(0.9e10, 1.2e10) : /"name":"Multiple Projectiles"/.test(j) ? fig(1.1e10, 1.1e10) : fig(1e10, 1e10) }; } };
     const r = await runPlan(ev, s, ctx.prices, { goal: 1e12, maxSteps: 3 });
-    expect(r.plan!.steps.some((x) => /Wind Projectiles/.test(x.label))).toBe(false);
+    expect(r.plan!.steps.some((x) => /Critical Strike Damage Increase/.test(x.label))).toBe(false);
     expect(r.plan!.steps.some((x) => /Multiple Projectiles/.test(x.label))).toBe(true);
-    expect(r.notCalculable.some((n) => /Wind Projectiles.*lowers your damage at full Life/.test(n))).toBe(true);
+    expect(r.notCalculable.some((n) => /Critical Strike Damage Increase.*lowers your damage at full Life/.test(n))).toBe(true);
   }, 300_000);
 });

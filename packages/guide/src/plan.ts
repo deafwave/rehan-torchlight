@@ -29,6 +29,7 @@ const RULES = [
   'A Magnificent or Noble support is never levelled (max level 5, levelled by consuming copies).',
   'A legendary you wear or own is never bought.',
   'A change that unseals an aura (Sealed Mana over your Mana, MANA2) is refused.',
+  'Wind Projectiles is not offered: the model overrates it (your dummy, 2026-10-16: Passivation -> Wind Projectiles measured 22.5 B -> 16.9 B where the model said -8 %).',
   'Every step raises both the Traveler kill speed and your damage at full Life (the number the training dummy shows, the "Dummy" column): check each step there.',
   'Your Paralysis and Sealed Mana Compensation talent points stay, and so do points on a node the model prices at exactly 0 (it cannot judge them).',
 ];
@@ -40,7 +41,7 @@ const heldUniques = (s: State) => new Set([...ownedUniques(s, true).values(), ..
 /** a modifier's game text at a roll ($+P1$ -> +18), else its id */
 export function lineText(id: number, dyn: number[]): string {
   const b = (table<{ rows: Record<string, { bindings?: string[] }> }>('config_modifier').rows[id]?.bindings ?? [])[0], t = b && table<{ rows: Record<string, string> }>('lang_en').rows[`affix_class|description|${b.split('_')[0]}`];
-  return t ? t.replace(/<[^>]+>/g, '').replace(/\$([+-]?)P(\d)\$/g, (_, sg: string, i: string) => `${sg}${dyn[+i - 1] ?? '?'}`) : `modifier ${id} at ${dyn.join(' / ')}`;
+  return t ? t.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim().replace(/\$([+-]?)P(\d)\$/g, (_, sg: string, i: string) => `${sg}${dyn[+i - 1] ?? '?'}`) : `modifier ${id} at ${dyn.join(' / ')}`;
 }
 type Cand = { key: string; /** taken once per group */ group?: string; /** a better roll of a worn legendary: the lowest roll with the same figure is found when taken */ roll?: { slot: string; id: number; now: number[]; best: number[]; range: [number, number][] }; label: string; costFE: number; kind: string; note?: string; changes: Move['changes'] };
 const fits = (f: Figure) => !f.mana || 'stop' in f.mana || f.mana.fits;
@@ -50,11 +51,13 @@ export function candidates(s: State, ctx: GenCtx, o: PlanOpts, lines: { id: numb
   const out: Cand[] = [];
   const add = (m: Move, label = m.label) => {
     const t = m.then, cost = t ? t.costFE : m.costFE;
-    if (cost === null || m.minLevel > s.level) return;
+    if (cost === null || m.minLevel > s.level || (m.kind === 'support' && MEASURED_WRONG.test(m.label))) return;
     const u = /^Unique (.+) in \w+$/.exec(m.label)?.[1];
     if (u && held.has(u)) return;
     out.push({ key: `${m.kind}|${label}`, label: t ? `${label} (${t.note})` : label, costFE: cost, kind: m.kind, changes: t ? t.changes : m.changes });
   };
+  // Wind Projectiles: the model's figure is off against the owner's dummy (RULES)
+  const MEASURED_WRONG = /Wind Projectiles/;
   for (const g of [ownedGear, gearMoves, gemMoves, kismetMoves, pactMoves, prismMoves, slateMoves, talentMovesWith({ maxShifts: 60, locked: o.locked }), whiteBaseMoves]) for (const m of g(s, ctx)) add(m);
   for (const m of targetMoves(s, ctx)) {
     // the example build's skill groups are not offered: they replace a whole group at a cost they do not carry (a socket's gem is gemMoves', priced)
