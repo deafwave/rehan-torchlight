@@ -23,7 +23,8 @@ export interface PlanOpts { target: string; goal: number; maxSteps: number;
   /** FE of a slate carrying one wanted line, by line (the owner's prices); others `slateFE` */ slatePrices: [RegExp, number][]; slateFE: number;
   /** FE of the talent prism like the example build's (the owner's price) */ prismFE: number;
   /** talent nodes whose points never move (set by runPlan) */ locked?: Set<number>;
-  /** the character's talent points: the points it has spent at the start (set by runPlan) */ points?: number }
+  /** the character's talent points: the points it has spent at the start (set by runPlan) */ points?: number;
+  /** the board slates a new slate is tried in place of: the weakest (set by runPlan; absent = every one) */ slateSlots?: number[] }
 export const DEFAULT_PLAN: PlanOpts = { target: 'traveler', goal: 2e11, maxSteps: 60, slatePrices: [[/Agility Blessing on Critical Strike/, 100], [/All Skills' Levels/, 270]], slateFE: 100, prismFE: 555 };
 
 /** the owner's rules the candidates must keep (2026-10-16) */
@@ -79,12 +80,15 @@ const fits = (f: Figure) => !f.mana || 'stop' in f.mana || f.mana.fits;
 
 export function candidates(s: State, ctx: GenCtx, o: PlanOpts, lines: { id: number; name: string }[], held = heldUniques(s)): Cand[] {
   const L = s.loadout as { skills: { name: string; level: number; sid: number; place: { kind: string; slot?: number; ownerKind?: string; ownerSlot?: number } }[]; slateItems?: Record<string, unknown>[] };
-  const out: Cand[] = [];
+  const out: Cand[] = [], fates = new Set<string>();
   const add = (m: Move, label = m.label) => {
     const t = m.then, cost = t ? t.costFE : m.costFE;
     if (cost === null || m.minLevel > s.level || (m.kind === 'support' && MEASURED_WRONG.test(m.label))) return;
     const u = /^Unique (.+) in \w+$/.exec(m.label)?.[1];
     if (u && held.has(u)) return;
+    // a fate prices the same on any free point of its kind (the steps show only the next copy's smaller gain): offered on the first one only
+    const fate = m.kind === 'kismet' && /^Socket (.+) on contract point \d+$/.exec(label)?.[1];
+    if (fate) { if (fates.has(fate)) return; fates.add(fate); }
     out.push({ key: `${m.kind}|${label}`, label: t ? `${label} (${t.note})` : label, costFE: cost, kind: m.kind, changes: t ? t.changes : m.changes });
   };
   // Wind Projectiles: the model's figure is off against the owner's dummy (RULES)
@@ -120,15 +124,16 @@ export function candidates(s: State, ctx: GenCtx, o: PlanOpts, lines: { id: numb
       changes: [{ kind: 'patch', op: 'skill-group', place: p, items: group.map((x) => (at(x) ? { ...x, level: 20 } : x)) } as never] });
   }
   // a slate you own (bag, stash) in place of one on the board: free
-  for (const o of s.owned.filter((x) => x.talents?.length)) {
-    const where = o.where === 'bag' ? 'bag' : 'stash';
-    ((s.loadout.slateItems ?? []) as { talents: number[] }[]).forEach((it, i) => out.push({ key: `ownslate|${o.itemId}|${i}`, group: `ownslate|${o.itemId}`, kind: 'slate', costFE: 0,
-      label: `Put your ${where} slate (${o.talents!.map(talentName).join(', ')}) in place of board slate ${i + 1} (${it.talents.map(talentName).join(', ')})`, changes: [replaceSlate(s, i, o.talents!)] }));
+  for (const own of s.owned.filter((x) => x.talents?.length)) {
+    const where = own.where === 'bag' ? 'bag' : 'stash';
+    ((s.loadout.slateItems ?? []) as { talents: number[] }[]).forEach((it, i) => (o.slateSlots && !o.slateSlots.includes(i)) || out.push({ key: `ownslate|${own.itemId}|${i}`, group: `ownslate|${own.itemId}`, kind: 'slate', costFE: 0,
+      label: `Put your ${where} slate (${own.talents!.map(talentName).join(', ')}) in place of board slate ${i + 1} (${it.talents.map(talentName).join(', ')})`, changes: [replaceSlate(s, i, own.talents!)] }));
   }
   // a slate in place of one of yours, same shape (so it fits the board), carrying one or two wanted lines (its other lines priced as nothing)
   const slates = L.slateItems ?? [], price = (n: string) => o.slatePrices.find(([r]) => r.test(n))?.[1] ?? o.slateFE;
   const sets = [...lines.slice(0, 10).map((a) => [a]), ...lines.slice(0, 6).flatMap((a, i) => lines.slice(i + 1, 6).map((b) => [a, b]))];
   slates.forEach((it, i) => {
+    if (o.slateSlots && !o.slateSlots.includes(i)) return;
     const was = (it.talents as number[]).map(talentName).join(', ');
     for (const set of sets) {
       const ids = set.map((x) => x.id), names = set.map((x) => x.name);
@@ -147,7 +152,7 @@ export async function runPlan(ev: Evaluator, s0: State, books: PriceBook, k: Par
   const ctx: GenCtx = { prices: books, level: s.level, notSearched: new Set() };
   const C = ctxOfState(s), first = (await ev.run(s.loadout, [], C)).figure;
   if (first.stop) throw new Error(`your character cannot be priced on ${bossName(o.target)}: ${first.stop}`);
-  const lines = (await slateWants(ev, s, first, 0, 25)).filter((x) => !CONVERSION.test(x.name));
+  const lines = (await slateWants(ev, s, first, 0, 25, false)).filter((x) => !CONVERSION.test(x.name));
   // talent points that stay where they are: the owner's (Paralysis is applied in game, Sealed Mana Compensation keeps the auras on) and a node the model prices
   // at exactly 0 (a state it does not evaluate, so it cannot judge the node)
   const held = Object.entries((s.loadout.talents ?? {}) as Record<string, number>).filter(([, p]) => p > 0).map(([n]) => +n);
@@ -158,7 +163,10 @@ export async function runPlan(ev: Evaluator, s0: State, books: PriceBook, k: Par
   const steps: NonNullable<GuideOut['plan']>['steps'] = [], refused = new Map<string, string>(), score = new Map<string, number>(), taken = new Set<string>();
   let f = first, spent = 0;
   const slateFrom: Record<number, string> = {};
+  let figures = 0, t0 = Date.now();
+  const lap = (what: string) => { console.log(`[time] ${what}: ${figures} figures, ${((Date.now() - t0) / 1000).toFixed(0)} s`); figures = 0; t0 = Date.now(); };
   const rate = async (c: Cand) => {
+    figures++;
     const e = await ev.run(s.loadout, c.changes, C), g = e.figure;
     // both ways: a change that takes out a piece the model does not price (an omission gone) would read as a gain it cannot judge
     const now = new Set(g.partial.map(pieceKey)), lost = f.partial.filter((p) => !now.has(pieceKey(p)));
@@ -179,14 +187,29 @@ export async function runPlan(ev: Evaluator, s0: State, books: PriceBook, k: Par
     slates: lines.slice(0, 25), plan: { target: o.target, goal: o.goal, at: new Date().toISOString(), start: { label: 'your character as read from the game', figure: first }, steps,
       build: buildSheet(s.loadout) } });
   const keep = heldUniques(s0);
+  // the weakest board slates (the least lost when emptied): a new slate is tried in place of these 2 only (6 figures, again after a slate step)
+  const weakest = async () => { const n = ((s.loadout.slateItems ?? []) as unknown[]).length;
+    const loss = await Promise.all(Array.from({ length: n }, async (_, i) => ({ i, k: (await ev.run(s.loadout, [replaceSlate(s, i, [])], C)).figure.kill })));
+    o.slateSlots = loss.sort((a, b) => b.k - a.k).slice(0, 2).map((x) => x.i); };
+  await weakest();
   let cands = candidates(s, ctx, o, lines, keep);
   console.log(`start: ${first.kill.toExponential(3)}/s on ${o.target}; ${cands.length} candidates; ${lines.length} slate lines`);
+  lap('slate lines and talent checks');
   await Promise.all(cands.map(rate));
+  lap(`first round (${cands.length} options)`);
   while (steps.length < o.maxSteps && f.kill < o.goal) {
     const open = cands.filter((c) => !taken.has(c.key) && !(c.group && taken.has(c.group)) && (score.get(c.key) ?? 0) > -Infinity).sort((a, b) => score.get(b.key)! - score.get(a.key)!);
     if (!open.length) break;
-    // lazy greedy: the stale best are re-priced on the build as it is now, the best of them is taken
-    const w = (await Promise.all(open.slice(0, Math.max(16, ev.parallelism ?? 16)).map(rate))).filter((x) => x.v > -Infinity).sort((a, b) => b.v - a.v)[0];
+    // lazy greedy: a stale score bounds the fresh one from above (a gain shrinks as the build grows); the stale best are re-priced a batch at a time until the
+    // best fresh one beats every stale score left, so no option that could win goes unpriced and none that cannot is priced
+    const P = Math.max(16, ev.parallelism ?? 16);
+    let w: Awaited<ReturnType<typeof rate>> | undefined;
+    for (let at = 0; at < open.length; at += P) {
+      const got = (await Promise.all(open.slice(at, at + P).map(rate))).filter((x) => x.v > -Infinity).sort((a, b) => b.v - a.v)[0];
+      if (got && (!w || got.v > w.v)) w = got;
+      const next = open[at + P];
+      if (w && (!next || w.v >= score.get(next.key)!)) break;
+    }
     if (!w) continue;
     // a better roll: the lowest single-line roll that still gives this figure (Deterioration Duration 28 is the same breakpoint as 30)
     if (w.c.roll && w.c.roll.best.length === 1) {
@@ -204,9 +227,11 @@ export async function runPlan(ev: Evaluator, s0: State, books: PriceBook, k: Par
     s = { ...s, loadout: w.e.loadout }; spent += w.c.costFE; taken.add(w.c.key); if (w.c.group) taken.add(w.c.group);
     steps.push({ label: w.c.label, costFE: w.c.costFE, totalFE: spent, figure: w.e.figure, ...(w.c.note ? { note: w.c.note } : {}) });
     f = w.e.figure;
+    lap(`step ${steps.length + 1} chosen`);
     console.log(`step ${steps.length}: ${w.c.label.slice(0, 120)} | ${w.c.costFE} FE (total ${spent}) -> ${f.kill.toExponential(3)}/s`);
     onStep?.(out(true));
     // the build changed: new moves (a socket's new neighbours, a slot's new item) are priced, the rest keep their stale score
+    if (/^(own)?slate\|/.test(w.c.key)) await weakest();
     const seen = new Set(cands.map((c) => c.key)), next = candidates(s, ctx, o, lines, keep);
     await Promise.all(next.filter((c) => !seen.has(c.key)).map(rate));
     cands = next;

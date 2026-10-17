@@ -66,10 +66,11 @@ export function replaceSlate(s: State, index: number, talents: number[]): Change
 /** Slate talents to look for (user, 2026-10-16: "we need more buckets"): every talent the game shows (any tree, cores too; one per distinct effect) priced as one
  *  more slate talent on the character, the gains above 0.5 % best first. A core the build already holds adds nothing (CT1). Which slate can roll which talent
  *  is not in the catalog rules read here: the list says what to look for, not where. */
-export async function slateWants(ev: Evaluator, s: State, f: Figure, cores = 10, others = 25): Promise<{ id: number; name: string; gain: number; core: boolean }[]> {
+/** `micro` false: Micro nodes (config_talent i4 1, at most a few %) are not priced; `cores` 0: cores are not priced either */
+export async function slateWants(ev: Evaluator, s: State, f: Figure, cores = 10, others = 25, micro = true): Promise<{ id: number; name: string; gain: number; core: boolean }[]> {
   if (!withSlate(s, [])) return [];
   const t = rows('config_talent'), byId = new Map(Object.values(t).map((r) => [r.i0 as number, r])), seen = new Set<string>(), ids: number[] = [];
-  for (const n of allTrees().flatMap((tr) => [...treeNodes(tr), ...treeCores(tr)])) { const k = byId.get(n.id)?.sc0 ?? String(n.id); if (!seen.has(k)) { seen.add(k); ids.push(n.id); } }
+  for (const n of allTrees().flatMap((tr) => [...treeNodes(tr), ...treeCores(tr)])) { const r = byId.get(n.id), k = r?.sc0 ?? String(n.id); if (seen.has(k) || (!micro && r?.i4 === 1) || (!cores && r?.i4 === CORE)) continue; seen.add(k); ids.push(n.id); }
   const out = await Promise.all(ids.map(async (id) => { const g = (await ev.run(s.loadout, [withSlate(s, [id])!], ctxOfState(s))).figure; return { id, name: talentName(id), gain: g.stop ? 0 : g.kill / f.kill, core: byId.get(id)?.i4 === CORE }; }));
   const ok = out.filter((o) => o.gain > 1.005).sort((a, b) => b.gain - a.gain);   // cores and the other talents each get a list (cores would fill one list)
   return [...ok.filter((o) => o.core).slice(0, cores), ...ok.filter((o) => !o.core).slice(0, others)];
