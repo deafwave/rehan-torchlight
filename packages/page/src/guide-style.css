@@ -829,3 +829,5 @@ a.t-branch:hover,a.t-branch:focus-visible{text-decoration:underline}
 .slate-board .bc-slate:hover rect { filter: brightness(1.35); }
 .slate-board .bc-slate.changed rect { stroke-width: 2; }
 .bc-list li.changed { color: #ffd479; }
+
+.gl-plan-steps tr.over td { opacity: 0.45; }
