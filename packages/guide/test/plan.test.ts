@@ -172,6 +172,20 @@ describe('runPlan: a step must raise the damage at full Life too (owner, 2026-10
   }, 300_000);
 });
 
+describe('runPlan: within your FE (owner, 2026-10-17: "within the 641 FE budget I have right now")', () => {
+  it('an option dearer than the FE left is never priced, and the plan stops when none fits', async () => {
+    const fig = (k: number) => ({ life100: k, life0: k, kill: k, partial: [], target: 'traveler', lifeMax: 1.6e12 });
+    const priced: string[] = [];
+    const ev: Evaluator = { pin: 'stub', parallelism: 4, close: async () => {},
+      run: async (loadout, changes) => { priced.push(JSON.stringify(changes)); return { loadout, dropped: [], figure: fig(1e10 * (1 + priced.length * 1e-3)) }; } };
+    const all = candidates(s, ctx, { ...DEFAULT_PLAN }, lines);
+    const r = await runPlan(ev, s, ctx.prices, { goal: 1e12, maxSteps: 60, budget: 50 });
+    expect(all.some((c) => c.costFE > 50)).toBe(true);
+    for (const c of all.filter((x) => x.costFE > 50)) expect(priced).not.toContain(JSON.stringify(c.changes));
+    expect(r.plan!.steps.at(-1)?.totalFE ?? 0).toBeLessThanOrEqual(50);
+  }, 300_000);
+});
+
 describe('runPlan: every write carries the slate board (owner, 2026-10-17: a stopped plan left the page with no slate viewer)', () => {
   it('each partial output has the board now and after, as the final one does', async () => {
     const fig = (k: number) => ({ life100: k, life0: k, kill: k, partial: [], target: 'traveler', lifeMax: 1.6e12 });

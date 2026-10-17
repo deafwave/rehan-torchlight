@@ -21,7 +21,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Evaluator, Figure, GenCtx, GuideOut, Move, PriceBook, State } from './types';
 
-export interface PlanOpts { target: string; goal: number; /** the goal as a time to kill the target (s): goal = its max Life / goalSeconds */ goalSeconds?: number; maxSteps: number;
+export interface PlanOpts { target: string; goal: number; /** your FE: an option dearer than the FE left is not priced; the plan stops when none fits */ budget?: number; /** the goal as a time to kill the target (s): goal = its max Life / goalSeconds */ goalSeconds?: number; maxSteps: number;
   /** FE of a slate carrying one wanted line, by line (the owner's prices); others `slateFE` */ slatePrices: [RegExp, number][]; slateFE: number;
   /** FE of the talent prism like the example build's (the owner's price) */ prismFE: number;
   /** talent nodes whose points never move (set by runPlan) */ locked?: Set<number>;
@@ -318,13 +318,14 @@ export async function runPlan(ev: Evaluator, s0: State, books: PriceBook, k: Par
     const by = (k: string) => loss.filter((x) => x.p.kind === k).sort((a, b) => b.k - a.k).slice(0, 2).map((x) => x.p);
     o.skillSlots = [...by('active'), ...by('passive')]; };
   await weakSkills();
-  let cands = candidates(s, ctx, o, lines, keep);
+  const fitsFE = (c: Cand) => o.budget === undefined || c.costFE <= o.budget - spent;
+  let cands = candidates(s, ctx, o, lines, keep).filter(fitsFE);
   console.log(`start: ${first.kill.toExponential(3)}/s on ${o.target}; ${cands.length} candidates; ${lines.length} slate lines`);
   lap('slate lines and talent checks');
   await Promise.all(cands.map(rate));
   lap(`first round (${cands.length} options)`);
   while (steps.length < o.maxSteps && f.kill < o.goal) {
-    const open = cands.filter((c) => !taken.has(c.key) && !(c.group && taken.has(c.group)) && (score.get(c.key) ?? 0) > -Infinity).sort((a, b) => score.get(b.key)! - score.get(a.key)!);
+    const open = cands.filter((c) => fitsFE(c) && !taken.has(c.key) && !(c.group && taken.has(c.group)) && (score.get(c.key) ?? 0) > -Infinity).sort((a, b) => score.get(b.key)! - score.get(a.key)!);
     if (!open.length) break;
     // lazy greedy: a stale score bounds the fresh one from above (a gain shrinks as the build grows); the stale best are re-priced a batch at a time until the
     // best fresh one beats every stale score left, so no option that could win goes unpriced and none that cannot is priced
@@ -360,7 +361,7 @@ export async function runPlan(ev: Evaluator, s0: State, books: PriceBook, k: Par
     // the build changed: new moves (a socket's new neighbours, a slot's new item) are priced, the rest keep their stale score
     if (/^(own)?slate\||^add\|/.test(w.c.key)) await weakest();
     if (w.c.key.startsWith('skill|')) await weakSkills();
-    const seen = new Set(cands.map((c) => c.key)), next = candidates(s, ctx, o, lines, keep);
+    const seen = new Set(cands.map((c) => c.key)), next = candidates(s, ctx, o, lines, keep).filter(fitsFE);
     await Promise.all(next.filter((c) => !seen.has(c.key)).map(rate));
     cands = next;
   }

@@ -27,7 +27,7 @@ records the pin commit and the memo key includes it. Never edit dps-debug from h
 
 ## Commands
 
-`pnpm guide plan [export.json] [--target traveler] [--goal 2e11] [--slate-fe N] [--prism-fe N]` (your character, read fresh from the running game, to a
+`pnpm guide plan [export.json] [--target traveler] [--goal 2e11] [--budget N] [--slate-fe N] [--prism-fe N]` (your character, read fresh from the running game, to a
 damage goal at the least FE; writes `packages/page/src/data/advice.json`, the page's plan card) | `ideal [--live] | live [--every M] | advise <export.json> [--fe N] [--season N] | figure <loadout.json> [--skill hoa|iceShot] [--level N]`;
 shared flags `--workers --bombs --roll-budget --budget-minutes --out` (advise: `--budget-minutes` defaults to 30); ideal / advise read your prices
 (`prices.json` at the repository root when it exists, or `--prices <file>`: `{ "<item name>": FE }` over etor, `withPrices`). `pnpm dev` / `pnpm build` / `pnpm test`
