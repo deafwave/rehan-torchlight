@@ -821,3 +821,11 @@ a.t-branch:hover,a.t-branch:focus-visible{text-decoration:underline}
 .gl-routes.one{grid-template-columns:1fr}
 
 .gl-plan-steps td:nth-child(n+3) { white-space: nowrap; }
+
+.boards { display: flex; gap: 24px; flex-wrap: wrap; }
+.slate-board .bc-cell { fill: #16202b; stroke: #2a3a4a; }
+.slate-board .bc-cell.locked { fill: #0d1218; stroke-dasharray: 3 3; }
+.slate-board .bc-slate text { fill: #fff; font-size: 14px; font-weight: 700; text-anchor: middle; pointer-events: none; }
+.slate-board .bc-slate:hover rect { filter: brightness(1.35); }
+.slate-board .bc-slate.changed rect { stroke-width: 2; }
+.bc-list li.changed { color: #ffd479; }

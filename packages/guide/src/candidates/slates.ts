@@ -36,6 +36,16 @@ const cellsOf = (it: SlateItem, slot = (it.link as { SlotId: number }).SlotId, d
     return [Math.floor(slot / 10) + x, (slot % 10) + y];
   });
 
+/** the board drawn: every cell (the level it opens at) and each placed slate's cells with its lines and where it comes from (`from(i)`, board index i) */
+export interface BoardView { cells: { x: number; y: number; level: number }[]; slates: { cells: [number, number][]; lines: string[]; source: string; changed: boolean }[] }
+export function boardView(l: Record<string, unknown>, from: (i: number) => { source: string; changed: boolean } = () => ({ source: 'on your board', changed: false })): BoardView {
+  const items = (l.slateItems ?? []) as SlateItem[], shapes = rows('lua_config_talent_block_shape');
+  const at = (it: SlateItem): [number, number][] => (shapes[it.shapeId!]?.Shape ? cellsOf(it) : []);
+  const held = new Set(items.flatMap((it) => at(it).map(([x, y]) => cellKey(x, y))));
+  return { cells: [...board(held)].map(([k, level]) => { const [x, y] = k.split(',').map(Number); return { x, y, level }; }),
+    slates: items.map((it, i) => ({ cells: at(it), lines: it.talents.map(talentName), ...from(i) })) };
+}
+
 /** One more slate carrying `talents` on the character (a copy of its first placed slate, nothing devoured or copied); undefined when it has none placed */
 export function withSlate(s: State, talents: number[]): Change | undefined {
   const items = (s.loadout.slateItems ?? []) as SlateItem[], tmpl = items[0];

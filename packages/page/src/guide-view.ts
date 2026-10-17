@@ -12,7 +12,9 @@ export interface GuideOut {
   /** advise, an Ice Shot character at the switch's level: the planned switch to Hammer of Ash on this character, on the first boss */ switch?: { label: string; costFE: number | null; target: string; figure: Figure };
   /** advise: talents worth finding on a slate, each priced as one more slate talent */ slates?: { id: number; name: string; gain: number; core: boolean }[];
   /** your character to `goal` damage per second on `target`, the most damage per FE first (guide plan.ts) */ plan?: Plan;
+  /** your slate board now and after the plan (guide slates.ts boardView) */ board?: { now: Board; after: Board };
 }
+export interface Board { cells: { x: number; y: number; level: number }[]; slates: { cells: [number, number][]; lines: string[]; source: string; changed: boolean }[] }
 export interface Plan { target: string; goal: number; at: string; start: { label: string; figure: Figure }; steps: { label: string; costFE: number; totalFE: number; figure: Figure; note?: string }[];
   build?: { section: string; lines: string[]; trees?: TreeView[] }[] }
 /** one tab: a skill against one yardstick (target null = the training dummy), from step `firstStep` on; `end` = why it ended */
@@ -339,6 +341,28 @@ function planCard(g: GuideOut): string {
     + `<table class="gl-plan-steps"><tr><th>#</th><th>Do this</th><th>Cost</th><th>Total</th><th>Gain</th><th title="damage per second at full Life: what the training dummy shows">Dummy after</th><th title="kill speed: the damage averaged from full Life to 0 on the boss">${boss} kill speed</th><th>${boss} dies in</th></tr>${rows}</table>`
     + (notes ? `<ul class="bnote">${notes}</ul>` : '') + refused + build + '</div>';
 }
+/** a slate board as the game lays it out: each slate's cells in its colour and number; hover a slate for its lines and where it comes from */
+const SLATE_HUE = [205, 30, 140, 280, 350, 60, 170, 250, 100, 320];
+function boardSvg(b: Board, level: number): string {
+  const xs = b.cells.map((c) => c.x), ys = b.cells.map((c) => c.y), x0 = Math.min(...xs), y0 = Math.min(...ys), S = 40, pad = 4;
+  const W = (Math.max(...xs) - x0 + 1) * S + pad * 2, H = (Math.max(...ys) - y0 + 1) * S + pad * 2;
+  const at = (x: number, y: number) => [pad + (x - x0) * S, pad + (y - y0) * S];
+  const cells = b.cells.map((c) => { const [px, py] = at(c.x, c.y); return `<rect class="bc-cell${c.level > level ? ' locked' : ''}" x="${px + 1}" y="${py + 1}" width="${S - 2}" height="${S - 2}" rx="4"><title>${c.level > level ? `opens at level ${c.level}` : 'empty cell'}</title></rect>`; }).join('');
+  const slates = b.slates.map((sl, i) => {
+    const hue = SLATE_HUE[i % SLATE_HUE.length], tip = `${esc(sl.source)}&#10;${sl.lines.map((l) => `• ${esc(l)}`).join('&#10;')}`;
+    const rects = sl.cells.map(([x, y]) => { const [px, py] = at(x, y); return `<rect x="${px + 2}" y="${py + 2}" width="${S - 4}" height="${S - 4}" rx="5" style="fill:hsl(${hue} 55% ${sl.changed ? 45 : 28}%);stroke:hsl(${hue} 80% ${sl.changed ? 75 : 50}%)"/>`; }).join('');
+    const [lx, ly] = sl.cells.length ? at(...sl.cells[0]) : [0, 0];
+    return `<g class="bc-slate${sl.changed ? ' changed' : ''}"><title>Slate ${i + 1}: ${tip}</title>${rects}<text x="${lx + S / 2}" y="${ly + S / 2 + 5}">${i + 1}</text></g>`;
+  }).join('');
+  return `<svg class="slate-board" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="slate board">${cells}${slates}</svg>`;
+}
+function boardCard(g: GuideOut): string {
+  const b = g.board;
+  if (!b) return '';
+  const lv = g.character?.level ?? 100, list = (x: Board) => `<ol class="bc-list">${x.slates.map((sl) => `<li${sl.changed ? ' class="changed"' : ''}><b>${esc(sl.source)}</b>: ${sl.lines.map(esc).join(' · ')}</li>`).join('')}</ol>`;
+  return `<div class="gl-final"><b>Your slate board</b><p class="bnote">Hover a slate for its lines and where it comes from. Bright slates are the ones the plan changes; the numbers match the plan's "board slate N".</p>`
+    + `<div class="boards"><div><h4>Now</h4>${boardSvg(b.now, lv)}</div><div><h4>After the plan</h4>${boardSvg(b.after, lv)}</div></div>${list(b.after)}</div>`;
+}
 function finalCard(g: GuideOut): string {
   if (!g.final?.length) return '';
   return `<div class="gl-final"><b>The final build, boss by boss</b><table><tr><th>Boss</th><th>Damage per second at full Life</th><th>Time to kill</th></tr>`
@@ -346,7 +370,7 @@ function finalCard(g: GuideOut): string {
     + '</table></div>';
 }
 export function renderGuide(g: GuideOut, mine: Record<string, number> = {}): string {
-  if (g.plan) return `<div class="gl-plan">${planCard(g)}${slateCard(g)}</div>`;
+  if (g.plan) return `<div class="gl-plan">${planCard(g)}${boardCard(g)}${slateCard(g)}</div>`;
   const plan = g.legs?.length ? legTabs(g) : chart(g.start, entries(g.steps)) + stages(entries(g.steps), g.mode);
   return `<div class="gl-plan">${goalCard(g)}${g.character ? renderCharacter(g.character) : ''}${g.character?.skill === 'hoa' && g.switch ? switchCard(g) + respecCard(g) : respecCard(g) + switchCard(g)}${g.next?.length ? renderNext(g.next, g.prices ?? {}, mine, g.character?.fe ?? Infinity) : ''}${slateCard(g)}${finalCard(g)}${plan}${huntingList(g)}${details(g)}</div>`;
 }

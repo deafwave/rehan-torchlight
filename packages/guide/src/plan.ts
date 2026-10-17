@@ -7,7 +7,7 @@ import { gemMoves } from './candidates/gems';
 import { kismetMoves } from './candidates/kismets';
 import { pactMoves } from './candidates/pacts';
 import { prismMoves } from './candidates/prisms';
-import { replaceSlate, slateMoves, slateWants } from './candidates/slates';
+import { boardView, replaceSlate, slateMoves, slateWants } from './candidates/slates';
 import { talentMovesWith } from './candidates/talents';
 import { targetMoves } from './candidates/target';
 import { bossName, ownedGear, ownedUniques } from './modes';
@@ -157,6 +157,7 @@ export async function runPlan(ev: Evaluator, s0: State, books: PriceBook, k: Par
   const notes = [...RULES, ...(first.mana && !('stop' in first.mana) ? [`Sealed Mana now: ${first.mana.reserved} of ${first.mana.capacity} (${first.mana.margin} free); Life sealed ${first.mana.life.reserved} of ${first.mana.life.capacity}.`] : [`Sealed Mana: not calculated (${first.mana && 'stop' in first.mana ? first.mana.stop : 'no figure'}); changes are not checked against it.`])];
   const steps: NonNullable<GuideOut['plan']>['steps'] = [], refused = new Map<string, string>(), score = new Map<string, number>(), taken = new Set<string>();
   let f = first, spent = 0;
+  const slateFrom: Record<number, string> = {};
   const rate = async (c: Cand) => {
     const e = await ev.run(s.loadout, c.changes, C), g = e.figure;
     // both ways: a change that takes out a piece the model does not price (an omission gone) would read as a gain it cannot judge
@@ -196,6 +197,10 @@ export async function runPlan(ev: Evaluator, s0: State, books: PriceBook, k: Par
         w.e = e; w.c = { ...w.c, label: w.c.label.replace(lineText(id, best), `${lineText(id, [v])} or ${up ? 'more' : 'less'} (range ${range[0][0]}-${range[0][1]})`) };
       }
     }
+    // the board slot a slate step fills, and where that slate comes from (the slate viewer)
+    const own = /^ownslate\|(.+)\|(\d+)$/.exec(w.c.key), buy = /^slate\|(\d+)\|/.exec(w.c.key);
+    if (own) { const o = s0.owned.find((x) => x.itemId === own[1]); slateFrom[+own[2]] = `from your ${o?.where === 'bag' ? 'bag' : 'stash'} (free, step ${steps.length + 1})`; }
+    if (buy) slateFrom[+buy[1]] = `buy (about ${Math.round(w.c.costFE)} FE, price assumed: check /market; step ${steps.length + 1})`;
     s = { ...s, loadout: w.e.loadout }; spent += w.c.costFE; taken.add(w.c.key); if (w.c.group) taken.add(w.c.group);
     steps.push({ label: w.c.label, costFE: w.c.costFE, totalFE: spent, figure: w.e.figure, ...(w.c.note ? { note: w.c.note } : {}) });
     f = w.e.figure;
@@ -208,6 +213,7 @@ export async function runPlan(ev: Evaluator, s0: State, books: PriceBook, k: Par
   }
   const r = out(false);
   r.plan!.build = buildSheet(s.loadout);
+  r.board = { now: boardView(s0.loadout), after: boardView(s.loadout, (i) => (slateFrom[i] ? { source: slateFrom[i], changed: true } : { source: 'on your board', changed: false })) };
   if (f.kill < o.goal) r.startNotes!.push(`The goal is not reached: the plan ends at ${f.kill.toExponential(2)} per second; nothing left that the model can price raises it.`);
   return r;
 }
